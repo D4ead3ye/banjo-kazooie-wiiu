@@ -72,3 +72,4 @@ undefined_funcs_auto*
 #secret folder
 tmp/
 tmp/*
+/properties.h

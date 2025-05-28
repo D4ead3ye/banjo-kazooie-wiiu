@@ -127,26 +127,49 @@ configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/properties.h.in ${CMAKE_CURRENT_SOUR
 
 # Include directories
 include_directories(
-    #${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src"
 )
 
 # Collect source files to build the executable
 file(GLOB_RECURSE ALL_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     # "src/assets/*.c"
-    "src/**/*.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/**/*.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/**/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/**/*.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/**/*"
 )
 
 set (EXCLUDES 
-    "${PROJECT_SOURCE_DIR}/src/core1/audio"
-    "${PROJECT_SOURCE_DIR}/src/core1/gu"
-    "${PROJECT_SOURCE_DIR}/src/core1/io"
-    "${PROJECT_SOURCE_DIR}/src/core1/os"
-    "${PROJECT_SOURCE_DIR}/src/done"
-    "${PROJECT_SOURCE_DIR}/include/2.0L"
-    "eeprom.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/core1/audio"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/core1/gu"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/core1/io"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/core1/os"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/done"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/2.0L"
+    "${CMAKE_CURRENT_SOURCE_DIR}/eeprom.c"
 )
+
+# Function to filter out files whose paths start with any exclude directory.
+function(filter_excluded_files out_var)
+    set(filtered_list "")
+    foreach(file ${ARGN})
+        set(skip FALSE)
+        foreach(exclude ${EXCLUDES})
+            if(file MATCHES "^${exclude}(/|$)")
+                set(skip TRUE)
+                break()
+            endif() # if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
+        endforeach()
+        if(NOT skip)
+            list(APPEND filtered_list ${file})
+        endif()
+    endforeach()
+    set(${out_var} ${filtered_list} PARENT_SCOPE)
+endfunction()
+
+filter_excluded_files(FILTERED_FILES ${ALL_FILES})
 
 if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(IOS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libultraship/ios)
@@ -155,9 +178,9 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(IMAGE_FILES ${IOS_DIR}/PoweredBy.png)
     set(ICON_FILES ${IOS_DIR}/Icon.png)
 
-    list(APPEND ALL_FILES ${STORYBOARD_FILE} ${IMAGE_FILES} ${ICON_FILES})
+    list(APPEND FILTERED_FILES ${STORYBOARD_FILE} ${IMAGE_FILES} ${ICON_FILES})
 
-    add_executable(${PROJECT_NAME} ${ALL_FILES})
+    add_executable(${PROJECT_NAME} ${FILTERED_FILES})
     set_xcode_property(${PROJECT_NAME} PRODUCT_BUNDLE_IDENTIFIER ${PROJECT_ID} All)
     set_target_properties(
         ${PROJECT_NAME}
@@ -167,7 +190,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
         RESOURCE "${IMAGE_FILES};${STORYBOARD_FILE};${ICON_FILES}"
     )
 else()
-    add_executable(${PROJECT_NAME} ${ALL_FILES})
+    add_executable(${PROJECT_NAME} ${FILTERED_FILES})
 endif()
 
 ################################################################################
