@@ -138,38 +138,51 @@ file(GLOB_RECURSE ALL_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     "${CMAKE_CURRENT_SOURCE_DIR}/src/**/*.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/**/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/**/*.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/**/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/**/*"
 )
 
 set (EXCLUDES 
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/core1/audio"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/core1/gu"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/core1/io"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/core1/os"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/done"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/2.0L"
-    "${CMAKE_CURRENT_SOURCE_DIR}/eeprom.c"
+    "src/core1/audio"
+    "src/core1/gu"
+    "src/core1/io"
+    "src/core1/os"
+    "src/done"
+    "include/2.0L"
+    "eeprom.c"
 )
 
 # Function to filter out files whose paths start with any exclude directory.
 function(filter_excluded_files out_var)
     set(filtered_list "")
     foreach(file ${ARGN})
-        set(skip FALSE)
+        message(STATUS ${file})
+        set(skip OFF)
         foreach(exclude ${EXCLUDES})
-            if(file MATCHES "^${exclude}(/|$)")
-                set(skip TRUE)
+            string(FIND ${file} ${exclude} pos)
+            message(STATUS "${exclude} ${pos}")
+            if(pos GREATER -1)
+                message(STATUS "Skipping file ${file}")
+                set(skip ON)
                 break()
             endif() # if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
         endforeach()
         if(NOT skip)
             list(APPEND filtered_list ${file})
+            message(STATUS "Adding file ${file}")
         endif()
     endforeach()
     set(${out_var} ${filtered_list} PARENT_SCOPE)
 endfunction()
 
-filter_excluded_files(FILTERED_FILES ${ALL_FILES})
+filter_excluded_files(ALL_FILES ${ALL_FILES})
+
+# Create source groups that match the real file directory paths
+foreach(source IN LISTS ALL_FILES)
+    get_filename_component(source_path "${source}" PATH)
+    string(REPLACE "/" "\\" source_path_adjusted "${source_path}")
+    source_group("${source_path_adjusted}" FILES "${source}")
+endforeach()
 
 if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(IOS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libultraship/ios)
@@ -178,9 +191,9 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(IMAGE_FILES ${IOS_DIR}/PoweredBy.png)
     set(ICON_FILES ${IOS_DIR}/Icon.png)
 
-    list(APPEND FILTERED_FILES ${STORYBOARD_FILE} ${IMAGE_FILES} ${ICON_FILES})
+    list(APPEND ALL_FILES ${STORYBOARD_FILE} ${IMAGE_FILES} ${ICON_FILES})
 
-    add_executable(${PROJECT_NAME} ${FILTERED_FILES})
+    add_executable(${PROJECT_NAME} ${ALL_FILES})
     set_xcode_property(${PROJECT_NAME} PRODUCT_BUNDLE_IDENTIFIER ${PROJECT_ID} All)
     set_target_properties(
         ${PROJECT_NAME}
@@ -190,7 +203,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
         RESOURCE "${IMAGE_FILES};${STORYBOARD_FILE};${ICON_FILES}"
     )
 else()
-    add_executable(${PROJECT_NAME} ${FILTERED_FILES})
+    add_executable(${PROJECT_NAME} ${ALL_FILES})
 endif()
 
 ################################################################################
