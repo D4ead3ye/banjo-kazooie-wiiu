@@ -151,9 +151,9 @@ bool __chSnowman_isYawNearYawTarget(Actor *this, s32 max_angle_degree){
     f32 dYaw;
     dYaw = this->yaw - this->yaw_ideal;
     if((dYaw < max_angle_degree) && (-max_angle_degree < dYaw)){
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 int __chSnowman_isPlayerInAttackRange(Actor *this, s32 min_distance, s32 max_distance){
@@ -176,7 +176,7 @@ int __chSnowman_func_802E1F70(ActorMarker *marker, s32 arg1){
     else{
         marker->id = MARKER_B1_SIR_SLUSH;
     }
-    return TRUE;
+    return true;
 }
 
 void __chSnowman_deathCallback(ActorMarker *marker, ActorMarker *other_marker){
@@ -210,7 +210,7 @@ void chSnowman_update(Actor *this){
 
     dt = time_getDelta();
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->marker->propPtr->unk8_3 = 0;
         actor_collisionOn(this);
         marker_setCollisionScripts(this->marker, NULL, NULL, __chSnowman_deathCallback);
@@ -247,7 +247,7 @@ void chSnowman_update(Actor *this){
     }//L802E2280
     switch(this->state){
         case CHSNOWMAN_STATE_1_IDLE://L802E22B0
-            local->unk9 = FALSE;
+            local->unk9 = false;
             local->unkA = 1;
             __chSnowman_setYawTarget(this, 6.0f);
             if(!func_80329530(this, 3150)){
@@ -304,7 +304,7 @@ void chSnowman_update(Actor *this){
                 }//L802E2558
 
                 if(actor_animationIsAt(this, 0.45f)){
-                    local->unk9 = TRUE;
+                    local->unk9 = true;
                 }
                 else if(
                     actor_animationIsAt(this, 0.58f)
@@ -312,7 +312,7 @@ void chSnowman_update(Actor *this){
                 ){
                     func_8030E878(SFX_8F_SNOWBALL_FLYING, randf2(0.95f, 1.05f), 30000, this->position, 800.0f, 3050.0f);
                     __spawnQueue_add_1((GenFunction_1)__chSnowman_spawnSnowball, (s32)this->marker);
-                    local->unk9 = FALSE;
+                    local->unk9 = false;
                 }
                 
             }

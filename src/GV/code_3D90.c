@@ -68,7 +68,7 @@ void func_8038A314(Actor *this){}
 void func_8038A31C(Actor *this){
     Actor *sp24;
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         actor_collisionOff(this);
         __spawnQueue_add_1((GenFunction_1)func_8038A2C0, reinterpret_cast(s32, this->marker));
         this->velocity[0] = 0.0f;
@@ -84,7 +84,7 @@ void func_8038A31C(Actor *this){
     {
     case 1: //L8038A3C0
         func_80343DEC(this);
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->marker->propPtr->unk8_3 = true;
         this->unk1C[0] = 1.0;
         this->alpha_124_19 = 0xff;
         if(this->unk54 != 0.0f){
@@ -93,7 +93,7 @@ void func_8038A31C(Actor *this){
         }
         break;
     case 2: //L8038A440
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->marker->propPtr->unk8_3 = true;
         this->unk1C[0] = 1.0;
         if(45.0f <= this->velocity[0]){
             subaddie_set_state_with_direction(this, 3, 0.02f, 1);
@@ -111,7 +111,7 @@ void func_8038A31C(Actor *this){
         break;
     case 3: //L8038A534
         func_80343DEC(this);
-        this->marker->propPtr->unk8_3 = FALSE;
+        this->marker->propPtr->unk8_3 = false;
         this->unk1C[0] = 0.0;
         this->alpha_124_19 = 0;
         if(this->unk54 == 0.0f){
@@ -120,7 +120,7 @@ void func_8038A31C(Actor *this){
         break;
         
     case 4: //L8038A5A4
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->marker->propPtr->unk8_3 = true;
         this->unk1C[0] = 1.0;
         if(45.0f <= this->velocity[0]){
             subaddie_set_state_with_direction(this, 1, 0.02f, 1);

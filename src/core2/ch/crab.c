@@ -150,7 +150,7 @@ void __chCrab_mutantTextCallback(ActorMarker *caller, enum asset_e text_id, s32 
         func_80324E38(3.0f, 0);
         return;
     }
-    levelSpecificFlags_set(LEVEL_FLAG_E_CC_UNKNOWN, FALSE);
+    levelSpecificFlags_set(LEVEL_FLAG_E_CC_UNKNOWN, false);
 }
 
 bool __chCrab_802CB76C(ActorMarker *marker, ActorMarker *other) {
@@ -158,9 +158,9 @@ bool __chCrab_802CB76C(ActorMarker *marker, ActorMarker *other) {
 
     this = marker_getActor(marker);
     if ((this->modelCacheIndex == ACTOR_F2_BLACK_SNIPPET) && !maCastle_hasBanjoKazooieCodeBeenEntered()) {
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 void __chCrab_die(ActorMarker *marker, ActorMarker *other){
@@ -179,7 +179,7 @@ void __chCrab_die(ActorMarker *marker, ActorMarker *other){
     FUNC_8030E8B4(SFX_79_TICKER_DEATH, 1.0f, 28000, this->position, 950, 1900);
     __spawnQueue_add_4((GenFunction_4)spawnQueue_actor_f32, ACTOR_4C_STEAM, reinterpret_cast(s32, this->position[0]), reinterpret_cast(s32, this->position[1]), reinterpret_cast(s32, this->position[2]));
     this->lifetime_value = 5.0f;
-    marker->collidable = FALSE;
+    marker->collidable = false;
     this->unk138_27 = 1;
     marker_despawn(marker);
     if( map_get() == MAP_B_CC_CLANKERS_CAVERN
@@ -236,9 +236,9 @@ void chCrab_update(Actor *this) {
     if (!this->volatile_initialized) {
         marker_setCollisionScripts(this->marker, __chCrab_touch, __chCrab_ow, __chCrab_die);
         func_803300C0(this->marker, &__chCrab_802CB76C);
-        this->unk124_0 = this->unk138_31 = FALSE;
-        this->has_met_before = FALSE;
-        this->volatile_initialized = TRUE;
+        this->unk124_0 = this->unk138_31 = false;
+        this->has_met_before = false;
+        this->volatile_initialized = true;
         anctrl_setTransitionDuration(this->anctrl, 0.25f);
         if (map_get() == MAP_A_TTC_SANDCASTLE) {
             if (!jiggyscore_isCollected(JIGGY_10_TTC_SANDCASTLE)) {
@@ -269,9 +269,9 @@ void chCrab_update(Actor *this) {
     ) {
         if ((this->state != 6) && (this->state != 5)) {
             gcdialog_showText(ASSET_D32_DIALOG_MUTANT_CRAB_MEET, 0xF, this->position, NULL, __chCrab_mutantTextCallback, NULL);
-            mapSpecificFlags_set(0, TRUE);
-            levelSpecificFlags_set(LEVEL_FLAG_E_CC_UNKNOWN, TRUE);
-            this->has_met_before = TRUE;
+            mapSpecificFlags_set(0, true);
+            levelSpecificFlags_set(LEVEL_FLAG_E_CC_UNKNOWN, true);
+            this->has_met_before = true;
         }
     }
     if (map_get() == MAP_A_TTC_SANDCASTLE) {
@@ -282,16 +282,16 @@ void chCrab_update(Actor *this) {
             && func_80329530(this, 1600)
         ) {
             gcdialog_showText(0xA12, 4, this->position, NULL, NULL, NULL);
-            mapSpecificFlags_set(0, TRUE);
+            mapSpecificFlags_set(0, true);
         } else if (mapSpecificFlags_get(1)) {
             gcdialog_showText(0xA13, 4, this->position, NULL, NULL, NULL);
-            mapSpecificFlags_set(1, FALSE);
+            mapSpecificFlags_set(1, false);
         }
     }
     if (levelSpecificFlags_get(LEVEL_FLAG_E_CC_UNKNOWN)) {
         if ((this->state != 8) && (this->state != 9)) {
             subaddie_set_state_with_direction(this, (this->has_met_before) ? 8 : 9, 0.0f, 1);
-            this->has_met_before = FALSE;
+            this->has_met_before = false;
         }
     }
 

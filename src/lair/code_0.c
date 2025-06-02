@@ -350,7 +350,7 @@ void func_803867A8(Actor *this) {
         this->unk1C[2] = this->position[2];
         this->position[1] -= 300.0f;
         
-        this->initialized = TRUE;
+        this->initialized = true;
         this->alpha_124_19 = 0;
 
         this->lifetime_value = this->yaw;
@@ -359,13 +359,13 @@ void func_803867A8(Actor *this) {
         return;
     }
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->unk158[0] = func_803866D8(0);
         this->unk158[1] = func_803866D8(1);
         if (volatileFlag_get(VOLATILE_FLAG_86_SANDCASTLE_SHOCKSPRING_JUMP_UNLOCKED)) {
             ability_unlock(ABILITY_D_SHOCK_JUMP);
-            fileProgressFlag_set(FILEPROG_C6_LAIR_JUMP_PAD_SWITCH_PRESSED, TRUE);
-            fileProgressFlag_set(FILEPROG_C7_LAIR_JUMP_PAD_ACTIVE, TRUE);
+            fileProgressFlag_set(FILEPROG_C6_LAIR_JUMP_PAD_SWITCH_PRESSED, true);
+            fileProgressFlag_set(FILEPROG_C7_LAIR_JUMP_PAD_ACTIVE, true);
         }
     }
     if ((this->unk1C[1] - 150.0f) <= this->position[1]) {
@@ -445,8 +445,8 @@ void func_80386D20(Actor *this)
 void func_80386D40(void)
 {
     func_802D68F0(0xC);
-    item_set(ITEM_6_HOURGLASS, TRUE);
-    mapSpecificFlags_set(1, TRUE);
+    item_set(ITEM_6_HOURGLASS, true);
+    mapSpecificFlags_set(1, true);
 }
 
 void func_80386D78(Actor *this) {
@@ -454,7 +454,7 @@ void func_80386D78(Actor *this) {
 
     if (!this->initialized) {
         func_802D3CE8(this);
-        this->initialized = TRUE;
+        this->initialized = true;
         this->unk1C[1] = this->position[1];
         this->position[1] -= 300.0f;
         this->scale = 0.0001f;
@@ -462,10 +462,10 @@ void func_80386D78(Actor *this) {
     }
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if (volatileFlag_get(VOLATILE_FLAG_8A_SANDCASTLE_FLIGHT_UNLOCKED)) {
             ability_unlock(ABILITY_9_FLIGHT);
-            mapSpecificFlags_set(0, TRUE);
+            mapSpecificFlags_set(0, true);
             this->lifetime_value = 0.0f;
             this->position[1] = this->unk1C[1];
             this->scale = 1.0f;
@@ -499,8 +499,8 @@ void func_80386D78(Actor *this) {
                 FUNC_8030E624(SFX_11_WOOD_BREAKING_1, 0.8f, 25000);
                 func_8030E6D4(SFX_B6_GLASS_BREAKING_1);
                 this->position[1] = this->unk1C[1] - 300.0f;
-                mapSpecificFlags_set(1, FALSE);
-                mapSpecificFlags_set(0, FALSE);
+                mapSpecificFlags_set(1, false);
+                mapSpecificFlags_set(0, false);
             }
         }
     } else if (mapSpecificFlags_get(0)) {
@@ -528,7 +528,7 @@ void func_803870DC(Actor *this) {
              || (D_80393468[this->unkF4_8 - 1] != 0 && volatileFlag_get(D_80393468[this->unkF4_8 - 1]));
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if (phi_v1) {
             this->alpha_124_19 = 0xFF;
         } else {
@@ -614,8 +614,8 @@ void func_803875F0(Actor * this)
         {
             this->unk1C_y = this->position_y;
             func_802BAFE4(0x2A);
-            fileProgressFlag_set(FILEPROG_1E_LAIR_GRATE_TO_BGS_PUZZLE_OPEN, TRUE);
-            this->volatile_initialized = TRUE;
+            fileProgressFlag_set(FILEPROG_1E_LAIR_GRATE_TO_BGS_PUZZLE_OPEN, true);
+            this->volatile_initialized = true;
             this->unk38_31 = 0x0C;
         }
     }
@@ -658,7 +658,7 @@ void func_80387730(Actor *this) {
 
     func_802D3D74(this);
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->alpha_124_19 = 0xFF;
         this->unk1C[1] = 0.0f;
         this->unk1C[2] = 3.5f;
@@ -711,7 +711,7 @@ void func_80387730(Actor *this) {
                     this->alpha_124_19 -= 7;
                 }
                 if (this->alpha_124_19 == 0) {
-                    fileProgressFlag_set(this->unkF4_8 + FILEPROG_39_CCW_OPEN, TRUE);
+                    fileProgressFlag_set(this->unkF4_8 + FILEPROG_39_CCW_OPEN, true);
                     marker_despawn(this->marker);
                     func_8028F918(0);
                     func_8028F66C(BS_INTR_35);
@@ -832,9 +832,9 @@ void func_80387F78(Actor *this, enum file_progress_e progress_flag)
         if (this->unk1C[0] != 0 && fileProgressFlag_get(FILEPROG_9B_LAIR_CC_WITCH_SWITCH_EYES_ACTIVE))
         {
             u32 flagState = fileProgressFlag_get(progress_flag);
-            fileProgressFlag_set(progress_flag, TRUE);
+            fileProgressFlag_set(progress_flag, true);
 
-            if (flagState == FALSE
+            if (flagState == false
                 && !jiggyscore_isSpawned(JIGGY_35_LAIR_CC_WITCH_SWITCH)
                 && fileProgressFlag_get(FILEPROG_9C_LAIR_CC_WITCH_SWITCH_LEFT_EYE_PRESSED)
                 && fileProgressFlag_get(FILEPROG_9D_LAIR_CC_WITCH_SWITCH_RIGHT_EYE_PRESSED))
@@ -864,7 +864,7 @@ void func_803880BC(Actor *this)
     {
         func_802D3CE8(this);
 
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
 
         this->unk1C[1] = this->position_y;
         this->position_y -= 51.f;
@@ -899,7 +899,7 @@ void func_803880BC(Actor *this)
         if (this->position_y >= this->unk1C[1])
         {
             this->position_y = this->unk1C[1];
-            fileProgressFlag_set(FILEPROG_9B_LAIR_CC_WITCH_SWITCH_EYES_ACTIVE, TRUE);
+            fileProgressFlag_set(FILEPROG_9B_LAIR_CC_WITCH_SWITCH_EYES_ACTIVE, true);
         }
 
         if (this->unk100 != NULL)
@@ -936,7 +936,7 @@ void func_803882B0(Actor *this)
     {
         func_802D3D74(this);
 
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
 
         if (fileProgressFlag_get(FILEPROG_48_FP_WITCH_SWITCH_ADVENT_DOOR_OPEN))
             this->pitch = 90.f;
@@ -961,17 +961,17 @@ void func_803882B0(Actor *this)
     if (this->pitch > 90.f)
     {
         this->pitch = 90.f;
-        fileProgressFlag_set(FILEPROG_48_FP_WITCH_SWITCH_ADVENT_DOOR_OPEN, TRUE);
+        fileProgressFlag_set(FILEPROG_48_FP_WITCH_SWITCH_ADVENT_DOOR_OPEN, true);
         func_802D48B8(this);
     }
 }
 
 void func_80388404(enum file_progress_e progress_flag, enum sfx_e sfx, f32 a2, s32 a3)
 {
-    if (fileProgressFlag_get(progress_flag) == FALSE)
+    if (fileProgressFlag_get(progress_flag) == false)
         func_8030E6A4(sfx, a2, a3);
 
-    fileProgressFlag_set(progress_flag, TRUE);
+    fileProgressFlag_set(progress_flag, true);
 }
 
 void func_80388450(Actor *actor1, Actor *actor2)
@@ -1016,69 +1016,69 @@ void func_80388524(Actor *this) {
             switch(this->modelCacheIndex){
                 case ACTOR_2E5_DOOR_OF_GRUNTY://L80388630
                     if (!fileProgressFlag_get(FILEPROG_E2_DOOR_OF_GRUNTY_OPEN) && func_8038EAE0(0xA)) {
-                        fileProgressFlag_set(FILEPROG_E2_DOOR_OF_GRUNTY_OPEN, TRUE);
+                        fileProgressFlag_set(FILEPROG_E2_DOOR_OF_GRUNTY_OPEN, true);
                     }
                     break;
 
                 case ACTOR_20E_MM_ENTRANCE_DOOR: //L80388660
                     if (!fileProgressFlag_get(FILEPROG_31_MM_OPEN) && func_8038EAE0(1)) {
-                        fileProgressFlag_set(FILEPROG_31_MM_OPEN, TRUE);
+                        fileProgressFlag_set(FILEPROG_31_MM_OPEN, true);
                     }
                     break;
 
                 case ACTOR_226_GV_ENTRANCE: //L80388690
                     if (!fileProgressFlag_get(FILEPROG_36_GV_OPEN) && func_8038EAE0(6)) {
-                        fileProgressFlag_set(FILEPROG_36_GV_OPEN, TRUE);
+                        fileProgressFlag_set(FILEPROG_36_GV_OPEN, true);
                     }
                     break;
 
                 case ACTOR_212_CC_ENTRANCE_BARS: //L803886C0
                     if (!fileProgressFlag_get(FILEPROG_33_CC_OPEN) && func_8038EAE0(3)) {
-                        fileProgressFlag_set(FILEPROG_33_CC_OPEN, TRUE);
+                        fileProgressFlag_set(FILEPROG_33_CC_OPEN, true);
                     }
                     break;
 
                 case ACTOR_211_TCC_ENTRANCE_CHEST_LID: //L803886F0
                     if (!fileProgressFlag_get(FILEPROG_32_TTC_OPEN) && func_8038EAE0(2)) {
-                        fileProgressFlag_set(FILEPROG_32_TTC_OPEN, TRUE);
+                        fileProgressFlag_set(FILEPROG_32_TTC_OPEN, true);
                     }
                     break;
 
                 case ACTOR_210_BGS_ENTRANCE_DOOR: //L80388720
                     if (!fileProgressFlag_get(FILEPROG_34_BGS_OPEN) && func_8038EAE0(4)) {
-                        fileProgressFlag_set(FILEPROG_34_BGS_OPEN, TRUE);
+                        fileProgressFlag_set(FILEPROG_34_BGS_OPEN, true);
                     }
                     break;
 
                 case ACTOR_20F_RBB_ENTRANCE_DOOR: //L80388750
                     if (!fileProgressFlag_get(FILEPROG_38_RBB_OPEN) && func_8038EAE0(8)) {
-                        fileProgressFlag_set(FILEPROG_38_RBB_OPEN, TRUE);
+                        fileProgressFlag_set(FILEPROG_38_RBB_OPEN, true);
                     }
                     break;
 
                 case ACTOR_228_MMM_ENTRANCE_DOOR: //L80388780
                     if (!fileProgressFlag_get(FILEPROG_37_MMM_OPEN) && func_8038EAE0(7)) {
-                        fileProgressFlag_set(FILEPROG_37_MMM_OPEN, TRUE);
+                        fileProgressFlag_set(FILEPROG_37_MMM_OPEN, true);
                     }
                     break;
 
                 case ACTOR_234_CCW_ENTRANCE_DOOR: //L803887B0
                     if (!fileProgressFlag_get(FILEPROG_39_CCW_OPEN) && func_8038EAE0(9)) {
-                        fileProgressFlag_set(FILEPROG_39_CCW_OPEN, TRUE);
+                        fileProgressFlag_set(FILEPROG_39_CCW_OPEN, true);
                     }
                     break;
 
                 case ACTOR_235_FP_ENTANCE_DOOR: //L803887E0
                     if (!fileProgressFlag_get(FILEPROG_35_FP_OPEN) && func_8038EAE0(5)) {
-                        fileProgressFlag_set(FILEPROG_35_FP_OPEN, TRUE);
+                        fileProgressFlag_set(FILEPROG_35_FP_OPEN, true);
                     }
                     break;
             }//L80388808
         }
-        this->initialized = TRUE;
+        this->initialized = true;
     }
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         switch(this->modelCacheIndex){
             case ACTOR_2E5_DOOR_OF_GRUNTY: //L80388880
                 if (fileProgressFlag_get(FILEPROG_E2_DOOR_OF_GRUNTY_OPEN) && (this->state == 0x19)) {
@@ -1275,7 +1275,7 @@ void func_80388524(Actor *this) {
                         lair_func_80388278(this);
                         marker_despawn(this->marker);
                         marker_despawn(sp28->marker);
-                        fileProgressFlag_set(FILEPROG_35_FP_OPEN, TRUE);
+                        fileProgressFlag_set(FILEPROG_35_FP_OPEN, true);
                         return;
                     }
                     func_80388450(this, sp28);
@@ -1293,7 +1293,7 @@ void func_80388FC8(Actor *this)
 
     if (!this->initialized)
     {
-        this->initialized = TRUE;
+        this->initialized = true;
 
         this->unk1C[1] = this->position_y;
         this->position_y -= 500.f;
@@ -1326,9 +1326,9 @@ void func_80388FC8(Actor *this)
                 if (1);  // oof
             }
 
-            fileProgressFlag_set(this->modelCacheIndex == 0x215 ? FILEPROG_1F_CC_LOBBY_PIPE_1_RAISED : FILEPROG_20_CC_LOBBY_PIPE_2_RAISED, TRUE);
+            fileProgressFlag_set(this->modelCacheIndex == 0x215 ? FILEPROG_1F_CC_LOBBY_PIPE_1_RAISED : FILEPROG_20_CC_LOBBY_PIPE_2_RAISED, true);
 
-            this->volatile_initialized = TRUE;
+            this->volatile_initialized = true;
             this->unk38_31 = 12;
         }
     }
@@ -1371,7 +1371,7 @@ void lair_func_80389204(Actor *this)
 
     if (!this->initialized)
     {
-        this->initialized = TRUE;
+        this->initialized = true;
 
         this->unk1C[1] = this->position_y;
         this->position_y -= 280.f;
@@ -1398,9 +1398,9 @@ void lair_func_80389204(Actor *this)
         if (mapSpecificFlags_get(2))
         {
             func_802BAFE4(0x2C);
-            fileProgressFlag_set(FILEPROG_21_CC_LOBBY_PIPE_3_RAISED, TRUE);
+            fileProgressFlag_set(FILEPROG_21_CC_LOBBY_PIPE_3_RAISED, true);
 
-            this->volatile_initialized = TRUE;
+            this->volatile_initialized = true;
             this->unk38_31 = 12;
         }
     }
@@ -1436,7 +1436,7 @@ void func_803893B8(Actor *this)
 
     if (!this->volatile_initialized)
     {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
 
         if (jiggyscore_isCollected(JIGGY_37_LAIR_BGS_WITCH_SWITCH))
         {
@@ -1472,7 +1472,7 @@ void lair_func_803894B0(Actor *this)
 
     if (!this->volatile_initialized)
     {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->unk1C[0] = 0;
 
         if (fileProgressFlag_get(FILEPROG_A1_STATUE_HAT_OPEN))
@@ -1489,7 +1489,7 @@ void lair_func_803894B0(Actor *this)
 
     if (--this->unk1C[0] == 0)
     {
-        fileProgressFlag_set(FILEPROG_A1_STATUE_HAT_OPEN, TRUE);
+        fileProgressFlag_set(FILEPROG_A1_STATUE_HAT_OPEN, true);
         timed_playSfx(0.5f, SFX_3F9_UNKNOWN, 1.f, 32000);
         FUNC_8030E624(SFX_114_BRICKWALL_BREAKING, 0.8f, 32000);
         func_802EE2E8(this, 0xB, 0x19, 0x000, 0.6f, 1.8f, 3.f);
@@ -1559,7 +1559,7 @@ void func_8038982C(Actor *this)
         func_802D3CE8(this);
         actor_collisionOff(this);
 
-        this->initialized = TRUE;
+        this->initialized = true;
 
         if (!fileProgressFlag_get(FILEPROG_9E_CRYPT_COFFIN_LID_OPEN))
             __spawnQueue_add_1((GenFunction_1)func_803897D4, reinterpret_cast(s32, this->marker));
@@ -1578,7 +1578,7 @@ void func_80389898(Actor *this)
             {
                 subaddie_set_state_forward(this, 0x13);
                 actor_playAnimationOnce(this);
-                fileProgressFlag_set(FILEPROG_9E_CRYPT_COFFIN_LID_OPEN, TRUE);
+                fileProgressFlag_set(FILEPROG_9E_CRYPT_COFFIN_LID_OPEN, true);
             }
 
             break;
@@ -1602,7 +1602,7 @@ void func_80389934(Actor *this)
         func_802D3CE8(this);
         actor_collisionOff(this);
 
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
 
         if (fileProgressFlag_get(FILEPROG_A2_GV_LOBBY_COFFIN_OPEN))
             subaddie_set_state_with_direction(this, 0x18, 0.999f, 1);
@@ -1617,7 +1617,7 @@ void func_80389934(Actor *this)
                 this->unk1C[0] = 25;
 
                 subaddie_set_state_forward(this, 0x16);
-                fileProgressFlag_set(FILEPROG_A2_GV_LOBBY_COFFIN_OPEN, TRUE);
+                fileProgressFlag_set(FILEPROG_A2_GV_LOBBY_COFFIN_OPEN, true);
             }
 
             break;
@@ -1727,7 +1727,7 @@ void func_80389D08(Actor *this)
     {
         func_802D3CE8(this);
 
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->lifetime_value = 0;
 
         if (fileProgressFlag_get(FILEPROG_A5_LAIR_CRYPT_GATE_OPEN))

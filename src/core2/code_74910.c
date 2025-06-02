@@ -171,7 +171,7 @@ bool func_802FBE04(void){
     struct8s * var_v1 = D_80381540[0];
 
     if(D_80369854 == 0){
-        return FALSE;
+        return false;
     }
     
     return ((var_v1->unk0 == 1) || (var_v1->unk0 == 2));

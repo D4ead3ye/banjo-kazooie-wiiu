@@ -77,8 +77,8 @@ void func_8038AA8C(Actor *this) {
     f32 sp40;
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
-        mapSpecificFlags_set(5, FALSE);
+        this->volatile_initialized = true;
+        mapSpecificFlags_set(5, false);
         if( (!fileProgressFlag_get(FILEPROG_E8_AUTMN_EYRIE_FED) || jiggyscore_isSpawned(JIGGY_49_CCW_EYRIE))
             && !volatileFlag_get(VOLATILE_FLAG_1F_IN_CHARACTER_PARADE)
         ) {

@@ -254,10 +254,10 @@ bool func_8030AF58(enum map_e arg0) {
 
     for(phi_v0 = &D_8036B810[1]; phi_v0->map_id != 0; phi_v0++) {
         if(phi_v0->map_id == arg0){
-            return TRUE;
+            return true;
         }
     }
-    return FALSE;
+    return false;
 }
 
 void func_8030AFA0(enum map_e arg0){

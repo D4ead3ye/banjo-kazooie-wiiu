@@ -84,9 +84,9 @@ static bool __chTreasurehunt_isActiveHitboxBeakBusterHitbox(void) {
             music_volume = 0x7FFF;
         }
         func_8025A6EC(comusic_id, music_volume);
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 static void __chTreasurehunt_spawnRedXForNextStep(void) {
@@ -186,8 +186,8 @@ static void __chTreasurehunt_updateFunc(Actor *this){
 
     if(!this->initialized){
         actor_collisionOff(this);
-        this->marker->collidable = FALSE;
-        this->initialized = TRUE;
+        this->marker->collidable = false;
+        this->initialized = true;
     }
 
     switch(this->state){

@@ -500,7 +500,7 @@ void gcPauseMenu_setState(enum gcpausemenu_state_e next_state) {
 
         case PAUSE_STATE_7_TOTALS_INIT:/* 8B3F4 80312384 44803000 */
             D_80383010.menu = PAUSE_MENU_1_TOTALS;
-            D_80383010.b_button_visible = TRUE;
+            D_80383010.b_button_visible = true;
             D_80383010.unk20 = D_80383010.unk28 = 0.0f;
             gcpausemenu_zoomboxes_free();
             gcpausemenu_zoomboxes_initTotalsMenu();
@@ -544,7 +544,7 @@ void gcPauseMenu_setState(enum gcpausemenu_state_e next_state) {
             D_80383010.zoombox_closing_count = 4;
 
             if (D_80383010.page != 12) {
-                D_80383010.b_button_visible = FALSE;
+                D_80383010.b_button_visible = false;
             }
 
             gcpausemenu_8031209C(D_8036C520, 4);
@@ -627,7 +627,7 @@ void gcPauseMenu_setState(enum gcpausemenu_state_e next_state) {
         case PAUSE_STATE_F_SNS_OPENING: /* 8B8FC 8031288C 3C128038 */
             D_80383010.unk8 = -0x10;
             D_80383010.unk6 = 0xff;
-            D_80383010.unk3_5 = D_80383010.sns_visible = TRUE;
+            D_80383010.unk3_5 = D_80383010.sns_visible = true;
             break;
 
         case PAUSE_STATE_10_SNS:
@@ -637,7 +637,7 @@ void gcPauseMenu_setState(enum gcpausemenu_state_e next_state) {
             D_80383010.unk3_5 = 1;
             D_80383010.sns_visible = 0;
             if (D_80383010.page == -1) {
-                D_80383010.b_button_visible = FALSE;
+                D_80383010.b_button_visible = false;
             }
             break;
 
@@ -648,11 +648,11 @@ void gcPauseMenu_setState(enum gcpausemenu_state_e next_state) {
             break;
 
         case PAUSE_STATE_13_EXIT_PAUSE: /* 8B9A8 80312938 3C128038 */
-            D_80383010.exit_pause = FALSE;
+            D_80383010.exit_pause = false;
             break;
 
         case PAUSE_STATE_14_EXIT_GAME: /* 8B9C0 80312950 3C128038 */
-            D_80383010.exit_pause = D_80383010.unk3_6 = FALSE;
+            D_80383010.exit_pause = D_80383010.unk3_6 = false;
             D_80383010.unkC = 0.0f;
             func_8025A430(-1, 0x7D0, 3);
             func_8025A2B0();
@@ -732,7 +732,7 @@ s32 gcpausemenu_initLargestPageIndex(void) {
 }
 
 bool gcpausemenu_initReturnToLair(void) {
-    return TRUE;
+    return true;
 }
 
 void gcpausemenu_init(void) {
@@ -832,7 +832,7 @@ void gcpausemenu_80312FD0(s32 arg0) {
             temp_v1 = D_8036C5F4[D_80383010.unk6];
             D_80383010.unk8 += temp_v1;
             if (D_80383010.unk6 == 0xC) {
-                D_80383010.unk3_5 = FALSE;
+                D_80383010.unk3_5 = false;
             }
         }
         else {
@@ -840,7 +840,7 @@ void gcpausemenu_80312FD0(s32 arg0) {
             temp_v1 = D_8036C5F4[D_80383010.unk6];
             D_80383010.unk8 -= temp_v1;
             if (D_80383010.unk6 == 0) {
-                D_80383010.unk3_5 = FALSE;
+                D_80383010.unk3_5 = false;
             }
         }
     }
@@ -880,14 +880,14 @@ void gcpausemenu_updateBButtonAndJoystickSprites(void) {
         if (D_80383010.unk3_4) {
             if (D_80383010.joystick_frame-- == 0) {
                 D_80383010.joystick_frame = 0;
-                D_80383010.unk3_4 = FALSE;
+                D_80383010.unk3_4 = false;
                 var_f0 = 0.066666666666666666;
             }
         }
         else {
             D_80383010.joystick_frame++;
             if (D_80383010.joystick_frame >= D_80383010.joystick_frame_count) {
-                D_80383010.unk3_4 = TRUE;
+                D_80383010.unk3_4 = true;
                 D_80383010.joystick_frame = D_80383010.joystick_frame_count - 1;
                 var_f0 = 0.05f;
             }
@@ -895,7 +895,7 @@ void gcpausemenu_updateBButtonAndJoystickSprites(void) {
         D_80383010.unk20 -= var_f0;
     }
     D_80383010.left_joystick_visible = BOOL(D_80383010.selection != 0);
-    D_80383010.right_joystick_visible = (gcpausemenu_getMaxPage() == D_80383010.selection) ? FALSE : TRUE;
+    D_80383010.right_joystick_visible = (gcpausemenu_getMaxPage() == D_80383010.selection) ? false : true;
     D_80383010.unk28 += time_getDelta();
 
     var_f12 = (D_80383010.unk3_0) ? 0.04 : 0.04;
@@ -903,14 +903,14 @@ void gcpausemenu_updateBButtonAndJoystickSprites(void) {
         if (D_80383010.unk3_0) {
             if (D_80383010.b_button_frame-- <= 0) {
                 D_80383010.b_button_frame = 0;
-                D_80383010.unk3_0 = FALSE;
+                D_80383010.unk3_0 = false;
                 var_f12 = 0.04;
             }
         }
         else {
             D_80383010.b_button_frame++;
             if (D_80383010.b_button_frame >= D_80383010.b_button_frame_count) {
-                D_80383010.unk3_0 = TRUE;
+                D_80383010.unk3_0 = true;
                 D_80383010.b_button_frame = D_80383010.b_button_frame_count - 1;
                 var_f12 = 0.04;
             }
@@ -1008,12 +1008,12 @@ s32 gcPauseMenu_update(void) {
 
                 if (0.75 < joystick[JOYSTICK_Y]) {
                     if ((s32) D_80383010.selection > 0) {
-                        gczoombox_highlight(D_80383010.zoombox[D_80383010.selection], FALSE);
+                        gczoombox_highlight(D_80383010.zoombox[D_80383010.selection], false);
                         D_80383010.selection--;
                         if (D_80383010.return_to_lair_disabled && D_80383010.selection == PAUSE_SELECTION_1_EXIT_TO_WITCH_S_LAIR) {
                             D_80383010.selection--;
                         }
-                        gczoombox_highlight(D_80383010.zoombox[D_80383010.selection], TRUE);
+                        gczoombox_highlight(D_80383010.zoombox[D_80383010.selection], true);
                         gczoombox_func_803160A8(D_80383010.zoombox[D_80383010.selection]);
                         D_80383010.unk3_6 = 0;
                         D_80383010.unk7 = 6;
@@ -1057,7 +1057,7 @@ s32 gcPauseMenu_update(void) {
         case PAUSE_STATE_4_SELECTION_PROCESSING:
             switch (D_80383010.selection) {
                 case PAUSE_SELECTION_0_RETURN_TO_GAME://L803138FC
-                    D_80383010.exit_pause = TRUE;
+                    D_80383010.exit_pause = true;
                     break;
 
                 case PAUSE_SELECTION_1_EXIT_TO_WITCH_S_LAIR://L80313908 //return to lair
@@ -1177,8 +1177,8 @@ s32 gcPauseMenu_update(void) {
             gcpausemenu_updateBButtonAndJoystickSprites();
 
             if (D_80383010.page != 12) {
-                D_80383010.left_joystick_visible = FALSE;
-                D_80383010.right_joystick_visible = FALSE;
+                D_80383010.left_joystick_visible = false;
+                D_80383010.right_joystick_visible = false;
             }//L80313D50
 
             if (!D_80383010.zoombox_closing_count) {
@@ -1196,7 +1196,7 @@ s32 gcPauseMenu_update(void) {
 
         case PAUSE_STATE_B_TOTALS_DISPOSE:
             if (D_80383010.menu == PAUSE_MENU_3_EXIT) {
-                D_80383010.exit_pause = TRUE;
+                D_80383010.exit_pause = true;
             }
             else {
                 gcPauseMenu_setState(D_80383010.page == 12 ? PAUSE_STATE_E_SNS_INIT : PAUSE_STATE_0_MENU_INIT);
@@ -1259,8 +1259,8 @@ s32 gcPauseMenu_update(void) {
             gcpausemenu_80312FD0(-1);
             gcpausemenu_updateBButtonAndJoystickSprites();
             if (D_80383010.page == -1) {
-                D_80383010.left_joystick_visible = FALSE;
-                D_80383010.right_joystick_visible = FALSE;
+                D_80383010.left_joystick_visible = false;
+                D_80383010.right_joystick_visible = false;
             }
             if (D_80383010.sns_alpha == 0) {
                 gcPauseMenu_setState(PAUSE_STATE_12_SNS_DISPOSE);
@@ -1269,7 +1269,7 @@ s32 gcPauseMenu_update(void) {
 
         case PAUSE_STATE_12_SNS_DISPOSE:
             if (D_80383010.menu == PAUSE_MENU_3_EXIT) {
-                D_80383010.exit_pause = TRUE;
+                D_80383010.exit_pause = true;
             }
             else {
                 gcPauseMenu_setState((D_80383010.page != -1) ? PAUSE_STATE_7_TOTALS_INIT : PAUSE_STATE_0_MENU_INIT);
@@ -1354,14 +1354,14 @@ void gcpausemenu_draw(Gfx **gfx, Mtx **mtx, Vtx **vtx) {
         if (!D_8036C620) {
             func_803151D0(gfx, mtx, vtx);
         }
-        D_8036C620 = TRUE;
+        D_8036C620 = true;
         return;
     }
 
     if (D_8036C620) {
         func_8033B61C();
         func_80315084(gfx, mtx, vtx);
-        D_8036C620 = FALSE;
+        D_8036C620 = false;
     }
     else {
         func_80315110(gfx, mtx, vtx);
@@ -1498,13 +1498,13 @@ void gcpausemenu_draw(Gfx **gfx, Mtx **mtx, Vtx **vtx) {
         }
     }
 
-    if (D_80383010.sns_visible != FALSE) {
+    if (D_80383010.sns_visible != false) {
         if (D_80383010.sns_alpha < 0xFF) {
             D_80383010.sns_alpha = (D_80383010.sns_alpha + 0xC < 0xFF) ? D_80383010.sns_alpha + 0xC : 0xFF;
         }
     }
 
-    if (D_80383010.sns_visible == FALSE) {
+    if (D_80383010.sns_visible == false) {
         if (D_80383010.sns_alpha > 0) {
             D_80383010.sns_alpha = (D_80383010.sns_alpha - 0xC > 0) ? D_80383010.sns_alpha - 0xC : 0;
         }
@@ -1534,7 +1534,7 @@ void gcpausemenu_returnToLair(void) {
     s32 level = level_get();
 
     if (0 < level && level < LEVEL_C_BOSS && D_8036C560[level - 1].map != -1) {
-        volatileFlag_set(VOLATILE_FLAG_16, TRUE);
+        volatileFlag_set(VOLATILE_FLAG_16, true);
         func_802E4078(D_8036C560[level - 1].map, D_8036C560[level - 1].exit, 1);
     }
 }

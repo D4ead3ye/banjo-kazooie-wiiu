@@ -41,7 +41,7 @@ bool func_80357C30(Actor *this) {
 
     local = (ActorLocal_core2_D0CA0 *)&this->local;
     if (!this->marker->unk14_21) {
-        return TRUE;
+        return true;
     }
     ml_vec3f_interpolate_fast(sp20, local->unk8, local->unk18, func_802575BC(local->unk4 + 0.05));
     sp20[1] += 60.0f;
@@ -161,8 +161,8 @@ void func_80357F0C(Actor *this, s32 next_state) {
     }
     if (this->state == 6) {
         this->unk138_27 = 1;
-        this->marker->collidable = FALSE;
-        this->unk10_1 = FALSE;
+        this->marker->collidable = false;
+        this->unk10_1 = false;
         FUNC_8030E624(SFX_1F_HITTING_AN_ENEMY_3, 1.2f, 32200);
         skeletalAnim_set(this->unk148, 0x23D, 0.3f, 0.45f);
         skeletalAnim_setBehavior(this->unk148, SKELETAL_ANIM_1_LOOP);
@@ -288,7 +288,7 @@ void func_80358684(Actor *this) {
     next_state = 0;
     sp88 = time_getDelta();
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->marker->actorFreeFunc = func_80358490;
         local->unk38 = 0;
         local->unk39 = 0;

@@ -60,8 +60,8 @@ void func_8038B19C(Actor *this) {
     tick = time_getDelta();
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
-        this->has_met_before = FALSE;
+        this->volatile_initialized = true;
+        this->has_met_before = false;
         func_8038B0F0(this, 1);
     }
 
@@ -89,7 +89,7 @@ void func_8038B19C(Actor *this) {
         }
     }
     if (!this->has_met_before && func_803292E0(this)) {
-        this->has_met_before = TRUE;
+        this->has_met_before = true;
         gcdialog_showText(0xCC8, 0, NULL, NULL, NULL, NULL);
     }
     func_8028E668(this->position, 300.0f, -50.0f, 120.0f);

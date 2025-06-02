@@ -17,7 +17,7 @@ f32 D_8037DAEC;
 
 /* .code */
 void ncDynamicCam11_init(void){
-    D_8037DAE5 = TRUE;
+    D_8037DAE5 = true;
     func_802C0150(1);
 }
 

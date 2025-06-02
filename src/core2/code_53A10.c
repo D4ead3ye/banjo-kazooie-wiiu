@@ -59,7 +59,7 @@ void func_802DAA14(Actor *this){
 
     if(!this->initialized){
         this->lifetime_value = 0.5f;
-        this->initialized = TRUE;
+        this->initialized = true;
     }
 
     if(0.0f < this->lifetime_value){
@@ -79,6 +79,6 @@ void func_802DAA14(Actor *this){
             text_id = tmp;
         }
         gcdialog_showText(text_id, 4, NULL, this->marker, func_802DA9A0, NULL);
-        this->has_met_before = TRUE;
+        this->has_met_before = true;
     }
 }

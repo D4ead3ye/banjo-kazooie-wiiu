@@ -37,7 +37,7 @@ Actor *func_803892D0(ActorMarker *this_marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
 
 void func_8038938C(Actor *this){
     if(!this->initialized){
-        this->initialized = TRUE;
+        this->initialized = true;
         this->unk124_11 = 3;
         this->unk1C[2] = 1.0f;
         this->velocity[0] = 0.0f;

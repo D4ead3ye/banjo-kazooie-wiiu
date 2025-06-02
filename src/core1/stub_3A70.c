@@ -26,7 +26,7 @@ void func_80241490(Gfx **gfx, Vtx **vtx, s32 arg2[3], s32 arg3[3], s32 arg4[3], 
 
     gSPDisplayList((*gfx)++, sGfxSublist);
 
-    if (cull_front != FALSE) {
+    if (cull_front != false) {
         gSPSetGeometryMode((*gfx)++, G_ZBUFFER | G_CULL_BACK);
     } else {
         gSPSetGeometryMode((*gfx)++, G_ZBUFFER | G_CULL_FRONT);

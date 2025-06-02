@@ -82,7 +82,7 @@ void chBossJinjoBase_update(Actor *this) {
     marker_loadModelBin(this->marker);
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker_setCollisionScripts(this->marker, NULL, chBossJinjoBase_getHitByEgg, NULL);
         marker_setFreeMethod(this->marker, chBossJinjoBase_free);
         this->marker->propPtr->unk8_3 = 1;

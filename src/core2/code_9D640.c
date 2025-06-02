@@ -67,7 +67,7 @@ s32 func_803245D0(enum map_e map_id, s32 arg1){
             return D_8036E4D8[i].unk4;
         }
     }
-    return TRUE;
+    return true;
 }
 
 s32 func_80324624(enum map_e map_id, s32 arg1){
@@ -84,7 +84,7 @@ s32 func_80324624(enum map_e map_id, s32 arg1){
             return D_8036E420[i].unk2[sub_indx];
         }
     }
-    return TRUE;
+    return true;
 }
 
 s32 func_803246B4(enum map_e map_id, s32 arg1){

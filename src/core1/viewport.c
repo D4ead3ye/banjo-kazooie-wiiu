@@ -20,8 +20,8 @@ f32 sViewportUnused1; // debug?
 f32 sViewportFrustumPlanes[4][4];
 Vp sViewportStack[VIEWPORT_STACK_SIZE];
 int sViewportUnused2; // debug?
-MtxF sViewportMatrix;
-MtxF sViewportDefaultMatrix;
+BKMtxF sViewportMatrix;
+BKMtxF sViewportDefaultMatrix;
 s32 sViewportStackIndex;
 
 void viewport_moveAlongZAxis(f32 offset) {
@@ -275,7 +275,7 @@ bool viewport_isBoundingBoxInFrustum(f32 min[3], f32 max[3]) {
         ((sViewportFrustumPlanes[0][0] * max[0] + sViewportFrustumPlanes[0][1] * min[1] + sViewportFrustumPlanes[0][2] * max[2] + sViewportFrustumPlanes[0][3]) >= 0.0f) &&
         ((sViewportFrustumPlanes[0][0] * max[0] + sViewportFrustumPlanes[0][1] * max[1] + sViewportFrustumPlanes[0][2] * min[2] + sViewportFrustumPlanes[0][3]) >= 0.0f) &&
         ((sViewportFrustumPlanes[0][0] * max[0] + sViewportFrustumPlanes[0][1] * max[1] + sViewportFrustumPlanes[0][2] * max[2] + sViewportFrustumPlanes[0][3]) >= 0.0f))
-        return FALSE;
+        return false;
 
     if (((sViewportFrustumPlanes[1][0] * min[0] + sViewportFrustumPlanes[1][1] * min[1] + sViewportFrustumPlanes[1][2] * min[2] + sViewportFrustumPlanes[1][3]) >= 0.0f) &&
         ((sViewportFrustumPlanes[1][0] * min[0] + sViewportFrustumPlanes[1][1] * min[1] + sViewportFrustumPlanes[1][2] * max[2] + sViewportFrustumPlanes[1][3]) >= 0.0f) &&
@@ -285,7 +285,7 @@ bool viewport_isBoundingBoxInFrustum(f32 min[3], f32 max[3]) {
         ((sViewportFrustumPlanes[1][0] * max[0] + sViewportFrustumPlanes[1][1] * min[1] + sViewportFrustumPlanes[1][2] * max[2] + sViewportFrustumPlanes[1][3]) >= 0.0f) &&
         ((sViewportFrustumPlanes[1][0] * max[0] + sViewportFrustumPlanes[1][1] * max[1] + sViewportFrustumPlanes[1][2] * min[2] + sViewportFrustumPlanes[1][3]) >= 0.0f) &&
         ((sViewportFrustumPlanes[1][0] * max[0] + sViewportFrustumPlanes[1][1] * max[1] + sViewportFrustumPlanes[1][2] * max[2] + sViewportFrustumPlanes[1][3]) >= 0.0f))
-        return FALSE;
+        return false;
 
     if (((sViewportFrustumPlanes[2][0] * min[0] + sViewportFrustumPlanes[2][1] * min[1] + sViewportFrustumPlanes[2][2] * min[2] + sViewportFrustumPlanes[2][3]) >= 0.0f) &&
         ((sViewportFrustumPlanes[2][0] * min[0] + sViewportFrustumPlanes[2][1] * min[1] + sViewportFrustumPlanes[2][2] * max[2] + sViewportFrustumPlanes[2][3]) >= 0.0f) &&
@@ -295,7 +295,7 @@ bool viewport_isBoundingBoxInFrustum(f32 min[3], f32 max[3]) {
         ((sViewportFrustumPlanes[2][0] * max[0] + sViewportFrustumPlanes[2][1] * min[1] + sViewportFrustumPlanes[2][2] * max[2] + sViewportFrustumPlanes[2][3]) >= 0.0f) &&
         ((sViewportFrustumPlanes[2][0] * max[0] + sViewportFrustumPlanes[2][1] * max[1] + sViewportFrustumPlanes[2][2] * min[2] + sViewportFrustumPlanes[2][3]) >= 0.0f) &&
         ((sViewportFrustumPlanes[2][0] * max[0] + sViewportFrustumPlanes[2][1] * max[1] + sViewportFrustumPlanes[2][2] * max[2] + sViewportFrustumPlanes[2][3]) >= 0.0f))
-        return FALSE;
+        return false;
 
     if (((sViewportFrustumPlanes[3][0] * min[0] + sViewportFrustumPlanes[3][1] * min[1] + sViewportFrustumPlanes[3][2] * min[2] + sViewportFrustumPlanes[3][3]) >= 0.0f) &&
         ((sViewportFrustumPlanes[3][0] * min[0] + sViewportFrustumPlanes[3][1] * min[1] + sViewportFrustumPlanes[3][2] * max[2] + sViewportFrustumPlanes[3][3]) >= 0.0f) &&
@@ -305,9 +305,9 @@ bool viewport_isBoundingBoxInFrustum(f32 min[3], f32 max[3]) {
         ((sViewportFrustumPlanes[3][0] * max[0] + sViewportFrustumPlanes[3][1] * min[1] + sViewportFrustumPlanes[3][2] * max[2] + sViewportFrustumPlanes[3][3]) >= 0.0f) &&
         ((sViewportFrustumPlanes[3][0] * max[0] + sViewportFrustumPlanes[3][1] * max[1] + sViewportFrustumPlanes[3][2] * min[2] + sViewportFrustumPlanes[3][3]) >= 0.0f) &&
         ((sViewportFrustumPlanes[3][0] * max[0] + sViewportFrustumPlanes[3][1] * max[1] + sViewportFrustumPlanes[3][2] * max[2] + sViewportFrustumPlanes[3][3]) >= 0.0f))
-        return FALSE;
+        return false;
 
-    return TRUE;
+    return true;
 }
 
 bool viewport_cube_isInFrustum(Cube *cube) {
@@ -331,7 +331,7 @@ bool viewport_cube_isInFrustum2(Cube *cube) {
     f32 rel_pos[3];
 
     if (cube->x == -16) {
-        return TRUE;
+        return true;
     }
 
     rel_pos[0] = (f32) ((cube->x * 1000) + 500) - sViewportPosition[0];
@@ -339,7 +339,7 @@ bool viewport_cube_isInFrustum2(Cube *cube) {
     rel_pos[2] = (f32) ((cube->z * 1000) + 500) - sViewportPosition[2];
 
     if (LENGTH_SQ_VEC3F(rel_pos) > 1.6e7f) {
-        return FALSE;
+        return false;
     }
 
     min[0] = (f32) ((cube->x * 1000) - 150);
@@ -364,11 +364,11 @@ bool viewport_func_8024DB50(f32 pos[3], f32 distance) {
 
     for(i = 0; i < 4; i++) {
         if(distance <= ml_vec3f_dot_product(delta, sViewportFrustumPlanes[i])) {
-            return FALSE;
+            return false;
         }
     }
 
-    return TRUE;
+    return true;
 }
 
 bool viewport_isPointOutsideFrustum_3f(f32 x, f32 y, f32 z) {
@@ -376,9 +376,9 @@ bool viewport_isPointOutsideFrustum_3f(f32 x, f32 y, f32 z) {
         (sViewportFrustumPlanes[1][0] * x + sViewportFrustumPlanes[1][1] * y + sViewportFrustumPlanes[1][2] * z + sViewportFrustumPlanes[1][3] <= 0.0f) &&
         (sViewportFrustumPlanes[2][0] * x + sViewportFrustumPlanes[2][1] * y + sViewportFrustumPlanes[2][2] * z + sViewportFrustumPlanes[2][3] <= 0.0f) &&
         (sViewportFrustumPlanes[3][0] * x + sViewportFrustumPlanes[3][1] * y + sViewportFrustumPlanes[3][2] * z + sViewportFrustumPlanes[3][3] <= 0.0f))
-        return TRUE;
+        return true;
 
-    return FALSE;
+    return false;
 }
 
 bool viewport_isPointOutsideFrustum_vec3f(f32 arg0[3]) {
@@ -456,7 +456,7 @@ f32 sViewportBackupPosition[3];
 f32 sViewportBackupRotation[3];
 f32 sViewportBackupFrustumPlanes[4][4];
 f32 sViewportBackupLookVector[3];
-MtxF sViewportBackupMatrix;
+BKMtxF sViewportBackupMatrix;
 
 // ??
 bool viewport_func_8024E030(f32 pos[3], f32 *arg1)
@@ -476,7 +476,7 @@ bool viewport_func_8024E030(f32 pos[3], f32 *arg1)
     ml_vec3f_pitch_rotate_copy(delta, delta, -sViewportRotation[0]);
 
     if ((-sViewportNear) <= delta[2]) {
-        return FALSE;
+        return false;
     }
 
     temp_f2 = gu_sqrtf((delta[1] * delta[1]) + (delta[2] * delta[2])) * sinf(fovy_radians);
@@ -486,14 +486,14 @@ bool viewport_func_8024E030(f32 pos[3], f32 *arg1)
     arg1[1] = (f32) ((1 - (delta[1] / temp_f2)) * (((f32) gFramebufferHeight) / 2));
 
     if ((arg1[0] < (-((f32) gFramebufferWidth))) || ((((f32) gFramebufferWidth) * 2) < arg1[0])) {
-        return FALSE;
+        return false;
     }
 
     if ((arg1[1] < (-((f32) gFramebufferHeight))) || ((((f32) gFramebufferHeight) * 2) < arg1[1])) {
-        return FALSE;
+        return false;
     }
 
-    return TRUE;
+    return true;
 }
 
 void viewport_backupState(void) {

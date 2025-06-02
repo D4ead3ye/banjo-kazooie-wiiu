@@ -37,12 +37,12 @@ void func_803216D0(enum map_e map){
         levelSpecificFlags_clear();
         bsStoredState_clearTimers();
         func_803219A8();
-        if( volatileFlag_getAndSet(VOLATILE_FLAG_17, FALSE) 
+        if( volatileFlag_getAndSet(VOLATILE_FLAG_17, false) 
             && getGameMode() != 0
             && D_80383300.level != LEVEL_D_CUTSCENE
             && map != MAP_91_FILE_SELECT
         ){
-            volatileFlag_set(VOLATILE_FLAG_18, TRUE);
+            volatileFlag_set(VOLATILE_FLAG_18, true);
         }
 
         if(D_80383300.level == LEVEL_9_RUSTY_BUCKET_BAY){

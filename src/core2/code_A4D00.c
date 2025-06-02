@@ -138,13 +138,13 @@ bool func_8032BD88(Actor *arg0, f32 arg1[3], s32 arg2, s32 arg3) {
     sp284[1] = arg1[1] - arg0->position[1];
     sp284[2] = arg1[2] - arg0->position[2];
     if (&func_8032C4AC == D_8036E5D0[arg2][1]) {
-        sp29C = TRUE;
+        sp29C = true;
         var_f24 = var_f24 * 0.6;
         var_f22 = MAX(arg0->marker->unk38[1], var_f24 * 1.25);
     }
     else {
         if (!spBC[i].unk44) {}
-        sp29C = FALSE;
+        sp29C = false;
         var_f24 = var_f24 * 0.5;
         var_f22 = arg0->marker->unk38[1];
     }
@@ -223,7 +223,7 @@ bool func_8032BD88(Actor *arg0, f32 arg1[3], s32 arg2, s32 arg3) {
 
 bool func_8032C280(Actor *arg0, f32 arg1[3], s32 arg2, s32 arg3) {
     if ((arg0->unk10_25 != 0) && !func_80307390(arg0->unk10_25 - 1, arg0->unk10_18 - 1)) {
-        return FALSE;
+        return false;
     }
     return func_8032BD88(arg0, arg1, arg2, arg3);
 }
@@ -243,7 +243,7 @@ bool func_8032C2F0(Actor *arg0, f32 arg1[3], s32 arg2, s32 arg3) {
     arg0->position[0] += sp60[0];
     arg0->position[1] += sp60[1];
     arg0->position[2] += sp60[2];
-    return FALSE;
+    return false;
 }
 
 bool func_8032C404(Actor *arg0, f32 arg1[3], s32 arg2, s32 arg3) {
@@ -256,7 +256,7 @@ bool func_8032C404(Actor *arg0, f32 arg1[3], s32 arg2, s32 arg3) {
     arg0->position[0] += sp1C[0];
     arg0->position[1] += sp1C[1];
     arg0->position[2] += sp1C[2];
-    return FALSE;
+    return false;
 }
 
 bool func_8032C4AC(Actor *arg0, f32 arg1[3], s32 arg2, s32 arg3) {
@@ -290,7 +290,7 @@ bool func_8032C4AC(Actor *arg0, f32 arg1[3], s32 arg2, s32 arg3) {
             arg0->position[1] = MAX(-100000.0f, arg0->position[1] + arg0->unk170);
         }
     }
-    return FALSE;
+    return false;
 }
 
 bool func_8032C660(Actor *arg0, f32 arg1[3], s32 arg2, s32 arg3) {
@@ -315,9 +315,9 @@ bool func_8032C6E0(Actor *actor, f32 arg1[3], s32 arg2, s32 arg3) {
         actor->position[0] = arg1[0];
         actor->position[1] = arg1[1];
         actor->position[2] = arg1[2];
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 bool func_8032C79C(Actor *arg0, f32 arg1[3], s32 arg2, s32 arg3) {
@@ -329,10 +329,10 @@ bool func_8032C79C(Actor *arg0, f32 arg1[3], s32 arg2, s32 arg3) {
             arg0->position[0] = arg1[0];
             arg0->position[1] = arg1[1];
             arg0->position[2] = arg1[2];
-            return TRUE;
+            return true;
         }
         arg0->unk10_18 = temp_v0 + 1;
-        return FALSE;
+        return false;
     }
     return func_8032C6E0(arg0, arg1, arg2, arg3);
 }
@@ -345,7 +345,7 @@ bool func_8032C850(Actor *actor, f32 arg1[3], s32 arg2, s32 arg3, bool nonactor)
     temp_f0 = func_8033229C(actor->marker);
     stored_collidability = actor->marker->collidable;
     D_803833D0 = NULL;
-    actor->marker->collidable = TRUE;
+    actor->marker->collidable = true;
     func_80320ED8(actor->marker, temp_f0 / 2, 2);
     actor->marker->collidable = stored_collidability;
     for (var_v1 = func_8032F528(); var_v1 != NULL; var_v1 = func_8032F528()) {
@@ -355,10 +355,10 @@ bool func_8032C850(Actor *actor, f32 arg1[3], s32 arg2, s32 arg3, bool nonactor)
             actor->position[1] = (f32) arg1[1];
             actor->position[2] = (f32) arg1[2];
             while (func_8032F528() != NULL) {}
-            return TRUE;
+            return true;
         }
     }
-    return FALSE;
+    return false;
 }
 
 bool func_8032C99C(Actor *actor, f32 arg1[3], s32 arg2, s32 arg3) {

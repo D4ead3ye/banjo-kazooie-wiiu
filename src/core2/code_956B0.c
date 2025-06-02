@@ -32,9 +32,9 @@ u8 D_80383190;
 // func_8031C640
 bool cutscene_skipIntroCutsceneCheck(void) {
     if ((func_8024E698(0) == 1) && (gameFile_anyNonEmpty() != 0)) {
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 // func_8031C688
@@ -43,9 +43,9 @@ bool cutscene_skipEnterLairCutsceneCheck(void) {
         && ((D_8037DCCE[0] != 0) 
             || (D_8037DCCE[1] != 0) 
             || (D_8037DCCE[2] != 0))) {
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 
@@ -58,7 +58,7 @@ bool cutscene_skipGameOverCutsceneCheck(void) {
     }
     if ((sp24 == 1) && fileProgressFlag_get(FILEPROG_E1_UNKNOWN) && !gctransition_8030BDC0()) {
         if (!mapSpecificFlags_get(0xC)) {
-            mapSpecificFlags_set(0xC, TRUE);
+            mapSpecificFlags_set(0xC, true);
             func_802DC528(0, 0);
             timedFunc_set_2(11.0f, (GenFunction_2)func_802DC560, 0, 0);
             timedFunc_set_3(12.0f, (GenFunction_3)func_802E4078, MAP_1F_CS_START_RAREWARE, 0, 1);
@@ -66,12 +66,12 @@ bool cutscene_skipGameOverCutsceneCheck(void) {
             timedFuncQueue_flush();
         }
     }
-    return FALSE;
+    return false;
 }
 
 bool cutscene_skipBeachCutsceneCheck(void){
     func_803219F4(1);
-    return FALSE;
+    return false;
 }
 
 //checks is a cutscene can be inturrupted and performs take me there
@@ -126,7 +126,7 @@ void func_8031CB50(enum map_e map_id, s32 exit_id, s32 arg2) {
         if ((func_803226E8(map_id) != sp1C) && (func_80322914() == 0)) {
             func_8025A388(0, 0x4E2);
             func_8025AB00();
-            core1_ce60_incOrDecCounter(FALSE);
+            core1_ce60_incOrDecCounter(false);
         }
         if (func_802E4A08()) {
             func_802E40D0(map_id, exit_id);

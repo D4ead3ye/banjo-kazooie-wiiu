@@ -86,11 +86,11 @@ u8 func_8033FA84(void){
             ml_vec3f_clear(D_80385000[i].position);
             ml_vec3f_clear(D_80385000[i].rotation);
             D_80385000[i].frame_28_31 = 0;
-            D_80385000[i].unk28_13 = TRUE;
+            D_80385000[i].unk28_13 = true;
             D_80385000[i].unk28_23 = 0;
             D_80385000[i].unk28_21 = 0xb;
             D_80385000[i].sprite_0 = NULL;
-            D_80385000[i].unk28_12 = TRUE;
+            D_80385000[i].unk28_12 = true;
             D_80385000[i].unk20[0] = 100;
             D_80385000[i].unk20[1] = 100;
             D_80385000[i].color[0] = 0xff;

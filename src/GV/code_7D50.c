@@ -23,5 +23,5 @@ s32 func_8038E184(void){
 }
 
 void func_8038E18C(void){
-    GV_D_80391AB0.unk8 = TRUE;
+    GV_D_80391AB0.unk8 = true;
 }

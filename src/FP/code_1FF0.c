@@ -45,13 +45,13 @@ void func_803884F4(ActorMarker *this_marker, ActorMarker *other_marker){
 
 void func_80388584(Actor *this){
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if(jiggyscore_isCollected(JIGGY_2C_FP_BOGGY_3)){
             marker_despawn(this->marker);
             return;
         }
         marker_setCollisionScripts(this->marker, NULL, func_803884F4, NULL);
-        this->marker->propPtr->unk8_3 = FALSE;
+        this->marker->propPtr->unk8_3 = false;
         func_803289EC(this, randf(), 1);
         this->unk124_6 = 0;
         if(this->unk38_31 == 0){
@@ -61,7 +61,7 @@ void func_80388584(Actor *this){
     }//L8038863C
 
     if((this->velocity[0] == 0.0f || this->velocity[1] != 0.0f)){//L8038866C
-        this->marker->collidable = FALSE;
+        this->marker->collidable = false;
         if(this->velocity[0] != 0.0f){
 
         }
@@ -72,8 +72,8 @@ void func_80388584(Actor *this){
     else{//L80388694
         if(!func_80329530(this, 2000)&& !maSlolam_WithinRadiusOfBoggy(this->position, 2000))
             return;
-        this->marker->collidable = TRUE;
-        this->unk124_6 = TRUE;
+        this->marker->collidable = true;
+        this->unk124_6 = true;
     }
     func_8028E668(this->position, 200.0f, -10.0f, 30.0f);
     if(this->state == 2){

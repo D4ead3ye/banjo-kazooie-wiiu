@@ -73,7 +73,7 @@ void fxhealthscore_draw(enum item_e item_id, struct8s *arg1, Gfx **gfx, Mtx **mt
     f32 f18;
     f32 f14;
     f32 f20;
-    s32 is_red_health_initialized = FALSE;
+    s32 is_red_health_initialized = false;
     s32 s6;
 
     if (gSpriteHealth == NULL) {
@@ -99,7 +99,7 @@ void fxhealthscore_draw(enum item_e item_id, struct8s *arg1, Gfx **gfx, Mtx **mt
             if (0 < (gHealth - 8.0f) && (gHealth - 8.0f) > i) {
                 if (!is_red_health_initialized) {
                     func_80347FC0(gfx, gSpriteRedHealth, 0, 0, 0, 0, 0, 2, 2, &honeycomb_width, &honeycomb_height);
-                    is_red_health_initialized = TRUE;
+                    is_red_health_initialized = true;
                 }
             }//L80300F38
 
@@ -138,7 +138,7 @@ void fxhealthscore_draw(enum item_e item_id, struct8s *arg1, Gfx **gfx, Mtx **mt
 
 bool func_803012B8(f32 arg0, s32 arg1, s32 arg2){
     if(arg1 == 0)
-        return TRUE;
+        return true;
     
     return (arg0 < D_80381F08[arg1 - 1]);
 }

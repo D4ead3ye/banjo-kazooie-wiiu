@@ -72,8 +72,8 @@ void chChoirTurtle_update(Actor *this) {
 
     local = (ActorLocal_ChoirTurtle *)&this->local;
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = true;
         marker_setCollisionScripts(this->marker, NULL, func_803895D0, NULL);
         local->unk0 = 1;
         local->unkC = 0;

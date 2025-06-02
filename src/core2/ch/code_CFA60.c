@@ -90,7 +90,7 @@ void func_80356CCC(Actor *this){
     
     sp50 = time_getDelta();
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->unk16C_0 = 1;
         marker_setCollisionScripts(this->marker, NULL, func_80356BF4, func_80356C24);
         func_803569F0(this, (this->state < 5)? 1 : 6);

@@ -18,7 +18,7 @@ CameraNode sNcCameraNodeList[NC_CAMERA_NODE_LIST_CAPACITY];
 void ncCameraNodeList_init() {
     int i;
     for(i = 0; i< NC_CAMERA_NODE_LIST_CAPACITY; i++) {
-        sNcCameraNodeList[i].valid = FALSE;
+        sNcCameraNodeList[i].valid = false;
     }
 }
 
@@ -32,7 +32,7 @@ void ncCameraNodeList_free() {
 }
 
 static void __ncCameraNodeList_addNode(int camera_node_index) {
-    sNcCameraNodeList[camera_node_index].valid = TRUE;
+    sNcCameraNodeList[camera_node_index].valid = true;
     sNcCameraNodeList[camera_node_index].type = 0;
 
 }

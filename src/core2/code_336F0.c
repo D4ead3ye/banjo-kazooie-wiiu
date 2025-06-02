@@ -25,9 +25,9 @@ static void __code336F0_func_802BA680(CameraNodeType1 *this, s32 arg1, s32 arg2)
 
 static bool __code336F0_func_802BA6B0(CameraNodeType1 *this, s32 arg1) {
     if (this->unknownFlag & arg1) 
-        return TRUE;
+        return true;
 
-    return FALSE;
+    return false;
 }
 
 CameraNodeType1 *cameraNodeType1_init() {

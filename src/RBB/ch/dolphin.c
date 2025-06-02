@@ -64,7 +64,7 @@ void func_8038B900(Actor *this){
     }////L8038BBFC
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->position_x = -5100.0f;
         this->position_y = -2600.0f;
         this->position_z = 1460.0f;
@@ -90,7 +90,7 @@ void func_8038B900(Actor *this){
                 && !player_movementGroup()
             ){
                 gcdialog_showText(0xb9b, 4, 0, 0, 0, 0);
-                this->has_met_before = TRUE;
+                this->has_met_before = true;
             }
         }
 
@@ -107,7 +107,7 @@ void func_8038B900(Actor *this){
         if(this->state == 3){
             actor_update_func_80326224(this);
             if(0.99 < this->unk48){   
-                mapSpecificFlags_set(4, FALSE);
+                mapSpecificFlags_set(4, false);
                 marker_despawn(this->marker);
             }
         }

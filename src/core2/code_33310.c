@@ -26,8 +26,8 @@ static void __code33310_func_802BA2A0(CameraNodeType3 *this, bool arg1, s32 arg2
 
 bool __code33310_func_802BA2D0(CameraNodeType3 *this, s32 arg1) {
     if(this->unknownFlag & arg1)
-        return TRUE;
-    return FALSE;
+        return true;
+    return false;
 }
 
 CameraNodeType3 *cameraNodeType3_init() {
@@ -42,8 +42,8 @@ CameraNodeType3 *cameraNodeType3_init() {
     __cameraNodeType3_setRotationAndAccelaration(this, 4.0f, 16.0f);
     __cameraNodeType3_setCloseDistance(this, 1000.0f);
     __cameraNodeType3_setFarDistance(this, 1000.0f);
-    __code33310_func_802BA530(this, FALSE);
-    __code33310_func_802BA510(this, FALSE);
+    __code33310_func_802BA530(this, false);
+    __code33310_func_802BA510(this, false);
     return this;
 }
 

@@ -5,7 +5,7 @@
 #define BAD_DTOR (BAD_PI/ 180.0)
 #define M_TAU (2*M_PI)
 #define BAD_TAU 6.2831853
-
+#define M_PI 3.14159265358979323846
 
 struct Overlay {
     void *start;

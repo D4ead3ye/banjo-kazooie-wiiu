@@ -252,10 +252,10 @@ void func_8033D2F4(void) {
     s32 var_v0 = 0xBB;
 
     for(var_v1 = 0; var_v1 < 0x2A9; var_v1++) {
-        for(((var_a0 = 0), (var_a1 = FALSE), (D_80383F10[var_v1] = -1)); (var_a0 < var_v0) && !var_a1; var_a0++){
+        for(((var_a0 = 0), (var_a1 = false), (D_80383F10[var_v1] = -1)); (var_a0 < var_v0) && !var_a1; var_a0++){
             if (var_v1 == D_80370AC0[var_a0].unk0) {
                 D_80383F10[var_v1] = var_a0;
-                var_a1 = TRUE;
+                var_a1 = true;
             }
         }
     }
@@ -275,7 +275,7 @@ bool func_8033D410(ActorMarker *arg0, ActorMarker *arg1) {
 
     sp38 = D_80383F10[arg1->id];
     if (sp38 == -1) {
-        return FALSE;
+        return false;
     }
     for(var_s2 = 0; var_s2 < 11; var_s2++){
         if ((D_80370AC0[sp38].unk4[var_s2] != 0) && (D_80371DC0[var_s2].unk0(arg0, arg1) == D_80371DC0[var_s2].unk4)) {
@@ -284,7 +284,7 @@ bool func_8033D410(ActorMarker *arg0, ActorMarker *arg1) {
             break;
         }
     }
-    return TRUE;
+    return true;
 }
 
 s32 func_8033D564(struct5Cs *arg0){

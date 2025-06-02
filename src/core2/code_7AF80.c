@@ -1074,21 +1074,21 @@ bool nodeprop_findPositionFromActorId(enum actor_e actor_id, s32 *position) {
         position[0] = (s32) node_prop->x;
         position[1] = (s32) node_prop->y;
         position[2] = (s32) node_prop->z;
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 bool nodeProp_findPositionFromActorId(enum actor_e actor_id, f32 *arg1) {
     s32 vec[3];
 
     if (nodeprop_findPositionFromActorId(actor_id, vec) == 0) {
-        return FALSE;
+        return false;
     }
     arg1[0] = vec[0];
     arg1[1] = vec[1];
     arg1[2] = vec[2];
-    return TRUE;
+    return true;
 }
 
 s32 func_80304E9C(s32 arg0, s32 arg1, s32 arg2){
@@ -1190,11 +1190,11 @@ bool func_80305290(bool (* arg0)(NodeProp *), bool (* arg1)(Prop *)){
     phi_s0 = sCubeList.cubes;
     while (phi_s0 < &sCubeList.cubes[sCubeList.cubeCnt]) {
         if (!func_8032E398(phi_s0, arg0, arg1)) {
-            return FALSE;
+            return false;
         }
         phi_s0++;
     }
-    return TRUE;
+    return true;
 }
 
 bool func_80305344(s32 arg0, u32 *arg1) {
@@ -1270,7 +1270,7 @@ Actor * func_803055E0(enum actor_e arg0, s32 position[3], s32 yaw, s32 arg3, s32
             sp28[1] = (f32)position[1];
             sp28[2] = (f32)position[2];
             actor->unk48 = func_803243D0(func_80342038(actor->unk44_14), sp28);
-            actor->marker->unk2C_2 = TRUE;
+            actor->marker->unk2C_2 = true;
         }
     }
     return actor;
@@ -1380,16 +1380,16 @@ void code7AF80_freeTotalCounts(void){
 
 bool func_80305C30(s32 arg0){
     if(!((arg0 >= 0) && (arg0 < D_8036ABA8)))
-        return FALSE;
+        return false;
     
-    return ((sProp1TotalCounts[arg0] != 0)) ? TRUE : FALSE;
+    return ((sProp1TotalCounts[arg0] != 0)) ? true : false;
 }
 
 bool __code7AF80_pad_func_80305C84(s32 arg0){
     if(!((arg0 >= 0) && (arg0 < D_8036ABA8)))
-        return FALSE;
+        return false;
     
-    return ((sProp2TotalCounts[arg0] != 0)) ? TRUE : FALSE;
+    return ((sProp2TotalCounts[arg0] != 0)) ? true : false;
 }
 
 void func_80305CD8(s32 idx, s32 count){
@@ -1460,7 +1460,7 @@ void __code7AF80_concatElementsAndRemoveEmpty(s32 *count, Struct_core2_7AF80_1 *
             for(b_list = a_list + 1; b_list < *arg1 + *count; b_list++) {
                 //same types and neither A or B are empty
                 if ((a_list->unk4 == b_list->unk4) &&  (a_list->count != 0) &&  (b_list->count != 0)) {
-                    continue_loop = TRUE;
+                    continue_loop = true;
                     for(a_elem = a_list->unk8; (a_elem < a_list->unk8 + a_list->count) && continue_loop; a_elem++){
                         for(b_elem = b_list->unk8; (b_elem < b_list->unk8 + b_list->count) && continue_loop; b_elem++) {
                             if ((
@@ -1479,7 +1479,7 @@ void __code7AF80_concatElementsAndRemoveEmpty(s32 *count, Struct_core2_7AF80_1 *
                                 b_list->unk8 = NULL;
                                 
                                 b_list = a_list;
-                                continue_loop = FALSE;
+                                continue_loop = false;
                             }
                         }
                     }
@@ -1490,7 +1490,7 @@ void __code7AF80_concatElementsAndRemoveEmpty(s32 *count, Struct_core2_7AF80_1 *
         //remove empty lists
         for(a_list =  *arg1; a_list < *arg1 + *count; a_list++){
             if (a_list->count == 0) { //A is empty
-                continue_loop = TRUE;
+                continue_loop = true;
                 for(b_list = a_list + 1; (b_list < *arg1 + *count) && continue_loop; b_list++){
                     if (b_list->count != 0) { //B is not empty
                         //swap A an B
@@ -1498,7 +1498,7 @@ void __code7AF80_concatElementsAndRemoveEmpty(s32 *count, Struct_core2_7AF80_1 *
                         b_list->count = 0;
                         b_list->unk8 = NULL;
 
-                        continue_loop = FALSE;
+                        continue_loop = false;
                     }
                 }
             }
@@ -1589,10 +1589,10 @@ bool func_80306534(Struct_core2_7AF80_1 *arg0, s32 arg1, s32 position[3], s32 ra
         ) < (
             (radius + iPtr->radius) * (radius + iPtr->radius)
         )) {
-            return TRUE;
+            return true;
         }
     }
-    return FALSE;
+    return false;
 }
 
 // some sort of init function if bit6 == 7
@@ -1707,11 +1707,11 @@ bool __code7AF80_pad_func_80306C88(s32 arg0) {
     phi_v1 = D_8036A9BC;
     while (phi_v1 < &D_8036A9BC[D_8036A9B8]) {
         if (arg0 == phi_v1->unk4) {
-            return TRUE;
+            return true;
         }
         phi_v1++;
     }
-    return FALSE;
+    return false;
 }
 
 bool __code7AF80_pad_func_80306CE4(s32 arg0) {
@@ -1720,11 +1720,11 @@ bool __code7AF80_pad_func_80306CE4(s32 arg0) {
     phi_v1 = D_8036A9C8;
     while (phi_v1 < &D_8036A9C8[D_8036A9C4]) {
         if (arg0 == phi_v1->unk4) {
-            return TRUE;
+            return true;
         }
         phi_v1++;
     }
-    return FALSE;
+    return false;
 }
 
 s32 func_80306D40(s32 arg0){
@@ -1738,11 +1738,11 @@ bool __code7AF80_pad_func_80306D60(s32 arg0) {
     phi_v1 = D_8036A9D4;
     while (phi_v1 < &D_8036A9D4[D_8036A9D0]) {
         if (arg0 == phi_v1->unk4) {
-            return TRUE;
+            return true;
         }
         phi_v1++;
     }
-    return FALSE;
+    return false;
 }
 
 s32 func_80306DBC(s32 arg0){
@@ -1933,27 +1933,27 @@ bool func_803077FC(f32 arg0[3], s32 *arg1, s32 *arg2, s32 arg3, u32 arg4) {
         *arg1 = func_80306EF4(sp3C, arg3, arg4);
         if (*arg1 == -1) {
             *arg2 = -1;
-            return FALSE;
+            return false;
         }
     }
     *arg2 = func_80307504(arg0, *arg1, (*arg2 == -1) ? 0 : *arg2, arg3, arg4);
     if (*arg2 >= 0) {
-        return TRUE;
+        return true;
     }
 
     *arg1 = func_80306EF4(sp3C, arg3, arg4);
     if (*arg1 == -1) {
         *arg2 = -1;
-        return FALSE;
+        return false;
     }
 
     *arg2 = func_80307504(arg0, *arg1, 0, arg3, arg4);
     if (*arg2 >= 0) {
-        return TRUE;
+        return true;
     }
 
     *arg1 = -1;
-    return FALSE;
+    return false;
 }
 
 Cube **func_80307948(s32 arg0[3]) {
@@ -2177,7 +2177,7 @@ bool func_803082D8(Cube *arg0, s32 *arg1, bool arg2, bool arg3) {
 
     if (*arg1 >= arg0->prop2Cnt) {
         *arg1 = 0;
-        return FALSE;
+        return false;
     }
     var_a0 = var_v0->unk8_4;
     (*arg1)++;
@@ -2354,7 +2354,7 @@ bool __code7AF80_pad_func_803088C8(s32 arg0) {
     for(i = 0; D_8036ABAC[i] != -1 && arg0 != D_8036ABAC[i] && arg0 != D_8036ABC0[i]; i++){
     }
 
-    return (D_8036ABAC[i] == -1) ? FALSE : TRUE;
+    return (D_8036ABAC[i] == -1) ? false : true;
 }
 
 /* .code */
@@ -2391,7 +2391,7 @@ static void __code7AF80_func_80308984(void) {
     // this iterates over the cubes and assumes that the cubes pointer is currently at index 0
     for(iCube = sCubeList.cubes; iCube < sCubeList.cubes + sCubeList.cubeCnt; iCube++){
         for(iNode = iCube->prop1Ptr; iNode < iCube->prop1Ptr + iCube->prop1Cnt; iNode++){
-            if (iNode->bit6 == 6 && iNode->bit0 == FALSE){
+            if (iNode->bit6 == 6 && iNode->bit0 == false){
                 u32 tmp = iNode->unk8;
 
                 if(tmp >= unk8_range_min && tmp <= unk8_range_max) {
@@ -2405,7 +2405,7 @@ static void __code7AF80_func_80308984(void) {
 
                         for(jCube = sCubeList.cubes; jCube < sCubeList.cubes + sCubeList.cubeCnt; jCube++){
                             for(jNode = jCube->prop1Ptr; jNode < jCube->prop1Ptr + jCube->prop1Cnt; jNode++){
-                                if (jNode->bit6 == 6 && jNode->bit0 == FALSE && jNode->unk8 == D_8036ABC0[i]) {
+                                if (jNode->bit6 == 6 && jNode->bit0 == false && jNode->unk8 == D_8036ABC0[i]) {
                                     __code7AF80_addCubeIndexToD_80382150(jCube - sCubeList.cubes);
                                     D_80382150[temp_s4 + 1]++;
                                     jNode = jCube->prop1Ptr + jCube->prop1Cnt;

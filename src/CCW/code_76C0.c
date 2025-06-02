@@ -82,7 +82,7 @@ ActorInfo D_8038F888 = { 0x1CC, 0x318, 0x0,   0x0, NULL, func_80325F84, NULL, fu
 void func_8038DAB0(Actor *this){
     if(!this->initialized){
         func_802D3CE8(this);
-        this->initialized = TRUE;
+        this->initialized = true;
 
         if (levelSpecificFlags_get(LEVEL_FLAG_38_CCW_UNKNOWN)) {
             marker_despawn(this->marker);
@@ -93,7 +93,7 @@ void func_8038DAB0(Actor *this){
 void CCW_func_8038DB0C(Actor *this){
     if(!this->initialized){
         func_802D3D74(this);
-        this->initialized = TRUE;
+        this->initialized = true;
         this->position_x = 325.8f;
         this->position_y = 600.0f;
         this->position_z = 0.0f;

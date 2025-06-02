@@ -48,7 +48,7 @@ void __chlmonkey_updateBringOrange(Actor **this_ptr) {
         player_throwCarriedObject()) {
 
         func_8028FA34(0xc6, *this_ptr);
-        (*this_ptr)->has_met_before = TRUE;
+        (*this_ptr)->has_met_before = true;
         timed_setStaticCameraToNode(1.2f, 0xF);
         func_80324E38(1.2f, 3);
     }
@@ -81,7 +81,7 @@ void __chlmonkey_spawnJiggy(s32 x, s32 y, s32 z) {
 void __chlmonkey_complete(ActorMarker *marker, enum asset_e unused_1, s32 unused_2) {
     Actor *actor = marker_getActor(marker);
 
-    mapSpecificFlags_set(MM_SPECIFIC_FLAG_4_SHAKE, TRUE);
+    mapSpecificFlags_set(MM_SPECIFIC_FLAG_4_SHAKE, true);
     subaddie_set_state(actor, LMONKEY_STATE_3_WALKING);
     timed_setStaticCameraToNode(2.3f, 0x12);
     timedFunc_set_3(2.9f, __chlmonkey_spawnJiggy, actor->position_x, actor->position_y + 150.0f, actor->position_z);
@@ -123,7 +123,7 @@ void chlmonkey_update(Actor *this) {
                         !this->has_met_before) {
 
                         gcdialog_showText(ASSET_B3F_DIALOG_CHIMPY_MEET, 0xe, this->position, NULL, NULL, NULL);
-                        this->has_met_before = TRUE;
+                        this->has_met_before = true;
                     }//L80388774
 
                     actor_loopAnimation(this);
@@ -149,11 +149,11 @@ void chlmonkey_update(Actor *this) {
                 actor_loopAnimation(this);
 
                 if (0.19 <= this->unk48) {
-                    mapSpecificFlags_set(MM_SPECIFIC_FLAG_0_CHIMPY_STUMP_RAISED, TRUE);
+                    mapSpecificFlags_set(MM_SPECIFIC_FLAG_0_CHIMPY_STUMP_RAISED, true);
                 }
 
                 if (0.24 <= this->unk48) {
-                    mapSpecificFlags_set(MM_SPECIFIC_FLAG_3_CHIMPY_HAS_LEAVED, TRUE);
+                    mapSpecificFlags_set(MM_SPECIFIC_FLAG_3_CHIMPY_HAS_LEAVED, true);
                 }
 
                 if (0.99 <= this->unk48) {

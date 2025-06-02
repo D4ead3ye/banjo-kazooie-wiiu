@@ -46,7 +46,7 @@ extern ParticleSettingsVelocityAccelerationPosition chFightFlightPad_D_80366FB4 
 
 /* .code */
 void chShockJump_update(Actor *this){
-    this->marker->propPtr->unk8_3 = TRUE;
+    this->marker->propPtr->unk8_3 = true;
     if(volatileFlag_get(VOLATILE_FLAG_86_SANDCASTLE_SHOCKSPRING_JUMP_UNLOCKED)){
         ability_unlock(ABILITY_D_SHOCK_JUMP);
     }
@@ -60,7 +60,7 @@ void chShockJump_update(Actor *this){
 }
 
 void chFlightPad_update(Actor *this){
-    this->marker->propPtr->unk8_3 = TRUE;
+    this->marker->propPtr->unk8_3 = true;
     if(volatileFlag_get(VOLATILE_FLAG_8A_SANDCASTLE_FLIGHT_UNLOCKED)){
         ability_unlock(ABILITY_9_FLIGHT);
     }
@@ -92,11 +92,11 @@ void chFightFlightPad_emitSparklesAtPosition(f32 position[3]){
 
 void chFightFlightPad_update(Actor *this){
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         chFightFlightPad_emitSparklesAtPosition(this->position);
         FUNC_8030E8B4(SFX_113_PAD_APPEARS, 1.0f, 32000, this->position, 5000, 12000);
     }
-    this->marker->propPtr->unk8_3 = TRUE;
+    this->marker->propPtr->unk8_3 = true;
     this->alpha_124_19 = MIN(this->alpha_124_19 + this->unk38_31, 0xFF);
     actor_setOpacity(this, this->alpha_124_19);
         

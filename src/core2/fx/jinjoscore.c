@@ -207,7 +207,7 @@ void fxjinjoscore_draw(s32 arg0, struct8s *arg1, Gfx **gfx, Mtx **mtx, Vtx **vtx
 
 bool func_802FFA10(f32 arg0, s32 arg1, s32 arg2){
     if(arg1 == 0){
-        return TRUE;
+        return true;
     }
 
     return (D_80381E78[arg1 - 1] < arg0);

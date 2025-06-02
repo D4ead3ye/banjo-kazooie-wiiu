@@ -53,7 +53,7 @@ void __chJinjo_802CDBA8(ActorMarker *this, ActorMarker *other){
         if(item_adjustByDiffWithHud(ITEM_12_JINJOS, 1 << (this->id + 6) ) == 0x1f)
             localPtr->unk4 = 1;
         actor_loopAnimation(actorPtr);
-        this->collidable = FALSE;
+        this->collidable = false;
     }
 }
 
@@ -104,7 +104,7 @@ void chJinjo_update(Actor * this){
     
     local = &this->jinjo;
     if(!this->initialized){
-        this->initialized = TRUE;
+        this->initialized = true;
         local->unk0 = 1;
         local->unk4 = 0;
         local->unk8 = (this->position_y < func_80309B24(this->position));
@@ -173,7 +173,7 @@ void chJinjo_update(Actor * this){
                     sp40[1] += 50.0f;
                     jiggy_spawn(10*level_get()-9, sp40);
                 }//L802CE0CC
-                core1_ce60_incOrDecCounter(FALSE);
+                core1_ce60_incOrDecCounter(false);
                 func_8032BB88(this, 0, 4000);
                 if(local->unk4){
                     func_8025A6EC(COMUSIC_30_5TH_JINJO_COLLECTED, 28000);
@@ -248,7 +248,7 @@ void chJinjo_update(Actor * this){
                     func_80326310(this);
                     if(local->unk4 == 0){
                         func_8032BB88(this, -1, 4000);
-                        core1_ce60_incOrDecCounter(TRUE);
+                        core1_ce60_incOrDecCounter(true);
                     }
                 }//L802CE518
 
@@ -263,7 +263,7 @@ void chJinjo_update(Actor * this){
 
                 if(local->unk4 && actor_animationIsAt(this,0.95f)){
                     func_8032BB88(this, -1, 4000);
-                    core1_ce60_incOrDecCounter(TRUE);
+                    core1_ce60_incOrDecCounter(true);
                 }
             }//L802CE598
 

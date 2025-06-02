@@ -101,7 +101,7 @@ void func_803890BC(Actor *this){
     if(!this->volatile_initialized){
         actor_collisionOff(this);
         this->marker->propPtr->unk8_3 = 1;
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         local->unk0 = func_80388E60(this);
         this->position[0] = local->unk0->unk4[0];
         this->position[1] = local->unk0->unk4[1];

@@ -166,7 +166,7 @@ void fxegg_head_spawn(void){
     f32 tmp_f8 = 20.0f;
 
     marker->unk2C_1 = 1;
-    marker->collidable = TRUE;
+    marker->collidable = true;
     func_803300B8(marker, fxegg_collide);
     func_8033EA40(0, 20.0f);
     func_8033EA40(1, 0.0f);
@@ -273,8 +273,8 @@ void fxegg_ass_spawn(void) {
     projectile_indx = func_8033E8D0();
     sp58 = func_8033E8F4();
     sp57 = func_8033E93C();
-    func_8033E840()->unk2C_1 = TRUE;
-    func_8033E840()->collidable = TRUE;
+    func_8033E840()->unk2C_1 = true;
+    func_8033E840()->collidable = true;
     func_803300B8(func_8033E840(), &fxegg_collide);
     func_8033EA40(1, 0);
     func_8033EA40(0, 20.0f);

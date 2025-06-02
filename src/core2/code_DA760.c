@@ -28,7 +28,7 @@ int func_803616F0(Actor *this){
         case 6:// L803617F0
             return fileProgressFlag_get(FILEPROG_36_GV_OPEN) && !chmole_learnedAllLevelAbilities(LEVEL_7_GOBIS_VALLEY);
         default:
-            return FALSE;
+            return false;
     }
 }
 
@@ -43,24 +43,24 @@ void func_80361870(Actor *this){
     s32 sp28;
     if(!this->volatile_initialized){
         marker_setFreeMethod(this->marker, func_80361828);
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
     }
 
     if(!this->has_met_before && func_80329530(this, 400) && !func_80329530(this, 50)){
         if(this->unkF4_8 == 1 && !fileProgressFlag_get(FILEPROG_31_MM_OPEN) && level_get() == LEVEL_6_LAIR){
             text_id = fileProgressFlag_get(FILEPROG_A7_NEAR_PUZZLE_PODIUM_TEXT)? 0xF80 : 0xF7F;
             if(gcdialog_showText(text_id, 0, 0, 0, 0, 0)){
-                this->has_met_before = TRUE;
+                this->has_met_before = true;
             }
         }
         else if(func_803616F0(this)){
             sp28 = (volatileFlag_get(VOLATILE_FLAG_16)?0xf6e:0xf68) + this->unkF4_8 - 1;
             if(!volatileFlag_get(VOLATILE_FLAG_16) && level_get() == LEVEL_6_LAIR){
-                this->has_met_before = TRUE;
+                this->has_met_before = true;
             }
             else{ 
                 if(gcdialog_showText(sp28, 0, 0, 0, 0, 0)){
-                    this->has_met_before = TRUE;
+                    this->has_met_before = true;
                     volatileFlag_set(VOLATILE_FLAG_16, 0);
                 }
             }

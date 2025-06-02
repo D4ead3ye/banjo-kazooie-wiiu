@@ -90,7 +90,7 @@ void func_802DEE1C(Actor *this) {
     f32 sp38;
 
     if (!this->initialized) {
-        this->initialized = TRUE;
+        this->initialized = true;
         actor_collisionOff(this);
         marker_setFreeMethod(this->marker, func_802DEDDC);
         actor_playAnimationOnce(this);

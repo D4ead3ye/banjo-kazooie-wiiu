@@ -111,12 +111,12 @@ void func_8038F6A4(Actor *this)
     {
       nodeprop_getPosition(temp_v0, local->unk18);
     }
-    this->has_met_before = FALSE;
-    this->initialized = TRUE;
+    this->has_met_before = false;
+    this->initialized = true;
   }
   if (!this->volatile_initialized)
   {
-    this->volatile_initialized = TRUE;
+    this->volatile_initialized = true;
     this->marker->propPtr->unk8_3 = 1;
     actor_collisionOff(this);
     this->scale = 1.0f;
@@ -143,7 +143,7 @@ void func_8038F6A4(Actor *this)
       if ((((ml_vec3f_distance(local->unk18, sp48) < 250.0f) && (ml_vec3f_distance(local->unk18, sp48) > 80.0f)) && (!player_movementGroup())) && (player_getTransformation() == TRANSFORM_1_BANJO))
       {
         gcdialog_showText(0xC7E, 0, 0, 0, 0, 0);
-        this->has_met_before = TRUE;
+        this->has_met_before = true;
       }
     }
       if (local->unk10)

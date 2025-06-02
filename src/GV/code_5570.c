@@ -85,10 +85,10 @@ s32 func_8038BAA4(Actor *jiggy){
 
 int func_8038BB24(Actor *this){
     if(func_80329530(this, 1560) && !func_80329530(this, 1380)){
-        return TRUE;
+        return true;
     }
     else{
-        return FALSE;
+        return false;
     }
 }
 
@@ -102,7 +102,7 @@ void func_8038BB6C(Actor *jiggy, ActorMarker * grabba_marker)
 
     grabba->unk100 = jiggy->marker;
     grabba_local->unk0 = grabba->unk100->unk5C;
-    jiggy->unk10_1 = TRUE;
+    jiggy->unk10_1 = true;
     grabba->unk1C[2] = (f32)func_8038BAA4(jiggy);
     if(jiggyscore_isCollected((s32)grabba->unk1C[2])){
         func_8038C748();
@@ -160,8 +160,8 @@ void GV_func_8038BEA0(Actor *this){
     f32 sp38[3];
 
     if(!this->initialized){
-        this->initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->initialized = true;
+        this->marker->propPtr->unk8_3 = true;
         actor_collisionOff(this);
         this->unk38_31 = 0;
         this->unk1C[1] = this->position_y;
@@ -170,7 +170,7 @@ void GV_func_8038BEA0(Actor *this){
     }//L8038BF24
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if(this->unk44_31 == 0){
             this->unk44_31 = sfxsource_createSfxsourceAndReturnIndex();
             sfxsource_setSfxId(this->unk44_31, SFX_3EC_CCW_DOOR_OPENING);
@@ -183,17 +183,17 @@ void GV_func_8038BEA0(Actor *this){
             local->unk0 =  this->unk100 != NULL ? this->unk100->unk5C : NULL;
         }
         subaddie_set_state_with_direction(this, this->state, 0.01f, 1);
-        this->unk58_0 = FALSE;
-        this->marker->propPtr->unk8_3 = FALSE;
+        this->unk58_0 = false;
+        this->marker->propPtr->unk8_3 = false;
     }//L8038BFF4
 
     if(subaddie_playerIsWithinSphere(this, 4000) || this->state == 5){
-        this->unk58_0 = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->unk58_0 = true;
+        this->marker->propPtr->unk8_3 = true;
         switch(this->state){
             case 1: //L8038C064
-                this->unk58_0 = FALSE;
-                this->marker->propPtr->unk8_3 = FALSE;
+                this->unk58_0 = false;
+                this->marker->propPtr->unk8_3 = false;
                 if(func_8038BB24(this)){
                     subaddie_set_state_with_direction(this, 2, 0.01f, 1);
                     actor_playAnimationOnce(this);
@@ -212,7 +212,7 @@ void GV_func_8038BEA0(Actor *this){
                     actor_loopAnimation(this);
                     D_80391A80 = this->state;
                     if(this->unk100){
-                        this->unk100->collidable = TRUE;
+                        this->unk100->collidable = true;
                     }
                 }
                 else{
@@ -246,7 +246,7 @@ void GV_func_8038BEA0(Actor *this){
                 else{
                     if(!this->has_met_before){
                         if(gcdialog_showText(ASSET_A78_DIALOG_GRABBA_MEET, 0, NULL, NULL, NULL, NULL)){
-                            this->has_met_before = TRUE;
+                            this->has_met_before = true;
                         }
                     }
                 }
@@ -271,13 +271,13 @@ void GV_func_8038BEA0(Actor *this){
 
                     if(actor_animationIsAt(this, 0.4f)){
                         if(this->unk100){
-                            this->unk100->collidable = FALSE;
+                            this->unk100->collidable = false;
                             func_8030E878(SFX_3F5_UNKNOWN, randf2(0.95f, 1.05f), 32000, this->position, 1250.0f, 2500.0f);
                         }
 
                         if(!this->unk138_23){
                             if(gcdialog_showText(ASSET_A7A_DIALOG_GRABBA_TOO_FAST, 0, NULL, NULL, NULL, NULL)){
-                                this->unk138_23 = TRUE;
+                                this->unk138_23 = true;
                             }
                         }
                     }

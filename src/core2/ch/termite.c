@@ -137,7 +137,7 @@ void __chTermite_die(ActorMarker *marker, ActorMarker *other_marker){
     __chTermite_emitHead(partEmitMgr_newEmitter(1), this->position);
     __chTermite_emitBody(partEmitMgr_newEmitter(1), this->position);
     __chTermite_emitEyes(partEmitMgr_newEmitter(2), this->position);
-    marker->collidable = FALSE;
+    marker->collidable = false;
     this->unk138_27 = 1;
     FUNC_8030E624(SFX_D1_SNORKEL_WAH, 1.4f, 32750);
     marker_despawn(marker);
@@ -147,8 +147,8 @@ void __chTermite_testCallback(ActorMarker *caller, enum asset_e text_id, s32 arg
     Actor *this;
 
     this = marker_getActor(caller);
-    this->has_met_before = FALSE;
-    levelSpecificFlags_set(LEVEL_FLAG_D_MM_UNKNOWN, FALSE);
+    this->has_met_before = false;
+    levelSpecificFlags_set(LEVEL_FLAG_D_MM_UNKNOWN, false);
 }
 
 void chTermite_update(Actor *this) {
@@ -159,10 +159,10 @@ void chTermite_update(Actor *this) {
     sp34 = globalTimer_getTime();
     if (!this->volatile_initialized) {
         marker_setCollisionScripts(this->marker, NULL, __chTermite_ow, __chTermite_die);
-        this->unk124_0 = this->unk138_31 = FALSE;
-        this->has_met_before = FALSE;
-        this->unk16C_0 = TRUE;
-        this->volatile_initialized = TRUE;
+        this->unk124_0 = this->unk138_31 = false;
+        this->has_met_before = false;
+        this->unk16C_0 = true;
+        this->volatile_initialized = true;
     }
     if( map_get() == MAP_C_MM_TICKERS_TOWER 
         && !mapSpecificFlags_get(0) 
@@ -172,9 +172,9 @@ void chTermite_update(Actor *this) {
         && player_getTransformation() == TRANSFORM_1_BANJO
     ) {
         gcdialog_showText(ASSET_B43_DIALOG_TERMITE_MEET_AS_BEAR, 7, this->position, this->marker, __chTermite_testCallback, NULL);
-        mapSpecificFlags_set(0, TRUE);
-        levelSpecificFlags_set(LEVEL_FLAG_D_MM_UNKNOWN, TRUE);
-        this->has_met_before = TRUE;
+        mapSpecificFlags_set(0, true);
+        levelSpecificFlags_set(LEVEL_FLAG_D_MM_UNKNOWN, true);
+        this->has_met_before = true;
     }
 
     if( func_80329530(this, 300)
@@ -184,12 +184,12 @@ void chTermite_update(Actor *this) {
     ) {
         if (!levelSpecificFlags_get(LEVEL_FLAG_B_MM_UNKNOWN)) {
             if (gcdialog_showText(ASSET_B41_DIALOG_TERMITE_COOL_SHORTS, 0, NULL, NULL, NULL, NULL)) {
-                levelSpecificFlags_set(LEVEL_FLAG_B_MM_UNKNOWN, TRUE);
-                this->unk138_23 = TRUE;
+                levelSpecificFlags_set(LEVEL_FLAG_B_MM_UNKNOWN, true);
+                this->unk138_23 = true;
             }
         }
         else if (!levelSpecificFlags_get(LEVEL_FLAG_C_MM_UNKNOWN) && !this->unk138_23 && (gcdialog_showText(ASSET_B42_DIALOG_TERMITE_COOL_BACKPACK, 0, NULL, NULL, NULL, NULL))) {
-            levelSpecificFlags_set(LEVEL_FLAG_C_MM_UNKNOWN, TRUE);
+            levelSpecificFlags_set(LEVEL_FLAG_C_MM_UNKNOWN, true);
         }
     }
     switch (this->state) {

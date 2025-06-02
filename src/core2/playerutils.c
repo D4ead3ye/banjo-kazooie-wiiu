@@ -227,20 +227,20 @@ bool player_isActive(void) {
     sp1C = func_80294610(0x10) && baflag_isFalse(BA_FLAG_3);
     sp18 = func_80294610(0x40) && baflag_isFalse(BA_FLAG_4);
     if(sp1C || sp18)
-        return TRUE;
-    return FALSE;
+        return true;
+    return false;
 }
 
 bool player_isFallTumbling(void){
     s32 damage;
 
     if (player_isStable()) {
-        return FALSE;
+        return false;
     }
     if (!bafalldamage_get_damage(&damage)) {
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 bool player_isSwimming(void){
@@ -253,10 +253,10 @@ bool player_isSwimming(void){
         case BS_30_DIVE_ENTER:
         case BS_39_DIVE_A:
         case BS_4C_LANDING_IN_WATER:
-            out = TRUE;
+            out = true;
             break;
         default:
-            out = FALSE;
+            out = false;
     }
     return out;
 }
@@ -295,7 +295,7 @@ void func_8028B59C(void) {
         D_8037BF61 = (func_80294554() && player_getYPosition() < ((func_80294500() - 50.0f) - 2.0f));
     }
     if (map_get() == MAP_6_TTC_NIPPERS_SHELL) {
-        D_8037BF61 = FALSE;
+        D_8037BF61 = false;
     }
     if (!sp24 && D_8037BF61 && (baphysics_get_vertical_velocity() < -40.0)) {
         func_8029C0D0();

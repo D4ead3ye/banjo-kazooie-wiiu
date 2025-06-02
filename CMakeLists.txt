@@ -127,14 +127,18 @@ configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/properties.h.in ${CMAKE_CURRENT_SOUR
 
 # Include directories
 include_directories(
-    "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src"
+    "${PROJECT_SOURCE_DIR}"
+    "${PROJECT_SOURCE_DIR}/include"
+    "${PROJECT_SOURCE_DIR}/src"
 )
 
 # Collect source files to build the executable
 file(GLOB_RECURSE ALL_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     # "src/assets/*.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp
     "${CMAKE_CURRENT_SOURCE_DIR}/src/**/*.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/**/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/**/*.h"

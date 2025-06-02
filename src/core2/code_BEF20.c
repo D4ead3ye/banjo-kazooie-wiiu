@@ -193,7 +193,7 @@ void item_setItemsStartCounts(void){
     D_80385F30[ITEM_26_JIGGY_TOTAL] = 0;
     itemscore_noteScores_clear();
     itemscore_timeScores_clear();
-    D_80385FE4 = FALSE;
+    D_80385FE4 = false;
 }
 
 void itemscore_levelReset(enum level_e level){
@@ -245,9 +245,9 @@ void func_803465E4(void){
             && map_get() != MAP_33_UNUSED
             && map_get() != MAP_91_FILE_SELECT
         ){
-            D_80385FE0 = TRUE;
+            D_80385FE0 = true;
         }//L80346674
-        D_80385FE8 = FALSE;
+        D_80385FE8 = false;
     }//L8034667C
     
     if(D_80385FE0){
@@ -256,9 +256,9 @@ void func_803465E4(void){
                 item_dec(ITEM_16_LIFE);
                 func_802FACA4(ITEM_14_HEALTH);
             }
-            D_80385FE4 = FALSE;
-            sp50 = TRUE;
-            D_80385FE0 = FALSE;
+            D_80385FE4 = false;
+            sp50 = true;
+            D_80385FE0 = false;
         }
     }
     else{//L803466E8
@@ -266,7 +266,7 @@ void func_803465E4(void){
             && D_80385F30[ITEM_14_HEALTH] < 3
             && func_80347A4C()
         ){
-            sp50 = TRUE;
+            sp50 = true;
         }
     }//L80346710
 
@@ -353,14 +353,14 @@ void func_80346C10(enum bs_e *retVal, enum bs_e fail_state, enum bs_e success_st
 void func_80346CA8(void) {
     D_80385FE0 = 0;
     if (D_80385FE4) {
-        D_80385FE0 = TRUE;
+        D_80385FE0 = true;
         D_80385F30[ITEM_14_HEALTH] = D_80385F30[ITEM_15_HEALTH_TOTAL];
         D_80385F30[ITEM_17_AIR] = 60*60;
     }
 }
 
 void func_80346CE8(void){
-    D_80385FE4 = FALSE;
+    D_80385FE4 = false;
 }
 
 enum item_e carriedobj_actorId2ItemId(enum actor_e actor_id){
@@ -399,10 +399,10 @@ void func_80346DB4(s32 note_count) {
                 gcdialog_showText(0xF78, 4, NULL, NULL, NULL, NULL);
             }
             if (note_count == 1) {
-                levelSpecificFlags_set(LEVEL_FLAG_34_UNKNOWN, TRUE);
+                levelSpecificFlags_set(LEVEL_FLAG_34_UNKNOWN, true);
             }
             if (!levelSpecificFlags_get(LEVEL_FLAG_34_UNKNOWN) && (gcdialog_showText(0xF76, 0, NULL, NULL, NULL, NULL))) {
-                levelSpecificFlags_set(LEVEL_FLAG_34_UNKNOWN, TRUE);
+                levelSpecificFlags_set(LEVEL_FLAG_34_UNKNOWN, true);
             }
             if (volatileFlag_get(VOLATILE_FLAG_17) == 0) {
                 volatileFlag_set(VOLATILE_FLAG_17, 1);
@@ -579,7 +579,7 @@ void func_80347A14(s32 arg0){
 }
 
 bool func_80347A4C(void){
-    return (D_80386038 != 0) ? FALSE : TRUE;
+    return (D_80386038 != 0) ? false : true;
 }
 
 void func_80347A70(void){
@@ -595,10 +595,10 @@ void func_80347A7C(void){
 
 void func_80347AA8(void) {
     volatileFlag_restoreAll();
-    volatileFlag_set(VOLATILE_FLAG_1F_IN_CHARACTER_PARADE, FALSE);
-    volatileFlag_set(VOLATILE_FLAG_20_BEGIN_CHARACTER_PARADE, FALSE);
-    volatileFlag_set(VOLATILE_FLAG_C1_IN_FINAL_CHARACTER_PARADE, FALSE);
-    volatileFlag_set(VOLATILE_FLAG_C0_BEGIN_FINAL_CHARACTER_PARADE, FALSE);
+    volatileFlag_set(VOLATILE_FLAG_1F_IN_CHARACTER_PARADE, false);
+    volatileFlag_set(VOLATILE_FLAG_20_BEGIN_CHARACTER_PARADE, false);
+    volatileFlag_set(VOLATILE_FLAG_C1_IN_FINAL_CHARACTER_PARADE, false);
+    volatileFlag_set(VOLATILE_FLAG_C0_BEGIN_FINAL_CHARACTER_PARADE, false);
     item_set(ITEM_16_LIFE, D_80386068);
     itemPrint_reset();
 }

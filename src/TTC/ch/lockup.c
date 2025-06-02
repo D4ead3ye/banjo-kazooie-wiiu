@@ -64,7 +64,7 @@ static Actor *__chLockup_drawFunc(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx
 
 static void __chLockup_close(Actor *this){
     subaddie_set_state_with_direction(this, CH_LOCKUP_STATE_CLOSED, 0.2f, 1);
-    this->marker->collidable = FALSE;
+    this->marker->collidable = false;
     this->unk38_31 = 0;
     FUNC_8030E8B4(SFX_6C_LOCKUP_CLOSING, 1.0f, 32000, this->position, 1250, 2500);
 }
@@ -89,21 +89,21 @@ static void __chLockup_updateFunc(Actor *this){
         && !player_movementGroup()
         && gcdialog_showText(ASSET_A15_DIALOG_TTC_LOCKUP_SPAWNED, 0, NULL, NULL, NULL, NULL)
     ){
-        this->has_met_before = TRUE;
+        this->has_met_before = true;
     }
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
     }
 
     switch(this->state){
         case CH_LOCKUP_STATE_CLOSED:
             if(!this->initialized){
-                this->marker->propPtr->unk8_3 = TRUE;
+                this->marker->propPtr->unk8_3 = true;
                 subaddie_set_state_with_direction(this, CH_LOCKUP_STATE_CLOSED, 0.2f, 1);
-                this->marker->collidable = FALSE;
+                this->marker->collidable = false;
                 this->unk38_31 = 0;
-                this->initialized = TRUE;
+                this->initialized = true;
             }
             local->closed_ticks_counter++;
 
@@ -128,7 +128,7 @@ static void __chLockup_updateFunc(Actor *this){
                 subaddie_set_state_with_direction(this, CH_LOCKUP_STATE_OPEN, 0.5f, 1);
             }
             if(0.15 < anctrl_getAnimTimer(this->anctrl)){
-                this->marker->collidable = TRUE;
+                this->marker->collidable = true;
             }
             break;
 

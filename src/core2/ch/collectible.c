@@ -56,7 +56,7 @@ void func_802D8C98(Actor *this, s32 arg1) {
     switch (this->marker->id)
     {
     case MARKER_60_BLUE_EGG_COLLECTIBLE:
-        phi_v0 = TRUE;
+        phi_v0 = true;
         break;
 
     case MARKER_B5_RED_FEATHER_COLLECTIBLE:
@@ -64,11 +64,11 @@ void func_802D8C98(Actor *this, s32 arg1) {
         break;
 
     case MARKER_1E5_GOLD_FEATHER_COLLECTIBLE:
-        phi_v0 = TRUE;
+        phi_v0 = true;
         break;
 
     default:
-        phi_v0 = FALSE;
+        phi_v0 = false;
         break;
     }
 
@@ -86,11 +86,11 @@ bool chCollectible_collectItem(Actor* actor, enum file_progress_e arg1, enum ass
     }
 
     if(!actor || !actor->unk38_0)
-        return TRUE;
+        return true;
             
     actor->lifetime_value = arg5;
     chCollectible_setState(actor, 1);
-    return FALSE;
+    return false;
 }
 
 s32 chCollectible_collectEgg(ActorProp *arg0){
@@ -149,7 +149,7 @@ void chCollectible_update(Actor *this) {
         this->unk10_12 = -1;
         this->unk38_0 = (map_get() == MAP_90_GL_BATTLEMENTS);
         this->actor_specific_1_f = this->unk38_0 ? 0.0f : 255.0f;
-        this->initialized = TRUE;
+        this->initialized = true;
     }
     if(!this->unk38_0)
         return;

@@ -37,7 +37,7 @@ void func_80363500(Actor *this){
             func_80363440();
             marker_despawn(this->marker);
         }
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
     }//L8036355C
 
     if(chmole_learnedAllSpiralMountainAbilities()){

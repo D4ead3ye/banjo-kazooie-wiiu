@@ -121,10 +121,10 @@ static bool __codeF0_areRomCrcsCorrect(){
         && (osPiReadIo((u32)crc_ROM_START + 16, &sp24), sp24 == D_803FFE00[2])
         && (osPiReadIo((u32)crc_ROM_START + 20, &sp24), sp24 == D_803FFE00[3])
     ){
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
 }
 
 static bool __codeF0_areCrcsValid(){
@@ -133,9 +133,9 @@ static bool __codeF0_areCrcsValid(){
         && D_8038B320.unkC == D_80275650 
         && D_8038B320.unk8 == D_8038AAE8.word + D_8038AAE8.byte[0] + D_8038AAE8.byte[1] + D_8038AAE8.byte[2] + D_8038AAE8.byte[3]
     ){
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 void SM_resetSpawnableActors()

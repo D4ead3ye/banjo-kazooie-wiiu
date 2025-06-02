@@ -29,7 +29,7 @@ void bstalk_init(void){
     func_8029957C(3);
     baphysics_set_type(BA_PHYSICS_NORMAL);
     baphysics_set_target_horizontal_velocity(0.0f);
-    bsTalkStayInState = TRUE;
+    bsTalkStayInState = true;
 }
 
 void bstalk_update(void){
@@ -37,7 +37,7 @@ void bstalk_update(void){
 
     if (!bsTalkStayInState)
         next_state = BS_1_IDLE;
-    bsTalkStayInState = FALSE;
+    bsTalkStayInState = false;
     bs_setState(next_state);
 }
 
@@ -45,7 +45,7 @@ void bstalk_end(void){}
 
 void bstalk_interrupt(void){
     if(bs_getInterruptType() == BS_INTR_8){
-        bsTalkStayInState = TRUE;
+        bsTalkStayInState = true;
         func_8029A86C(2);
     }
     else{

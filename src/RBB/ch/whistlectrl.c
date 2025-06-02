@@ -76,7 +76,7 @@ void chWhistleCtrl_update(Actor *this){
     ActorLocal_RBB_5060 *local = (ActorLocal_RBB_5060 *)&this->local;
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         local->unk2 = 1;
         local->unk4 = "312111";
         if(jiggyscore_isSpawned(JIGGY_54_RBB_WHISTLE))

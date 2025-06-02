@@ -109,7 +109,7 @@ void FP_func_803888E4(Actor *this){
             func_80324DBC(0.1f, 0xc28, 0x2a, D_80391D18, this->marker, func_80388D70, NULL);
         }
     }//L80388A30
-    mapSpecificFlags_set(5, TRUE);
+    mapSpecificFlags_set(5, true);
     maSlalom_start();
 }
 
@@ -132,7 +132,7 @@ void func_80388A94(Actor *this){
 }
 
 void func_80388B18(Actor *this, u8 arg1){
-    if(arg1 == TRUE){
+    if(arg1 == true){
         if(player_getTransformation() == TRANSFORM_4_WALRUS){
             func_80388A50(this);
             if(mapSpecificFlags_get(5)){
@@ -145,7 +145,7 @@ void func_80388B18(Actor *this, u8 arg1){
         else{//L80388BB8
             if(!volatileFlag_get(VOLATILE_FLAG_B3)){
                 if(gcdialog_showText(ASSET_C01_DIALOG_UNKNOWN, 0xe, this->position, this->marker, func_80388D70, NULL)){
-                    volatileFlag_set(VOLATILE_FLAG_B3, TRUE);
+                    volatileFlag_set(VOLATILE_FLAG_B3, true);
                     func_80388A50(this);
                 }
             }
@@ -155,7 +155,7 @@ void func_80388B18(Actor *this, u8 arg1){
         if(player_getTransformation() == TRANSFORM_4_WALRUS){
             if(!volatileFlag_get(VOLATILE_FLAG_B4)){
                 if(gcdialog_showText(ASSET_C08_DIALOG_UNKNOWN, 0xe, this->position, this->marker, func_80388D70, NULL)){
-                    volatileFlag_set(VOLATILE_FLAG_B4, TRUE);
+                    volatileFlag_set(VOLATILE_FLAG_B4, true);
                     func_80388A50(this);
                 }
             }
@@ -178,10 +178,10 @@ bool FP_func_80388CA0(Actor *this){
     u32 sp20;
 
     if(player_movementGroup() != BSGROUP_0_NONE && player_movementGroup() != BSGROUP_8_TROT)
-        return FALSE;
+        return false;
 
     if( !func_80329530(this, 1100) ){
-        local->unk18 = TRUE;
+        local->unk18 = true;
     }
 
     sp20 = this->unk10_12;
@@ -201,7 +201,7 @@ void func_80388D70(ActorMarker *caller, enum asset_e text_id, s32 arg2){
         case 0xc29://L80388DC4
             func_8025A6EC(COMUSIC_3A_FP_BOGGY_RACE, 25000);
             func_8025A58C(0, 4000);
-            core1_ce60_incOrDecCounter(FALSE);
+            core1_ce60_incOrDecCounter(false);
             func_802BE720();
             local->unk0 = partEmitMgr_newEmitter(16);
             local->unk4 = partEmitMgr_newEmitter(16);
@@ -209,13 +209,13 @@ void func_80388D70(ActorMarker *caller, enum asset_e text_id, s32 arg2){
             func_80388EE8(local->unk4);
             subaddie_set_state_with_direction(this, 4, 0.0001f, 1);
             local->unk14 = (local->unk19 == 2) ? 1.0f : 0.0f;
-            this->marker->unk40_23 = TRUE;
+            this->marker->unk40_23 = true;
             break;
         default://L80388E78
             switch(arg2){
                 case 1:
                     FP_func_803888E4(this);
-                    mapSpecificFlags_set(6, TRUE);
+                    mapSpecificFlags_set(6, true);
                     break;
                 case 0:
                     subaddie_set_state_with_direction(this, 1, 0.0001f, 1);
@@ -268,13 +268,13 @@ void func_80388F90(Actor *this){
 bool func_80388FE8(Actor *this, f32 arg1, f32 arg2){
     if(arg2 < 0.0f && 0.0f < arg1){
         func_8030E878(SFX_8D_BOGGY_OHWW, randf2(1.04f, 1.12f), 32000, this->position, 600.0f, 1200.0f);
-        return TRUE;
+        return true;
     }
     else if( 0.0f < arg2 && arg1 < 0.0f){
         func_8030E878(SFX_F9_GRUNTLING_NOISE_1, randf2(1.04f, 1.12f), 32000, this->position, 600.0f, 1200.0f);
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 void func_803890DC(Actor *this, u8 arg1){
@@ -406,10 +406,10 @@ void func_803896FC(Actor *this){
     controller_copyFaceButtons(0, sp3C);
     
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
-        this->marker->unk40_23 = FALSE;
-        this->marker->propPtr->unk8_3 = FALSE;
-        this->marker->unk2C_1 = TRUE;
+        this->volatile_initialized = true;
+        this->marker->unk40_23 = false;
+        this->marker->propPtr->unk8_3 = false;
+        this->marker->unk2C_1 = true;
         this->unk44_31 = func_8030ED2C(SFX_18_BIGBUTT_SLIDE, 2);
         D_80392F20[0] = this->position_x;
         D_80392F20[1] = this->position_y;
@@ -438,7 +438,7 @@ void func_803896FC(Actor *this){
         else{
             local->unk19  = 1;
             this->unk4C = 600.0f;
-            mapSpecificFlags_set(4, TRUE);
+            mapSpecificFlags_set(4, true);
         }
     }//L803898CC
 
@@ -599,7 +599,7 @@ void func_803896FC(Actor *this){
                             if(jiggyscore_isCollected(JIGGY_2C_FP_BOGGY_3)){
                                 maSlalom_unlinkBoggy();
                                 marker_despawn(this->marker);
-                                mapSpecificFlags_set(0xC, TRUE);
+                                mapSpecificFlags_set(0xC, true);
                             }
                         }
                         else{
@@ -652,8 +652,8 @@ bool func_8038A1A0(ActorMarker *marker){
         case 9:
         case 10:
         case 11:
-            return TRUE;
+            return true;
         default:
-            return FALSE;
+            return false;
     }
 }

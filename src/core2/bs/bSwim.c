@@ -360,7 +360,7 @@ void func_802A7E2C(void) {
             func_80256E24(sp24, sp34, sp30, 0.0f, 0.0f, 800.0f);
             baphysics_set_velocity(sp24);
             batimer_set(1, 0.8f);
-            D_8037D396 = TRUE;
+            D_8037D396 = true;
         }
         break;
     case 1:
@@ -463,7 +463,7 @@ void func_802A8098(void) {
 void func_802A82D4(void) {
     func_802906A4(1);
     func_80291548();
-    core1_ce60_incOrDecCounter(FALSE);
+    core1_ce60_incOrDecCounter(false);
     baMarker_collisionOn();
     if (bs_getNextState() != BS_5A_LOADZONE) {
         func_80346CE8();

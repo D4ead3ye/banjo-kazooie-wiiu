@@ -503,7 +503,7 @@ void func_8038D8BC(Actor *this){
     
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         local->unk0 = &D_80390B70[this->marker->id - 0x1A1];
         local->unk4 = 0;
         local->unk20 = 0;

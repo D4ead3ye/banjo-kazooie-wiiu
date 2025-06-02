@@ -18,6 +18,6 @@ ActorInfo D_8038F8C0 = { 0x251, 0x37E, 0x506,
 
 /* .code */
 void func_8038DFB0(Actor *this){
-    this->marker->propPtr->unk8_3 = TRUE;
+    this->marker->propPtr->unk8_3 = true;
     actor_collisionOff(this);
 }

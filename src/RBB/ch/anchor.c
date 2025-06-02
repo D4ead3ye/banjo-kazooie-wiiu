@@ -25,7 +25,7 @@ void RBB_func_8038BEA0(Actor *this, s32 arg1){
 
 void func_8038BF28(Actor *this){
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->position_x = -5100.0f;
         this->position_y = -2600.0f;
         this->position_z = 1460.0f;

@@ -79,7 +79,7 @@ void func_8038ABDC(void){
     comusic_8025AB44(COMUSIC_3A_FP_BOGGY_RACE, 0, 4000);
     func_8025AABC(COMUSIC_3A_FP_BOGGY_RACE);
     func_8025A58C(-1, 4000);
-    core1_ce60_incOrDecCounter(TRUE);
+    core1_ce60_incOrDecCounter(true);
 }
 
 void func_8038AC20(s32 gate_indx, s32 arg1){
@@ -201,7 +201,7 @@ void __maSlalom_despawnAllBridges(void){
 
 void __maSlalom_spawnTrainers(void){
     Actor *trainers = actor_spawnWithYaw_f32(ACTOR_2C_TURBO_TALON_TRAINERS, D_80391F20, 100);
-    trainers->unk10_1 = FALSE;
+    trainers->unk10_1 = false;
 }
 
 void __maSlalom_spawnJiggy(enum jiggy_e jiggy_id){
@@ -215,7 +215,7 @@ void __maSlalom_spawnJiggy(enum jiggy_e jiggy_id){
 
 void __maSlalom_8038B190(void){
     func_8028F66C(BS_INTR_2B);
-    mapSpecificFlags_set(4, FALSE);
+    mapSpecificFlags_set(4, false);
     func_8028F918(0);
 }
 
@@ -534,7 +534,7 @@ void maSlalom_setBoggyGate(s32 gate_num){
             case 4:
                 if(Me.hasBeenFourBehind)
                         break;
-                Me.hasBeenFourBehind = TRUE;
+                Me.hasBeenFourBehind = true;
                 FP_func_8038AB60(0);
                 if(!player_isDead()){
                     func_8028F918(2);
@@ -603,9 +603,9 @@ bool maSlalom_isActive(void){
          || Me.state == MA_SLALOM_STATE_4_LOSE 
          || Me.hasBeenFourBehind
     ){
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 bool maSlolam_WithinRadiusOfBoggy(f32 position[3], s32 radius){
@@ -617,7 +617,7 @@ bool maSlolam_WithinRadiusOfBoggy(f32 position[3], s32 radius){
         pntBoggy = marker_getActor(Me.boggyLink);
     }
     else{
-        return FALSE;
+        return false;
     }
 
     if( (pntBoggy->position[0] - position[0])*(pntBoggy->position[0] - position[0])
@@ -625,10 +625,10 @@ bool maSlolam_WithinRadiusOfBoggy(f32 position[3], s32 radius){
         + (pntBoggy->position[2] - position[2])*(pntBoggy->position[2] - position[2]) 
         < radius*radius
     ){
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
 }
 
 s32 maSlalom_boggyHasFinished(void){

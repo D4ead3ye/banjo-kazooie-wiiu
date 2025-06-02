@@ -145,7 +145,7 @@ void mainLoop(void){
     
     if (!sDisableInput)
         pfsManager_update();
-    sDisableInput = FALSE;
+    sDisableInput = false;
 
     baMotor_80250C08();
 
@@ -226,5 +226,5 @@ OSThread *mainThread_get(void) {
 }
 
 void disableInput_set(void){
-    sDisableInput = TRUE;
+    sDisableInput = true;
 }

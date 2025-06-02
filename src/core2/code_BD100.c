@@ -33,7 +33,7 @@ void func_80344090(BKSpriteDisplayData *self, s32 frame, Gfx **gfx) {
 
 void func_80344124(void){
     D_80371EC0.unk0 = NULL;
-    D_803858B0 = FALSE;
+    D_803858B0 = false;
 }
 
 void func_80344138(BKSpriteDisplayData *self, s32 frame, s32 mirrored, f32 position[3], f32 scale[3], Gfx **gfx, Mtx **mtx) {

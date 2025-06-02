@@ -94,7 +94,7 @@ void func_80387E68(ActorMarker *caller, enum asset_e text_id, s32 arg2){
         func_80324D2C(4.5f, COMUSIC_43_ENTER_LEVEL_GLITTER);
         subaddie_set_state_with_direction(this, 5, 0.79f, 1);
         func_80326310(this); //did not disappear when moved, after cutscene still there with collision but broken
-        bgs_D_803907B8[this->unkF4_8]->propPtr->unk8_4 = TRUE;
+        bgs_D_803907B8[this->unkF4_8]->propPtr->unk8_4 = true;
         timedFunc_set_1(1.1f, (GenFunction_1)func_80387E00, reinterpret_cast(s32, bgs_D_803907B8[this->unkF4_8]));
         timed_setStaticCameraToNode(0.8f, 9);
         func_80324DBC(3.4f, 0xC87, 0xE, NULL, NULL, func_80387E68, NULL);
@@ -114,12 +114,12 @@ void func_80387FD4(Actor *this){
             marker_despawn(this->marker);
             return;
         }
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if(bgs_D_803907B8[this->unkF4_8 - 1] == 0){
             bgs_D_803907B8[this->unkF4_8 - 1] = this->marker;
             for(j = this->unkF4_8; j < 6; j++){
                 if(bgs_D_803907B8[j] != NULL){
-                    bgs_D_803907B8[j]->propPtr->unk8_4 = FALSE;
+                    bgs_D_803907B8[j]->propPtr->unk8_4 = false;
                     actor_setOpacity(marker_getActor(bgs_D_803907B8[j]), 0);
                 }
             }//L803880C8
@@ -128,10 +128,10 @@ void func_80387FD4(Actor *this){
 
             
             if(j >= 0){
-                this->marker->propPtr->unk8_4 = FALSE;
+                this->marker->propPtr->unk8_4 = false;
                 actor_setOpacity(this, 0);
             }
-            this->marker->propPtr->unk8_3 = TRUE;
+            this->marker->propPtr->unk8_3 = true;
         }//L80388144
         func_803289EC(this, 0.0f, 1);
         this->lifetime_value = 0.0f;
@@ -157,7 +157,7 @@ void func_80387FD4(Actor *this){
                     func_80326310(this);
                 }
                 if (this->unkF4_8 < 5) {
-                    bgs_D_803907B8[this->unkF4_8]->propPtr->unk8_4 = TRUE;
+                    bgs_D_803907B8[this->unkF4_8]->propPtr->unk8_4 = true;
                     timedFunc_set_1(1.1f, (GenFunction_1)func_80387E00, reinterpret_cast(s32, bgs_D_803907B8[this->unkF4_8]));
                     func_802BAFE4(D_803907B0[this->unkF4_8-1]);
                 } else {

@@ -143,14 +143,14 @@ void comusicPlayer_update(void) {
     if (!D_80276E34)
         return;
 
-    D_80276E34 = FALSE;
+    D_80276E34 = false;
     for(var_s0 = D_80276E30; var_s0 < &D_80276E30[6]; var_s0++){
         if (var_s0->track_id >= 0) {
             if (var_s0->unk12 != 0) {
                 temp_lo = var_s0 - D_80276E30;
                 if (var_s0->unk0 > 0.0f) {
                     var_s0->unk0 -= time_getDelta();
-                    D_80276E34 = TRUE;
+                    D_80276E34 = true;
                 } else if (var_s0->unk12 < 0) {
                     var_s0->unk8 += var_s0->unk12;
                     if (var_s0->unk15 && (var_s0->unkC == 0) && (var_s0->unk8 <= 0)) {
@@ -161,7 +161,7 @@ void comusicPlayer_update(void) {
                             var_s0->unk8 = var_s0->unkC;
                             var_s0->unk12 = 0;
                         } else {
-                            D_80276E34 = TRUE;
+                            D_80276E34 = true;
                         }
                         func_8024FD28(temp_lo, (s16)var_s0->unk8);
                     }
@@ -174,7 +174,7 @@ void comusicPlayer_update(void) {
                         var_s0->unk8 = var_s0->unkC;
                         var_s0->unk12 = 0;
                     } else {
-                        D_80276E34 = TRUE;
+                        D_80276E34 = true;
                     }
                     func_8024FD28(temp_lo, (s16)var_s0->unk8);
                 } else {

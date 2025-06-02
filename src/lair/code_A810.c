@@ -119,19 +119,19 @@ void func_80390E28(Actor *this) {
                 this->unk10_12++;
             }
         }
-        this->initialized = TRUE;
+        this->initialized = true;
     }
     if (!this->volatile_initialized) {
         if (sp38 != 0) {
             mapSpecificFlags_setN(0, 0, 2);
         }
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         return;
     }
 
     switch (this->state) {
         case 0:
-            if( gcquiz_isNotInInitialState() == FALSE && (sp38 < 2) && (randf() < 0.1) && !mapSpecificFlags_get(0xA) && !volatileFlag_get(VOLATILE_FLAG_1F_IN_CHARACTER_PARADE)) {
+            if( gcquiz_isNotInInitialState() == false && (sp38 < 2) && (randf() < 0.1) && !mapSpecificFlags_get(0xA) && !volatileFlag_get(VOLATILE_FLAG_1F_IN_CHARACTER_PARADE)) {
                 sp38++;
                 mapSpecificFlags_setN(0, sp38, 2);
                 func_80390D3C(this, (randf() < 0.5) ? 2 :1);
@@ -141,7 +141,7 @@ void func_80390E28(Actor *this) {
         case 2:
             if (this->unk38_0) {
                 func_80390D3C(this, 0);
-                this->unk38_0 = FALSE;
+                this->unk38_0 = false;
             }
             break;
     }

@@ -103,10 +103,10 @@ bool func_802BC640(f32 arg0[3], f32 arg1[3], f32 arg2, s32 arg3) {
             ncDynamicCamera_setPosition(sp78);
             ml_vec3f_clear(D_8037D9C8);
             ml_vec3f_clear(D_8037D9E0);
-            return TRUE;
+            return true;
         }
     }
-    return FALSE;
+    return false;
 }
 
 s32 func_802BC84C(s32 arg0){
@@ -200,7 +200,7 @@ void func_802BCA58(void) {
 
 void func_802BCBD4(void) {
     D_8037D940 = 0;
-    cameraUpdateEnabled = TRUE;
+    cameraUpdateEnabled = true;
     func_802BD8EC(130.0f);
     func_802BD870(10.0f, 10.0f, 120.0f, 120.0f);
     func_802BE230(1.4f, 14.0f);
@@ -259,12 +259,12 @@ bool func_802BCE0C(f32 arg0[3], f32 arg1[3]) {
 
     ml_vec3f_copy(sp2C, arg1);
     if (func_80244D94(arg0, sp2C, sp20, 0x9E0000, 40.0f)) {
-        return FALSE;
+        return false;
     }
     if (func_8024575C(arg0, sp2C, 40.0f, sp20, 4, 0x9E0000)) {
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 
@@ -988,7 +988,7 @@ void func_802BE894(f32 position[3], f32 rotation[3]){
 }
 
 void ncDynamicCamera_enterFirstPerson(void){
-    dynamicCameraInFirstPerson = TRUE;
+    dynamicCameraInFirstPerson = true;
     ncFirstPersonCamera_setState(FIRSTPERSON_STATE_1_ENTER);
     ncFirstPersonCamera_setZoomedOutPosition(cameraPosition);
     ncFirstPersonCamera_setZoomedOutRotation(cameraRotation);

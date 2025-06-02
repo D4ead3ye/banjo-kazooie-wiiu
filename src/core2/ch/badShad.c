@@ -26,8 +26,8 @@ f32 D_8037DE20[3];
 void chBadShad_update(Actor *this){
     s32 iVar1;
     if(!this->initialized){
-        this->initialized = TRUE;
-        this->marker->collidable = FALSE;
+        this->initialized = true;
+        this->marker->collidable = false;
     }
     if(!this->despawn_flag && this->unk1C_x < (f32)(globalTimer_getTime() - 1) ){
         //unlink
@@ -131,7 +131,7 @@ void func_802D729C(Actor *actor, f32 arg1){
         if(actor->unk104){
             sp1C = marker_getActor(actor->unk104);
             sp1C->unk104 = NULL;
-            marker_getActor(actor->unk104)->despawn_flag = TRUE;
+            marker_getActor(actor->unk104)->despawn_flag = true;
         }
         else{
         }
@@ -144,7 +144,7 @@ void func_802D729C(Actor *actor, f32 arg1){
     }
 
     sp1C = marker_getActor(actor->unk104);
-    if(sp1C->despawn_flag == TRUE) 
+    if(sp1C->despawn_flag == true) 
         return;
 
     if(!((globalTimer_getTime() ^ actor->marker->actrArrayIdx) & 0x7)){

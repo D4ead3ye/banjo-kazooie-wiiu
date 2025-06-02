@@ -118,7 +118,7 @@ static bool __func_80388088(Actor *this){
     sp2C = this->yaw - func_80329784(this);
     player_getPosition(sp20);
     if(sp20[0] < -5680.0f){
-        return FALSE;
+        return false;
     }
 
     return BOOL(-35.0f < sp2C && sp2C < 35.0f);
@@ -167,7 +167,7 @@ static bool __chNipper_determineMarkerId(ActorMarker * this_marker, ActorMarker 
     else{
         this_marker->id = MARKER_A5_NIPPER;
     }
-    return TRUE;
+    return true;
 }
 
 static void __chNipper_ow2Func(ActorMarker * this_marker, ActorMarker *other_marker){
@@ -179,7 +179,7 @@ static void __chNipper_ow2Func(ActorMarker * this_marker, ActorMarker *other_mar
             && this->has_met_before
             && gcdialog_showText(0xa0f, 0, NULL, NULL, NULL, NULL)
         ){
-            mapSpecificFlags_set(TTC_SPECIFIC_FLAG_7_NIPPER_FIRST_MEET_TEXT_SHOWN, TRUE);
+            mapSpecificFlags_set(TTC_SPECIFIC_FLAG_7_NIPPER_FIRST_MEET_TEXT_SHOWN, true);
         }
     }
 }
@@ -190,7 +190,7 @@ static void __chNipper_owFunc(ActorMarker * this_marker, ActorMarker *other_mark
         && this->has_met_before
         && gcdialog_showText(0xa11, 0, NULL, NULL, NULL, NULL)
     ){
-        this->unk138_23 = TRUE;
+        this->unk138_23 = true;
     }
 }
 
@@ -204,7 +204,7 @@ static void __chNipper_updateFunc(Actor *this){
     player_getPosition(playerPosition);
     xVelocity = func_80309D58(playerPosition, 1);
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->velocity_x = xVelocity;
         func_8032BC18(this);
     }
@@ -213,13 +213,13 @@ static void __chNipper_updateFunc(Actor *this){
         if(0.0f == this->velocity_x && xVelocity){
             comusic_8025AB44(COMUSIC_12_TTC_NIPPER, -1, 5000);
             func_8032BB88(this, 0, 4000);
-            core1_ce60_incOrDecCounter(FALSE);
+            core1_ce60_incOrDecCounter(false);
         }
         else if(!xVelocity && 0.0f != this->velocity_x){
             comusic_8025AB44(COMUSIC_12_TTC_NIPPER, 0, 300);
             func_8025AABC(COMUSIC_12_TTC_NIPPER);
             func_8032BB88(this, -1, 300);
-            core1_ce60_incOrDecCounter(TRUE);
+            core1_ce60_incOrDecCounter(true);
         }
         this->velocity_x = xVelocity;
     }
@@ -230,10 +230,10 @@ static void __chNipper_updateFunc(Actor *this){
                 anctrl_setTransitionDuration(this->anctrl, 0.35f);
                 subaddie_set_state_with_direction(this, CH_NIPPER_STATE_1_UNKNOWN, 0.01f, 1);
                 this->lifetime_value = 120.0f;
-                this->marker->propPtr->unk8_3 = TRUE;
+                this->marker->propPtr->unk8_3 = true;
                 marker_setCollisionScripts(this->marker, __chNipper_owFunc, __chNipper_ow2Func, __chNipper_dieFunc);
                 func_803300C0(this->marker, __chNipper_determineMarkerId);
-                this->initialized = TRUE;
+                this->initialized = true;
             }
 
             if(__chNipper_shouldShowActor(this)){
@@ -244,7 +244,7 @@ static void __chNipper_updateFunc(Actor *this){
                 ){
                     subaddie_set_state_with_direction(this, CH_NIPPER_STATE_5_SPAWNED, 0.01f, 1);
                     if(gcdialog_showText(ASSET_A0E_DIALOG_NIPPER_SPAWNED, 0xf, this->position, this->marker, __chNipper_spawnedShowTextCallback, NULL)){
-                        this->has_met_before = TRUE;
+                        this->has_met_before = true;
                     }
                     comusic_8025AB44(COMUSIC_12_TTC_NIPPER, 5000, 300);
                     ncStaticCamera_setToNode(11);
@@ -323,7 +323,7 @@ static void __chNipper_updateFunc(Actor *this){
             break;
 
         case CH_NIPPER_STATE_6_DEAD:
-            this->marker->collidable = FALSE;
+            this->marker->collidable = false;
             if(actor_animationIsAt(this, 0.6f)){
                 FUNC_8030E8B4(SFX_7C_CHEBOOF, 0.9f, 20000, this->position, 1500, 3000);
                 break;
@@ -335,7 +335,7 @@ static void __chNipper_updateFunc(Actor *this){
             break;
 
         case CH_NIPPER_STATE_7_UNKNOWN:
-            this->marker->collidable = FALSE;
+            this->marker->collidable = false;
             break;
     }
 }

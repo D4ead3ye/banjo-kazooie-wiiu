@@ -14,11 +14,11 @@ ActorInfo D_80390F00 = { MARKER_AB_RUBEES_EGG_POT, ACTOR_11D_RUBEES_EGG_POT, ASS
 
 /* .code */
 void GV_func_80389E90(Actor *this){
-    this->marker->propPtr->unk8_3 = FALSE;
+    this->marker->propPtr->unk8_3 = false;
 }
 
 void GV_func_80389EA8(Actor *this){
-    this->marker->propPtr->unk8_3 = FALSE;
+    this->marker->propPtr->unk8_3 = false;
     this->unk4C = 100 + 40*func_8038E178();
     func_80343DEC(this);
 

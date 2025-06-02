@@ -438,9 +438,9 @@ bool audioManager_handleFrameMsg(AudioInfo *info, AudioInfo *prev_info){
 
 void audioManager_handleDoneMsg(AudioInfo *info)
 {   
-    static int D_8027584C = TRUE;
-	if (osAiGetLength() >> 2 == 0 && D_8027584C == FALSE) {
-		D_8027584C = FALSE;
+    static int D_8027584C = true;
+	if (osAiGetLength() >> 2 == 0 && D_8027584C == false) {
+		D_8027584C = false;
 	}
 }
 

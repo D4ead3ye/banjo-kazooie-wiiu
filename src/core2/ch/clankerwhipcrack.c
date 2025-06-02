@@ -30,7 +30,7 @@ void func_803567EC(Actor *this){
     f32 sp40;
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->roll = this->yaw;
         this->yaw = 0.0f;
         func_80356770(this, 1);

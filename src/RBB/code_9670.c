@@ -45,7 +45,7 @@ void func_8038FB6C(void){
 
 void RBB_func_8038FB84(Actor *this){
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         D_803912B0 = 0;
         func_8038FA9C(this, 1);
     }

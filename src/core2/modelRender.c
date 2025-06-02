@@ -672,9 +672,9 @@ f32 D_80383C98[3];
 void modelRender_reset(void){
     modelRenderBoneTransformList = 0;
     D_80383708 = 30000.0f;
-    D_80383704 = TRUE;
+    D_80383704 = true;
     D_8038370C = 1.0f;
-    D_80383710 = FALSE;
+    D_80383710 = false;
     modelRenderColorMode = COLOR_MODE_STATIC_OPAQUE;
     D_80383650 = 0;
     modelRenderDisplayList = NULL;
@@ -1441,7 +1441,7 @@ void modelRender_setDisplayList(BKGfxList *gfx_list){
 }
 
 void func_8033A308(f32 arg0[3]){
-    D_803837B0.unk0 = TRUE;
+    D_803837B0.unk0 = true;
     D_803837B0.unk4[0] = arg0[0];
     D_803837B0.unk4[1] = arg0[1];
     D_803837B0.unk4[2] = arg0[2];

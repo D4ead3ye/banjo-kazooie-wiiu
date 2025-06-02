@@ -45,7 +45,7 @@ ActorInfo D_80372A6C = { 0x1C1, 0x317, 0x0, 0, NULL, func_80359454, NULL, func_8
 
 /* .code */
 int func_80359110(Actor *this){
-    return TRUE;
+    return true;
 }
 
 int func_8035911C(Actor *this){
@@ -105,7 +105,7 @@ void func_803591E8(Actor *this, s32 next_state){
 void func_8035933C(Actor *this){
     ActorLocal_core2_D2180 * local = (ActorLocal_core2_D2180 *) &this->local;
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         local->unk0 = D_80372940 + (this->modelCacheIndex - 0x2AE);
         func_803591E8(this, 1);
     }

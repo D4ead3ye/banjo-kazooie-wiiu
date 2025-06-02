@@ -19,7 +19,7 @@ Struct_Core2_CB610_0 D_803861C0[40];
 void func_80352830(void){
     s32 i;
     for(i = 1; i < 40; i++){
-        D_803861C0[i].occupied = FALSE;
+        D_803861C0[i].occupied = false;
     }
 }
 

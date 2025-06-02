@@ -44,7 +44,7 @@ void func_802C5A60(Actor *this){
         this->marker->propPtr->unk8_5 = 0.5 < randf();
         this->position_y += 100.0*this->scale;
         actor_collisionOff(this);
-        this->initialized = TRUE;
+        this->initialized = true;
     }//L802C5B60
     this->marker->propPtr->unk8_15 = D_80365F30[local->unk0];
     local->unk0++;

@@ -98,14 +98,14 @@ void actor_predrawMethod(Actor *this){
     }
 
     if(this->marker->unk20 != NULL){
-        sp44 = FALSE;
+        sp44 = false;
         if(this->unk148 != NULL){
             animMtxList_setBoned(&this->marker->unk20, model_getAnimationList(sp48), skeletalAnim_getBoneTransformList(this->unk148));
-            sp44 = TRUE;
+            sp44 = true;
         }//L8032542C
         else if(this->anctrl != NULL && model_getAnimationList(sp48)){
             anim_802897D4(&this->marker->unk20, model_getAnimationList(sp48), anctrl_getAnimPtr(this->anctrl));
-            sp44 = TRUE;
+            sp44 = true;
         }//L80325474
 
         if(sp44){
@@ -187,11 +187,11 @@ void func_80325760(Actor *this) {
 }
 
 void actor_postdrawMethod(ActorMarker *marker){
-    marker->unk14_21 = TRUE;
+    marker->unk14_21 = true;
 }
 
 void func_803257A4(ActorMarker *marker){
-    marker->unk14_21 = TRUE;
+    marker->unk14_21 = true;
 }
 
 BKModelBin *func_803257B4(ActorMarker *marker) {
@@ -555,8 +555,8 @@ void func_803268B4(void) {
                             }
                         }
                     }
-                    actor->unk124_7 = TRUE;
-                    actor->unk138_28 = FALSE;
+                    actor->unk124_7 = true;
+                    actor->unk138_28 = false;
                     if (anim_ctrl != NULL) {
                         anctrl_update(anim_ctrl);
                     }
@@ -728,7 +728,7 @@ bool func_803270B8(f32 arg0[3], f32 arg1, enum marker_collision_func_type_e arg2
     Actor * start;
     Actor * i_ptr;
 
-    var_s4 = FALSE;
+    var_s4 = false;
     start = &suBaddieActorArray->data[0];
     for(i_ptr = start; (suBaddieActorArray != NULL) && (i_ptr - start < suBaddieActorArray->cnt); i_ptr++){
         if( !i_ptr->despawn_flag 
@@ -738,7 +738,7 @@ bool func_803270B8(f32 arg0[3], f32 arg1, enum marker_collision_func_type_e arg2
         ) {
             if (i_ptr->marker->unk58 == NULL || i_ptr->marker->unk58(i_ptr->marker, arg4)
             ) {
-                var_s4 = TRUE;
+                var_s4 = true;
                 if (!func_8033D410(arg4, i_ptr->marker)) {
                     marker_callCollisionFunc(i_ptr->marker, arg4, arg2);
                 }
@@ -833,10 +833,10 @@ Actor *actor_new(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags){
     suLastBaddie->unk144 = 0.0f;
     suLastBaddie->unk44_1 = 0;
     suLastBaddie->unk44_0 = 0;
-    suLastBaddie->initialized = FALSE;
-    suLastBaddie->volatile_initialized = FALSE;
+    suLastBaddie->initialized = false;
+    suLastBaddie->volatile_initialized = false;
     suLastBaddie->lifetime_value = 0.0f;
-    suLastBaddie->is_bundle = FALSE;
+    suLastBaddie->is_bundle = false;
     suLastBaddie->unk104 = NULL;
     suLastBaddie->unk100 = NULL;
     suLastBaddie->unk158[0] = NULL;
@@ -882,7 +882,7 @@ Actor *actor_new(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags){
     suLastBaddie->unk14C[0] = NULL;
     suLastBaddie->unk14C[1] = NULL;
     suLastBaddie->unk138_27 = 0;
-    suLastBaddie->has_met_before = FALSE;
+    suLastBaddie->has_met_before = false;
     suLastBaddie->unk138_23 = 0;
     suLastBaddie->unk138_22 = 0;
     suLastBaddie->unk138_21 = 0;
@@ -1164,7 +1164,7 @@ static bool __subaddie_set_state(Actor *this, s32 state)
     s32 index;
     this->state = state;
     if (this->unk18 == 0)
-        return FALSE;
+        return false;
     
     animInfo = this->unk18 + state;
     index = animInfo->index;
@@ -1183,7 +1183,7 @@ static bool __subaddie_set_state(Actor *this, s32 state)
         anctrl_setPlaybackType(this->anctrl, ANIMCTRL_STOPPED);
         anctrl_setDirection(this->anctrl, mvmt_dir_forwards);
     }
-    return TRUE;
+    return true;
 }
 
 void func_803285E8(Actor *this, f32 anim_start_position, int direction){
@@ -1227,7 +1227,7 @@ s32 func_80328748(AnimCtrl *anim_ctrl, f32 min, f32 max) {
         return sp24;
     }
     sp20 = anctrl_getAnimTimer(anim_ctrl);
-    if (anctrl_isPlayedForwards(anim_ctrl) == TRUE) {
+    if (anctrl_isPlayedForwards(anim_ctrl) == true) {
         if (max <= sp20) {
             anctrl_setAnimTimer(anim_ctrl, max);
             anctrl_setDirection(anim_ctrl, 0);
@@ -1328,9 +1328,9 @@ bool subaddie_maybe_set_state_position_direction(Actor *this, s32 myAnimId, f32 
             func_803285E8(this, start_position, direction);
             anctrl_start(this->anctrl, "subaddie.c", 0x705);
         }
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 void subaddie_set_ideal_yaw(Actor * this, int arg1){
@@ -1416,16 +1416,16 @@ bool func_80329078(Actor *this, s32 arg1, s32 arg2){
     f32 sp1C[3];
 
     if(this->unk10_25 == 0)
-        return TRUE;
+        return true;
 
     sp1C[0] = this->position[0];
     sp1C[1] = this->position[1];
     sp1C[2] = this->position[2];
     func_80328478(sp1C, arg1, arg2);
     if(func_80307258(sp1C, this->unk10_25 - 1, this->unk10_18 - 1) == -1){
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 bool func_80329140(Actor *this, s32 arg1, s32 arg2){
@@ -1442,9 +1442,9 @@ bool func_80329140(Actor *this, s32 arg1, s32 arg2){
     }
     if(var_v0 == 0){
         if (this->unk10_18 != 0) 
-            return FALSE;
+            return false;
     }
-    return TRUE;
+    return true;
 }
 
 int func_80329210(Actor * arg0, f32 (* arg1)[3]){
@@ -1459,9 +1459,9 @@ bool func_80329260(Actor *this, f32 p1[3]){
         this->unk10_18 = var_v0;
     }
     if(var_v0 == 0 && this->unk10_18 != 0){
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 bool func_803292E0(Actor *this){
@@ -1485,7 +1485,7 @@ bool func_80329384(Actor *this, f32 arg1){
     f32 sp1C[3];
 
     if(this->unk10_25 == 0)
-        return TRUE;
+        return true;
 
     _player_getPosition(sp1C);
 
@@ -1527,9 +1527,9 @@ bool func_80329530(Actor *this, s32 dist){
         && !volatileFlag_get(VOLATILE_FLAG_BF) 
         && subaddie_playerIsWithinSphere(this, dist)
     ){
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 bool subaddie_playerIsWithinSphere(Actor *this, s32 dist){
@@ -1544,9 +1544,9 @@ bool subaddie_playerIsWithinSphere(Actor *this, s32 dist){
           + (this->position_z - sp24[2])*(this->position_z - sp24[2]) 
         ) < dist*dist
     ){
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 bool subaddie_playerIsWithinAsymmetricCylinder(Actor *this, s32 radius, s32 d_upper, s32 d_lower){
@@ -1555,7 +1555,7 @@ bool subaddie_playerIsWithinAsymmetricCylinder(Actor *this, s32 radius, s32 d_up
     player_getPosition(sp1C);
 
     if(((this->position[1] + d_upper) < sp1C[1]) || (sp1C[1] < (this->position[1] - d_lower))){
-        return FALSE;
+        return false;
     }
     return subaddie_playerIsWithinSphere(this, radius);
 
@@ -1567,7 +1567,7 @@ bool subaddie_playerIsWithinCylinder(Actor *this, s32 radius, s32 d_y){
 
 bool func_803296D8(Actor *this, s32 dist){
     if(!this->unk124_7){
-        return TRUE;
+        return true;
     }
     else{
         return func_80329530(this, dist);
@@ -1669,7 +1669,7 @@ void func_803299B4(Actor *arg0) {
     arg0->marker->unk2C_1 = arg0->unkF4_26;
     arg0->marker->collidable = arg0->stored_marker_collidable;
 
-    arg0->unk124_7  = FALSE;
+    arg0->unk124_7  = false;
     arg0->unk138_7 = 0;
     position[0] = (s32) arg0->position[0];
     position[1] = (s32) arg0->position[1];
@@ -1743,7 +1743,7 @@ void *actors_appendToSavestate(void * begin, u32 end){
                 s0->unk14C[0] =s0->unk14C[1] = NULL;
                 // s0->unk14C = NULL;
                 s0->unk148 = NULL;
-                s0->volatile_initialized = FALSE;
+                s0->volatile_initialized = false;
                 s0->unk44_31 = 0;
                 s0->unk104 = NULL;
                 s0->unk100 = NULL;
@@ -1951,7 +1951,7 @@ void func_8032A88C(Actor *arg0) {
     if ((((arg0->position[0] - sp20->unk0[0]) * (arg0->position[0] - sp20->unk0[0])) + ((arg0->position[2] - sp20->unk0[2]) * (arg0->position[2] - sp20->unk0[2]))) <= 144.0f) {
         arg0->unk44_14 = sp20->unkE;
         arg0->unk48 = 0.0f;
-        arg0->marker->unk2C_2 = TRUE;
+        arg0->marker->unk2C_2 = true;
     }
 }
 
@@ -1960,8 +1960,8 @@ void func_8032A95C(Actor *arg0, s32 arg1, s32 arg2) {
     func_80343F00(arg1, arg0->position);
     arg0->unk44_14 = arg1;
     arg0->unk48 = 0.0f;
-    arg0->marker->unk2C_2 = TRUE;
-    arg0->unk44_1 = TRUE;
+    arg0->marker->unk2C_2 = true;
+    arg0->unk44_1 = true;
     arg0->unk10_3 = 0;
 }
 
@@ -1979,11 +1979,11 @@ void func_8032AA58(Actor *this, f32 scale){
 }
 
 void actor_collisionOff(Actor* this){
-    this->marker->collidable = FALSE;
+    this->marker->collidable = false;
 }
 
 void actor_collisionOn(Actor* this){
-    this->marker->collidable = TRUE;
+    this->marker->collidable = true;
 }
 
 void func_8032AA9C(void){
@@ -2337,10 +2337,10 @@ void func_8032BB88(Actor *this, s32 arg1, s32 arg2){
 
 bool func_8032BBE8(Actor *this){
     if(this->volatile_initialized){
-        return TRUE;
+        return true;
     }
-    this->volatile_initialized = TRUE;
-    return FALSE;
+    this->volatile_initialized = true;
+    return false;
 }
 
 void func_8032BC18(Actor *this){

@@ -102,7 +102,7 @@ void func_8038ADFC(f32 pos[3], s32 cnt){
 }
 
 void func_8038AF10(Actor *this){
-    anctrl_setSmoothTransition(this->anctrl, TRUE);
+    anctrl_setSmoothTransition(this->anctrl, true);
     subaddie_set_state_with_direction(this, 3, 0.00001f, 1);
     actor_loopAnimation(this);
     this->actor_specific_1_f = 16.0f;
@@ -145,7 +145,7 @@ void func_8038B0BC(ActorMarker *this_marker, ActorMarker *other_marker){
 
 void func_8038B124(Actor *this){
     if(!this->initialized){
-        this->initialized = TRUE;
+        this->initialized = true;
         this->unk38_31 = 0;
         this->unk1C[0] = 0.0f;
         this->unk1C[2] = 240.0f;
@@ -155,12 +155,12 @@ void func_8038B124(Actor *this){
     }
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if(this->state == 0xa)
             marker_despawn(this->marker);
 
         marker_setCollisionScripts(this->marker, func_8038B0BC, func_8038B08C, func_8038AFF4);
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->marker->propPtr->unk8_3 = true;
         actor_collisionOn(this);
         this->unk138_27 = 1;
         this->unk1C[1] = 0.0f;
@@ -175,10 +175,10 @@ void func_8038B124(Actor *this){
 
     if(!subaddie_playerIsWithinSphere(this, 4500)) return;
 
-    this->unk58_0 = TRUE;
+    this->unk58_0 = true;
     switch(this->state){
         case 1: //L8038B2A4
-            this->unk58_0 = FALSE;
+            this->unk58_0 = false;
             if(0.0 < this->unk1C[1]){
                 this->unk1C[1] = MAX((f64)(this->unk1C[1] - time_getDelta()), 0.0);
             }//L8038B33C
@@ -312,7 +312,7 @@ void func_8038B124(Actor *this){
             break;
 
         case 10: //L8038B900
-            this->unk58_0 = FALSE;
+            this->unk58_0 = false;
             if(0.0f != this->unk1C[2]){
                 this->unk1C[2] -= 1.0f;
             }

@@ -130,7 +130,7 @@ void func_8038944C(Actor *this){
 
     if(!this->volatile_initialized){
         this->marker->propPtr->unk8_3 = 1;
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         local->unkC = func_80389280(this);
         if(this->state == 0){
             ml_vec3f_copy(this->position, local->unkC->unk4);

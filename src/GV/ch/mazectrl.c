@@ -50,7 +50,7 @@ void __chMazeCtrl_markerSetState(ActorMarker *this_marker, s32 arg1){
 void __chMazeCtrl_8038F5E4(Actor *this){
     if(this->state == 2){
         comusic_8025AB44(COMUSIC_26_GV_SANDYBUTT_DANGER, 0, 30000);
-        item_set(ITEM_6_HOURGLASS, FALSE);
+        item_set(ITEM_6_HOURGLASS, false);
     }
 }
 
@@ -67,7 +67,7 @@ void __chMazeCtrl_setState(Actor *this, s32 next_state){
         func_8025A58C(0, 4000);
         func_8025A6EC(COMUSIC_26_GV_SANDYBUTT_DANGER, 30000);
         item_set(ITEM_0_HOURGLASS_TIMER, 0xdd3);
-        item_set(ITEM_6_HOURGLASS, TRUE);
+        item_set(ITEM_6_HOURGLASS, true);
         func_8038F520(1.0f);
         FUNC_8030E624(SFX_3F6_RUBBING, 0.8f, 25000);
         FUNC_8030E624(SFX_3F6_RUBBING, 0.7f, 25000);
@@ -86,7 +86,7 @@ void __chMazeCtrl_setState(Actor *this, s32 next_state){
 
         if (!levelSpecificFlags_get(LEVEL_FLAG_16_GV_UNKNOWN)) {
             gcdialog_showText(ASSET_A82_DIALOG_SANDYBUTT_START_MAZE, 4, NULL, NULL, NULL, NULL);
-            levelSpecificFlags_set(LEVEL_FLAG_16_GV_UNKNOWN, TRUE);
+            levelSpecificFlags_set(LEVEL_FLAG_16_GV_UNKNOWN, true);
         }
     }//L8038F794
 
@@ -94,7 +94,7 @@ void __chMazeCtrl_setState(Actor *this, s32 next_state){
         func_8025A58C(-1, 400);
         comusic_8025AB44(COMUSIC_26_GV_SANDYBUTT_DANGER, 0, 0x190);
         func_8025AABC(COMUSIC_26_GV_SANDYBUTT_DANGER);
-        item_set(ITEM_6_HOURGLASS, FALSE);
+        item_set(ITEM_6_HOURGLASS, false);
     }
 
     if(next_state == 3){
@@ -136,7 +136,7 @@ void __chMazeCtrl_setState(Actor *this, s32 next_state){
         
         if(!levelSpecificFlags_get(LEVEL_FLAG_17_GV_UNKNOWN)){
             gcdialog_showText(ASSET_A83_DIALOG_SANDYBUTT_DONE, 4, NULL, NULL, NULL, NULL);
-            levelSpecificFlags_set(LEVEL_FLAG_17_GV_UNKNOWN, TRUE);
+            levelSpecificFlags_set(LEVEL_FLAG_17_GV_UNKNOWN, true);
         }
     }
 
@@ -152,11 +152,11 @@ void chMazeCtrl_update(Actor *this){
 
     sp34 = time_getDelta();
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->marker->actorFreeFunc = __chMazeCtrl_8038F5E4;
         if(this->state == 2){
             comusic_8025AB44(COMUSIC_26_GV_SANDYBUTT_DANGER, 30000, 30000);
-            item_set(ITEM_6_HOURGLASS, TRUE);
+            item_set(ITEM_6_HOURGLASS, true);
         }
         else{
             func_8038F56C(0.0f);
@@ -166,7 +166,7 @@ void chMazeCtrl_update(Actor *this){
             local->unk8 = 1.0f;
         }//L8038FA8C
         if(jiggyscore_isCollected(JIGGY_41_GV_MAZE))
-            levelSpecificFlags_set(LEVEL_FLAG_17_GV_UNKNOWN, TRUE);
+            levelSpecificFlags_set(LEVEL_FLAG_17_GV_UNKNOWN, true);
     }//L8038FAA4
 
     player_getPosition(sp3C);
@@ -180,7 +180,7 @@ void chMazeCtrl_update(Actor *this){
             && ml_timer_update(&local->unk8, sp34)
             && gcdialog_showText(ASSET_A81_DIALOG_SANDYBUTT_ENTER, 0, NULL, NULL, NULL, NULL)
         ) {
-            levelSpecificFlags_set(LEVEL_FLAG_15_GV_UNKNOWN, TRUE);
+            levelSpecificFlags_set(LEVEL_FLAG_15_GV_UNKNOWN, true);
         }
     }//L8038FB34
 

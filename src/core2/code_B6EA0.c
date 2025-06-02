@@ -225,7 +225,7 @@ int func_8033E3F0(enum common_particle_e particle_id, int arg1){
     D_80384490[D_80384FD0].marker_30 = func_8032FBE4(sp34, func_8033DE60, 1, commonParticleType_80352C7C(particle_id));
     D_80384490[D_80384FD0].marker_30->unk40_22 = 1;
     func_8032FFEC(D_80384490[D_80384FD0].marker_30, (u32)D_80384FD0);
-    D_80384490[D_80384FD0].marker_30->collidable = FALSE;
+    D_80384490[D_80384FD0].marker_30->collidable = false;
     func_80352A38(D_80384490[D_80384FD0].unk46, particle_id);
     func_8033FFB8(D_80384490[D_80384FD0].unk45, animsprite_get_frame(D_80384490[D_80384FD0].unk34));
     projectile_getPosition(D_80384490[D_80384FD0].unk45, sp34);

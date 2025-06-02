@@ -52,9 +52,9 @@ bool snspayload_validate(struct SnsPayload *payload)
     glcrc_calc_checksum(payload, payload->checksum, checksum);
 
     if ((payload->checksum[0] == checksum[0]) && (payload->checksum[1] == checksum[1]))
-        return TRUE;
+        return true;
 
-    return FALSE;
+    return false;
 }
 
 struct SnsPayload *snspayload_find_payload_in_ram(void)

@@ -23,7 +23,7 @@ ActorInfo chRaceSled = {
 /* .code */
 Actor *chRaceSled_draw(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
     Actor *this = marker_getActor(marker);
-    if(this->unk10_12 == FALSE){
+    if(this->unk10_12 == false){
         return actor_draw(marker, gfx, mtx, vtx);
     }
     return this;
@@ -34,16 +34,16 @@ void __chRaceSled_setState(Actor *this, s32 next_state){
         subaddie_set_state(this, next_state);
         switch(next_state){
             case 1: //L8038697C
-                this->unk10_12 = TRUE;
-                this->marker->propPtr->unk8_3 = FALSE;
+                this->unk10_12 = true;
+                this->marker->propPtr->unk8_3 = false;
                 break;
             case 2: //L803869A4
-                this->unk10_12 = FALSE;
-                this->marker->propPtr->unk8_3 = TRUE;
+                this->unk10_12 = false;
+                this->marker->propPtr->unk8_3 = true;
                 break;
             case 3: //L803869CC
-                this->unk10_12 = TRUE;
-                this->marker->propPtr->unk8_3 = FALSE;
+                this->unk10_12 = true;
+                this->marker->propPtr->unk8_3 = false;
                 break;
         }
     }
@@ -68,7 +68,7 @@ void __chRaceSled_touch(ActorMarker *this_marker, ActorMarker *other_marker){
 void chRaceSled_update(Actor *this){
     s32 sp24;
     if(!this->initialized){
-        this->initialized = TRUE;
+        this->initialized = true;
         marker_setCollisionScripts(this->marker, __chRaceSled_touch, NULL, NULL);
         __chRaceSled_setState(this, 1);
     }

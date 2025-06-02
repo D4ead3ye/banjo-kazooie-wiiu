@@ -565,9 +565,9 @@ s32 func_802445AC(N_AL_Struct81s *arg0){
 bool func_802445C4(ALBank *bank, s16 arg1){
     ALSound *snd = bank->instArray[0]->soundArray[arg1-1];
     if (snd->envelope->decayTime == -1)
-        return TRUE;
+        return true;
     else
-        return FALSE;
+        return false;
 }
 
 void *func_80244608(ALBank *bank, s16 arg1, struct46s *arg2) {

@@ -100,7 +100,7 @@ static void _chskeleton_init(Actor *this) {
     local->unk28 = 0x118;
     local->unk2A = 32000;
     local->unk2C = 1.0f;
-    local->unkC_28 = TRUE;
+    local->unkC_28 = true;
     local->unk30 = func_802DB4E0;
     local->unk34 = chskeleton_despawn;
 

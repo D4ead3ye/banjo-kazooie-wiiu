@@ -196,7 +196,7 @@ bool func_8029D66C(void){
         case MAP_7F_FP_WOZZAS_CAVE://L8029D790
             return player_inWater();
     }
-    return FALSE;
+    return false;
 }
 
 bool canTakeGroundDamage(void){

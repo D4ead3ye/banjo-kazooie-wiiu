@@ -70,7 +70,7 @@ int func_80290D48(void){
     camera_node_index = func_802903CC();
     if(camera_node_index == -1 || !ncCameraNodeList_nodeIsValid(camera_node_index)){
         func_80290BC0(0);
-        return FALSE;
+        return false;
     }
 
     sp1C = bs_getState();
@@ -79,25 +79,25 @@ int func_80290D48(void){
             sp28 = ncCameraNodeList_getCameraNodeType4(camera_node_index);
             sp24 = code33250_func_802BA234(sp28);
             func_80290BC0(sp24);
-            return FALSE;
+            return false;
         case 3: //L80290DD8
             if(bsBeeFly_inSet(sp1C) && !code33310_func_802BA4D0(ncCameraNodeList_getCameraNodeType3(camera_node_index))){
-                return FALSE;
+                return false;
             }
             ncDynamicCamera_setState(0x11);
             func_802BF798(camera_node_index);
             func_80291488(0x9);
-            return TRUE;
+            return true;
         case 1://L80290E28
             if(bsBeeFly_inSet(sp1C) && !code336F0_func_802BA89C(ncCameraNodeList_getCameraNodeType1(camera_node_index))){
-                return FALSE;
+                return false;
             }
             ncDynamicCamera_setState(0x8);
             ncDynamicCam8_func_802BF9B8(camera_node_index);
             func_80291488(0x9);
-            return TRUE;
+            return true;
         default://L80290E7C
-            return FALSE;
+            return false;
     }
     
 
@@ -105,7 +105,7 @@ int func_80290D48(void){
 
 int func_80290E8C(void){
     if(player_getWaterState() != BSWATERGROUP_2_UNDERWATER)
-        return FALSE;
+        return false;
 
     ncDynamicCamera_setState(3);
     func_80291488(0xB);
@@ -114,7 +114,7 @@ int func_80290E8C(void){
     ){
         func_802C1B20(1100.0f);
     }
-    return TRUE;
+    return true;
 }
 
 void func_80290F14(void){
@@ -153,21 +153,21 @@ void func_8029103C(void){
 
 int func_8029105C(s32 arg0){
     if(func_80298850())
-        return FALSE;
+        return false;
 
     if(bainput_should_rotate_camera_left() && ncDynamicCamA_func_802C1DB0(-45.0f)){
         func_80291488(arg0);
         func_8029103C();
-        return TRUE;
+        return true;
     }
     
     if(bainput_should_rotate_camera_right() && ncDynamicCamA_func_802C1DB0(45.0f)){
         func_80291488(arg0);
         func_8029103C();
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
 }
 
 //_camera_mode_1_update

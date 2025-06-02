@@ -123,7 +123,7 @@ void func_8038B340(Actor * this){
     ActorLocal_RBB_4C70 *local = (ActorLocal_RBB_4C70 *)&this->local;
     if(!this->volatile_initialized){
         this->marker->propPtr->unk8_3 = 1;
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         local->unk0 = func_8038B060(this);
         
         local->unk4[2] = 0.0f;

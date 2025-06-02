@@ -4,7 +4,7 @@
 #include "variables.h"
 #include "save.h"
 
-bool snsToRestoreItems = FALSE;
+bool snsToRestoreItems = false;
 struct SnsPayload *snsBasePayloadPtr1 = NULL;
 struct SnsPayload *snsBasePayloadPtr2 = NULL;
 struct SnsPayload *snsBasePayloadPtr3 = NULL;
@@ -70,21 +70,21 @@ void sns_save_and_update_global_data(void)
          * Clears the entire global data area.
          */
 
-        gSaveData.sns.uEggYellow = FALSE;
-        gSaveData.sns.uEggRed    = FALSE;
-        gSaveData.sns.uEggGreen  = FALSE;
-        gSaveData.sns.uEggBlue   = FALSE;
-        gSaveData.sns.uEggPink   = FALSE;
-        gSaveData.sns.uEggCyan   = FALSE;
-        gSaveData.sns.uIceKey    = FALSE;
+        gSaveData.sns.uEggYellow = false;
+        gSaveData.sns.uEggRed    = false;
+        gSaveData.sns.uEggGreen  = false;
+        gSaveData.sns.uEggBlue   = false;
+        gSaveData.sns.uEggPink   = false;
+        gSaveData.sns.uEggCyan   = false;
+        gSaveData.sns.uIceKey    = false;
 
-        gSaveData.sns.cEggYellow = FALSE;
-        gSaveData.sns.cEggRed    = FALSE;
-        gSaveData.sns.cEggGreen  = FALSE;
-        gSaveData.sns.cEggBlue   = FALSE;
-        gSaveData.sns.cEggPink   = FALSE;
-        gSaveData.sns.cEggCyan   = FALSE;
-        gSaveData.sns.cIceKey    = FALSE;
+        gSaveData.sns.cEggYellow = false;
+        gSaveData.sns.cEggRed    = false;
+        gSaveData.sns.cEggGreen  = false;
+        gSaveData.sns.cEggBlue   = false;
+        gSaveData.sns.cEggPink   = false;
+        gSaveData.sns.cEggCyan   = false;
+        gSaveData.sns.cIceKey    = false;
 
         gSaveData.snsw = gSaveData.snsw << SNS_NUM_FLAGS >> SNS_NUM_FLAGS ^ gSaveData.snsw;
 
@@ -161,10 +161,10 @@ bool sns_get_or_set_key(bool state, struct SnsPayload *payload, s32 key, s32 mod
 
         sns_init_parsing_params(key, key);
 
-        return sns_get_next_key_in_range() ? TRUE : state;
+        return sns_get_next_key_in_range() ? true : state;
     }
 
-    return FALSE;
+    return false;
 }
 
 void sns_commit_collected_flags(s32 mode, struct SnsPayload *payload)
@@ -243,15 +243,15 @@ void sns_stub(void) {}
  * This value is unused in the retail builds, but may have
  * been used in debug builds.
  * 
- * If TRUE, on boot, the game will start in the furnace fun
+ * If true, on boot, the game will start in the furnace fun
  * portal room (used for testing furnace fun?)
  * 
- * If FALSE, on boot, the game will start on the file select
+ * If false, on boot, the game will start on the file select
  * screen (skips all the logo cutscenes)
  */
 bool DEBUG_use_special_bootmap(void)
 {
-    return FALSE;
+    return false;
 }
 
 /**
@@ -259,7 +259,7 @@ bool DEBUG_use_special_bootmap(void)
  */
 bool func_8025B818(void)
 {
-    return TRUE;
+    return true;
 }
 
 bool sns_get_item_state(enum StopNSwop_Item item, s32 set)
@@ -274,7 +274,7 @@ bool sns_get_item_state(enum StopNSwop_Item item, s32 set)
         case SNS_ITEM_EGG_CYAN:   return set == SNS_COLLECTED ? gSaveData.sns.cEggCyan   : gSaveData.sns.uEggCyan;
         case SNS_ITEM_ICE_KEY:    return set == SNS_COLLECTED ? gSaveData.sns.cIceKey    : gSaveData.sns.uIceKey;
         default:
-            return FALSE;
+            return false;
     }
 }
 
@@ -336,15 +336,15 @@ void sns_backup_items_and_unlock_all(void)
 
     sns_write_payload_over_heap();
 
-    snsToRestoreItems = TRUE;
+    snsToRestoreItems = true;
 
     // statements on same line for match (why?)
     snsBackedUpItems = 0; for (i = 1; i < SNS_ITEM_length; i++)
     {
         snsBackedUpItems = (sns_get_item_state(i, SNS_UNLOCKED)  ? 1 : 0) + (snsBackedUpItems << 1);
         snsBackedUpItems = (sns_get_item_state(i, SNS_COLLECTED) ? 1 : 0) + (snsBackedUpItems << 1);
-        sns_set_item_state(i, SNS_UNLOCKED,  TRUE);
-        sns_set_item_state(i, SNS_COLLECTED, FALSE);
+        sns_set_item_state(i, SNS_UNLOCKED,  true);
+        sns_set_item_state(i, SNS_COLLECTED, false);
     }
 }
 
@@ -369,6 +369,6 @@ void sns_restore_backed_up_items(void)
         snsBackedUpItems >>= 1;
     }
 
-    snsToRestoreItems = FALSE;
+    snsToRestoreItems = false;
 }
 

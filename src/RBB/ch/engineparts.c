@@ -112,7 +112,7 @@ void func_8038A724(Actor *this){
 
     if(!this->volatile_initialized){
         this->marker->propPtr->unk8_3 = 1;
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         actor_collisionOff(this);
         local->unk0 = 0;
         local->unk0 = (this->modelCacheIndex == 0x17E) ? 1: local->unk0;

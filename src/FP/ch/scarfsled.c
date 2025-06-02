@@ -24,7 +24,7 @@ void __chScarfSled_setState(Actor *this, s32 next_state){
     subaddie_set_state(this, next_state);
     
     if(next_state == 2){
-        mapSpecificFlags_set(0xB, TRUE);
+        mapSpecificFlags_set(0xB, true);
         timed_setStaticCameraToNode(0.0f, 0x27);
         timed_playSfx(0.6f, SFX_52_BANJO_YAH_OH, 1.0f, 28000);
         timed_playSfx(1.25f, SFX_31_BANJO_OHHWAAOOO, 1.0f, 28000);
@@ -55,7 +55,7 @@ void __chScarfSled_func_8038655C(Actor *this){
     int tmp;
     tmp_bool = (mlAbsF(this->position_y - this->velocity_y) < 100.0f);
     tmp = this->unk10_12;
-    this->unk10_12 = FALSE;
+    this->unk10_12 = false;
     if(!tmp_bool){
         if(tmp != 0){
             func_8030E6A4(SFX_19_BANJO_LANDING_08, func_8030E200(this->unk44_31), 0x55f0);
@@ -66,7 +66,7 @@ void __chScarfSled_func_8038655C(Actor *this){
             this->unk44_31 = func_8030ED2C(SFX_18_BIGBUTT_SLIDE, 2);
             func_8030E0FC(this->unk44_31, 0.9f, 1.5f, 1.2f);
         }
-        this->unk10_12 = TRUE;
+        this->unk10_12 = true;
         func_8030E2C4(*((u8*)this + 0x44));
     }
 }
@@ -108,7 +108,7 @@ void __chScarfSled_func_80386630(Actor *this){
     }//L80386724
 
     if(1.0 == this->unk48){
-        mapSpecificFlags_set(1, TRUE);
+        mapSpecificFlags_set(1, true);
         FUNC_8030E624(SFX_103_FLOTSAM_DEATH, 1.0f, 30000);
         FUNC_8030E624(SFX_11_WOOD_BREAKING_1, 0.8f, 25000);
         FUNC_8030E624(SFX_D_EGGSHELL_BREAKING, 1.0f, 25000);
@@ -123,16 +123,16 @@ void __chScarfSled_func_80386630(Actor *this){
 
 void chScarfSled_update(Actor *this){
     if(!this->initialized){
-        this->initialized = TRUE;
+        this->initialized = true;
         marker_setCollisionScripts(this->marker, __chScarfSled_touch, NULL, NULL);
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->marker->propPtr->unk8_3 = true;
         this->unk10_12 = 0;
         ml_vec3f_clear(this->velocity);
         __chScarfSled_setState(this, 1);
     }
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if(jiggyscore_isCollected(JIGGY_2A_FP_BOGGY_1)){
             marker_despawn(this->marker);
             return;

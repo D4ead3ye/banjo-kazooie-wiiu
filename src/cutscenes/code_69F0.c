@@ -79,7 +79,7 @@ extern void func_8038CF50(Actor *this){
     int i;
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         local->unk0 = partEmitMgr_newEmitter(6);
         local->unk4 = partEmitMgr_newEmitter(6);
 

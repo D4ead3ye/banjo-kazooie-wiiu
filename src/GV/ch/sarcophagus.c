@@ -35,11 +35,11 @@ s32 D_80390E88[4] = {0, 0, 0, 0};
 
 /* .code */
 void GV_func_803894B0(Actor *this){
-    this->marker->propPtr->unk8_3 = TRUE;
+    this->marker->propPtr->unk8_3 = true;
     actor_collisionOff(this);
     subaddie_set_state_with_direction(this, 1, 0.01f, 1);
     this->unk38_31 = 0;
-    this->initialized = TRUE;
+    this->initialized = true;
 }
 
 void func_80389518(Actor *this){

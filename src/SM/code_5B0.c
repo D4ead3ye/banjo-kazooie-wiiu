@@ -59,7 +59,7 @@ void SM_func_80386A00(Actor *this) {
         actor_collisionOff(this);
         if(0);
         this->marker->propPtr->unk8_3 = 1;
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
     }
     func_803869A0(this, 0.20f, 1.00f);
     func_803869A0(this, 0.27f, 1.05f);
@@ -135,7 +135,7 @@ void SM_func_80386EF4(Actor *this) {
         marker_setCollisionScripts(this->marker, NULL, NULL, func_80386EB4);
         this->unk38_31 = 0;
         this->unk138_31 = 1;
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
     }
     if ((this->state) == 1) {
         temp_t3 = this->unk38_31++ ^ 2;

@@ -142,7 +142,7 @@ s32 s_jiggylist_current_index;
 
 /* .code */
 void func_80332B90(void){
-    core1_ce60_incOrDecCounter(TRUE);
+    core1_ce60_incOrDecCounter(true);
 }
 
 void func_80332BB0(void) {
@@ -243,9 +243,9 @@ void jiggy_spawn(enum jiggy_e jiggy_id, f32 pos[3]) {
         temp_v0->unk10.position[1] = pos[1];
         temp_v0->unk10.position[2] = pos[2];
         temp_v0->init(&temp_v0->unk10);
-        jiggyscore_setSpawned(jiggy_id, TRUE);
+        jiggyscore_setSpawned(jiggy_id, true);
         if (!jiggyscore_isCollected(jiggy_id) && (jiggy_id != JIGGY_3E_GV_GRABBA) && (jiggy_id != JIGGY_0B_TTC_JINJO)) {
-            core1_ce60_incOrDecCounter(FALSE);
+            core1_ce60_incOrDecCounter(false);
             func_8025A55C(0, 4000, 5);
             func_8025A6EC(COMUSIC_3D_JIGGY_SPAWN, 0x7FFF);
             timedFunc_set_0(3.5f, func_80332BB0);
@@ -260,7 +260,7 @@ void codeABC00_spawnJiggyAtLocation(enum jiggy_e jiggy_id, f32 location[3]) {
     jiggylist_list[jiggy_id - 1].unk10.position[1] = location[1];
     jiggylist_list[jiggy_id - 1].unk10.position[2] = location[2];
     jiggylist_list[jiggy_id - 1].init(&jiggylist_list[jiggy_id - 1].unk10);
-    jiggyscore_setSpawned(jiggy_id, TRUE);
+    jiggyscore_setSpawned(jiggy_id, true);
 }
 
 void func_80333270(enum jiggy_e jiggy_id, f32 position[3], void (*method)(Actor *, ActorMarker *), ActorMarker *other_marker) {
@@ -315,7 +315,7 @@ void func_803333DC(Struct81s *arg0, Actor *arg1) {
     jiggy_id = ((s32) ((s32)arg0 - (s32)&jiggylist_list) / 0x2C) + 1;
     chjiggy_setJiggyId(arg1, jiggy_id);
     if ((jiggy_id == JIGGY_49_CCW_EYRIE) || (jiggy_id == JIGGY_39_LAIR_MMM_WITCH_SWITCH) || (jiggy_id == JIGGY_3C_LAIR_CCW_WITCH_SWITCH)) {
-        arg1->marker->unk40_21 = TRUE;
-        arg1->marker->unk40_20 = TRUE;
+        arg1->marker->unk40_21 = true;
+        arg1->marker->unk40_20 = true;
     }
 }

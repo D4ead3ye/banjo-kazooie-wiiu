@@ -20,5 +20,5 @@ void chLargeCrocodile_init(Actor *this){
         return;
     this->marker->propPtr->unk8_3 = 1;
     actor_collisionOff(this);
-    this->initialized = TRUE;
+    this->initialized = true;
 }

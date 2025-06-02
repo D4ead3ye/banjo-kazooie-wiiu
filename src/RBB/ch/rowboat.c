@@ -38,7 +38,7 @@ void func_8038E3D8(Actor *this){
     
     if(!this->volatile_initialized){
         this->marker->propPtr->unk8_3 = 1;
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         local->unk0 = randf2(80.0f, 100.0f);
         local->unk28 = 0.0f;
         local->unk2C = 0.5f;

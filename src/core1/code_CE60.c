@@ -14,8 +14,8 @@ typedef struct bounding_box_s {
 
 static s32 D_80275C10 = -1;
 static s32 D_80275C14 = 0;
-static u8 D_80275C18 = FALSE;
-static u8 D_80275C1C = FALSE;
+static u8 D_80275C18 = false;
+static u8 D_80275C1C = false;
 static BoundingBox sBoundingBoxes[] = {
     { -6000, -1580, -9000, 9000, -6200, -1228 }, 
     { -1700,  -397, -9000, 9000, -6500, -2287 },
@@ -167,14 +167,14 @@ void core1_ce60_func_8024AE74(void) {
     sUnusedCounter = 0;
     D_80275C10 = -1;
     D_80275C14 = 0;
-    D_80275C1C = D_80275C18 = core1_ce60_isPlayerInRange(2883, -10520, 6480) ? TRUE : FALSE;
+    D_80275C1C = D_80275C18 = core1_ce60_isPlayerInRange(2883, -10520, 6480) ? true : false;
 }
 
 void core1_ce60_resetState(void) {
     D_80275C10 = -1;
     D_80275C14 = 0;
-    D_80275C18 = FALSE;
-    D_80275C1C = FALSE;
+    D_80275C18 = false;
+    D_80275C1C = false;
 }
 
 void core1_ce60_setChanMaskFromWaterState(s32 chan_mask_underwater, s32 chan_mask_surface) {
@@ -508,7 +508,7 @@ void core1_ce60_func_8024AF48(void) {
             break;
 
         case MAP_72_GL_BGS_LOBBY:
-            if (D_80275C10 == -1 && D_80275C18 == FALSE) {
+            if (D_80275C10 == -1 && D_80275C18 == false) {
                 D_80275C10 = func_802F9AA8(0x410);
                 func_802F9F80(D_80275C10, 3.0f, 16777216.0f, 0.0f);
                 func_802FA060(D_80275C10, 3500, 3500, 0.0f);
@@ -529,10 +529,10 @@ void core1_ce60_func_8024AF48(void) {
             }
 
             if (core1_ce60_isPlayerInRange(2883, -10520, 6480)) {
-                D_80275C18 = TRUE;
+                D_80275C18 = true;
                 core1_ce60_setChanMask(0xe040);
             } else {
-                D_80275C18 = FALSE;
+                D_80275C18 = false;
                 core1_ce60_setChanMask(0x9c00);
             }
             break;
@@ -623,9 +623,9 @@ void core1_ce60_func_8024BD40(s32 arg0, s32 arg1) {
         return;
     
     if (arg1 == 2) {
-        D_802806F4 = TRUE;
+        D_802806F4 = true;
     }
     else {
-        D_802806F4 = FALSE;
+        D_802806F4 = false;
     }
 }

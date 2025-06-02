@@ -35,9 +35,9 @@ bool meshList_meshContainsVtx(BKMeshList * meshList, s32 mesh_id, void *vtx_id){
     if(v0){
         for(i = 0; i < v0->vtxCount_2; i++){
             if(((s16*)(v0 + 1))[i] == *(s16 *)vtx_id){
-                return TRUE;
+                return true;
             }
         }
     }
-    return FALSE;
+    return false;
 }

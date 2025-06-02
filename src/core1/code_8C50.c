@@ -240,7 +240,7 @@ void func_80246D78(void){
     s32 sp2C = (D_8027FC0C != 0) && (D_8028062C == D_80280628) && (D_8027FC18 == 2) && (D_8027FC1C == 0x10);
     volatile s32 sp30;
 
-    sp30 = FALSE;
+    sp30 = false;
     if( osViGetCurrentFramebuffer() != D_80280688 || sp2C){
         if(osDpGetStatus() & DPC_STATUS_FREEZE){
             osDpSetStatus(DPC_CLR_FREEZE);
@@ -272,7 +272,7 @@ void func_80246D78(void){
     if(D_80275998 != 0){
         D_80275998--;
         if(D_80275998 == 0){
-            sp30 = TRUE;
+            sp30 = true;
         }
     }
     D_8027FC10 = 0;
@@ -333,7 +333,7 @@ void func_80247000(void) {
 }
 
 void func_802471D8(OSMesg arg0){
-    D_8027FC10 = TRUE;
+    D_8027FC10 = true;
 }
 
 void func_802471EC(void){
@@ -417,7 +417,7 @@ void func_8024730C(void){
     static s32 D_802806D4;
 
     if(!D_802806D4){
-        D_802806D4 = TRUE;
+        D_802806D4 = true;
 #if VERSION == VERSION_USA_1_0
         if(osTvType != OS_TV_NTSC){
             osViSetMode(&D_802759A8);

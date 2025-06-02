@@ -57,26 +57,26 @@ bool __chConga_isPlayerNearCongaTree(Actor * this){
     f32 unused_tmpz;
 
     if (map_get() != MAP_2_MM_MUMBOS_MOUNTAIN) {
-        return FALSE;
+        return false;
     }
 
     if (!this->unk10_12) {
-        return FALSE;
+        return false;
     }
 
     player_getPosition(plyr_pos);
 
     if (plyr_pos[1] < 300.0f || 600.0f < plyr_pos[1]) {
-        return FALSE;
+        return false;
     }
 
     unused_tmpz = plyr_pos[2] - 5029.0f;
 
     if (52900.0f < (plyr_pos[0] - -5011.0f) * (plyr_pos[0] - -5011.0f) + (plyr_pos[2] - 5029.0f) * (plyr_pos[2] - 5029.0f)) {
-        return FALSE;
+        return false;
     }
     
-    return TRUE;
+    return true;
 }
 
 void func_80386FB0(Actor *this){
@@ -218,7 +218,7 @@ void func_803876D0(Actor *this){
     if(!this->initialized){
         ((ActorLocal_Conga *)&this->local)->unkC = 1;
         this->unk16C_0 = 1;
-        this->initialized = TRUE;
+        this->initialized = true;
         this->velocity_x = 0.0f;
         this->actor_specific_1_f = 0.0f;
         node_prop = nodeprop_findByActorIdAndActorPosition(0x150, this);
@@ -252,12 +252,12 @@ void func_803876D0(Actor *this){
         && gcdialog_showText(ASSET_B37_DIALOG_CONGA_SAFE_UP_HERE, 0, 0, 0, 0, 0)
     ){
         this->unk138_23 = 1;
-        mapSpecificFlags_set(MM_SPECIFIC_FLAG_A_UNKNOWN, TRUE);
+        mapSpecificFlags_set(MM_SPECIFIC_FLAG_A_UNKNOWN, true);
     }//L803878F8
 
     if( sp3C && !this->has_met_before){
         if(gcdialog_showText((player_getTransformation()== TRANSFORM_2_TERMITE) ? ASSET_B3E_DIALOG_CONGA_MEET_AS_TERMITE : ASSET_B3C_DIALOG_CONGA_MEET, 0, this->position, 0,0,0)){
-            this->has_met_before = TRUE;
+            this->has_met_before = true;
         }
     } //L80387968
 
@@ -296,7 +296,7 @@ void func_803876D0(Actor *this){
             ((ActorLocal_Conga *)&this->local)->unkC = 1;
             actor_playAnimationOnce(this);
             __chConga_playRandomNoise();
-            if( anctrl_isPlayedForwards(this->anctrl) == TRUE
+            if( anctrl_isPlayedForwards(this->anctrl) == true
                 && actor_animationIsAt(this, 0.0f)
             ){
                 subaddie_set_state_with_direction(this, 5, 0.0f, 1);

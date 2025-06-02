@@ -25,7 +25,7 @@ int func_8038D388(void){
 
 void func_8038D3AC(Actor *this){
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker_setCollisionScripts(this->marker, func_8038D370, NULL, NULL);
         D_80391AA0 = 0;
         if(fileProgressFlag_getN(FILEPROG_F8_KING_SANDYBUTT_PYRAMID_STATE, 2) == 3){

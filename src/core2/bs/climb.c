@@ -181,7 +181,7 @@ void bsclimb_move_update(void){
     if(!D_8037D3D8)
         next_state = BS_1_IDLE;
     
-    D_8037D3D8 = FALSE;
+    D_8037D3D8 = false;
 
     bs_setState(next_state);
 }
@@ -216,7 +216,7 @@ void func_802ABD40(void){
 void func_802ABD60(void){
     s32 next_state = 0;
     if(bs_getInterruptType() == BS_INTR_C_CLIMB){
-        D_8037D3D8 = TRUE;
+        D_8037D3D8 = true;
     }
     else{
         func_80296608();

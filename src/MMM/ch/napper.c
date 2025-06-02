@@ -26,7 +26,7 @@ ActorInfo chNapper = {
 void __chnapper_setState(Actor *this, s32 next_state){
     ActorLocal_Napper *local = (ActorLocal_Napper *)&this->local;
     
-    local->jiggy_marker->collidable = TRUE;
+    local->jiggy_marker->collidable = true;
     local->unk4 = 0.0f;
     actor_collisionOff(this);
     if(next_state == 1)
@@ -35,7 +35,7 @@ void __chnapper_setState(Actor *this, s32 next_state){
     if(next_state == 2){
         skeletalAnim_set(this->unk148, ASSET_A4_ANIM_NAPPER_AWAKE, 0.2f, 5.0f);
         actor_collisionOn(this);
-        local->jiggy_marker->collidable = FALSE;
+        local->jiggy_marker->collidable = false;
         local->unk8 = randf2(2.0f, 6.0f);
     }
 
@@ -53,7 +53,7 @@ void __chnapper_setState(Actor *this, s32 next_state){
     if(next_state == 5){
         skeletalAnim_set(this->unk148, ASSET_A6_ANIM_NAPPER_ALERT, 2.0f, 4.0f);
         actor_collisionOn(this);
-        local->jiggy_marker->collidable = FALSE;
+        local->jiggy_marker->collidable = false;
     }
 
     this->state = next_state;
@@ -64,7 +64,7 @@ void func_80386ACC(ActorMarker *this_marker, ActorMarker *other_marker){
 
     if(!this->has_met_before){
         if(gcdialog_showText(0xad8, 0, NULL, NULL, NULL, NULL)){
-            this->has_met_before = TRUE;
+            this->has_met_before = true;
         }
     }
 }
@@ -74,14 +74,14 @@ Actor *chnapper_draw(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
     ActorLocal_Napper *local = (ActorLocal_Napper *)&this->local;
 
     if(this->state == 1){
-        func_8033A45C(1, TRUE);
-        func_8033A45C(2, FALSE);
-        func_8033A45C(3, FALSE);
+        func_8033A45C(1, true);
+        func_8033A45C(2, false);
+        func_8033A45C(3, false);
     }
     else {
-        func_8033A45C(1, FALSE);
+        func_8033A45C(1, false);
         func_8033A45C(2, BOOL(local->unk10));
-        func_8033A45C(3, (local->unk10) ? FALSE : TRUE);
+        func_8033A45C(3, (local->unk10) ? false : true);
     }
 
     if(this->state == 1){ //set model alpha
@@ -109,10 +109,10 @@ void chnapper_update(Actor *this){
     sp68 = time_getDelta();
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->scale = 0.5f;
         marker_setCollisionScripts(this->marker, func_80386ACC, NULL, NULL);
-        local->unk10 = TRUE;
+        local->unk10 = true;
         local->jiggy_marker = NULL;
         local->unk4 = 0.0f;
         local->unk8 = 0.0f;

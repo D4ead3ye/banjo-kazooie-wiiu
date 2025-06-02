@@ -203,8 +203,8 @@ void func_803513EC(ModelProp *arg0, s32 arg1) {
     s32 pad30;
     f32 sp2C[3];
 
-    arg0->unkB_5 = TRUE;
-    arg0->unkB_4 = FALSE;
+    arg0->unkB_5 = true;
+    arg0->unkB_4 = false;
     sp3C[0] = (f32) arg0->unk4[0];
     sp3C[1] = (f32) arg0->unk4[1];
     sp3C[2] = (f32) arg0->unk4[2];
@@ -225,7 +225,7 @@ void func_803514F4(Struct68s *arg0){
 
 void func_80351538(Struct68s *arg0){
     arg0->unk4 = (ActorMarker *)func_8032FBE4(arg0->position, func_80350E90, 1, 0x47);
-    ((ActorMarker *)arg0->unk4)->collidable = FALSE;
+    ((ActorMarker *)arg0->unk4)->collidable = false;
     ((ActorMarker *)arg0->unk4)->actrArrayIdx = (arg0 - D_803861B0.unk4);
     ((ActorMarker *)arg0->unk4)->unk18 = &D_80386180.unk4;
     if (D_803725F4[arg0->unk31].unk0 != NULL) {
@@ -243,7 +243,7 @@ bool func_803515EC(NodeProp *arg0) {
 
 
     if (arg0->bit6 != 6) {
-        return TRUE;
+        return true;
     } else {
         for(phi_s0 = D_803725C0; phi_s0->unk0 != 0; phi_s0++){
             if( (arg0->unk8 == phi_s0->unk0) 
@@ -259,24 +259,24 @@ bool func_803515EC(NodeProp *arg0) {
             }
         } 
     }
-    return TRUE;
+    return true;
 }
 
 bool func_80351700(Prop * arg0){
     if (((*(u16*)((s32)arg0 + 0xA) << 0x1E) >> 0x1F)) {
-        return TRUE;
+        return true;
     }
-    return TRUE;
+    return true;
 }
 
 bool func_80351724(void * arg0){
     ActorProp *a_prop;
     if (((*(u16*)((s32)arg0 + 0xA) << 0x1E) >> 0x1F) && ((*(u16*)((s32)arg0 + 0xA) << 0x1A) >> 0x1F)) {
         a_prop = (ActorProp *)arg0;
-        a_prop->unk8_5 = FALSE;
-        a_prop->unk8_4 = TRUE;
+        a_prop->unk8_5 = false;
+        a_prop->unk8_4 = true;
     }
-    return TRUE;
+    return true;
 }
 
 s32 func_80351758_getSfxsourceIndex(Struct68s *arg0) {

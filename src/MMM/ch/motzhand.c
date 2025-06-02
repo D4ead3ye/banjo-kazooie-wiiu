@@ -113,7 +113,7 @@ void func_803876C8(ActorMarker *marker, s32 arg1) {
     ActorLocal_Motzhand *local = (ActorLocal_Motzhand *) &this->local;
 
     local->unk8 = arg1;
-    if (arg1 == TRUE) {
+    if (arg1 == true) {
         local->pattern_ptr = sMotzhandPattern1;
     }
     else {
@@ -126,7 +126,7 @@ void func_803876C8(ActorMarker *marker, s32 arg1) {
 void func_80387720(ActorMarker *marker) {
     Actor *this = marker_getActor(marker);
     ActorLocal_Motzhand *local = (ActorLocal_Motzhand *) &this->local;
-    local->unk9 = TRUE;
+    local->unk9 = true;
 }
 
 void chMotzhand_update(Actor *this) {
@@ -138,15 +138,15 @@ void chMotzhand_update(Actor *this) {
     tick = time_getDelta();
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
 
         if (jiggyscore_isSpawned(JIGGY_60_MMM_MOTZHAND)) {
             marker_despawn(this->marker);
             return;
         }
 
-        local->unk8 = FALSE;
-        local->unk9 = FALSE;
+        local->unk8 = false;
+        local->unk9 = false;
         local->unkC[0] = this->position_x;
         local->unkC[1] = this->position_y;
         local->unkC[2] = this->position_z;
@@ -159,7 +159,7 @@ void chMotzhand_update(Actor *this) {
             while (*local->pattern_ptr != 0xff) {
                 *local->pattern_ptr++; //find_seq end
             }
-            local->unk9 = FALSE;
+            local->unk9 = false;
         }//L80387820
 
         if (0xff == *local->pattern_ptr) {
@@ -183,7 +183,7 @@ void chMotzhand_update(Actor *this) {
             }
         }
         else {//L80387930
-            ml_vec3f_set_length(diff, ((local->unk8 == TRUE) ? 150.0f : 225.0f) * tick);
+            ml_vec3f_set_length(diff, ((local->unk8 == true) ? 150.0f : 225.0f) * tick);
             this->position_x = diff[0] + this->position_x;
             this->position_y = diff[1] + this->position_y;
             this->position_z = diff[2] + this->position_z;
@@ -198,7 +198,7 @@ void chMotzhand_update(Actor *this) {
                 while (*local->pattern_ptr != 0xff) {
                     *local->pattern_ptr++; //find_seq end
                 }
-                local->unk9 = FALSE;
+                local->unk9 = false;
             }
             else {//L80387A18
                 *local->pattern_ptr++;

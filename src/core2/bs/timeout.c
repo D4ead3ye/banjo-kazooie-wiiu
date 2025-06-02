@@ -18,7 +18,7 @@ void func_802B6270(void){
     ncDynamicCamD_func_802BF2C0(80.0f);
     func_8025A58C(0,0xfa0);
     comusic_playTrack(COMUSIC_3C_MINIGAME_LOSS);
-    core1_ce60_incOrDecCounter(FALSE);
+    core1_ce60_incOrDecCounter(false);
     func_8029E070(1);
     baMarker_collisionOff();
 }
@@ -43,7 +43,7 @@ void func_802B6314(void){
 void func_802B63C8(void){
     baeyes_open();
     func_80291548();
-    core1_ce60_incOrDecCounter(TRUE);
+    core1_ce60_incOrDecCounter(true);
 }
 
 void func_802B63F8(void){
@@ -59,7 +59,7 @@ void func_802B63F8(void){
     ncDynamicCamD_func_802BF2C0(80.0f);
     func_8025A58C(0,0xfa0);
     comusic_playTrack(COMUSIC_3C_MINIGAME_LOSS);
-    core1_ce60_incOrDecCounter(FALSE);
+    core1_ce60_incOrDecCounter(false);
     baMarker_collisionOff();
     batimer_set(0, 2.9f);
 }
@@ -72,6 +72,6 @@ void func_802B64D0(void){
 void func_802B6500(void){
     func_8029E070(0);
     func_80291548();
-    core1_ce60_incOrDecCounter(TRUE);
+    core1_ce60_incOrDecCounter(true);
     func_8025A904();
 }

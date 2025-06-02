@@ -30,7 +30,7 @@ Actor *func_8038E720(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
 void func_8038E774(Actor *this){
     subaddie_set_state_with_direction(this, 2, 0.05f, 1);
     actor_playAnimationOnce(this);
-    this->marker->collidable = TRUE;
+    this->marker->collidable = true;
     this->unk38_31 = 0;
 }
 
@@ -68,23 +68,23 @@ void func_8038E840(f32 position[3], s32 cnt, enum asset_e sprite_id){
 
 void func_8038E940(Actor *this){
     if (jiggyscore_isCollected(JIGGY_2F_FP_XMAS_TREE) || levelSpecificFlags_get(LEVEL_FLAG_29_FP_UNKNOWN)) {
-        this->marker->propPtr->unk8_3 = TRUE;
-        this->marker->collidable = FALSE;
+        this->marker->propPtr->unk8_3 = true;
+        this->marker->collidable = false;
         subaddie_set_state_with_direction(this, 3, 0.95f, 0);
         return;
     }//L8038E9B8
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
-        this->marker->collidable = FALSE;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = true;
+        this->marker->collidable = false;
         marker_setCollisionScripts(this->marker, NULL, func_8038E7CC, NULL);
         subaddie_set_state_with_direction(this, 1, 0.05f, 1);
         this->unk38_31 = 0;
         this->lifetime_value = 0.0f;
     }//L8038EA3C
 
-    this->unk58_0 = (this->state == 1) ? FALSE : TRUE;
+    this->unk58_0 = (this->state == 1) ? false : true;
     
     switch(this->state){
         case 1: //L8038EA98
@@ -101,13 +101,13 @@ void func_8038E940(Actor *this){
             subaddie_set_state_with_direction(this, 3, 0.05f, 1);
             actor_playAnimationOnce(this);
             FUNC_8030E624(SFX_416, 0.8f, 32000);
-            this->marker->collidable = FALSE;
+            this->marker->collidable = false;
             this->lifetime_value = 0.0f;
             break;
         case 3: //L8038EB44
             if(this->lifetime_value == 0.0f && actor_animationIsAt(this, 0.95f)){
                 this->lifetime_value = 1.0f;
-                mapSpecificFlags_set(2, TRUE);
+                mapSpecificFlags_set(2, true);
                 break;
             }
 

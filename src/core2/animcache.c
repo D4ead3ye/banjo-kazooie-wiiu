@@ -18,7 +18,7 @@ void animCache_init(void){
     int i;
 
     for(i = 0; i<340; i++){
-        D_80379E20[i].alive = FALSE;
+        D_80379E20[i].alive = false;
         D_80379E20[i].bone_xform = NULL;
         D_80379E20[i].life = 0;
     }
@@ -40,7 +40,7 @@ void animCache_flushStale(void){
     int i;
 
     for(i = 0; i<340; i++){
-        if(D_80379E20[i].alive == TRUE && D_80379E20[i].bone_xform != NULL){
+        if(D_80379E20[i].alive == true && D_80379E20[i].bone_xform != NULL){
             if(D_80379E20[i].life < 0x3b){
                 boneTransformList_free(D_80379E20[i].bone_xform);
                 D_80379E20[i].bone_xform = 0;
@@ -69,7 +69,7 @@ void animCache_update(void){
     int i;
 
     for(i = 0; i<340; i++){
-        if(D_80379E20[i].alive == TRUE && D_80379E20[i].bone_xform){
+        if(D_80379E20[i].alive == true && D_80379E20[i].bone_xform){
             if(--D_80379E20[i].life <= 0){
                 boneTransformList_free(D_80379E20[i].bone_xform);
                 D_80379E20[i].bone_xform = 0;
@@ -91,7 +91,7 @@ s16 animCache_getNextFree(void){
 
 s16 animCache_getNew(void){
     int indx = animCache_getNextFree();
-    D_80379E20[indx].alive = TRUE;
+    D_80379E20[indx].alive = true;
     D_80379E20[indx].life = 0;
     D_80379E20[indx].bone_xform = 0;
     return indx;
@@ -115,18 +115,18 @@ int animCache_getBoneTransformList(s16 index, BoneTransformList **arg1){
     D_80379E20[index].life = 0x3C;
     if(D_80379E20[index].bone_xform){
         *arg1 = D_80379E20[index].bone_xform;
-        return FALSE;
+        return false;
     }else{
         D_80379E20[index].bone_xform = boneTransformList_new();
         *arg1 = D_80379E20[index].bone_xform;
-        return TRUE;
+        return true;
     }
 }
 
 void animCache_defrag(void){
     int i;
     for(i = 0; i < 340; i++){
-        if(D_80379E20[i].alive == TRUE && D_80379E20[i].bone_xform){
+        if(D_80379E20[i].alive == true && D_80379E20[i].bone_xform){
             D_80379E20[i].bone_xform = boneTransformList_defrag(D_80379E20[i].bone_xform);
         }
     }

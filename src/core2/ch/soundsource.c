@@ -79,7 +79,7 @@ void func_802D07C8(Actor *this){
     f32 sp2C[3];
     f32 sp28;
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->marker->actorFreeFunc = func_802D07A8;
         func_802D05A0(this, 1);
     }

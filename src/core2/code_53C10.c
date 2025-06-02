@@ -121,10 +121,10 @@ bool func_802DAFBC(Actor *this) {
 
     temp_v0 = func_8032CA80(this, 0x11);
     if ((this->unk38_31 == 0) && this->unk38_0) {
-        this->unk38_0 = FALSE;
+        this->unk38_0 = false;
     }
     if ((temp_v0 == 0) || this->unk38_0) {
-        return FALSE;
+        return false;
     }
     if (temp_v0 & 4) {
         func_8032C9E0(sp38);
@@ -135,21 +135,21 @@ bool func_802DAFBC(Actor *this) {
             func_80328CEC(this, (s32) sp34, 0, 0xF);
         }
         this->unk38_31 = 0x1E;
-        this->unk38_0 = TRUE;
+        this->unk38_0 = true;
         local->unk38 = globalTimer_getTime();
     } else if (temp_v0 & 8) {
         func_802DAE10(this);
         this->unk38_31 = 0x5A;
         subaddie_set_state_with_direction(this, 2, sp44, 1);
         func_80328CEC(this, (s32) this->yaw_ideal, 0xB3, 0xB4);
-        this->unk38_0 = TRUE;
+        this->unk38_0 = true;
     } else {
         func_802DAE10(this);
         this->unk38_31 = 0x5A;
         subaddie_set_state_with_direction(this, 8, sp44, 1);
         func_80328CEC(this, (s32) this->yaw_ideal, 120, 180);
     }
-    return TRUE;
+    return true;
 }
 
 void func_802DB220(Actor *this) {
@@ -240,11 +240,11 @@ void func_802DB5A0(Actor *this) {
     local = (ActorLocal_core2_53C10 *)&this->local;
     if (!this->volatile_initialized) {
         marker_setCollisionScripts(this->marker, &func_802DB440, local->unk30, local->unk34);
-        this->marker->propPtr->unk8_3 = FALSE;
+        this->marker->propPtr->unk8_3 = false;
         this->lifetime_value = 0.0f;
-        this->unk124_0 = this->unk138_31 = FALSE;
+        this->unk124_0 = this->unk138_31 = false;
         local->unk38 = 0;
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if (volatileFlag_get(VOLATILE_FLAG_1F_IN_CHARACTER_PARADE)) {
             subaddie_set_state(this, 2U);
             return;

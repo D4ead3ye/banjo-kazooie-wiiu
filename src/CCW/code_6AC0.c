@@ -58,7 +58,7 @@ void func_8038CEB0(Actor *this, s32 next_state) {
         skeletalAnim_set(this->unk148, 0x1A6, 0.2f, 4.5f);
     }
     if (next_state == 2) {
-        this->marker->propPtr->unk8_3 = FALSE;
+        this->marker->propPtr->unk8_3 = false;
         skeletalAnim_set(this->unk148, 0x1A7, 0.2f, 3.0f);
         skeletalAnim_setBehavior(this->unk148, SKELETAL_ANIM_2_ONCE);
         gcdialog_showText(0xCD0, 0x24, NULL, NULL, NULL, NULL);
@@ -80,14 +80,14 @@ void func_8038CFB4(Actor *this) {
     f32 sp60[3];
 
     if (!this->volatile_initialized) {
-        this->marker->propPtr->unk8_3 = TRUE;
-        this->volatile_initialized = TRUE;
-        this->has_met_before = FALSE;
+        this->marker->propPtr->unk8_3 = true;
+        this->volatile_initialized = true;
+        this->has_met_before = false;
         func_8038CEB0(this, 1);
         if (jiggyscore_isCollected(JIGGY_4B_CCW_GNAWTY) != 0) {
-            levelSpecificFlags_set(LEVEL_FLAG_25_CCW_UNKNOWN, TRUE);
+            levelSpecificFlags_set(LEVEL_FLAG_25_CCW_UNKNOWN, true);
         }
-        if (levelSpecificFlags_get(LEVEL_FLAG_25_CCW_UNKNOWN) != FALSE) {
+        if (levelSpecificFlags_get(LEVEL_FLAG_25_CCW_UNKNOWN) != false) {
             marker_despawn(this->marker);
         }
         return;
@@ -118,11 +118,11 @@ void func_8038CFB4(Actor *this) {
             player_getPosition(sp60);
             if (ml_vec3f_distance(this->position, sp60) < 900.0f) {
                 gcdialog_showText(0xCCF, 4, NULL, NULL, NULL, NULL);
-                this->has_met_before = TRUE;
+                this->has_met_before = true;
             }
         }
 
-        if (levelSpecificFlags_get(LEVEL_FLAG_25_CCW_UNKNOWN) != FALSE) {
+        if (levelSpecificFlags_get(LEVEL_FLAG_25_CCW_UNKNOWN) != false) {
             func_8038CEB0(this, 2);
         }
     }

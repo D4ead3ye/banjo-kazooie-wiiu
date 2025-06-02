@@ -109,8 +109,8 @@ void func_8038DBDC(Actor *this){
     switch(this->state){
         case 1: //8038DC18
             if(!this->initialized){
-                this->initialized = TRUE;
-                this->marker->propPtr->unk8_3 = TRUE;
+                this->initialized = true;
+                this->marker->propPtr->unk8_3 = true;
                 actor_collisionOff(this);
                 subaddie_set_state_with_direction(this, 1, 0.99f, 0);
                 anctrl_setPlaybackType(this->anctrl, ANIMCTRL_STOPPED);
@@ -196,7 +196,7 @@ void func_8038DBDC(Actor *this){
                 anctrl_setDuration(this->anctrl, 1.6f);
                 func_80386608();
                 func_8038DB4C(0);
-                GV_D_80391AB0.unk8 = FALSE;
+                GV_D_80391AB0.unk8 = false;
                 func_8025A58C(-1, 0x190);
                 func_8025A7DC(COMUSIC_27_GV_RUBEES_SONG);
                 if(!this->unk44_31){

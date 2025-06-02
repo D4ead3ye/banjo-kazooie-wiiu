@@ -256,11 +256,11 @@ void chicecube_update(Actor *this){
     if(map_get() == MAP_27_FP_FREEZEEZY_PEAK){
         if(maSlalom_isActive()){
             actor_collisionOff(this);
-            this->unk58_0 = FALSE;
+            this->unk58_0 = false;
             return;
         }
         actor_collisionOn(this);
-        this->unk58_0 = TRUE;
+        this->unk58_0 = true;
     }//L8035AAF4
     
     if(!subaddie_playerIsWithinSphere(this, 3000))
@@ -268,9 +268,9 @@ void chicecube_update(Actor *this){
 
     func_802D729C(this, 3.4 * this->scale);
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker_setCollisionScripts(this->marker, __chicecube_ow, NULL, __chicecube_die);
-        this->marker->propPtr->unk8_3 = FALSE;
+        this->marker->propPtr->unk8_3 = false;
         actor_collisionOff(this);
         this->alpha_124_19 = 0x50;
         actor_setOpacity(this, this->alpha_124_19);

@@ -146,7 +146,7 @@ void func_803868F0(Actor *this){
     ActorLocal_RBB_0 *local = (ActorLocal_RBB_0 *) &this->local;
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if(this->state == 0){
             local->unk0 = 0;
             local->unk4 = 0;

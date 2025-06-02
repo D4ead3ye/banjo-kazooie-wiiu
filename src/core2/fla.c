@@ -78,11 +78,11 @@ bool freelist_elementIsAlive(FLA *this, s32 index)
   {
     if ((*i_ptr) == index)
     {
-      return FALSE;
+      return false;
     }
   }
 
-  return TRUE;
+  return true;
 }
 void freelist_free(FLA *this){
     free(this);

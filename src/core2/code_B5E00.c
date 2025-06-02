@@ -131,7 +131,7 @@ bool gameFile_anyNonEmpty(void){
     int i;
     for(i = 0; i < 3; i++){
         if(gameFile_isNotEmpty(i))
-            return TRUE;
+            return true;
     }
-    return FALSE;
+    return false;
 }

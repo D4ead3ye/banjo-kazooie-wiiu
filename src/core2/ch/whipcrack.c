@@ -98,7 +98,7 @@ void chwhipcrack_update(Actor *this){
     f32 sp40;
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->roll = this->yaw;
         this->yaw = 0.0f;
         marker_setCollisionScripts(this->marker, NULL, NULL, __chwhipcrack_die);

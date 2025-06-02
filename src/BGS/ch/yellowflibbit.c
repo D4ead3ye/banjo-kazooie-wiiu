@@ -64,7 +64,7 @@ s32 func_8038D2F4(Actor *this, f32 *arg1, bool arg2) {
     skeletalAnim_set(this->unk148, ASSET_DB_ANIM_FLIBBIT_HOP, 0.2f, (arg2) ? randf2(0.7f, 0.8f) : randf2(0.7f, 0.8f));
     skeletalAnim_setBehavior(this->unk148, SKELETAL_ANIM_2_ONCE);
     func_80324D54(0.2f, SFX_3F2_UNKNOWN, randf2(0.7f, 1.3f), randi2(25000, 27000), this->position, 500.0f, 2500.0f);
-    return TRUE;
+    return true;
 }
 
 bool func_8038D468(Actor *this) {
@@ -91,7 +91,7 @@ bool func_8038D468(Actor *this) {
             }
         }
     }
-    return FALSE;
+    return false;
 }
 
 bool func_8038D5A8(Actor *this) {
@@ -126,7 +126,7 @@ bool func_8038D5A8(Actor *this) {
             return func_8038D2F4(this, sp3C, 0);
         }
     }
-    return FALSE;
+    return false;
 }
 
 s32 func_8038D768(Actor *this) {
@@ -158,7 +158,7 @@ s32 func_8038D768(Actor *this) {
             return func_8038D2F4(this, sp68, 0);
         }
     }
-    return FALSE;
+    return false;
 }
 
 bool func_8038D930(Actor *this) {
@@ -170,7 +170,7 @@ bool func_8038D930(Actor *this) {
         var_v1 = func_8038D468(this);
         if (var_v1 == 0) {
             if (randf() > 0.5) {
-                return FALSE;
+                return false;
             }
         }
     }
@@ -248,8 +248,8 @@ void func_8038D9D0(Actor *this, s32 next_state) {
     if (next_state == 9) {
         skeletalAnim_set(this->unk148, ASSET_112_ANIM_FLIBBIT_DIE, 0.2f, 0.4f);
         FUNC_8030E8B4(SFX_115_BUZZBOMB_DEATH, 1.0f, 32200, this->position, 500, 2500);
-        this->marker->collidable = FALSE;
-        this->unk10_1 = FALSE;
+        this->marker->collidable = false;
+        this->unk10_1 = false;
         func_8038CEA0();
         local->unk18 = 1000.0f;
     }
@@ -349,7 +349,7 @@ void BGS_func_8038E034(Actor *this) {
 
     sp9C = time_getDelta();
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker_setCollisionScripts(this->marker, &func_8038DD9C, &func_8038DDDC, &func_8038DE1C);
         local->unk2 = 0U;
         local->unk20[0] = randf2(-2.0f, -1.0f);
@@ -364,7 +364,7 @@ void BGS_func_8038E034(Actor *this) {
         return;
     } 
     if (!local->unk2) {
-        local->unk2 = TRUE;
+        local->unk2 = true;
         BGS_func_8038CED0();
     }
     player_getPosition(spB4);

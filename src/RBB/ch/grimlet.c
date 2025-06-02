@@ -95,7 +95,7 @@ void func_80388620(Actor *this){
     f32 tmp_f2;
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->marker->propPtr->unk8_3 = 1;
         marker_setCollisionScripts(this->marker, RBB_func_80388430, NULL, NULL);
         local->unk4 = 0;

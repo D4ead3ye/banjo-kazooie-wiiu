@@ -46,13 +46,13 @@ void __chBubble_collisionCallback(ActorMarker *this_marker, ActorMarker *other_m
     Actor *this = marker_getActor(this_marker);
     ActorLocal_Core2_3ECE0 *local = (ActorLocal_Core2_3ECE0 *) &this->local;
     local->unk0 = 1;
-    this_marker->collidable = FALSE;
+    this_marker->collidable = false;
 
 }
 
 void chBubble_update(Actor *this){
     if(!this->initialized){
-        this->initialized = TRUE;
+        this->initialized = true;
         marker_setCollisionScripts(this->marker, __chBubble_collisionCallback, NULL, NULL);
         marker_setFreeMethod(this->marker, __chBubble_freeCallback);
         func_802F32C4(func_8032994C(), this->position, 200.0f, this->marker, __chBubble_func_802C5C70);

@@ -46,9 +46,9 @@ void func_80389FA0(f32 position[3]){
 
 void GV_func_8038A084(Actor *this){
     if(this->unkF4_8 == 6 && !this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if( jiggyscore_isCollected(JIGGY_42_GV_WATER_PYRAMID) && this->yaw == 1.0f){
-            this->unk38_31 = TRUE;
+            this->unk38_31 = true;
         }
     }
 

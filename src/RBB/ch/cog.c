@@ -49,7 +49,7 @@ void func_80388C20(Actor *this){
         actor_collisionOff(this);
         this->marker->propPtr->unk8_3 = 1;
         this->marker->actorFreeFunc = func_80388BE8;
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if(this->modelCacheIndex == 0x17B){
             local->sfxsourceIdx = sfxsource_createSfxsourceAndReturnIndex();
             sfxsource_set_fade_distances(local->sfxsourceIdx, 1000.0f, 2000.0f);

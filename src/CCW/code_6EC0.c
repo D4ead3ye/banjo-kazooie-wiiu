@@ -39,7 +39,7 @@ void func_8038D2B0(Actor *this, s32 next_state) {
 }
 
 Actor *func_8038D30C(ActorMarker* marker, Gfx** gfx, Mtx** mtx, Vtx** vtx) {
-    if (levelSpecificFlags_get(LEVEL_FLAG_25_CCW_UNKNOWN) == FALSE) {
+    if (levelSpecificFlags_get(LEVEL_FLAG_25_CCW_UNKNOWN) == false) {
         return func_80325340(marker, gfx, mtx, vtx);
     }
 
@@ -52,9 +52,9 @@ void func_8038D368(Actor *this) {
 
     local = (ActorLocal_CCW_6EC0 *)&this->local;
     if (!this->volatile_initialized) {
-        this->marker->propPtr->unk8_3 = TRUE;
-        this->volatile_initialized = TRUE;
-        this->has_met_before = FALSE;
+        this->marker->propPtr->unk8_3 = true;
+        this->volatile_initialized = true;
+        this->has_met_before = false;
         local->unk0 = D_8038F600;
         while (local->unk0->map != 0 && map_get() != local->unk0->map) {
             local->unk0++;
@@ -62,7 +62,7 @@ void func_8038D368(Actor *this) {
 
         func_8038D2B0(this, 1);
         if (jiggyscore_isCollected(JIGGY_4B_CCW_GNAWTY)) {
-            levelSpecificFlags_set(LEVEL_FLAG_25_CCW_UNKNOWN, TRUE);
+            levelSpecificFlags_set(LEVEL_FLAG_25_CCW_UNKNOWN, true);
         }
         return;
     } 
@@ -77,7 +77,7 @@ void func_8038D368(Actor *this) {
                     gcdialog_showText(local->unk0->unk4, 4, NULL, NULL, NULL, NULL);
                 }
             }
-            this->has_met_before = TRUE;
+            this->has_met_before = true;
         }
     }
     

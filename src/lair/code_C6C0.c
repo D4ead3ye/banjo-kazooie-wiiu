@@ -30,7 +30,7 @@ void func_80392B6C(Actor *this) {
     s32 sp28;
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if (fileProgressFlag_get(FILEPROG_A6_FURNACE_FUN_COMPLETE)) {
             marker_despawn(this->marker);
             return;

@@ -44,7 +44,7 @@ void chnabnut_setState(Actor *this, s32 next_state) {
     }
 
     if (next_state == NABNUT_STATE_3_BACKFLIP) {
-        this->marker->propPtr->unk8_3 = FALSE;
+        this->marker->propPtr->unk8_3 = false;
         skeletalAnim_set(this->unk148, ASSET_22D_ANIM_NABNUT_BACKFLIP, 0.2f, 3.13f);
         skeletalAnim_setBehavior(this->unk148, SKELETAL_ANIM_2_ONCE);
         func_80324E38(0.0f, 3);
@@ -116,12 +116,12 @@ void chnabnut_update(Actor *this) {
 
     local = (ActorLocal_CCW_5540 *)&this->local;
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         D_8038F350[0] = this->position[0];
         D_8038F350[1] = this->position[1];
         D_8038F350[2] = this->position[2];
         if (this->state == 0) {
-            this->has_met_before = FALSE;
+            this->has_met_before = false;
             local->returned_acorn_count = NULL;
         }
         chnabnut_setState(this, 1);
@@ -134,7 +134,7 @@ void chnabnut_update(Actor *this) {
     if (this->state == NABNUT_STATE_1_SAD) {
         player_getPosition(sp30);
         if (!this->has_met_before && (ml_vec3f_distance(this->position, sp30) < 400.0f)) {
-            this->has_met_before = TRUE;
+            this->has_met_before = true;
             gcdialog_showText(0xCCA, 0xE, this->position, NULL, NULL, NULL);
         }
         if (item_getCount(ITEM_23_ACORNS) > 0) {

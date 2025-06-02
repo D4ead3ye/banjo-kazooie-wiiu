@@ -44,7 +44,7 @@ void __chchimpystump_updateShaking(Actor *this) {
 void chchimpystump_update(Actor *this) {
     if (!this->initialized) {
         actor_collisionOff(this);
-        this->initialized = TRUE;
+        this->initialized = true;
         this->actor_specific_1_f = this->position_y;
         this->position_y -= 134.0f;
         this->marker->propPtr->unk8_3 = 1;

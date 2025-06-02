@@ -194,7 +194,7 @@ void func_803899BC(void){
 }
 
 void organMinigame_setState(s32 next_state){
-    func_8028F8F8(1, FALSE);
+    func_8028F8F8(1, false);
 
     if (next_state == 2) {
         if (Me.pattern == 0) {
@@ -214,7 +214,7 @@ void organMinigame_setState(s32 next_state){
         else{
             Me.unk10 = D_8038C1D4;
         }
-        func_8028F8F8(1, TRUE);
+        func_8028F8F8(1, true);
         func_803876C8(Me.motzhand_marker, Me.pattern);
     }//L80389AF4
 

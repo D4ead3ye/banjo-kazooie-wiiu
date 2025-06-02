@@ -99,7 +99,7 @@ void chHoneycomb_update(Actor *this){
 
     if(!this->initialized){
         this->lifetime_value = (randf() < 0.5) ? 200.0 : -200.0;
-        this->initialized = TRUE;
+        this->initialized = true;
         if( this->marker->id == MARKER_53_EMPTY_HONEYCOMB){
             if(local->uid == 0)
                 local->uid = (!this->unk44_2)? D_8037DDC0 : func_802C9C40(this);
@@ -114,7 +114,7 @@ void chHoneycomb_update(Actor *this){
     }//L802C9F9C
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if( this->marker->id == MARKER_55_HONEYCOMB
             && !this->unk44_2
         ){
@@ -136,12 +136,12 @@ void chHoneycomb_update(Actor *this){
 
     if(map_get() == MAP_27_FP_FREEZEEZY_PEAK){
         if(maSlalom_isActive()){
-            this->unk58_0 = FALSE;
+            this->unk58_0 = false;
             actor_collisionOff(this);
             return;
         }
         else{
-            this->unk58_0 = TRUE;
+            this->unk58_0 = true;
             actor_collisionOn(this);
         }
     }

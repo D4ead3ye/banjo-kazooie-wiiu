@@ -84,8 +84,8 @@ void func_8036158C(Actor *this){
     sp30 = time_getDelta();
 
     if(!this->volatile_initialized){
-        this->marker->propPtr->unk8_3 = TRUE;
-        this->volatile_initialized = TRUE;
+        this->marker->propPtr->unk8_3 = true;
+        this->volatile_initialized = true;
         local->unk0 = &D_80373130[this->modelCacheIndex - 0x289];
         if(*local->unk0){
             this->roll = this->yaw;

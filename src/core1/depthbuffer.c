@@ -51,7 +51,7 @@ void func_80253428(int arg0) {
     }else{
         sDepthBuffer.data = NULL;
     }
-    sDepthBuffer.unk4 = FALSE;
+    sDepthBuffer.unk4 = false;
 }
 
 void func_802534A8(int arg0) {

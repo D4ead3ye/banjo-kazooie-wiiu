@@ -70,7 +70,7 @@ void chdrips_update(Actor *this){
     ParticleEmitter *pCtrl;
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         actor_collisionOff(this);
         this->lifetime_value = this->yaw/360.0;
     }

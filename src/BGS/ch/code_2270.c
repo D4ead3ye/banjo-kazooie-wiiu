@@ -144,7 +144,7 @@ void chTiptup_setState(Actor *this, s32 arg1){
         unqPtr->unkC = randf2(5.0f, 15.0f);
 
         if (!this->has_met_before) {
-            this->has_met_before = TRUE;
+            this->has_met_before = true;
 
             if (unqPtr->unkA == 0) {
                 gcdialog_showText(ASSET_C72_DIALOG_UNKNOWN, 0xe, this->position, this->marker, chTiptup_textEvent, 0);
@@ -246,7 +246,7 @@ void chTiptup_choirHitReaction(ActorMarker *this, s32 arg1){
             func_8028F55C(1, thisActor->marker);
             timedFunc_set_0(0.5f, chTiptup_sfxIncorrectHit);
            if(!mapSpecificFlags_get(1) && !volatileFlag_get(VOLATILE_FLAG_2_FF_IN_MINIGAME) && gcdialog_showText(0xc75, 0, NULL, NULL, NULL, NULL))
-               mapSpecificFlags_set(1,TRUE);
+               mapSpecificFlags_set(1,true);
         }
     }
 }
@@ -283,7 +283,7 @@ void chTiptup_update(Actor *this){
     unqPtr = (ActorLocal_Tiptup *)&this->local;
     sp3C = time_getDelta();
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->marker->actorFreeFunc = func_80388FC0;
         marker_setCollisionScripts(this->marker, func_80388E44, NULL, NULL);
         

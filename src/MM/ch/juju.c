@@ -83,7 +83,7 @@ void __chjuju_initialize_all(ActorMarker *marker, s32 count) {
     position[2] = actorPtr->position_z;
     for(i = 0; i < 4; i++){
         jujuPtr = actor_spawnWithYaw_f32(ACTOR_59_JUJU, actorPtr->position, actorPtr->yaw);
-        jujuPtr->marker->collidable = FALSE;
+        jujuPtr->marker->collidable = false;
 
         actorPtr = marker_getActor(marker);
         chjujuhitbox_setJuju(actorPtr, i, jujuPtr);
@@ -96,7 +96,7 @@ void __chjuju_initialize_all(ActorMarker *marker, s32 count) {
         }
 
         if (i == count) {
-            ((ActorLocal_Juju_2 *) &jujuPtr->local)->unk18 = TRUE;
+            ((ActorLocal_Juju_2 *) &jujuPtr->local)->unk18 = true;
         }
     }
 }
@@ -146,7 +146,7 @@ void func_803892A8(ActorMarker **ptr) {
                 jujuPtr = (ActorLocal_Juju_2 *) &actorPtr->local;
 
                 if (j == i + 1) {
-                    jujuPtr->unk18 = TRUE;
+                    jujuPtr->unk18 = true;
                 }
 
                 jujuPtr->animation_countdown = s2;
@@ -165,11 +165,11 @@ bool __chjuju_isEveryJujuDespawned(ActorMarker **ptr) {
         jujuPtr = (ActorLocal_Juju_2 *) &marker_getActor(ptr[i])->local;
 
         if (jujuPtr->animation_state != JUJU_ANIMATION_STATE_2_DESPAWNED) {
-            return FALSE;
+            return false;
         }
     }
 
-    return TRUE;
+    return true;
 }
 
 bool __chjuju_isEveryJujuStable(ActorMarker **ptr) {
@@ -180,11 +180,11 @@ bool __chjuju_isEveryJujuStable(ActorMarker **ptr) {
         jujuPtr = (ActorLocal_Juju_2 *) &marker_getActor(ptr[i])->local;
 
         if (jujuPtr->animation_state != JUJU_ANIMATION_STATE_1_YAWING && jujuPtr->animation_state != JUJU_ANIMATION_STATE_2_DESPAWNED) {
-            return FALSE;
+            return false;
         }
     }
 
-    return TRUE;
+    return true;
 }
 
 void __chjuju_updateCount(ActorMarker **ptr) {
@@ -200,7 +200,7 @@ void __chjuju_updateCount(ActorMarker **ptr) {
 
 void chjuju_update(Actor *this) {
     ActorLocal_Juju_2 *jujuPtr = (ActorLocal_Juju_2 *) &this->local;
-    s32 has_completed_full_turn = FALSE;
+    s32 has_completed_full_turn = false;
     f32 previous_yaw;
     f32 pos_offset[3];
 
@@ -212,12 +212,12 @@ void chjuju_update(Actor *this) {
             this->yaw += ((11 - mm_juju_count * 2) * time_getDelta() * 60.0f) / 2;
 
             if (360.0f < this->yaw) {
-                has_completed_full_turn = TRUE;
+                has_completed_full_turn = true;
                 this->yaw -= 360.0f;
             }//L803896B4
 
             if (jujuPtr->unk18 && (has_completed_full_turn || (previous_yaw < 180.0f && 180.0f <= this->yaw))) {
-                mapSpecificFlags_set(MM_SPECIFIC_FLAG_9_JUJU_HAS_HALF_TURNED, TRUE);
+                mapSpecificFlags_set(MM_SPECIFIC_FLAG_9_JUJU_HAS_HALF_TURNED, true);
             }
             break;
 

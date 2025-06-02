@@ -155,7 +155,7 @@ void func_802D3138(ActorMarker *marker, ActorMarker *other_marker) {
 
 // called from collision die function below, set according file flag and despawns object
 void func_802D317C(ActorMarker *marker, enum file_progress_e prog_flag_id) {
-    fileProgressFlag_set(prog_flag_id, TRUE);
+    fileProgressFlag_set(prog_flag_id, true);
     marker_despawn(marker);
 }
 
@@ -164,7 +164,7 @@ void func_802D31AC(ActorMarker *arg0, ActorMarker * arg1) {
     Actor *sp2C;
 
     sp2C = marker_getActor(arg0);
-    arg0->collidable = FALSE;
+    arg0->collidable = false;
     switch (arg0->id) {
         case 0x9F:
         case 0xA0:
@@ -185,7 +185,7 @@ void func_802D31AC(ActorMarker *arg0, ActorMarker * arg1) {
             func_8030E6D4(SFX_114_BRICKWALL_BREAKING);
             sfxsource_play(SFX_11_WOOD_BREAKING_1, 28000);
             subaddie_set_state_looped(sp2C, 9);
-            fileProgressFlag_set((sp2C->unkF4_8 == 1) ? FILEPROG_C8_LAIR_BRICKWALL_TO_WADINGBOOTS_BROKEN : FILEPROG_C9_LAIR_BRICKWALL_TO_SHOCKJUMP_PAD_BROKEN, TRUE);
+            fileProgressFlag_set((sp2C->unkF4_8 == 1) ? FILEPROG_C8_LAIR_BRICKWALL_TO_WADINGBOOTS_BROKEN : FILEPROG_C9_LAIR_BRICKWALL_TO_SHOCKJUMP_PAD_BROKEN, true);
             break;
 
         case 0x107:
@@ -212,7 +212,7 @@ void func_802D31AC(ActorMarker *arg0, ActorMarker * arg1) {
 
         case 0x163:
             if (sp2C->unk10_12 == 0) {
-                sp2C->unk10_12 = TRUE;
+                sp2C->unk10_12 = true;
                 timed_playSfx(0.5f, SFX_3F9_UNKNOWN, 1.0f, 32000);
                 FUNC_8030E624(SFX_114_BRICKWALL_BREAKING, 0.8f, 32000);
             }
@@ -362,8 +362,8 @@ void func_802D3CC8(ActorMarker *marker){
 void func_802D3CE8(Actor *this){
     if(!this->initialized){
         marker_setCollisionScripts(this->marker, NULL, func_802D3138, func_802D31AC);
-        this->marker->propPtr->unk8_3 = TRUE;
-        this->initialized = TRUE;
+        this->marker->propPtr->unk8_3 = true;
+        this->initialized = true;
     }
 }
 
@@ -373,7 +373,7 @@ void func_802D3D54(Actor *this){
 
 // used as init function
 void func_802D3D74(Actor *this){
-    this->marker->propPtr->unk8_3 = TRUE;
+    this->marker->propPtr->unk8_3 = true;
     actor_collisionOff(this);
 }
 
@@ -387,8 +387,8 @@ void func_802D3DA4(Actor *this) {
 
     if (!this->volatile_initialized) {
 
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = true;
         this->unk38_31 = 0;
     }
     player_getPosition(sp24);
@@ -419,7 +419,7 @@ Actor *func_802D3F48(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
 
 void func_802D3FD4(Actor *this){
     if(!this->initialized){
-        this->initialized = TRUE;
+        this->initialized = true;
         func_802D3CE8(this);
         switch(map_get()){
             case MAP_1D_MMM_CELLAR: //L802D4058
@@ -477,17 +477,17 @@ Actor *func_802D41C4(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
     this = marker_getActor(marker);
     sp2C = this->unkF4_8;
     for(i = 0; i < 6; i++){
-        func_8033A45C(i+1, FALSE);
+        func_8033A45C(i+1, false);
     }
-    func_8033A45C(sp2C, TRUE);
+    func_8033A45C(sp2C, true);
     return actor_drawFullDepth(marker, gfx, mtx, vtx);
 }
 
 void func_802D4250(Actor *this){
     if(!this->initialized){
-        this->initialized = TRUE;
+        this->initialized = true;
         func_802D3CE8(this);
-        if(sns_get_item_state(SNS_ITEM_ICE_KEY, FALSE)){
+        if(sns_get_item_state(SNS_ITEM_ICE_KEY, false)){
             marker_despawn(this->marker);
         }
         return;
@@ -507,7 +507,7 @@ bool func_802D42F8(Actor *this) {
     }
 
     if (D_803679B0[i] == -1) {
-        return FALSE;
+        return false;
     }
     else{
         return fileProgressFlag_get(D_803679B0[i + 1]);
@@ -547,7 +547,7 @@ void func_802D4388(Actor *this){
             }
             break;
     }//L802D456C
-    mapSpecificFlags_set(0x1F, FALSE);
+    mapSpecificFlags_set(0x1F, false);
 }
 
 Actor *func_802D4588(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx) {
@@ -565,7 +565,7 @@ bool func_802D4608(void){
 void func_802D4614(enum map_e map_id){
     if(D_803676AC)
         return;
-    D_803676AC = TRUE;
+    D_803676AC = true;
     func_8028F918(2);
     func_8025A788(COMUSIC_69_FF_WARP, 0.0f, 1.7f);
     timedFunc_set_2(1.0f, (GenFunction_2) func_8031CC40, map_id, 2);
@@ -635,7 +635,7 @@ void func_802D48F0(void){
 }
 
 void func_802D4928(Actor *this, s32 arg1, s32 arg2, s32 arg3) {
-    this->marker->propPtr->unk8_3 = TRUE;
+    this->marker->propPtr->unk8_3 = true;
     if( ( (((arg1 & 0xC00000) == 0) && mapSpecificFlags_get(arg1 - 0)) 
           || (((arg1 & 0xC00000) == 0x800000) && fileProgressFlag_get(arg1 - 0x800000)) 
           || (((arg1 & 0xC00000) == 0x400000) && volatileFlag_get(arg1 - 0x400000))
@@ -713,10 +713,10 @@ void func_802D4CAC(Actor *this){
 void func_802D4CD4(Actor *this){
     if(map_get() == MAP_27_FP_FREEZEEZY_PEAK){
         if(maSlalom_isActive()){
-            this->unk58_0 = FALSE;
+            this->unk58_0 = false;
             return;
         }//L802D4D10
-        this->unk58_0 = TRUE;
+        this->unk58_0 = true;
     }//L802D4D1C
     func_802D4AC0(this, 0x4000bb, FILEPROG_47_FP_WITCH_SWITCH_JIGGY_PRESSED);
 }
@@ -803,8 +803,8 @@ void func_802D5140(ActorMarker *caller, enum asset_e text_id, s32 arg2){
 
 void func_802D5178(s32 arg0, enum file_progress_e arg1, s32 arg2, enum map_e arg3, s32 arg4, s32 arg5, enum actor_e arg6, s32 arg7){
     if(levelSpecificFlags_get(arg0) && !fileProgressFlag_get(arg1)){
-        levelSpecificFlags_set(arg0, FALSE);
-        fileProgressFlag_set(arg1, TRUE);
+        levelSpecificFlags_set(arg0, false);
+        fileProgressFlag_set(arg1, true);
         func_802D6264(0.95f, arg3, arg2, arg4, arg5, 0);
         D_803676A0 = arg6;
         D_80367690 = arg7;
@@ -829,10 +829,10 @@ void func_802D5260(void) {
          : -1;
 
     if (sp3C == -1) {
-        levelSpecificFlags_set(LEVEL_FLAG_3C_LAIR_UNKNOWN, FALSE);
-        fileProgressFlag_set(FILEPROG_26_WATER_SWITCH_3_PRESSED, FALSE);
-        fileProgressFlag_set(FILEPROG_27_LAIR_WATER_LEVEL_3,     FALSE);
-        levelSpecificFlags_set(LEVEL_FLAG_3D_LAIR_UNKNOWN, FALSE);
+        levelSpecificFlags_set(LEVEL_FLAG_3C_LAIR_UNKNOWN, false);
+        fileProgressFlag_set(FILEPROG_26_WATER_SWITCH_3_PRESSED, false);
+        fileProgressFlag_set(FILEPROG_27_LAIR_WATER_LEVEL_3,     false);
+        levelSpecificFlags_set(LEVEL_FLAG_3D_LAIR_UNKNOWN, false);
         return;
     }
     sp38 = func_8034C528(sp3C + 0x190);
@@ -841,15 +841,15 @@ void func_802D5260(void) {
         && !levelSpecificFlags_get(LEVEL_FLAG_3C_LAIR_UNKNOWN)
     ) {
         func_802D68F0(30);
-        item_set(ITEM_6_HOURGLASS, TRUE);
-        levelSpecificFlags_set(LEVEL_FLAG_3D_LAIR_UNKNOWN, TRUE);
+        item_set(ITEM_6_HOURGLASS, true);
+        levelSpecificFlags_set(LEVEL_FLAG_3D_LAIR_UNKNOWN, true);
     }
     if( levelSpecificFlags_get(LEVEL_FLAG_3D_LAIR_UNKNOWN)
         && !levelSpecificFlags_get(LEVEL_FLAG_3C_LAIR_UNKNOWN)
-        && item_getCount(ITEM_6_HOURGLASS) == FALSE
+        && item_getCount(ITEM_6_HOURGLASS) == false
     ) {
-        levelSpecificFlags_set(LEVEL_FLAG_3C_LAIR_UNKNOWN, TRUE);
-        levelSpecificFlags_set(LEVEL_FLAG_3D_LAIR_UNKNOWN, FALSE);
+        levelSpecificFlags_set(LEVEL_FLAG_3C_LAIR_UNKNOWN, true);
+        levelSpecificFlags_set(LEVEL_FLAG_3D_LAIR_UNKNOWN, false);
         D_803676A4 = 0.0f;
     }
 
@@ -863,16 +863,16 @@ void func_802D5260(void) {
         }
 
         if (D_803679C8[sp3C].unk6 + D_803676A4 <= D_803679C8[sp3C].unk4) {
-            levelSpecificFlags_set(LEVEL_FLAG_3C_LAIR_UNKNOWN, FALSE);
-            fileProgressFlag_set(FILEPROG_26_WATER_SWITCH_3_PRESSED, FALSE);
-            fileProgressFlag_set(FILEPROG_27_LAIR_WATER_LEVEL_3, FALSE);
+            levelSpecificFlags_set(LEVEL_FLAG_3C_LAIR_UNKNOWN, false);
+            fileProgressFlag_set(FILEPROG_26_WATER_SWITCH_3_PRESSED, false);
+            fileProgressFlag_set(FILEPROG_27_LAIR_WATER_LEVEL_3, false);
             func_802F9D38(D_803676A8);
             D_803676A8 = 0;
         }
     }
 
     if (sp38 != 0) {
-        if (levelSpecificFlags_get(LEVEL_FLAG_3C_LAIR_UNKNOWN) != FALSE) {
+        if (levelSpecificFlags_get(LEVEL_FLAG_3C_LAIR_UNKNOWN) != false) {
             sp34 = D_803679C8[sp3C].unk6 + D_803676A4;
         } else {
             sp34 = ((s16 *)&D_803679C8[sp3C])[(fileProgressFlag_get(FILEPROG_27_LAIR_WATER_LEVEL_3)) ? 3 
@@ -1041,7 +1041,7 @@ void func_802D5628(void){
         if(volatileFlag_get(VOLATILE_FLAG_18)){
             if(!fileProgressFlag_get(FILEPROG_99_PAST_50_NOTE_DOOR_TEXT)){
                 func_80311174(0xF75, 0xE, NULL, NULL, NULL, NULL, func_802D5140);
-                fileProgressFlag_set(FILEPROG_99_PAST_50_NOTE_DOOR_TEXT, TRUE);
+                fileProgressFlag_set(FILEPROG_99_PAST_50_NOTE_DOOR_TEXT, true);
                 volatileFlag_set(VOLATILE_FLAG_18, 0);
             }
             else{//L802D5DD8
@@ -1074,7 +1074,7 @@ void func_802D5628(void){
 
                         if(volatileFlag_get(VOLATILE_FLAG_22)){
                             if(gcdialog_showText(0xF82, 4, NULL, NULL, NULL, NULL)){
-                                fileProgressFlag_set(FILEPROG_C1_BADDIES_ESCAPE_TEXT, TRUE);
+                                fileProgressFlag_set(FILEPROG_C1_BADDIES_ESCAPE_TEXT, true);
                                 volatileFlag_set(VOLATILE_FLAG_22, 0);
                                 D_8037DE04 = 0.0f;
                                 D_80367680 += 60.0;
@@ -1121,7 +1121,7 @@ void func_802D6114(void){
     sp24 =  D_80367694;\
     sp20 =  D_80367698;
     if(D_8036769C)
-        fileProgressFlag_set(D_8036769C, TRUE);
+        fileProgressFlag_set(D_8036769C, true);
     func_802D6344();
     if(map_get() != sp24){
         if(map_getLevel(sp24) != map_getLevel(map_get())){
@@ -1330,7 +1330,7 @@ s32 func_802D683C(s32 arg0){
 
 int func_802D686C(void){
     if(volatileFlag_get(VOLATILE_FLAG_1E)){
-        return FALSE;
+        return false;
     } 
     return map_get() == D_80367684;
 }
@@ -1355,31 +1355,31 @@ void func_802D6924(void){
 void func_802D6948(void){
     switch(map_get()){
         case MAP_2_MM_MUMBOS_MOUNTAIN:
-            fileProgressFlag_set(FILEPROG_B0_HAS_ENTERED_MM, TRUE);
+            fileProgressFlag_set(FILEPROG_B0_HAS_ENTERED_MM, true);
             break;
         case MAP_7_TTC_TREASURE_TROVE_COVE:
-            fileProgressFlag_set(FILEPROG_B2_HAS_ENTERED_TTC, TRUE);
+            fileProgressFlag_set(FILEPROG_B2_HAS_ENTERED_TTC, true);
             break;
         case MAP_B_CC_CLANKERS_CAVERN:
-            fileProgressFlag_set(FILEPROG_B8_HAS_ENTERED_CC, TRUE);
+            fileProgressFlag_set(FILEPROG_B8_HAS_ENTERED_CC, true);
             break;
         case MAP_D_BGS_BUBBLEGLOOP_SWAMP:
-            fileProgressFlag_set(FILEPROG_B1_HAS_ENTERED_BGS, TRUE);
+            fileProgressFlag_set(FILEPROG_B1_HAS_ENTERED_BGS, true);
             break;
         case MAP_12_GV_GOBIS_VALLEY:
-            fileProgressFlag_set(FILEPROG_B3_HAS_ENTERED_GV, TRUE);
+            fileProgressFlag_set(FILEPROG_B3_HAS_ENTERED_GV, true);
             break;
         case MAP_1B_MMM_MAD_MONSTER_MANSION:
-            fileProgressFlag_set(FILEPROG_B7_HAS_ENTERED_MMM, TRUE);
+            fileProgressFlag_set(FILEPROG_B7_HAS_ENTERED_MMM, true);
             break;
         case MAP_27_FP_FREEZEEZY_PEAK:
-            fileProgressFlag_set(FILEPROG_B6_HAS_ENTERED_FP, TRUE);
+            fileProgressFlag_set(FILEPROG_B6_HAS_ENTERED_FP, true);
             break;
         case MAP_31_RBB_RUSTY_BUCKET_BAY:
-            fileProgressFlag_set(FILEPROG_B4_HAS_ENTERED_RBB, TRUE);
+            fileProgressFlag_set(FILEPROG_B4_HAS_ENTERED_RBB, true);
             break;
         case MAP_40_CCW_HUB:
-            fileProgressFlag_set(FILEPROG_B5_HAS_ENTERED_CCW, TRUE);
+            fileProgressFlag_set(FILEPROG_B5_HAS_ENTERED_CCW, true);
             break;
     }
 }
@@ -1406,5 +1406,5 @@ int func_802D6A38(enum map_e map_id){
         case MAP_40_CCW_HUB:
             return fileProgressFlag_get(FILEPROG_B5_HAS_ENTERED_CCW);
     }
-    return FALSE;
+    return false;
 }

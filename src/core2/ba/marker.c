@@ -544,7 +544,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
                     if( jiggy_id != JIGGY_2F_FP_XMAS_TREE
                         || (player_isStable() && !(3600.0f < ml_distanceSquared_vec3f(actor->position, spA0)))
                     ){
-                        jiggyscore_setCollected(jiggy_id, TRUE);
+                        jiggyscore_setCollected(jiggy_id, true);
                         item_adjustByDiffWithoutHud(ITEM_26_JIGGY_TOTAL, 1);
                         if(jiggy_id == JIGGY_20_BGS_ELEVATED_WALKWAY || jiggy_id == JIGGY_25_BGS_MAZE){
                             func_802D6924();
@@ -949,11 +949,11 @@ ActorMarker *baMarker_get(void){ //baMarker_get
 }
 
 void baMarker_collisionOff(void){ //player_collisionOff
-    playerMarker->collidable = FALSE;
+    playerMarker->collidable = false;
 }
 
 void baMarker_collisionOn(void){ //player_collisionOn
-    playerMarker->collidable = TRUE;
+    playerMarker->collidable = true;
 }
 
 bool baMarker_isCollidable(void){ //player_isCollidable

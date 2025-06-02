@@ -134,15 +134,15 @@ void chGobiCCW_update(Actor *this) {
 
     local = (ActorLocal_chGobiCCW*)&this->local;
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = true;
         this->marker->actorFreeFunc = chGobiCCW_free;
-        this->has_met_before = FALSE;
+        this->has_met_before = false;
         local->unk4 = skeletalAnim_new();
         local->spit_model = assetcache_get(ASSET_3F3_MODEL_GOBI_SPIT);
         marker_setCollisionScripts(this->marker, NULL, func_8038894C, NULL);
         if(!jiggyscore_isSpawned(JIGGY_4D_CCW_FLOWER)) {
-            fileProgressFlag_set(FILEPROG_E5_CCW_FLOWER_AUTUMN, FALSE);
+            fileProgressFlag_set(FILEPROG_E5_CCW_FLOWER_AUTUMN, false);
         }
         local->unk0 = &D_8038ECD0[0];
         while((local->unk0->map_id != 0) && (map_get() != local->unk0->map_id)) {
@@ -165,7 +165,7 @@ void chGobiCCW_update(Actor *this) {
                 if (local->unk0->unk2 != 0) {
                     gcdialog_showText((s32) local->unk0->unk2, 4, NULL, NULL, NULL, NULL);
                 }
-                this->has_met_before = TRUE;
+                this->has_met_before = true;
             }
         }
     }

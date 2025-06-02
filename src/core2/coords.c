@@ -44,15 +44,15 @@ bool coords_isPointInside(s32 min[3], s32 max[3], s32 point[3]) {
 
     for (i = 0; i < 3; i++) {
         if (min[i] >= point[i]) {
-            return FALSE;
+            return false;
         }
 
         if (point[i] >= max[i]) {
-            return FALSE;
+            return false;
         }
     }
 
-    return TRUE;
+    return true;
 }
 
 bool coords_isPointInsideWithOffset(s32 min[3], s32 max[3], s32 point[3], s32 offset) {
@@ -60,15 +60,15 @@ bool coords_isPointInsideWithOffset(s32 min[3], s32 max[3], s32 point[3], s32 of
 
     for (i = 0; i < 3; i++) {
         if (min[i] >= (point[i] + offset)) {
-            return FALSE;
+            return false;
         }
 
         if ((point[i] - offset) >= max[i]) {
-            return FALSE;
+            return false;
         }
     }
 
-    return TRUE;
+    return true;
 }
 
 void coords_scale(s32 min[3], s32 max[3], s32 ratio) {

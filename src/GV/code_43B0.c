@@ -65,8 +65,8 @@ void func_8038A8CC(ActorMarker *this_marker){
 
 void func_8038A948(Actor *this){
     if(!this->initialized){
-        this->initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->initialized = true;
+        this->marker->propPtr->unk8_3 = true;
         actor_collisionOff(this);
         __spawnQueue_add_1((GenFunction_1)func_8038A8CC, (s32)this->marker);
         this->velocity_y = 0.0f;
@@ -76,13 +76,13 @@ void func_8038A948(Actor *this){
 void GV_func_8038A9C0(Actor *this){
     Actor * sp24;
     if(!this->initialized){
-        this->initialized = TRUE;
+        this->initialized = true;
         this->velocity_y = 0.0f;
     }
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = true;
         actor_collisionOff(this);
         __spawnQueue_add_1((GenFunction_1)func_8038A8CC, (s32)this->marker);
         sp24 = subaddie_getLinkedActor(this);

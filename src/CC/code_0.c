@@ -53,7 +53,7 @@ void func_803864D4(Actor *this){
     f32 sin_result;
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker->propPtr->unk8_3 = 1;
         CC_func_803863F0(this, 1);
     }//L80386530

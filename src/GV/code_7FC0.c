@@ -23,6 +23,6 @@ ActorInfo D_803913B4 = { 0xFB, 0x1F9, 0x424,
 
 /* .code */
 void func_8038E3B0(Actor *this){
-    this->marker->propPtr->unk8_3 = TRUE;
+    this->marker->propPtr->unk8_3 = true;
     actor_collisionOff(this);
 }

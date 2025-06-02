@@ -184,7 +184,7 @@ void bscroc_jump_init(void){
     AnimCtrl *aCtrl = baanim_getAnimCtrlPtr();
 
     anctrl_reset(aCtrl);
-    anctrl_setSmoothTransition(aCtrl, FALSE);
+    anctrl_setSmoothTransition(aCtrl, false);
     anctrl_setIndex(aCtrl, ASSET_11C_ANIM_BSCROC_JUMP);
     anctrl_setSubRange(aCtrl, 0.0f, 0.35f);
     anctrl_setDuration(aCtrl, 1.0f);
@@ -423,7 +423,7 @@ void bscroc_die_init(void){
 
     func_8029B930();
     anctrl_reset(aCtrl);
-    anctrl_setSmoothTransition(aCtrl, FALSE);
+    anctrl_setSmoothTransition(aCtrl, false);
     anctrl_setIndex(aCtrl, ASSET_11E_ANIM_BSCROC_DIE);
     anctrl_setSubRange(aCtrl, 0.0f, 0.3966f);
     anctrl_setDuration(aCtrl, 1.7f);
@@ -491,7 +491,7 @@ void bscroc_die_update(void){
 }
 
 void bscroc_die_end(void){
-    core1_ce60_incOrDecCounter(FALSE);
+    core1_ce60_incOrDecCounter(false);
     baphysics_reset_gravity();
     pitch_setIdeal(0.0f);
     roll_setIdeal(0.0f);
@@ -517,7 +517,7 @@ void bscroc_bite_init(void){
     func_8029C7F4(1,1,1, BA_PHYSICS_LOCKED_ROTATION);
     func_802ACF58();
     D_8037D3F4 = 0;
-    _bscrocHitboxActive = TRUE;
+    _bscrocHitboxActive = true;
 }
 
 void bscroc_bite_update(void){
@@ -557,7 +557,7 @@ void bscroc_bite_update(void){
 }
 
 void bscroc_bite_end(void){
-    _bscrocHitboxActive = FALSE;
+    _bscrocHitboxActive = false;
     func_802ABFBC();
 }
 

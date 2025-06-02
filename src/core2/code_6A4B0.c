@@ -195,7 +195,7 @@ void func_802F1A10(Struct_Core2_6A4B0_2 *arg0, f32 angle_degrees) {
         }
     }
     arg0->draw_method = &func_802F1440;
-    arg0->unk10 = FALSE;
+    arg0->unk10 = false;
 }
 
 void func_802F1CAC(Struct_Core2_6A4B0_2 *arg0) {
@@ -236,5 +236,5 @@ void func_802F1CAC(Struct_Core2_6A4B0_2 *arg0) {
         }
     }
     arg0->draw_method = &func_802F1440;
-    arg0->unk10 = TRUE;
+    arg0->unk10 = true;
 }

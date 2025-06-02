@@ -338,7 +338,7 @@ void chvile_update(Actor *this) {
 
     local = (ActorLocal_MrVile *)&this->local;
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->marker->actorFreeFunc = chvile_free;
         local->unk0 = 0;
         local->unk4 = assetcache_get(0x3F6);

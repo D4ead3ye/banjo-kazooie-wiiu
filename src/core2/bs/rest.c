@@ -53,14 +53,14 @@ bool func_802B3BB0(void) {
 
     anim_ctrl = baanim_getAnimCtrlPtr();
     func_802B3A50();
-    sp20 = FALSE;
+    sp20 = false;
     switch(anctrl_getIndex(anim_ctrl)){
         case ASSET_167_ANIM_BSREST_MOVE:
             if (baanim_isStopped() != 0) {
                 if (anctrl_isPlayedForwards(anim_ctrl) != 0) {
                     baanim_playForDuration_loopSmooth(ASSET_14A_ANIM_BSREST_LISTEN, 11.4f);
                 } else if (func_80298850() == 0) {
-                    sp20 = TRUE;
+                    sp20 = true;
                 }
             }
             break;
@@ -77,7 +77,7 @@ bool func_802B3BB0(void) {
             break;
         default:
             if (func_80298850() == 0) {
-                sp20 = TRUE;
+                sp20 = true;
             }
             break;
     }

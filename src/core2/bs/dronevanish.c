@@ -29,7 +29,7 @@ void __bsDroneVanish_setSubstate(s32 next_state) {
         break;
     case 3:
         gcpausemenu_returnToLair();
-        baModel_setVisible(FALSE);
+        baModel_setVisible(false);
         comusic_8025AB44(COMUSIC_43_ENTER_LEVEL_GLITTER, 0, 2000);
         batimer_set(0, 2.0f);
         break;

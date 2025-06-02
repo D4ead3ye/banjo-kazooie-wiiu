@@ -219,7 +219,7 @@ bool func_80388670(ActorMarker * this_marker, ActorMarker * other_marker){
             return (5470.0f < sp20[0] &&  sp20[0] < 5920.0f) && ( -850.0f < sp20[2] &&  sp20[2] < -780.0f);
         
         default:
-            return FALSE;
+            return false;
     }
 }
 
@@ -298,7 +298,7 @@ void func_80388BDC(Actor *this) {
             this->unk38_31 = 0;
             this->lifetime_value = 0.0f;
         }
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
     }
 
     switch (this->state) {
@@ -308,7 +308,7 @@ void func_80388BDC(Actor *this) {
             func_802BAFE4(0x21);
             subaddie_set_state(this, 6);
             core1_7090_initSfxSource(0, 0x6A, 0x7FF8, 0.3f);
-            mapSpecificFlags_set(MMM_SPECIFIC_FLAG_2_UNKNOWN, FALSE);
+            mapSpecificFlags_set(MMM_SPECIFIC_FLAG_2_UNKNOWN, false);
             func_8025A6EC(COMUSIC_4_MMM_CLOCK_VERSION, -1);
             func_8025AE0C(2000, 3.0f);
         }
@@ -350,7 +350,7 @@ void func_80388BDC(Actor *this) {
             subaddie_set_state(this, 1U);
             this->yaw = 0.0f;
             func_8030E540(SFX_7F_HEAVYDOOR_SLAM);
-            mapSpecificFlags_set(MMM_SPECIFIC_FLAG_0_UNKNOWN, FALSE);
+            mapSpecificFlags_set(MMM_SPECIFIC_FLAG_0_UNKNOWN, false);
             core1_7090_freeSfxSource(0);
             if (!this->unk38_31) {
                 func_8025A6EC(COMUSIC_3C_MINIGAME_LOSS, 0x7FF8);
@@ -372,7 +372,7 @@ void func_80389004(Actor *this){
     func_802D3CE8(this);
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
 
         if (levelSpecificFlags_get(LEVEL_FLAG_2E_MMM_UNKNOWN)) {
             marker_despawn(this->marker);
@@ -381,7 +381,7 @@ void func_80389004(Actor *this){
 }
 
 void func_80389060(Actor *this){
-    if(!this->initialized && sns_get_item_state(SNS_ITEM_EGG_CYAN, TRUE)){
+    if(!this->initialized && sns_get_item_state(SNS_ITEM_EGG_CYAN, true)){
         marker_despawn(this->marker);
     }
     else{

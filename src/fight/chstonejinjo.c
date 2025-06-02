@@ -29,13 +29,13 @@ void chstonejinjo_spawnJinjo(ActorMarker *marker) {
 
 void chstonejinjo_update(Actor *this) {
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = true;
         actor_collisionOff(this);
         
         if (this->unkF4_8 == BOSSJINJO_5_JINJONATOR) {
-            this->marker->unk40_23 = TRUE;
-            this->marker->unk40_20 = TRUE;
+            this->marker->unk40_23 = true;
+            this->marker->unk40_20 = true;
             this->unk1C[0] = 6.0f;
             this->scale *= 4.0;
         } else {
@@ -124,7 +124,7 @@ void chstonejinjo_breakOpen(ActorMarker *marker) {
             camera_duration_time = actor_stonejinjo->unk1C[0] + bossjinjo_wakeup_time;
             chfinalboss_getPosition(position_finalboss);
             func_8028F94C(2, &position_finalboss);
-            chfinalboss_setJinjoStatueActivated(TRUE);
+            chfinalboss_setJinjoStatueActivated(true);
             timed_setStaticCameraToNode(0 * camera_duration_time, camera_node);
             timed_exitStaticCamera(1 * camera_duration_time);
             timed_setStaticCameraToNode(1 * camera_duration_time, camera_node + 1);

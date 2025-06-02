@@ -30,7 +30,7 @@ Actor *__chJigsawDance_draw(ActorMarker *this, Gfx **gdl, Mtx **mptr, Vtx **arg3
     Actor *thisActor = marker_getActor(this);
 
     if(!thisActor->initialized){
-        thisActor->initialized = TRUE;
+        thisActor->initialized = true;
         return thisActor;
     }
     else{
@@ -41,7 +41,7 @@ Actor *__chJigsawDance_draw(ActorMarker *this, Gfx **gdl, Mtx **mptr, Vtx **arg3
 void __chJigsawDance_update(Actor * this){
     AnimCtrl *plyrMvmt;
 
-    this->marker->collidable = FALSE;
+    this->marker->collidable = false;
     switch(this->state){
         case 1:
             break;

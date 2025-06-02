@@ -56,7 +56,7 @@ f32 ml_acosf_deg(f32 x) {
     upperIdx = 0;
     lowerIdx = 91;
 
-    while (TRUE) {
+    while (true) {
         s32 idx = (upperIdx + lowerIdx) / 2;
 
         if (x > table[idx])
@@ -578,11 +578,11 @@ bool ml_timer_update(f32 *timer, f32 delta) {
 
         if (*timer <= 0) {
             *timer = 0;
-            return TRUE;
+            return true;
         }
     }
 
-    return FALSE;
+    return false;
 }
 
 void func_8025778C(f32 dst[3], f32 arg1[3], f32 arg2[3][3]){
@@ -863,7 +863,7 @@ int func_80258210(f32 x, f32 y, f32 *dst)
     tmp = gu_sqrtf(_SQ2(y, x));
 
     if (tmp < 0.01)
-        return FALSE;
+        return false;
 
     *dst = ml_acosf(x / tmp);
 
@@ -873,7 +873,7 @@ int func_80258210(f32 x, f32 y, f32 *dst)
     if (x < 0)
         *dst = 360 - *dst;
 
-    return TRUE;
+    return true;
 }
 
 bool ml_isZero_vec3f(f32 vec[3])

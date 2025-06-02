@@ -493,10 +493,10 @@ bool func_803340A0(f32 arg0[3], f32 arg1[3], f32 arg2) {
             && (!(sp40[0] <= (i_ptr->unk0[0] - i_ptr->unk18)) || !(sp40[0] <= (i_ptr->unkC[0] - i_ptr->unk18))) 
             && (!(sp40[1] <= (i_ptr->unk0[1] - i_ptr->unk18)) || !(sp40[1] <= (i_ptr->unkC[1] - i_ptr->unk18))) 
             && (!(sp40[2] <= (i_ptr->unk0[2] - i_ptr->unk18)) || !(sp40[2] <= (i_ptr->unkC[2] - i_ptr->unk18)))) {
-            return FALSE;
+            return false;
         }
     }
-    return TRUE;
+    return true;
 }
 
 s32 func_803342AC(f32 arg0[3], f32 arg1[3], f32 arg2){

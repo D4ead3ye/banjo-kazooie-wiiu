@@ -143,7 +143,7 @@ Actor *__bundle_spawnWithFirstActor(enum bundle_e bundle_id, f32 position[3], Ac
 
         //L802C9114
         actor = (i == 0 && firstActor) ? firstActor : actor_spawnWithYaw_f32(bundle_info->actor_id, position, 0);
-        actor->is_bundle = TRUE;
+        actor->is_bundle = true;
         
         bundle = (Bundle *) &actor->unkBC;
         bundle->index = bundle_id;
@@ -206,7 +206,7 @@ bool func_802C939C(Actor *actor, f32 arg1[3], f32 arg2[3], f32 arg3[3], bool arg
                 ml_vec3f_diff_copy(arg3, arg2, arg1);
                 ml_vec3f_normalize(arg3);
                 ml_vec3f_copy(arg2, arg1);
-                return TRUE;
+                return true;
             }
         }
         else {
@@ -215,7 +215,7 @@ bool func_802C939C(Actor *actor, f32 arg1[3], f32 arg2[3], f32 arg3[3], bool arg
                     ml_vec3f_diff_copy(arg3, arg2, arg1);
                     ml_vec3f_normalize(arg3);
                     ml_vec3f_copy(arg2, arg1);
-                    return TRUE;
+                    return true;
                 }
             }
         }
@@ -248,7 +248,7 @@ bool func_802C939C(Actor *actor, f32 arg1[3], f32 arg2[3], f32 arg3[3], bool arg
     }
     if (var_v1 && bundle->unk2D && (actor->marker->modelId == ASSET_363_MODEL_HONEYCOMB)) {
         ml_vec3f_scale_copy(sp44, arg3, sp60 / (f32) (1 << bundle->unk6));
-        var_v1 = TRUE;
+        var_v1 = true;
         arg2[0] += sp44[0];
         arg2[1] += sp44[1];
         arg2[2] += sp44[2];
@@ -256,12 +256,12 @@ bool func_802C939C(Actor *actor, f32 arg1[3], f32 arg2[3], f32 arg3[3], bool arg
             bundle->unk6++;
         }
         if (bundle->unk6 == 5) {
-            bundle->unk2D = FALSE;
+            bundle->unk2D = false;
         } else {
-            var_v1 = FALSE;
+            var_v1 = false;
         }
     } else {
-        bundle->unk2D = FALSE;
+        bundle->unk2D = false;
     }
     arg1[1] -= sp60;
     arg2[1] -= sp60;
@@ -333,7 +333,7 @@ void bundle_update(Actor *actor) {
                     bundle->unk2C = 1;
 
                     if (bundle_info->flags & 0x10) {
-                        actor->marker->propPtr->unk8_3 = TRUE;
+                        actor->marker->propPtr->unk8_3 = true;
                     }
                 }
                 else {

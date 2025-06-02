@@ -59,7 +59,7 @@ bool func_80387EE4(Actor *this) {
     var_v1 = (temp_f0 < temp_f2) ? 1 : 0;
     if (!(this->initialized) || (local->unk0 == var_v1) || !(sp34 >= 0.0f) || !(sp34 <= ((temp_f20 * temp_f20) + (temp_f22 * temp_f22)))) {
         local->unk0 = var_v1;
-        this->initialized = TRUE;
+        this->initialized = true;
         return 0;
     }
     local->unk0 = var_v1;
@@ -105,32 +105,32 @@ void func_8038811C(ActorMarker *this_marker, ActorMarker *other_marker){
 
 void func_803881AC(Actor *this){
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if(jiggyscore_isCollected(JIGGY_2C_FP_BOGGY_3)){
             marker_despawn(this->marker);
             return;
         }
         marker_setCollisionScripts(this->marker, NULL, func_8038811C, NULL);
-        this->marker->propPtr->unk8_3 = FALSE;
-        this->unk124_6 = FALSE;
+        this->marker->propPtr->unk8_3 = false;
+        this->unk124_6 = false;
         func_803289EC(this, randf(), 1);
         if(this->unk38_31 == 0){
             maSlalom_linkActiveFlag(this->marker);
             this->velocity_x = 0.0f;
         }
-        this->initialized = FALSE;
+        this->initialized = false;
         this->velocity_z = 0.0f;
     }//L8038827C
 
     if(0.0f == this->velocity_x || 0.0f != this->velocity_y) {
-        this->marker->collidable = FALSE;
+        this->marker->collidable = false;
         if(0.0f == this->velocity_x)
             return;
     }else{
         if(!func_80329530(this, 2000) && !maSlolam_WithinRadiusOfBoggy(this->position, 2000))
             return;
-        this->marker->collidable = TRUE;
-        this->unk124_6 = TRUE;
+        this->marker->collidable = true;
+        this->unk124_6 = true;
 
     }//L80388314
     func_8028E668(this->position, 200.0f, -10.0f, 30.0f);

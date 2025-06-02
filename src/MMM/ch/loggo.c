@@ -43,7 +43,7 @@ void __chLoggo_collide(ActorMarker *this_marker, ActorMarker *other_marker) {
     if ((player_getTransformation() == TRANSFORM_3_PUMPKIN) && !fileProgressFlag_get(FILEPROG_89_ENTERED_LOGGO_AS_PUMPKIN)) {
         if (gcdialog_showText(ASSET_ADF_DIALOG_ENTER_LOGGO, 0x2B, this->position, this->marker, &__chLoggo_textCallback, 0) != 0) {
             actor_collisionOff(this);
-            fileProgressFlag_set(FILEPROG_89_ENTERED_LOGGO_AS_PUMPKIN, TRUE);
+            fileProgressFlag_set(FILEPROG_89_ENTERED_LOGGO_AS_PUMPKIN, true);
         }
         return;
     }
@@ -56,7 +56,7 @@ void __chLoggo_collide(ActorMarker *this_marker, ActorMarker *other_marker) {
 
     if ((player_getTransformation() == TRANSFORM_1_BANJO) && !fileProgressFlag_get(FILEPROG_88_TRIED_LOGGO_AS_BEAR)) {
         if (gcdialog_showText(ASSET_ADE_DIALOG_LOGGO_AS_BEAR, 0x2A, this->position, NULL, NULL, NULL)) {
-            fileProgressFlag_set(FILEPROG_88_TRIED_LOGGO_AS_BEAR, TRUE);
+            fileProgressFlag_set(FILEPROG_88_TRIED_LOGGO_AS_BEAR, true);
         }
     }
 }
@@ -69,8 +69,8 @@ void chLoggo_update(Actor *this) {
     tick = time_getDelta();
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = true;
 
         actor_collisionOn(this);
         marker_setCollisionScripts(this->marker, __chLoggo_collide, NULL, NULL);
@@ -82,7 +82,7 @@ void chLoggo_update(Actor *this) {
 
         if (!fileProgressFlag_get(FILEPROG_8A_EXITED_LOGGO) && levelSpecificFlags_get(LEVEL_FLAG_33_MMM_UNKNOWN)) {
             if (gcdialog_showText(ASSET_AE0_DIALOG_EXIT_LOGGO, 4, NULL, NULL, NULL, NULL)) {
-                fileProgressFlag_set(FILEPROG_8A_EXITED_LOGGO, TRUE);
+                fileProgressFlag_set(FILEPROG_8A_EXITED_LOGGO, true);
             }
         }
     }
@@ -114,9 +114,9 @@ void chLoggo_update(Actor *this) {
 
         case LOGGO_STATE_2_FLUSHING:
             if (actor_animationIsAt(this, 0.46f)) {
-                this->marker->propPtr->unk8_3 = FALSE;
+                this->marker->propPtr->unk8_3 = false;
                 FUNC_8030E8B4(SFX_92_TOILET_FLUSH, 1.0f, 32000, this->position, 600, 1500);
-                levelSpecificFlags_set(LEVEL_FLAG_33_MMM_UNKNOWN, TRUE);
+                levelSpecificFlags_set(LEVEL_FLAG_33_MMM_UNKNOWN, true);
                 ml_vec3f_assign(position, this->position_x - 50.0f, this->position_y + 50.0f, this->position_z);
                 func_8028F6E4(BS_INTR_2F_LOGGO, position);
             }

@@ -277,7 +277,7 @@ void pfsManager_readData(){
 void pfsManager_entry(void *arg) {
     do {
         osRecvMesg(&pfsManagerContPollingMsqQ, 0, 1);
-        if(pfsManagerBusy == TRUE){
+        if(pfsManagerBusy == true){
             pfsManager_readData();
         }
         else{
@@ -391,7 +391,7 @@ OSContPad *func_8024F3F4(void){
 
 /* initilizes D_802816E8 message queue */
 void func_8024F400(void) {
-    D_80275D38 = TRUE;
+    D_80275D38 = true;
     osCreateMesgQueue(&D_802816E8, &D_80281700, 5);
     osSendMesg(&D_802816E8, 0, OS_MESG_NOBLOCK);
 }

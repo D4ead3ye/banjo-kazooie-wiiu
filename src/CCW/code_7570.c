@@ -25,9 +25,9 @@ void func_8038D9E0(Actor *this) {
     ActorMarker *temp_v0;
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->depth_mode = 2;
-        this->marker->unk40_22 = TRUE;
+        this->marker->unk40_22 = true;
         func_8038D960(this, 1);
     }
     if (this->state == 1) {

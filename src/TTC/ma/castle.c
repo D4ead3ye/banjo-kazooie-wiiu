@@ -173,12 +173,12 @@ static void __maCastle_setupCheatCodeTimer(s32 new_timer_state)
             item_set(ITEM_0_HOURGLASS_TIMER, 5999);
         }
 
-        item_set(ITEM_6_HOURGLASS, TRUE);
+        item_set(ITEM_6_HOURGLASS, true);
     }
 
     if (sMapState.timerState == 1)
     {
-        item_set(ITEM_6_HOURGLASS, FALSE);
+        item_set(ITEM_6_HOURGLASS, false);
     }
 
     sMapState.timerState = new_timer_state;
@@ -209,7 +209,7 @@ static void __maCastle_initFloorTiles(void)
         i_ptr->timeDeltaSum = 0.0f;
     }
 
-    mapSpecificFlags_set(TTC_SPECIFIC_FLAG_1_UNKNOWN, FALSE);
+    mapSpecificFlags_set(TTC_SPECIFIC_FLAG_1_UNKNOWN, false);
 }
 
 static void __maCastle_meshCallbackFloorTileState_1(s32 arg0, BKVtxRef *ref, Vtx *dst, s32 arg3)
@@ -338,12 +338,12 @@ static void __maCastle_setVolatileFlags(u32 arg0)
     {
         if (arg0 & (1 << i))
         {
-            volatileFlag_set(VOLATILE_FLAG_93_SANDCASTLE_OPEN_CCW + i, TRUE);
-            volatileFlag_set(VOLATILE_FLAG_78_SANDCASTLE_NO_BONUS, TRUE);
+            volatileFlag_set(VOLATILE_FLAG_93_SANDCASTLE_OPEN_CCW + i, true);
+            volatileFlag_set(VOLATILE_FLAG_78_SANDCASTLE_NO_BONUS, true);
         }
         else
         {
-            volatileFlag_set(VOLATILE_FLAG_93_SANDCASTLE_OPEN_CCW + i, FALSE);
+            volatileFlag_set(VOLATILE_FLAG_93_SANDCASTLE_OPEN_CCW + i, false);
         }
     }
 }
@@ -361,7 +361,7 @@ static void __maCastle_checkFloorTileForRegularCheatCode(LetterFloorTile *letter
     bool is_correct_input;
 
     is_in_ff_minigame = volatileFlag_get(VOLATILE_FLAG_2_FF_IN_MINIGAME);
-    is_correct_input = FALSE;
+    is_correct_input = false;
     floor_is_valid_or_correct = __maCastle_isFloorTileValidForSecretCheatCode(letter_floor_tile);
     for (cheatcode_ptr = sCheatCodes; cheatcode_ptr->code != NULL; cheatcode_ptr++)
     {
@@ -394,7 +394,7 @@ static void __maCastle_checkFloorTileForRegularCheatCode(LetterFloorTile *letter
             }
             if (letter_floor_tile->letter == cheatcode_ptr->code[cheatcode_ptr->codeCharacterIdx])
             {
-                is_correct_input = TRUE;
+                is_correct_input = true;
                 cheatcode_ptr->codeCharacterIdx++;
                 if (__maCastle_isCurrentSecretCheatCodeCharacter0())
                 {
@@ -418,7 +418,7 @@ static void __maCastle_checkFloorTileForRegularCheatCode(LetterFloorTile *letter
 
                         if (is_in_ff_minigame)
                         {
-                            item_set(ITEM_6_HOURGLASS, FALSE);
+                            item_set(ITEM_6_HOURGLASS, false);
                             volatileFlag_set(VOLATILE_FLAG_3, 0);
                             volatileFlag_set(VOLATILE_FLAG_5_FF_MINIGAME_WON, 1);
                             __maCastle_setupCheatCodeTimer(2);
@@ -431,8 +431,8 @@ static void __maCastle_checkFloorTileForRegularCheatCode(LetterFloorTile *letter
                             {
                                 sMapState.banjoKazooieCodeEnteredState = 2;
                                 sMapState.unkC = 0.0f;
-                                mapSpecificFlags_set(TTC_SPECIFIC_FLAG_1_UNKNOWN, TRUE);
-                                fileProgressFlag_set(FILEPROG_FA_UNKNOWN, TRUE);
+                                mapSpecificFlags_set(TTC_SPECIFIC_FLAG_1_UNKNOWN, true);
+                                fileProgressFlag_set(FILEPROG_FA_UNKNOWN, true);
                                 func_8030E2C4(sMapState.doorOpeningSfxSourceIdx);
                                 __maCastle_setupCheatCodeTimer(2);
                             }
@@ -472,13 +472,13 @@ static void __maCastle_checkFloorTileForRegularCheatCode(LetterFloorTile *letter
                     }
                 }
             }
-            else if (floor_is_valid_or_correct != FALSE)
+            else if (floor_is_valid_or_correct != false)
             {
-                is_correct_input = TRUE;
+                is_correct_input = true;
             }
         }
     }
-    if ((__maCastle_isCurrentSecretCheatCodeCharacter0() == FALSE) && (is_correct_input == FALSE) && (sMapState.banjoKazooieCodeEnteredState == 0))
+    if ((__maCastle_isCurrentSecretCheatCodeCharacter0() == false) && (is_correct_input == false) && (sMapState.banjoKazooieCodeEnteredState == 0))
     {
         __maCastle_setLetterFloorTileState(letter_floor_tile, 1);
     }
@@ -604,8 +604,8 @@ void maCastle_update(void)
             __maCastle_setupCheatCodeTimer(2);
             if (volatileFlag_get(VOLATILE_FLAG_2_FF_IN_MINIGAME))
             {
-                volatileFlag_set(VOLATILE_FLAG_3, FALSE);
-                volatileFlag_set(VOLATILE_FLAG_5_FF_MINIGAME_WON, FALSE);
+                volatileFlag_set(VOLATILE_FLAG_3, false);
+                volatileFlag_set(VOLATILE_FLAG_5_FF_MINIGAME_WON, false);
             }
             else
             {
@@ -899,7 +899,7 @@ static void __maCastle_setFileProgressForSecretCheatCode(
         fileProgressFlag_setN(prog_id, prog_val, prog_bit_size);
         if (file_progress_to_mark_true)
         {
-            fileProgressFlag_set(file_progress_to_mark_true, TRUE);
+            fileProgressFlag_set(file_progress_to_mark_true, true);
         }
     }
 }
@@ -1090,7 +1090,7 @@ static bool __maCastle_isFloorTileValidForSecretCheatCode(LetterFloorTile *floor
 
     if ((sLastFloorTileHitCorret == 2) || (__maCastle_getNumberOfBannedCheatCodesEntered() == 3))
     {
-        return FALSE;
+        return false;
     }
 
     if (sLastFloorTileHitCorret == 0)
@@ -1115,12 +1115,12 @@ static bool __maCastle_isFloorTileValidForSecretCheatCode(LetterFloorTile *floor
             {
                 sLastFloorTileHitCorret = 1;
                 __maCastle_setsecretCheatCodeRelatedValue();
-                return TRUE;
+                return true;
             }
 
             sLastFloorTileHitCorret = 2;
             __maCastle_setsecretCheatCodeRelatedValue();
-            return FALSE;
+            return false;
         }
 
         // is entering "CHEAT"?
@@ -1129,12 +1129,12 @@ static bool __maCastle_isFloorTileValidForSecretCheatCode(LetterFloorTile *floor
             func_8030E58C(SFX_2B_BULL_MOO_1, randf2(0.6f, 0.7f));
             sSecretsCheatCodes[0].codeCharacterIdx++;
             __maCastle_setsecretCheatCodeRelatedValue();
-            return TRUE;
+            return true;
         }
 
         sLastFloorTileHitCorret = 2;
         __maCastle_setsecretCheatCodeRelatedValue();
-        return FALSE;
+        return false;
     }
 
     __maCastle_setsecretCheatCodeRelatedValue();
@@ -1160,7 +1160,7 @@ static bool __maCastle_isFloorTileValidForSecretCheatCode(LetterFloorTile *floor
                     {
                         __maCastle_checkIfBannedCheatCodeEntered(secret_cheat_code_index);
                     }
-                    return TRUE;
+                    return true;
                 }
             }
             else
@@ -1173,11 +1173,11 @@ static bool __maCastle_isFloorTileValidForSecretCheatCode(LetterFloorTile *floor
         if (matched_secret_cheat_code_2 == 0)
         {
             sLastFloorTileHitCorret = 2;
-            return FALSE;
+            return false;
         }
     }
 
-    return TRUE;
+    return true;
 }
 
 static bool __maCastle_isCurrentSecretCheatCodeCharacter0()

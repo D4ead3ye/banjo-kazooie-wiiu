@@ -113,7 +113,7 @@ void fxairscore_draw(enum item_e item_id, struct8s *arg1, Gfx **gfx, Mtx **mtx, 
 
 bool func_80301CE0(f32 arg0, s32 arg1, s32 arg2){
     if(arg1 == 5)
-        return TRUE;
+        return true;
 
     return arg0 < D_80381F68[arg1 + 1];
 }

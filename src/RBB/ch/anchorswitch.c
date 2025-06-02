@@ -20,7 +20,7 @@ void __chAnchorSwitch_setState(Actor *this, s32 arg1){
         actor_collisionOff(this);
         this->position_y -= 35.0f;
         if(this->state == 1){
-            levelSpecificFlags_set(LEVEL_FLAG_30_RBB_UNKNOWN, TRUE);
+            levelSpecificFlags_set(LEVEL_FLAG_30_RBB_UNKNOWN, true);
             volatileFlag_set(VOLATILE_FLAG_E, 1);
             timedFunc_set_0(1.0f, func_803228D8);
             timedFunc_set_3(1.0f, (GenFunction_3)func_802E4078, MAP_31_RBB_RUSTY_BUCKET_BAY, 0, 0);
@@ -36,7 +36,7 @@ void __chAnchorSwitch_press(ActorMarker *marker, ActorMarker *arg1){
 
 void chAnchorSwitch_update(Actor *this){
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->marker->propPtr->unk8_3 = 1;
         marker_setCollisionScripts(this->marker, NULL, __chAnchorSwitch_press, NULL);
         if(jiggyscore_isSpawned(JIGGY_53_RBB_SNORKEL))

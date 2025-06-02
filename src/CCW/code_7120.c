@@ -68,7 +68,7 @@ void func_8038D6D8(Actor *this, s32 next_state) {
 
     local->unk0 = 0.0f;
     if (next_state == 2) {
-        this->marker->propPtr->unk8_3 = FALSE;
+        this->marker->propPtr->unk8_3 = false;
         func_802BB3DC(0, 60.0f, 0.7f);
         CCW_func_8038D510(this);
         func_8038D5DC(this);
@@ -78,7 +78,7 @@ void func_8038D6D8(Actor *this, s32 next_state) {
         FUNC_8030E624(SFX_9B_BOULDER_BREAKING_1, 0.9f, 15000);
         func_80324E38(0.0f, 3);
         timed_setStaticCameraToNode(0.5f, 3);
-        timedFunc_set_2(0.5f, levelSpecificFlags_set, LEVEL_FLAG_25_CCW_UNKNOWN, TRUE);
+        timedFunc_set_2(0.5f, levelSpecificFlags_set, LEVEL_FLAG_25_CCW_UNKNOWN, true);
         timed_exitStaticCamera(4.0f);
         func_80324E38(4.0f, 0);
         local->unk0 = 0.5f;
@@ -103,16 +103,16 @@ void func_8038D85C(Actor *this) {
 
     tick = time_getDelta();
     if (!this->volatile_initialized) {
-        this->marker->propPtr->unk8_3 = TRUE;
-        this->volatile_initialized = TRUE;
+        this->marker->propPtr->unk8_3 = true;
+        this->volatile_initialized = true;
         marker_setCollisionScripts(this->marker, NULL, &func_8038D81C, NULL);
         func_8038D6D8(this, 1);
 
-        if (jiggyscore_isCollected(JIGGY_4B_CCW_GNAWTY) != FALSE) {
-            levelSpecificFlags_set(LEVEL_FLAG_25_CCW_UNKNOWN, TRUE);
+        if (jiggyscore_isCollected(JIGGY_4B_CCW_GNAWTY) != false) {
+            levelSpecificFlags_set(LEVEL_FLAG_25_CCW_UNKNOWN, true);
         }
 
-        if ((levelSpecificFlags_get(LEVEL_FLAG_25_CCW_UNKNOWN) != FALSE) && (map_get() != MAP_43_CCW_SPRING)) {
+        if ((levelSpecificFlags_get(LEVEL_FLAG_25_CCW_UNKNOWN) != false) && (map_get() != MAP_43_CCW_SPRING)) {
             marker_despawn(this->marker);
         }
         return;

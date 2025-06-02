@@ -116,14 +116,14 @@ void code26D0_resetSpawnableActorsForTTC(void)
 static void __code26D0_genericUpdateFunc(Actor *this){
     if(!this->initialized){
         func_802D3D74(this);
-        this->initialized = TRUE;
+        this->initialized = true;
     }
 }
 
 static void __code26D0_palmTreeUpdateFunc(Actor *this){
     if(!this->initialized){
         func_802D3D74(this);
-        this->initialized = TRUE;
+        this->initialized = true;
         this->scale = 2.55f;
     }
 }
@@ -138,7 +138,7 @@ static void __code26D0_lighthouseAUpdateFunc(Actor *this){
     __code26D0_genericUpdateFunc(this);
     if(!this->volatile_initialized){
         __spawnQueue_add_1((GenFunction_1)__code26D0_spawnLighthouseB, (s32)this->marker);
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
     }
 }
 
@@ -147,15 +147,15 @@ static void __code26D0_sharkfoodIslandUpdateFunc(Actor *this){
 
     if(!this->initialized){
         func_802D3CE8(this);
-        this->initialized = TRUE;
+        this->initialized = true;
         this->position_x = 0.412*(8831.0f - this->position_x) + this->position_x;
         this->position_z = 0.412*(13535.0f - this->position_z) + this->position_z;
         this->yaw = 199.0f;
     }
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
-        if(sns_get_item_state(SNS_ITEM_EGG_PINK, TRUE)){
+        this->volatile_initialized = true;
+        if(sns_get_item_state(SNS_ITEM_EGG_PINK, true)){
             this->position_y = 700.0f;
         }
         else{

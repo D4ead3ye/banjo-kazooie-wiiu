@@ -279,7 +279,7 @@ int particleEmitter_getParticleCount(ParticleEmitter *this){
 
 int particleEmitter_isDone(ParticleEmitter *this){
     return (u32)(this->pList_end_128 - this->pList_start_124) < 1 
-           && this->doneSpawning_0_23 == TRUE;
+           && this->doneSpawning_0_23 == true;
 }
 
 void particleEmitter_free(ParticleEmitter *this){
@@ -546,7 +546,7 @@ void particleEmitter_setParticleLifeTimeRange(ParticleEmitter *this, f32 min, f3
 }
 
 void particleEmitter_setParticleVelocityRange(ParticleEmitter *this, f32 x_min, f32 x_max, f32 y_min, f32 y_max, f32 z_min, f32 z_max){
-    this->sphericalParticleVelocity_48 = FALSE;
+    this->sphericalParticleVelocity_48 = false;
     this->particleVelocityRange_E4.cartisian_min_x = x_min;
     this->particleVelocityRange_E4.cartisian_min_y = x_max;
     this->particleVelocityRange_E4.cartisian_min_z = y_min;
@@ -556,7 +556,7 @@ void particleEmitter_setParticleVelocityRange(ParticleEmitter *this, f32 x_min, 
 }
 
 void particleEmitter_setSphericalParticleVelocityRange(ParticleEmitter *this, f32 pitch_min, f32 yaw_min, f32 radial_min, f32 pitch_max, f32 yaw_max, f32 radial_max){
-    this->sphericalParticleVelocity_48 = TRUE;
+    this->sphericalParticleVelocity_48 = true;
     this->particleVelocityRange_E4.spherical.yaw_min = yaw_min;
     this->particleVelocityRange_E4.spherical.yaw_max = yaw_max;
     this->particleVelocityRange_E4.spherical.pitch_min = pitch_min;
@@ -592,7 +592,7 @@ void particleEmitter_setRGB(ParticleEmitter *this, s32 arg1[3]){
 }
 
 void particleEmitter_setSpawnInterval(ParticleEmitter *this, f32 arg1){
-    this->doneSpawning_0_23 = FALSE;
+    this->doneSpawning_0_23 = false;
     this->spawnIntervalTimer_38 = arg1;
 }
 
@@ -697,10 +697,10 @@ void particleEmitter_update(ParticleEmitter *this){
         if(0.0f < this->spawnIntervalTimer_38){ //if exactly 0.0f (no update)
             this->spawnIntervalTimer_38 -= tick;
             if(this->spawnIntervalTimer_38 <= 0.0f) //only can stop spawning 
-                this->doneSpawning_0_23 = TRUE;
+                this->doneSpawning_0_23 = true;
         }
 
-        if(this->doneSpawning_0_23 != TRUE){
+        if(this->doneSpawning_0_23 != true){
             this->particleSpawnTimer_24 -= tick;
             if(this->particleSpawnTimer_24 <= 0.0f){
                 this->particleSpawnTimer_24 = randf2(this->spawnIntervalRange_D4_min, this->spawnIntervalRange_D4_max);
@@ -779,13 +779,13 @@ void partEmitMgr_update(void){
             iPtr = partEmitMgr[i];
             particleEmitter_update(iPtr);
             if( iPtr->auto_free
-                && iPtr->doneSpawning_0_23 == TRUE
+                && iPtr->doneSpawning_0_23 == true
                 && iPtr->pList_end_128 == iPtr->pList_start_124
             ){
-                iPtr->dead = TRUE;
+                iPtr->dead = true;
             }
             else{
-                iPtr->dead = FALSE;
+                iPtr->dead = false;
             }
         }//L802F09C0
         for(i = 0; i < partEmitMgrLength;){
@@ -821,7 +821,7 @@ void partEmitMgr_draw(Gfx **gdl, Mtx **mptr, Vtx **vptr){
 ParticleEmitter *partEmitMgr_newEmitter(u32 cnt){
     partEmitMgr = realloc(partEmitMgr, (++partEmitMgrLength)*4);
     partEmitMgr[partEmitMgrLength - 1] = particleEmitter_new(cnt);
-    partEmitMgr[partEmitMgrLength - 1]->auto_free = TRUE;
+    partEmitMgr[partEmitMgrLength - 1]->auto_free = true;
     return partEmitMgr[partEmitMgrLength - 1];
 }
 
@@ -839,11 +839,11 @@ void partEmitMgr_freeEmitter(ParticleEmitter *this){
 }
 
 void particleEmitter_manualFree(ParticleEmitter *this){
-    this->auto_free = FALSE;
+    this->auto_free = false;
 }
 
 void particleEmitter_autoFree(ParticleEmitter *this){
-    this->auto_free = TRUE;
+    this->auto_free = true;
 }
 
 ParticleEmitter * partEmitMgr_defragEmitter(ParticleEmitter *this){

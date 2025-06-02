@@ -130,7 +130,7 @@ void func_803897B8(Actor *this, s32 next_state) {
         local->unk8 = local->unk0->unk8;
     }
     if ((this->state == 1) && (next_state == 2)) {
-        fileProgressFlag_set(local->unk0->unk4, TRUE);
+        fileProgressFlag_set(local->unk0->unk4, true);
     }
     if (next_state == 5) {
         func_8028F784(1);
@@ -212,9 +212,9 @@ void CCW_func_80389BFC(Actor *this) {
     local = (ActorLocal_CCW_3310 *)&this->local;
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
-        this->has_met_before = FALSE;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = true;
+        this->has_met_before = false;
         this->position[0] = -4900.0f;
         this->position[1] = 4619.0f;
         this->position[2] = 0.0f;
@@ -258,7 +258,7 @@ void CCW_func_80389BFC(Actor *this) {
             && (sp4C[2] < 6500.0f) 
             && (local->unk0->unk28 != 0)
         ){
-            this->has_met_before = TRUE;
+            this->has_met_before = true;
             func_80324E38(0.0f, 3);
             timed_setStaticCameraToNode(0.0f, local->unk0->unk24);
             func_80324DBC(0.0f, local->unk0->unk28, 6, NULL, this->marker, func_80389700, NULL);

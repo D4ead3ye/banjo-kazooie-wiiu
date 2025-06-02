@@ -74,7 +74,7 @@ void func_8038D218(Actor *this){
     ActorLocal_cutscenes_6C90 *local = (ActorLocal_cutscenes_6C90 *)&this->local;
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         anctrl_setSmoothTransition(this->anctrl, 0);
         this->lifetime_value = this->yaw/4;
         local->unk0 = partEmitMgr_newEmitter(0x100);

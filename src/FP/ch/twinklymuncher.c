@@ -103,9 +103,9 @@ void func_8038E094(Actor *this){
     f32 sp34 = time_getDelta();
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker_setCollisionScripts(this->marker, NULL, func_8038DEB8, NULL);
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->marker->propPtr->unk8_3 = true;
         anctrl_setAnimTimer(this->anctrl, 0.99999f);
         this->lifetime_value = 0.0f;
         if(this->unkF4_8 == 1){
@@ -146,7 +146,7 @@ void func_8038E094(Actor *this){
 
     switch(this->state){
         case 1: //L8038E2DC
-            this->marker->propPtr->unk8_3 = FALSE;
+            this->marker->propPtr->unk8_3 = false;
             anctrl_setAnimTimer(this->anctrl, 0.99f);
             if(this->lifetime_value < 5.0){
                 this->lifetime_value += sp34;
@@ -164,7 +164,7 @@ void func_8038E094(Actor *this){
             break;
 
         case 2: //L8038E3C0
-            this->marker->propPtr->unk8_3 = TRUE;
+            this->marker->propPtr->unk8_3 = true;
             sp38 = func_8038DF34(this);
             if(sp38){
                 func_8038DE40(this);
@@ -183,7 +183,7 @@ void func_8038E094(Actor *this){
             break;
 
         case 3: //L8038E498
-            this->marker->propPtr->unk8_3 = TRUE;
+            this->marker->propPtr->unk8_3 = true;
             sp38 = func_8038DF34(this);
             if(sp38){
                 func_8038DE40(this);
@@ -192,7 +192,7 @@ void func_8038E094(Actor *this){
             break;
 
         case 4: //L8038E4F0
-            this->marker->propPtr->unk8_3 = TRUE;
+            this->marker->propPtr->unk8_3 = true;
             sp38 = func_8038DF34(this);
             if(sp38 && sp38->marker->id == this->unk38_31){
                 if(actor_animationIsAt(this, 0.23)){
@@ -202,7 +202,7 @@ void func_8038E094(Actor *this){
                     func_80324D54(0.35f, SFX_110_TWINKLY_DEATH, 1.0f, 32000, this->position, 1250.0f, 2500.0f);
                     marker_despawn(sp38->marker);
                     if( !mapSpecificFlags_get(0xa) && gcdialog_showText(0xc16, 0, NULL, NULL, NULL, NULL)){
-                        mapSpecificFlags_set(0xa, TRUE);
+                        mapSpecificFlags_set(0xa, true);
                     }
                 }
             }//L8038E620
@@ -212,7 +212,7 @@ void func_8038E094(Actor *this){
             break;
 
         case 5: //L8038E644
-            this->marker->propPtr->unk8_3 = TRUE;
+            this->marker->propPtr->unk8_3 = true;
             if(actor_animationIsAt(this, 0.97f)){
                 subaddie_set_state_with_direction(this, 1, 0.97f, 0);
                 actor_playAnimationOnce(this);
@@ -221,13 +221,13 @@ void func_8038E094(Actor *this){
             break;
 
         case 6: //L8038E698
-            this->marker->propPtr->unk8_3 = FALSE;
+            this->marker->propPtr->unk8_3 = false;
             this->yaw_ideal = (f32)func_80329784(this);
             func_80328FB0(this, 12.0f);
             break;
 
         case 7: //L8038E6D4
-            this->marker->propPtr->unk8_3 = FALSE;
+            this->marker->propPtr->unk8_3 = false;
             if(actor_animationIsAt(this, 0.97f)){
                 marker_despawn(this->marker);
             }

@@ -91,7 +91,7 @@ void func_803902B8(Actor *this) {
     if (!this->initialized) {
         marker_setFreeMethod(this->marker, func_80390298);
         this->has_met_before = volatileFlag_get(VOLATILE_FLAG_1F_IN_CHARACTER_PARADE);
-        this->initialized = TRUE;
+        this->initialized = true;
     }
     _player_getPosition(sp5C);
     sp58 = ml_vec3f_within_distance(this->position, sp5C, 1750.0f) && !this->has_met_before;

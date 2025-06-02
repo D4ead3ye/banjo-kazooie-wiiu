@@ -47,14 +47,14 @@ bool __fxRipple_802F3370(f32 position[3], s32 *arg1, bool arg2){
     } else {
         arg2 = func_8024549C(position, 20.0f);
         if(!arg2){
-            return FALSE;
+            return false;
         }
     }
     
     if(func_80245524(position, arg2, arg1, &sp1C)){
         position[1] = sp1C;
     }
-    return TRUE;
+    return true;
 }
 
 ParticleEmitter *__fxRipple_create(s32 arg0, f32 position[3], bool arg2){

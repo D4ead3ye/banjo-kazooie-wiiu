@@ -80,7 +80,7 @@ void func_80352114(Struct_core2_CB050_0 *arg0, s32 arg1, f32 arg2) {
         } else {
             arg0->unk40[1] = -32.0f;
         }
-        arg0->unk6C = TRUE;
+        arg0->unk6C = true;
 
     } else {
         arg0->unk1C[0] = arg0->unk1C[1] = arg0->unk1C[2] = 0.0f;
@@ -91,7 +91,7 @@ void func_80352114(Struct_core2_CB050_0 *arg0, s32 arg1, f32 arg2) {
         } else {
             arg0->unk40[1] = 10.0f;
         }
-        arg0->unk6C = FALSE;
+        arg0->unk6C = false;
     }
     arg0->unk28[1] = sinf(((arg0->unk64 * arg0->unk0) / 180.0) * BAD_PI) * 10.0f;
     arg0->unk4[0] = cosf(((arg0->unk64 * arg0->unk0) / 180.0) * BAD_PI) * 4.5;

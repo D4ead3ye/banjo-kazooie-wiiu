@@ -93,7 +93,7 @@ void func_802DC018(Actor *this){
         actor_collisionOff(this);
         local->unk0 = partEmitMgr_newEmitter(16);
         func_802DBE9C(this, local->unk0);
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
     }
     if(func_802DBF94(this, 600) && randf() < 0.2){
         tmp_f0 = randf2(0.01f, 0.06f);

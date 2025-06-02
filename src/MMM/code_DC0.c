@@ -36,11 +36,11 @@ void chFlowerpot_setRemaining(s32 arg0) {
 void MMM_func_803871FC(Actor *this) {
     switch (this->state) {
         case FLOWER_POT_STATE_1_IDLE:
-            func_8033A45C(3, FALSE);
+            func_8033A45C(3, false);
             break;
 
         case FLOWER_POT_STATE_2_FLOWERED:
-            func_8033A45C(3, TRUE);
+            func_8033A45C(3, true);
             break;
     }
 
@@ -52,10 +52,10 @@ void chFlowerpot_reset() {
 }
 
 void chFlowerpot_update(Actor *this) {
-    this->marker->propPtr->unk8_3 = TRUE;
+    this->marker->propPtr->unk8_3 = true;
 
     if (!this->initialized) {
-        this->initialized = TRUE;
+        this->initialized = true;
         this->unk130 = MMM_func_803871FC;
     }
 
@@ -78,7 +78,7 @@ bool chFlowerpot_eggCollision(ActorMarker *marker) {
     s32 remaining;
 
     if (actor->state == FLOWER_POT_STATE_2_FLOWERED) {
-        return FALSE;
+        return false;
     }
 
     subaddie_set_state(actor, FLOWER_POT_STATE_2_FLOWERED);
@@ -101,5 +101,5 @@ bool chFlowerpot_eggCollision(ActorMarker *marker) {
     }
 
     chFlowerpot_setRemaining(remaining);
-    return TRUE;
+    return true;
 }

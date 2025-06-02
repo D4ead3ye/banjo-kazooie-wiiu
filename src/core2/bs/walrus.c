@@ -215,7 +215,7 @@ void bswalrus_jump_init(void){
     AnimCtrl *aCtrl = baanim_getAnimCtrlPtr();
 
     anctrl_reset(aCtrl);
-    anctrl_setSmoothTransition(aCtrl, FALSE);
+    anctrl_setSmoothTransition(aCtrl, false);
     anctrl_setIndex(aCtrl, ASSET_121_ANIM_BSWALRUS_JUMP);
     anctrl_setSubRange(aCtrl, 0.0f, 0.514f);
     anctrl_setDuration(aCtrl, 1.0f);
@@ -444,7 +444,7 @@ void bswalrus_die_init(void){
 
     func_8029B930();
     anctrl_reset(aCtrl);
-    anctrl_setSmoothTransition(aCtrl, FALSE);
+    anctrl_setSmoothTransition(aCtrl, false);
     anctrl_setIndex(aCtrl, ASSET_19D_ANIM_BSWALRUS_DIE);
     anctrl_setSubRange(aCtrl, 0.0f, 0.4454f);
     anctrl_setDuration(aCtrl, 2.2f);
@@ -508,7 +508,7 @@ void bswalrus_die_update(void){
 }
 
 void bswalrus_die_end(void){
-    core1_ce60_incOrDecCounter(FALSE);
+    core1_ce60_incOrDecCounter(false);
     baphysics_reset_gravity();
     pitch_setIdeal(0.0f);
     roll_setIdeal(0.0f);
@@ -596,7 +596,7 @@ void bswalrus_sled_end(void){
 void bswalrus_sled_jump_init(void){
     AnimCtrl *aCtrl = baanim_getAnimCtrlPtr();
     anctrl_reset(aCtrl);
-    anctrl_setSmoothTransition(aCtrl, FALSE);
+    anctrl_setSmoothTransition(aCtrl, false);
     anctrl_setIndex(aCtrl, ASSET_19F_ANIM_BSWALRUS_SLED_JUMP);
     anctrl_setSubRange(aCtrl, 0.0f, 0.4285f);
     anctrl_setDuration(aCtrl, 1.0f);
@@ -732,7 +732,7 @@ void bswalrus_timeout_init(void) {
     ncDynamicCamD_func_802BF2C0(60.0f);
     func_8025A58C(0, 4000);
     comusic_playTrack(COMUSIC_3C_MINIGAME_LOSS);
-    core1_ce60_incOrDecCounter(FALSE);
+    core1_ce60_incOrDecCounter(false);
     baMarker_collisionOff();
     batimer_set(0, 2.9f);
     func_802B813C();
@@ -749,7 +749,7 @@ void func_802B9830(void) {
 
 void func_802B9880(void) {
     func_80291548();
-    core1_ce60_incOrDecCounter(TRUE);
+    core1_ce60_incOrDecCounter(true);
     func_8025A904();
     baeyes_open();
     func_802B80D0();

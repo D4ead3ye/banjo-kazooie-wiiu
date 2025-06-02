@@ -20,7 +20,7 @@ void __chBossBoomBoxCtrl_setState(Actor *this, s32 new_state){
 void chBossBoomBoxCtrl_update(Actor *this){
     if(!this->volatile_initialized){
 
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if(jiggyscore_isSpawned(JIGGY_56_RBB_BOSS_BOOM_BOX) && !volatileFlag_get(VOLATILE_FLAG_2_FF_IN_MINIGAME)){
             marker_despawn(this->marker);
         }else{

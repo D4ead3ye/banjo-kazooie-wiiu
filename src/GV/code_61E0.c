@@ -42,13 +42,13 @@ void GV_func_8038C658(Actor *this){
     s32 sp24;
     if(!this->initialized){
         actor_collisionOff(this);
-        GV_D_80391A90 = FALSE;
-        this->initialized = TRUE;
+        GV_D_80391A90 = false;
+        this->initialized = true;
         this->position_y += 4.0f;
     }
 
     if(!this->volatile_initialized && this->initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         subaddie_set_state_with_direction(this, this->state, 0.01f, 1);
     }
     sp24 = GV_func_8038C5BC();
@@ -59,5 +59,5 @@ void GV_func_8038C658(Actor *this){
 }
 
 void func_8038C748(void){
-    GV_D_80391A90 = TRUE;
+    GV_D_80391A90 = true;
 }

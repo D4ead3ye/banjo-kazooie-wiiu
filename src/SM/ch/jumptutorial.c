@@ -47,10 +47,10 @@ void chJumpTutorial_setState(Actor *this, s32 state) {
             func_8028F918(0);
 
             if (ability_isUnlocked(ABILITY_7_FEATHERY_FLAP)) {
-                mapSpecificFlags_set(SM_SPECIFIC_FLAG_9_ABILITY_FEATHERY_UNLOCKED, TRUE);
+                mapSpecificFlags_set(SM_SPECIFIC_FLAG_9_ABILITY_FEATHERY_UNLOCKED, true);
             }
             else if (ability_isUnlocked(ABILITY_A_HOLD_A_JUMP_HIGHER)) {//L8038A540
-                mapSpecificFlags_set(SM_SPECIFIC_FLAG_8_ABILITY_HOLD_A_JUMP_HIGHER_UNLOCKED, TRUE);
+                mapSpecificFlags_set(SM_SPECIFIC_FLAG_8_ABILITY_HOLD_A_JUMP_HIGHER_UNLOCKED, true);
             }
             else {//L8038A560
                 __chJumpTutorial_setStaticCameraToNode4(this);
@@ -58,12 +58,12 @@ void chJumpTutorial_setState(Actor *this, s32 state) {
 
                 gcdialog_showText(ASSET_DF6_DIALOG_BOTTLES_HIGH_JUMP_LEARN, 0xe, this->unk1C, this->marker, __chJumpTutorial_textCallback, NULL);
                 this->sm_4070.dialog_id = ASSET_E1A_DIALOG_BOTTLES_UNKNOWN;
-                mapSpecificFlags_set(SM_SPECIFIC_FLAG_8_ABILITY_HOLD_A_JUMP_HIGHER_UNLOCKED, FALSE);
+                mapSpecificFlags_set(SM_SPECIFIC_FLAG_8_ABILITY_HOLD_A_JUMP_HIGHER_UNLOCKED, false);
             }
             break;
 
         case JUMP_TUTORIAL_STATE_3_DISAPPEARED://L8038A5B0
-            mapSpecificFlags_set(SM_SPECIFIC_FLAG_5, TRUE);
+            mapSpecificFlags_set(SM_SPECIFIC_FLAG_5, true);
             break;
     }//L8038A5BC
 
@@ -91,7 +91,7 @@ void chJumpTutorial_update(Actor *this) {
             this->unk1C_z = this->position_z;
         }//L8038A644
 
-        this->initialized = TRUE;
+        this->initialized = true;
     }//L8038A650
 
     controller_copyFaceButtons(0, face_buttons);
@@ -114,7 +114,7 @@ void chJumpTutorial_update(Actor *this) {
 
                     gcdialog_showText(ASSET_DF7_DIALOG_BOTTLES_FEATHERY_FLAP_LEARN, 0xa, this->unk1C, this->marker, __chJumpTutorial_textCallback, NULL);
                     this->sm_4070.dialog_id = ASSET_E1B_DIALOG_BOTTLES_UNKNOWN;
-                    mapSpecificFlags_set(SM_SPECIFIC_FLAG_8_ABILITY_HOLD_A_JUMP_HIGHER_UNLOCKED, FALSE);
+                    mapSpecificFlags_set(SM_SPECIFIC_FLAG_8_ABILITY_HOLD_A_JUMP_HIGHER_UNLOCKED, false);
                 }//L8038A730
 
                 if (mapSpecificFlags_get(SM_SPECIFIC_FLAG_9_ABILITY_FEATHERY_UNLOCKED)) {
@@ -123,7 +123,7 @@ void chJumpTutorial_update(Actor *this) {
 
                     gcdialog_showText(ASSET_DF8_DIALOG_BOTTLES_FLAP_FLIP_LEARN, 0xa, this->unk1C, this->marker, __chJumpTutorial_textCallback, NULL);
                     this->sm_4070.dialog_id = ASSET_E1C_DIALOG_BOTTLES_UNKNOWN;
-                    mapSpecificFlags_set(SM_SPECIFIC_FLAG_9_ABILITY_FEATHERY_UNLOCKED, FALSE);
+                    mapSpecificFlags_set(SM_SPECIFIC_FLAG_9_ABILITY_FEATHERY_UNLOCKED, false);
                 }//L8038A794
 
                 if (mapSpecificFlags_get(SM_SPECIFIC_FLAG_A)) {
@@ -131,7 +131,7 @@ void chJumpTutorial_update(Actor *this) {
                     func_8028F94C(2, this->unk1C);
 
                     if (!mapSpecificFlags_get(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED) && chmole_learnedAllSpiralMountainAbilities()) {
-                        mapSpecificFlags_set(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, TRUE);
+                        mapSpecificFlags_set(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, true);
                         dialog_id = ASSET_E12_DIALOG_BOTTLES_LEARNED_TUTORIAL_MOVES;
                     }
                     else {
@@ -139,7 +139,7 @@ void chJumpTutorial_update(Actor *this) {
                     }
 
                     gcdialog_showText(dialog_id, 0xe, this->unk1C, this->marker, __chJumpTutorial_textCallback, NULL);
-                    mapSpecificFlags_set(SM_SPECIFIC_FLAG_A, FALSE);
+                    mapSpecificFlags_set(SM_SPECIFIC_FLAG_A, false);
                     this->sm_4070.dialog_id = NULL;
                 }
             }//L8038A828
@@ -149,7 +149,7 @@ void chJumpTutorial_update(Actor *this) {
             plyr_pos[2] = this->velocity_z;
             func_8028FAB0(plyr_pos);
 
-            if (func_8028EFC8() && face_buttons[FACE_BUTTON(BUTTON_B)] == TRUE && func_8028F20C()) {
+            if (func_8028EFC8() && face_buttons[FACE_BUTTON(BUTTON_B)] == true && func_8028F20C()) {
                 if (this->sm_4070.dialog_id) {
                     gcdialog_showText(dialog_id = this->sm_4070.dialog_id, 0, NULL, NULL, NULL, NULL);
                 }

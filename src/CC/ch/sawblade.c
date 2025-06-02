@@ -135,7 +135,7 @@ void chSawblade_update(Actor *this){
     f32 sp34 = time_getDelta();
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->roll = this->yaw;
         this->yaw =  0.0f;
         marker_setCollisionScripts(this->marker, func_80389520, NULL, CC_func_8038954C);

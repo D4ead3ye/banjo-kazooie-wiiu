@@ -170,105 +170,105 @@ bool file_isNextByteExpected(File *file, s32 expected) {
 
     if ((file->mode == FILE_MODE_1_UNKNOWN) || (file->mode == FILE_MODE_4_ALLOCATED)) {
         file_getByte(file, &saved_expected);
-        return TRUE;
+        return true;
     }
 
     if (file->last_expected == -1) {
         file_getByte(file, &saved_expected);
 
         if (expected == saved_expected) {
-            return TRUE;
+            return true;
         }
 
         file->last_expected = saved_expected;
-        return FALSE;
+        return false;
     }
 
     if (expected == file->last_expected) {
         file->last_expected = -1;
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
 }
 
 bool file_getByte_ifExpected(File *file, s32 expected, u8 *dst) {
     if (!file_isNextByteExpected(file, expected)) {
-        return FALSE;
+        return false;
     } else {
         file_getByte(file, dst);
-        return TRUE;
+        return true;
     }
 }
 
 bool file_getNBytes_ifExpected(File *file, s32 expected, u8 *dst, s32 cnt) {
     if (!file_isNextByteExpected(file, expected)) {
-        return FALSE;
+        return false;
     } else {
         file_getNBytes(file, dst, cnt);
-        return TRUE;
+        return true;
     }
 }
 
 bool file_getFloat_ifExpected(File *file, s32 expected, f32 *dst) {
     if (!file_isNextByteExpected(file, expected)) {
-        return FALSE;
+        return false;
     } else {
         file_getFloat(file, dst);
-        return TRUE;
+        return true;
     }
 }
 
 bool file_getNFloats_ifExpected(File *file, s32 expected, f32 *dst, s32 cnt) {
     if (!file_isNextByteExpected(file, expected)) {
-        return FALSE;
+        return false;
     } else {
         file_getNFloat(file, dst, cnt);
-        return TRUE;
+        return true;
     }
 }
 
 bool file_getWord_ifExpected(File *file, s32 expected, s32 *dst) {
     if (!file_isNextByteExpected(file, expected)) {
-        return FALSE;
+        return false;
     } else {
         file_getWord(file, dst);
-        return TRUE;
+        return true;
     }
 }
 
 bool file_getNWords_ifExpected(File *file, s32 expected, s32 *dst, s32 cnt) {
     if (!file_isNextByteExpected(file, expected)) {
-        return FALSE;
+        return false;
     } else {
         file_getNWords(file, dst, cnt);
-        return TRUE;
+        return true;
     }
 }
 
 bool file_get_ifExpected(File *file, s32 expected, void *dst, s32 len) {
     if (!file_isNextByteExpected(file, expected)) {
-        return FALSE;
+        return false;
     } else{
         file_read(file, dst, len);
-        return TRUE;
+        return true;
     }
 }
 
 bool file_getShort_ifExpected(File *file, s32 expected, s16 *dst) {
     if (!file_isNextByteExpected(file, expected)) {
-        return FALSE;
+        return false;
     } else {
         file_getShort(file, dst);
-        return TRUE;
+        return true;
     }
 }
 
 bool file_getNShorts_ifExpected(File *file, s32 expected, s16 *dst, s32 cnt) {
     if (!file_isNextByteExpected(file, expected)) {
-        return FALSE;
+        return false;
     } else {
         file_getNShorts(file, dst, cnt);
-        return TRUE;
+        return true;
     }
 }

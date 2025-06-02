@@ -83,7 +83,7 @@ static void __chsnacker_start_dialog(Actor *this) {
                     if(gcdialog_showText(0xA1B + text_index, 0, NULL, NULL, NULL, NULL)){
                         text_index++;
                         mapSpecificFlags_setN(8, text_index, 3);
-                        this->has_met_before = TRUE;
+                        this->has_met_before = true;
                     }
                 }
             }
@@ -115,7 +115,7 @@ void func_802E0EC8(void){
     local = (ChSnackerLocal *)&this->local;
 
     actor_collisionOff(this);
-    s_chSnacker_marker->propPtr->unk8_3 = FALSE;
+    s_chSnacker_marker->propPtr->unk8_3 = false;
     if(local->ctl != CH_SNACKER_OPA_2_FADE){
         func_8032BB88(this, -1, 750);
         comusic_8025AB44(COMUSIC_34_SNACKER_DANGER, 0, 750);
@@ -189,9 +189,9 @@ void chsnacker_update(Actor *this) {
     local = (ChSnackerLocal *)&this->local;
 
     if (!this->initialized) {
-        this->initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
-        this->unk138_25 = TRUE;
+        this->initialized = true;
+        this->marker->propPtr->unk8_3 = true;
+        this->unk138_25 = true;
         this->unk154 = 0x085E0000;
         marker_setCollisionScripts(this->marker, __chsnacker_ow, func_802E1010, __chsnacker_die);
     }
@@ -286,7 +286,7 @@ void chsnacker_update(Actor *this) {
         case CH_SNACKER_OPA_0_APPEAR:
             local->opa = MIN(0xFF, local->opa + 8);
             if(local->opa >= 0x81){
-                this->marker->collidable = TRUE;
+                this->marker->collidable = true;
             }
             if (local->opa == 0xFF) {
                 local->ctl = CH_SNACKER_OPA_1_ACTIVE;
@@ -299,7 +299,7 @@ void chsnacker_update(Actor *this) {
         case CH_SNACKER_OPA_2_FADE:
             local->opa = MAX(0, local->opa - 8);
             if(local->opa < 0x80){
-                this->marker->collidable = FALSE;
+                this->marker->collidable = false;
             }
             if (local->opa == 0) {
                 marker_despawn(this->marker);
@@ -373,10 +373,10 @@ void chSnacker_spawn(void) {
     }
     if (volatileFlag_get(VOLATILE_FLAG_C1_IN_FINAL_CHARACTER_PARADE) == 0) {
         func_8032BB88(snacker, 5000, 750);
-        core1_ce60_incOrDecCounter(FALSE);
+        core1_ce60_incOrDecCounter(false);
         func_8025A6EC(COMUSIC_34_SNACKER_DANGER, 0);
         comusic_8025AB44(COMUSIC_34_SNACKER_DANGER, 0x7FFF, 750);
-        core1_ce60_incOrDecCounter(TRUE);
+        core1_ce60_incOrDecCounter(true);
     }
     s_chSnacker_spawnTimer = 0.0f;
     func_8032CA80(snacker, s_chSnacker_inRbb ? 15 : 9);

@@ -25,7 +25,7 @@ Actor *chXmasTree_draw(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
 void __chXmasTree_free(Actor *this){
     u8 tmp_a0;
 
-    item_set(ITEM_6_HOURGLASS, FALSE);
+    item_set(ITEM_6_HOURGLASS, false);
     tmp_a0 = this->unk44_31;
     if(tmp_a0){
         sfxsource_freeSfxsourceByIndex(tmp_a0);
@@ -40,7 +40,7 @@ void __chXmasTree_80386EF4(Actor *this, int arg1){
 }
 
 void __chXmasTree_80386F3C(void){
-    levelSpecificFlags_set(LEVEL_FLAG_29_FP_UNKNOWN, TRUE);
+    levelSpecificFlags_set(LEVEL_FLAG_29_FP_UNKNOWN, true);
     func_803228D8();
     volatileFlag_set(VOLATILE_FLAG_E, 1);
     func_802E4078(MAP_53_FP_CHRISTMAS_TREE, 1, 0);
@@ -88,9 +88,9 @@ void chXmasTree_update(Actor *this){
     u8 tmp_a0;
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
-        this->marker->collidable = FALSE;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = true;
+        this->marker->collidable = false;
         marker_setFreeMethod(this->marker, __chXmasTree_free);
         if(this->unk44_31 == 0){
             this->unk44_31 = sfxsource_createSfxsourceAndReturnIndex();
@@ -102,7 +102,7 @@ void chXmasTree_update(Actor *this){
         __spawnQueue_add_1((GenFunction_1)__chXmasTree_spawnStar, reinterpret_cast(s32, this->marker));
         if(fileProgressFlag_get(FILEPROG_13_COMPLETED_TWINKLIES_MINIGAME)){
             __chXmasTree_80386F84(this);
-            mapSpecificFlags_set(2, FALSE);
+            mapSpecificFlags_set(2, false);
         }
     }
 
@@ -152,7 +152,7 @@ void chXmasTree_update(Actor *this){
                     subaddie_set_state(this, 4);
                     __chXmasTree_80386EF4(this, 1);
                     item_set(ITEM_0_HOURGLASS_TIMER, 3600 - 1);
-                    item_set(ITEM_6_HOURGLASS, TRUE);
+                    item_set(ITEM_6_HOURGLASS, true);
 
                 }
             }
@@ -162,7 +162,7 @@ void chXmasTree_update(Actor *this){
             if(mapSpecificFlags_get(3)){
                 subaddie_set_state(this, 6);
                 __chXmasTree_80386EF4(this, 1);
-                item_set(ITEM_6_HOURGLASS, FALSE);
+                item_set(ITEM_6_HOURGLASS, false);
                 tmp_a0 = this->unk44_31;
                 if(tmp_a0){
                     sfxsource_freeSfxsourceByIndex(tmp_a0);
@@ -174,7 +174,7 @@ void chXmasTree_update(Actor *this){
             else{//L80387470
                 if(item_empty(ITEM_6_HOURGLASS)){
                     subaddie_set_state(this, 5);
-                    mapSpecificFlags_set(2, FALSE);
+                    mapSpecificFlags_set(2, false);
                     this->lifetime_value = 0.1f;
                     if(!maSlalom_isActive()){
                         if(!mapSpecificFlags_get(9) || mapSpecificFlags_get(1)){

@@ -153,7 +153,7 @@ bool func_802FCD98(struct8s *arg0) {
     s32 temp_v0;
 
     if (arg0->unk0 == 2) {
-        return TRUE;
+        return true;
     }
     if (arg0->unk0 == 1) {
         temp_v0 = D_803698C0[arg0->unk18];

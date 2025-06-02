@@ -76,15 +76,15 @@ Actor *func_802C8484(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx) {
 
     sp58 = marker_getActorAndRotation(marker, &sp5C);
     temp_s1 = sp58->unk40;
-    phi_s4 = FALSE;
+    phi_s4 = false;
     for(phi_s0 = temp_s1->begin; phi_s0 < temp_s1->current; phi_s0++){
         if ((phi_s0->unk0 != 0) && (phi_s0->model_bin != NULL)) {
             modelRender_setDepthMode(MODEL_RENDER_DEPTH_FULL);
             modelRender_draw(gfx, mtx, phi_s0->unk8, phi_s0->unk14, phi_s0->unk2C / 10.0f, NULL, phi_s0->model_bin);
-            phi_s4 = TRUE;
+            phi_s4 = true;
         }
     }
-    if (phi_s4 == FALSE) {
+    if (phi_s4 == false) {
         marker_despawn(marker);
     }
     return sp58;
@@ -97,7 +97,7 @@ Actor *func_802C8580(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags){
     f32 sp68[3];
     Struct24s * s0;
 
-    actor->marker->collidable = FALSE;
+    actor->marker->collidable = false;
     s1->begin = &s1->data[0];
     s1->current = &s1->data[0];
     s1->end = s1->begin + D_8037DD90;

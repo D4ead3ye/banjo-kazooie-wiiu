@@ -40,16 +40,16 @@ Actor *func_8038F0F0(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
 
 void func_8038F144(Actor *this){
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if(!jiggyscore_isCollected(JIGGY_2E_FP_PRESENTS)){
-            this->unk38_31 = TRUE;
-            this->marker->collidable = FALSE;
-            this->marker->propPtr->unk8_3 = FALSE;
+            this->unk38_31 = true;
+            this->marker->collidable = false;
+            this->marker->propPtr->unk8_3 = false;
         }
         else{
-            this->unk38_31 = FALSE;
-            this->marker->collidable = FALSE;
-            this->marker->propPtr->unk8_3 = TRUE;
+            this->unk38_31 = false;
+            this->marker->collidable = false;
+            this->marker->propPtr->unk8_3 = true;
             anctrl_setAnimTimer(this->anctrl, randf());
         }
     }

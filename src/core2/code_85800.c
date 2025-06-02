@@ -103,7 +103,7 @@ int sfxsource_isFlagCleared(SfxSource *arg0, s32 arg1){
 void sfxsource_initAll(void){
     int i;
     for(i = 0; i < 35; i++)
-        sfxsources[i].busy = FALSE;
+        sfxsources[i].busy = false;
 }
 
 SfxSource *sfxsource_at(u8 indx){
@@ -122,7 +122,7 @@ u8 sfxsource_getNewIndex(void){
     int i;
     for(i = 1; i < 35; i++){
         if(!sfxsources[i].busy){
-            sfxsources[i].busy = TRUE;
+            sfxsources[i].busy = true;
             return i;
         }
     }
@@ -159,7 +159,7 @@ void sfxsource_free(u8 indx){
         func_8030C9F4(ptr->unk40);
         ptr->unk40 = 0;
     }
-    sfxsources[indx].busy = FALSE;
+    sfxsources[indx].busy = false;
 }
 
 void func_8030CBD0(SfxSource *arg0){

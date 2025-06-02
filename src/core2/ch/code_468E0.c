@@ -22,7 +22,7 @@ ActorInfo D_80367184 = {0x12, 0x6C, 0, 0, NULL,
 
 /* .code */
 void func_802CD870(Actor *this){
-    *(s32 *)this->unkBC = TRUE;
+    *(s32 *)this->unkBC = true;
     func_8028F918(2);
 }
 
@@ -33,9 +33,9 @@ void func_802CD898(Actor *this){
 
 void func_802CD8C0(Actor *this){
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->marker->unk2C_1 = 1;
-        this->marker->collidable = FALSE;
+        this->marker->collidable = false;
         *(s32*)this->unkBC = 0; //TODO Make struct
         if(volatileFlag_get(VOLATILE_FLAG_1) || volatileFlag_get(VOLATILE_FLAG_1F_IN_CHARACTER_PARADE)){
             marker_despawn(this->marker);
@@ -52,7 +52,7 @@ void func_802CD8C0(Actor *this){
             }
             else{
                 func_802CD870(this);
-                fileProgressFlag_set(FILEPROG_1D_MMM_DINNING_ROOM_CUTSCENE, TRUE);
+                fileProgressFlag_set(FILEPROG_1D_MMM_DINNING_ROOM_CUTSCENE, true);
             }
         }
         //L802CD9C4
@@ -74,7 +74,7 @@ void func_802CD8C0(Actor *this){
             if(*(s32*)this->unkBC)
                 func_8028F918(0);
             if(map_get() == MAP_8E_GL_FURNACE_FUN){
-                mapSpecificFlags_set(4, TRUE);
+                mapSpecificFlags_set(4, true);
             }
             else{
                 camera_setType(2);

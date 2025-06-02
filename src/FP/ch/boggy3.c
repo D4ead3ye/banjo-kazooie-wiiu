@@ -37,28 +37,28 @@ Actor *func_80390290(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
 
 int func_80390334(void) {
     if (levelSpecificFlags_get(LEVEL_FLAG_11_FP_UNKNOWN) && levelSpecificFlags_get(LEVEL_FLAG_12_FP_UNKNOWN) && levelSpecificFlags_get(LEVEL_FLAG_13_FP_UNKNOWN)) {
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
 }
 
 void func_80390388(Actor *this){
     actor_collisionOff(this);
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if(jiggyscore_isSpawned(JIGGY_2E_FP_PRESENTS) || jiggyscore_isCollected(JIGGY_2E_FP_PRESENTS)){
-            levelSpecificFlags_set(LEVEL_FLAG_11_FP_UNKNOWN, TRUE);
-            levelSpecificFlags_set(LEVEL_FLAG_12_FP_UNKNOWN, TRUE);
-            levelSpecificFlags_set(LEVEL_FLAG_13_FP_UNKNOWN, TRUE);
+            levelSpecificFlags_set(LEVEL_FLAG_11_FP_UNKNOWN, true);
+            levelSpecificFlags_set(LEVEL_FLAG_12_FP_UNKNOWN, true);
+            levelSpecificFlags_set(LEVEL_FLAG_13_FP_UNKNOWN, true);
         }
         if(jiggyscore_isCollected(JIGGY_2C_FP_BOGGY_3) || jiggyscore_isSpawned(JIGGY_2C_FP_BOGGY_3)){
-            this->unk38_31 = FALSE;
-            this->marker->propPtr->unk8_3 = TRUE;
+            this->unk38_31 = false;
+            this->marker->propPtr->unk8_3 = true;
         }
         else{
-            this->unk38_31 = TRUE;
-            this->marker->propPtr->unk8_3 = FALSE;
+            this->unk38_31 = true;
+            this->marker->propPtr->unk8_3 = false;
             return;
         }
     }//L80390468
@@ -70,7 +70,7 @@ void func_80390388(Actor *this){
         || jiggyscore_isCollected(JIGGY_2E_FP_PRESENTS)
         || func_80390334()
     ){
-        this->has_met_before = TRUE;
+        this->has_met_before = true;
     }
 
     if( func_80329530(this, 0xFA) 
@@ -78,14 +78,14 @@ void func_80390388(Actor *this){
     ){
         if(0.0f == this->unk1C[0] && func_80390334()){
             if(gcdialog_showText(ASSET_C1F_DIALOG_UNKNOWN, 0xb, this->position, NULL, NULL, NULL)){
-                this->has_met_before = TRUE;
+                this->has_met_before = true;
                 this->unk1C[0] = 1.0f;
             }
         }
         else{
             if( !this->has_met_before ){
                 if(gcdialog_showText(ASSET_C1E_DIALOG_UNKNOWN, 0x2b, this->position, NULL, NULL, NULL)){
-                    this->has_met_before = TRUE;
+                    this->has_met_before = true;
                 }
             }
         }

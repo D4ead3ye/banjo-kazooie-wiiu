@@ -29,7 +29,7 @@ void func_8038D450(ActorMarker *this_marker){
 void func_8038D47C(Actor *this){
     f32 sp3C[3];
     NodeProp *tmp_v0;
-    this->marker->propPtr->unk8_3 = TRUE;
+    this->marker->propPtr->unk8_3 = true;
     actor_collisionOff(this);
     func_80287784(this->anctrl, 0);
     if(!this->initialized){
@@ -58,12 +58,12 @@ void func_8038D47C(Actor *this){
             nodeprop_getPosition(tmp_v0, this->velocity);
         }
 
-        this->initialized = TRUE;
+        this->initialized = true;
     }//L8038D590
 
     if(!this->volatile_initialized){
         mapSpecificFlags_set(0x10, 0);
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if(volatileFlag_get(VOLATILE_FLAG_C1_IN_FINAL_CHARACTER_PARADE) && gcparade_8031B4F4() == -3){
             timedFunc_set_1(1.5f, (GenFunction_1)func_8038D450, reinterpret_cast(s32, this->marker));
         }
@@ -82,12 +82,12 @@ void func_8038D47C(Actor *this){
     switch(this->state){
         case 1: //L8038D6C0
             if(!mapSpecificFlags_get(0xE) && mapSpecificFlags_get(0) + mapSpecificFlags_get(1) == 1){
-                mapSpecificFlags_set(0xE, TRUE);
+                mapSpecificFlags_set(0xE, true);
                 subaddie_set_state_forward(this, 2);
                 this->unk38_31 = 1;
             }
             else if(!mapSpecificFlags_get(0xF) && mapSpecificFlags_get(0) + mapSpecificFlags_get(1) == 2){
-                mapSpecificFlags_set(0xF, TRUE);
+                mapSpecificFlags_set(0xF, true);
                 func_8028F918(2);
                 subaddie_set_state_forward(this, 3);
                 func_802BAFE4(0);
@@ -103,7 +103,7 @@ void func_8038D47C(Actor *this){
             if( actor_animationIsAt(this, 0.99f) ){
                 if(--this->unk38_31 == 0){
                     gcdialog_showText(ASSET_A7C_DIALOG_JINXY_ONE_EGG, 4, NULL, NULL, NULL, NULL);
-                    mapSpecificFlags_set(0x14, TRUE);
+                    mapSpecificFlags_set(0x14, true);
                     subaddie_set_state_forward(this, 1);
                 }
             }

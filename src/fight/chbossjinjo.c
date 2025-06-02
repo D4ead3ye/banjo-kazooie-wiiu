@@ -154,7 +154,7 @@ void chBossJinjo_update(Actor *this){
     s16 old_yaw;
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         func_80324CFC(0.0f, SFX_JINJO_STATUE_POWERUP, 32000);
         func_80324D2C(this->lifetime_value + 2.26, SFX_JINJO_STATUE_POWERUP);
     }
@@ -264,7 +264,7 @@ void chBossJinjo_update(Actor *this){
                 }
             } else {
                 if (actor_animationIsAt(this, 0.9f)) {
-                    anctrl_setSmoothTransition(this->anctrl, FALSE);
+                    anctrl_setSmoothTransition(this->anctrl, false);
                     subaddie_set_state_with_direction(this, BOSSJINJO_STATE_5_HIT, 0.001f, 1);
                     FUNC_8030E8B4(SFX_135_CARTOONY_SPRING, 1.0f, 32000, this->position, 10000, 16000);
                     func_80324D54(0.1f, SFX_C1_BUZZBOMB_ATTACK, 0.85f, 32000, this->position, 5000.0f, 12000.0f);
@@ -320,7 +320,7 @@ void chBossJinjo_update2(Actor *this) {
     enum asset_e blast_asset;
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->marker->propPtr->unk8_3 = 0;
         actor_collisionOff(this);
         this->alpha_124_19 = 0x7d;

@@ -189,10 +189,10 @@ bool func_8033B0D0(void *arg0) {
         for(iPtr = start_ptr; iPtr < end_ptr && arg0 != iPtr->unk1; iPtr++){
         }
         if (iPtr < end_ptr){
-            return TRUE;
+            return true;
         }
     }
-    return FALSE;
+    return false;
 }
 
 void func_8033B180(void){
@@ -250,7 +250,7 @@ bool func_8033B338(void **sprite_ptr, BKSpriteDisplayData **arg1)
 
 bool func_8033B388(BKSprite **sprite_ptr, BKSpriteDisplayData **arg1){
     if(*sprite_ptr == NULL)
-        return FALSE;
+        return false;
     
     func_8033B020(*sprite_ptr);
     *sprite_ptr = NULL;
@@ -258,7 +258,7 @@ bool func_8033B388(BKSprite **sprite_ptr, BKSpriteDisplayData **arg1){
 
     if(sprite_ptr);
     
-    return TRUE;
+    return true;
 }
 
 s32 assetcache_release(void * arg0){

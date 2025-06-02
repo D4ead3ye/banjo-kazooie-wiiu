@@ -142,8 +142,8 @@ void chshrapnel_update(Actor *this) {
     tick = time_getDelta();
     if (!this->initialized) {
         marker_setCollisionScripts(this->marker, NULL, NULL, chShrapnel_explode);
-        this->unk138_25 = TRUE;
-        this->initialized = TRUE;
+        this->unk138_25 = true;
+        this->initialized = true;
         this->unk4C = 0.0f;
     }
     chShrapnel_func_802D0FC8(this);

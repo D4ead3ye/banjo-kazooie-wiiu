@@ -55,7 +55,7 @@ bool func_802BB720(s32 arg0, f32 arg1[3], f32 arg2[3], s32 *arg3) {
         arg2[0] = 0.0f;
         arg2[1] = mlNormalizeAngle((f32) func_802E4B24(arg0) - 180.0f);
         arg2[2] = 0.0f;
-        return TRUE;
+        return true;
     }
     if ((arg0 >= 0x5B) && (arg0 < 0x63)) {
         arg0 -= 0x40;
@@ -68,9 +68,9 @@ bool func_802BB720(s32 arg0, f32 arg1[3], f32 arg2[3], s32 *arg3) {
         arg2[0] = 0.0f;\
         arg2[1] = mlNormalizeAngle(temp_f6);\
         arg2[2] = 0.0f;
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 
@@ -79,13 +79,13 @@ bool func_802BB884(f32 arg0[3], f32 *arg1) {
     f32 sp18[3];
 
     if (!player_is_present() || !func_8028F070() || !func_8028F150()) {
-        return FALSE;
+        return false;
     }
     player_getPosition(sp24);
     sp24[1] += 50.0f;
     ml_vec3f_diff_copy(sp18, arg0, sp24);
     *arg1 = gu_sqrtf(sp18[0]*sp18[0] + sp18[1]*sp18[1] + sp18[2]*sp18[2]);
-    return TRUE;
+    return true;
 }
 
 
@@ -229,15 +229,15 @@ f32 func_802BBEA4(f32 arg0[3], f32 arg1[3], f32 arg2, s32 arg3, s32 arg4) {
         D_8037D8D0.unk30 = 0;
     }
     
-    D_8037D8D0.unk31 = FALSE;
+    D_8037D8D0.unk31 = false;
 
     for(i = 0; i < 6; i++){
         if (D_8037D8D0.unk0[i]){
             if(D_8037D8D0.unk0[i] & 0x1E0000){
-                D_8037D8D0.unk31 = TRUE;
+                D_8037D8D0.unk31 = true;
             }
             else{
-                 D_8037D8D0.unk31 = FALSE;
+                 D_8037D8D0.unk31 = false;
                  break;
             }
         }
@@ -309,10 +309,10 @@ void ncCamera_update(void){
 
 void func_802BC21C(s32 arg0, s32 arg1){
     if(arg1 == 2){
-        D_8037D8C5 = TRUE;
+        D_8037D8C5 = true;
     }
     else{
-        D_8037D8C5 = FALSE;
+        D_8037D8C5 = false;
     }
 }
 

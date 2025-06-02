@@ -31,7 +31,7 @@ void __bscarriedobj_spawnMethod(enum actor_e actor_id){
 
     baModel_getPosition(sp20);
     actor = actor_spawnWithYaw_f32(actor_id, sp20, (s32) yaw_get());
-    actor->unk138_22 = TRUE;
+    actor->unk138_22 = true;
     bacarry_set_marker(actor->marker);
     bs_setState(BS_3A_CARRY_IDLE);
 }

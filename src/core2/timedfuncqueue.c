@@ -323,7 +323,7 @@ void timedFuncQueue_defrag(void){
 }
 
 void mapSpecificFlags_setTrue(s32 flag){
-    mapSpecificFlags_set(flag, TRUE);
+    mapSpecificFlags_set(flag, true);
 }
 
 void timed_mapSpecificFlags_setTrue(f32 time, s32 flag){

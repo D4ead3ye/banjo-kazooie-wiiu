@@ -43,7 +43,7 @@ bool func_8038B160(Actor *this){
     temp_v0 = func_8038A9E0(local->game_marker);
 
     if ((temp_v0 == 1) || (temp_v0 == 4)) {
-        return FALSE;
+        return false;
     }
 
     if ((temp_v0 == 2) || (temp_v0 == 5)) {
@@ -135,10 +135,10 @@ bool func_8038B684(ActorMarker * arg0){
 
     if( actPtr->state < 5){
         chyumblie_set_state(actPtr, YUMBLIE_STATE_5_BEING_EATEN);
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
 }
 
 void chyumblie_update(Actor *this){
@@ -152,7 +152,7 @@ void chyumblie_update(Actor *this){
     s0 = (ActorLocal_Yumblie *)&this->local;
     sp4C = time_getDelta();
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         s0->unk0 = 0.0f;
         s0->unk4 = 0;
         s0->game_marker = NULL;

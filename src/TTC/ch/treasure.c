@@ -47,7 +47,7 @@ static void __chTreasure_updateFunc(Actor *this){
     s16 sp34[3];
 
     if(!this->initialized){
-        this->initialized = TRUE;
+        this->initialized = true;
         if(this->unkF4_8 == 1 && !volatileFlag_get(VOLATILE_FLAG_C1_IN_FINAL_CHARACTER_PARADE)){
             marker_despawn(this->marker);
             return;

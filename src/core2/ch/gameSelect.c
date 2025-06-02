@@ -321,7 +321,7 @@ void func_802C4C14(Actor *this){
             func_802C74F4(this, 0, 1.0f);
             func_802C74F4(this, 1, 1.0f);
         }//L802C4CD8
-        this->initialized = TRUE;
+        this->initialized = true;
     }//L802C4CE4
     func_802C7478(this);
     if(!sp80){

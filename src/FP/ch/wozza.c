@@ -102,7 +102,7 @@ void func_8038F41C(Actor *this){
 
 void func_8038F454(Actor *this){
     if(!mapSpecificFlags_get(7) && player_movementGroup() != BSGROUP_A_FLYING && func_80329530(this, 1000) ){
-        mapSpecificFlags_set(7, TRUE);
+        mapSpecificFlags_set(7, true);
         subaddie_set_state(this, 2);
         actor_loopAnimation(this);
         timed_setStaticCameraToNode(0.0f, 0x2e);
@@ -141,8 +141,8 @@ bool func_8038F5D4(Actor *this, f32 arg1[3], f32 arg2, f32 arg3, s32 arg4){
     this->actor_specific_1_f = (1.0f- sp24)*arg2;
     func_80329054(this, 2);
     if(ml_vec3f_distance(this->position, arg1) <= arg4)
-        return TRUE;
-    return FALSE;
+        return true;
+    return false;
 
 }
 
@@ -153,9 +153,9 @@ bool FP_func_8038F6C4(Actor *this, f32 arg1[3], f32 arg2){
     func_80328FB0(this, arg2);
     dTheta = this->yaw - this->yaw_ideal;
     if(-arg2 <= dTheta && dTheta <= arg2){
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 void FP_func_8038F758(ActorMarker *marker){
@@ -174,18 +174,18 @@ void FP_func_8038F7AC(Actor *this){
 
     if(volatileFlag_get(VOLATILE_FLAG_C4_WOZZA_HIDE_IN_SNS_PARADE)){
         if(!this->volatile_initialized){
-            this->volatile_initialized = TRUE;
-            this->marker->propPtr->unk8_3 = FALSE;
+            this->volatile_initialized = true;
+            this->marker->propPtr->unk8_3 = false;
             actor_collisionOff(this);
-            this->unk58_0 = FALSE;
+            this->unk58_0 = false;
             func_8038F274();
         }
         return;
     }
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = FALSE;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = false;
         if(jiggyscore_isCollected(JIGGY_32_FP_WOZZA)){
             func_8038F274();
             marker_despawn(this->marker);
@@ -193,7 +193,7 @@ void FP_func_8038F7AC(Actor *this){
         }
 
         if (levelSpecificFlags_get(LEVEL_FLAG_26_FP_UNKNOWN)) {
-            this->unk38_31 = TRUE;
+            this->unk38_31 = true;
             func_8038F274();
         }
         else{//L8038F8A0
@@ -205,7 +205,7 @@ void FP_func_8038F7AC(Actor *this){
             this->position[1] = local->unkC[1];\
             this->position[2] = local->unkC[2];
             __spawnQueue_add_1((GenFunction_1)FP_func_8038F758, reinterpret_cast(s32, this->marker));
-            local->unk30 = FALSE;
+            local->unk30 = false;
         }
     }//L8038F910
 
@@ -274,7 +274,7 @@ void FP_func_8038F7AC(Actor *this){
 
             if(!local->unk30){
                 if(gcdialog_showText(0xc1d, 0x20, NULL, NULL, NULL, NULL)){
-                    local->unk30 =  TRUE;
+                    local->unk30 =  true;
                 }
             }
             break;
@@ -302,7 +302,7 @@ void FP_func_8038F7AC(Actor *this){
             if(func_80329530(this, 500) && !this->has_met_before){
                 if(gcdialog_showText(0xc1c, 0xAA, this->position, this->marker, func_8038F330, func_8038F3C4)){
                     timed_setStaticCameraToNode(0.0f, 0x2E);
-                    this->has_met_before = TRUE;
+                    this->has_met_before = true;
                 }
                 break;
             }//L8038FD40
@@ -348,7 +348,7 @@ void FP_func_8038F7AC(Actor *this){
 
         case 12: //L8038FEB8
             if(func_8038F5D4(this, local->unk18, 30.0f, 12.0f, 0x3C)){
-                this->unk38_31 = TRUE;
+                this->unk38_31 = true;
             }
             break;
     }//L8038FEEC

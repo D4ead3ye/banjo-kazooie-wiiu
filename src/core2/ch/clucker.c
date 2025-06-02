@@ -93,7 +93,7 @@ void func_80357264(Actor *this, s32 next_state){
         if(!levelSpecificFlags_get(LEVEL_FLAG_14_TTC_UNKNOWN)
             && !( actorArray_findClosestActorFromActorId(this->position, 0x318, -1, &sp38) && ( sp38 < 250.0f))
         ){
-            levelSpecificFlags_set(LEVEL_FLAG_14_TTC_UNKNOWN, TRUE);
+            levelSpecificFlags_set(LEVEL_FLAG_14_TTC_UNKNOWN, true);
             func_80324E38(0.0f, 3);
             __clucker_setDeathCutsceneCamera(this);
             timed_exitStaticCamera(2.0f);
@@ -135,8 +135,8 @@ void func_8035765C(Actor *this){
 
     sp50 = time_getDelta();
     if( !this->volatile_initialized){
-        this->volatile_initialized = TRUE;
-        this->unk16C_0 = TRUE;
+        this->volatile_initialized = true;
+        this->unk16C_0 = true;
         if(this->state != 6){
             marker_setCollisionScripts(this->marker, NULL, func_80357564, func_8035758C);
             local->unk0 = 0xff;

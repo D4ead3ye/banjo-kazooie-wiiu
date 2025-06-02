@@ -72,7 +72,7 @@ void func_80389900(Actor * this){
     f32 sp20 = time_getDelta();
     
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->marker->propPtr->unk8_3 = 1;
         local->unk0 = &D_80389E40[this->modelCacheIndex - 0x28C];
         local->unk8 = 0;

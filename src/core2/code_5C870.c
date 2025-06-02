@@ -117,7 +117,7 @@ void func_802E39D0(Gfx **gdl, Mtx **mptr, Vtx **vptr, s32 framebuffer_idx, s32 a
     Vtx* v_start = *vptr;
 
     scissorBox_SetForGameMode(gdl, framebuffer_idx);
-    D_8037E8E0.unkC = FALSE;
+    D_8037E8E0.unkC = false;
     func_80334540(gdl, mptr, vptr);
     if(!arg4){
         func_802E67AC();
@@ -209,10 +209,10 @@ void game_setMode(enum game_mode_e next_mode, s32 arg1){
             func_80334E1C(2);
         }//L802E3D18
         if(arg1){
-            sp20 = FALSE;
+            sp20 = false;
             if(next_mode == GAME_MODE_3_NORMAL){
                 if(volatileFlag_get(VOLATILE_FLAG_1F_IN_CHARACTER_PARADE)){
-                    sp20 = TRUE;
+                    sp20 = true;
                     sp1C = 7;
                 }
                 else if(func_8032190C()
@@ -221,12 +221,12 @@ void game_setMode(enum game_mode_e next_mode, s32 arg1){
                     && level_get() != LEVEL_6_LAIR
                     && level_get() != LEVEL_D_CUTSCENE
                 ){
-                    sp20 = TRUE;
+                    sp20 = true;
                     sp1C = 1;
                 }
             }
             else if(func_802E4A08()){//L802E3DBC
-                sp20 = TRUE;
+                sp20 = true;
                 sp1C = func_8034BDA4(D_8037E8E0.map, D_8037E8E0.exit);
             }
 
@@ -451,7 +451,7 @@ bool func_802E4424(void) {
                 }
                 gcparade_8031ABF8();
                 func_802E3E7C(GAME_MODE_3_NORMAL);
-                return FALSE;
+                return false;
 
             case 10:                                    /* switch 1 */
                 if( (D_8037E8E0.game_mode == GAME_MODE_7_ATTRACT_DEMO)
@@ -463,7 +463,7 @@ bool func_802E4424(void) {
                 }
                 gcparade_8031ABA0();
                 func_802E3E7C(GAME_MODE_3_NORMAL);
-                return FALSE;
+                return false;
 
             case 1:                                     /* switch 1 */
                 if( (D_8037E8E0.game_mode == GAME_MODE_7_ATTRACT_DEMO)
@@ -474,39 +474,39 @@ bool func_802E4424(void) {
                     func_8034B940();
                 }
                 func_802E3E7C(GAME_MODE_3_NORMAL);
-                return FALSE;
+                return false;
 
             case 6:                                     /* switch 1 */
                 func_8034B8C0(D_8037E8E0.map, D_8037E8E0.exit);
                 func_802E3E7C(GAME_MODE_7_ATTRACT_DEMO);
-                return FALSE;
+                return false;
 
             case 12:                                    /* switch 1 */
                 func_8034B8C0(D_8037E8E0.map, D_8037E8E0.exit);
                 func_802E3E7C(GAME_MODE_A_SNS_PICTURE);
-                return FALSE;
+                return false;
 
             case 7:                                     /* switch 1 */
                 func_8034B8C0(D_8037E8E0.map, D_8037E8E0.exit);
                 func_802E3E7C(GAME_MODE_8_BOTTLES_BONUS);
-                return FALSE;
+                return false;
 
             case 8:                                     /* switch 1 */
                 func_8034B8C0(D_8037E8E0.map, D_8037E8E0.exit);
                 func_802E3E7C(GAME_MODE_9_BANJO_AND_KAZOOIE);
-                return FALSE;
+                return false;
 
             case 11:                                    /* switch 1 */
                 func_802E3E7C(D_8037E8E0.game_mode);
-                return FALSE;
+                return false;
 
             case 2:                                     /* switch 1 */
                 func_8023DFF0(1);
-                return FALSE;
+                return false;
 
             case 3:                                     /* switch 1 */
                 func_8023DFF0(4);
-                return FALSE;
+                return false;
             case 0:
                 break;
         }
@@ -573,7 +573,7 @@ bool func_802E4424(void) {
     if (func_802E4A08() == 0) {
         func_802F5374();
     }
-    return TRUE;
+    return true;
 }
 
 void func_802E48B8(enum game_mode_e mode, s32 arg1){
@@ -613,7 +613,7 @@ s32 game_defrag(void){
 }
 
 void func_802E49E0(void){
-    D_8037E8E0.unkC = TRUE;
+    D_8037E8E0.unkC = true;
 }
 
 int game_is_frozen(void){

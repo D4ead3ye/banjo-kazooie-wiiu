@@ -1,3 +1,4 @@
+#if 0
 #include <ultra64.h>
 
 #ifndef BANJO_KAZOOIE_BOOL_H
@@ -8,3 +9,5 @@ typedef int bool;
 #define BOOL(boolean) ((boolean) ? TRUE : FALSE)
 
 #endif
+#endif
+#include <stdbool.h>

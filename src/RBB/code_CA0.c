@@ -199,7 +199,7 @@ void func_80387890(Actor *this){
 
 void func_803878B0(Actor *this){
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->marker->actorFreeFunc = func_80387890;
         marker_setCollisionScripts(this->marker, NULL, func_80387850, NULL);
         func_8032AA58(this, 1.1f);

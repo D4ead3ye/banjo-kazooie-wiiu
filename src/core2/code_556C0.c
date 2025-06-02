@@ -26,7 +26,7 @@ void func_802DC650(Actor * this){
 void func_802DC67C(Actor *this){
     if(!this->initialized){
 
-        this->initialized = TRUE;
+        this->initialized = true;
         this->depth_mode = MODEL_RENDER_DEPTH_NONE;
         func_803262E4(this);
         actor_collisionOff(this);

@@ -60,7 +60,7 @@ void func_802DF2C4(Actor *this) {
 
     temp_fp = chBottlesBonusCursor_func_802E06B4() - 0x15;
     if (!this->initialized) {
-        this->initialized = TRUE;
+        this->initialized = true;
         actor_collisionOff(this);
         for(i = 0; i < 20; i++){
             func_8034DFB0(func_8034C2C4(this->marker, i + 0x190), D_8036837C, D_8036836C, 0.0f);
@@ -74,11 +74,11 @@ void func_802DF2C4(Actor *this) {
         if (prev_val != D_8037E008[i] ) {
             val = D_8037E008[i];
             switch(val){
-                case TRUE: 
+                case true: 
                     func_8034DFB0(temp_v0, D_8036836C, D_8036837C, 0.05f);
                     break;
 
-                case FALSE:
+                case false:
                     func_8034DFB0(temp_v0, D_8036837C, D_8036836C, 0.2f);
                     break;
             }

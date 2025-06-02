@@ -577,7 +577,7 @@ void _printbuffer_draw_letter(char letter, f32* xPtr, f32* yPtr, f32 arg3, Gfx *
     }//L802F5778
 
     if(!t0 || print_sInFontFormatMode){
-        print_sInFontFormatMode = FALSE;
+        print_sInFontFormatMode = false;
         switch(letter){
             case ' '://802F5818
                 *xPtr += ((D_80380AF0) ? D_80369068[D_80380AE8]: D_80369068[D_80380AE8]*0.8) * arg3;
@@ -665,7 +665,7 @@ void _printbuffer_draw_letter(char letter, f32* xPtr, f32* yPtr, f32 arg3, Gfx *
                 break;
 
             case 0xfd: //L802F5BEC
-                print_sInFontFormatMode = TRUE;
+                print_sInFontFormatMode = true;
                 break;
 
             case 0xfe://L802F5BF4
@@ -779,7 +779,7 @@ f32 func_802F6C90(u8 letter, f32* xPtr, f32 *yPtr, f32 arg3){
     s32 sp2C;
 
     sp38 = *xPtr;
-    var_v0 = FALSE;
+    var_v0 = false;
     sp34 = 0;
     if (D_80380AE8 == 1) {
         if (letter < 0x80) {
@@ -792,7 +792,7 @@ f32 func_802F6C90(u8 letter, f32* xPtr, f32 *yPtr, f32 arg3){
                 }
                 D_80380AB0 = letter;
                 sp44 = D_80380F20[letter];
-                var_v0 = TRUE;
+                var_v0 = true;
                 sp38 += sp34 * arg3;
             }
         }

@@ -210,9 +210,9 @@ bool func_8038C718(Actor *this, f32 arg1){
 
     if(this->position_y <= arg1){
         this->position_y = arg1;
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 bool func_8038C844(f32 arg0[3], f32 arg1[3]){
@@ -220,9 +220,9 @@ bool func_8038C844(f32 arg0[3], f32 arg1[3]){
         && (arg0[1] - arg1[1] < 26.0f && -26.0f < arg0[1] - arg1[1])
         && (arg0[2] - arg1[2] < 26.0f && -26.0f < arg0[2] - arg1[2])
     ){
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 void func_8038C8F0(ActorMarker *marker){
@@ -258,7 +258,7 @@ void func_8038C9A0(Actor *this){
     other = marker_getActor(this->unk100);
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->marker->unk18 = &FP_D_80392018;
         this->unk38_31 = 0;
         if(0.0f != other->velocity[0]){
@@ -304,10 +304,10 @@ void func_8038C9A0(Actor *this){
             }
 
             if(0.8 < anctrl_getAnimTimer(this->anctrl) || anctrl_getAnimTimer(this->anctrl) < 0.2){
-                this->unk38_31 = TRUE;
+                this->unk38_31 = true;
             }
             else{
-                this->unk38_31 = FALSE;
+                this->unk38_31 = false;
             }
 
             if(!func_8038C718(this, 0.0f)){
@@ -337,7 +337,7 @@ void func_8038C9A0(Actor *this){
                 this->position_y = this->unk1C[1];
                 if(!fileProgressFlag_get(FILEPROG_82_MET_TWINKLIES)){
                     gcdialog_showText(0xc12, 0x2a, this->position, this->marker, func_8038C94C, NULL);
-                    fileProgressFlag_set(FILEPROG_82_MET_TWINKLIES, TRUE);
+                    fileProgressFlag_set(FILEPROG_82_MET_TWINKLIES, true);
                 }
                 else{
                     gcdialog_showText(0xc25, 0x2b, this->position, this->marker, func_8038C94C, NULL);

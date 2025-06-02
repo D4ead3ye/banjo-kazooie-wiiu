@@ -61,7 +61,7 @@ void func_803865F4(Actor *this, s32 next_state) {
 
     if (next_state == 4) {
         if (volatileFlag_get(VOLATILE_FLAG_2_FF_IN_MINIGAME)) {
-            item_set(ITEM_6_HOURGLASS, FALSE);
+            item_set(ITEM_6_HOURGLASS, false);
             volatileFlag_set(VOLATILE_FLAG_3, 0);
             volatileFlag_set(VOLATILE_FLAG_5_FF_MINIGAME_WON, 1);
         } else {
@@ -130,8 +130,8 @@ void func_8038687C(Actor *this) {
     sp88 = time_getDelta();
     local = (ActorLocal_CCW_160 *)&this->local;
     if(!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = true;
         reinterpret_cast(s32, local->unk0) = 1;
         local->unk4 = 0;
         local->unk8 = 0;

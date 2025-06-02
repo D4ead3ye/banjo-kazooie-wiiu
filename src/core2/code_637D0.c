@@ -14,7 +14,7 @@ bool func_802EA760(BKModelUnk14List *arg0, s32 arg1, f32 arg2[3], f32 rotation[3
     BKModelUnk14_2 *temp_v0;
 
     if (arg1 >= arg0->unk4) {
-        return FALSE;
+        return false;
     }
     start = sizeof(BKModelUnk14List) + arg0->cnt0*sizeof(BKModelUnk14_0) + (s32)arg0;
     temp_v0 = (BKModelUnk14_2*)(arg0->cnt2*sizeof(BKModelUnk14_1) + start + arg1 *sizeof(BKModelUnk14_2));
@@ -27,7 +27,7 @@ bool func_802EA760(BKModelUnk14List *arg0, s32 arg1, f32 arg2[3], f32 rotation[3
     func_80252C08(arg2, rotation, scale, arg5);
     mlMtx_apply_vec3f(arg6, arg6);
     *arg7 /= scale;
-    return TRUE;
+    return true;
 }
 
 s32 func_802EA864(BKModelUnk14List *arg0, f32 position[3], f32 rotation[3], f32 scale, f32 arg4[3], f32 arg5[3], f32 arg6) {

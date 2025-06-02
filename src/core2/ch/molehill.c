@@ -68,11 +68,11 @@ void func_802DA634(ParticleEmitter *pCtrl, f32 arg1[3], s32 cnt){
 void func_802DA740(Actor *this){
     ActorLocal_MoleHill * local = (ActorLocal_MoleHill *) &this->local;
 
-    this->marker->propPtr->unk8_3 = TRUE;
-    this->marker->collidable = FALSE;
+    this->marker->propPtr->unk8_3 = true;
+    this->marker->collidable = false;
     if(!this->volatile_initialized){
         local->unk0 = 0;
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
     }
     switch(this->state){
         case 1:

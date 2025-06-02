@@ -108,7 +108,7 @@ void __chSmBottles_skipIntroTutorial(void) {
     ability_unlock(ABILITY_8_FLAP_FLIP);
     ability_unlock(ABILITY_5_CLIMB);
     __chSmBottles_setHasUsedSpiralMountainAbilities();
-    mapSpecificFlags_set(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, TRUE);
+    mapSpecificFlags_set(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, true);
 }
 
 /**
@@ -219,7 +219,7 @@ static void __chSmBottles_textActions(ActorMarker *marker, enum asset_e text_id,
             break;
 
         case 4:
-            mapSpecificFlags_set(SM_SPECIFIC_FLAG_4, TRUE);
+            mapSpecificFlags_set(SM_SPECIFIC_FLAG_4, true);
             break;
 
         case 5:
@@ -240,7 +240,7 @@ void __chSmBottles_textCallback(ActorMarker *marker, enum asset_e text_id, s32 a
     Actor *actor = marker_getActor(marker);
 
     if (!mapSpecificFlags_get(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED) && chmole_learnedAllSpiralMountainAbilities()) {
-        mapSpecificFlags_set(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, TRUE);
+        mapSpecificFlags_set(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, true);
         gcdialog_showText(ASSET_E12_DIALOG_BOTTLES_LEARNED_TUTORIAL_MOVES, 0xe, actor->position, actor->marker, __chSmBottles_textCallback, NULL);
     }//L8038933C
     else {
@@ -257,11 +257,11 @@ void __chSmBottles_textCallback(ActorMarker *marker, enum asset_e text_id, s32 a
                 break;
 
             case ASSET_E1F_DIALOG_BOTTLES_TUTORIAL_OFFER: /* 2FEC 803893DC 9209003B */
-                actor->unk38_0 = TRUE;
+                actor->unk38_0 = true;
                 break;
 
             case ASSET_E1D_DIALOG_BOTTLES_TUTORIAL_OFFER_WAIT: /* 2FFC 803893EC 920B0138 */
-                actor->has_met_before = FALSE;
+                actor->has_met_before = false;
                 actor->lifetime_value = 0.0f;
                 break;
 
@@ -337,7 +337,7 @@ void __chSmBottles_talk(Actor *this) {
             }
             else {//L803896E8
                 text_id = chSmBottlesDialogTable[this->unkF4_8 - 1].teach_text_id;
-                mapSpecificFlags_set(SM_SPECIFIC_FLAG_1_TALKED_TO_BOTTLES, TRUE);
+                mapSpecificFlags_set(SM_SPECIFIC_FLAG_1_TALKED_TO_BOTTLES, true);
             }
             break;
 
@@ -354,10 +354,10 @@ void __chSmBottles_talk(Actor *this) {
                 else {//L80389780
                     __chSmBottles_setHasUsedSpiralMountainAbilities();
                     text_id = fileProgressFlag_get(FILEPROG_DB_SKIPPED_TUTORIAL) ? 0xe1e : 0xe13;
-                    mapSpecificFlags_set(SM_SPECIFIC_FLAG_F, TRUE);
+                    mapSpecificFlags_set(SM_SPECIFIC_FLAG_F, true);
                 } //L803897B4
 
-                mapSpecificFlags_set(SM_SPECIFIC_FLAG_2, TRUE);
+                mapSpecificFlags_set(SM_SPECIFIC_FLAG_2, true);
             }
             else {//L803897C8
                 if (mapSpecificFlags_get(SM_SPECIFIC_FLAG_2)) {
@@ -366,14 +366,14 @@ void __chSmBottles_talk(Actor *this) {
                 }
                 else {
                     text_id = chSmBottlesDialogTable[this->unkF4_8 - 1].teach_text_id;
-                    mapSpecificFlags_set(SM_SPECIFIC_FLAG_2, TRUE);
+                    mapSpecificFlags_set(SM_SPECIFIC_FLAG_2, true);
                 }
             }
             break;
 
         case 4://L80389848
             if (!(ability_isUnlocked(ABILITY_4_CLAW_SWIPE) && ability_isUnlocked(ABILITY_C_ROLL) && ability_isUnlocked(ABILITY_B_RATATAT_RAP))) {//L803898D4
-                mapSpecificFlags_set(SM_SPECIFIC_FLAG_4, TRUE);
+                mapSpecificFlags_set(SM_SPECIFIC_FLAG_4, true);
             }
             else {//L803898E4
                 __chSmBottles_getRefresherDialog(this, &text_id, &text_flags);
@@ -382,7 +382,7 @@ void __chSmBottles_talk(Actor *this) {
 
         case 6://L803898A0
             if (!(ability_isUnlocked(ABILITY_A_HOLD_A_JUMP_HIGHER) && ability_isUnlocked(ABILITY_7_FEATHERY_FLAP) && ability_isUnlocked(ABILITY_8_FLAP_FLIP))) {//L803898D4
-                mapSpecificFlags_set(SM_SPECIFIC_FLAG_E, TRUE);
+                mapSpecificFlags_set(SM_SPECIFIC_FLAG_E, true);
             }
             else {//L803898E4
                 __chSmBottles_getRefresherDialog(this, &text_id, &text_flags);
@@ -438,7 +438,7 @@ void chSmBottles_update(Actor *this) {
     if (!this->initialized) {
         this->marker->propPtr->unk8_3 = 0;
         actor_collisionOff(this);
-        this->initialized = TRUE;
+        this->initialized = true;
         marker_setFreeMethod(this->marker, __chSmBottles_free);
 
         if (this->unkF4_8 == 1 || this->unkF4_8 == 8) {//L80389A30
@@ -463,20 +463,20 @@ void chSmBottles_update(Actor *this) {
         }//L80389AC8
 
         if (__chSmBottles_isAnySpiralMountainAbilityLearned()) {
-            mapSpecificFlags_set(SM_SPECIFIC_FLAG_1_TALKED_TO_BOTTLES, TRUE);
+            mapSpecificFlags_set(SM_SPECIFIC_FLAG_1_TALKED_TO_BOTTLES, true);
 
             if (chmole_learnedAllSpiralMountainAbilities()) {
-                mapSpecificFlags_set(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, TRUE);
-                mapSpecificFlags_set(SM_SPECIFIC_FLAG_2, TRUE);
-                mapSpecificFlags_set(SM_SPECIFIC_FLAG_C, TRUE);
-                mapSpecificFlags_set(SM_SPECIFIC_FLAG_F, TRUE);
+                mapSpecificFlags_set(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, true);
+                mapSpecificFlags_set(SM_SPECIFIC_FLAG_2, true);
+                mapSpecificFlags_set(SM_SPECIFIC_FLAG_C, true);
+                mapSpecificFlags_set(SM_SPECIFIC_FLAG_F, true);
             }
         }
     }//L80389B20
 
     if (!this->volatile_initialized) {
         __spawnQueue_add_1((GenFunction_1) __chSmBottles_spawnMolehill, reinterpret_cast(s32, this->marker));
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
     }//L80389B4C
 
     if (this->unk138_23) {
@@ -590,7 +590,7 @@ void chSmBottles_update(Actor *this) {
             }//L8038A194
 
             if (mapSpecificFlags_get(SM_SPECIFIC_FLAG_5)) {
-                mapSpecificFlags_set(SM_SPECIFIC_FLAG_5, FALSE);
+                mapSpecificFlags_set(SM_SPECIFIC_FLAG_5, false);
                 __chSmBottles_setState(this, SM_BOTTLES_STATE_4_UNKNOWN);
             }//L8038A1B8
 
@@ -600,10 +600,10 @@ void chSmBottles_update(Actor *this) {
                 this->lifetime_value += time_getDelta();
 
                 if (func_803114C4() != 0xe1d) {
-                    if (face_buttons[FACE_BUTTON(BUTTON_A)] == TRUE) {
+                    if (face_buttons[FACE_BUTTON(BUTTON_A)] == true) {
                         bakey_pressed = 1;
                     }
-                    else if (face_buttons[FACE_BUTTON(BUTTON_B)] == TRUE) {
+                    else if (face_buttons[FACE_BUTTON(BUTTON_B)] == true) {
                         bakey_pressed = 0;
                     }
                 }//L8038A218
@@ -616,11 +616,11 @@ void chSmBottles_update(Actor *this) {
                         __chSmBottles_skipIntroTutorial();
                     }
 
-                    this->unk38_0 = FALSE;
+                    this->unk38_0 = false;
                 }
                 else if (!this->has_met_before && 5.0 < this->lifetime_value) {
                     gcdialog_showText(ASSET_E1D_DIALOG_BOTTLES_TUTORIAL_OFFER_WAIT, 0x86, this->position, this->marker, __chSmBottles_textCallback, NULL);
-                    this->has_met_before = TRUE;
+                    this->has_met_before = true;
                 }
             }
             break;

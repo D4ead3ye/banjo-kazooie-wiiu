@@ -119,7 +119,7 @@ void chjinjonator_spawnAttackParticles(Actor *this, s32 hit_id){
 }
 
 void chjinjonator_803903C4(Actor *this) {
-    anctrl_setSmoothTransition(this->anctrl, FALSE);
+    anctrl_setSmoothTransition(this->anctrl, false);
     subaddie_set_state_with_direction(this, JINJONATOR_STATE_7_ATTACK_END, 0.001f, 1);
     actor_loopAnimation(this);
 }
@@ -144,7 +144,7 @@ void chjinjonator_update(Actor *this){
     f32 sp48;
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         local->sfx_volume_adjust = 0.40000000000000013 / (this->lifetime_value + 3.3);
         local->sfx_volume = 0.7f;
         func_8025A6EC(JINGLE_MENACING_GRUNTILDA_B, 20000);
@@ -222,7 +222,7 @@ void chjinjonator_update(Actor *this){
             chjinjonator_spawnSparkleParticles(this);
 
             if (actor_animationIsAt(this, 0.998f)) {
-                anctrl_setSmoothTransition(this->anctrl, FALSE);
+                anctrl_setSmoothTransition(this->anctrl, false);
                 subaddie_set_state_with_direction(this, JINJONATOR_STATE_6_ATTACK, 0.0001f, 1);
                 actor_loopAnimation(this);
 
@@ -416,10 +416,10 @@ bool chjinjonator_8039125C(ActorMarker *marker) {
     u32 state = (u32) (marker_getActor(marker))->state;
 
     if (state == JINJONATOR_STATE_7_ATTACK_END || state == JINJONATOR_STATE_12_FINAL_ATTACK_END) {
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
 }
 
 void chjinjonator_8039129C(f32 arg0[3]) {

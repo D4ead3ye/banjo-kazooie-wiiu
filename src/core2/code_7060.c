@@ -51,7 +51,7 @@ bool func_8028DFF0(s32 arg0, s32 position[3]) {
         position[0] = func_802E4A98(arg0);
         position[1] = func_802E4AAC(arg0);
         position[2] = func_802E4AC0(arg0);
-        return TRUE;
+        return true;
     }
     else{
         return nodeprop_findPositionFromActorId(func_803084F0(arg0), position);
@@ -61,7 +61,7 @@ bool func_8028DFF0(s32 arg0, s32 position[3]) {
 bool func_8028E060(s32 arg0, s32 *arg1){
     if(arg0 >= 0x80){
         *arg1 = func_802E4AD4();
-        return TRUE;
+        return true;
     }
     else{
         return func_80305344(func_803084F0(arg0), arg1);
@@ -70,7 +70,7 @@ bool func_8028E060(s32 arg0, s32 *arg1){
 
 void func_8028E0B0(ActorMarker *arg0){
     bs_setState(bs_getIdleState());
-    bsStoredState_setTrot(FALSE);
+    bsStoredState_setTrot(false);
     baflag_clear(BA_FLAG_16_FLYING);
     baflag_clear(BA_FLAG_18_UNDERWATER);
 }
@@ -88,9 +88,9 @@ void func_8028E0F0(s32 arg0, s32 arg1[3]) {
     f32 sp28[3];
     f32 sp1C[3];
 
-    D_8037BFB8 = TRUE;
-    sp64 = FALSE;
-    sp68 = FALSE;
+    D_8037BFB8 = true;
+    sp64 = false;
+    sp68 = false;
     sp7C[0] = (f32) arg1[0];
     sp7C[1] = (f32) arg1[1];
     sp7C[2] = (f32) arg1[2];
@@ -153,7 +153,7 @@ void func_8028E0F0(s32 arg0, s32 arg1[3]) {
     }
     func_8028F85C(sp7C);
     func_80295A8C();
-    bsStoredState_setTrot(FALSE);
+    bsStoredState_setTrot(false);
     baflag_clear(BA_FLAG_16_FLYING);
     baflag_clear(BA_FLAG_18_UNDERWATER);
     func_8028E060(arg0, &sp6C);
@@ -182,8 +182,8 @@ void func_8028E4B0(void) {
     s32 sp24[3];
     s32 sp20;
 
-    D_8037BFBA = TRUE;
-    D_8037BFB9 = FALSE;
+    D_8037BFBA = true;
+    D_8037BFB9 = false;
     func_80295914();
     sp20 = exit_get();
     D_8037BFB8 = 0;
@@ -197,7 +197,7 @@ void func_8028E4B0(void) {
         D_8037BFBC = (s32) D_8037BFD0;
         D_8037BFB8 = 1;
         func_80295A8C();
-        bsStoredState_setTrot(FALSE);
+        bsStoredState_setTrot(false);
         baflag_clear(BA_FLAG_16_FLYING);
         yaw_setIdeal(D_8037BFCC);
         yaw_applyIdeal();
@@ -217,7 +217,7 @@ void func_8028E4B0(void) {
         }
     }
     if (D_803636B0) {
-        D_803636B0 = FALSE;
+        D_803636B0 = false;
         func_8028F85C(D_803636B4);
     }
 }
@@ -572,7 +572,7 @@ void func_8028F050(enum actor_e actor_id){
 
 bool func_8028F070(void){
     if(!D_8037BFBA){
-        return FALSE;
+        return false;
     }
     return D_8037BFB8;
 }
@@ -581,9 +581,9 @@ bool func_8028F098(void){
     switch(player_movementGroup()){
         case BSGROUP_1_INTR:
         case BSGROUP_2:
-            return FALSE;
+            return false;
         default:
-            return TRUE;
+            return true;
     }
 }
 
@@ -633,9 +633,9 @@ bool func_8028F20C(void){
 
 bool player_isDead(void){
     if(bs_getState() == BS_41_DIE){
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 bool func_8028F25C(void){
@@ -664,7 +664,7 @@ bool player_setCarryObjectPoseInHorizontalRadius(f32 position[3], f32 radius, en
     if (player_isInHorizontalRadius(position, radius)) {
         return player_setCarryObjectPose(actor_id, arg3);
     }
-    return FALSE;
+    return false;
 }
 
 //sets carry actor if player is within a cylinder around a point
@@ -672,11 +672,11 @@ bool player_setCarryObjectPoseInCylinder(f32 position[3], f32 radius, f32 vert_r
     if (player_isInVerticalRange(position, vert_range)) {
         return player_setCarryObjectPoseInHorizontalRadius(position, radius, actor_id, arg4);
     }
-    return FALSE;
+    return false;
 }
 
 void ability_unlock(enum ability_e uid){
-    ability_setLearned(uid, TRUE);
+    ability_setLearned(uid, true);
 }
 
 void func_8028F3D8(f32 arg0[3], f32 arg1, void(*arg2)(ActorMarker *), ActorMarker *arg3){
@@ -786,12 +786,12 @@ void func_8028F760(s32 arg0, f32 arg1, f32 arg2){
 
 void func_8028F784(bool arg0){
     if(arg0){
-        bakey_disableAll(TRUE);
-        bastick_lockAtzero(TRUE);
+        bakey_disableAll(true);
+        bastick_lockAtzero(true);
     }
     else{
-        bakey_disableAll(FALSE);
-        bastick_lockAtzero(FALSE);
+        bakey_disableAll(false);
+        bastick_lockAtzero(false);
     }
 }
 
@@ -925,7 +925,7 @@ bool func_8028FB88(enum transformation_e xform_id) {
 
 bool func_8028FBD4(f32 arg0[3]) {
     if (func_803114B0() || player_movementGroup()) {
-        return FALSE;
+        return false;
     }
     if (arg0 != NULL) {
         set_talk_target_position(arg0);
@@ -938,7 +938,7 @@ bool player_throwCarriedObject(void){
         return bs_checkInterrupt(BS_INTR_16_THROW_CARRIED_OBJ) == 2;
     }
 
-    return FALSE;
+    return false;
 }
 
 void func_8028FC8C(f32 arg0[3]){
@@ -946,11 +946,11 @@ void func_8028FC8C(f32 arg0[3]){
 }
 
 void func_8028FCAC(void){
-    D_8037BFB8 = TRUE;
+    D_8037BFB8 = true;
 }
 
 void func_8028FCBC(void){
-    D_8037BFB8 = FALSE;
+    D_8037BFB8 = false;
 }
 
 //player_setModelVisibile

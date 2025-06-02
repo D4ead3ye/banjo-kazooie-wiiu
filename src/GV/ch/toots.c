@@ -25,7 +25,7 @@ s32 D_80391A34;
 /* .code */
 void GV_func_803863F0(Actor *this){
     subaddie_set_state_with_direction(this, 1, 0.0001f, 1);
-    D_80391A30 = FALSE;
+    D_80391A30 = false;
 }
 
 void GV_func_80386420(Actor *this){
@@ -39,7 +39,7 @@ void func_80386464(Actor *this){
 
 void chtoots_update(Actor *this){
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         D_80391A30 = 0;
         D_80391A34 = 0;
     }
@@ -49,7 +49,7 @@ void chtoots_update(Actor *this){
             if(D_80391A34){
                func_80386464(this); 
             }
-            else if(D_80391A30 == TRUE){
+            else if(D_80391A30 == true){
                 GV_func_80386420(this);
             }
             break;
@@ -75,13 +75,13 @@ void chtoots_update(Actor *this){
 }
 
 void func_803865E8(void){
-    D_80391A30 = TRUE;
+    D_80391A30 = true;
 }
 
 void func_803865F8(void){
-    D_80391A34 = TRUE;
+    D_80391A34 = true;
 }
 
 void func_80386608(void){
-    D_80391A34 = FALSE;
+    D_80391A34 = false;
 }

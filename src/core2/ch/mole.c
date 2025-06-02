@@ -65,7 +65,7 @@ int chmole_learnedAllLevelAbilities(enum level_e level){
         case LEVEL_7_GOBIS_VALLEY:
             return ability_isUnlocked(ABILITY_11_TURBO_TALON);
         default:
-            return FALSE;
+            return false;
   }
 }
 
@@ -165,7 +165,7 @@ void chmole_healthRefill(ActorMarker *marker, enum asset_e arg1, s32 arg2){
     else{//L802D97BC
         if(actor->has_met_before){
             func_80347A14(1);
-            actor->has_met_before = FALSE;
+            actor->has_met_before = false;
         }
         timed_exitStaticCamera(0.0f);
         if(actor->state == 5){
@@ -185,18 +185,18 @@ void chmole_additionalAbilityLearnActions(ActorMarker *marker, enum asset_e arg1
     switch(arg2){
         case 1: // Stilt Stride
             timed_setStaticCameraToNode(0.0f, 0x11);
-            levelSpecificFlags_set(LEVEL_FLAG_1A_UNKNOWN, TRUE);
+            levelSpecificFlags_set(LEVEL_FLAG_1A_UNKNOWN, true);
             break;
         case 2:
-            levelSpecificFlags_set(LEVEL_FLAG_1A_UNKNOWN, FALSE);
+            levelSpecificFlags_set(LEVEL_FLAG_1A_UNKNOWN, false);
             chmole_setStaticCamera(actor);
             break;
         case 3: // Turbo Talon Trainer
             timed_setStaticCameraToNode(0.0f, 0x29);
-            levelSpecificFlags_set(LEVEL_FLAG_1A_UNKNOWN, TRUE);
+            levelSpecificFlags_set(LEVEL_FLAG_1A_UNKNOWN, true);
             break;
         case 4:
-            levelSpecificFlags_set(LEVEL_FLAG_1A_UNKNOWN, FALSE);
+            levelSpecificFlags_set(LEVEL_FLAG_1A_UNKNOWN, false);
             chmole_setStaticCamera(actor);
             break;
         case 5: // Egg Firing
@@ -229,7 +229,7 @@ int chmole_learnAbility(Actor *this){
     // New Ability: Learn Dialog & Misc Actions
     else{
         func_80347A14(0);
-        this->has_met_before = TRUE;
+        this->has_met_before = true;
         sp2C = moleTable[this->unkF4_8-9].teach_text_id;
         ability_unlock(moleTable[this->unkF4_8-9].ability);
         switch(moleTable[this->unkF4_8-9].ability){
@@ -243,7 +243,7 @@ int chmole_learnAbility(Actor *this){
         }
     }//L802D9A9C
     gcdialog_showText(sp2C, sp28, this->position, this->marker, chmole_healthRefill, chmole_additionalAbilityLearnActions);
-    return TRUE;
+    return true;
 }
 
 void func_802D9ADC(Actor *this){
@@ -252,7 +252,7 @@ void func_802D9ADC(Actor *this){
         subaddie_set_state_with_direction(other, 2, 0.0001f, 1);
     }
     this->marker->propPtr->unk8_3 = 1;
-    anctrl_setSmoothTransition(this->anctrl, TRUE);
+    anctrl_setSmoothTransition(this->anctrl, true);
     subaddie_set_state_with_direction(this, 2, 0.0001f, 1);
     actor_playAnimationOnce(this);
     this->unk44_31 = sfxsource_createSfxsourceAndReturnIndex();
@@ -332,7 +332,7 @@ void chmole_update(Actor *this){
         return;
     
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker_setFreeMethod(this->marker, func_802D9C90);
         if(this->initialized){
             other = actorArray_findClosestActorFromActorId(this->position, ACTOR_12C_MOLEHILL, -1, &sp4C);
@@ -351,17 +351,17 @@ void chmole_update(Actor *this){
         // If actor exists and player is within radius, force trigger conversation
         node_prop = nodeprop_findByActorIdAndActorPosition(0x372, this);
         if(node_prop == NULL){
-            this->unk38_0 = FALSE;
+            this->unk38_0 = false;
         }
         else{
-            this->unk38_0 = TRUE;
+            this->unk38_0 = true;
             nodeprop_getPosition(node_prop, this->unk1C);
         }
         // Spawns molehill
         __spawnQueue_add_1((GenFunction_1)chmole_spawnMolehill, reinterpret_cast(s32, this->marker));
-        this->marker->propPtr->unk8_3 = FALSE;
-        this->marker->collidable = FALSE;
-        this->initialized = TRUE;
+        this->marker->propPtr->unk8_3 = false;
+        this->marker->collidable = false;
+        this->initialized = true;
         if(this->unkF4_8 == 0x12){
             node_prop = nodeprop_findByActorIdAndActorPosition(0x349, this);
             if(node_prop == NULL){
@@ -403,7 +403,7 @@ void chmole_update(Actor *this){
             }
             break;
         case 2://L802DA0A0
-            this->marker->propPtr->unk8_3 = TRUE;
+            this->marker->propPtr->unk8_3 = true;
             this->yaw_ideal = func_80329784(this);
             func_80328FB0(this, 4.0f);
             if( 0.0 < anctrl_getAnimTimer(this->anctrl)

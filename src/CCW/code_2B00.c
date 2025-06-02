@@ -68,7 +68,7 @@ void func_80388F50(ActorMarker *marker, ActorMarker *other_marker){
 
     this = marker_getActor(marker);
     if ((player_movementGroup() != BSGROUP_1_INTR) && !this->unk38_0) {
-        this->unk38_0 = TRUE;
+        this->unk38_0 = true;
         actor_collisionOff(this);
         subaddie_set_state_with_direction(this, 4, 0.0f, 1);
         actor_playAnimationOnce(this);
@@ -79,10 +79,10 @@ void func_80388F50(ActorMarker *marker, ActorMarker *other_marker){
 void func_80388FD4(Actor *this) {
 
     if (!this->initialized) {
-        this->unk138_31 = this->unk124_0 = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->unk138_31 = this->unk124_0 = true;
+        this->marker->propPtr->unk8_3 = true;
         this->unk10_12 = func_80388EF0(this);
-        this->initialized = TRUE;
+        this->initialized = true;
     }
     if (!this->volatile_initialized) {
         if (fileProgressFlag_get(this->unk10_12 + FILEPROG_8B_CCW_SPRING_OPEN)) {
@@ -92,8 +92,8 @@ void func_80388FD4(Actor *this) {
         } else {
             marker_setCollisionScripts(this->marker, NULL, &func_80388F50, NULL);
         }
-        this->unk38_0 = FALSE;
-        this->volatile_initialized = TRUE;
+        this->unk38_0 = false;
+        this->volatile_initialized = true;
     }
     if( (this->state == 4)
         && this->unk38_0 
@@ -101,7 +101,7 @@ void func_80388FD4(Actor *this) {
     ){
         func_802D6264(1.1f, 0x40, this->unk10_12 + 0x3C, 0x2B, D_8038ED10[this->unk10_12].unk3, this->unk10_12 + 0x8B);
         func_80324E38(0.5f, 3);
-        timedFunc_set_2(1.1f, levelSpecificFlags_set, this->unk10_12 + 7, TRUE);
+        timedFunc_set_2(1.1f, levelSpecificFlags_set, this->unk10_12 + 7, true);
         func_80324E38(5.6f, 0);
     }
 }
@@ -129,11 +129,11 @@ void func_80389268(Actor *this) {
     u32 temp_v1_2;
 
     if(!this->initialized) {
-        this->unk58_2 = FALSE;
+        this->unk58_2 = false;
         this->unk10_12 = func_80388EF0(this);
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->marker->propPtr->unk8_3 = true;
         actor_collisionOff(this);
-        this->initialized = TRUE;
+        this->initialized = true;
     }
     if (!this->volatile_initialized) {
         this->unk1C[0] = this->position[0];
@@ -141,7 +141,7 @@ void func_80389268(Actor *this) {
         this->unk1C[2] = this->position[2];
         this->unk1C[1] += 250.0f;
 
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if (fileProgressFlag_get(this->unk10_12 + FILEPROG_8B_CCW_SPRING_OPEN)) {
             subaddie_set_state(this, 3);
         }
@@ -159,7 +159,7 @@ void func_80389268(Actor *this) {
     case 2:
         this->position[1] += 60.0f * time_getDelta();
         if (this->unk1C[1] <= this->position[1]) {
-            levelSpecificFlags_set(this->unk10_12 + 7, FALSE);
+            levelSpecificFlags_set(this->unk10_12 + 7, false);
             subaddie_set_state(this, 3);
         }
         break;

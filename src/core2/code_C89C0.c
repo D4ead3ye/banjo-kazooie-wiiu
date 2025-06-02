@@ -161,7 +161,7 @@ void func_8034FEE0(Struct_core2_C89C0_1 *arg0) {
     D_80386150.unk18->unk24[1] = randf2(-100.0f, 100.0f);
     D_80386150.unk18->unk24[2] = randf2(-100.0f, 100.0f);
     D_80386150.unk18->unk0 = func_8032FBE4(D_80386150.unk18->unk8, &func_8034FCDC, 1, 0x46);
-    D_80386150.unk18->unk0->collidable = FALSE;
+    D_80386150.unk18->unk0->collidable = false;
     D_80386150.unk18->unk0->actrArrayIdx = D_80386150.unk18 - D_80386150.unk14;
     D_80386150.unk18++;
 }

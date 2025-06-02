@@ -120,10 +120,10 @@ bool func_802F4604(Struct5Ds *this, f32 arg1, s32 arg2){
     for(i = 0; D_80368DF0[i].unk0 != 0; i++ ){
         if(arg2 == D_80368DF0[i].unk0){
             func_802F4554(this, D_80368DF0[i].unk2, D_80368DF0[i].unk4 + arg1, D_80368DF0[i].unk8 + arg1, D_80368DF0[i].unkC, D_80368DF0[i].unk10);
-            return TRUE;
+            return true;
         }
     }
-    return FALSE;
+    return false;
 }
 
 void func_802F4690(Struct5Ds *this, f32 arg1){

@@ -29,7 +29,7 @@ void chBeehive_die(ActorMarker *this, ActorMarker *other){
     FUNC_8030E8B4(SFX_D_EGGSHELL_BREAKING, 1.0f, 28000, actor->position, 300, 3000);
     subaddie_set_state(actor, CHBEEHIVE_STATE_2_DIE);
     actor_playAnimationOnce(actor);
-    this->collidable = FALSE;
+    this->collidable = false;
     actor->unk138_27 = 3;
     __spawnQueue_add_4((GenFunction_4)spawnQueue_actor_f32, ACTOR_4C_STEAM, reinterpret_cast(s32, actor->position[0]), reinterpret_cast(s32, actor->position[1]), reinterpret_cast(s32, actor->position[2]));
     __spawnQueue_add_4((GenFunction_4)spawnQueue_actor_f32, ACTOR_4A_WOOD_EXPLOSION, reinterpret_cast(s32, actor->position[0]), reinterpret_cast(s32, actor->position[1]), reinterpret_cast(s32, actor->position[2]));
@@ -43,7 +43,7 @@ void chBeehive_update(Actor *this){
         marker_setCollisionScripts(this->marker, NULL, NULL, chBeehive_die);
         this->marker->propPtr->unk8_3 = 1;
         this->unk44_31 = sfxsource_createSfxsourceAndReturnIndex();
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->unk38_0 = volatileFlag_get(VOLATILE_FLAG_1)| volatileFlag_get(VOLATILE_FLAG_1F_IN_CHARACTER_PARADE);
     }//L802CE960
     if(map_get() == MAP_27_FP_FREEZEEZY_PEAK){

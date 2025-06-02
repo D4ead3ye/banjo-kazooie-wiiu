@@ -60,7 +60,7 @@ extern void chTooth_update(Actor * this){
     f32 sp24[3];
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker->propPtr->unk8_3 = 1;
         local->unk0 = &D_80389B50[(this->modelCacheIndex == ACTOR_101_CLANKER_TOKEN_TOOTH) ? 0 : 1];
         this->position[0] = local->unk0->position[0];

@@ -24,7 +24,7 @@ void func_802EE5E8(ParticleEmitter *this){
 }
 
 bool func_802EE5F0(s32 arg0){
-    return (arg0 < 3) ? !particleEmitter_isDone(func_802F0EF0(D_80380910[arg0])) : FALSE;
+    return (arg0 < 3) ? !particleEmitter_isDone(func_802F0EF0(D_80380910[arg0])) : false;
 }
 
 void func_802EE63C(void) {

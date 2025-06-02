@@ -137,7 +137,7 @@ void __baanim_applyBottlesBonus(s32 arg0, s32 arg1) {
 void baAnim_init(void){
     playerAnimCtrl = anctrl_new(1);
     func_80287784(playerAnimCtrl, 0);
-    anctrl_setSmoothTransition(playerAnimCtrl, FALSE);
+    anctrl_setSmoothTransition(playerAnimCtrl, false);
     func_8028746C(playerAnimCtrl, __baanim_applyBottlesBonus);
     baAnimModifyFunction = NULL;
     baanim_80289F30();
@@ -194,12 +194,12 @@ void baanim_setVelocityMapRanges(f32 vel_min, f32 vel_max, f32 dur_slowest, f32 
     baAnimScale.velocity_max = vel_max;
     baAnimScale.duration_min = dur_slowest;
     baAnimScale.duration_max = dur_fastest;
-    baAnimScale.scalable_duration = FALSE;
+    baAnimScale.scalable_duration = false;
 }
 
 void baanim_scaleDuration(f32 arg0){
     baAnimScale.duration_scale = arg0;
-    baAnimScale.scalable_duration = TRUE;
+    baAnimScale.scalable_duration = true;
 }
 
 void baanim_setUpdateType(enum baanim_update_type_e arg0){
@@ -243,7 +243,7 @@ void baanim_playForDuration_loopSmooth(enum asset_e anim_id, f32 duration){
 
 void baanim_playForDuration_loop(enum asset_e anim_id, f32 duration){
     anctrl_reset(playerAnimCtrl);
-    anctrl_setSmoothTransition(playerAnimCtrl, FALSE);
+    anctrl_setSmoothTransition(playerAnimCtrl, false);
     anctrl_setIndex(playerAnimCtrl, anim_id);
     anctrl_setDuration(playerAnimCtrl, duration);
     anctrl_setPlaybackType(playerAnimCtrl, ANIMCTRL_LOOP);
@@ -278,7 +278,7 @@ void baanim_playForDuration_onceStartingAt(enum asset_e anim_id, f32 duration, f
 
 void baanim_playForDuration_onceSmooth(enum asset_e anim_id, f32 duration){
     anctrl_reset(playerAnimCtrl);
-    anctrl_setSmoothTransition(playerAnimCtrl, FALSE);
+    anctrl_setSmoothTransition(playerAnimCtrl, false);
     anctrl_setIndex(playerAnimCtrl, anim_id);
     anctrl_setDuration(playerAnimCtrl, duration);
     anctrl_setPlaybackType(playerAnimCtrl, ANIMCTRL_ONCE);
@@ -287,7 +287,7 @@ void baanim_playForDuration_onceSmooth(enum asset_e anim_id, f32 duration){
 
 void baanim_playForDuration_onceSmoothStartingAt(enum asset_e anim_id, f32 duration, f32 start_position){
     anctrl_reset(playerAnimCtrl);
-    anctrl_setSmoothTransition(playerAnimCtrl, FALSE);
+    anctrl_setSmoothTransition(playerAnimCtrl, false);
     anctrl_setIndex(playerAnimCtrl, anim_id);
     anctrl_setDuration(playerAnimCtrl, duration);
     anctrl_setStart(playerAnimCtrl, start_position);

@@ -86,7 +86,7 @@ s32 __heap_align(s32 size){
 }
 
 int func_80254490(int arg0){
-    return FALSE;
+    return false;
 }
 
 void _heap_defragEmptyBlock(EmptyHeapBlock * arg0){
@@ -191,7 +191,7 @@ void heap_init(void){
     D_802765A4 = 0;
     D_802765A8 = 0;
     D_802765AC = 0;
-    D_802765B0.unk0 = FALSE;
+    D_802765B0.unk0 = false;
     D_8002D500[0].hdr.prev = NULL;
     D_8002D500[0].hdr.next = &D_8002D500[1];
     D_8002D500[0].hdr.unkC_7 = 2;
@@ -308,7 +308,7 @@ EmptyHeapBlock *func_80254B84(s32 arg0){
 }
 
 int func_80254BC4(int arg0){
-    return FALSE;
+    return false;
 }
 
 //returns n'th free block and size
@@ -329,7 +329,7 @@ void *func_80254BD0(s32 *size, u32 arg1) {
 }
 
 void func_80254C98(void){
-    D_802765B0.unk0 = TRUE;
+    D_802765B0.unk0 = true;
 }
 
 void *malloc(s32 size){
@@ -338,7 +338,7 @@ void *malloc(s32 size){
     EmptyHeapBlock *a0;
 
     D_80283234 = D_802765B0.unk0;
-    D_802765B0.unk0 = FALSE;
+    D_802765B0.unk0 = false;
     if(D_8002D500->next_free == &D_8002D500[LAST_HEAP_BLOCK])
         return NULL;
 
@@ -624,7 +624,7 @@ void func_80255524(void){
 }
 
 void func_802555C4(void){
-    D_8028322C = FALSE;
+    D_8028322C = false;
 }
 
 bool func_802555D0(void){
@@ -657,7 +657,7 @@ void *defrag(void *this){
     }
 
     //previous block is empty, move contents of this block forward
-    D_8028322C = TRUE;
+    D_8028322C = true;
     D_80283220 = D_80283220 + size;
 
     next_empty = ((EmptyHeapBlock *)new_block)->next_free;
@@ -758,11 +758,11 @@ bool func_80255920(void *arg0) {
     HeapHeader *block;
 
     if ((arg0 == NULL) || (arg0 == D_8027659C) || (D_802765A0 != NULL)) {
-        return FALSE;
+        return false;
     }
 
     block = &((HeapHeader*)arg0)[-1];
-    return (block->prev->unkC_7 != HEAP_BLOCK_EMPTY ) ? FALSE : TRUE;
+    return (block->prev->unkC_7 != HEAP_BLOCK_EMPTY ) ? false : true;
 }
 
 HeapHeader * func_80255978(void *ptr){
@@ -787,16 +787,16 @@ void func_80255A14(void){
 }
 
 void func_80255A20(void){
-    D_80276598 = TRUE;
+    D_80276598 = true;
 }
 
 void func_80255A30(void){
-    D_80276598 = FALSE;
+    D_80276598 = false;
 }
 
 void func_80255A3C(void){
     func_80255524();
-    if(func_802559A0() && D_80276598 != TRUE)
+    if(func_802559A0() && D_80276598 != true)
         return;
     
     if(!func_802559A0())

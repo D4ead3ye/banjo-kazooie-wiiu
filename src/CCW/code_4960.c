@@ -65,13 +65,13 @@ void func_8038AEBC(Actor *this) {
     f32 sp2C;
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         func_8038AD50(this, 1);
         return;
     }
     if (this->state == 1){
         if(mapSpecificFlags_get(5)) {
-            mapSpecificFlags_set(5, FALSE);
+            mapSpecificFlags_set(5, false);
             func_8038AD50(this, 2);
         }
     }
@@ -84,7 +84,7 @@ void func_8038AEBC(Actor *this) {
             }
         }
         if (mapSpecificFlags_get(6)) {
-            mapSpecificFlags_set(6, FALSE);
+            mapSpecificFlags_set(6, false);
             func_8038AD50(this, 3);
         }
         if (0.99 < this->unk48) {

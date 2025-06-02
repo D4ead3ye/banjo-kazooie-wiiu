@@ -33,7 +33,7 @@ void bstwirl_init(void){
     D_8037D5A0 = baphysics_get_target_horizontal_velocity();
     baphysics_set_target_horizontal_velocity(600.0f);
     basfx_80299CF4(SFX_32_BANJO_EGHEE, 1.0f, 0x6590);
-    _bstwirlHitboxActive = TRUE;
+    _bstwirlHitboxActive = true;
     batimer_set(0, 0.01f);
     D_8037D5A4 = 0;
 }
@@ -83,5 +83,5 @@ void bstwirl_update(void){
 
 void bstwirl_end(void){
     ability_use(0xC);
-    _bstwirlHitboxActive = FALSE;
+    _bstwirlHitboxActive = false;
 }

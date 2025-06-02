@@ -23,7 +23,7 @@ void chOverlayCopyright_freeMethod(Actor *this){
 
 void chOverlayCopyright_update(Actor *this){
     if(!this->initialized){
-        this->initialized = TRUE;
+        this->initialized = true;
         this->depth_mode = MODEL_RENDER_DEPTH_NONE;
         actor_collisionOff(this);
         marker_setFreeMethod(this->marker, chOverlayCopyright_freeMethod);

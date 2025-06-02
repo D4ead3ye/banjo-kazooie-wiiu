@@ -21,7 +21,7 @@ void codeA960_forceLoadzone(s32 arg0){
             batimer_set(5, 2.0f);
             func_8029C984();
             bs_setState(BS_5A_LOADZONE);
-            baModel_setVisible(FALSE);
+            baModel_setVisible(false);
             baphysics_set_type(BA_PHYSICS_FREEZE);
             func_8029151C(6);
         }

@@ -257,82 +257,82 @@ int func_802C779C(s32 arg0){
             func_802C7630(0x8E);
             func_802C7630(0xB8);
             func_802C7630(0x2FB);
-            return TRUE;
+            return true;
         case 0x11: // 802C77E8
             func_802C7650(0x8E);
             func_802C7650(0xB8);
             func_802C7650(0x2FB);
-            return TRUE;
+            return true;
         case 0x12: // 802C7808
             func_802C7670(0x8E);
             func_802C7670(0xB8);
             func_802C7670(0x2FB);
-            return TRUE;
+            return true;
         case 0x13: // 802C7828
             func_802C7690(0x8E);
             func_802C7690(0xB8);
             func_802C7690(0x2FB);
-            return TRUE;
+            return true;
         case 0x14: // 802C7848
             func_802C76D4(0x8E);
             func_802C76D4(0xB8);
             func_802C76D4(0x2FB);
-            return TRUE;
+            return true;
         case 0x15: // 802C7868
             func_802C7718(0x8E);
             func_802C7718(0xB8);
             func_802C7718(0x2FB);
-            return TRUE;
+            return true;
         case 0x16: // 802C7888
             func_802C775C(0x8E);
             func_802C775C(0xB8);
             func_802C775C(0x2FB);
-            return TRUE;
+            return true;
         case 0x17: // 802C78A8
             func_802C777C(0x8E);
             func_802C777C(0xB8);
             func_802C777C(0x2FB);
-            return TRUE;
+            return true;
         case 0x18: // 802C78C8
             func_802C7630(0xAC);
-            return TRUE;
+            return true;
         case 0x19: // 802C78D8
             func_802C7650(0xAC);
-            return TRUE;
+            return true;
         case 0x1A: // 802C78E8
             func_802C7670(0xAC);
-            return TRUE;
+            return true;
         case 0x1B: // 802C78F8
             func_802C7690(0xAC);
-            return TRUE;
+            return true;
         case 0x1C: // 802C7908
             func_802C76D4(0xAC);
-            return TRUE;
+            return true;
         case 0x1D: // 802C7918
             func_802C7718(0xAC);
-            return TRUE;
+            return true;
         case 0x1E: // 802C7928
             func_802C775C(0xAC);
-            return TRUE;
+            return true;
         case 0x1F: // 802C7938
             func_802C777C(0xAC);
-            return TRUE;
+            return true;
         case 0xD:  // 802C7948
             func_802BB360(0, 10.0f);
             func_802BB3AC(0, 1.0f);
             func_802BB3C4(0);
-            return TRUE;
+            return true;
         case 0xE:  // 802C7970
             func_802BB360(0, 35.0f);
             func_802BB3AC(0, 1.0f);
             func_802BB3C4(0);
-            return TRUE;
+            return true;
         case 0xF:  // 802C7998
             func_802BB3AC(0, 0.8f);
-            return TRUE;
+            return true;
             break;
     }
-    return FALSE;
+    return false;
 }
 
 
@@ -342,7 +342,7 @@ void func_802C79C4(void){
     int i;
     for(i = 0; i < 0x20; i++){
         if(mapSpecificFlags_get(i) && func_802C779C(i)){
-            mapSpecificFlags_set(i, FALSE);
+            mapSpecificFlags_set(i, false);
         }
     }
 }

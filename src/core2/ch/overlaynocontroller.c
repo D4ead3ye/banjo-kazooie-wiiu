@@ -61,7 +61,7 @@ void chOverlayNoController_freeMethod(Actor *this){
 
 void chOverlayNoController_update(Actor *this) {
     if (!this->initialized) {
-        this->initialized = TRUE;
+        this->initialized = true;
         this->depth_mode = MODEL_RENDER_DEPTH_NONE;
         actor_collisionOff(this);
         subaddie_set_state_with_direction(this, 1, 0.0f, 1);

@@ -36,7 +36,7 @@ s32 func_802D76E0(Actor *this, f32 *arg1) {
     sp28 = func_8030526C(sp40, 0x27, this->position);
     temp_v0 = func_8030526C(sp34, 0x28, this->position);
     if (!sp28 && !temp_v0) {
-        return FALSE;
+        return false;
     }
     if (sp28 && temp_v0) {
         sp30 = ml_vec3f_horizontal_distance_zero_likely(this->position, sp40);
@@ -51,7 +51,7 @@ s32 func_802D76E0(Actor *this, f32 *arg1) {
         ml_vec3f_copy(arg1, sp34);
         local->unkC = 2;
     }
-    return TRUE;
+    return true;
 }
 
 void func_802D77D4(Actor *this) {
@@ -87,5 +87,5 @@ void func_802D77D4(Actor *this) {
 
 void func_802D7930(void){
     player_getPosition(D_8037DE30);
-    D_8037DE3C = TRUE;
+    D_8037DE3C = true;
 }

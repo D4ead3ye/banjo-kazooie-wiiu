@@ -320,7 +320,7 @@ void chBeeSwarm_update(Actor *this) {
     dt = time_getDelta();
     sp78 = 0;
     if (!this->initialized) {
-        this->initialized = TRUE;
+        this->initialized = true;
         beehive = actorArray_findClosestActorFromActorId(this->position, ACTOR_12_BEEHIVE, -1, &distance_to_home);
         this->unk100 = (beehive != NULL) ? beehive->marker : NULL;
         if(500.0f < distance_to_home){
@@ -354,7 +354,7 @@ void chBeeSwarm_update(Actor *this) {
         }
     }
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker_setFreeMethod(this->marker, chBeeSwarm_802CEBA8);
         actor_collisionOff(this);
         local->unk20 = assetcache_get(ASSET_3BF_MODEL_PLAYER_SHADOW);
@@ -372,7 +372,7 @@ void chBeeSwarm_update(Actor *this) {
          local->unk24 = (this->unk100 != NULL) ? this->unk100->unk5C : 0;
         local->unk5 = 1;
         if (this->unk100 != NULL) {
-            fileProgressFlag_set(FILEPROG_D_BEEHIVE_TEXT, TRUE);
+            fileProgressFlag_set(FILEPROG_D_BEEHIVE_TEXT, true);
         }
         subaddie_set_state(this, (this->unk100 != NULL) ? 1 : 2);
         this->lifetime_value = 0.0f;
@@ -391,10 +391,10 @@ void chBeeSwarm_update(Actor *this) {
     }
     if (map_get() == MAP_27_FP_FREEZEEZY_PEAK) {
         if (maSlalom_isActive()) {
-            this->unk58_0 = FALSE;
+            this->unk58_0 = false;
             return;
         }
-        this->unk58_0 = TRUE;
+        this->unk58_0 = true;
     }
     position[0] = this->position[0];
     position[1] = this->position[1];
@@ -449,7 +449,7 @@ void chBeeSwarm_update(Actor *this) {
             && (player_getTransformation() == TRANSFORM_1_BANJO) 
             && (gcdialog_showText(0xDA6, 0, NULL, NULL, NULL, NULL) != 0)
         ) {
-            fileProgressFlag_set(FILEPROG_8F_MET_BEE_INFESTED_BEEHIVE, TRUE);
+            fileProgressFlag_set(FILEPROG_8F_MET_BEE_INFESTED_BEEHIVE, true);
         }
         if (chBeeSwarm_802CF5E4(this)) {
             subaddie_set_state(this, 2U);

@@ -110,7 +110,7 @@ void chSnowball_update(Actor *this) {
             local->unk0 = 1;
             return;
         }
-        this->initialized = TRUE;
+        this->initialized = true;
         player_getPosition(sp7C);
         sp7C[1] += 1.0f;
         phi_a1 = (globalTimer_getTime() & 1) ? 0x15 : 0x2B;

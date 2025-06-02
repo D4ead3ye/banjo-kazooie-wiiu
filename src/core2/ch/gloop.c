@@ -46,8 +46,8 @@ void chgloop_update(Actor *this){
 
     if(!this->initialized){
         actor_collisionOff(this);
-        this->initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->initialized = true;
+        this->marker->propPtr->unk8_3 = true;
     }
 
     actor_update_func_80326224(this);
@@ -62,7 +62,7 @@ void chgloop_update(Actor *this){
                 && func_80329530(this, 350)
                 && gcdialog_showText(ASSET_D34_DIALOG_GLOOP_MEET, 0, NULL, NULL, NULL, NULL)
             ){
-                mapSpecificFlags_set(2, TRUE);
+                mapSpecificFlags_set(2, true);
             }
             break;
 

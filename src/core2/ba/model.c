@@ -136,7 +136,7 @@ void baModel_reset(void){
     ml_vec3f_clear(baModelDisplacement);
     baModelYaw = baModelRoll = baModelPitch = 0.0f;
     D_8037C150.unk0 = 0;
-    baModel_setVisible(TRUE);
+    baModel_setVisible(true);
     baModel_setScale(1.0f);
     baModelDirection = 0;
     baModel_setDirection(PLAYER_MODEL_DIR_BANJO);

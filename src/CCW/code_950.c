@@ -111,7 +111,7 @@ void chwasp_update(Actor *this) {
     sp68 = time_getDelta();
     local = (ActorLocal_CCW_950 *)&this->local;
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->marker->actorFreeFunc = func_8038717C;
         local->sfxsourceIdx = sfxsource_createSfxsourceAndReturnIndex();
         local->unk4 = 0;

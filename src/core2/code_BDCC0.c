@@ -116,13 +116,13 @@ void func_80345000(Struct_Core2_BD100_0 *self, f32 arg1[3]) {
     f32 sp30[3];
     void *temp_a0;
 
-    self->unk24 = FALSE;
+    self->unk24 = false;
     func_80344F48(self, arg1, sp30);
     temp_a0 = self + 0x10;
     if (func_80244D94(arg1, sp30, sp3C, 0x025E0080, 15.0f)) {
         func_80257DB0(self->unk10, self->unk10, sp3C);
         self->unk10[1] = ml_max_f(self->unk10[1], 250.0f);
-        self->unk24 = TRUE;
+        self->unk24 = true;
     }
     self->unk0 = func_80344FF0(sp30);
     ml_vec3f_copy(self->unk4, sp30);

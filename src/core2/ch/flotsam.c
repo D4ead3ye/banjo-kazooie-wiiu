@@ -258,7 +258,7 @@ void func_8035C8F4(Actor *this){
 
     sp34 = time_getDelta();
     if(this->state == 0){
-        this->marker->unk14_21 = FALSE;
+        this->marker->unk14_21 = false;
         this->marker->actorFreeFunc = func_8035C8C8;
         marker_setCollisionScripts(this->marker, func_8035C6C4, func_8035C6C4, func_8035C6F0);
         local->unk4 = mapModel_getFloorY(this->position);

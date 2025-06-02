@@ -104,7 +104,7 @@ AnimCtrl *anctrl_new(s32 arg0){ //new
     anim_new(&this->animation, 1);
     this->anctrl.playback_type = 0;
     this->anctrl.index = 0;
-    this->anctrl.default_start = TRUE;
+    this->anctrl.default_start = true;
     this->anctrl.timer = 0.0f;
     this->anctrl.start = 0.0f;
     func_80287784(&this->anctrl, func_8030C77C());
@@ -166,7 +166,7 @@ void func_8028748C(AnimCtrl *this, s32 arg1){
 
 void anctrl_reset(AnimCtrl *this){
     this->playback_type = ANIMCTRL_LOOP;
-    this->default_start = TRUE;
+    this->default_start = true;
     this->timer = 0.0;
     this->start = 0.0;
     anctrl_setSmoothTransition(this, 1);
@@ -246,7 +246,7 @@ void anctrl_setStart(AnimCtrl *this, f32 start_position){
         start_position = 0.9999989867210388f; // D_80373E18
 
     this->start = start_position;
-    this->default_start = FALSE;
+    this->default_start = false;
 }
 
 void func_80287784(AnimCtrl *this, s32 arg1){

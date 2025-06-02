@@ -212,7 +212,7 @@ s32 func_80322758(void){
 }
 
 void func_80322764(void){
-    D_80383348 = FALSE;
+    D_80383348 = false;
      D_80383340.unk0 = D_80383340.unk2 = D_80383340.unk4 = 0;
 }
 
@@ -233,13 +233,13 @@ void func_8032278C(s32 arg0, s32 arg1) {
         D_8036E2B4 = 0;
         if (D_80383348 == 0) {
             if ((temp_v0 & 1) != 0) {
-                core1_ce60_func_8024ADF0(FALSE);
+                core1_ce60_func_8024ADF0(false);
             } else {
-                core1_ce60_func_8024ADF0(TRUE);
+                core1_ce60_func_8024ADF0(true);
             }
         } else {
             D_80383348 = 0;
-            core1_ce60_incOrDecCounter(TRUE);
+            core1_ce60_incOrDecCounter(true);
         }
     }
     if ((arg0 == 1) && (arg1 == 2)) {
@@ -253,8 +253,8 @@ void func_8032278C(s32 arg0, s32 arg1) {
 
 void func_803228D8(void){
     if(!D_80383348){
-        core1_ce60_incOrDecCounter(FALSE);
-        D_80383348 = TRUE;
+        core1_ce60_incOrDecCounter(false);
+        D_80383348 = true;
     }
 }
 

@@ -14,7 +14,7 @@ void func_802C5BC0(Actor *this){
         this->lifetime_value = 0.0f;
         this->pitch = 90.0f;
         fxRipple_802F3554(4, this->position);
-        this->initialized = TRUE;
+        this->initialized = true;
     }
     else{
         this->lifetime_value += time_getDelta();

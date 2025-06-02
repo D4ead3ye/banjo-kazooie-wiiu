@@ -21,8 +21,8 @@ void __propellorCtrl_setState(s32 arg0){
     }
 
     if(arg0 == 3 || arg0 == 4){
-        levelSpecificFlags_set(LEVEL_FLAG_27_RBB_UNKNOWN, FALSE);
-        levelSpecificFlags_set(LEVEL_FLAG_28_RBB_UNKNOWN, FALSE);
+        levelSpecificFlags_set(LEVEL_FLAG_27_RBB_UNKNOWN, false);
+        levelSpecificFlags_set(LEVEL_FLAG_28_RBB_UNKNOWN, false);
         item_set(ITEM_9_PROPELLOR,0);
         if(arg0 == 3 && !jiggyscore_isCollected(JIGGY_57_RBB_PROPELLOR)){
             timedFunc_set_1(0.5f, (GenFunction_1)func_802FAD64, 3);

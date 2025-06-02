@@ -186,21 +186,21 @@ void chSpellFireball_collisionDie(ActorMarker *marker, ActorMarker *other) {
         case FINALBOSS_PHASE_1_BROOMSTICK:
             if (!sFightPlayerHitBySpellInPhase1 && gcdialog_showText(randi2(0, 5) + ASSET_10F2_DIALOG_FINALBOSS_PHASE_1_OPTION_1, 0, 0, 0, 0, 0))
             {
-                sFightPlayerHitBySpellInPhase1 = TRUE;
+                sFightPlayerHitBySpellInPhase1 = true;
             }
             break;
 
         case FINALBOSS_PHASE_2_AIR:
             if (!sFightPlayerHitBySpellInPhase2 && gcdialog_showText(randi2(0, 5) + ASSET_110B_DIALOG_FINALBOSS_PHASE_2_OPTION_1, 0, 0, 0, 0, 0))
             {
-                sFightPlayerHitBySpellInPhase2 = TRUE;
+                sFightPlayerHitBySpellInPhase2 = true;
             }
             break;
 
         case FINALBOSS_PHASE_3_FLIGHT:
             if (!sFightPlayerHitBySpellInPhase3 && gcdialog_showText(randi2(0, 5) + ASSET_1122_DIALOG_FINALBOSS_PHASE_3_OPTION_1, 0, 0, 0, 0, 0))
             {
-                sFightPlayerHitBySpellInPhase3 = TRUE;
+                sFightPlayerHitBySpellInPhase3 = true;
             }
             break;
 
@@ -209,7 +209,7 @@ void chSpellFireball_collisionDie(ActorMarker *marker, ActorMarker *other) {
                 chfinalboss_isJinjoSpawned() &&
                 gcdialog_showText(randi2(0, 5) + ASSET_113B_DIALOG_FINALBOSS_PHASE_4_OPTION_1, 0, 0, 0, 0, 0))
             {
-                sFightPlayerHitBySpellInPhase4 = TRUE;
+                sFightPlayerHitBySpellInPhase4 = true;
             }
             break; 
 
@@ -218,7 +218,7 @@ void chSpellFireball_collisionDie(ActorMarker *marker, ActorMarker *other) {
                 chfinalboss_isJinjonatorSpawned() &&
                 gcdialog_showText(randi2(0, 5) + ASSET_1154_DIALOG_FINALBOSS_PHASE_5_OPTION_1, 0, 0, 0, 0, 0))
             {
-                sFightPlayerHitBySpellInPhase5 = TRUE;
+                sFightPlayerHitBySpellInPhase5 = true;
             }
             break; 
     }
@@ -226,10 +226,10 @@ void chSpellFireball_collisionDie(ActorMarker *marker, ActorMarker *other) {
 
 bool chSpellFireball_isPositionOverThreshold(f32 *position, f32 distance) {
     if (((position[0] * position[0]) + (position[2] * position[2])) < distance) {
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
 }
 
 void chSpellFireball_free(Actor *this) {
@@ -245,7 +245,7 @@ void chSpellFireball_update(Actor *this) {
     f32 time_delta = time_getDelta();
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker_setCollisionScripts(this->marker, NULL, NULL, chSpellFireball_collisionDie);
         this->marker->propPtr->unk8_3 = 0;
         actor_collisionOn(this);
@@ -353,11 +353,11 @@ void chSpellFireball_func_8038FB84(ActorMarker *marker, f32 *position, f32 *velo
 }
 
 void chSpellFireball_resetSpellHits(void) {
-    sFightPlayerHitBySpellInPhase1 = FALSE;
-    sFightPlayerHitBySpellInPhase2 = FALSE;
-    sFightPlayerHitBySpellInPhase3 = FALSE;
-    sFightPlayerHitBySpellInPhase4 = FALSE;
-    sFightPlayerHitBySpellInPhase5 = FALSE;
+    sFightPlayerHitBySpellInPhase1 = false;
+    sFightPlayerHitBySpellInPhase2 = false;
+    sFightPlayerHitBySpellInPhase3 = false;
+    sFightPlayerHitBySpellInPhase4 = false;
+    sFightPlayerHitBySpellInPhase5 = false;
 }
 
 void chSpellFireball_setLastSpellFired(bool value) {

@@ -224,10 +224,10 @@ bool func_80245524(f32 arg0[3], void *arg1, s32 *arg2, f32 *arg3){
     *arg2 = func_8034C630(arg1);
     if(*arg2 == NULL){
         *arg3 = arg0[1];
-        return FALSE;
+        return false;
     }
     *arg3 = arg0[1] - (f32)func_8034E698(*arg2);
-    return TRUE;
+    return true;
 }
 
 s32 func_8024559C(f32 arg0[3], s32 *arg1, f32 *arg2){
@@ -328,12 +328,12 @@ int collisionTri_isHitFromAbove_actor(f32 position[3], Actor *actor, s32 vertica
     adjusted_actor_position[1] += (f32) verticalOffset;
 
     if (adjusted_actor_position[1] < tmp_position[1]) {
-        return FALSE;
+        return false;
     }
 
     if (func_80320B98(tmp_position, adjusted_actor_position, sp34, 0x25e0000)) {
-        return FALSE;
+        return false;
     }
 
-    return TRUE;
+    return true;
 }

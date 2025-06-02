@@ -23,18 +23,18 @@ bool baflag_isFalse(enum misc_flag_e arg0){
 }
 
 void baflag_set(enum misc_flag_e arg0){
-    BaFlags[arg0] = TRUE;
+    BaFlags[arg0] = true;
 }
 
 void baflag_clear(enum misc_flag_e arg0){
-    BaFlags[arg0] = FALSE;
+    BaFlags[arg0] = false;
 }
 
 void baflag_toggle(enum misc_flag_e arg0){
     if(BaFlags[arg0]){
-        BaFlags[arg0] = FALSE;
+        BaFlags[arg0] = false;
     }
     else {
-        BaFlags[arg0] = TRUE;
+        BaFlags[arg0] = true;
     }
 }

@@ -45,9 +45,9 @@ bool ncDynamicCamA_func_802C1DB0(f32 arg0) {
     sp1C[1] = pad4C;
     if (func_802BCE0C(camera_position, sp1C)) {
         ncDynamicCamera_setState(0xA);
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 bool ncDynamicCamA_func_802C1EE0(void){

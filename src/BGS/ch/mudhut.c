@@ -81,8 +81,8 @@ void chMudHut_update(Actor *this){
 
     if(func_80334904() == 2){
         if(!this->initialized){
-            this->marker->collidable = FALSE;
-            this->initialized = TRUE;
+            this->marker->collidable = false;
+            this->initialized = true;
         }
 
         switch(this->state){

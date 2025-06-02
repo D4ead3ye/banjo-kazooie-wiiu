@@ -22,27 +22,27 @@ extern ActorInfo D_80392700 = { MARKER_20F_WOZZA_IN_CAVE, ACTOR_33F_WOZZA_IN_CAV
 void func_80390630(Actor *this){
     if(volatileFlag_get(VOLATILE_FLAG_C4_WOZZA_HIDE_IN_SNS_PARADE)){
         if(!this->volatile_initialized){
-            this->volatile_initialized = TRUE;
-            this->marker->propPtr->unk8_3 = FALSE;
+            this->volatile_initialized = true;
+            this->marker->propPtr->unk8_3 = false;
             actor_collisionOff(this);
-            this->unk58_0 = FALSE;
+            this->unk58_0 = false;
         }
         return;
     }
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = FALSE;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = false;
         actor_collisionOn(this);
         this->unk38_31 = jiggyscore_isCollected(JIGGY_32_FP_WOZZA) || levelSpecificFlags_get(LEVEL_FLAG_26_FP_UNKNOWN) ? 0 : 1;
     }//L80390714
  
     if(this->unk38_31){
-        this->unk58_0 = FALSE;
+        this->unk58_0 = false;
         return;
     }
 
-    this->unk58_0 = TRUE;
+    this->unk58_0 = true;
     func_8028E668(this->position, 200.0f, -40.0f, 160.0f);
     
     if(this->state == 1){
@@ -70,14 +70,14 @@ void func_80390630(Actor *this){
             if (player_getTransformation() == TRANSFORM_4_WALRUS) {
                 if (!levelSpecificFlags_get(LEVEL_FLAG_31_FP_UNKNOWN)) {
                     if (gcdialog_showText(ASSET_C27_DIALOG_UNKNOWN, 0x23, NULL, NULL, NULL, NULL)) {
-                        levelSpecificFlags_set(LEVEL_FLAG_31_FP_UNKNOWN, TRUE);
+                        levelSpecificFlags_set(LEVEL_FLAG_31_FP_UNKNOWN, true);
                     }
                 }
             }
             else {
                 if (!levelSpecificFlags_get(LEVEL_FLAG_32_FP_UNKNOWN)) {
                     if (gcdialog_showText(ASSET_C26_DIALOG_UNKNOWN, 0x23, NULL, NULL, NULL, NULL)) {
-                        levelSpecificFlags_set(LEVEL_FLAG_32_FP_UNKNOWN, TRUE);
+                        levelSpecificFlags_set(LEVEL_FLAG_32_FP_UNKNOWN, true);
                     }
                 }
             }

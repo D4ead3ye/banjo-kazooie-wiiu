@@ -66,7 +66,7 @@ void func_80390E78(ActorMarker *this_marker, ActorMarker *other_marker){
 
 void func_80390EB0(Actor *this){
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         actor_collisionOn(this);
         marker_setCollisionScripts(this->marker, func_80390E78, NULL, NULL);
     }

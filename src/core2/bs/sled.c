@@ -12,14 +12,14 @@ void func_802B3F20(void){
 
     bssled_gSledMarker = func_80296554();
     sled = marker_getActor(bssled_gSledMarker);
-    sled->unk138_20 = TRUE;
+    sled->unk138_20 = true;
 }
 
 void func_802B3F60(void){
     Actor *sled;
     if(bssled_gSledMarker != NULL){
         sled = marker_getActor(bssled_gSledMarker);
-        sled->unk138_20 = FALSE;
+        sled->unk138_20 = false;
         bssled_gSledMarker = NULL;
     }
 }

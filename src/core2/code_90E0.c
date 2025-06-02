@@ -42,14 +42,14 @@ struct{
 /* .code */
 void func_80290070(void){
     D_8037C000.unk0 = NULL;
-    D_8037C000.unk9 = FALSE;
+    D_8037C000.unk9 = false;
     D_8037C000.unk8 = 0;
     D_8037C000.unk4 = 0.0f;
 }
 
 void func_80290090(Struct_core2_7060_0 *arg0){
     D_8037C000.unk0 = arg0;
-    D_8037C000.unk9 = TRUE;
+    D_8037C000.unk9 = true;
     D_8037C000.unk8 = 0;
     D_8037C000.unk4 = arg0->unk0;
 }
@@ -63,7 +63,7 @@ void func_802900D8(void){
 }
 
 void func_802900FC(void){
-    D_8037C000.unk9 = FALSE;
+    D_8037C000.unk9 = false;
 }
 
 void func_80290108(void) {
@@ -83,7 +83,7 @@ void func_80290108(void) {
             phi_s0++;
             if (phi_s0->unk4 == 4) {
                 if (phi_s0->unk0 == 0.0f) {
-                    D_8037C000.unk9 = FALSE;
+                    D_8037C000.unk9 = false;
                     return;
                 }
                 phi_s0 = D_8037C000.unk0;

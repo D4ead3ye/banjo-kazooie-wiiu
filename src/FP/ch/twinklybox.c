@@ -192,14 +192,14 @@ void func_8038D324(Actor *this){
 }
 
 void func_8038D3B0(Actor *arg0){
-    item_set(ITEM_6_HOURGLASS, FALSE);
+    item_set(ITEM_6_HOURGLASS, false);
 }
 
 void func_8038D3D8(void){
     comusic_8025AB44(COMUSIC_68_TWINKLY_MINIGAME, 0, 4000);
     func_8025AABC(COMUSIC_68_TWINKLY_MINIGAME);
     func_8025A58C(-1, 4000);
-    core1_ce60_incOrDecCounter(TRUE);
+    core1_ce60_incOrDecCounter(true);
 }
 
 void func_8038D41C(ActorMarker *marker){
@@ -239,8 +239,8 @@ void func_8038D474(ActorMarker *marker){
 void func_8038D51C(ActorMarker *marker){
     Actor *this = marker_getActor(marker);
     
-    item_set(ITEM_6_HOURGLASS, FALSE);
-    fileProgressFlag_set(FILEPROG_13_COMPLETED_TWINKLIES_MINIGAME, TRUE);
+    item_set(ITEM_6_HOURGLASS, false);
+    fileProgressFlag_set(FILEPROG_13_COMPLETED_TWINKLIES_MINIGAME, true);
     FUNC_8030E624(SFX_416, 0.8f, 32000);
     func_8028F8F8(7, 0);
     this->unk1C[1] = 1.0f;
@@ -265,7 +265,7 @@ void func_8038D5C8(ActorMarker *this_marker, ActorMarker *other_marker){
         this->unk1C[1] = 0.0f;
         func_8025A6EC(COMUSIC_68_TWINKLY_MINIGAME, 25000);
         func_8025A58C(0, 4000);
-        core1_ce60_incOrDecCounter(FALSE);
+        core1_ce60_incOrDecCounter(false);
         this->unk1C[2] = 428571.0f;
         func_8025AEA0(0x68, (s32)this->unk1C[2]);
         subaddie_set_state_with_direction(this, 3, 0.001f, 1);
@@ -282,18 +282,18 @@ void func_8038D6C8(Actor *this){
     mapSpecificFlags_set(0xd, BOOL(this->state != 1 && this->state != 2));
     
     if(maSlalom_isActive() || fileProgressFlag_get(FILEPROG_13_COMPLETED_TWINKLIES_MINIGAME)){
-        this->marker->propPtr->unk8_3 = FALSE;
+        this->marker->propPtr->unk8_3 = false;
         actor_collisionOff(this);
-        func_8028F8F8(7, FALSE);
+        func_8028F8F8(7, false);
         return;
     }
 
 
-    this->marker->propPtr->unk8_3 = TRUE;
+    this->marker->propPtr->unk8_3 = true;
     actor_collisionOn(this);
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker_setFreeMethod(this->marker, func_8038D3B0);
         marker_setCollisionScripts(this->marker, NULL, func_8038D5C8, NULL);
         this->unk38_31 = 0;
@@ -301,7 +301,7 @@ void func_8038D6C8(Actor *this){
         this->velocity[0] = 0.0f;
         this->velocity[1] = 0.0f;
         this->unk1C[0] = -1.0f;
-        func_8028F8F8(7, FALSE);
+        func_8028F8F8(7, false);
         if(volatileFlag_get(VOLATILE_FLAG_C1_IN_FINAL_CHARACTER_PARADE) && gcparade_8031B4F4() == -1){
             subaddie_set_state_with_direction(this, 3, 0.001f, 1);
             actor_playAnimationOnce(this);
@@ -332,8 +332,8 @@ void func_8038D6C8(Actor *this){
     case 2: //L8038D91C
         sp20 = anctrl_isPlayedForwards(this->anctrl);
         anctrl_setDuration(this->anctrl, this->velocity[2]);
-        if( ( sp20 == TRUE && actor_animationIsAt(this, 0.999f) )
-            || ( sp20 == FALSE && actor_animationIsAt(this, 0.001f) )
+        if( ( sp20 == true && actor_animationIsAt(this, 0.999f) )
+            || ( sp20 == false && actor_animationIsAt(this, 0.001f) )
         ){
             subaddie_set_state_with_direction(this, 1, 0.001f, 0);
             actor_playAnimationOnce(this);
@@ -365,7 +365,7 @@ void func_8038D6C8(Actor *this){
         subaddie_set_state_with_direction(this, 4, 0.999f, 1);
         actor_playAnimationOnce(this);
         item_set(ITEM_0_HOURGLASS_TIMER, 80*60 - 1);
-        item_set(ITEM_6_HOURGLASS, TRUE);
+        item_set(ITEM_6_HOURGLASS, true);
         this->unk38_31 = 0xA;
         item_set(ITEM_24_TWINKLY_SCORE, this->unk38_31);
         __spawnQueue_add_1((GenFunction_1)func_8038D41C, (s32)this->marker);
@@ -396,9 +396,9 @@ void func_8038D6C8(Actor *this){
             subaddie_set_state_with_direction(this, 1, 0.001f, 0);
             actor_playAnimationOnce(this);
             this->unk38_31 = 0;
-            item_set(ITEM_6_HOURGLASS, FALSE);
+            item_set(ITEM_6_HOURGLASS, false);
             func_8025A6EC(COMUSIC_3C_MINIGAME_LOSS, 28000);
-            func_8028F8F8(7, FALSE);
+            func_8028F8F8(7, false);
             this->unk1C[1] = 1.0f;
             func_8038D3D8();
             func_80347A14(1);
@@ -427,6 +427,6 @@ bool func_8038DD14(void){
 bool func_8038DD34(ActorMarker *marker){
     Actor *this = marker_getActor(marker);
     if(func_80329530(this, 800))
-        return TRUE;
-    return FALSE;
+        return true;
+    return false;
 }

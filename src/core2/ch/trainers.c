@@ -63,7 +63,7 @@ void chtrainers_update(Actor *this){
     }
 
     if(!this->initialized){
-        this->initialized = TRUE;
+        this->initialized = true;
         ml_vec3f_copy(this->unk1C, this->position);
         this->velocity[0] = this->yaw;
         this->velocity[1] = 0.0f;
@@ -72,7 +72,7 @@ void chtrainers_update(Actor *this){
     }
 
     if(!volatileFlag_get(VOLATILE_FLAG_F_HAS_MEET_TURBO_SHOES) && ability_isUnlocked(ABILITY_11_TURBO_TALON)){
-        volatileFlag_set(VOLATILE_FLAG_F_HAS_MEET_TURBO_SHOES, TRUE);
+        volatileFlag_set(VOLATILE_FLAG_F_HAS_MEET_TURBO_SHOES, true);
     }
 
     switch(this->state){
@@ -83,7 +83,7 @@ void chtrainers_update(Actor *this){
                     && player_getTransformation() == TRANSFORM_1_BANJO
                 ){
                     if(gcdialog_showText(0xda4, 0, NULL, NULL, NULL, NULL)){
-                        volatileFlag_set(VOLATILE_FLAG_F_HAS_MEET_TURBO_SHOES, TRUE);
+                        volatileFlag_set(VOLATILE_FLAG_F_HAS_MEET_TURBO_SHOES, true);
                     }
                 }//L802CA620
                 _chtrainers_802CA378(this, sp2C);

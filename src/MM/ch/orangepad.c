@@ -89,12 +89,12 @@ void chorangepad_update(Actor *this) {
     if (!this->initialized) {
         this->marker->propPtr->unk8_3 = 1;
         actor_collisionOff(this);
-        this->initialized = TRUE;
+        this->initialized = true;
     }//L803867B0
 
     if (!this->volatile_initialized) {
         this->unk100 = actorArray_findClosestActorFromActorId(this->position, 8, -1, &min_distance)->marker;
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
     }//L803867E0
 
     if (this->unk100) {
@@ -107,7 +107,7 @@ void chorangepad_update(Actor *this) {
         closest_actor->state != 3) {
 
         if (gcdialog_showText(0xb3d, 0, NULL, NULL, NULL, NULL)) {
-            mapSpecificFlags_set(MM_SPECIFIC_FLAG_6_UNKNOWN, TRUE);
+            mapSpecificFlags_set(MM_SPECIFIC_FLAG_6_UNKNOWN, true);
         }
     }
 

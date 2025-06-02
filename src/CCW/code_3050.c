@@ -14,8 +14,8 @@ void func_80389440(Actor *this, s32 next_state) {
 
     if (next_state == 2) {
         sfxsource_play(SFX_AA_BGS_EGG_BREAKING_1, 28000);
-        this->marker->propPtr->unk8_3 = FALSE;
-        fileProgressFlag_set(FILEPROG_E6_SPRING_EYRIE_HATCHED, TRUE);
+        this->marker->propPtr->unk8_3 = false;
+        fileProgressFlag_set(FILEPROG_E6_SPRING_EYRIE_HATCHED, true);
         skeletalAnim_set(this->unk148, 0x187, 0.0f, 2.0f);
         skeletalAnim_setBehavior(this->unk148, SKELETAL_ANIM_2_ONCE);
         func_80324E38(0.0f, 3);
@@ -50,8 +50,8 @@ void func_803895F4(Actor *this) {
     f32 sp28;
 
     if(!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = true;
         marker_setCollisionScripts(this->marker, NULL, NULL, &func_8038950C);
         func_80389440(this, 1);
         if (fileProgressFlag_get(FILEPROG_E6_SPRING_EYRIE_HATCHED) || jiggyscore_isSpawned(JIGGY_49_CCW_EYRIE)) {

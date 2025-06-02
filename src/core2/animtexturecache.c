@@ -17,9 +17,9 @@ bool AnimTextureListCache_tryGetTextureOffset(s32 list_index, s32 texture_index,
     temp_v0 = (AnimTextureList *)freelist_at(AnimTextureListCache, list_index);
     if (temp_v0->anim_texture_info[texture_index].frame_size != 0) {
         *current_frame = (s32)temp_v0->current_frame[texture_index] * temp_v0->anim_texture_info[texture_index].frame_size;
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 s32 AnimTextureListCache_newList(void){

@@ -57,10 +57,10 @@ void chTrucker_update(Actor *this){
     ActorMarker *marker = this->marker;
     s32 sp28 = 0;
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
-        marker->propPtr->unk8_3 = TRUE;
+        this->volatile_initialized = true;
+        marker->propPtr->unk8_3 = true;
         actor_collisionOff(this);
-        mapSpecificFlags_set(0xC, FALSE);
+        mapSpecificFlags_set(0xC, false);
         if(jiggyscore_isSpawned(JIGGY_45_GV_GOBI_2) && !volatileFlag_get(VOLATILE_FLAG_1)){
             __chTrucker_setState(this, 3);
         }
@@ -75,7 +75,7 @@ void chTrucker_update(Actor *this){
         && func_8028F2A0()
     ){
         gcdialog_showText(ASSET_A71_DIALOG_TRUNKER_MEET, 0xe, this->position, NULL, NULL, NULL);
-        this->has_met_before = TRUE;
+        this->has_met_before = true;
     }//L80389254
 
     if(this->state == 1 && mapSpecificFlags_get(0xC)){

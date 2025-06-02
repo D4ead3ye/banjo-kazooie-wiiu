@@ -34,7 +34,7 @@ Actor *func_8038EBD0(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
 void func_8038EC34(ActorMarker *this_marker, ActorMarker *other_marker){
     Actor *this = marker_getActor(this_marker);
     ActorLocal_FP_87E0 *local = (ActorLocal_FP_87E0 *)&this->local;
-    local->unk1B = TRUE;
+    local->unk1B = true;
 }
 
 void func_8038EC5C(Actor *this){
@@ -59,14 +59,14 @@ void func_8038ECD8(Actor *this){
     f32 sp30[3];
 
     if(jiggyscore_isCollected(JIGGY_2F_FP_XMAS_TREE)){
-        this->marker->collidable = FALSE;
+        this->marker->collidable = false;
         return;
     }
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker_setCollisionScripts(this->marker, NULL, func_8038EC34, NULL);
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->marker->propPtr->unk8_3 = true;
         player_getPosition(D_803935D0);
         local->unk1B = 0;
         this->unk38_31 = 0;
@@ -88,7 +88,7 @@ void func_8038ECD8(Actor *this){
         local->unkC[0] = sp4C[0];
         local->unkC[1] = sp4C[1];
         local->unkC[2] = sp4C[2];
-        local->unk1A = TRUE;
+        local->unk1A = true;
     }//L8038EE98
 
     if(0.0f != this->lifetime_value){
@@ -100,7 +100,7 @@ void func_8038ECD8(Actor *this){
     }//L8038EEF0
     switch(this->state){
         case 1: //L8038EF10
-            this->marker->collidable = FALSE;
+            this->marker->collidable = false;
             if(!mapSpecificFlags_get(2)) break;
             if(mapSpecificFlags_get(3))  break;
 
@@ -114,14 +114,14 @@ void func_8038ECD8(Actor *this){
                 subaddie_set_state(this, 1);
             }
             else{
-                this->marker->collidable = TRUE;
+                this->marker->collidable = true;
                 player_getPosition(sp68);
                 sp68[0] -= local->unkC[0];
                 sp68[1] -= local->unkC[1];
                 sp68[2] -= local->unkC[2];
                 sp64 = (0.0f <= sp68[0]*local->unk0[0] + sp68[1]*local->unk0[1] + sp68[2]*local->unk0[2]) ? 0 : 1;
                 if(sp64 == (local->unk18 ^ 1)){
-                    local->unk19 = TRUE;
+                    local->unk19 = true;
                     if(local->unk1B){
                         func_8038EC5C(this);
                     }

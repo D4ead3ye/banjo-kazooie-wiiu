@@ -342,7 +342,7 @@ void func_8029B890(void){
             return;
         }
         gcdialog_showText(0xf81, 7, NULL, NULL, func_8029B85C, NULL);
-        fileProgressFlag_set(FILEPROG_A8_HAS_DIED, TRUE);
+        fileProgressFlag_set(FILEPROG_A8_HAS_DIED, true);
     }
     else{
         func_8029B62C();
@@ -623,7 +623,7 @@ void func_8029C22C(void) {
     if(func_80294574() && func_80294500() > player_getYPosition())
         return;
 
-    D_80364620 = D_80364620 ? FALSE : TRUE;
+    D_80364620 = D_80364620 ? false : true;
     if (baphysics_get_horizontal_velocity() > 100.0f) {
         if (D_80364620) {
             func_80292864(baphysics_get_target_yaw() - 20.0f, 20.0f);
@@ -719,9 +719,9 @@ void update_void_return_Location(void) {
 void func_8029C674(void) {
     f32 sp1C[3];
 
-    D_8037D1E8 = FALSE;
+    D_8037D1E8 = false;
     if (func_80298850() == BSGROUP_4_LOOK) {
-        D_8037D1E8 = TRUE;
+        D_8037D1E8 = true;
         baflag_set(BA_FLAG_17_FIRST_PERSON_VIEW);
         ncDynamicCamera_enterFirstPerson();
         func_8028E9C4(5, sp1C);
@@ -822,7 +822,7 @@ void func_8029C984(void){
     func_8025AB00();
     func_8025A2FC(0, 4000);
     comusic_playTrack(COMUSIC_1A_DEATH);
-    core1_ce60_incOrDecCounter(FALSE);
+    core1_ce60_incOrDecCounter(false);
 }
 
 s32 func_8029C9C0(s32 arg0){
@@ -884,7 +884,7 @@ void func_8029CB84(void){
 
 void func_8029CBC4(void){
     func_8025A55C(-1, 4000, 0xc);
-    core1_ce60_incOrDecCounter(TRUE);
+    core1_ce60_incOrDecCounter(true);
 }
 
 void func_8029CBF4(void){
@@ -919,7 +919,7 @@ void func_8029CCC4(void){
     if(jiggyscore_total() == 100 && fileProgressFlag_get(FILEPROG_FC_DEFEAT_GRUNTY)){
         func_8028F918(2);
     }
-    core1_ce60_incOrDecCounter(FALSE);
+    core1_ce60_incOrDecCounter(false);
     func_8025A55C(0, 4000, 0xC);
     func_8025A6EC(COMUSIC_D_JINGLE_JIGGY_COLLECTED, -1);
     timedFunc_set_0(4.0f, func_8029CBF4);

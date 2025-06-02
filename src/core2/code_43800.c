@@ -63,7 +63,7 @@ Actor *func_802CA7BC(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
 void func_802CA92C(Actor *this){
     f32 sp34[3];
     f32 sp28[3];
-    this->marker->collidable = FALSE;
+    this->marker->collidable = false;
     player_getPosition(this->position);
     viewport_getPosition_vec3f(sp34);
     ml_vec3f_diff_copy(sp28, sp34, this->position);

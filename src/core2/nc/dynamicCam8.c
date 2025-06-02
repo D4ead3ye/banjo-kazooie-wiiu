@@ -14,7 +14,7 @@ u8 D_8037DB0E;
 
 /* .code */
 void ncDynamicCam8_init(void){
-    D_8037DB0E = TRUE;
+    D_8037DB0E = true;
 }
 
 void ncDynamicCam8_end(void){}

@@ -401,7 +401,7 @@ void chBottlesBonus_lose(u8 *arg0, enum asset_e text_id) {
     chBottlesBonusCursor_lose();
     func_8025A6CC(COMUSIC_3C_MINIGAME_LOSS, 28000);
     actor->state = 5;
-    item_set(ITEM_6_HOURGLASS, FALSE);
+    item_set(ITEM_6_HOURGLASS, false);
     func_802FAD64(0);
     if (*arg0 == 0) {
         *arg0 = 1;
@@ -424,7 +424,7 @@ void chBottlesBonus_completedPuzzle(void) {
     Actor *actor;
 
     actor = marker_getActor(chBottlesBonusMarker);
-    gCompletedBottleBonusGames[chBottleBonusPuzzleIndex] = TRUE;
+    gCompletedBottleBonusGames[chBottleBonusPuzzleIndex] = true;
     func_80311714(0);
     gcdialog_showText(D_803681A0[chBottleBonusPuzzleIndex + 1].text_id, 0x86, actor->position, chBottlesBonusMarker, chBottlesBonus_IncrementPuzzle, NULL);
     func_80311714(1);
@@ -440,7 +440,7 @@ void chBottlesBonus_startTimer(ActorMarker *arg0, enum asset_e arg1, s32 arg2) {
     actor = marker_getActor(chBottlesBonusMarker);
     actor->state = 4;
     actor->lifetime_value = 0.0f;
-    timedFunc_set_2(0.25f, (GenFunction_2)item_set, ITEM_6_HOURGLASS, TRUE);
+    timedFunc_set_2(0.25f, (GenFunction_2)item_set, ITEM_6_HOURGLASS, true);
     timedFunc_set_2(0.25f, (GenFunction_2)item_set, ITEM_0_HOURGLASS_TIMER, D_803681A0[chBottleBonusPuzzleIndex + 1].time_seconds * 60 - 1);
 }
 
@@ -457,7 +457,7 @@ void chBottlesBonus_update(Actor *this) {
     local = (ActorLocal_core2_560F0 *) &this->local;
     sp50 = time_func_8033DDB8();
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         actor_collisionOff(this);
         this->lifetime_value = 0.0f;
         D_8037DEB4 = D_8037DEB0 = 0;
@@ -488,17 +488,17 @@ void chBottlesBonus_update(Actor *this) {
         sp40 = D_8037DF90[phi_s0_2];
         temp_v0_2 = &func_8034C2C4(this->marker, phi_s0_2 + 0x190)->type_6D;
         if ((phi_s0_2 == sp48) && (cursor_state == 1) && !chBottlesBonusCursor_func_802E0538(phi_s0_2)) {
-            D_8037DF90[phi_s0_2] = TRUE;
+            D_8037DF90[phi_s0_2] = true;
         } else {
-            D_8037DF90[phi_s0_2] = FALSE;
+            D_8037DF90[phi_s0_2] = false;
         }
         if (sp40 != D_8037DF90[phi_s0_2]) {
             switch(D_8037DF90[phi_s0_2]){
-                case TRUE:
+                case true:
                     func_8034DFB0(temp_v0_2, D_803682A4, D_803682B4, 0.1f);
                     break;
 
-                case FALSE:
+                case false:
                     func_8034DFB0(temp_v0_2, D_803682B4, D_803682A4, 0.3f);
                     break;
 

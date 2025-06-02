@@ -201,9 +201,9 @@ void func_8035B900(Actor *this){
     s32 sp30 = globalTimer_getTime();
     f32 sp2C = time_getDelta();
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker_setCollisionScripts(this->marker, NULL, func_8035B3B4, func_8035B1CC);
-        this->marker->propPtr->unk8_3 = FALSE;
+        this->marker->propPtr->unk8_3 = false;
         actor_collisionOn(this);
         this->velocity_z = 0.0f;
         this->lifetime_value = 0.0f;
@@ -274,19 +274,19 @@ void func_8035B900(Actor *this){
 }
 
 int func_8035BC5C(Actor *this, s32 target, s32 delta){
-    s32 done = FALSE;
+    s32 done = false;
     s32 alpha;
     if(delta < 0){
         if((s32)(this->alpha_124_19 + delta) < target){
             this->alpha_124_19 = target;
-            done = TRUE;
+            done = true;
         } 
 
     }
     else{//L8035BCB8
         if(target < this->alpha_124_19 + delta){
             this->alpha_124_19 = target;
-            done = TRUE;
+            done = true;
         } 
     }
     if(!done){
@@ -299,12 +299,12 @@ int func_8035BC5C(Actor *this, s32 target, s32 delta){
 
 void func_8035BD48(Actor *this){
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = FALSE;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = false;
         actor_collisionOn(this);
         marker_setCollisionScripts(this->marker, NULL, func_8035B3B4, func_8035B2C4);
-        mapSpecificFlags_set(3, FALSE);
-        mapSpecificFlags_set(4, FALSE);
+        mapSpecificFlags_set(3, false);
+        mapSpecificFlags_set(4, false);
         if(map_get() == MAP_24_MMM_TUMBLARS_SHED){
             if( jiggyscore_isSpawned(JIGGY_62_MMM_TUMBLAR)
                 || jiggyscore_isCollected(JIGGY_62_MMM_TUMBLAR)
@@ -333,10 +333,10 @@ void func_8035BD48(Actor *this){
             }
             break;
         case 3: //L8035BECC
-            this->unk58_0 = TRUE;
+            this->unk58_0 = true;
             actor_collisionOn(this);
             if(mapSpecificFlags_getClear(4)){
-                this->unk38_0 = TRUE;
+                this->unk38_0 = true;
                 func_8035B2C4(this->marker, NULL);
             }
             else{//L8035BF14
@@ -351,7 +351,7 @@ void func_8035BD48(Actor *this){
             break;
         case 6: //L8035BFD4
             if(func_8035BC5C(this, 0, -7)){
-                this->unk58_0 = FALSE;
+                this->unk58_0 = false;
                 this->unk48 = 0.0f;
                 func_80343DEC(this);
                 if(this->unk38_0){
@@ -359,7 +359,7 @@ void func_8035BD48(Actor *this){
                 }
                 else{
                     subaddie_set_state_with_direction(this, 1, 0.01f, 1);
-                    timedFunc_set_2(randf2(5.0f, 10.0f), mapSpecificFlags_set, 3, TRUE);
+                    timedFunc_set_2(randf2(5.0f, 10.0f), mapSpecificFlags_set, 3, true);
                 }
             }
             break;

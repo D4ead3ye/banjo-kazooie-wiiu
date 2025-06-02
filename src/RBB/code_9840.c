@@ -36,7 +36,7 @@ void func_8038FC48(Actor *this){
     s32 tmp_a1;
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         actor_collisionOff(this);
         local->unk4 = RBB_D_80390E30 + (this->marker->id - 0x1d2);
         local->unk8 = NULL;

@@ -41,18 +41,18 @@ bool baflap_add(f32 duration) {
     for(i = 0; i < 5; i++){
         if(duration - 0.25 < s_flap_list[i]){
             s_flap_max_timer = duration;
-            return FALSE;
+            return false;
         }
     }
     // add to list
     for(i = 0; i < 5; i++){
         if (s_flap_list[i] == 0.0f) {
             s_flap_list[i] = duration;
-            return TRUE;
+            return true;
         }
     }
     s_flap_max_timer = duration;
-    return FALSE;
+    return false;
 }
 
 /**

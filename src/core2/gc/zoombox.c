@@ -571,15 +571,15 @@ int func_803156F0(u8 arg0, u8 arg1){
 static int __get_str_print_len(u8 *arg0, s32 len){
      int i;
      s32 phi_v1 = 0;
-     bool skip_next = FALSE;
+     bool skip_next = false;
      for(i = 0; i < len; i++){
           if(arg0[i] == 0xFD){ //escape character 
-               skip_next = TRUE;
+               skip_next = true;
           }else if(!skip_next){
                phi_v1++;
           }
           else{ 
-               skip_next = FALSE;
+               skip_next = false;
           }
      }
      return phi_v1;
@@ -916,14 +916,14 @@ void func_80316764(GcZoombox *this, s32 arg1) {
         if (this->unk1A4_21) {
             this->unk186--;
             if ((this->frame_count - 4) >= this->unk186) {
-                this->unk1A4_21 = FALSE;
-                this->unk1A4_22 = FALSE;
+                this->unk1A4_21 = false;
+                this->unk1A4_22 = false;
                 this->unk186 = 0;
             }
         } else {
             this->unk186++;
             if (this->unk186 >= this->frame_count) {
-                this->unk1A4_21 = TRUE;
+                this->unk1A4_21 = true;
                 this->unk186--;
             }
         }
@@ -938,15 +938,15 @@ void func_80316764(GcZoombox *this, s32 arg1) {
                     func_80315C90(this, 0);
                 }
             }
-            this->unk1A4_22 = FALSE;
-            this->unk1A4_21 = FALSE;
+            this->unk1A4_22 = false;
+            this->unk1A4_21 = false;
             if (this->unk186 == this->unkB0[this->unk187]) {
                 this->unk187++;
                 if (this->unk187 >= this->unk189) {
                     this->unk187 = 0;
-                    this->unk1A4_23 = FALSE;
+                    this->unk1A4_23 = false;
                     if (randf() < 0.4) {
-                        this->unk1A4_22 = TRUE;
+                        this->unk1A4_22 = true;
                         this->unk186 = this->frame_count - 4;
                     }
                 }
@@ -962,7 +962,7 @@ void func_80316764(GcZoombox *this, s32 arg1) {
             this->unk186--;
         } else {
             if (randf() < 0.01) {
-                this->unk1A4_22 = TRUE;
+                this->unk1A4_22 = true;
                 this->unk186 = this->frame_count - 4;
             }
         }
@@ -1475,7 +1475,7 @@ bool gczoombox_setStrings(GcZoombox *this, s32 str_cnt, char **str_ptrs) {
     s32 phi_v0;
 
     if ((this->unk13A & 4) || (str_ptrs == NULL) || (str_cnt == 0)) {
-        return FALSE;
+        return false;
     }
     this->current_str_index = 0;
     this->str_cnt = str_cnt;
@@ -1495,7 +1495,7 @@ bool func_803183A4(GcZoombox *this, char *arg1) {
     char *sp1C;
 
     if ((this->unk13A & 4) || (arg1 == NULL)) {
-        return FALSE;
+        return false;
     }
     sp1C = arg1;
     return gczoombox_setStrings(this, 1, &sp1C);
@@ -1574,9 +1574,9 @@ bool func_8031857C(GcZoombox *this, u8 *str){
           gczoombox_maximize(this);
           gczoombox_minimize(this);
           gczoombox_close(this);
-          return TRUE;
+          return true;
      }
-     return FALSE;
+     return false;
 }
 
 void gczoombox_highlight(GcZoombox *this, bool should_highlight){
@@ -1636,7 +1636,7 @@ bool func_8031877C(GcZoombox *this){
     if( this == NULL 
         || this->state == 0 || this->state == 0xb || this->state == 0x9 || this->state == 0x6 || this->state == 0x7
     ){
-        return FALSE;
+        return false;
     }
     _gczoombox_memClear(this->unk0, 0x30);
     _gczoombox_memClear(this->unk30, 0x30);
@@ -1652,37 +1652,37 @@ bool func_8031877C(GcZoombox *this){
         this->unk134 = 3;
     }
     func_8031843C(this);
-    return TRUE;
+    return true;
 }
 
 bool func_803188B4(GcZoombox *this) {
 
     if ((this == NULL) || (this->state == 0) || (this->state == 7) || (this->state == 9)) {
-        return FALSE;
+        return false;
     }
     if ((this->state == 6) && (this->unk134 == 4)) {
-        return FALSE;
+        return false;
     }
     if (this->state == 8) {
-        this->unk1A4_16 = FALSE;
+        this->unk1A4_16 = false;
         this->state = 6;
     } else if (this->state != 6) {
         func_803155C8(this);
     }
     func_8031843C(this);
     func_80318498(this);
-    return TRUE;
+    return true;
 }
 
 
 bool func_80318964(GcZoombox *this) {
     if (this == NULL || this->state == 0 || this->state == 7 || this->state == 9) {
-        return FALSE;
+        return false;
     }
     gczoombox_close(this);
     func_8031842C(this);
     func_803155C8(this);
-    return TRUE;
+    return true;
 }
 
 bool gczoombox_loadSprite(GcZoombox *this, GcZoomboxSprite arg1){
@@ -1693,7 +1693,7 @@ bool gczoombox_loadSprite(GcZoombox *this, GcZoomboxSprite arg1){
               && this->state != 0xb
               && this->state != 0x9
      )){
-          return FALSE;
+          return false;
      }
      
      if(this->state == 0xb || this->state == 0x9){
@@ -1732,7 +1732,7 @@ bool gczoombox_loadSprite(GcZoombox *this, GcZoomboxSprite arg1){
           this->unk1A4_13 = 1;
           this->unk17C = 1.0f;
      }//L80318B64
-     return TRUE;
+     return true;
 }
 
 void func_80318B7C(GcZoombox *this, s32 arg1) {
@@ -1764,7 +1764,7 @@ void gczoombox_defrag(GcZoombox *this) {
 void gczoombox_func_80318C48(GcZoombox *this, bool arg1) {
     if (this != NULL) {
         if (this->unk1A4_30) {
-            if (arg1 != FALSE) {
+            if (arg1 != false) {
                 if (this->unk0[0] == 0xFD) {
                     this->unk0[1] = 0x68;
                 } else {
@@ -1779,7 +1779,7 @@ void gczoombox_func_80318C48(GcZoombox *this, bool arg1) {
             }
         }
         if (this->unk1A4_29) {
-            if (arg1 != FALSE) {
+            if (arg1 != false) {
                 if (this->unk30[0] == 0xFD) {
                     this->unk30[1] = 0x68;
                     return;

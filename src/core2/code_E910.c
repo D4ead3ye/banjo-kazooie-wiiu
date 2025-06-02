@@ -248,10 +248,10 @@ void func_80295B04(void){
     sp24 = (bslongleg_inSet(sp20)) ? stateTimer_get(STATE_TIMER_2_LONGLEG) : 0.0f;
     bsStoredState_setLongLegTimer(sp24);
     sp24 = 0.0f;
-    is_in_talon_trot = FALSE;
+    is_in_talon_trot = false;
     if(bsbtrot_inSet(sp20)){
         sp24 = stateTimer_get(STATE_TIMER_3_TURBO_TALON);
-        is_in_talon_trot = TRUE;
+        is_in_talon_trot = true;
     }
 
     bsStoredState_setTrot(is_in_talon_trot);

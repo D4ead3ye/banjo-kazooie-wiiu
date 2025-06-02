@@ -25,7 +25,7 @@ void func_8038E1A0(Actor *this){}
 
 void func_8038E1A8(Actor *this){
     Actor *sp24 = func_8032A7AC(this);
-    this->marker->propPtr->unk8_3 = TRUE;
+    this->marker->propPtr->unk8_3 = true;
 
     switch(this->state){
         case 1:

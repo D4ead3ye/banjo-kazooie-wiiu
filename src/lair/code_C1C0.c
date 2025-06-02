@@ -29,10 +29,10 @@ Actor *func_803925B0(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
 
 void func_80392610(ActorMarker *marker, enum asset_e text_id, s32 arg2){
     if(arg2 == 0xA){
-        mapSpecificFlags_set(5, TRUE);
+        mapSpecificFlags_set(5, true);
     }
     else{
-        mapSpecificFlags_set(5, FALSE);
+        mapSpecificFlags_set(5, false);
     }
     ncStaticCamera_setToNode(arg2);
 }
@@ -60,7 +60,7 @@ void func_80392700(Actor *this) {
             func_802BC280();
             ncStaticCamera_setToNode(0x1F);
             gcdialog_showText(0x102C, 0xE, this->position, this->marker, func_80392664, func_80392610);
-            fileProgressFlag_set(FILEPROG_F4_ENTER_FF_CUTSCENE, TRUE);
+            fileProgressFlag_set(FILEPROG_F4_ENTER_FF_CUTSCENE, true);
         }
         mapSpecificFlags_set(4, 0);
     }
@@ -83,7 +83,7 @@ void func_80392700(Actor *this) {
         func_80328FB0(this, 12.0f);
         if (func_80329480(this) != 0) {
             subaddie_set_state_with_direction(this, 5, 0.0f, 1);
-            this->marker->unk2C_2 = TRUE;
+            this->marker->unk2C_2 = true;
         }
     }
     this->unk58_0 = !gcquiz_isNotInInitialState();
@@ -96,8 +96,8 @@ void func_80392918(Actor *this) {
             mapSpecificFlags_set(4, 1);
         }
         this->unk4C = 400.0f;
-        this->marker->unk2C_2 = FALSE;
-        this->volatile_initialized = TRUE;
+        this->marker->unk2C_2 = false;
+        this->volatile_initialized = true;
         if (fileProgressFlag_get(FILEPROG_A6_FURNACE_FUN_COMPLETE)) {
             marker_despawn(this->marker);
         }
@@ -105,15 +105,15 @@ void func_80392918(Actor *this) {
     }
     actor_update_func_80326224(this);
     if ((this->unk48 > 0.5) && !this->has_met_before) {
-        this->has_met_before = TRUE;
+        this->has_met_before = true;
         ncStaticCamera_setToNode(0x1E);
     }
     if ((0.999 < this->unk48) && !this->unk38_0) {
         comusic_8025AB44(COMUSIC_A8_KLUNGO_BY_FALLEN_GRUNTY, 0, 2000);
         func_8025AABC(0xA8);
-        this->unk38_0 = TRUE;
-        mapSpecificFlags_set(7, TRUE);
-        mapSpecificFlags_set(5, TRUE);
+        this->unk38_0 = true;
+        mapSpecificFlags_set(7, true);
+        mapSpecificFlags_set(5, true);
     }
     if (this->unk48 == 1.0) {
         marker_despawn(this->marker);

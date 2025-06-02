@@ -55,7 +55,7 @@ void func_80387F64(Actor *this, s32 next_state){
         if (map_get() == MAP_43_CCW_SPRING) {
             func_8025A6EC(COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 28000);
         }
-        fileProgressFlag_set(local->unk0->unk8, TRUE);
+        fileProgressFlag_set(local->unk0->unk8, true);
         skeletalAnim_set(this->unk148, local->unk0->unk4, 0.0f, 6.0f);
         skeletalAnim_setBehavior(this->unk148, SKELETAL_ANIM_2_ONCE);
         if (map_get() == MAP_43_CCW_SPRING) {
@@ -79,7 +79,7 @@ void func_80387F64(Actor *this, s32 next_state){
     }
 
     if (next_state == 3) {
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->marker->propPtr->unk8_3 = true;
         skeletalAnim_set(this->unk148, local->unk0->unk6, 0.1f, 5.0f);
         skeletalAnim_setBehavior(this->unk148, SKELETAL_ANIM_1_LOOP);
     }
@@ -132,9 +132,9 @@ void func_803883F4() {
 bool func_80388438() {
     Actor* actor = actorArray_findActorFromActorId(0x29D);
     if (actor && actor->state == 2) {
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 void func_80388478(Actor *this) {
@@ -142,12 +142,12 @@ void func_80388478(Actor *this) {
 
     local = (ActorLocal_CCW_1B20 *)&this->local;
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         func_803300C0(this->marker, func_80388260);
         marker_setCollisionScripts(this->marker, NULL, CCW_func_80388278, func_803882A4);
         actor_collisionOn(this);
         if (!jiggyscore_isSpawned(JIGGY_4D_CCW_FLOWER)) {
-            fileProgressFlag_set(FILEPROG_E5_CCW_FLOWER_AUTUMN, FALSE);
+            fileProgressFlag_set(FILEPROG_E5_CCW_FLOWER_AUTUMN, false);
         }
         
         for(local->unk0 = &D_8038EC40[0]; local->unk0 < D_8038EC40 + 3; local->unk0++){

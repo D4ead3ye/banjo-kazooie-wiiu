@@ -37,8 +37,8 @@ void chGobi1_setState(Actor *this, s32 next_state){
     ActorLocal_chGobi1 *local = (ActorLocal_chGobi1 *)&this->local;
     
     this->state = next_state;
-    GV_D_80391A40.unk0 = FALSE;
-    GV_D_80391A40.unk1 = FALSE;
+    GV_D_80391A40.unk0 = false;
+    GV_D_80391A40.unk1 = false;
 
     if(this->state == 1){
         skeletalAnim_set(this->unk148, 0xd9, 0.5f, 4.0f);
@@ -48,14 +48,14 @@ void chGobi1_setState(Actor *this, s32 next_state){
     if(this->state == 2){
         skeletalAnim_set(this->unk148, 0xda, 1.0f, 5.0f);
         local->unkC = 0.9f;
-        GV_D_80391A40.unk0 = TRUE;
+        GV_D_80391A40.unk0 = true;
     }
 
     if(this->state == 3){
         func_8028F918(2);
         skeletalAnim_set(this->unk148, 0xf7, 1.0f, 5.33f);
         local->unk14 = 0.01f;
-        GV_D_80391A40.unk1 = TRUE;
+        GV_D_80391A40.unk1 = true;
     }
 
     if(this->state == 4){
@@ -114,11 +114,11 @@ void chGobi1_update(Actor *this){
 
     tick = time_getDelta();
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker_setCollisionScripts(this->marker, func_803873B0, NULL, NULL);
         marker->actorFreeFunc = func_8038736C;
-        marker->propPtr->unk8_3 = TRUE;
-        marker->collidable = TRUE;
+        marker->propPtr->unk8_3 = true;
+        marker->collidable = true;
         GV_D_80391A40.unk0 = 0;
         GV_D_80391A40.unk1 = 0;
         local->unk0[0] = sfxsource_createSfxsourceAndReturnIndex();
@@ -182,7 +182,7 @@ void chGobi1_update(Actor *this){
             && func_8028F2A0()
             && gcdialog_showText(0xa73, 0, NULL, NULL, NULL, NULL)
         ){
-            this->has_met_before = TRUE;
+            this->has_met_before = true;
         }
     }//L803877A4
 

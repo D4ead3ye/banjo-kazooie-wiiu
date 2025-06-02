@@ -81,7 +81,7 @@ void func_8035CFC4(Actor *this) {
     local->unk10 = 0x11A;
     local->unk12 = 25000;
     local->unk14 = 1.0f;
-    local->unkC_28 = TRUE;
+    local->unkC_28 = true;
     local->unk30 = func_802DB548;
     local->unk34 = func_8035CF60;
     local->unk3C = 1.5f;

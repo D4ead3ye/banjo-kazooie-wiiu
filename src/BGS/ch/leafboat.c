@@ -57,7 +57,7 @@ void chLeafBoat_update(Actor *this){
 
     local = (ActorLocal_Leafboat *)&this->local;
     if(!this->initialized){
-        this->initialized = TRUE;
+        this->initialized = true;
         marker_setCollisionScripts(this->marker, func_8038FD88, NULL, NULL);
         local->unk6C = randf2(80.0f, 100.0f);
         this->unk1C[0] = this->unk1C[1] = this->unk1C[2] = 0.0f;
@@ -120,7 +120,7 @@ void chLeafBoat_update(Actor *this){
             if (this->marker->unk2C_2) {
                 actor_update_func_80326224(this);
             }
-            this->marker->propPtr->unk8_3 = FALSE;
+            this->marker->propPtr->unk8_3 = false;
             this->unk1C[0] = 0.0f;
             this->alpha_124_19 = 0;
             if (this->unk54 == 0.0f) {

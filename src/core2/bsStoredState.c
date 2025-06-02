@@ -18,7 +18,7 @@ void bsStoredState_clear(void){
     ability_clearAll();
     bsStoredState.longleg_timer = bsStoredState.turbo_timer = 0.0f;
     bsStoredState.transformation = TRANSFORM_1_BANJO;
-    bsStoredStateInTrot = FALSE;
+    bsStoredStateInTrot = false;
 }
 
 enum transformation_e bsStoredState_getTransformation(void){

@@ -290,10 +290,10 @@ void func_8034BB08(bool arg0) {
 
 bool func_8034BB48(void) {
     if (D_80386120 && gctransition_done()) {
-        D_80386120 = FALSE;
-        return TRUE;
+        D_80386120 = false;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 void func_8034BB90(void) {

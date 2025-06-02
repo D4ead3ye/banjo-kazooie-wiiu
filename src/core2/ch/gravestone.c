@@ -62,9 +62,9 @@ bool func_8035ED60(Actor *this) {
     temp_f0 = this->position[0] - this->unk1C[0];
     temp_f2 = this->position[2] - this->unk1C[2];
     if (((temp_f0 * temp_f0) + (temp_f2 * temp_f2)) < 110.0f) {
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 void func_8035EDB0(f32 position[3], s32 count, enum asset_e sprite) {
@@ -187,7 +187,7 @@ void func_8035F138(Actor *this) {
     switch(this->state){
         case 1: //L8035F20C
             if (!this->volatile_initialized) {
-                this->volatile_initialized = TRUE;
+                this->volatile_initialized = true;
                 marker_setCollisionScripts(this->marker, func_8035F0E8, func_8035F048, func_8035EF9C);
                 local->unk0 = 1;
                 this->unk1C[0] = this->position[0];

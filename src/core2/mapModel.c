@@ -555,10 +555,10 @@ bool func_80309FA4(enum map_e map_id){
 
     for(i_ptr = D_8036ABE0; i_ptr->map_id != 0; i_ptr++){
         if(map_id == i_ptr->map_id){
-            return TRUE;
+            return true;
         }
     }
-    return FALSE;
+    return false;
 }
 
 void mapModel_free(void){

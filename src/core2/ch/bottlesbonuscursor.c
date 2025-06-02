@@ -119,18 +119,18 @@ s32 chBottlesBonusCursor_func_802DF50C(void) {
 bool chBottlesBonusCursor_checkPuzzleCompletion(void) {
     s32 i;
 
-    D_8037E5C0.is_completed = TRUE;
+    D_8037E5C0.is_completed = true;
     for(i = 0; i < 20 && D_8037E5C0.is_completed != 0; i++){
         if((D_8037E248[i].state != 3) 
             || (i != D_8037E248[i].piece_id) 
             || !vec4f_isAlmostZero(chBottlesBonus_get_piece_distance_vec4f(i))
         ) {
-            D_8037E5C0.is_completed = FALSE;
+            D_8037E5C0.is_completed = false;
         }
     }
 
     if (D_8037E5C0.is_completed) {
-        item_set(ITEM_6_HOURGLASS, FALSE);
+        item_set(ITEM_6_HOURGLASS, false);
         timedFunc_set_3(0.25f, (GenFunction_3)comusic_8025AB44, COMUSIC_94_BBONUS, 0, 2000);
         timedFunc_set_2(0.3f, (GenFunction_2)func_8025A6EC, COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 22000);
         timedFunc_set_0(1.5f, (GenFunction_0)chBottlesBonusCursor_func_802DF99C);
@@ -212,7 +212,7 @@ void chBottlesBonusCursor_update(Actor *this) {
     sp58 = time_func_8033DDB8();
     held_piece = &D_8037E248[D_8037E5C0.unk0];
     if (!this->initialized) {
-        this->initialized = TRUE;
+        this->initialized = true;
         this->scale = 0.18f;
         this->pitch = 59.0f;
         this->roll = 63.0f;

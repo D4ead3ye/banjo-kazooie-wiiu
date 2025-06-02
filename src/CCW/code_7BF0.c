@@ -60,10 +60,10 @@ void func_8038E0C8(Actor *this) {
     if(!subaddie_playerIsWithinSphere(this, 3000)) return;
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         func_8028746C(this->anctrl, (GenFunction_2)func_8038E060);
         func_8028748C(this->anctrl, (s32) this->marker);
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->marker->propPtr->unk8_3 = true;
         this->unk1C[0] = 0.0f;
         this->unk38_31 = 0;
     }

@@ -9,12 +9,12 @@ bool func_802ED420(BKModelUnk20List *arg0, u8 *arg1, u32 arg2) {
     start_ptr = (BKModelUnk20_0 *)(arg0 + 1);
     while(arg2 != 0){
         if (start_ptr[*arg1].unkC != 0) {
-            return TRUE;
+            return true;
         }
         arg2--; 
         arg1++;
     }
-    return FALSE;
+    return false;
 }
 
 void func_802ED52C(BKModelUnk20List *arg0, f32 arg1[3], f32 arg2) {

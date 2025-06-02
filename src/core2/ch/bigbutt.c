@@ -121,9 +121,9 @@ void func_802C6240(Actor *this){
         this->marker->dieFunc = func_802C61C0;
         this->marker->collisionFunc = func_802C60AC;
         this->marker->collision2Func = func_802C6150;
-        this->has_met_before = FALSE;
+        this->has_met_before = false;
         this->unk16C_0 = 1;
-        this->initialized = TRUE;
+        this->initialized = true;
         return;
     }//L802C62BC
     switch(this->state){

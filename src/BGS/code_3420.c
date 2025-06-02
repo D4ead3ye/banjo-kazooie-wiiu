@@ -113,10 +113,10 @@ enum asset_e D_80390A18[] = {
 /* .code */
 bool BGS_func_80389810(f32 arg0[3]) {
     if (player_movementGroup() != BSGROUP_7_CROC_ATTACK) {
-        return FALSE;
+        return false;
     }
     func_8028E9C4(2, arg0);
-    return TRUE;
+    return true;
 }
 
 void BGS_func_80389850(Actor *this, s32 arg1) {
@@ -317,7 +317,7 @@ void func_8038A068(Actor *this, s32 next_state) {
     ActorLocal_BGS_3420 *local;
 
     local = (ActorLocal_BGS_3420 *)&this->local;
-    mapSpecificFlags_set(6, FALSE);
+    mapSpecificFlags_set(6, false);
     if (next_state == 1) {
         if (local->vile_marker != NULL) {
             func_8038C408(local->vile_marker);
@@ -363,8 +363,8 @@ void func_8038A068(Actor *this, s32 next_state) {
                 local->type_change_timer = 10.0f;
             }
             item_set(ITEM_0_HOURGLASS_TIMER, 3600-1);
-            item_set(ITEM_6_HOURGLASS, TRUE);
-            mapSpecificFlags_set(6, TRUE);
+            item_set(ITEM_6_HOURGLASS, true);
+            mapSpecificFlags_set(6, true);
             func_8038C3DC(local->vile_marker);
             func_8025A58C(0, 4000);
             timedFunc_set_2(1.0f, (GenFunction_2)func_8025A6EC, COMUSIC_55_BGS_MR_VILE, 28000);
@@ -372,7 +372,7 @@ void func_8038A068(Actor *this, s32 next_state) {
     }
     if (this->state == 5) {
         if (local->unkC != 7) {
-            item_set(ITEM_6_HOURGLASS, FALSE);
+            item_set(ITEM_6_HOURGLASS, false);
             if ((next_state != 6) && (next_state != 8) && (next_state != 9)) {
                 func_8038A044();
             }
@@ -461,7 +461,7 @@ bool chvilegame_cpu_consume_piece(ActorMarker *marker, f32 position[3]) {
     this = marker_getActor(marker);
     local = (ActorLocal_BGS_3420 *)&this->local;
     if (this->state != 5){
-        return FALSE;
+        return false;
     }
     begin = vector_getBegin(local->game_pieces);
     end = vector_getEnd(local->game_pieces);
@@ -471,10 +471,10 @@ bool chvilegame_cpu_consume_piece(ActorMarker *marker, f32 position[3]) {
             timedFunc_set_1(0.0f, (GenFunction_1)func_802FDCB8, ITEM_1B_VILE_VILE_SCORE);
             timedFunc_set_1(0.5f, (GenFunction_1)func_802FDCB8, ITEM_1B_VILE_VILE_SCORE);
             timedFunc_set_1(1.0f, (GenFunction_1)func_802FDCB8, ITEM_1B_VILE_VILE_SCORE);
-            return TRUE;
+            return true;
         }
     }
-    return FALSE;
+    return false;
 }
 
 BKModelBin *chvilegame_get_grumblie_model(ActorMarker *marker){
@@ -560,9 +560,9 @@ bool chvilegame_find_closest_piece(ActorMarker *marker, f32 position[0], f32 yaw
         dst[0] = closest_piece->position[0];
         dst[1] = closest_piece->position[1];
         dst[2] = closest_piece->position[2];
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 void chvilegame_new_piece(ActorMarker *game_marker, ActorMarker *piece_marker, f32 position[3], enum chvilegame_piece_type_e yumblie_type){
@@ -620,7 +620,7 @@ void chvilegame_update(Actor *this) {
     sp50 = time_getDelta();
     local = (ActorLocal_BGS_3420 *)&this->local;
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->marker->actorFreeFunc = &chvilegame_free;
         local->game_pieces = vector_new(sizeof(struct vilegame_piece), 0x20);
         local->grumblie_model_bin = assetcache_get(0x3F7);
@@ -673,9 +673,9 @@ void chvilegame_update(Actor *this) {
                 }
                 if (local->type_change_timer > 3.5) {
                     if (local->current_type != 0) {
-                        item_adjustByDiffWithHud(ITEM_1D_GRUMBLIE, FALSE);
+                        item_adjustByDiffWithHud(ITEM_1D_GRUMBLIE, false);
                     } else {
-                        item_adjustByDiffWithHud(ITEM_1E_YUMBLIE, FALSE);
+                        item_adjustByDiffWithHud(ITEM_1E_YUMBLIE, false);
                     }
                 }
             }

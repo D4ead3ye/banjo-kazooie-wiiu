@@ -11,12 +11,13 @@
 
 #define UNK_TYPE(t) t
 
-
+#if 0
 typedef struct{
     f32 x;
     f32 y;
     f32 z;
 } vec3f;
+#endif
 
 #define TUPLE(t, n) union{\
     struct{ t n##_x; t n##_y; t n##_z; };\
@@ -49,7 +50,10 @@ typedef struct freelist_s{
 
 typedef struct {
     f32 m[4][4];
+#if 0
 } MtxF;
+#endif
+} BKMtxF;
 
 typedef struct bk_sprite_s{
     s16 frameCnt;

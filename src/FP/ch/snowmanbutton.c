@@ -73,16 +73,16 @@ void func_80386CB8(ActorMarker *this_marker, ActorMarker *other_marker){
 
 void FP_func_80386CF8(Actor *this){
     marker_setCollisionScripts(this->marker, NULL, NULL, func_80386CB8);
-    this->marker->propPtr->unk8_3 = TRUE;
+    this->marker->propPtr->unk8_3 = true;
     actor_collisionOn(this);
     
     if(!this->initialized){
-        this->initialized = TRUE;
+        this->initialized = true;
         this->pitch += (f32)(this->unkF4_8 - 1);
     }
     
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if(this->state == 3){
             maSnowButton_decRemaining();
         }

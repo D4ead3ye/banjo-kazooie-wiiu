@@ -51,7 +51,7 @@ bool func_8035D608(Actor *this) {
 
     player_getPosition(sp1C);
     if (LOCAL_D6600(this)->unk4 == 8) {
-        return TRUE;
+        return true;
     }
     return func_80309D58(&sp1C, this->unk10_18);
 }
@@ -126,8 +126,8 @@ void func_8035DA1C(Actor *this) {
     bool sp38;
 
     if (!this->initialized) {
-        this->initialized = TRUE;
-        this->unk138_25 = TRUE;
+        this->initialized = true;
+        this->unk138_25 = true;
         this->actor_specific_1_f = 4.0f;
         LOCAL_D6600(this)->unk4 =(map_get() == MAP_71_GL_STATUE_ROOM) ? 8 : 0xf;
         if (volatileFlag_get(VOLATILE_FLAG_C1_IN_FINAL_CHARACTER_PARADE)) {

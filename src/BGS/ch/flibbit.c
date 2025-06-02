@@ -49,7 +49,7 @@ bool BGS_func_803863F0(Actor *this, f32 arg1[3], s32 arg2){
     skeletalAnim_set(this->unk148, 0xdb, 0.2f,(arg2) ?  randf2(0.7f, 0.8f) :  randf2(0.75f, 0.85f));
     skeletalAnim_setBehavior(this->unk148, SKELETAL_ANIM_2_ONCE);
     func_80324D54(0.2f, 0x3f2, randf2(0.7f, 1.3f), randi2(0x61A8, 0x6978), this->position, 500.0f, 2500.0f);
-    return TRUE;
+    return true;
 }
 
 bool func_80386564(Actor *this){
@@ -145,7 +145,7 @@ bool func_8038686C(Actor *this) {
             return BGS_func_803863F0(this, sp68, 0);
         }
     }
-    return FALSE;
+    return false;
 }
 
 
@@ -175,7 +175,7 @@ void func_80386AEC(Actor *this, s32 next_state) {
     ActorLocal_Flibbit *local;
 
     local = (ActorLocal_Flibbit *) &this->local;
-    local->unk1 = FALSE;
+    local->unk1 = false;
     local->unk18 = 0.0f;
     local->unk24 = 0.0f;
 
@@ -225,8 +225,8 @@ void func_80386AEC(Actor *this, s32 next_state) {
     if (next_state == 6) {
         skeletalAnim_set(this->unk148, ASSET_112_ANIM_FLIBBIT_DIE, 0.2f, 0.4f);
         FUNC_8030E8B4(SFX_115_BUZZBOMB_DEATH, 1.0f, 32200, this->position, 500, 2500);
-        this->marker->collidable = FALSE;
-        this->unk10_1 = FALSE;
+        this->marker->collidable = false;
+        this->unk10_1 = false;
         local->unk14 = 1000.0f;
     }
     if (next_state == 7) {
@@ -323,7 +323,7 @@ void chflibbit_update(Actor *this){
     f32 sp4C[3];
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker_setCollisionScripts(this->marker, BGS_func_80386E30, func_80386E70, func_80386EB0);
         local->unk1C[0] = randf2(-2.0f, -1.0f);
         local->unk1C[1] = randf2(-2.0f, -1.0f);

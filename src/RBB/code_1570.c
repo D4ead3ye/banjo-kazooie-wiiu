@@ -210,7 +210,7 @@ void func_803881E8(Actor *this, s32 arg1){
         func_80324E38(0.2f, 3);
         timed_setStaticCameraToNode(1.1f, 7);
         timedFunc_set_1(1.6f, (GenFunction_1)func_80388154, (s32)this->marker);
-        levelSpecificFlags_set(LEVEL_FLAG_2D_RBB_UNKNOWN, TRUE);
+        levelSpecificFlags_set(LEVEL_FLAG_2D_RBB_UNKNOWN, true);
     }
 }
 
@@ -222,7 +222,7 @@ void func_803882B4(ActorMarker *marker, ActorMarker *arg1){
 
 void RBB_func_803882F4(Actor *this){
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
 
         if (levelSpecificFlags_get(LEVEL_FLAG_2D_RBB_UNKNOWN)) {
             func_80387AC0();

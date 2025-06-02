@@ -159,12 +159,12 @@ void func_802FC0D8(void) {
 bool func_802FC390(void){
     s32 *phi_v1 = D_80381560[0];
     if (D_80369884 == 0)
-        return FALSE; 
+        return false; 
     return *phi_v1 == 2;
 }
 
 bool func_802FC3C4(void){
     if (D_80369884 == 0)
-        return FALSE; 
+        return false; 
     return (func_802FDD0C(D_80381560[D_80369884 - 1]) == 0xE);
 }

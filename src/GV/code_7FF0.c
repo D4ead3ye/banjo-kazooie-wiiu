@@ -175,7 +175,7 @@ void func_8038E460(Actor *this){//banjo_door
     if(mapSpecificFlags_get(0x10)){
         func_8038E430(this);
         if(!mapSpecificFlags_get(2)){
-            mapSpecificFlags_set(2, TRUE);
+            mapSpecificFlags_set(2, true);
             func_8028F918(0);
             func_80324DBC(4.0f, ASSET_A7D_DIALOG_JINXY_HELPED, 4, NULL, NULL, NULL, NULL);
         }
@@ -186,11 +186,11 @@ void func_8038E4DC(Actor *this){
     f32 sp24;
     func_802D3D74(this);
     if(!this->initialized){
-        this->initialized = TRUE;
+        this->initialized = true;
         this->unk1C[0] = this->unk48;
     }
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if(exit_get() == 3){
             if(0.65 < this->unk48 && this->unk48 < 0.95){
                 func_80343E20(0x6a, 0x7ff8, 0.32842f, 0x34);
@@ -198,8 +198,8 @@ void func_8038E4DC(Actor *this){
         }
         else{//L8038E594
             func_8032BC3C(this, this->unk1C[0]);
-            mapSpecificFlags_set(3, FALSE);
-            mapSpecificFlags_set(4, FALSE);
+            mapSpecificFlags_set(3, false);
+            mapSpecificFlags_set(4, false);
             return;
         }
     }//L8038E5BC
@@ -209,12 +209,12 @@ void func_8038E4DC(Actor *this){
     sp24 = this->unk48;
     func_8038E430(this);
     if(this->unk48 < sp24){
-        mapSpecificFlags_set(3, FALSE);
-        mapSpecificFlags_set(4, FALSE);
+        mapSpecificFlags_set(3, false);
+        mapSpecificFlags_set(4, false);
     }
     else{
         if(!mapSpecificFlags_get(4)){
-            mapSpecificFlags_set(4, TRUE);
+            mapSpecificFlags_set(4, true);
             func_802BAFE4(1);
         }
     }
@@ -261,7 +261,7 @@ void func_8038E648(Actor *this){
                 subaddie_set_state(this, 1);
                 this->pitch = 0.0f;
                 func_8030E540(SFX_7F_HEAVYDOOR_SLAM);
-                mapSpecificFlags_set(5, FALSE);
+                mapSpecificFlags_set(5, false);
                 core1_7090_freeSfxSource(0);
                 volatileFlag_setAndTriggerDialog_0(VOLATILE_FLAG_AC_GV_TRAPDOOR_MISSED);
             }
@@ -273,7 +273,7 @@ void func_8038E914(Actor *this){
     func_80389F5C(this);
     if(!this->initialized){
         func_802D3D74(this);
-        this->initialized = TRUE;
+        this->initialized = true;
         if(sns_get_item_state(SNS_ITEM_EGG_BLUE, 1))
             marker_despawn(this->marker);
     }
@@ -282,7 +282,7 @@ void func_8038E914(Actor *this){
 void func_8038E97C(Actor *this){
     f32 tmp_f0;
     if(!this->initialized){
-        this->initialized = TRUE;
+        this->initialized = true;
         this->scale = 1.35f;
         func_802D3D74(this);
         this->unk1C[0] = this->position_y;
@@ -290,7 +290,7 @@ void func_8038E97C(Actor *this){
     }
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if(exit_get() == 7){
             this->position_z += 117.0;
             this->position_y += 130.0;
@@ -363,7 +363,7 @@ void chKazooieDoor_update(Actor *this){
                 subaddie_set_state(this, 1);
                 func_8030E540(SFX_7F_HEAVYDOOR_SLAM);
                 core1_7090_freeSfxSource(1);
-                mapSpecificFlags_set(6, FALSE);
+                mapSpecificFlags_set(6, false);
             }
             break;
     }//L8038ED40
@@ -374,7 +374,7 @@ void chSunSwitch_update(Actor *this){
     func_802D4A9C(this, 3);
     
     if( this->velocity_x == 0.0f 
-        && mapSpecificFlags_get(3) == TRUE
+        && mapSpecificFlags_get(3) == true
         && func_802BB270()
     ){
         this->velocity_x = 1.0f;
@@ -383,7 +383,7 @@ void chSunSwitch_update(Actor *this){
     }//L8038EDC8
 
     if( this->velocity_x == 1.0f
-        && mapSpecificFlags_get(3) == FALSE
+        && mapSpecificFlags_get(3) == false
     ){
         this->velocity_x = 0.0f;
     }
@@ -391,14 +391,14 @@ void chSunSwitch_update(Actor *this){
 
 void chStarSwitch_update(Actor *this){
     if( this->velocity_x == 0.0f 
-        && mapSpecificFlags_get(5) == TRUE
+        && mapSpecificFlags_get(5) == true
         && func_802BB270()
     ){
         this->velocity_x = 1.0f;
     }//L8038EDC8
 
     if( this->velocity_x == 1.0f
-        && mapSpecificFlags_get(5) == FALSE
+        && mapSpecificFlags_get(5) == false
     ){
         this->velocity_x = 0.0f;
     }
@@ -407,7 +407,7 @@ void chStarSwitch_update(Actor *this){
 
 void chHoneycombSwitch_update(Actor *this){
     if(!mapSpecificFlags_get(0xd) && honeycombscore_get(HONEYCOMB_B_GV_CACTUS)){
-        mapSpecificFlags_set(0xd, TRUE);
+        mapSpecificFlags_set(0xd, true);
     }
     func_802D4A9C(this, 0xd);
 }
@@ -417,9 +417,9 @@ void func_8038EF14(Actor *this){
 }
 
 void chKazooieTarget_update(Actor *this){
-    this->marker->propPtr->unk8_3 = TRUE;
+    this->marker->propPtr->unk8_3 = true;
     if( this->velocity_x == 0.0f 
-        && mapSpecificFlags_get(6) == TRUE
+        && mapSpecificFlags_get(6) == true
         && func_802BB270()
     ){
         this->velocity_x = 1.0f;
@@ -428,7 +428,7 @@ void chKazooieTarget_update(Actor *this){
     }//L8038EDC8
 
     if( this->velocity_x == 1.0f
-        && mapSpecificFlags_get(6) == FALSE
+        && mapSpecificFlags_get(6) == false
     ){
         this->velocity_x = 0.0f;
     }
@@ -442,7 +442,7 @@ void func_8038F028(UNK_TYPE(s32) arg0, ActorMarker *arg1, s32 arg2, s32 arg3){
     f32 sp24[3];
     s16 *tmp_v1;
 
-    if(mapSpecificFlags_get(arg2) == FALSE){
+    if(mapSpecificFlags_get(arg2) == false){
         mapSpecificFlags_set(arg2, 1);
 
         sp24[0] = (f32)arg1->propPtr->x;

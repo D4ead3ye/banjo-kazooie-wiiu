@@ -205,16 +205,16 @@ bool func_802E74A0(f32 arg0[3], f32 arg1, f32 arg2[3], f32 arg3[3]) {
     f32 sp20;
 
     if (arg1 <= ml_func_802560D0(arg2, arg3, arg0)) {
-        return FALSE;
+        return false;
     }
     sp24[0] = (arg2[0] + arg3[0]) / 2;
     sp24[1] = (arg2[1] + arg3[1]) / 2;
     sp24[2] = (arg2[2] + arg3[2]) / 2;
     sp20 = ml_vec3f_distance(sp24, arg0);
     if ((ml_vec3f_distance(sp24, arg2) + arg1) <= sp20) {
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 bool func_802E7588(f32 arg0[3], f32 arg1, f32 arg2[3], f32 arg3) {

@@ -52,18 +52,18 @@ void bsDroneLook_update(void) {
         ncFirstPersonCamera_setZoomedOutRotation(eye_rotation);
         yaw_setIdeal(eye_rotation[1] + 180.0f);
 
-        exit_first_person = FALSE;
+        exit_first_person = false;
         // 1st person cancelled via input
         if (bakey_pressed(BUTTON_B) || bakey_pressed(BUTTON_A) || bakey_pressed(BUTTON_C_UP)) {
-            exit_first_person = TRUE;
+            exit_first_person = true;
         }
         // 1st person cancelled via entering water
         if (player_inWater()) {
             if (player_getTransformation() == TRANSFORM_1_BANJO && player_getWaterState() == BSWATERGROUP_0_NONE) {
-                exit_first_person += TRUE;
+                exit_first_person += true;
             }
         } else if (func_8028B254(25) == 0) {
-            exit_first_person += TRUE;
+            exit_first_person += true;
         }
         if (exit_first_person) {
             next_state = func_8029BDBC();

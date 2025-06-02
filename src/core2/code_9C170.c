@@ -273,13 +273,13 @@ f32 func_80323FDC(struct56s *arg0, f32 arg1, f32 arg2, s32 *arg3) {
     f32 temp_f2;
 
     temp_f2 = func_80323F74(arg0, arg1, arg2);
-    *arg3 = FALSE;
+    *arg3 = false;
     if (arg2 > 0.0f) {
         if (temp_f2 < arg1) {
-            *arg3 = TRUE;
+            *arg3 = true;
         }
     } else if ((arg2 < 0.0f) && (arg1 < temp_f2)) {
-        *arg3 = TRUE;
+        *arg3 = true;
     }
     return temp_f2;
 }
@@ -296,13 +296,13 @@ f32 func_803240E0(struct56s *arg0, f32 arg1, f32 arg2, bool *arg3) {
     f32 temp_f2;
 
     temp_f2 = func_80324078(arg0, arg1, arg2);
-    *arg3 = FALSE;
+    *arg3 = false;
     if (arg2 > 0.0f) {
         if (temp_f2 < arg1) {
-            *arg3 = TRUE;
+            *arg3 = true;
         }
     } else if ((arg2 < 0.0f) && (arg1 < temp_f2)) {
-        *arg3 = TRUE;
+        *arg3 = true;
     }
     return temp_f2;
 }

@@ -49,7 +49,7 @@ void func_803905CC(ActorMarker *marker, ActorMarker *other_marker){
         func_8025A6EC(SFX_GOLD_FEATHER_REFILL, -1);
         break;
     }
-    marker->collidable = FALSE;
+    marker->collidable = false;
 }
 
 void func_803906A0(Actor *this) {
@@ -59,8 +59,8 @@ void func_803906A0(Actor *this) {
 
     if (!this->initialized) {
         marker_setCollisionScripts(this->marker, func_803905CC, NULL, NULL);
-        this->initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->initialized = true;
+        this->marker->propPtr->unk8_3 = true;
     }
     if (this->marker->unk14_21 && this->marker->collidable) {
         switch (this->marker->modelId) {

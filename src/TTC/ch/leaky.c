@@ -37,15 +37,15 @@ static void __chLeaky_updateFunc(Actor *this) {
 
     func_8028E668(this->position, 100.0f, -20.0f, 100.0f);
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = FALSE;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = false;
 
-        if (levelSpecificFlags_get(LEVEL_FLAG_5_TTC_UNKNOWN) != FALSE) {
-            levelSpecificFlags_set(LEVEL_FLAG_5_TTC_UNKNOWN, FALSE);
+        if (levelSpecificFlags_get(LEVEL_FLAG_5_TTC_UNKNOWN) != false) {
+            levelSpecificFlags_set(LEVEL_FLAG_5_TTC_UNKNOWN, false);
             timedFunc_set_1(0.5f, (GenFunction_1)comusic_playTrack, COMUSIC_2D_PUZZLE_SOLVED_FANFARE);
         }
 
-        if (levelSpecificFlags_get(LEVEL_FLAG_2_TTC_UNKNOWN) != FALSE) {
+        if (levelSpecificFlags_get(LEVEL_FLAG_2_TTC_UNKNOWN) != false) {
             temp_v0_2 = func_8034C5AC(300);
             if (temp_v0_2 != 0) {
                 func_8034E71C(temp_v0_2, -600, 0.0f);
@@ -62,7 +62,7 @@ static void __chLeaky_updateFunc(Actor *this) {
         && !player_movementGroup() 
         && gcdialog_showText(ASSET_A1A_DIALOG_LEAKY_FIRST_MEET, 0, NULL, NULL, NULL, NULL)
     ){
-        this->has_met_before = TRUE;
+        this->has_met_before = true;
     }
 
     if (func_803114B0() == 0) {
@@ -106,18 +106,18 @@ bool chLeaky_eggCollision(ActorMarker *marker){
     Actor *this = marker_getActor(marker);
 
     if (levelSpecificFlags_get(LEVEL_FLAG_2_TTC_UNKNOWN)) {
-        return TRUE;
+        return true;
     }
 
     comusic_playTrack(COMUSIC_2B_DING_B);
     this->unk38_31++;
 
     if (this->unk38_31 < 2) {
-        return TRUE;
+        return true;
     }
 
-    levelSpecificFlags_set(2, TRUE);
-    levelSpecificFlags_set(5, TRUE);
+    levelSpecificFlags_set(2, true);
+    levelSpecificFlags_set(5, true);
     gcdialog_showText(ASSET_A28_DIALOG_LEAKY_DONE, 0x2a, this->position, this->marker, __chLeaky_showDoneText, NULL);
-    return TRUE;
+    return true;
 }

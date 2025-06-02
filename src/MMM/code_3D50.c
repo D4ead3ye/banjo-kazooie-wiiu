@@ -73,7 +73,7 @@ void func_8038A140(UNK_TYPE(s32) arg0) {
     if (arg0 == 2) {
         func_80324E38(0.3f, 3);
         timed_setStaticCameraToNode(0.3f, 1);
-        timedFunc_set_2(0.3f, mapSpecificFlags_set, MMM_SPECIFIC_FLAG_3_UNKNOWN, TRUE);
+        timedFunc_set_2(0.3f, mapSpecificFlags_set, MMM_SPECIFIC_FLAG_3_UNKNOWN, true);
         func_80324E38(3.0f, 0);
         timed_exitStaticCamera(3.0f);
         timedFunc_set_1(3.0f, func_8038A140, 3);
@@ -253,7 +253,7 @@ void func_8038AA44(void){
         && chTumblar_isBanjoAbove(MMM_D_8038C510.unkC, MMM_D_8038C510.unk10)
     ){
         if (!levelSpecificFlags_get(LEVEL_FLAG_2F_MMM_UNKNOWN)) {
-            levelSpecificFlags_set(LEVEL_FLAG_2F_MMM_UNKNOWN, TRUE);
+            levelSpecificFlags_set(LEVEL_FLAG_2F_MMM_UNKNOWN, true);
             func_8038A140(2);
         }
         else {

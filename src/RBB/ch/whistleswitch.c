@@ -72,7 +72,7 @@ void func_8038AC18(Actor *this, s32 new_state){
         func_8030E6D4(SFX_90_SWITCH_PRESS);
         local->unkC = vtxList_clone(model_getVtxList(marker_loadModelBin(this->marker)));
         
-        mapSpecificFlags_set(local->unk4->unk10, TRUE);
+        mapSpecificFlags_set(local->unk4->unk10, true);
         this->position_y -= 30.0f;
         local->unk8 = 1.0f;
         whistle_ctrl = actorArray_findActorFromActorId(0x1c5);
@@ -131,12 +131,12 @@ void func_8038AEB8(Actor *this){
     s32 tmp;
     
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->marker->propPtr->unk8_3 = 1;
         this->marker->actorFreeFunc = func_8038AD7C;
         marker_setCollisionScripts(this->marker, NULL, func_8038AD3C, NULL);
         local->unk4 = RBB_func_8038ABC0(this);
-        mapSpecificFlags_set(local->unk4->unk10, FALSE);
+        mapSpecificFlags_set(local->unk4->unk10, false);
         this->position_x = local->unk4->unk4[0];
         this->position_y = local->unk4->unk4[1];
         this->position_z = local->unk4->unk4[2];
@@ -155,7 +155,7 @@ void func_8038AEB8(Actor *this){
         if( tmp <  local->unk4->unk4[1] - 15.0f
             && local->unk4->unk4[1] - 15.0f <= this->position_y
         ){
-            mapSpecificFlags_set(local->unk4->unk10, FALSE);
+            mapSpecificFlags_set(local->unk4->unk10, false);
         }
     }//L8038B044
 }

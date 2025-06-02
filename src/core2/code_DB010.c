@@ -534,7 +534,7 @@ void func_80362E94(Actor *this){
             break;
         default: //L8036316C
             if(!this->volatile_initialized){
-                this->volatile_initialized = TRUE;
+                this->volatile_initialized = true;
                 this->lifetime_value = this->scale*10.0;
             }
 

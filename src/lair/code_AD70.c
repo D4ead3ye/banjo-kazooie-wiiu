@@ -147,7 +147,7 @@ void func_803917B0(Actor *actor)
 {
     Actor *unk = subaddie_getLinkedActor(actor);
 
-    unk->unk38_0 = TRUE;
+    unk->unk38_0 = true;
 }
 
 void func_803917DC(void)
@@ -231,10 +231,10 @@ void func_80391B04(Actor *this) {
         local->unk10 = func_8038E800();
         func_8038EA68(local->unk10, D_80394BC8);
         func_8038EA10(local->unk10, D_80394BC0);
-        this->unk58_2 = FALSE;
+        this->unk58_2 = false;
         func_80391810(this, 1);
         marker_setFreeMethod(this->marker, func_80391AE4);
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
     }
 
     func_8038E9A4(local->unk10, this->position);
@@ -265,7 +265,7 @@ void func_80391B04(Actor *this) {
         }
         if ((local->unk8 < this->position[1]) && !this->has_met_before) {
             FUNC_8030E8B4(SFX_14E_SOFT_EXPLOSION, 1.0f, 20000, this->position, 1500, 3000);
-            this->has_met_before = TRUE;
+            this->has_met_before = true;
         }
         break;
     case 3:

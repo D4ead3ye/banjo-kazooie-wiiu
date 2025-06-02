@@ -197,7 +197,7 @@ void func_8038AC7C(Actor *this) {
 
 
 void __chWarpCauldron_dingpotDialogCallback(ActorMarker *marker, enum asset_e text_id, s32 arg2){
-    fileProgressFlag_set(FILEPROG_F3_MET_DINGPOT, TRUE);
+    fileProgressFlag_set(FILEPROG_F3_MET_DINGPOT, true);
 }
 
 bool lair_func_8038ADF0(s32 arg0, s32 arg1) {
@@ -222,9 +222,9 @@ void chWarpCauldron_update(Actor *this) {
     
     lair_func_8038A864(this);
     if (!this->volatile_initialized) {
-        sp50 = FALSE;
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
+        sp50 = false;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = true;
         this->unk1C[1] = 0.0f;
         this->velocity[0] = this->yaw;
         if (this->modelCacheIndex == ACTOR_2DB_DINGPOT) {
@@ -242,7 +242,7 @@ void chWarpCauldron_update(Actor *this) {
             func_8038A704(this);
             func_802D09B8(this, 2);
             func_8038A96C(this, 2);
-            sp50 = TRUE;
+            sp50 = true;
             if( ( func_802D677C(-1) != 0 
                   && (func_802D677C(-1) == D_80393620[this->unkF4_8 - 1].unk0) 
                   && (func_802D67AC(-1) == MAP_16_GV_RUBEES_CHAMBER) 
@@ -271,7 +271,7 @@ void chWarpCauldron_update(Actor *this) {
             if (func_8038A690(this)) {
                 func_8028F918(2);
                 subaddie_set_state_forward(this, 2);
-                this->unk38_0 = FALSE;
+                this->unk38_0 = false;
                 func_8038A96C(this, 1);
                 func_802BAFE4(D_80393620[this->unkF4_8 - 1].unk3);
                 func_802D09B8(this, 2);
@@ -333,7 +333,7 @@ void chWarpCauldron_update(Actor *this) {
             break;
 
         case 3: //L8038B3DC
-            this->unk38_0 = TRUE;
+            this->unk38_0 = true;
             if (this->unk1C[2] != 0.0f) {
                 this->unk1C[2] = this->unk1C[2] - 1.0f;
             } else {
@@ -344,7 +344,7 @@ void chWarpCauldron_update(Actor *this) {
             break;
 
         case 7: //L8038B460
-            this->unk38_0 = TRUE;
+            this->unk38_0 = true;
             if (actor_animationIsAt(this, 0.62f)) {
                 func_8030E6D4(SFX_1B_EXPLOSION_1);
             }
@@ -387,7 +387,7 @@ void chWarpCauldron_update(Actor *this) {
             if (func_8038A690(this) && !fileProgressFlag_get(FILEPROG_F3_MET_DINGPOT)) {
                 gcdialog_showText(ASSET_FAD_DIALOG_UNKNOWN, 0xA, this->position, NULL, __chWarpCauldron_dingpotDialogCallback, NULL);
             }
-            this->unk38_0 = TRUE;
+            this->unk38_0 = true;
 
             sp3C = 0;
             if (fileProgressFlag_get(FILEPROG_FC_DEFEAT_GRUNTY)){
@@ -436,7 +436,7 @@ Actor *chWarpCauldron_draw(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx)
     this = marker_getActor(marker);
     if(this->modelCacheIndex == ACTOR_23B_WARP_CAULDRON) {
         func_8033A45C(3, BOOL(this->unk38_0));
-        func_8033A45C(4, this->unk38_0 ? FALSE : TRUE);
+        func_8033A45C(4, this->unk38_0 ? false : true);
     }
     this = actor_draw(marker, gfx, mtx, vtx);
     if (marker->unk14_21 && this->unk38_0 && (getGameMode() != GAME_MODE_4_PAUSED)) {

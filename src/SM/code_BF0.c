@@ -17,7 +17,7 @@ static void __codeBF0_draw(Actor *this){
     if(!this->volatile_initialized){
         this->unk10_12 = 0;
         this->unk38_31 = this->unk10_12;
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         actor_collisionOff(this);
     }
 
@@ -38,5 +38,5 @@ static void __codeBF0_draw(Actor *this){
 bool codeBF0_shouldSpawnQuarrieHoneyComb(ActorMarker *marker){
     Actor *actor = marker_getActor(marker);
     
-    return (--actor->unk10_12) == 0 ? TRUE : FALSE;
+    return (--actor->unk10_12) == 0 ? true : false;
 }

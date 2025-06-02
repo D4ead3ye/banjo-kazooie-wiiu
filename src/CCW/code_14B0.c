@@ -70,7 +70,7 @@ void CCW_func_80387A40(Actor *this) {
     local = (ActorLocal_CCW_14B0 *)&this->local;
     sp68 = time_getDelta();
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->marker->actorFreeFunc = CCW_func_80387A20;
         local->unk4 = &D_8038EC00[0];
         while((local->unk4->unk0 != 0) && (map_get() != local->unk4->unk0)) {
@@ -123,7 +123,7 @@ void CCW_func_80387A40(Actor *this) {
         if (sp44[2] > -600.0f) {
             if (!local->unk4->unk3 || !jiggyscore_isCollected(local->unk4->unk3) ) {
                 gcdialog_showText(local->unk4->unk4, 4, NULL, NULL, NULL, NULL);
-                mapSpecificFlags_set(local->unk4->unk2, TRUE);
+                mapSpecificFlags_set(local->unk4->unk2, true);
             }
         }
     }

@@ -63,7 +63,7 @@ void chPinkEgg_spawnNext(ActorMarker * arg0, u32 arg1){
 
     ((ActorLocal_PinkEgg *) &unkActor->local)->unk0 = arg1 + 1;
     ((ActorLocal_PinkEgg *) &unkActor->local)->unk4 = 5;
-    unkActor->marker->collidable = FALSE;
+    unkActor->marker->collidable = false;
     
 }
 
@@ -87,7 +87,7 @@ void chPinkEgg_collision(ActorMarker *this, ActorMarker *other_marker){
     sfxsource_play(SFX_AA_BGS_EGG_BREAKING_1, 28000);
     subaddie_set_state(thisActor, 3);
     actor_playAnimationOnce(thisActor);
-    this->collidable = FALSE;
+    this->collidable = false;
     thisActor->unk124_6 = 0;
     if(D_803906C4[(tmp = (ActorLocal_PinkEgg *) &thisActor->local)->unk0] != 0){
         __spawnQueue_add_2(chPinkEgg_spawnNext, thisActor->marker, tmp->unk0);
@@ -101,13 +101,13 @@ void chPinkEgg_update(Actor *this){
     if(!this->initialized){
         this->marker->propPtr->unk8_3 = 1;
         marker_setCollisionScripts(this->marker, NULL, NULL, chPinkEgg_collision);
-        this->initialized = TRUE;
+        this->initialized = true;
     }
 
     switch(this->state){
         case 1:
             if(!((ActorLocal_PinkEgg *) &this->local)->unk4){
-                this->marker->collidable = TRUE;
+                this->marker->collidable = true;
                 subaddie_set_state(this,2);
                 
             }else{

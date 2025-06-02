@@ -58,7 +58,7 @@ void chspellbarrier_update(Actor *this) {
     ActorMarker *jinjo_marker;
 
     if (!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker_setCollisionScripts(this->marker, NULL, chspellbarrier_collisionPassive, NULL);
         marker_setFreeMethod(this->marker, chspellbarrier_free);
         this->marker->propPtr->unk8_3 = 0;

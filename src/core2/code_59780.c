@@ -117,7 +117,7 @@ void func_802E07E0(Actor *this) {
     }
 
     if(!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if (sp24) {
             func_802C7318(this);
         }
@@ -140,7 +140,7 @@ void func_802E07E0(Actor *this) {
 void func_802E08F0(Actor *this) {
     f32 sp24[3];
 
-    this->marker->collidable = FALSE;
+    this->marker->collidable = false;
     anctrl_setDuration(this->anctrl, this->unk5C);
     anctrl_setPlaybackType(this->anctrl, ANIMCTRL_ONCE);
     if (actor_animationIsAt(this, 0.99f) != 0) {

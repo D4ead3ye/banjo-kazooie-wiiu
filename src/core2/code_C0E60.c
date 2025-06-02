@@ -147,15 +147,15 @@ void func_80348044(Gfx **gfx, BKSprite* sprite, s32 frame, s32 tmem, s32 rtile, 
         for(palette_addr = (s32)(sprite_frame + 1); palette_addr % 8; palette_addr++);
         gDPSetTextureLUT((*gfx)++, G_TT_RGBA16);
         gDPLoadTLUT_pal16((*gfx)++, 0, palette_addr);
-        spriteRenderHasPalette = TRUE;
-        spriteRender1PrimMode = FALSE;
+        spriteRenderHasPalette = true;
+        spriteRender1PrimMode = false;
         D_80386074 = 0; 
         texture_block = (BKSpriteTextureBlock *)(palette_addr + 0x20);
         D_80386098 = D_8038607C = 0;
     } else if (sprite->type & SPRITE_TYPE_CI8) {
         gDPPipelineMode((*gfx)++, G_PM_1PRIMITIVE);
         for(palette_addr = (s32)(sprite_frame + 1); palette_addr % 8; palette_addr++);
-        spriteRender1PrimMode = spriteRenderHasPalette = TRUE;
+        spriteRender1PrimMode = spriteRenderHasPalette = true;
         D_80386074 = NULL;
         D_8038607C = 0;
         texture_block = (BKSpriteTextureBlock *)(palette_addr + 0x200);
@@ -169,7 +169,7 @@ void func_80348044(Gfx **gfx, BKSprite* sprite, s32 frame, s32 tmem, s32 rtile, 
         gDPLoadTLUT_pal256((*gfx)++, palette_addr);
     } else {
         texture_block = (BKSpriteTextureBlock *)(sprite_frame + 1);
-        spriteRenderHasPalette = FALSE;
+        spriteRenderHasPalette = false;
     }
 
     if ((D_8038607C == 0) || (tmem == D_80386078)) {
@@ -287,7 +287,7 @@ void func_80349AD0(void){
     D_80386074 = D_80386070 = 0;
     D_80386098 = D_8038607C = 0;
     D_80386094 = D_80386078 = -1;
-    spriteRenderHasPalette = FALSE;
+    spriteRenderHasPalette = false;
 }
 
 void func_80349B1C(Gfx **gfx) {
@@ -298,10 +298,10 @@ void func_80349B1C(Gfx **gfx) {
     if (spriteRenderHasPalette) {
         gDPPipeSync((*gfx)++);
         gDPSetTextureLUT((*gfx)++, G_TT_NONE);
-        spriteRenderHasPalette = FALSE;
+        spriteRenderHasPalette = false;
         if (spriteRender1PrimMode) {
             gDPPipelineMode((*gfx)++, G_PM_NPRIMITIVE);
-            spriteRender1PrimMode = FALSE;
+            spriteRender1PrimMode = false;
         }
     }
 }

@@ -40,9 +40,9 @@ bool func_802DC188(void) {
 
     player_getVelocity(sp1C);
     if((sp1C[0] == 0.0) && (sp1C[1] == -1.0) && (sp1C[2] == 0.0)) {
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 
@@ -51,9 +51,9 @@ void func_802DC208(Actor *this) {
     enum asset_e phi_a1;
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         actor_collisionOff(this);
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->marker->propPtr->unk8_3 = true;
     }
     if( viewport_func_8024DB50(this->position, 50.0f) 
         && func_802DC188() 

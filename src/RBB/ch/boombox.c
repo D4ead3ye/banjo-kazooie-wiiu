@@ -217,7 +217,7 @@ void func_8038F190(Actor *this, s32 arg1){
 
     if(local->unk34){
         func_803343F8(local->unk34);
-        local->unk34 = FALSE;
+        local->unk34 = false;
     }
 
     if(arg1 == 1){
@@ -328,7 +328,7 @@ void func_8038F618(Actor *this){
 
     if(!this->volatile_initialized){
         this->marker->propPtr->unk8_3 = 0;
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         local->unk8[0] = this->position_x;
         local->unk8[1] = this->position_y;
         local->unk8[2] = this->position_z;
@@ -347,7 +347,7 @@ void func_8038F618(Actor *this){
     player_getPosition(sp7C);
     sp78 = func_80329210(this, sp7C);
     if(!local->unk38){
-        local->unk38 = TRUE;
+        local->unk38 = true;
         func_8038FB54();
     }
     func_8038E92C(this);

@@ -329,9 +329,9 @@ void func_802B1BF4(void) {
     bool smooth_transition;
 
     anim_ctrl = baanim_getAnimCtrlPtr();
-    smooth_transition = TRUE;
+    smooth_transition = true;
     if(bs_getPrevState() == BS_12_BFLIP){
-        smooth_transition = FALSE;
+        smooth_transition = false;
     }
     anctrl_reset(anim_ctrl);
     anctrl_setSmoothTransition(anim_ctrl, smooth_transition);

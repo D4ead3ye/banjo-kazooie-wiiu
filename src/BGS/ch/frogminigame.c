@@ -134,7 +134,7 @@ void chfrogminigame_update(Actor *this){
 
     local = &this->bgs_6730;
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         local->unk0 = 0;
         local->unk4 = 0;
         local->unk8 = 0;

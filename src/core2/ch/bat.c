@@ -105,7 +105,7 @@ bool chbat_nearHome(Actor *arg0, s32 arg1) {
     ) {
         return  func_80329480(arg0) != 0;
     }
-    return FALSE;
+    return false;
 }
 
 void chBat_updateHeight(Actor *this, f32 target_height, f32 velocity){
@@ -129,25 +129,25 @@ bool func_8035FC98(Actor *this, f32 arg1){
     f32 sp1C[3];
 
     if(this->unk38_0)
-        return FALSE;
+        return false;
 
     TUPLE_COPY(sp28, this->position);
     TUPLE_COPY(sp1C, sp28);
     sp1C[1] += arg1;
 
     if (func_80309B48(sp28, sp1C, sp34, 0x5E0000) != NULL)
-        return TRUE;
-    return FALSE;
+        return true;
+    return false;
 
 }
 
 bool func_8035FD28(Actor *this){
     this->velocity[0] -= 2.5;
     if(func_8035FC98(this, this->velocity[0]*2)){
-        return FALSE;
+        return false;
     }
     this->position[1] += this->velocity[0];
-    return TRUE;
+    return true;
 }
 
 bool chbat_nearPlayer(Actor *this) {
@@ -157,48 +157,48 @@ bool chbat_nearPlayer(Actor *this) {
     sp24[1] += 50.0f;
     if (this->unk38_0){
         if(!func_80329260(this, sp24)){
-            return FALSE;
+            return false;
         }
     } else{
         if(!func_80329210(this, sp24)){
-            return FALSE;
+            return false;
         }
     }
 
     if (this->unk38_31 != 0) {
         if (func_80329530(this, 0) && (sp24[1] <= (this->unk1C[1] - 40.0f))) {
-            return TRUE;
+            return true;
         }
         this->unk38_31--;
-        return FALSE;
+        return false;
     }
     if (func_80329530(this, 800) && (sp24[1] <= (this->unk1C[1] - 40.0f))) {
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
 }
 
 bool func_8035FEDC(Actor *this){
     if(func_8032CA80(this, this->unk38_0?0x13:4)){
         if(this->unk38_0){
-            return FALSE;
+            return false;
         }
         
         if(func_80329480(this)){
             this->actor_specific_1_f = 0.0f;
-            return FALSE;
+            return false;
         }
     }
-    return TRUE;
+    return true;
 }
 
 bool func_8035FF5C(Actor *this){
     if(func_8032CA80(this, 5) && func_80329480(this)){
         this->actor_specific_1_f = 0.0f;
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 void func_8035FFAC(Actor *this, f32 arg1){
@@ -271,12 +271,12 @@ bool func_80360198(Actor *this) {
 
     if (this->state == CH_BAT_STATE_ROAM) {
         if (func_8035FF5C(this) == 0) {
-            return FALSE;
+            return false;
         }
     } else if (func_8035FEDC(this) == 0) {
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 f32 func_803603AC(Actor *this, s32 arg1, u8 arg2){
@@ -341,7 +341,7 @@ bool chbat_updateRoam(Actor *this) {
         if (func_80329480(this) != 0) {
             this->lifetime_value = 0.0f;
         } else {
-            return TRUE;
+            return true;
         }
     }
     for(phi_s2 = 0; !func_80360198(this) && phi_s2 < 1; phi_s2++){
@@ -372,7 +372,7 @@ bool chbat_updateRoam(Actor *this) {
     if (this->position[1] <= mapModel_getFloorY(this->position)) {
         this->velocity[0] = 3.0f;
     }
-    return TRUE;
+    return true;
 }
 
 void chBat_dieCollision(ActorMarker *this_marker, ActorMarker *other_marker){
@@ -380,7 +380,7 @@ void chBat_dieCollision(ActorMarker *this_marker, ActorMarker *other_marker){
     ChBatLocal *local = (ChBatLocal *)&this->local;
     chBat_fall(this);
     local->cooldown = 0.0f;
-    this->marker->collidable = FALSE;
+    this->marker->collidable = false;
     FUNC_8030E8B4(SFX_115_BUZZBOMB_DEATH, 1.3f, 26000, this->position, 1250, 2500);
 }
 
@@ -396,9 +396,9 @@ void chbat_update(Actor *this){
     f32 sp34;
 
     if(!this->initialized){
-        this->initialized = TRUE;
+        this->initialized = true;
         marker_setCollisionScripts(this->marker, NULL, chBat_attackCollision, chBat_dieCollision);
-        this->unk38_0 = FALSE;
+        this->unk38_0 = false;
         this->actor_specific_1_f = 0.0f;
         this->velocity_x = 0.0f;
         TUPLE_COPY(this->unk1C, this->position); // set roost position

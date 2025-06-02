@@ -77,7 +77,7 @@ void chGreenBlast_update(Actor *this) {
     f32 target_position[3];
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker_setCollisionScripts(this->marker, NULL, NULL, chGreenBlast_collisionDie);
         this->marker->propPtr->unk8_3 = 0;
         actor_collisionOn(this);

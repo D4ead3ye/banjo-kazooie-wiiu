@@ -289,9 +289,9 @@ static bool __chVegetables_func_80387FA8(Actor* this, sChVegetable* local, s32 y
     sp24[2] = sp18[2] + local->unk0_z;
 
     if (func_80307258(sp24, this->unk10_25 - 1, this->unk10_18 - 1) == -1)
-        return FALSE;
+        return false;
     else
-        return TRUE;
+        return true;
 }
 
 static void __chVegetables_update(Actor* this) {
@@ -343,10 +343,10 @@ static void __chVegetables_update(Actor* this) {
         this->velocity_x = temp_velX;
         this->velocity_y = (local->vegetable_type == CH_VEGETABLE_3_COLLIWOBBLE) ? 90.0f : 70.0f;
         this->velocity_z = temp_velZ;
-        this->has_met_before = TRUE;
+        this->has_met_before = true;
         this->unk138_23 = 0;
         this->unk38_0 = 0;
-        this->initialized = TRUE;
+        this->initialized = true;
         this->scale = 0.5;
     }
 
@@ -503,7 +503,7 @@ static void __chVegetables_update(Actor* this) {
             sp54[2] = this->position_z;
             if (local->vegetable_type == CH_VEGETABLE_1_TOPPER)
                 sp54[1] += 150.0f;
-            this->has_met_before = FALSE;
+            this->has_met_before = false;
             __chVegetables_setParticlesForModel2(partEmitMgr_newEmitter(3), sp54, 3, (local->vegetable_type == CH_VEGETABLE_1_TOPPER) ? ASSET_4F0_MODEL_TOPPER_UNKNOWN: ASSET_4F1_MODEL_BAWL_OR_COLLIWOBBLE_UNKNOWN);
         }
         

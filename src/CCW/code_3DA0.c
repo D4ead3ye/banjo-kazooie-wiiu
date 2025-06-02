@@ -89,7 +89,7 @@ void chcaterpillar_update(Actor *this){
     sp84 = time_getDelta();
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         local->unk0[0] = this->position[0];
         local->unk0[1] = this->position[1];
         local->unk0[2] = this->position[2];
@@ -154,7 +154,7 @@ void chcaterpillar_update(Actor *this){
             func_8028F030(ACTOR_2A2_CATERPILLAR);
             if(!volatileFlag_get(VOLATILE_FLAG_B2)){
                 gcdialog_showText(ASSET_CC7_DIALOG_UNKNOWN, 4, NULL, NULL, NULL, NULL);
-                volatileFlag_set(VOLATILE_FLAG_B2, TRUE);
+                volatileFlag_set(VOLATILE_FLAG_B2, true);
             }
             FUNC_8030E8B4(SFX_C5_TWINKLY_POP, 1.0f, 25000, this->position, 0x1f4, 0x9c4);
             marker_despawn(this->marker);

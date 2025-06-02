@@ -68,9 +68,9 @@ Actor *chPortrait_draw(ActorMarker *marker, Gfx **graphics, Mtx **matrix, Vtx **
 
 void chPortrait_update(Actor *this) {
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
 
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->marker->propPtr->unk8_3 = true;
         actor_collisionOff(this);
         this->unk38_31 = 2;
     }

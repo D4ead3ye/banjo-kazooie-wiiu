@@ -71,8 +71,8 @@ void func_8038C8A0(Actor *this, s32 next_state){
     
     local->unk0 = 0;
     local->unk24 = 0.0f;
-    this->marker->propPtr->unk8_3 = (next_state == 1) ? FALSE : TRUE;
-    this->marker->collidable = (next_state == 1) ? FALSE : TRUE;
+    this->marker->propPtr->unk8_3 = (next_state == 1) ? false : true;
+    this->marker->collidable = (next_state == 1) ? false : true;
     if(this->state == 4 || this->state == 5)
         sfxsource_freeSfxsourceByIndex(local->sfxsourceIdx);
     
@@ -159,7 +159,7 @@ void func_8038CC98(Actor *this){
 
     if(!this->volatile_initialized){
         sp7C = fileProgressFlag_getN(FILEPROG_F8_KING_SANDYBUTT_PYRAMID_STATE, 2);
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->marker->actorFreeFunc = func_8038C880;
         local->unk8 = &D_803911F0[this->modelCacheIndex - 0x285];
         local->unk10 = 0;

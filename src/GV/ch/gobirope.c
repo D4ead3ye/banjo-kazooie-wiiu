@@ -38,8 +38,8 @@ void chGobiRope_update(Actor *this){
     Actor *sp2C;
     f32 sp28;
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = true;
         actor_collisionOff(this);
         sp2C = actorArray_findClosestActorFromActorId(this->position, ACTOR_12E_GOBI_1, -1, &sp28);
         if(sp2C){

@@ -151,7 +151,7 @@ static void __chAttackTutorial_update(Actor *this) {
           ? 1
           : 0;
 
-        this->initialized = TRUE;
+        this->initialized = true;
     }
 
     switch(this->state) {
@@ -166,7 +166,7 @@ static void __chAttackTutorial_update(Actor *this) {
         case CH_ATTACK_TUTORIAL_STATE_2_APPLY_LEARNED_MOVE:
             if (mapSpecificFlags_get(SM_SPECIFIC_FLAG_7)) {
                 __chAttackTutorial_showDialogText(this->marker);
-                mapSpecificFlags_set(SM_SPECIFIC_FLAG_7, FALSE);
+                mapSpecificFlags_set(SM_SPECIFIC_FLAG_7, false);
             }
             break;
 
@@ -213,7 +213,7 @@ static void __chAttackTutorial_showDialogText(ActorMarker* marker) {
     
     Actor* actor = marker_getActor(marker);
     
-    has_killed_enemy = actor->unk38_31 ? TRUE : FALSE;
+    has_killed_enemy = actor->unk38_31 ? true : false;
     if (has_killed_enemy) {
         dialog_flag = 0xE;
     }
@@ -240,7 +240,7 @@ static void __chAttackTutorial_showDialogText(ActorMarker* marker) {
     }
 
     if (!mapSpecificFlags_get(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED) && chmole_learnedAllSpiralMountainAbilities() && has_killed_enemy) {
-        mapSpecificFlags_set(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, TRUE);
+        mapSpecificFlags_set(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, true);
         dialog_text = ASSET_E12_DIALOG_BOTTLES_LEARNED_TUTORIAL_MOVES;
     }
 

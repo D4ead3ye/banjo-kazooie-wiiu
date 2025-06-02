@@ -46,10 +46,10 @@ bool func_80388B30(Actor *this, float arg1) {
     }
 
     if (yaw < arg1) {
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
 }
 
 void func_80388BEC(NodeProp *node, ActorMarker *marker) {
@@ -125,13 +125,13 @@ void chjujuhitbox_update(Actor *this) {
     jujuCtlPtr = (ActorLocal_JujuHitbox *) &this->local;
 
     if (!this->initialized) {
-        this->initialized = TRUE;
-        this->has_met_before = FALSE;
+        this->initialized = true;
+        this->has_met_before = false;
         jujuCtlPtr->unk18 = 0.5f;
     }
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         __spawnQueue_add_2((GenFunction_2) __chjujuhitbox_initialize_all, this->marker, jujuCtlPtr->unk4);
         __chjujuhitbox_playRubbingSfx(this);
         return;
@@ -139,7 +139,7 @@ void chjujuhitbox_update(Actor *this) {
 
     if (func_80329530(this, 0xfa) && !func_80329530(this, 0x50) && !player_movementGroup()) {
         if (!this->has_met_before && gcdialog_showText(ASSET_B44_DIALOG_JUJU_MEET, 0, 0, 0, NULL, NULL)) {
-            this->has_met_before = TRUE;
+            this->has_met_before = true;
         }
     }
 
@@ -162,6 +162,6 @@ void chjujuhitbox_update(Actor *this) {
 
     if (mapSpecificFlags_get(MM_SPECIFIC_FLAG_9_JUJU_HAS_HALF_TURNED)) {
         __chjujuhitbox_playRubbingSfx(this);
-        mapSpecificFlags_set(MM_SPECIFIC_FLAG_9_JUJU_HAS_HALF_TURNED, FALSE);
+        mapSpecificFlags_set(MM_SPECIFIC_FLAG_9_JUJU_HAS_HALF_TURNED, false);
     }
 }

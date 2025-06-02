@@ -84,7 +84,7 @@ void func_8038A318(ActorMarker *caller, enum asset_e text_id, s32 arg1){
         func_8025A6EC(COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 32000);
         func_8025A6EC(COMUSIC_5B_FP_IGLOO_HAPPY, 25000);
         func_8025A58C(0, 4000);
-        core1_ce60_incOrDecCounter(FALSE);
+        core1_ce60_incOrDecCounter(false);
     }
 }
 
@@ -94,8 +94,8 @@ void func_8038A384(Actor *this){
     s32 sp34;
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = FALSE;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = false;
         switch(this->marker->id){
             case MARKER_1FA_POLAR_BEAR_CUB_BLUE://L8038A404
                 this->unk1C[0] = 1.0f;
@@ -141,7 +141,7 @@ void func_8038A384(Actor *this){
                         && !jiggyscore_isSpawned(JIGGY_2C_FP_BOGGY_3)
                     ){
                         if (gcdialog_showText(ASSET_C1A_DIALOG_UNKNOWN, 0x2a, NULL, NULL, NULL, NULL)) {
-                            levelSpecificFlags_set(LEVEL_FLAG_19_FP_UNKNOWN, TRUE);
+                            levelSpecificFlags_set(LEVEL_FLAG_19_FP_UNKNOWN, true);
                         }
                     }
                 }

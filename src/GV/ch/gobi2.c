@@ -72,7 +72,7 @@ void chGobi2_setState(Actor *this, s32 next_state){
         actor_collisionOn(this);
 
     if(next_state == 2){
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->marker->propPtr->unk8_3 = true;
         skeletalAnim_set(this->unk148, ASSET_F4_ANIM_GOBI_IDLE, 0.5f, 12.0f);
     }
 
@@ -157,7 +157,7 @@ void __chGobi2_ow(ActorMarker *this_marker, ActorMarker *other_marker){
     enum hitbox_e hitbox;
     hitbox = player_getActiveHitbox(NULL);
     if(hitbox  == HITBOX_1_BEAK_BUSTER)
-        D_80391A50 = TRUE;
+        D_80391A50 = true;
     else if(hitbox == HITBOX_A_FAST_FALLING){
         this->unk1C[0] = 1.0f;
     }
@@ -171,7 +171,7 @@ void chGobi2_update(Actor *this){
     sp34 = this->marker;
     sp2C = time_getDelta();
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker_setCollisionScripts(this->marker, __chGobi2_ow, NULL, NULL);
         sp34->actorFreeFunc = __chGobi2_80387EFC;
         local->unk4 = skeletalAnim_new();
@@ -204,7 +204,7 @@ void chGobi2_update(Actor *this){
             if(func_80329530(this, 0xFA) && !func_80329530(this, 0x50)){
                 if(func_8028F2A0()){
                     if(gcdialog_showText(ASSET_A75_DIALOG_GOBI2_MEET, 0, this->position, NULL, NULL, NULL))
-                        this->has_met_before = TRUE;
+                        this->has_met_before = true;
                 }
             }
         }
@@ -232,7 +232,7 @@ void chGobi2_update(Actor *this){
             chGobi2_setState(this, 2);
         }
     }
-    D_80391A50 = FALSE;
+    D_80391A50 = false;
     this->unk1C[1] = this->unk1C[0];
     this->unk1C[0] = 0.0f;
 }

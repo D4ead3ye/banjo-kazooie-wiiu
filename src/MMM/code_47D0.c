@@ -105,7 +105,7 @@ void chTumblar_init(Struct_MMM_47D0_0 *arg0, Struct68s *arg1) {
     }
 
     if (arg0->jiggy_marker != NULL) {
-        arg0->jiggy_marker->collidable = FALSE;
+        arg0->jiggy_marker->collidable = false;
     }
 
     if (jiggyscore_isCollected(JIGGY_62_MMM_TUMBLAR)) {
@@ -115,7 +115,7 @@ void chTumblar_init(Struct_MMM_47D0_0 *arg0, Struct68s *arg1) {
 }
 
 void __chTumblar_congratulationTextCallback(ActorMarker *marker, enum asset_e text_id, s32 arg2) {
-    mapSpecificFlags_set(MMM_SPECIFIC_FLAG_TUMBLAR_BROKEN, TRUE);
+    mapSpecificFlags_set(MMM_SPECIFIC_FLAG_TUMBLAR_BROKEN, true);
 }
 
 void chTumblar_congratulate(Struct_MMM_47D0_0 *arg0, s32 arg1) {
@@ -189,7 +189,7 @@ void chTumblar_update(Struct_MMM_47D0_0 *arg0, Struct68s *arg1, f32 tick) {
             arg0->state = TUMBLAR_STATE_3_DISAPPEARED;
 
             if (arg0->jiggy_marker != NULL) {
-                arg0->jiggy_marker->collidable = TRUE;
+                arg0->jiggy_marker->collidable = true;
             }
 
             func_80351A04(arg1, 1);
@@ -213,14 +213,14 @@ void chTumblar_update(Struct_MMM_47D0_0 *arg0, Struct68s *arg1, f32 tick) {
 
     if (!mapSpecificFlags_get(MMM_SPECIFIC_FLAG_0_UNKNOWN) && arg0->state == TUMBLAR_STATE_0_IDLE && ml_vec3f_horizontal_distance_zero_likely(position, plyr_pos) < 250.0f) {
         if (gcdialog_showText(ASSET_ADA_DIALOG_UNKNOWN, 0, NULL, NULL, NULL, NULL)) {
-            mapSpecificFlags_set(0, TRUE);
+            mapSpecificFlags_set(0, true);
         }
     }
 
     if (arg0->state == TUMBLAR_STATE_1_CONGRATULATING && mapSpecificFlags_get(MMM_SPECIFIC_FLAG_TUMBLAR_BROKEN)) {
         arg0->state = TUMBLAR_STATE_2_BREAKING;
         arg0->timer = 0.0f;
-        mapSpecificFlags_set(MMM_SPECIFIC_FLAG_TUMBLAR_BROKEN, FALSE);
+        mapSpecificFlags_set(MMM_SPECIFIC_FLAG_TUMBLAR_BROKEN, false);
         FUNC_8030E8B4(SFX_11B_TUMBLAR_DISAPPEARING_1, 1.0f, 30000, position, 500, 2500);
     }
 }

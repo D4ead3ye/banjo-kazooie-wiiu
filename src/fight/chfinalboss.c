@@ -163,7 +163,7 @@ Actor *chfinalboss_draw(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx) {
     func_8033A45C(5, local->unkC);
 
     if (local->phase == FINALBOSS_PHASE_1_BROOMSTICK) {
-        func_8033A25C(FALSE);
+        func_8033A25C(false);
     }
 
     return actor_draw(marker, gfx, mtx, vtx);
@@ -309,9 +309,9 @@ bool chfinalboss_func_80386BEC(Actor *this, f32 arg1) {
     this->yaw_ideal = (f32) func_80329784(this);
     func_80328FB0(this, arg1);
     if ((this->yaw_ideal < (this->yaw + arg1)) && ((this->yaw - arg1) < this->yaw_ideal)) {
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 bool chfinalboss_func_80386C68(Actor *this, f32 arg1) {
@@ -322,9 +322,9 @@ bool chfinalboss_func_80386C68(Actor *this, f32 arg1) {
     func_80328FB0(this, arg1);
 
     if ((this->yaw_ideal < ( this->yaw + arg1)) && (( this->yaw - arg1) < this->yaw_ideal)) {
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 void chfinalboss_func_80386CF8(Actor *actor) {
@@ -528,9 +528,9 @@ bool chfinalboss_func_80387470(Actor *this, f32 arg1[3], f32 v_max, f32 arg3, f3
     this->yaw += (arg4 * temp.pos_x * dt);
 
     if (ml_vec3f_distance(this->position, arg1) < arg6) {
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 void chfinalboss_func_8038770C(Actor *actor) {
@@ -1226,7 +1226,7 @@ void __chfinalboss_spawnSpellBarrier(ActorMarker *marker) {
 
     actor = marker_getActor(marker);
     actor->unk100 = spawn_child_actor(ACTOR_3AB_GRUNTY_SPELL_BARRIER, &actor)->marker;
-    __chFinalBossSpellBarrierActive = TRUE;
+    __chFinalBossSpellBarrierActive = true;
 }
 
 void chfinalboss_spawnSpellBarrier(ActorMarker *arg0) {
@@ -1380,7 +1380,7 @@ void chfinalboss_phase3_update(ActorMarker *marker) {
 
 
 void chfinalboss_func_80389F54(void) {
-    fileProgressFlag_set(FILEPROG_D2_HAS_SPAWNED_A_JINJO_STATUE_IN_FINAL_FIGHT, TRUE);
+    fileProgressFlag_set(FILEPROG_D2_HAS_SPAWNED_A_JINJO_STATUE_IN_FINAL_FIGHT, true);
     sFinalBossJinjoStatueActivated = (u8)0;
 }
 
@@ -1412,7 +1412,7 @@ void chfinalboss_phase4_setState(Actor *this, s32 arg1) {
     case 30:
         if ((local->unk3 == 2) && (local->unkA == 0)) {
             iter.D_803928C4_ptr = &D_803928C4;
-            chFinalBossJinjoSpawned = TRUE;
+            chFinalBossJinjoSpawned = true;
             gcdialog_showText(randi2(0, 5) + 0x1136, 4, NULL, NULL, NULL, NULL);
             if ( !fileProgressFlag_get(FILEPROG_D2_HAS_SPAWNED_A_JINJO_STATUE_IN_FINAL_FIGHT) ) {
                 local->unkA = 1U;
@@ -1543,7 +1543,7 @@ void chfinalboss_phase4_update(ActorMarker *marker) {
     if (sp6C != NULL) {
         chbossjinjo_attack(sp6C);
         if (!fileProgressFlag_get(FILEPROG_D1_HAS_ACTIVATED_A_JINJO_STATUE_IN_FINAL_FIGHT)) {
-            fileProgressFlag_set(FILEPROG_D1_HAS_ACTIVATED_A_JINJO_STATUE_IN_FINAL_FIGHT, TRUE);
+            fileProgressFlag_set(FILEPROG_D1_HAS_ACTIVATED_A_JINJO_STATUE_IN_FINAL_FIGHT, true);
             sFinalBossJinjoStatueActivated = 0;
             timed_exitStaticCamera(1.0f);
             func_80324E38(1.0f, 0);
@@ -1558,9 +1558,9 @@ void chfinalboss_phase4_update(ActorMarker *marker) {
         else{
             temp_t6 = marker_getActor(sp6C)->marker->id;
             if ((temp_t6 == MARKER_27B_BOSS_JINJO_ORANGE) || (temp_t6 == MARKER_27E_BOSS_JINJO_YELLOW)) {
-                local->mirror_phase5 = FALSE;
+                local->mirror_phase5 = false;
             } else {
-                local->mirror_phase5 = TRUE;
+                local->mirror_phase5 = true;
             }
             chfinalboss_phase4_setState(this, 0x21);
         }
@@ -1854,7 +1854,7 @@ void chfinalboss_phase5_update(ActorMarker *marker) {
             }
             if (local->unk8 == 0) {
                 if (!chFinalBossJinjonatorSpawned) {
-                    chFinalBossJinjonatorSpawned = TRUE;
+                    chFinalBossJinjonatorSpawned = true;
                     chfinalboss_phase5_setState(this, 0x23);
                 }
                 else{
@@ -1953,7 +1953,7 @@ void chfinalboss_func_8038B780(ActorMarker *marker) {
 
     sp24 = marker_getActor(marker);
     if (!fileProgressFlag_get(FILEPROG_CF_HAS_ENTERED_FINAL_FIGHT)) {
-        fileProgressFlag_set(FILEPROG_CF_HAS_ENTERED_FINAL_FIGHT, TRUE);
+        fileProgressFlag_set(FILEPROG_CF_HAS_ENTERED_FINAL_FIGHT, true);
         gcdialog_showText(ASSET_10E7_DIALOG_UNKNOWN, 0x2A, sp24->position, sp24->marker, chfinalboss_phase0_endTextCallback, NULL);
     }
     else{
@@ -2006,7 +2006,7 @@ bool chfinalboss_func_8038B834(ActorMarker *marker, ActorMarker *other_marker) {
             break;
     }
 
-    return TRUE;
+    return true;
 }
 
 void chfinalboss_collisionPassive(ActorMarker *marker, ActorMarker *other_marker) {
@@ -2096,7 +2096,7 @@ void chfinalboss_update(Actor *this){
     f32 sp34[3];
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         func_803300C0(this->marker, chfinalboss_func_8038B834);
         marker_setCollisionScripts(this->marker, chfinalboss_collisionActive, chfinalboss_collisionPassive, NULL);
         this->marker->propPtr->unk8_3 = 0;
@@ -2107,11 +2107,11 @@ void chfinalboss_update(Actor *this){
         __chFinalBossFlightPadMarker = NULL;
         __chFinalBossShadowMarker = NULL;
         sFinalBossJinjoStatueActivated = 0;
-        __chFinalBossSpellBarrierActive = FALSE;
+        __chFinalBossSpellBarrierActive = false;
         __chFinalBossJinjonatorHits = 0;
-        D_803927C7 = FALSE;
-        chFinalBossJinjoSpawned = FALSE;
-        chFinalBossJinjonatorSpawned = FALSE;
+        D_803927C7 = false;
+        chFinalBossJinjoSpawned = false;
+        chFinalBossJinjonatorSpawned = false;
 
         local->unk8 = 0;
         local->unk9 = 0;
@@ -2210,7 +2210,7 @@ void chfinalboss_getPosition(f32 position[3]) {
 }
 
 void chfinalboss_spellBarrierInactive() {
-    __chFinalBossSpellBarrierActive = FALSE;
+    __chFinalBossSpellBarrierActive = false;
 }
 
 void chfinalboss_func_8038C10C(s32 arg0) {
@@ -2218,7 +2218,7 @@ void chfinalboss_func_8038C10C(s32 arg0) {
 }
 
 void chfinalboss_func_8038C138() {
-    D_803927C7 = TRUE;
+    D_803927C7 = true;
 }
 
 void chfinalboss_setBossDefeated(void) {
@@ -2236,7 +2236,7 @@ void chfinalboss_setBossDefeated(void) {
     temp_f20 = sp34 + chjinjonator_80391234();
     sp40 = chjinjonator_80391240();
     camera_node = 0x14;
-    fileProgressFlag_set(FILEPROG_FC_DEFEAT_GRUNTY, TRUE);
+    fileProgressFlag_set(FILEPROG_FC_DEFEAT_GRUNTY, true);
     if (sp48->mirror_phase5 != 0) {
         camera_node = 0x23;
     }

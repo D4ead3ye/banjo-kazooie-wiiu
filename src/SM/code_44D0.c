@@ -19,7 +19,7 @@ ActorInfo gCode44D0  = {
 
 /* .code */
 void func_8038A8C0(ActorMarker *arg0){
-    mapSpecificFlags_set(SM_SPECIFIC_FLAG_10, FALSE);
+    mapSpecificFlags_set(SM_SPECIFIC_FLAG_10, false);
     func_8028E6EC(2);
     func_8028F918(0);
 }
@@ -38,7 +38,7 @@ void func_8038A8F8(Actor *this){
             nodeprop_getPosition(other, this->unk1C);
         }
         actor_collisionOff(this);
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
     }//L8038A968
     player_getPosition(this->velocity);
     sp2C = ml_vec3f_distance(this->velocity, this->position);
@@ -51,7 +51,7 @@ void func_8038A8F8(Actor *this){
         ){ //L8038AA54
             this->yaw_ideal = ml_vec3f_distance(this->velocity, this->unk1C) / 150.0;
             func_8028F3D8(this->unk1C, this->yaw_ideal, func_8038A8C0, this->marker);
-            mapSpecificFlags_set(SM_SPECIFIC_FLAG_10, TRUE);
+            mapSpecificFlags_set(SM_SPECIFIC_FLAG_10, true);
         }
     }
 }

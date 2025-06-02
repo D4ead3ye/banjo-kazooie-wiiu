@@ -31,11 +31,11 @@ void __chGobiRock_setState(Actor *this, s32 next_state){
 
     this->state = next_state;
     local->unk14 = 0.0f;
-    chGobiRockDestroyed = FALSE;
+    chGobiRockDestroyed = false;
     if(this->state == 2){
-        this->marker->propPtr->unk8_3 = FALSE;
+        this->marker->propPtr->unk8_3 = false;
         local->unk14 = 2.6f;
-        chGobiRockDestroyed = TRUE;
+        chGobiRockDestroyed = true;
         func_8028F428(2, this->marker);
         FUNC_8030E624(SFX_9B_BOULDER_BREAKING_1, 0.3f, 9000);
         FUNC_8030E624(SFX_9B_BOULDER_BREAKING_1, 0.5f, 9000);
@@ -98,13 +98,13 @@ void chGobiRock_update(Actor *this){
     f32 sp24 = time_getDelta();
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         sp34->actorFreeFunc = chGobiRock_free;
-        sp34->propPtr->unk8_3 = TRUE;
+        sp34->propPtr->unk8_3 = true;
         marker_setCollisionScripts(this->marker, NULL, NULL, __chGobiRock_destroy);
         local->unkC = particleEmitter_new(20);
         local->unk10 = particleEmitter_new(30);
-        chGobiRockDestroyed = FALSE;
+        chGobiRockDestroyed = false;
         sp28 = actorArray_findClosestActorFromActorId(this->position, ACTOR_12E_GOBI_1, -1, &sp2C);
         if(sp28){
             this->position_x = sp28->position_x;

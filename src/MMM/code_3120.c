@@ -78,7 +78,7 @@ void func_8038966C(void){
         && MMM_D_8038C4E0.unk1 == 1
         && jiggyscore_isCollected(JIGGY_5D_MMM_NAPPER)
     ){
-        MMM_D_8038C4E0.unk2 = TRUE;
+        MMM_D_8038C4E0.unk2 = true;
         func_80324E38(0.0f, 3);
         timed_setStaticCameraToNode(0.2f, 1);
         func_80324DBC(0.2f, 0xad9, 6, NULL, NULL, func_803895D8, NULL);
@@ -109,7 +109,7 @@ void func_8038966C(void){
                 func_80324E38(0.0f, 3);
                 timed_setStaticCameraToNode(0.0f, 0);
                 func_80324DBC(0.0f, 0xad7, 6, NULL, NULL, func_803895D8, NULL);
-                levelSpecificFlags_set(LEVEL_FLAG_1B_MMM_UNKNOWN, TRUE);
+                levelSpecificFlags_set(LEVEL_FLAG_1B_MMM_UNKNOWN, true);
             }
         }
     }

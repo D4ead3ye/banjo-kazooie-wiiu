@@ -131,7 +131,7 @@ void __chChompa_spwanPortrait(ActorMarker *marker) {
     portrait = spawn_child_actor(portrait_id, &this);
     portrait->yaw = this->yaw;
     this->unk100 = portrait->marker;
-    portrait->unk10_1 = FALSE;
+    portrait->unk10_1 = false;
 }
 
 void __chChompa_emitDust(f32 position[3], s32 count, enum asset_e sprite_id) {
@@ -202,8 +202,8 @@ void chChompa_update(Actor *this) {
     f32 anim_progress;
 
     if (!this->volatile_initialized) {
-        this->volatile_initialized = TRUE;
-        this->unk16C_0 = TRUE;
+        this->volatile_initialized = true;
+        this->unk16C_0 = true;
         marker_setCollisionScripts(this->marker, NULL, __chChompa_hit, __chChompa_die);
         __spawnQueue_add_1((GenFunction_1) __chChompa_spwanPortrait, reinterpret_cast(s32, this->marker));
         chChompa_setState(this, this->state < CHOMPA_STATE_5_DYING ? CHOMPA_STATE_1_IDLE : CHOMPA_STATE_6_DEAD);

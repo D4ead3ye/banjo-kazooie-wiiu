@@ -199,7 +199,7 @@ void func_80247C20(void) {
         return;
     }
     if (globalTimer_getTime() != D_80275BE4) {
-        D_80275BE0 = FALSE;
+        D_80275BE0 = false;
         D_80275BE4 = globalTimer_getTime();
     }
 

@@ -104,7 +104,7 @@ void func_8031A678(Actor *this){
 
 void __chMinigame_textCallback1(ActorMarker *marker, enum asset_e text_id, s32 arg2){
     Actor *this = marker_getActor(marker);
-    this->has_met_before = TRUE;
+    this->has_met_before = true;
 }
 
 void __chMinigame_transformToCroc(ActorMarker *marker, enum asset_e text_id, s32 arg2){
@@ -123,7 +123,7 @@ void __chMinigame_setState(Actor *this, u32 arg1) {
             if (volatileFlag_get(this->unk10_12 + 6) == 0) {
                 func_80324DBC(2.0f, this->unk10_12 + 0x1026, 0xA2, NULL, this->marker, __chMinigame_textCallback1, __chMinigame_transformToCroc);
                 volatileFlag_set(this->unk10_12 + 6, 1);
-                this->unk138_23 = TRUE;
+                this->unk138_23 = true;
             } else {
                 func_80324DBC(2.0f, 0xD38, 0x20, NULL, this->marker, __chMinigame_textCallback1, NULL);
             }
@@ -138,7 +138,7 @@ void __chMinigame_setState(Actor *this, u32 arg1) {
             func_8025AB00();
             comusic_playTrack((volatileFlag_get(VOLATILE_FLAG_5_FF_MINIGAME_WON)) ? COMUSIC_3B_MINIGAME_VICTORY : COMUSIC_3C_MINIGAME_LOSS);
             func_802E4A70();
-            volatileFlag_set(VOLATILE_FLAG_21, TRUE);
+            volatileFlag_set(VOLATILE_FLAG_21, true);
             timedFunc_set_3(2.0f, (GenFunction_3)func_802E4078, MAP_8E_GL_FURNACE_FUN, 1, 1);
             break;
     }
@@ -151,7 +151,7 @@ void __chMinigame_free(Actor *this){
 
 void chMinigame_update(Actor *this){
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         this->unk10_12 = __chminigame_getCurrentMapId();
         actor_collisionOff(this);
         if(!volatileFlag_get(VOLATILE_FLAG_2_FF_IN_MINIGAME)){
@@ -164,7 +164,7 @@ void chMinigame_update(Actor *this){
         func_8028FAB0(this->position);
         this->unk1C[0] = 0.0f; this->unk1C[1] = this->yaw; this->unk1C[2] = 0.0f;
         player_setIdealRotation(this->unk1C);
-        this->has_met_before = FALSE;
+        this->has_met_before = false;
         if(this->unk10_12 >= 7){
             marker_despawn(this->marker);
             return;

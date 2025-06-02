@@ -104,7 +104,7 @@ void func_8035D2FC(Actor *this) {
     local->unk28 = 0xC5; //SFX_C5_TWINKLY_POP
     local->unk2A = 20000;
     local->unk2C = 1.0f;
-    local->unkC_28 = TRUE;
+    local->unkC_28 = true;
     local->unk30 = func_8035D2C0;
     local->unk34 = func_8035D1F0;
     this->unk154 |= 0x08000000;

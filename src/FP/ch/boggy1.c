@@ -53,7 +53,7 @@ void func_803876A4(Actor *this){
 }
 
 void func_803876F8(Actor *this){
-    this->marker->propPtr->unk8_3 = FALSE;
+    this->marker->propPtr->unk8_3 = false;
     subaddie_set_state_with_direction(this, 5, 0.0001f, 1);
     this->unk48 = 0.0f;
     func_80343DEC(this);
@@ -109,8 +109,8 @@ void func_8038794C(Actor *this){
     int i;
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->volatile_initialized = true;
+        this->marker->propPtr->unk8_3 = true;
         marker_setCollisionScripts(this->marker, NULL, func_80387754, NULL);
         this->unk38_31 = 1;
         ml_vec3f_copy(this->velocity, this->position);
@@ -129,7 +129,7 @@ void func_8038794C(Actor *this){
             }
             this->unk38_31 = 0;
             actor_collisionOff(this);
-            this->marker->propPtr->unk8_3 = FALSE;
+            this->marker->propPtr->unk8_3 = false;
         }
     }//L80387A68
     
@@ -137,7 +137,7 @@ void func_8038794C(Actor *this){
     switch(this->state){
         case 1://L80387AB0
             if(mapSpecificFlags_get(0xb))
-                this->has_met_before = TRUE;
+                this->has_met_before = true;
 
             if(mapSpecificFlags_get(0x1)){
                 func_8028F94C(1, this->position);
@@ -153,7 +153,7 @@ void func_8038794C(Actor *this){
                         for (i = 0; i < 5; i++) {
                             timedFunc_set_1(D_80391BEC[i], (GenFunction_1) func_8038787C, (s32) this->marker);
                         }
-                        this->has_met_before = TRUE;
+                        this->has_met_before = true;
                     }
                 }
             }

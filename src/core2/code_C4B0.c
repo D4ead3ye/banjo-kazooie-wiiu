@@ -92,21 +92,21 @@ void func_8029350C(f32 *arg0) {
     sp38 = floor_getXPosition(D_8037C200);
     func_8031C5AC(D_8037C200, sp3C);
     temp_v0 = D_8037C279;
-    D_8037C279 = FALSE;
+    D_8037C279 = false;
     if (!(sp3C[1] < 0.432)) {
         if (arg0[1] <= sp38) {
             arg0[1] = sp38;
-            D_8037C279 = TRUE;
+            D_8037C279 = true;
         }
         else if ((temp_v0 != 0) && (D_8037C238[1] < 0.0f)) {
             if (sp3C[1] < 0.9) {
                 if (arg0[1] < (sp38 + 30.0f)) {
                     arg0[1] = sp38;
-                    D_8037C279 = TRUE;
+                    D_8037C279 = true;
                 }
             } else if (arg0[1] < (sp38 + 5.0f)) {
                 arg0[1] = sp38;
-                D_8037C279 = TRUE;
+                D_8037C279 = true;
             }
         }
     }

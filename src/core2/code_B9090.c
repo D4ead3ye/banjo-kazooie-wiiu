@@ -14,12 +14,12 @@ bool func_80340020(Struct83s *self, f32 position[3], f32 arg2[3], f32 arg3, f32 
     Vtx *var_a0;
 
     if (!self->unk1A) {
-        return FALSE;
+        return false;
     }
     
-    self->unk1A = FALSE;
+    self->unk1A = false;
     if (0.1 < ml_vec3f_distance(arg6, self->unk8)) {
-        return FALSE;
+        return false;
     }
     for(i = 0; i < 3; i++){
         var_a0 = arg5->vtx_18 + self->unk14[i];
@@ -39,7 +39,7 @@ bool func_80340020(Struct83s *self, f32 position[3], f32 arg2[3], f32 arg3, f32 
     mlMtxIdent();
     func_80252C08(position, arg2, arg3, arg4);
     mlMtx_apply_vec3f(arg7, arg7);
-    return TRUE;
+    return true;
 }
 
 void func_80340200(Struct83s *self, f32 position[3], f32 arg2[3], f32 arg3, f32 arg4[3], s16 arg5[3], BKVertexList *arg6, f32 arg7[3]) {

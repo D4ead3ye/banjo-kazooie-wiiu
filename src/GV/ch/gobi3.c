@@ -57,7 +57,7 @@ void chGobi3_setState(Actor *this, s32 next_state){
         actor_collisionOn(this);
 
     if(next_state == 2){
-        this->marker->propPtr->unk8_3 = TRUE;
+        this->marker->propPtr->unk8_3 = true;
         skeletalAnim_set(this->unk148, ASSET_F4_ANIM_GOBI_IDLE, 0.5f, 12.0f);
     }
 
@@ -76,7 +76,7 @@ void chGobi3_setState(Actor *this, s32 next_state){
     }
 
     if(next_state == 4){
-        this->marker->propPtr->unk8_3 = FALSE;
+        this->marker->propPtr->unk8_3 = false;
         skeletalAnim_set(this->unk148, ASSET_F8_ANIM_GOBI_RUNNING, 0.3f, 0.71f);
     }
 
@@ -116,7 +116,7 @@ void chGobi3_ow(ActorMarker *this_marker, ActorMarker *other_marker){
 
 void chGobi3_update(Actor *this){
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         marker_setCollisionScripts(this->marker, chGobi3_ow, NULL, NULL);
         this->unk1C[0] = 0.0f;
         this->unk1C[1] = 0.0f;

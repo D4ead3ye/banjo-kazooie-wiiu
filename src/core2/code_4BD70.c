@@ -18,7 +18,7 @@ void chMumboSign_update(Actor *this) {
         ) {
             marker_despawn(this->marker);
         }
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
     }
     if (fileProgressFlag_get(this->modelCacheIndex - ACTOR_368_5_MUMBO_TOKEN_SIGN + FILEPROG_90_PAID_TERMITE_COST)) {
         func_80326310(this);

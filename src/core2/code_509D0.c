@@ -123,21 +123,21 @@ void __chLevelCollectible_collide(ActorMarker *marker, ActorMarker *other_marker
                 break;
 
             case MARKER_1FD_BLUE_PRESENT_COLLECTIBLE:
-                levelSpecificFlags_set(LEVEL_FLAG_2A_FP_UNKNOWN, TRUE);
+                levelSpecificFlags_set(LEVEL_FLAG_2A_FP_UNKNOWN, true);
                 func_8025A6EC(COMUSIC_2B_DING_B, 0x7FFF);
                 __chLevelCollectible_presentCollectEmitSparkles(this->position, ASSET_711_SPRITE_SPARKLE_DARK_BLUE);
                 dialog_id = ASSET_C20_DIALOG_PRESENT_COLLECTIBLE_MEET_BLUE;
                 break;
 
             case MARKER_1FE_GREEN_PRESENT_COLLECTIBLE:
-                levelSpecificFlags_set(LEVEL_FLAG_2B_FP_UNKNOWN, TRUE);
+                levelSpecificFlags_set(LEVEL_FLAG_2B_FP_UNKNOWN, true);
                 func_8025A6EC(COMUSIC_2B_DING_B, 0x7FFF);
                 __chLevelCollectible_presentCollectEmitSparkles(this->position, ASSET_712_SPRITE_SPARKLE_GREEN);
                 dialog_id = ASSET_C21_DIALOG_PRESENT_COLLECTIBLE_MEET_GREEN;
                 break;
 
             case MARKER_1FF_RED_PRESENT_COLLECTIBLE:
-                levelSpecificFlags_set(LEVEL_FLAG_2C_FP_UNKNOWN, TRUE);
+                levelSpecificFlags_set(LEVEL_FLAG_2C_FP_UNKNOWN, true);
                 func_8025A6EC(COMUSIC_2B_DING_B, 0x7FFF);
                 __chLevelCollectible_presentCollectEmitSparkles(this->position, ASSET_715_SPRITE_SPARKLE_RED);
                 dialog_id = ASSET_C22_DIALOG_PRESENT_COLLECTIBLE_MEET_RED;
@@ -167,9 +167,9 @@ void func_802D7DE8(ActorMarker *marker, f32 arg1[3]) {
     ml_vec3f_to_vec3w(sp50, arg1);
     if (sp4C == MARKER_37_GOLD_BULLION) {
         if (mapSpecificFlags_get(0)) {
-            mapSpecificFlags_set(1, TRUE);
+            mapSpecificFlags_set(1, true);
         } else {
-            mapSpecificFlags_set(0, TRUE);
+            mapSpecificFlags_set(0, true);
         }
     }
     func_8028F010(this->modelCacheIndex);
@@ -241,15 +241,15 @@ void __chLevelCollectible_returnObj(Actor *this) {
                 break;
             case MARKER_1FD_BLUE_PRESENT_COLLECTIBLE:
                 func_8025A6EC(COMUSIC_2B_DING_B, 32000);
-                levelSpecificFlags_set(LEVEL_FLAG_11_FP_UNKNOWN, TRUE);
+                levelSpecificFlags_set(LEVEL_FLAG_11_FP_UNKNOWN, true);
                 break;
             case MARKER_1FE_GREEN_PRESENT_COLLECTIBLE:
                 func_8025A6EC(COMUSIC_2B_DING_B, 32000);
-                levelSpecificFlags_set(LEVEL_FLAG_12_FP_UNKNOWN, TRUE);
+                levelSpecificFlags_set(LEVEL_FLAG_12_FP_UNKNOWN, true);
                 break;
             case MARKER_1FF_RED_PRESENT_COLLECTIBLE:
                 func_8025A6EC(COMUSIC_2B_DING_B, 32000);
-                levelSpecificFlags_set(LEVEL_FLAG_13_FP_UNKNOWN, TRUE);
+                levelSpecificFlags_set(LEVEL_FLAG_13_FP_UNKNOWN, true);
                 break;
             }
         }
@@ -317,7 +317,7 @@ void chLevelCollectible_update(Actor *this){
     if(this->despawn_flag) return;
 
     if(!this->volatile_initialized){
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
         if( this->marker->id == MARKER_1FD_BLUE_PRESENT_COLLECTIBLE
             || this->marker->id == MARKER_1FE_GREEN_PRESENT_COLLECTIBLE
             || this->marker->id == MARKER_1FF_RED_PRESENT_COLLECTIBLE

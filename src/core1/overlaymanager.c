@@ -145,10 +145,10 @@ bool overlayManagerload(enum overlay_e overlay_id){
     s32 rom_addr;
     
     if(overlay_id == 0)
-        return FALSE;
+        return false;
 
     if(overlay_id == overlayMgrLoadedId)
-        return FALSE;
+        return false;
 
     overlayMgrLoadedId = overlay_id;
     rom_addr = (s32)(overlayAddressMap + overlay_id);
@@ -166,7 +166,7 @@ bool overlayManagerload(enum overlay_e overlay_id){
         ((OverlayAddressMap*)rom_addr)->bss_start,
         ((OverlayAddressMap*)rom_addr)->bss_end 
     );
-    return TRUE;
+    return true;
 }
 
 s32 overlayManagerclearLoadedId(void){

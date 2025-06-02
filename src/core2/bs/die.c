@@ -125,7 +125,7 @@ void bsdie_update(void){
 }
 
 void bsdie_end(void){
-    core1_ce60_incOrDecCounter(FALSE);
+    core1_ce60_incOrDecCounter(false);
     baphysics_reset_gravity();
     func_8029E070(0);
     pitch_setIdeal(0.0f);

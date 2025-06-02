@@ -179,7 +179,7 @@ f32 func_80340700(f32 value, f32 min, f32 max) {
 }
 
 bool func_80340748(s32 arg0, s32 arg1, s32 arg2, f32 arg3[3], s32 arg4, s32 arg5, s32 arg6){
-    return FALSE;
+    return false;
 }
 
 s32 func_80340760(s32 arg0, s32 *arg1, f32 *arg2, s32 arg3, s32 arg4, f32 *arg5, f32 *arg6) {
@@ -1214,7 +1214,7 @@ s32 func_803438E0(Actor *actor, s32 arg1, s32 arg2, s32 arg3) {
     }
     sp48 = func_803421A4(actor->unk44_14, actor->unk48);
     if (!actor->unk44_1) {
-        actor->unk44_1 = TRUE;
+        actor->unk44_1 = true;
         actor->yaw = actor->yaw_ideal;
         actor->pitch = actor->unk6C;
     }

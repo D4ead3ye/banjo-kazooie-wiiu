@@ -121,10 +121,10 @@ void gcdialog_init(void) {
     }
 
     g_Dialog.state = 0;
-    g_Dialog.unk128_31 =  g_Dialog.unk128_5 = FALSE;
+    g_Dialog.unk128_31 =  g_Dialog.unk128_5 = false;
     g_Dialog.unk12C_31 = g_Dialog.unk12C_29 = g_Dialog.unk12C_27 = g_Dialog.unk12C_25 = 0;
-    g_Dialog.unk128_15 = g_Dialog.active_zoombox = FALSE;
-    g_Dialog.unk128_6 = TRUE; 
+    g_Dialog.unk128_15 = g_Dialog.active_zoombox = false;
+    g_Dialog.unk128_6 = true; 
     g_Dialog.unk12C_23 = -1;
     g_Dialog.unk12C_15 = g_Dialog.unk12C_11 = 0;
     g_Dialog.unk130 = (s16) -1;
@@ -133,7 +133,7 @@ void gcdialog_init(void) {
     g_Dialog.unk140 = NULL;
     g_Dialog.unk144 = 0;
     g_Dialog.unk132 = 0xC;
-    g_Dialog.unk128_3 = TRUE;
+    g_Dialog.unk128_3 = true;
 }
 
 static void _gcdialog_freeZoomboxes(void){
@@ -412,7 +412,7 @@ void gcdialog_update(void) {
                 g_Dialog.unk11A[g_Dialog.u8.active_zoombox].unk0_7 = 1;
                 g_Dialog.unk11A[g_Dialog.u8.active_zoombox].unk0_5 = 1;
                 g_Dialog.u8.active_zoombox ^= 1;
-                g_Dialog.unk128_6 = TRUE;
+                g_Dialog.unk128_6 = true;
                 break;
 
             case -1: // Choice
@@ -426,7 +426,7 @@ void gcdialog_update(void) {
                 g_Dialog.unk11A[g_Dialog.u8.active_zoombox].unk0_7 = 0;
                 g_Dialog.unk11A[g_Dialog.u8.active_zoombox].unk0_5 = 1;
                 g_Dialog.u8.active_zoombox ^= 1;
-                g_Dialog.unk128_6 = TRUE;
+                g_Dialog.unk128_6 = true;
                 break;
 
             case -7: // Trigger
@@ -463,7 +463,7 @@ void gcdialog_update(void) {
                 g_Dialog.unk11A[g_Dialog.u8.active_zoombox].unk0_7 = 0;
                 g_Dialog.string_index[g_Dialog.u8.active_zoombox]++;
                 g_Dialog.u8.active_zoombox ^= 1;
-                g_Dialog.unk128_6 = TRUE;
+                g_Dialog.unk128_6 = true;
                 break;
 
             case -5:
@@ -471,7 +471,7 @@ void gcdialog_update(void) {
                 g_Dialog.unk11A[g_Dialog.u8.active_zoombox].unk0_7 = 0;
                 g_Dialog.string_index[g_Dialog.u8.active_zoombox]++;
                 g_Dialog.u8.active_zoombox ^= 1;
-                g_Dialog.unk128_6 = TRUE;
+                g_Dialog.unk128_6 = true;
                 break;
 
             case -3:
@@ -544,12 +544,12 @@ void gcdialog_update(void) {
 
                     if (gczoombox_loadSprite(g_Dialog.zoombox[g_Dialog.u8.active_zoombox], g_Dialog.string_cmd[g_Dialog.u8.active_zoombox] + 12)) {
                         gczoombox_minimize(g_Dialog.zoombox[g_Dialog.u8.active_zoombox]);
-                        g_Dialog.unk128_6 = TRUE;
+                        g_Dialog.unk128_6 = true;
                     }
 
                     if (g_Dialog.unk128_6) {
                         gczoombox_maximize(g_Dialog.zoombox[g_Dialog.u8.active_zoombox]);
-                        g_Dialog.unk128_6 = FALSE;
+                        g_Dialog.unk128_6 = false;
                     }
 
                     if (ret == -1) {

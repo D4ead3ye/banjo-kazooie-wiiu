@@ -32,7 +32,7 @@ void lair_func_8038BA88(ActorMarker *marker, enum asset_e text_id, s32 arg2){
 
     this = marker_getActor(marker);
     item_set(ITEM_14_HEALTH, item_getCount(ITEM_15_HEALTH_TOTAL));
-    fileProgressFlag_set(this->unkF4_8 - 1 + FILEPROG_E9_HEALED_BY_BRENTILDA_1, TRUE);
+    fileProgressFlag_set(this->unkF4_8 - 1 + FILEPROG_E9_HEALED_BY_BRENTILDA_1, true);
 }
 
 void func_8038BADC(ActorMarker *marker, enum asset_e text_id, s32 arg2) {
@@ -57,7 +57,7 @@ void func_8038BBC0(Actor *this) {
         comusic_8025AB44(COMUSIC_7A_BRENTILDA, 0, 10000);
         func_8025AABC(COMUSIC_7A_BRENTILDA);
         func_8032BB88(this, -1, 10000);
-        this->unk38_0 = FALSE;
+        this->unk38_0 = false;
     }
 }
 
@@ -103,16 +103,16 @@ void chBrentilda_update(Actor *this) {
         this->unk10_12 = 2;
         if (!fileProgressFlag_get(FILEPROG_5C_FF_PATTERN_SET)) {
             fileProgressFlag_setN(FILEPROG_D3_FF_PATTERN, randi2(0, 0x100), 8);
-            fileProgressFlag_set(FILEPROG_5C_FF_PATTERN_SET, TRUE);
+            fileProgressFlag_set(FILEPROG_5C_FF_PATTERN_SET, true);
         }
         gzquiz_initGruntyQuestions();
         actor_setOpacity(this, 0x40);
-        this->initialized = TRUE;
+        this->initialized = true;
     }
 
     if (!this->volatile_initialized) {
         local->unk0 = this->unkF4_8*3 + 0x1080;
-        this->volatile_initialized = TRUE;
+        this->volatile_initialized = true;
     }
 
     func_8028E668(this->position, 280.0f, -40.0f, 160.0f);
@@ -144,8 +144,8 @@ void chBrentilda_update(Actor *this) {
                 if (!this->has_met_before) {
                     comusic_playTrack(COMUSIC_81_ACTIVATING_BRENTILDA);
                     func_80324D2C(1.0f, COMUSIC_81_ACTIVATING_BRENTILDA);
-                    this->has_met_before = TRUE;
-                    this->unk138_23 = FALSE;
+                    this->has_met_before = true;
+                    this->unk138_23 = false;
                 }
             }
         }
@@ -156,8 +156,8 @@ void chBrentilda_update(Actor *this) {
                 if (!this->unk138_23) {
                     comusic_playTrack(COMUSIC_8B_DEACTIVATE_BRENTILDA);
                     func_80324D2C(1.0f, COMUSIC_8B_DEACTIVATE_BRENTILDA);
-                    this->unk138_23 = TRUE;
-                    this->has_met_before = FALSE;
+                    this->unk138_23 = true;
+                    this->has_met_before = false;
                 }
             }
         }
@@ -166,13 +166,13 @@ void chBrentilda_update(Actor *this) {
             if ((phi_f2 < 600.0) && !this->unk38_0) {
                 comusic_8025AB44(COMUSIC_7A_BRENTILDA, -1, 0x1F4);
                 func_8032BB88(this, 0, 0x1F4);
-                this->unk38_0 = TRUE;
+                this->unk38_0 = true;
             }
             if ((600.0 < phi_f2) && this->unk38_0) {
                 comusic_8025AB44(COMUSIC_7A_BRENTILDA, 0, 0x1F4);
                 func_8025AABC(0x7A);
                 func_8032BB88(this, -1, 0x1F4);
-                this->unk38_0 = FALSE;
+                this->unk38_0 = false;
             }
         }
         if( (phi_f2 < 300.0) 
@@ -181,7 +181,7 @@ void chBrentilda_update(Actor *this) {
             && !func_803114B0()) {
             if (!fileProgressFlag_get(FILEPROG_96_MET_BRENTILDA)) {
                 gcdialog_showText(ASSET_10A1_DIALOG_BRENTILDA_MEET, 0xA, this->position, this->marker, func_8038BADC, NULL);
-                fileProgressFlag_set(FILEPROG_96_MET_BRENTILDA, TRUE);
+                fileProgressFlag_set(FILEPROG_96_MET_BRENTILDA, true);
                 subaddie_set_state(this, 2);
                 return;
             }
