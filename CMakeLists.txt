@@ -4,6 +4,12 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 project(Lighthouse VERSION 0.0.1 LANGUAGES C CXX ASM)
 include(FetchContent)
 
+if(APPLE)
+  enable_language(OBJCXX)
+endif()
+
+set(EXCLUDE_MPQ_SUPPORT ON)
+
 set(NATO_PHONETIC_ALPHABET
   "Alfa" "Bravo" "Charlie" "Delta" "Echo" "Foxtrot" "Golf" "Hotel"
   "India" "Juliett" "Kilo" "Lima" "Mike" "November" "Oscar" "Papa"
@@ -20,18 +26,8 @@ list(GET NATO_PHONETIC_ALPHABET ${PATCH_INDEX} PROJECT_PATCH_WORD)
 set(PROJECT_BUILD_NAME "Barnard ${PROJECT_PATCH_WORD}" CACHE STRING "" FORCE)
 #set(PROJECT_TEAM "SonicDcer & Lywx" CACHE STRING "" FORCE)
 
-if(APPLE)
-  enable_language(OBJCXX)
-endif()
-
 # Set the minimum version of CMake and the deployment target for macOS
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum OS X deployment version")
-
-# Set the C++ standard and enable the MSVC parallel build option
-set(CMAKE_CXX_STANDARD 20 CACHE STRING "The C++ standard to use")
-set(CMAKE_C_STANDARD 11 CACHE STRING "The C standard to use")
-#add_compile_options(-fsanitize=address)
-#add_link_options(-fsanitize=address)
 
 # Add a custom module path to locate additional CMake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
@@ -45,6 +41,11 @@ set(VCPKG_TARGET_TRIPLET x64-windows-static)
 vcpkg_bootstrap()
 vcpkg_install_packages(zlib bzip2 libzip libpng sdl2 glew glfw3 nlohmann-json tinyxml2 spdlog libogg libvorbis)
 
+# Set the C++ standard and enable the MSVC parallel build option
+set(CMAKE_CXX_STANDARD 20 CACHE STRING "The C++ standard to use")
+set(CMAKE_C_STANDARD 11 CACHE STRING "The C standard to use")
+#add_compile_options(-fsanitize=address)
+#add_link_options(-fsanitize=address)
 set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 endif()
@@ -55,19 +56,19 @@ if(NOT EXISTS ${CMAKE_BINARY_DIR}/config.yml)
 endif()
 
 if (MSVC)
-set(CPP "${CMAKE_C_COMPILER}" "/EP")
+    set(CPP "${CMAKE_C_COMPILER}" "/EP")
 else()
-set(CPP "${CMAKE_C_COMPILER}" "-E" "-P" "-Wno-trigraphs" "-x" "c")
+    set(CPP "${CMAKE_C_COMPILER}" "-E" "-P" "-Wno-trigraphs" "-x" "c")
 endif()
 
 if(IOS)
-set(PLATFORM "OS64")
-include(cmake/ios.toolchain.cmake)
-add_compile_definitions(
-    PLATFORM_IOS=1
-)
-set(CMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM "YOUR_TEAM_ID")
-set(PROJECT_ID "dev.net64.game")
+    set(PLATFORM "OS64")
+    include(cmake/ios.toolchain.cmake)
+    add_compile_definitions(
+        PLATFORM_IOS=1
+    )
+    set(CMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM "YOUR_TEAM_ID")
+    set(PROJECT_ID "dev.net64.game")
 endif()
 
 ################################################################################
@@ -120,7 +121,7 @@ add_compile_definitions(
 
 # Find necessary libraries
 if (UNIX AND NOT APPLE)
-find_package(OpenGL REQUIRED)
+    find_package(OpenGL REQUIRED)
 endif()
 
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/properties.h.in ${CMAKE_CURRENT_SOURCE_DIR}/properties.h @ONLY)
@@ -263,7 +264,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/libultraship/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/2.0L
+  #${CMAKE_CURRENT_SOURCE_DIR}/include/2.0L
   #${CMAKE_CURRENT_SOURCE_DIR}/include/2.0L/PR
   ${CMAKE_CURRENT_SOURCE_DIR}/libultraship/include/libultraship
   ${CMAKE_CURRENT_SOURCE_DIR}/libultraship/src
@@ -290,7 +291,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/libultraship/libultraship/Lib/spdlog/include/
   ${CMAKE_CURRENT_SOURCE_DIR}/libultraship/src/graphic/Fast3D/U64/PR
   ${CMAKE_CURRENT_SOURCE_DIR}/libultraship/src/graphic
-  ${CMAKE_CURRENT_SOURCE_DIR}/port
+  #${CMAKE_CURRENT_SOURCE_DIR}/port
   ${SDL2_INCLUDE_DIRS}
   ${GLEW_INCLUDE_DIRS}
   ${dr_libs_SOURCE_DIR}
