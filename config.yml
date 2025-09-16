@@ -1,0 +1,12 @@
+1fe1632098865f639e22c11b9a81ee8f29c75d7a:
+  name: Banjo Kazooie (USA (Rev0))
+  path: assets/yaml/us/rev0
+  config:
+    gbi: F3DEX
+    sort: OFFSET
+    logging: ERROR
+    textures: ADDITIONAL_DEFINES
+    output:
+      code: src/assets
+      headers: include/assets
+      modding: src/assets

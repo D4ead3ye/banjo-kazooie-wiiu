@@ -13,6 +13,7 @@ asm/core1/os
 !asm/core1/ultra
 build/*
 build/
+build-cmake
 
 #binaries ripped from the ROMs
 assets/

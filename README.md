@@ -1,168 +1,105 @@
-# Banjo-Kazooie (100.0000%)
+[comment]: <> (Todo: Make Light Mode Image)
+[comment]: <> (Todo: Make Dark Mode Image)
 
-<img src="./progress/progress_total.svg">
+# Lighthouse
 
-### Baserom checksums
+Lead Developers: 
+TODO: fill in
+
+## Discord
+
+Official Discord: https://discord.com/invite/shipofharkinian
+
+If you're having any trouble after reading through this `README`, feel free ask for help in the Lighthouse Support text channels. Please keep in mind that we do not condone piracy.
+
+# Quick Start
+
+Lighthouse does not include any copyrighted assets.  You are required to provide a supported copy of the game.
+
+### 1. Verify your ROM dump
+The supported ROMs are US 1.0 and US 1.1 Rev A versions. You can verify you have dumped a supported copy of the game by using the SHA-1 File Checksum Online at https://www.romhacking.net/hash/. 
 
 - `baserom.us.v10.z64`: `1fe1632098865f639e22c11b9a81ee8f29c75d7a`
 - `baserom.us.v11.z64`: `ded6ee166e740ad1bc810fd678a84b48e245ab80`
 - `baserom.jp.z64`:     `90726d7e7cd5bf6cdfd38f45c9acbf4d45bd9fd8`
 - `baserom.pal.z64`:    `bb359a75941df74bf7290212c89fbc6e2c5601fe`
 
-# Building
+TODO: add info about languages
 
-The following instructions should work on the following platforms:
-- Ubuntu 18.04 or higher (x86_64)
-- Docker only
-    - Linux (x86_64, ARM)
-    - macOS (x86_64, ARM)
+### 2. Verify your ROM is in .z64 format
+Your ROM needs to be in .z64 format. If it's in .n64 format, use the following to convert it to a .z64: https://hack64.net/tools/swapper.php
 
-Building Instructions Table Of Contents:
-- [Local (Linux)](#local-linux)
-- [Local (Docker - Linux/macOS)](#local-docker---linuxmacos)
-- [Cloud (GitLab CI)](#cloud-gitlab-ci))
+### 2. Download Lighthouse from [Releases](https://github.com/HarbourMasters/Lighthouse/releases)
 
-## Local (Linux)
+### 3. Generating the OTR from the ROM and Play!
+#### Windows
+* Extract every file from the zip into a folder of your choosing.
+* Run lighthouse.exe and select your US 1.0 or US 1.1 ROM.
 
-Works with Ubuntu 18.04 or higher.
+#### Linux
+* Extract every file from the zip into a folder of your choosing.
+* Execute lighthouse.appimage. You may have to chmod +x the appimage via terminal.
 
-### 1. Install dependencies
+#### MacOS
+* Extract every file from the zip into a folder of your choosing.
+* Run lighthouse and select your US 1.0 or US 1.1 ROM.
 
-```sh
-sudo apt-get update && sudo apt-get install -y $(cat packages.txt)
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-git submodule update --init --recursive
-python3 -m pip install -r requirements.txt
-```
+#### Nintendo Switch
+* Run one of the PC releases to generate an `sf64.o2r` file. After launching the game on PC, you will be able to find these files in the same directory as `lighthouse.exe` or `lighthouse.appimage`.
+* Copy the files to your sd card
 
-### 2. Add baserom
+# Configuration
 
-Add the file for `US v1.0` as `baserom.us.v10.z64` in the project folder.
+### Default keyboard configuration
+| N64 | A | B | Z | Start | Analog stick | C buttons | D-Pad |
+| - | - | - | - | - | - | - | - |
+| Keyboard | X | C | Z | Space | WASD | Arrow keys | TFGH |
 
-(optional): Check the baserom checksum
+### Other shortcuts
+| Keys | Action |
+| - | - |
+| F1 | Toggle menubar |
+| F4 | Reset |
+| F11 | Fullscreen |
+| Tab | Toggle Alternate assets |
 
-```sh
-sha1sum baserom.us.v10.z64
-```
+### Graphics Backends
 
-The output should match the checksum specified above.
+TODO: verify this info
 
-### 3. Build
+Currently, there are three rendering APIs supported: DirectX11 (Windows), OpenGL (all platforms), and Metal (macOS). You can change which API to use in the `Settings` menu of the menubar, which requires a restart.  If you're having an issue with crashing, you can change the API in the `lighthouse.cfg.json` file by finding the line `"Backend":{`... and changing the `id` value to `3` and set the `Name` to `OpenGL`. `DirectX 11` with id `2` is the default on Windows. `Metal` with id `4` is the default on macOS.
 
-To extract and build everything simply run:
+# Custom Assets
+Custom assets are packed in `.o2r` or `.otr` files. To use custom assets, place them in the `mods` folder.
 
-```sh
-make
-```
+If you're interested in creating and/or packing your own custom asset `.o2r`/`.otr` files, check out the following tools:
+* [**retro - OTR and O2R generator**](https://github.com/HarbourMasters64/retro)
+* [**fast64 - Blender plugin (Note that SF64 is not supported at this time)**](https://github.com/HarbourMasters/fast64)
 
-If you want to build a specific module, instead do:
+# Development
+### Building
 
-```sh
-make <module_id>
-```
+TODO: add a main branch
 
-...where the following are supported values of `<module_id>`
-- `core1`
-- `core2`
-- `MM`
-- `TTC`
-- `CC`
-- `BGS`
-- `FP`
-- `lair`
-- `GV`
-- `CCW`
-- `RBB`
-- `MMM`
-- `SM`
-- `fight`
-- `cutscenes`
+If you want to manually compile Lighthouse, please consult the [building instructions](https://github.com/HarbourMasters/Lighthouse/blob/main/docs/BUILDING.md).
 
-### Version Selection
+### Playtesting
+If you want to playtest a continuous integration build, you can find them at the links below. Keep in mind that these are for playtesting only, and you will likely encounter bugs and possibly crashes. 
 
-Drop in `us.v10` `us.v11`, `jp`, or `pal` as `baserom.<version>.z64` e.g. `baserom.us.v11.z64`
+TODO: replace these with lighthouse builds
 
-```sh
-make VERSION=us.v11
-```
+* [Windows](https://nightly.link/HarbourMasters/Starship/workflows/main/main/starship-windows.zip)
+* [macOS](https://nightly.link/HarbourMasters/Starship/workflows/main/main/starship-mac-x64.zip)
+* [Linux](https://nightly.link/HarbourMasters/Starship/workflows/main/main/Starship-linux.zip)
+* [Switch](https://nightly.link/HarbourMasters/Starship/workflows/main/main/Starship-switch.zip)
 
+<a href="https://github.com/Kenix3/libultraship/">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./docs/poweredbylus.darkmode.png">
+    <img alt="Powered by libultraship" src="./docs/poweredbylus.lightmode.png">
+  </picture>
+</a>
 
-## Local (Docker - Linux/macOS)
+# Special Thanks:
 
-### 1. Get the Docker image
-
-(if available) you can pull it from GitLab (but you need to be logged in):
-
-```sh
-docker login registry.gitlab.com
-docker pull registry.gitlab.com/banjo.decomp/banjo-kazooie:latest
-```
-
-(otherwise) you can build it yourself:
-
-```sh
-docker build -t banjo-kazooie .
-```
-
-**NOTE for ARM users** (Windows ARM, Raspberry Pi and similar, or Apple Silicon): Use this command instead:
-
-```sh
-docker build --platform linux/amd64 -t banjo-kazooie .
-```
-
-### 2. Add baserom
-
-Follow the same instructions as Step 3 above in "Local (Linux)".
-
-### 3. Run the Docker container
-
-```sh
-docker run -it --rm -v $(pwd):/banjo banjo-kazooie 
-```
-
-**NOTE for ARM users**: Use this command instead:
-
-```sh
-docker run --platform linux/amd64 -it --rm -v $(pwd):/banjo banjo-kazooie 
-```
-
-### 4. Build
-
-Follow the same instructions as Step 4 above in "Local (Linux)".
-
-To exit Docker, simply type `exit`.
-
-## Cloud (GitLab CI)
-
-These are the instructions for building on GitLab CI.
-This applies to the main repo - **if you have a fork**, you will need to follow these steps too!
-
-### 1. Upload the baserom
-
-Upload the file for `US v1.0` as `baserom.us.v10.enc.z64` to a remote server where it can be downloaded from with `wget` or `curl`. The file has to be encrypted with `AES-256-CBC`, as follows:
-
-```sh
-openssl enc -aes-256-cbc -salt -in baserom.us.v10.z64 -out baserom.us.v10.enc.z64
-```
-
-Then, upload the encrypted file to a server and get a direct download link.
-
-Sharing services like Google Drive, Dropbox, or OneDrive might not work, as they require manual interaction to download the file.
-
-### 2. Set up environment variables
-
-In your GitLab project, go to `Settings > CI/CD > Variables` and add the following variables (for each version):
-
-- `BASEROM_<VER>_URL`: a direct download URL for the baserom.us.v10.z64 file (see above); this file has to be encrypted with `AES-256-CBC`
-- `BASEROM_<VER>_KEY`: the AES key used to encrypt the baserom file above
-- `BASEROM_<VER>_SHA1`: the SHA1 checksum of the baserom file; simply use the one mentioned above
-
-Replace `<VER>` with the version you are using:
-- `US10`
-- `US11`
-- `JP`
-- `PAL`
-
-### 3. Trigger the pipeline
-
-Push a commit to your repository and you should see a new pipeline starting in the `CI/CD > Pipelines` section! 
+TODO: fill in
