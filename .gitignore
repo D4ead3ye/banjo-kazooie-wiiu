@@ -75,3 +75,8 @@ tmp/
 tmp/*
 /properties.h
 *.pdb
+
+# port output
+torch.hash.yml
+*.o2r
+*.otr
