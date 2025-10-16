@@ -20,14 +20,14 @@
 #ifndef __N_LIBAUDIO__
 #define __N_LIBAUDIO__
 
-#include <PR/libaudio.h>
+#include <2.0L/PR/libaudio.h>
 
 #ifdef _LANGUAGE_C_PLUS_PLUS
 extern "C" {
 #endif
 
-#include <PR/ultratypes.h>
-#include <PR/mbi.h>
+#include <2.0L/PR/ultratypes.h>
+#include <2.0L/PR/mbi.h>
 
 
 /*

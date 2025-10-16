@@ -30,40 +30,40 @@
 #ifndef _OS_H_
 #define	_OS_H_
 
-#include <PR/os_thread.h>
-#include <PR/os_message.h>
-#include <PR/os_exception.h>
-#include <PR/os_tlb.h>
-#include <PR/os_pi.h>
-#include <PR/os_vi.h>
-#include <PR/os_ai.h>
-#include <PR/os_si.h>
-#include <PR/os_time.h>
-#include <PR/os_cont.h>
-#include <PR/os_pfs.h>
-#include <PR/os_gbpak.h>
-#include <PR/os_voice.h>
-#include <PR/os_cache.h>
-#include <PR/os_debug.h>
-#include <PR/os_error.h>
-#include <PR/os_gio.h>
-#include <PR/os_reg.h>
-#include <PR/os_system.h>
-#include <PR/os_eeprom.h>
-#include <PR/os_flash.h>
-#include <PR/os_host.h>
-#include <PR/os_convert.h>
-#include <PR/os_rdp.h>
-#include <PR/os_rsp.h>
-#include <PR/os_motor.h>
-#include <PR/os_libc.h>
-#include <PR/os_version.h>
+#include <2.0L/PR/os_thread.h>
+#include <2.0L/PR/os_message.h>
+#include <2.0L/PR/os_exception.h>
+#include <2.0L/PR/os_tlb.h>
+#include <2.0L/PR/os_pi.h>
+#include <2.0L/PR/os_vi.h>
+#include <2.0L/PR/os_ai.h>
+#include <2.0L/PR/os_si.h>
+#include <2.0L/PR/os_time.h>
+#include <2.0L/PR/os_cont.h>
+#include <2.0L/PR/os_pfs.h>
+#include <2.0L/PR/os_gbpak.h>
+#include <2.0L/PR/os_voice.h>
+#include <2.0L/PR/os_cache.h>
+#include <2.0L/PR/os_debug.h>
+#include <2.0L/PR/os_error.h>
+#include <2.0L/PR/os_gio.h>
+#include <2.0L/PR/os_reg.h>
+#include <2.0L/PR/os_system.h>
+#include <2.0L/PR/os_eeprom.h>
+#include <2.0L/PR/os_flash.h>
+#include <2.0L/PR/os_host.h>
+#include <2.0L/PR/os_convert.h>
+#include <2.0L/PR/os_rdp.h>
+#include <2.0L/PR/os_rsp.h>
+#include <2.0L/PR/os_motor.h>
+#include <2.0L/PR/os_libc.h>
+#include <2.0L/PR/os_version.h>
 
 #ifdef _LANGUAGE_C_PLUS_PLUS
 extern "C" {
 #endif
 
-#include <PR/ultratypes.h>
+#include <2.0L/PR/ultratypes.h>
 
 /**************************************************************************
  *

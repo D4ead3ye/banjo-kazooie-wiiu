@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-#include <PR/ultratypes.h>
+#include <2.0L/PR/ultratypes.h>
 
 /*===========================================================================*
  *	Macro

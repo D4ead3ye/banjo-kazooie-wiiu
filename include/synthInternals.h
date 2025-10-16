@@ -23,7 +23,7 @@
 #ifndef __audioInternals__
 #define __audioInternals__
 
-#include <PR/libaudio.h>
+#include <2.0L/PR/libaudio.h>
 
 /*
  * filter message ids

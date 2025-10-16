@@ -1,8 +1,6 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
-
-#include "string.h"
 #if 0
 void strcat(char *dst, char *src){
     while(*(dst) != '\0'){
@@ -54,11 +52,19 @@ void _strFToA(char *dst, f32 val, s32 decPlaces){
     }
 }
 
+/* Forward declarations */
+static void bk_strIToA_impl(char *str, s32 num, char prefix);
+
+/* Define the actual functions */
 void strIToA(char *str, s32 num){
-    _strIToA(str, num, 0);
+    bk_strIToA_impl(str, num, 0);
 }
 
 void _strIToA(char *str, s32 num, char prefix){
+    bk_strIToA_impl(str, num, prefix);
+}
+
+static void bk_strIToA_impl(char *str, s32 num, char prefix){
     s32 i;
 
     //Find end of string to concatinate onto

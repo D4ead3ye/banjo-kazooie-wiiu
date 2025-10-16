@@ -94,7 +94,7 @@ static int _rarezip_inflate(u8 * src, u8 * dst, struct huft * arg2){
     D_8027BF10 += COMP_HEADER_SIZE;
     D_8027BF1C = 0;
     D_8027BF18 = 0;
-    inflate();
+    bk_inflate();
     return D_8027BF1C;
 }
 

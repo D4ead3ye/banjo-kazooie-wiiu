@@ -1,6 +1,6 @@
 #include <ultra64.h>
 #include "synthInternals.h"
-#include "mixer.h"
+#include "port/mixer.h"
 #include <libultra/convert.h>
 #include <libultra/r4300.h>
 

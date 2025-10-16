@@ -503,7 +503,7 @@ int *m;                 /* maximum lookup bits, returns actual */
 }
 
 /* decompress an inflated entry */
-int inflate(void) //int inflate()
+int bk_inflate(void) //int inflate() - renamed to avoid conflict with zlib
 {
   int e;                /* last block flag */
   int r;                /* result code */

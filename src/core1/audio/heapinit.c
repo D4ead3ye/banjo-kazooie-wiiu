@@ -1,5 +1,5 @@
 #include "synthInternals.h"
-#include <PR/libaudio.h>
+#include <2.0L/PR/libaudio.h>
 
 void alHeapInit(ALHeap *hp, u8 *base, s32 len)
 {

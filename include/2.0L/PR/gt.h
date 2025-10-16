@@ -55,7 +55,7 @@
 extern "C" {
 #endif	/* _LANGUAGE_C_PLUS_PLUS */
 
-#include <PR/ultratypes.h>
+#include <2.0L/PR/ultratypes.h>
 
 /* the following #defines seem out of order, but we need them
  * for the microcode.
@@ -352,7 +352,7 @@ typedef union {
 #endif	/* _LANGUAGE_C */
 
 #ifdef	_LANGUAGE_ASSEMBLY
-#include <PR/gtoff.h>
+#include <2.0L/PR/gtoff.h>
 #endif	/* _LANGUAGE_ASSEMBLY */
 
 #ifdef	_LANGUAGE_C_PLUS_PLUS

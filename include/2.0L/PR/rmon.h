@@ -25,7 +25,7 @@
 extern "C" {
 #endif
 
-#include <PR/ultratypes.h>
+#include <2.0L/PR/ultratypes.h>
 #define RMON_DBG_BUF_SIZE  2048
 #define RMON_STACKSIZE 0x1000
 

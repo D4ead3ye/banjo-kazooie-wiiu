@@ -27,8 +27,8 @@
 extern "C" {
 #endif
 
-#include <PR/mbi.h>
-#include <PR/ultratypes.h>
+#include <2.0L/PR/mbi.h>
+#include <2.0L/PR/ultratypes.h>
 
 struct bitmap {
 	s16	width;		/* Size across to draw in texels */

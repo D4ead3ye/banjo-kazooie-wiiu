@@ -5,6 +5,7 @@
 #include "libultraship/libultra/thread.h"
 #include "resourcebridge.h"
 #include <math.h>
+#include <string.h>
 
 #include <libultra/convert.h>
 #include <libultra/exception.h>
@@ -137,23 +138,30 @@ void osViExtendVStart(u32 arg0) {
 void osSetThreadPri(OSThread* thread, OSPri p) {
 }
 s32 osContSetCh(u8 ch) {
+  return 0;
 }
 u32 __osGetSR(void) {
+  return 0;
 }
 void __osSetSR(u32 value) {
 }
 OSYieldResult osSpTaskYielded(OSTask* task) {
+  return 0;
 }
 // Lighthouse TODO these need to be implemented in LUS
-int osStartTimer(void *t){}
-int osStopTimer(void *t){}
+int osStartTimer(void *t){
+  return 0;
+}
+int osStopTimer(void *t){
+  return 0;
+}
 
 void osDpSetStatus(u32 data){}
 OSIntMask osSetIntMask(OSIntMask a) {
   return 0;
 }
 
-void __osError(s16, s16, ...) {
+void __osError(s16 error_code, s16 num_args, ...) {
 }
 
 // Lighthouse TODO why is this stubbed and not decompiled?
@@ -161,8 +169,12 @@ void func_80253010(void *dest, void *src, s32 size) {
 
 }
 
-s32 osMotorStop(void *pfs){}
-s32 osMotorStart(void *pfs){}
+s32 osMotorStop(void *pfs){
+  return 0;
+}
+s32 osMotorStart(void *pfs){
+  return 0;
+}
 
 s32 osAiSetFrequency(u32 frequency) {
   f32 dacRateF = ((f32)osViClock / frequency) + 0.5f;
@@ -177,7 +189,21 @@ s32 osAiSetFrequency(u32 frequency) {
 s32 eeprom_writeBlocks(s32 file, s32 offset, void *buffer, s32 count){return 0;}
 s32 eeprom_readBlocks(s32 file, s32 offset, void *buffer, s32 count){ return 0;}
 
-int main (void) {
+/* BSD memory functions */
+void bzero(void *s, size_t n) {
+    memset(s, 0, n);
+}
+
+void bcopy(const void *src, void *dest, size_t n) {
+    memmove(dest, src, n);
+}
+
+/* Rename main to SDL_main for SDL compatibility */
+#ifdef _WIN32
+#define main SDL_main
+#endif
+
+int SDL_main (int argc, char *argv[]) {
 
   return 0;
 }

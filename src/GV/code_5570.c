@@ -180,7 +180,7 @@ void GV_func_8038BEA0(Actor *this){
         }
         if(this->unk100 == NULL){
             this->unk100 = func_8032B16C(JIGGY_3E_GV_GRABBA);
-            local->unk0 =  this->unk100 != NULL ? this->unk100->unk5C : NULL;
+            local->unk0 =  this->unk100 != NULL ? this->unk100->unk5C : 0;
         }
         subaddie_set_state_with_direction(this, this->state, 0.01f, 1);
         this->unk58_0 = false;

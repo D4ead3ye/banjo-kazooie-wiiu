@@ -1,5 +1,5 @@
-#include "PR/n_libaudio.h"
-#include "PR/ultraerror.h"
+#include "2.0L/PR/n_libaudio.h"
+#include "2.0L/PR/ultraerror.h"
 #include <ultra64.h>
 
 static u32 __readVarLen(ALCSeq *s,u32 track);

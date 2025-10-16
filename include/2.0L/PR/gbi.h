@@ -21,7 +21,7 @@
 #define	_GBI_H_
 #include <libultraship/libultra/gbi.h>
 #if 0
-#include <PR/ultratypes.h>
+#include <2.0L/PR/ultratypes.h>
 
 /*
  * To use the F3DEX ucodes, define F3DEX_GBI before include this file.

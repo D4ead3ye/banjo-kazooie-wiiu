@@ -14,8 +14,8 @@
 extern "C" {
 #endif
 
-#include <PR/os.h>
-#include <PR/leoappli.h>
+#include <2.0L/PR/os.h>
+#include <2.0L/PR/leoappli.h>
 
 #if defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS)
 

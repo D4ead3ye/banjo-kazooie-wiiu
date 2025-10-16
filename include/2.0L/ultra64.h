@@ -22,19 +22,19 @@
 #ifndef _ULTRA64_H_
 #define _ULTRA64_H_
 
-#include <PR/ultratypes.h>
-#include <PR/rcp.h>
-#include <PR/os.h>
-#include <PR/region.h>
-#include <PR/rmon.h>
-#include <PR/sptask.h>
-#include <PR/mbi.h>
-#include <PR/libaudio.h>
-#include <PR/gu.h>
-#include <PR/ramrom.h>
-#include <PR/sp.h>
-#include <PR/ucode.h>
-#include <PR/ultraerror.h>
-#include <PR/ultralog.h>
+#include <2.0L/PR/ultratypes.h>
+#include <2.0L/PR/rcp.h>
+#include <2.0L/PR/os.h>
+#include <2.0L/PR/region.h>
+#include <2.0L/PR/rmon.h>
+#include <2.0L/PR/sptask.h>
+#include <2.0L/PR/mbi.h>
+#include <2.0L/PR/libaudio.h>
+#include <2.0L/PR/gu.h>
+#include <2.0L/PR/ramrom.h>
+#include <2.0L/PR/sp.h>
+#include <2.0L/PR/ucode.h>
+#include <2.0L/PR/ultraerror.h>
+#include <2.0L/PR/ultralog.h>
 
 #endif

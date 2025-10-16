@@ -1,6 +1,6 @@
 #include <ultra64.h>
 #include "synthInternals.h"
-#include "mixer.h"
+#include "port/mixer.h"
 
 Acmd *alSavePull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset,
                  Acmd *p) 
