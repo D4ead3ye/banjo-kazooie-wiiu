@@ -1,6 +1,6 @@
 [submodule "tools/Torch"]
 	path = tools/Torch
-	url = https://github.com/inspectredc/Torch.git
+	url = https://github.com/Malkierian/Torch.git
 	branch = Lighthouse
 [submodule "libultraship"]
 	path = libultraship
