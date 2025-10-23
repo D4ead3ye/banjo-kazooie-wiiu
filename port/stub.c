@@ -5,7 +5,7 @@
 #include "libultraship/libultra/thread.h"
 #include "resourcebridge.h"
 #include <math.h>
-#include <string.h>
+#include "bk_string.h"
 
 #include <libultra/convert.h>
 #include <libultra/exception.h>

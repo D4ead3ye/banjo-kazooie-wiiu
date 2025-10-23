@@ -29,6 +29,12 @@ set(PROJECT_BUILD_NAME "Barnard ${PROJECT_PATCH_WORD}" CACHE STRING "" FORCE)
 # Set the minimum version of CMake and the deployment target for macOS
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum OS X deployment version")
 
+# Set the C++ standard and enable the MSVC parallel build option
+set(CMAKE_CXX_STANDARD 20 CACHE STRING "The C++ standard to use")
+set(CMAKE_C_STANDARD 11 CACHE STRING "The C standard to use")
+#add_compile_options(-fsanitize=address)
+#add_link_options(-fsanitize=address)
+
 # Add a custom module path to locate additional CMake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 set(YAML_CPP_STATIC_DEFINE ON)
@@ -41,11 +47,6 @@ set(VCPKG_TARGET_TRIPLET x64-windows-static)
 vcpkg_bootstrap()
 vcpkg_install_packages(zlib bzip2 libzip libpng sdl2 glew glfw3 nlohmann-json tinyxml2 spdlog libogg libvorbis)
 
-# Set the C++ standard and enable the MSVC parallel build option
-set(CMAKE_CXX_STANDARD 20 CACHE STRING "The C++ standard to use")
-set(CMAKE_C_STANDARD 11 CACHE STRING "The C standard to use")
-#add_compile_options(-fsanitize=address)
-#add_link_options(-fsanitize=address)
 set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 endif()
@@ -295,7 +296,6 @@ include_directories(
   ${SDL2_INCLUDE_DIRS}
   ${GLEW_INCLUDE_DIRS}
   ${dr_libs_SOURCE_DIR}
-        .
 )
 
 add_subdirectory(libultraship ${CMAKE_CURRENT_SOURCE_DIR}/libultraship)

@@ -12,6 +12,9 @@ void strcat(char *dst, char *src){
     *(dst) = 0;
 }
 #endif
+
+void strIToA(char* str, s32 num);
+
 void strcatc(char *dst, char src){
     while(*(dst) != '\0'){
         dst++;

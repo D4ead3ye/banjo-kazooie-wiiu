@@ -2,7 +2,7 @@
 //! when unoptimized and clang does not allow optimizing a single function.
 #include <stdbool.h>
 #include <stdint.h>
-#include <string.h>
+#include "bk_string.h"
 #include <stdio.h>
 
 #include "mixer.h"

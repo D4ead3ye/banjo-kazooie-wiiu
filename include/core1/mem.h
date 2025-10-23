@@ -1,6 +1,6 @@
 #ifndef BANJO_KAZOOIE_CORE1_MEMORY_H
 #define BANJO_KAZOOIE_CORE1_MEMORY_H
-#include <string.h>
+#include "bk_string.h"
 #if 0
 /**
 * copy memory area
