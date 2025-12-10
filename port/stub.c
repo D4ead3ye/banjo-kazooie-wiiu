@@ -198,9 +198,9 @@ void bcopy(const void *src, void *dest, size_t n) {
     memmove(dest, src, n);
 }
 
-/* Rename main to SDL_main for SDL compatibility */
-#ifdef _WIN32
-#define main SDL_main
+/* Rename SDL_main to main for SDL compatibility */
+#ifdef __GNUC__
+#define SDL_main main
 #endif
 
 int SDL_main (int argc, char *argv[]) {

@@ -43,7 +43,7 @@ struct {
             u8 unk12C_15:4;
             u8 unk12C_11:4;
             u8 pad12C_7:8;
-        } u8;
+        } u8_s;
         struct {
             u32 unk128_31:8;
             u32 state:8;
@@ -358,8 +358,8 @@ void func_8030F754(GcZoomboxSprite portrait_id, s32 arg1){
     }//L8030F984
 }
 
-#define CMD(i) (g_Dialog.string_list[g_Dialog.u8.active_zoombox] + i)
-#define CMD2(i) (&g_Dialog.string_list[g_Dialog.u8.active_zoombox][i])
+#define CMD(i) (g_Dialog.string_list[g_Dialog.u8_s.active_zoombox] + i)
+#define CMD2(i) (&g_Dialog.string_list[g_Dialog.u8_s.active_zoombox][i])
 
 void gcdialog_update(void) {
     s32 i;
@@ -373,7 +373,7 @@ void gcdialog_update(void) {
 
     ret = -1;
 
-    if (g_Dialog.u8.unk128_31 & 0x80) {
+    if (g_Dialog.u8_s.unk128_31 & 0x80) {
         pfsManager_getFirstControllerFaceButtonState(0, controller_face_buttons);
         func_8024E640(0, controller_side_buttons);
     } else {
@@ -390,108 +390,108 @@ void gcdialog_update(void) {
         }
         if (spA8 == 2) {
             gcdialog_setState(7);
-        } else if (g_Dialog.u8.unk12C_31 == g_Dialog.u8.unk128_15) {
-            g_Dialog.u8.unk12C_31 = 0;
+        } else if (g_Dialog.u8_s.unk12C_31 == g_Dialog.u8_s.unk128_15) {
+            g_Dialog.u8_s.unk12C_31 = 0;
             gcdialog_setState(2);
         }
         break;
 
     case 2:
-        if (g_Dialog.zoombox[g_Dialog.u8.active_zoombox] == NULL || func_80318BEC(g_Dialog.zoombox[g_Dialog.u8.active_zoombox]) || g_Dialog.unk11A[g_Dialog.u8.active_zoombox].unk0_5) {
-            g_Dialog.u8.active_zoombox ^= 1;
+        if (g_Dialog.zoombox[g_Dialog.u8_s.active_zoombox] == NULL || func_80318BEC(g_Dialog.zoombox[g_Dialog.u8_s.active_zoombox]) || g_Dialog.unk11A[g_Dialog.u8_s.active_zoombox].unk0_5) {
+            g_Dialog.u8_s.active_zoombox ^= 1;
         } else {
-            g_Dialog.string_cmd[g_Dialog.u8.active_zoombox] = CMD(g_Dialog.string_index[g_Dialog.u8.active_zoombox])->cmd;
-            g_Dialog.string[g_Dialog.u8.active_zoombox] = CMD(g_Dialog.string_index[g_Dialog.u8.active_zoombox])->str;
+            g_Dialog.string_cmd[g_Dialog.u8_s.active_zoombox] = CMD(g_Dialog.string_index[g_Dialog.u8_s.active_zoombox])->cmd;
+            g_Dialog.string[g_Dialog.u8_s.active_zoombox] = CMD(g_Dialog.string_index[g_Dialog.u8_s.active_zoombox])->str;
 
-            switch (g_Dialog.string_cmd[g_Dialog.u8.active_zoombox]) {
+            switch (g_Dialog.string_cmd[g_Dialog.u8_s.active_zoombox]) {
             case -2:
-                if (g_Dialog.string_index[g_Dialog.u8.active_zoombox] == 0) {
-                    g_Dialog.u8.unk12C_29++;
+                if (g_Dialog.string_index[g_Dialog.u8_s.active_zoombox] == 0) {
+                    g_Dialog.u8_s.unk12C_29++;
                 }
-                gczoombox_minimize(g_Dialog.zoombox[g_Dialog.u8.active_zoombox]);
-                g_Dialog.unk11A[g_Dialog.u8.active_zoombox].unk0_7 = 1;
-                g_Dialog.unk11A[g_Dialog.u8.active_zoombox].unk0_5 = 1;
-                g_Dialog.u8.active_zoombox ^= 1;
+                gczoombox_minimize(g_Dialog.zoombox[g_Dialog.u8_s.active_zoombox]);
+                g_Dialog.unk11A[g_Dialog.u8_s.active_zoombox].unk0_7 = 1;
+                g_Dialog.unk11A[g_Dialog.u8_s.active_zoombox].unk0_5 = 1;
+                g_Dialog.u8_s.active_zoombox ^= 1;
                 g_Dialog.unk128_6 = true;
                 break;
 
             case -1: // Choice
-                g_Dialog.unk11A[g_Dialog.u8.active_zoombox].unk0_7 = 2;
+                g_Dialog.unk11A[g_Dialog.u8_s.active_zoombox].unk0_7 = 2;
                 gcdialog_setState(4);
                 break;
 
             case -4: // Close
-                gczoombox_minimize(g_Dialog.zoombox[g_Dialog.u8.active_zoombox]);
-                gczoombox_close(g_Dialog.zoombox[g_Dialog.u8.active_zoombox]);
-                g_Dialog.unk11A[g_Dialog.u8.active_zoombox].unk0_7 = 0;
-                g_Dialog.unk11A[g_Dialog.u8.active_zoombox].unk0_5 = 1;
-                g_Dialog.u8.active_zoombox ^= 1;
+                gczoombox_minimize(g_Dialog.zoombox[g_Dialog.u8_s.active_zoombox]);
+                gczoombox_close(g_Dialog.zoombox[g_Dialog.u8_s.active_zoombox]);
+                g_Dialog.unk11A[g_Dialog.u8_s.active_zoombox].unk0_7 = 0;
+                g_Dialog.unk11A[g_Dialog.u8_s.active_zoombox].unk0_5 = 1;
+                g_Dialog.u8_s.active_zoombox ^= 1;
                 g_Dialog.unk128_6 = true;
                 break;
 
             case -7: // Trigger
                 if (g_Dialog.unk140 != NULL) {
                     if (g_Dialog.caller == NULL) {
-                        g_Dialog.unk140(g_Dialog.caller, g_Dialog.unk130, *g_Dialog.string[g_Dialog.u8.active_zoombox]);
+                        g_Dialog.unk140(g_Dialog.caller, g_Dialog.unk130, *g_Dialog.string[g_Dialog.u8_s.active_zoombox]);
                     } else if (func_8030EDC0(g_Dialog.caller, g_Dialog.unk138)) {
-                        g_Dialog.unk140(g_Dialog.caller, g_Dialog.unk130, *g_Dialog.string[g_Dialog.u8.active_zoombox]);
+                        g_Dialog.unk140(g_Dialog.caller, g_Dialog.unk130, *g_Dialog.string[g_Dialog.u8_s.active_zoombox]);
                     }
                 }
-                g_Dialog.string_index[g_Dialog.u8.active_zoombox]++;
+                g_Dialog.string_index[g_Dialog.u8_s.active_zoombox]++;
                 break;
 
             case -9: // Substitute integer
             case -8: // Conditional text
                 do {
-                    g_Dialog.string_index[g_Dialog.u8.active_zoombox]++;
-                    g_Dialog.string_cmd[g_Dialog.u8.active_zoombox] = CMD(g_Dialog.string_index[g_Dialog.u8.active_zoombox])->cmd;
-                } while (g_Dialog.string_cmd[g_Dialog.u8.active_zoombox] == -8 || g_Dialog.string_cmd[g_Dialog.u8.active_zoombox] == -9);
+                    g_Dialog.string_index[g_Dialog.u8_s.active_zoombox]++;
+                    g_Dialog.string_cmd[g_Dialog.u8_s.active_zoombox] = CMD(g_Dialog.string_index[g_Dialog.u8_s.active_zoombox])->cmd;
+                } while (g_Dialog.string_cmd[g_Dialog.u8_s.active_zoombox] == -8 || g_Dialog.string_cmd[g_Dialog.u8_s.active_zoombox] == -9);
                 break;
 
             case -6: // Conditional minimize
-                for(spA8 = g_Dialog.string_index[g_Dialog.u8.active_zoombox]; CMD2(spA8)->cmd < -4; spA8++);
+                for(spA8 = g_Dialog.string_index[g_Dialog.u8_s.active_zoombox]; CMD2(spA8)->cmd < -4; spA8++);
 
                 if (CMD2(spA8)->cmd >= 0) {
-                    gczoombox_loadSprite(g_Dialog.zoombox[g_Dialog.u8.active_zoombox], CMD2(spA8)->cmd + 0xC);
+                    gczoombox_loadSprite(g_Dialog.zoombox[g_Dialog.u8_s.active_zoombox], CMD2(spA8)->cmd + 0xC);
                 }
-                if (g_Dialog.string_index[g_Dialog.u8.active_zoombox]) {
-                    gczoombox_minimize(g_Dialog.zoombox[g_Dialog.u8.active_zoombox]);
+                if (g_Dialog.string_index[g_Dialog.u8_s.active_zoombox]) {
+                    gczoombox_minimize(g_Dialog.zoombox[g_Dialog.u8_s.active_zoombox]);
                 }
-                if (!g_Dialog.string_index[g_Dialog.u8.active_zoombox] && g_Dialog.unk11A[g_Dialog.u8.active_zoombox].unk0_7 == 2) {
-                    gczoombox_minimize(g_Dialog.zoombox[g_Dialog.u8.active_zoombox]);
+                if (!g_Dialog.string_index[g_Dialog.u8_s.active_zoombox] && g_Dialog.unk11A[g_Dialog.u8_s.active_zoombox].unk0_7 == 2) {
+                    gczoombox_minimize(g_Dialog.zoombox[g_Dialog.u8_s.active_zoombox]);
                 }
-                g_Dialog.unk11A[g_Dialog.u8.active_zoombox].unk0_7 = 0;
-                g_Dialog.string_index[g_Dialog.u8.active_zoombox]++;
-                g_Dialog.u8.active_zoombox ^= 1;
+                g_Dialog.unk11A[g_Dialog.u8_s.active_zoombox].unk0_7 = 0;
+                g_Dialog.string_index[g_Dialog.u8_s.active_zoombox]++;
+                g_Dialog.u8_s.active_zoombox ^= 1;
                 g_Dialog.unk128_6 = true;
                 break;
 
             case -5:
-                gczoombox_minimize(g_Dialog.zoombox[g_Dialog.u8.active_zoombox]);
-                g_Dialog.unk11A[g_Dialog.u8.active_zoombox].unk0_7 = 0;
-                g_Dialog.string_index[g_Dialog.u8.active_zoombox]++;
-                g_Dialog.u8.active_zoombox ^= 1;
+                gczoombox_minimize(g_Dialog.zoombox[g_Dialog.u8_s.active_zoombox]);
+                g_Dialog.unk11A[g_Dialog.u8_s.active_zoombox].unk0_7 = 0;
+                g_Dialog.string_index[g_Dialog.u8_s.active_zoombox]++;
+                g_Dialog.u8_s.active_zoombox ^= 1;
                 g_Dialog.unk128_6 = true;
                 break;
 
             case -3:
-                g_Dialog.unk11A[g_Dialog.u8.active_zoombox].unk0_7 = 0;
+                g_Dialog.unk11A[g_Dialog.u8_s.active_zoombox].unk0_7 = 0;
                 gcdialog_setState(4);
                 break;
 
             default:
-                if (!gczoombox_strlen(CMD(g_Dialog.string_index[g_Dialog.u8.active_zoombox])->str)) {
-                    g_Dialog.string_index[g_Dialog.u8.active_zoombox]++;
+                if (!gczoombox_strlen(CMD(g_Dialog.string_index[g_Dialog.u8_s.active_zoombox])->str)) {
+                    g_Dialog.string_index[g_Dialog.u8_s.active_zoombox]++;
                 } else {
-                    if (CMD(g_Dialog.string_index[g_Dialog.u8.active_zoombox] + 1)->cmd == -8) {
+                    if (CMD(g_Dialog.string_index[g_Dialog.u8_s.active_zoombox] + 1)->cmd == -8) {
                         // Conditional text - use callback to determine if text should be shown
                         if (g_Dialog.unk144 != NULL) {
                             sp7C = 1;
 
                             if (g_Dialog.caller == NULL) {
-                                ret = g_Dialog.unk144(g_Dialog.caller, g_Dialog.unk130, g_Dialog.string_index[g_Dialog.u8.active_zoombox]);
+                                ret = g_Dialog.unk144(g_Dialog.caller, g_Dialog.unk130, g_Dialog.string_index[g_Dialog.u8_s.active_zoombox]);
                             } else if (func_8030EDC0(g_Dialog.caller, g_Dialog.unk138)) {
-                                ret = g_Dialog.unk144(g_Dialog.caller, g_Dialog.unk130, g_Dialog.string_index[g_Dialog.u8.active_zoombox]);
+                                ret = g_Dialog.unk144(g_Dialog.caller, g_Dialog.unk130, g_Dialog.string_index[g_Dialog.u8_s.active_zoombox]);
                             }
 
                             if (ret < 0) {
@@ -499,22 +499,22 @@ void gcdialog_update(void) {
                                 sp7C = 0;
                             }
 
-                            if(ret >= 0 && CMD(g_Dialog.string_index[g_Dialog.u8.active_zoombox] + ret + 1)->cmd == -8) {
-                                strlen(CMD(g_Dialog.string_index[g_Dialog.u8.active_zoombox] + ret + 1)->str);
-                                strlen(CMD(g_Dialog.string_index[g_Dialog.u8.active_zoombox])->str);
+                            if(ret >= 0 && CMD(g_Dialog.string_index[g_Dialog.u8_s.active_zoombox] + ret + 1)->cmd == -8) {
+                                strlen(CMD(g_Dialog.string_index[g_Dialog.u8_s.active_zoombox] + ret + 1)->str);
+                                strlen(CMD(g_Dialog.string_index[g_Dialog.u8_s.active_zoombox])->str);
 
                                 func_8030F218(
                                         g_Dialog.output,
-                                        CMD(g_Dialog.string_index[g_Dialog.u8.active_zoombox])->str,
-                                        CMD(g_Dialog.string_index[g_Dialog.u8.active_zoombox] + ret + 1)->str,
-                                        func_8031B604(CMD(g_Dialog.string_index[g_Dialog.u8.active_zoombox])->str),
+                                        CMD(g_Dialog.string_index[g_Dialog.u8_s.active_zoombox])->str,
+                                        CMD(g_Dialog.string_index[g_Dialog.u8_s.active_zoombox] + ret + 1)->str,
+                                        func_8031B604(CMD(g_Dialog.string_index[g_Dialog.u8_s.active_zoombox])->str),
                                         sp7C
                                         );
                             } else {
                                 ret = -1;
                             }
                         }
-                    } else if(CMD(g_Dialog.string_index[g_Dialog.u8.active_zoombox] + 1)->cmd == -9){
+                    } else if(CMD(g_Dialog.string_index[g_Dialog.u8_s.active_zoombox] + 1)->cmd == -9){
                         // Integer substitution - use callback to determine integer value
                         // (used for player's note count in some messages)
                         if (g_Dialog.unk144 != NULL) {
@@ -523,45 +523,45 @@ void gcdialog_update(void) {
                             D_80382FF8[0] = '\0';
 
                             if (g_Dialog.caller == NULL) {
-                                ret = g_Dialog.unk144(g_Dialog.caller, g_Dialog.unk130, g_Dialog.string_index[g_Dialog.u8.active_zoombox]);
+                                ret = g_Dialog.unk144(g_Dialog.caller, g_Dialog.unk130, g_Dialog.string_index[g_Dialog.u8_s.active_zoombox]);
                             } else if (func_8030EDC0(g_Dialog.caller, g_Dialog.unk138)) {
-                                ret = g_Dialog.unk144(g_Dialog.caller, g_Dialog.unk130, g_Dialog.string_index[g_Dialog.u8.active_zoombox]);
+                                ret = g_Dialog.unk144(g_Dialog.caller, g_Dialog.unk130, g_Dialog.string_index[g_Dialog.u8_s.active_zoombox]);
                             }
 
                             strIToA(D_80382FF8, ret);
                             strlen(D_80382FF8);
-                            strlen(CMD(g_Dialog.string_index[g_Dialog.u8.active_zoombox])->str);
+                            strlen(CMD(g_Dialog.string_index[g_Dialog.u8_s.active_zoombox])->str);
 
                             func_8030F218(
                                     g_Dialog.output,
-                                    CMD(g_Dialog.string_index[g_Dialog.u8.active_zoombox])->str,
+                                    CMD(g_Dialog.string_index[g_Dialog.u8_s.active_zoombox])->str,
                                     D_80382FF8,
-                                    func_8031B604(CMD(g_Dialog.string_index[g_Dialog.u8.active_zoombox])->str),
+                                    func_8031B604(CMD(g_Dialog.string_index[g_Dialog.u8_s.active_zoombox])->str),
                                     0
                                     );
                         }
                     }
 
-                    if (gczoombox_loadSprite(g_Dialog.zoombox[g_Dialog.u8.active_zoombox], g_Dialog.string_cmd[g_Dialog.u8.active_zoombox] + 12)) {
-                        gczoombox_minimize(g_Dialog.zoombox[g_Dialog.u8.active_zoombox]);
+                    if (gczoombox_loadSprite(g_Dialog.zoombox[g_Dialog.u8_s.active_zoombox], g_Dialog.string_cmd[g_Dialog.u8_s.active_zoombox] + 12)) {
+                        gczoombox_minimize(g_Dialog.zoombox[g_Dialog.u8_s.active_zoombox]);
                         g_Dialog.unk128_6 = true;
                     }
 
                     if (g_Dialog.unk128_6) {
-                        gczoombox_maximize(g_Dialog.zoombox[g_Dialog.u8.active_zoombox]);
+                        gczoombox_maximize(g_Dialog.zoombox[g_Dialog.u8_s.active_zoombox]);
                         g_Dialog.unk128_6 = false;
                     }
 
                     if (ret == -1) {
-                        for (spA8 = g_Dialog.string_index[g_Dialog.u8.active_zoombox]; CMD(spA8)->cmd == g_Dialog.string_cmd[g_Dialog.u8.active_zoombox] && spA8 - g_Dialog.string_index[g_Dialog.u8.active_zoombox] < 8; spA8++) {
-                            sp4C[spA8 - g_Dialog.string_index[g_Dialog.u8.active_zoombox]] = CMD(spA8)->str;
+                        for (spA8 = g_Dialog.string_index[g_Dialog.u8_s.active_zoombox]; CMD(spA8)->cmd == g_Dialog.string_cmd[g_Dialog.u8_s.active_zoombox] && spA8 - g_Dialog.string_index[g_Dialog.u8_s.active_zoombox] < 8; spA8++) {
+                            sp4C[spA8 - g_Dialog.string_index[g_Dialog.u8_s.active_zoombox]] = CMD(spA8)->str;
                         }
 
-                        gczoombox_setStrings(g_Dialog.zoombox[g_Dialog.u8.active_zoombox], spA8 - g_Dialog.string_index[g_Dialog.u8.active_zoombox], sp4C);
-                        g_Dialog.string_index[g_Dialog.u8.active_zoombox] = spA8;
+                        gczoombox_setStrings(g_Dialog.zoombox[g_Dialog.u8_s.active_zoombox], spA8 - g_Dialog.string_index[g_Dialog.u8_s.active_zoombox], sp4C);
+                        g_Dialog.string_index[g_Dialog.u8_s.active_zoombox] = spA8;
                     } else {
-                        func_803183A4(g_Dialog.zoombox[g_Dialog.u8.active_zoombox], g_Dialog.output);
-                        g_Dialog.string_index[g_Dialog.u8.active_zoombox]++;
+                        func_803183A4(g_Dialog.zoombox[g_Dialog.u8_s.active_zoombox], g_Dialog.output);
+                        g_Dialog.string_index[g_Dialog.u8_s.active_zoombox]++;
                     }
 
                     gcdialog_setState(3);
@@ -572,16 +572,16 @@ void gcdialog_update(void) {
         break;
 
     case 3:
-        if ((g_Dialog.u8.unk128_31 & 1) && controller_face_buttons[FACE_BUTTON(BUTTON_B)] == 1u) {
+        if ((g_Dialog.u8_s.unk128_31 & 1) && controller_face_buttons[FACE_BUTTON(BUTTON_B)] == 1u) {
             gcdialog_setState(6);
             break;
         }
 
-        if (g_Dialog.u8.unk128_31 & 0x80) {
+        if (g_Dialog.u8_s.unk128_31 & 0x80) {
             break;
         }
 
-        if (NOT((g_Dialog.u8.unk128_31 & 0x80) ? func_8024E5E8(0, 4) : func_8024E5E8(0, 3))) {
+        if (NOT((g_Dialog.u8_s.unk128_31 & 0x80) ? func_8024E5E8(0, 4) : func_8024E5E8(0, 3))) {
             break;
         }
 
@@ -590,13 +590,13 @@ void gcdialog_update(void) {
 
     case 4: // Waiting for player to make choice
         if (controller_face_buttons[FACE_BUTTON(BUTTON_A)] == 1) {
-            g_Dialog.u8.unk12C_23 = 1;
+            g_Dialog.u8_s.unk12C_23 = 1;
         } else if (controller_face_buttons[FACE_BUTTON(BUTTON_B)] == 1) {
-            g_Dialog.u8.unk12C_23 = 0;
+            g_Dialog.u8_s.unk12C_23 = 0;
         }
 
-        if (g_Dialog.u8.unk12C_23 != -1) {
-            gcdialog_setState(g_Dialog.unk11A[g_Dialog.u8.active_zoombox].unk0_7 ? 8 : 5);
+        if (g_Dialog.u8_s.unk12C_23 != -1) {
+            gcdialog_setState(g_Dialog.unk11A[g_Dialog.u8_s.active_zoombox].unk0_7 ? 8 : 5);
         }
         break;
 
