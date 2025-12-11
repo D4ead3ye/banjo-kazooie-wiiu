@@ -321,6 +321,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         "_UNICODE;"
         "_CRT_SECURE_NO_WARNINGS;"
         "_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS;"
+        "NOMINMAX;"
+        "WIN32_LEAN_AND_MEAN;"
     )
     add_compile_definitions(STORMLIB_NO_AUTO_LINK)
 	set(STORMLIB_NO_AUTO_LINK ON)

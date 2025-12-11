@@ -21,7 +21,9 @@ extern "C" {
 /*	The copyright notice above does not evidence any   	*/
 /*	actual or intended publication of such source code.	*/
 
+#if 0 // BK
 #ident "$Revision: 1.17 $"
+#endif
 
 /* ANSI C Notes:
  *
