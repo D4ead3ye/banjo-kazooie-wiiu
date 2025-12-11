@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 project(Lighthouse VERSION 0.0.1 LANGUAGES C CXX ASM)
 include(FetchContent)
 
+include(CMake/lighthouse-cvars.cmake)
+include(CMake/lus-cvars.cmake)
+
 if(APPLE)
   enable_language(OBJCXX)
 endif()
@@ -125,6 +128,7 @@ if (UNIX AND NOT APPLE)
     find_package(OpenGL REQUIRED)
 endif()
 
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/src/port/build.c.in ${CMAKE_CURRENT_SOURCE_DIR}/src/port/build.c @ONLY)
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/properties.h.in ${CMAKE_CURRENT_SOURCE_DIR}/properties.h @ONLY)
 
 # Include directories

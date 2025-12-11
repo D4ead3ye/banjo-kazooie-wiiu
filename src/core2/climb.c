@@ -42,7 +42,7 @@ f32 climbGetTopY(void){ //climbGetTopY
     return climbPoleTop[1];
 }
 
-climbSet(f32 bottom[3], f32 top[3], f32 radius, u32 arg3){
+void climbSet(f32 bottom[3], f32 top[3], f32 radius, u32 arg3){
     if( !(D_8037C58C > 0.0f) || D_8037C580[0] != bottom[0]
        || D_8037C580[1] != bottom[1] || D_8037C580[2] != bottom[2])
     {

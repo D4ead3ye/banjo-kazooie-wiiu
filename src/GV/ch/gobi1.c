@@ -2,7 +2,7 @@
 #include "functions.h"
 #include "variables.h"
 
-extern func_802EBA98(s32, f32[3], s32, f32, s32, f32[3], f32, f32[3]);
+extern bool func_802EBA98(s32, f32[3], s32, f32, s32, f32[3], f32, f32[3]);
 
 typedef struct {
     u8 unk0[2]; // array of sfxsource indexes

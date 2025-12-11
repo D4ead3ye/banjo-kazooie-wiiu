@@ -5,7 +5,7 @@
 
 #include "version.h"
 
-extern func_8024FDDC(u8, s32);
+extern void func_8024FDDC(u8, s32);
 
 void func_8025AE50(s32, f32);
 

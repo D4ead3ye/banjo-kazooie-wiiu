@@ -60,7 +60,7 @@ void __chlmonkey_updateBringOrange(Actor **this_ptr) {
 void __chlmonkey_playRandomNoise(Actor *this) {
     f32 scaled_noise_volume;
     f32 random_noise;
-    static sNoiseCooldown = 0;
+    static int sNoiseCooldown = 0;
 
     scaled_noise_volume = ml_map_f(func_8032970C(this), 1000000.0f, 343000000.0f, 18000.0f, 0.0f);
     random_noise = randf();

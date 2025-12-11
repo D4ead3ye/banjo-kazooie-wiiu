@@ -73,7 +73,7 @@ struct {
 void func_8034C9B0(int arg0);
 
 //.code
-func_8034C3D0(BKModel *arg0, s32 arg1, s32 vtx_xform_id, s32 arg3){
+void func_8034C3D0(BKModel *arg0, s32 arg1, s32 vtx_xform_id, s32 arg3){
     struct1Ds * v0 = bk_vector_pushBackNew(&D_80386140.unk4);
     v0->xform_id = vtx_xform_id;
     v0->model = arg0;

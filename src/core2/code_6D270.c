@@ -3,7 +3,7 @@
 #include "functions.h"
 #include "variables.h"
 
-extern func_802EFAB0(ParticleEmitter *, s32, f32);
+extern void func_802EFAB0(ParticleEmitter *, s32, f32);
 
 ParticleEmitter *func_802F4274(f32 arg0[3]);
 

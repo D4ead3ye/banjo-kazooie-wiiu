@@ -11,6 +11,7 @@ asm/*/*.s
 asm/core1/os
 !asm/ultra
 !asm/core1/ultra
+/build*
 build/*
 build/
 build-cmake
@@ -80,3 +81,5 @@ tmp/*
 torch.hash.yml
 *.o2r
 *.otr
+lighthouse.cfg.json
+logs/

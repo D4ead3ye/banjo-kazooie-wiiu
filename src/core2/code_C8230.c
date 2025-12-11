@@ -15,7 +15,7 @@ void func_8034F1C0(s32 arg0, BKVtxRef *ref, Vtx *dst, Struct75s *arg3) {
 
 void func_8034F248(Struct75s arg0){}
 
-func_8034F250(Struct75s *arg0, UNK_TYPE(s32) arg1, UNK_TYPE(s32) arg2, UNK_TYPE(s32) arg3){
+void func_8034F250(Struct75s *arg0, UNK_TYPE(s32) arg1, UNK_TYPE(s32) arg2, UNK_TYPE(s32) arg3){
     arg0->unk0 = 0.0f;
 }
 

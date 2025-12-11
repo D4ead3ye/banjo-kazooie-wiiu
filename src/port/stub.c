@@ -197,13 +197,3 @@ void bzero(void *s, size_t n) {
 void bcopy(const void *src, void *dest, size_t n) {
     memmove(dest, src, n);
 }
-
-/* Rename SDL_main to main for SDL compatibility */
-#ifdef __GNUC__
-#define SDL_main main
-#endif
-
-int SDL_main (int argc, char *argv[]) {
-
-  return 0;
-}
