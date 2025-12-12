@@ -1,14 +1,15 @@
 #include "Menu.h"
+#include "port/Engine.h"
 #include "UIWidgets.hpp"
 #include "LighthouseInputEditorWindow.h"
-#include <window/gui/GuiElement.h>
+#include <ship/window/gui/GuiElement.h>
 #include "LighthouseModals.h"
 #include "Notification.h"
 #include <variant>
 #include <spdlog/fmt/fmt.h>
 #include "variables.h"
 #include <tuple>
-#include <config/Config.h>
+#include <ship/config/Config.h>
 
 std::vector<ImVec2> windowTypeSizes = { {} };
 
@@ -572,7 +573,7 @@ void Menu::DrawElement() {
         ImGui::End();
         return;
     }
-    // ImGui::PushFont(OTRGlobals::Instance->fontStandardLargest);
+    ImGui::PushFont(GameEngine::Instance->fontStandardLargest);
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
     ImGuiStyle& style = ImGui::GetStyle();
@@ -787,7 +788,7 @@ void Menu::DrawElement() {
     }
     ImGui::EndChild();
 
-    // ImGui::PushFont(OTRGlobals::Instance->fontMonoLarger);
+    ImGui::PushFont(GameEngine::Instance->fontMonoLarger);
     pos = ImVec2{ sectionCenterX + (sidebarWidth / 2), topY } + style.ItemSpacing * 2;
     window->DrawList->AddRectFilled(pos, pos + ImVec2{ 4, sectionHeight - style.FramePadding.y * 2 },
                                     ImGui::GetColorU32({ 255, 255, 255, 255 }), true, style.WindowRounding);

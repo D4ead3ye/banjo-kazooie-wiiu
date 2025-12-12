@@ -11,10 +11,10 @@
 #include <memory>
 #include "port/ShipInit.hpp"
 #include "port/ShipUtils.h"
-#include <window/gui/GuiWindow.h>
-#include "Context.h"
-#include "consolevariablebridge.h"
-#include <window/Window.h>
+#include <ship/window/gui/GuiWindow.h>
+#include "ship/Context.h"
+#include "libultraship/bridge/consolevariablebridge.h"
+#include <ship/window/Window.h>
 
 namespace UIWidgets {
 

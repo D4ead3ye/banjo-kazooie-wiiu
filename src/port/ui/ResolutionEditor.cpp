@@ -1,8 +1,8 @@
 #include "ResolutionEditor.h"
 #include <imgui.h>
 
-#include <graphic/Fast3D/Fast3dWindow.h>
-#include <graphic/Fast3D/interpreter.h>
+#include <fast/Fast3dWindow.h>
+#include <fast/interpreter.h>
 #include "LighthouseMenu.h"
 #include "LighthouseGui.hpp"
 

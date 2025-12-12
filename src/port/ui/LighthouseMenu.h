@@ -2,7 +2,7 @@
 
 #include "UIWidgets.hpp"
 #include "Menu.h"
-#include <graphic/Fast3D/backends/gfx_rendering_api.h>
+#include <fast/backends/gfx_rendering_api.h>
 
 namespace LighthouseGui {
 

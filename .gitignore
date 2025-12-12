@@ -81,6 +81,7 @@ tmp/*
 torch.hash.yml
 *.o2r
 *.otr
+imgui.ini
 lighthouse.cfg.json
 logs/
 /src/port/build.c

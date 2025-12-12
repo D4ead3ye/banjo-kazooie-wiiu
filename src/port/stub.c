@@ -3,7 +3,7 @@
 #include "libultraship/libultra/interrupt.h"
 #include "libultraship/libultra/sptask.h"
 #include "libultraship/libultra/thread.h"
-#include "resourcebridge.h"
+#include "libultraship/bridge/resourcebridge.h"
 #include <math.h>
 #include "bk_string.h"
 

@@ -1,23 +1,23 @@
 #include "Engine.h"
-#include "StringHelper.h"
-
+#include "ship/utils/StringHelper.h"
+#include "ship/window/gui/Fonts.h"
+#include "ship/window/gui/resource/Font.h"
 #include "extractor/GameExtractor.h"
-#include "libultraship/src/Context.h"
-#include "libultraship/src/controller/controldevice/controller/mapping/ControllerDefaultMappings.h"
-// #include "resource/type/ResourceType.h"
+#include <libultraship/controller/controldeck/ControlDeck.h>
+#include "ship/controller/controldevice/controller/mapping/ControllerDefaultMappings.h"
 
-#include <Fast3D/Fast3dWindow.h>
-#include <DisplayListFactory.h>
-#include <TextureFactory.h>
-#include <MatrixFactory.h>
-#include <BlobFactory.h>
-#include <VertexFactory.h>
+#include <fast/Fast3dWindow.h>
+#include "fast/resource/ResourceType.h"
+#include <fast/resource/factory/DisplayListFactory.h>
+#include <fast/resource/factory/TextureFactory.h>
+#include <fast/resource/factory/MatrixFactory.h>
+#include <fast/resource/factory/VertexFactory.h>
 #include "audio/GameAudio.h"
 #include "ui/LighthouseGui.hpp"
 // #include "port/patches/DisplayListPatch.h"
 // #include "port/mods/PortEnhancements.h"
 
-#include <Fast3D/interpreter.h>
+#include <fast/interpreter.h>
 #include <filesystem>
 #include <libultraship/libultraship.h>
 
@@ -102,38 +102,7 @@ GameEngine::GameEngine() {
     this->context->InitConsoleVariables(); // without this line the controldeck constructor failes in
                                            // ShipDeviceIndexMappingManager::UpdateControllerNamesFromConfig()
 
-    auto defaultMappings = std::make_shared<Ship::ControllerDefaultMappings>(
-        // KeyboardKeyToButtonMappings - use built-in LUS defaults
-        std::unordered_map<CONTROLLERBUTTONS_T, std::unordered_set<Ship::KbScancode>>(),
-        // KeyboardKeyToAxisDirectionMappings - use built-in LUS defaults
-        std::unordered_map<Ship::StickIndex, std::vector<std::pair<Ship::Direction, Ship::KbScancode>>>(),
-        // SDLButtonToButtonMappings
-        std::unordered_map<CONTROLLERBUTTONS_T, std::unordered_set<SDL_GameControllerButton>>{
-            { BTN_A, { SDL_CONTROLLER_BUTTON_A } },
-            { BTN_B, { SDL_CONTROLLER_BUTTON_X } },
-            { BTN_START, { SDL_CONTROLLER_BUTTON_START } },
-            { BTN_CLEFT, { SDL_CONTROLLER_BUTTON_Y } },
-            { BTN_CDOWN, { SDL_CONTROLLER_BUTTON_B } },
-            { BTN_DUP, { SDL_CONTROLLER_BUTTON_DPAD_UP } },
-            { BTN_DDOWN, { SDL_CONTROLLER_BUTTON_DPAD_DOWN } },
-            { BTN_DLEFT, { SDL_CONTROLLER_BUTTON_DPAD_LEFT } },
-            { BTN_DRIGHT, { SDL_CONTROLLER_BUTTON_DPAD_RIGHT } },
-            { BTN_R, { SDL_CONTROLLER_BUTTON_RIGHTSHOULDER } },
-            { BTN_Z, { SDL_CONTROLLER_BUTTON_LEFTSHOULDER } }
-        },
-        // SDLButtonToAxisDirectionMappings - use built-in LUS defaults
-        std::unordered_map<Ship::StickIndex, std::vector<std::pair<Ship::Direction, SDL_GameControllerButton>>>(),
-        // SDLAxisDirectionToButtonMappings
-        std::unordered_map<CONTROLLERBUTTONS_T, std::vector<std::pair<SDL_GameControllerAxis, int32_t>>>{
-            { BTN_CLEFT, { { SDL_CONTROLLER_AXIS_TRIGGERRIGHT, 1 } } },
-            { BTN_CDOWN, { { SDL_CONTROLLER_AXIS_TRIGGERLEFT, 1 } } },
-            { BTN_CUP, { { SDL_CONTROLLER_AXIS_RIGHTY, -1 } } },
-            { BTN_CRIGHT, { { SDL_CONTROLLER_AXIS_RIGHTX, 1 } } }
-        },
-        // SDLAxisDirectionToAxisDirectionMappings - use built-in LUS defaults
-        std::unordered_map<Ship::StickIndex, std::vector<std::pair<Ship::Direction, std::pair<SDL_GameControllerAxis, int32_t>>>>()
-    );
-    auto controlDeck = std::make_shared<LUS::ControlDeck>(std::vector<CONTROLLERBUTTONS_T>(), defaultMappings);
+    auto controlDeck = std::make_shared<LUS::ControlDeck>(std::vector<CONTROLLERBUTTONS_T>());
 
     this->context->InitResourceManager(archiveFiles, {}, 3); // without this line InitWindow fails in Gui::Init()
     this->context->InitConsole(); // without this line the GuiWindow constructor fails in ConsoleWindow::InitElement()
@@ -235,6 +204,14 @@ GameEngine::GameEngine() {
 
     prevAltAssets = CVarGetInteger("gEnhancements.Mods.AlternateAssets", 0);
     context->GetResourceManager()->SetAltAssetsEnabled(prevAltAssets);
+
+    fontMono = CreateFontWithSize(16.0f, "fonts/Inconsolata-Regular.ttf");
+    fontMonoLarger = CreateFontWithSize(20.0f, "fonts/Inconsolata-Regular.ttf");
+    fontMonoLargest = CreateFontWithSize(24.0f, "fonts/Inconsolata-Regular.ttf");
+    fontStandard = CreateFontWithSize(16.0f, "fonts/Montserrat-Regular.ttf");
+    fontStandardLarger = CreateFontWithSize(20.0f, "fonts/Montserrat-Regular.ttf");
+    fontStandardLargest = CreateFontWithSize(24.0f, "fonts/Montserrat-Regular.ttf");
+    ImGui::GetIO().FontDefault = fontMono;
 }
 
 bool GameEngine::GenAssetFile(bool exitOnFail) {
@@ -278,7 +255,7 @@ void GameEngine::Create() {
 
 void GameEngine::Destroy() {
     // PortEnhancements_Exit();
-    AudioExit();
+    // AudioExit();
     for (auto ptr : MemoryPool) {
         free(ptr);
     }
@@ -556,6 +533,41 @@ int GameEngine::ShowYesNoBox(const char* title, const char* box) {
     SDL_ShowMessageBox(&boxData, &ret);
 #endif
     return ret;
+}
+
+ImFont* GameEngine::CreateFontWithSize(float size, std::string fontPath) {
+    auto mImGuiIo = &ImGui::GetIO();
+    ImFont* font;
+    if (fontPath == "") {
+        ImFontConfig fontCfg = ImFontConfig();
+        fontCfg.OversampleH = fontCfg.OversampleV = 1;
+        fontCfg.PixelSnapH = true;
+        fontCfg.SizePixels = size;
+        font = mImGuiIo->Fonts->AddFontDefault(&fontCfg);
+    } else {
+        auto initData = std::make_shared<Ship::ResourceInitData>();
+        ImFontConfig config;
+        config.FontDataOwnedByAtlas = false;
+
+        initData->Format = RESOURCE_FORMAT_BINARY;
+        initData->Type = static_cast<uint32_t>(RESOURCE_TYPE_FONT);
+        initData->ResourceVersion = 0;
+        initData->Path = fontPath;
+        std::shared_ptr<Ship::Font> fontData = std::static_pointer_cast<Ship::Font>(
+            Ship::Context::GetInstance()->GetResourceManager()->LoadResource(fontPath, false, initData));
+        font = mImGuiIo->Fonts->AddFontFromMemoryTTF(fontData->Data, fontData->DataSize, size, &config);
+    }
+    // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
+    float iconFontSize = size * 2.0f / 3.0f;
+    static const ImWchar sIconsRanges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
+    ImFontConfig iconsConfig;
+    iconsConfig.MergeMode = true;
+    iconsConfig.PixelSnapH = true;
+    iconsConfig.GlyphMinAdvanceX = iconFontSize;
+    mImGuiIo->Fonts->AddFontFromMemoryCompressedBase85TTF(fontawesome_compressed_data_base85, iconFontSize,
+                                                          &iconsConfig, sIconsRanges);
+
+    return font;
 }
 
 bool GameEngine::HasVersion(BKVersion ver){

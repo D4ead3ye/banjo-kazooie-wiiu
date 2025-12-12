@@ -102,26 +102,26 @@ void core1_init(void) {
 #if VERSION == VERSION_PAL
      osTvType = 0;
 #endif
-    ucode_load();
+    // ucode_load();
     setBootMap(getDefaultBootMap());
     rarezip_init(); //initialize decompressor's huft table
     viMgr_init();
     overlayManagerloadCore2();
     sDebugVar_8027BEF0 = sDebugVar_8027A538;
-    heap_init();
+    // heap_init();
     func_80254028();
     dummy_func_8025AFB0();
-    allocUnusedBlock();
+    // allocUnusedBlock();
     assetCache_init();
     pfsManager_init();
     baMotor_init();
-    audioManager_init();
+    // audioManager_init();
     graphicsCache_init();
-    ml_init();
+    // ml_init();
     gctransition_reset();
     D_8027A130 = 0;
     gGlobalTimer = 0;
-    func_8023DA9C(3);
+    // func_8023DA9C(3);
 }
 
 void globalTimer_incTimer(void){

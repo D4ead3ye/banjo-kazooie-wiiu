@@ -1,8 +1,9 @@
 
-#include "DisplayList.h"
-#include "ResourceManager.h"
-#include "resourcebridge.h"
-#include "Context.h"
+#include "ship/resource/ResourceManager.h"
+#include "fast/resource/ResourceType.h"
+#include "fast/resource/Type/DisplayList.h"
+#include "libultraship/bridge/resourcebridge.h"
+#include "ship/Context.h"
 
 extern "C" uint16_t ResourceMgr_LoadTexWidthByName(char* texPath);
 

@@ -1,5 +1,6 @@
 #include "core1/core1.h"
 #include <ultra64.h>
+#include "port/Engine.h"
 
 #include <libultra/convert.h>
 
@@ -203,12 +204,12 @@ void graphicsCache_release(void) {
 
 void graphicsCache_init(void){
     if(sGfxStack[0] == NULL){
-        sGfxStack[0] = (Gfx *)bk_malloc(29600); // 3700 dlist commands
-        sGfxStack[1] = (Gfx *)bk_malloc(29600);
-        sMtxStack[0] = (Mtx *)bk_malloc(44800); // 700 matrices
-        sMtxStack[1] = (Mtx *)bk_malloc(44800);
-        sVtxStack[0] = (Vtx *)bk_malloc(6880); // 430 vertices
-        sVtxStack[1] = (Vtx *)bk_malloc(6880);
+        sGfxStack[0] = (Gfx *)GameEngine_Malloc(3700 * sizeof(Gfx)); // 3700 dlist commands
+        sGfxStack[1] = (Gfx *)GameEngine_Malloc(3700 * sizeof(Gfx));
+        sMtxStack[0] = (Mtx *)GameEngine_Malloc(700 * sizeof(Mtx)); // 700 matrices
+        sMtxStack[1] = (Mtx *)GameEngine_Malloc(700 * sizeof(Mtx));
+        sVtxStack[0] = (Vtx *)GameEngine_Malloc(430 * sizeof(Vtx)); // 430 vertices
+        sVtxStack[1] = (Vtx *)GameEngine_Malloc(430 * sizeof(Vtx));
         dummy_func_80254464();
     }
     sStackSelector = 0;

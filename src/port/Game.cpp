@@ -1,7 +1,13 @@
 #include <libultraship.h>
 
-#include <Fast3D/interpreter.h>
+#include <fast/interpreter.h>
 #include "Engine.h"
+
+extern "C" {
+#include "enums.h"
+#include "core1/main.h"
+void game_draw(s32 arg0);
+}
 
 extern "C"
 void Graphics_PushFrame(Gfx* data) {
@@ -9,6 +15,7 @@ void Graphics_PushFrame(Gfx* data) {
 }
 
 void push_frame() {
+    game_draw(0);
 
     // GameEngine::StartAudioFrame();
     GameEngine::Instance->StartFrame();
@@ -23,6 +30,7 @@ void push_frame() {
 
 int SDL_main (int argc, char *argv[]) {
     GameEngine::Create();
+    core1_init();
 
     while (WindowIsRunning()) {
         push_frame();

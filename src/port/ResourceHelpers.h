@@ -5,7 +5,7 @@
 
 #ifdef __cplusplus
 #include "ResourceManager.h"
-#include "Context.h"
+#include "ship/Context.h"
 
 std::shared_ptr<Ship::IResource> GetResourceByName(const char* path);
 

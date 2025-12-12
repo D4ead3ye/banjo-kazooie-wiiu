@@ -279,6 +279,8 @@ s32 func_802E3F80(void){
     return D_8037E8E0.unk0;
 }
 
+extern void Graphics_PushFrame(Gfx* data);
+
 void game_draw(s32 arg0){
     Gfx *gfx;
     Gfx *gfx_start;
@@ -297,6 +299,11 @@ void game_draw(s32 arg0){
     }
 
     gfx_start = gfx;
+    // Stub for now
+    gSPEndDisplayList(gfx++);
+    Graphics_PushFrame(gfx_start);
+    return;
+
     func_802E39D0(&gfx, &mtx, &vtx, getActiveFramebuffer(), arg0);
 
     if(D_8037E8E0.unkC == 0){

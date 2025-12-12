@@ -1,6 +1,6 @@
 #pragma once
 
-#include <window/gui/GuiMenuBar.h>
+#include <ship/window/gui/GuiMenuBar.h>
 
 namespace LighthouseGui {
 class LighthouseMenuBar : public Ship::GuiMenuBar {

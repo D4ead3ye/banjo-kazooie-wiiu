@@ -1,6 +1,6 @@
 #pragma once
 
-#include <window/gui/GuiWindow.h>
+#include <ship/window/gui/GuiWindow.h>
 
 #define CVAR_INPUT_VIEWER(var) "gInputViewer." var
 

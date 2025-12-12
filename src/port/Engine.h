@@ -5,16 +5,16 @@
 
 // TODO: Use correct hashes for BK
 typedef enum {
-    SF64_VER_US = 0x94F1D5A7,
-    SF64_VER_EU = 0x6EE9ADE7,
-    SF64_VER_JP = 0x3728D3E1
+    // BK_VER_US_10 = 0xFFFFFFFF,
+    BK_VER_US_11 = 0xAC5975CD,
 } BKVersion;
 
 #ifdef __cplusplus
 #include <vector>
 #include <SDL2/SDL.h>
-#include <Fast3D/interpreter.h>
-#include "libultraship/src/Context.h"
+#include <fast/interpreter.h>
+#include "ship/Context.h"
+#include "ship/window/gui/GameOverlay.h"
 
 #ifndef IDYES
 #define IDYES 6
@@ -26,6 +26,13 @@ typedef enum {
 class GameEngine {
   public:
     static GameEngine* Instance;
+
+    ImFont* fontStandard;
+    ImFont* fontStandardLarger;
+    ImFont* fontStandardLargest;
+    ImFont* fontMono;
+    ImFont* fontMonoLarger;
+    ImFont* fontMonoLargest;
 
     std::shared_ptr<Ship::Context> context;
 
@@ -43,6 +50,7 @@ class GameEngine {
 	static uint32_t GetInterpolationFPS();
 	static uint32_t GetInterpolationFrameCount();
     static void ProcessGfxCommands(Gfx* commands);
+    static ImFont* CreateFontWithSize(float size, std::string fontPath);
 
     static int ShowYesNoBox(const char* title, const char* box);
     static void ShowMessage(const char* title, const char* message, SDL_MessageBoxFlags type = SDL_MESSAGEBOX_ERROR);

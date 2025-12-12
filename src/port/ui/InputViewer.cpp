@@ -1,8 +1,8 @@
 #include "InputViewer.h"
 
-#include <resourcebridge.h>
+#include <libultraship/bridge/resourcebridge.h>
 #include <libultraship/libultra/controller.h>
-#include <Context.h>
+#include <ship/Context.h>
 #include <controller/controldeck/ControlDeck.h>
 #include <imgui.h>
 #include <cmath>

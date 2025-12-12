@@ -1,7 +1,7 @@
 #pragma once
 
 #include <functional>
-#include <window/gui/GuiWindow.h>
+#include <ship/window/gui/GuiWindow.h>
 
 class LighthouseModalWindow final : public Ship::GuiWindow {
   public:
