@@ -9,8 +9,7 @@ extern "C" {
 void game_draw(s32 arg0);
 }
 
-extern "C"
-void Graphics_PushFrame(Gfx* data) {
+extern "C" void Graphics_PushFrame(Gfx* data) {
     GameEngine::ProcessGfxCommands(data);
 }
 
@@ -28,7 +27,7 @@ void push_frame() {
 #define SDL_main main
 #endif
 
-int SDL_main (int argc, char *argv[]) {
+int SDL_main(int argc, char* argv[]) {
     GameEngine::Create();
     core1_init();
 

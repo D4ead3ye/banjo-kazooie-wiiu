@@ -55,8 +55,10 @@ GameEngine::GameEngine() {
     if (std::filesystem::exists(main_path)) {
         archiveFiles.push_back(main_path);
     } else {
-        if (ShowYesNoBox("Lighthouse - Asset Extraction", "Please provide a Banjo Kazooie ROM.\n\nSupported Versions:\nUS 1.0\nUS 1.1\n\nAssets will be extracted into an O2R file.") == IDYES) {
-            if(!GenAssetFile()){
+        if (ShowYesNoBox("Lighthouse - Asset Extraction",
+                         "Please provide a Banjo Kazooie ROM.\n\nSupported Versions:\nUS 1.0\nUS 1.1\n\nAssets will be "
+                         "extracted into an O2R file.") == IDYES) {
+            if (!GenAssetFile()) {
                 ShowMessage("Error", "An error occured, no O2R file was generated.\n\nExiting...");
                 exit(1);
             } else {
@@ -64,7 +66,7 @@ GameEngine::GameEngine() {
             }
 
             if (ShowYesNoBox("Extraction Complete", "ROM Extracted. Extract another?") == IDYES) {
-                if(!GenAssetFile()){
+                if (!GenAssetFile()) {
                     ShowMessage("Error", "An error occured, no O2R file was generated.");
                 }
             }
@@ -77,8 +79,7 @@ GameEngine::GameEngine() {
         archiveFiles.push_back(assets_path);
     }
 
-    if (const std::string patches_path = Ship::Context::GetPathRelativeToAppDirectory("mods");
-        !patches_path.empty()) {
+    if (const std::string patches_path = Ship::Context::GetPathRelativeToAppDirectory("mods"); !patches_path.empty()) {
         if (!std::filesystem::exists(patches_path)) {
             std::filesystem::create_directories(patches_path);
         }
@@ -114,14 +115,15 @@ GameEngine::GameEngine() {
 
 #ifndef __SWITCH__
     Ship::Context::GetInstance()->GetLogger()->set_level(
-        (spdlog::level::level_enum) CVarGetInteger("gDeveloperTools.LogLevel", 1));
+        (spdlog::level::level_enum)CVarGetInteger("gDeveloperTools.LogLevel", 1));
     Ship::Context::GetInstance()->GetLogger()->set_pattern("[%H:%M:%S.%e] [%s:%#] [%l] %v");
 #endif
 
     auto loader = context->GetResourceManager()->GetResourceLoader();
     // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAnimV0>(), RESOURCE_FORMAT_BINARY,
     //                                 "Animation", static_cast<uint32_t>(SF64::ResourceType::AnimData), 0);
-    // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinarySkeletonV0>(), RESOURCE_FORMAT_BINARY,
+    // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinarySkeletonV0>(),
+    // RESOURCE_FORMAT_BINARY,
     //                                 "Skeleton", static_cast<uint32_t>(SF64::ResourceType::Skeleton), 0);
     // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryLimbV0>(), RESOURCE_FORMAT_BINARY,
     //                                 "Limb", static_cast<uint32_t>(SF64::ResourceType::Limb), 0);
@@ -133,13 +135,15 @@ GameEngine::GameEngine() {
     // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryEnvSettingsV0>(),
     //                                 RESOURCE_FORMAT_BINARY, "EnvSettings",
     //                                 static_cast<uint32_t>(SF64::ResourceType::Environment), 0);
-    // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryObjectInitV0>(), RESOURCE_FORMAT_BINARY,
+    // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryObjectInitV0>(),
+    // RESOURCE_FORMAT_BINARY,
     //                                 "ObjectInit", static_cast<uint32_t>(SF64::ResourceType::ObjectInit), 0);
     // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryHitboxV0>(), RESOURCE_FORMAT_BINARY,
     //                                 "Hitbox", static_cast<uint32_t>(SF64::ResourceType::Hitbox), 0);
     // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryScriptV0>(), RESOURCE_FORMAT_BINARY,
     //                                 "Script", static_cast<uint32_t>(SF64::ResourceType::Script), 0);
-    // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryScriptCMDV0>(), RESOURCE_FORMAT_BINARY,
+    // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryScriptCMDV0>(),
+    // RESOURCE_FORMAT_BINARY,
     //                                 "ScriptCMD", static_cast<uint32_t>(SF64::ResourceType::ScriptCmd), 0);
     // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryColPolyV0>(), RESOURCE_FORMAT_BINARY,
     //                                 "ColPoly", static_cast<uint32_t>(SF64::ResourceType::ColPoly), 0);
@@ -157,7 +161,8 @@ GameEngine::GameEngine() {
 
     // loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryVertexV0>(), RESOURCE_FORMAT_BINARY,
     //                                 "Vertex", static_cast<uint32_t>(Fast::ResourceType::Vertex), 0);
-    // loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryXMLVertexV0>(), RESOURCE_FORMAT_XML, "Vertex",
+    // loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryXMLVertexV0>(), RESOURCE_FORMAT_XML,
+    // "Vertex",
     //                                 static_cast<uint32_t>(Fast::ResourceType::Vertex), 0);
 
     // loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryDisplayListV0>(),
@@ -172,31 +177,37 @@ GameEngine::GameEngine() {
     // loader->RegisterResourceFactory(std::make_shared<Ship::ResourceFactoryBinaryBlobV0>(), RESOURCE_FORMAT_BINARY,
     //                                 "Blob", static_cast<uint32_t>(Ship::ResourceType::Blob), 0);
 
-    // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAudioTableV0>(), RESOURCE_FORMAT_BINARY,
+    // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAudioTableV0>(),
+    // RESOURCE_FORMAT_BINARY,
     //                                 "AudioTable", static_cast<uint32_t>(SF64::ResourceType::AudioTable), 0);
 
-    // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAdpcmBookV0>(), RESOURCE_FORMAT_BINARY,
+    // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAdpcmBookV0>(),
+    // RESOURCE_FORMAT_BINARY,
     //                                 "AdpcmBook", static_cast<uint32_t>(SF64::ResourceType::AdpcmBook), 0);
 
     // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryDrumV0>(), RESOURCE_FORMAT_BINARY,
     //                                 "Drum", static_cast<uint32_t>(SF64::ResourceType::Drum), 0);
 
-    // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryEnvelopeV0>(), RESOURCE_FORMAT_BINARY,
+    // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryEnvelopeV0>(),
+    // RESOURCE_FORMAT_BINARY,
     //                                 "Envelope", static_cast<uint32_t>(SF64::ResourceType::Envelope), 0);
 
-    // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryInstrumentV0>(), RESOURCE_FORMAT_BINARY,
+    // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryInstrumentV0>(),
+    // RESOURCE_FORMAT_BINARY,
     //                                 "Instrument", static_cast<uint32_t>(SF64::ResourceType::Instrument), 0);
 
-    // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAdpcmLoopV0>(), RESOURCE_FORMAT_BINARY,
+    // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAdpcmLoopV0>(),
+    // RESOURCE_FORMAT_BINARY,
     //                                 "AdpcmLoop", static_cast<uint32_t>(SF64::ResourceType::AdpcmLoop), 0);
 
     // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinarySampleV1>(), RESOURCE_FORMAT_BINARY,
     //                                 "Sample", static_cast<uint32_t>(SF64::ResourceType::Sample), 1);
-    
+
     // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryXMLSampleV0>(), RESOURCE_FORMAT_XML,
     //                                 "Sample", static_cast<uint32_t>(SF64::ResourceType::Sample), 0);
 
-    // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinarySoundFontV0>(), RESOURCE_FORMAT_BINARY,
+    // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinarySoundFontV0>(),
+    // RESOURCE_FORMAT_BINARY,
     //                                 "SoundFont", static_cast<uint32_t>(SF64::ResourceType::SoundFont), 0);
 
     // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryXMLSoundFontV0>(), RESOURCE_FORMAT_XML,
@@ -228,7 +239,8 @@ bool GameEngine::GenAssetFile(bool exitOnFail) {
 
     auto game = extractor->ValidateChecksum();
     if (!game.has_value()) {
-        ShowMessage("Unsupported ROM", "The provided ROM is not supported.\n\nCheck the readme for a list of supported versions.");
+        ShowMessage("Unsupported ROM",
+                    "The provided ROM is not supported.\n\nCheck the readme for a list of supported versions.");
         if (exitOnFail) {
             exit(1);
         } else {
@@ -236,7 +248,8 @@ bool GameEngine::GenAssetFile(bool exitOnFail) {
         }
     }
 
-    ShowMessage(("Starship - Extraction - Found " + game.value()).c_str(), "The extraction process will now begin.\n\nThis may take a few minutes.", SDL_MESSAGEBOX_INFORMATION);
+    ShowMessage(("Starship - Extraction - Found " + game.value()).c_str(),
+                "The extraction process will now begin.\n\nThis may take a few minutes.", SDL_MESSAGEBOX_INFORMATION);
 
     return extractor->GenerateOTR();
 }
@@ -273,7 +286,8 @@ void GameEngine::StartFrame() const {
     switch (dwScancode) {
         case KbScancode::LUS_KB_TAB: {
             // Toggle HD Assets
-            CVarSetInteger("gEnhancements.Mods.AlternateAssets", !CVarGetInteger("gEnhancements.Mods.AlternateAssets", 0));
+            CVarSetInteger("gEnhancements.Mods.AlternateAssets",
+                           !CVarGetInteger("gEnhancements.Mods.AlternateAssets", 0));
             break;
         }
         case KbScancode::LUS_KB_F4: {
@@ -348,7 +362,7 @@ void GameEngine::HandleAudioThread() {
 #endif
         // AudioPlayerPlayFrame((u8*) audio_buffer,
         //                      num_audio_samples * (sizeof(int16_t) * num_audio_channels * AUDIO_FRAMES_PER_UPDATE));
-        
+
         audio.processing = false;
         audio.cv_from_thread.notify_one();
     }
@@ -490,13 +504,12 @@ uint32_t GameEngine::GetInterpolationFPS() {
     return CVarGetInteger("gInterpolationFPS", 60);
 }
 
-uint32_t GameEngine::GetInterpolationFrameCount()
-{
-	return ceil((float)GetInterpolationFPS() / (60.0f / gVIsPerFrame));
+uint32_t GameEngine::GetInterpolationFrameCount() {
+    return ceil((float)GetInterpolationFPS() / (60.0f / gVIsPerFrame));
 }
 
 extern "C" uint32_t GameEngine_GetInterpolationFrameCount() {
-	return GameEngine::GetInterpolationFrameCount();
+    return GameEngine::GetInterpolationFrameCount();
 }
 
 void GameEngine::ShowMessage(const char* title, const char* message, SDL_MessageBoxFlags type) {
@@ -570,7 +583,7 @@ ImFont* GameEngine::CreateFontWithSize(float size, std::string fontPath) {
     return font;
 }
 
-bool GameEngine::HasVersion(BKVersion ver){
+bool GameEngine::HasVersion(BKVersion ver) {
     auto versions = Ship::Context::GetInstance()->GetResourceManager()->GetArchiveManager()->GetGameVersions();
     return std::find(versions.begin(), versions.end(), ver) != versions.end();
 }
@@ -602,9 +615,9 @@ extern "C" uint32_t GameEngine_GetSamplesPerFrame() {
 
 Fast::Interpreter* GameEngine_GetInterpreter() {
     return std::dynamic_pointer_cast<Fast::Fast3dWindow>(Ship::Context::GetInstance()->GetWindow())
-             ->GetInterpreterWeak()
-             .lock()
-             .get();
+        ->GetInterpreterWeak()
+        .lock()
+        .get();
 }
 
 extern "C" float GameEngine_GetAspectRatio() {
@@ -625,8 +638,9 @@ extern "C" uint8_t GameEngine_OTRSigCheck(const char* data) {
     return strncmp(data, sOtrSignature, strlen(sOtrSignature)) == 0;
 }
 
-extern "C" void GameEngine_GetTextureInfo(const char* path, int32_t* width, int32_t* height, float* scale, bool* custom) {
-    if(GameEngine_OTRSigCheck(path) != 1){
+extern "C" void GameEngine_GetTextureInfo(const char* path, int32_t* width, int32_t* height, float* scale,
+                                          bool* custom) {
+    if (GameEngine_OTRSigCheck(path) != 1) {
         *custom = false;
         return;
     }
@@ -649,7 +663,8 @@ extern "C" uint32_t OTRGetCurrentHeight() {
 }
 
 extern "C" float OTRGetHUDAspectRatio() {
-    if (CVarGetInteger("gHUDAspectRatio.Enabled", 0) == 0 || CVarGetInteger("gHUDAspectRatio.X", 0) == 0 || CVarGetInteger("gHUDAspectRatio.Y", 0) == 0) {
+    if (CVarGetInteger("gHUDAspectRatio.Enabled", 0) == 0 || CVarGetInteger("gHUDAspectRatio.X", 0) == 0 ||
+        CVarGetInteger("gHUDAspectRatio.Y", 0) == 0) {
         return GameEngine_GetAspectRatio();
     }
     return ((float)CVarGetInteger("gHUDAspectRatio.X", 1) / (float)CVarGetInteger("gHUDAspectRatio.Y", 1));
@@ -657,23 +672,30 @@ extern "C" float OTRGetHUDAspectRatio() {
 
 extern "C" float OTRGetDimensionFromLeftEdge(float v) {
     auto interpreter = GameEngine_GetInterpreter();
-    return (interpreter->mNativeDimensions.width / 2 - interpreter->mNativeDimensions.height / 2 * interpreter->mCurDimensions.aspect_ratio + (v));
+    return (interpreter->mNativeDimensions.width / 2 -
+            interpreter->mNativeDimensions.height / 2 * interpreter->mCurDimensions.aspect_ratio + (v));
 }
 
 extern "C" float OTRGetDimensionFromRightEdge(float v) {
     auto interpreter = GameEngine_GetInterpreter();
-    return (interpreter->mNativeDimensions.width / 2 + interpreter->mNativeDimensions.height / 2 * interpreter->mCurDimensions.aspect_ratio -
+    return (interpreter->mNativeDimensions.width / 2 +
+            interpreter->mNativeDimensions.height / 2 * interpreter->mCurDimensions.aspect_ratio -
             (interpreter->mNativeDimensions.width - v));
 }
 
 extern "C" float OTRGetDimensionFromLeftEdgeForcedAspect(float v, float aspectRatio) {
     auto interpreter = GameEngine_GetInterpreter();
-    return (interpreter->mNativeDimensions.width / 2 - interpreter->mNativeDimensions.height / 2 * (aspectRatio > 0 ? aspectRatio : interpreter->mCurDimensions.aspect_ratio) + (v));
+    return (interpreter->mNativeDimensions.width / 2 -
+            interpreter->mNativeDimensions.height / 2 *
+                (aspectRatio > 0 ? aspectRatio : interpreter->mCurDimensions.aspect_ratio) +
+            (v));
 }
 
 extern "C" float OTRGetDimensionFromRightEdgeForcedAspect(float v, float aspectRatio) {
     auto interpreter = GameEngine_GetInterpreter();
-    return (interpreter->mNativeDimensions.width / 2 + interpreter->mNativeDimensions.height / 2 * (aspectRatio > 0 ? aspectRatio : interpreter->mCurDimensions.aspect_ratio) -
+    return (interpreter->mNativeDimensions.width / 2 +
+            interpreter->mNativeDimensions.height / 2 *
+                (aspectRatio > 0 ? aspectRatio : interpreter->mCurDimensions.aspect_ratio) -
             (interpreter->mNativeDimensions.width - v));
 }
 
@@ -698,19 +720,19 @@ extern "C" uint32_t OTRGetGameRenderHeight() {
 }
 
 extern "C" int16_t OTRGetRectDimensionFromLeftEdge(float v) {
-    return ((int) floorf(OTRGetDimensionFromLeftEdge(v)));
+    return ((int)floorf(OTRGetDimensionFromLeftEdge(v)));
 }
 
 extern "C" int16_t OTRGetRectDimensionFromRightEdge(float v) {
-    return ((int) ceilf(OTRGetDimensionFromRightEdge(v)));
+    return ((int)ceilf(OTRGetDimensionFromRightEdge(v)));
 }
 
 extern "C" int16_t OTRGetRectDimensionFromLeftEdgeForcedAspect(float v, float aspectRatio) {
-    return ((int) floorf(OTRGetDimensionFromLeftEdgeForcedAspect(v, aspectRatio)));
+    return ((int)floorf(OTRGetDimensionFromLeftEdgeForcedAspect(v, aspectRatio)));
 }
 
 extern "C" int16_t OTRGetRectDimensionFromRightEdgeForcedAspect(float v, float aspectRatio) {
-    return ((int) ceilf(OTRGetDimensionFromRightEdgeForcedAspect(v, aspectRatio)));
+    return ((int)ceilf(OTRGetDimensionFromRightEdgeForcedAspect(v, aspectRatio)));
 }
 
 extern "C" int16_t OTRGetRectDimensionFromLeftEdgeOverride(float v) {
@@ -741,7 +763,7 @@ extern "C" int32_t OTRConvertHUDXToScreenX(int32_t v) {
 
 extern "C" void* GameEngine_Malloc(size_t size) {
     MemoryPool.push_back(new uint8_t[size]);
-    return (void*) MemoryPool.back();
+    return (void*)MemoryPool.back();
 }
 
 extern "C" void GameEngine_Free(void* ptr) {

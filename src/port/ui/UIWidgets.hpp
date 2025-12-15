@@ -319,7 +319,7 @@ struct IntSliderOptions : WidgetOptions {
     Colors color = Colors::Gray;
     ImGuiSliderFlags flags = 0;
     ImVec2 size = { 0, 0 };
-    
+
     IntSliderOptions& ShowAdjustmentButtons(bool showAdjustmentButtons_) {
         showAdjustmentButtons = showAdjustmentButtons_;
         return *this;
@@ -1033,7 +1033,7 @@ bool ComboboxWithSearch(const char* label, T* value, const std::unordered_map<T,
     ImGui::BeginGroup();
     ImGui::BeginDisabled(options.disabled);
     PushStyleCombobox(options.color);
-    
+
     const char* longest;
     size_t length = 0;
     const auto& iterableComboMap = *comboMap;
@@ -1045,7 +1045,7 @@ bool ComboboxWithSearch(const char* label, T* value, const std::unordered_map<T,
         }
     }
     float comboWidth = CalcComboWidth(longest, options.flags);
-    
+
     ImGui::AlignTextToFramePadding();
     if (options.labelPosition != LabelPosition::None) {
         if (options.alignment == ComponentAlignment::Right) {
@@ -1064,38 +1064,38 @@ bool ComboboxWithSearch(const char* label, T* value, const std::unordered_map<T,
             }
         }
     }
-    
+
     ImGui::SetNextItemWidth(options.width.value_or(comboWidth));
     if (ImGui::BeginCombo(invisibleLabel, comboMap->at(*value), options.flags)) {
         // Local filter, no persistence
         ImGuiTextFilter filter;
-        
+
         // Focus search input when dropdown first opens
         if (ImGui::IsWindowAppearing()) {
             ImGui::SetKeyboardFocusHere();
         }
-        
+
         ImGui::SetNextItemWidth(-FLT_MIN);
         filter.Draw("##search", -FLT_MIN);
-        
+
         ImGui::Separator();
-        
+
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(10.0f, 10.0f));
         for (const auto& [itemId, itemName] : *comboMap) {
             if (!filter.PassFilter(itemName)) {
                 continue;
             }
-            
+
             if (ImGui::Selectable(itemName, itemId == *value)) {
                 *value = itemId;
                 dirty = true;
             }
         }
         ImGui::PopStyleVar();
-        
+
         ImGui::EndCombo();
     }
-    
+
     if (options.labelPosition != LabelPosition::None) {
         if (options.alignment == ComponentAlignment::Left) {
             if (options.labelPosition == LabelPosition::Near) {

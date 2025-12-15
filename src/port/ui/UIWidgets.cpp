@@ -1292,10 +1292,9 @@ void DrawFlagArray16(const std::string& name, uint16_t& flags, Colors color) {
 //         uint8_t bitMask = 1 << flagIndex;
 //         bool flag = (flags & bitMask) != 0;
 //         FlagEntry flagEntry = flagTable.entries.at(row * 8 + flagIndex);
-//         PushStyleCheckbox(flagEntry.type == PERSISTENT ? Gray : (flagEntry.type == CYCLE_RESET ? LightBlue : Orange));
-//         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 6.0f));
-//         std::string id = fmt::format("##{}{}", flagTable.name, flagIndex);
-//         if (ImGui::Checkbox(id.c_str(), &flag)) {
+//         PushStyleCheckbox(flagEntry.type == PERSISTENT ? Gray : (flagEntry.type == CYCLE_RESET ? LightBlue :
+//         Orange)); ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 6.0f)); std::string id =
+//         fmt::format("##{}{}", flagTable.name, flagIndex); if (ImGui::Checkbox(id.c_str(), &flag)) {
 //             if (flag) {
 //                 flags |= bitMask;
 //             } else {

@@ -15,7 +15,7 @@ bool GameExtractor::SelectGameFromUI() {
     this->mGamePath = Ship::Context::GetPathRelativeToAppDirectory("baserom.z64");
 
     std::ifstream file(this->mGamePath, std::ios::binary);
-    this->mGameData = std::vector<uint8_t>( std::istreambuf_iterator( file ), {} );
+    this->mGameData = std::vector<uint8_t>(std::istreambuf_iterator(file), {});
     file.close();
     return true;
 }
@@ -24,7 +24,7 @@ std::optional<std::string> GameExtractor::ValidateChecksum() const {
     const auto rom = new N64::Cartridge(this->mGameData);
     rom->Initialize();
     auto hash = rom->GetHash();
-    
+
     if (mGameList.find(hash) == mGameList.end()) {
         return std::nullopt;
     }
@@ -40,9 +40,7 @@ bool GameExtractor::GenerateOTR() const {
 
     try {
         Companion::Instance->Init(ExportType::Binary);
-    } catch (const std::exception& e) {
-        return false;
-    }
+    } catch (const std::exception& e) { return false; }
 
     return true;
 }

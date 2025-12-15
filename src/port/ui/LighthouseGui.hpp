@@ -5,11 +5,11 @@
 #include "LighthouseModals.h"
 
 namespace LighthouseGui {
-    void SetupHooks();
-    void SetupGuiElements();
-    void Draw();
-    void Destroy();
-    UIWidgets::Colors GetMenuThemeColor();
-}
+void SetupHooks();
+void SetupGuiElements();
+void Draw();
+void Destroy();
+UIWidgets::Colors GetMenuThemeColor();
+} // namespace LighthouseGui
 
 #define THEME_COLOR LighthouseGui::GetMenuThemeColor()

@@ -1,8 +1,6 @@
 #ifndef RESOURCE_HELPERS_H
 #define RESOURCE_HELPERS_H
 
-
-
 #ifdef __cplusplus
 #include "ResourceManager.h"
 #include "ship/Context.h"
@@ -13,11 +11,11 @@ extern "C" {
 #endif
 #include <libultra/gbi.h>
 
-Gfx * ResourceMgr_LoadGfxByName(const char* path);
+Gfx* ResourceMgr_LoadGfxByName(const char* path);
 char* ResourceMgr_LoadTexOrDListByName(const char* filePath);
 char* ResourceMgr_LoadIfDListByName(const char* filePath);
-  Vtx* ResourceMgr_LoadVtxByName(char* path);
-  Mtx* ResourceMgr_LoadMtxByName(char* path);
+Vtx* ResourceMgr_LoadVtxByName(char* path);
+Mtx* ResourceMgr_LoadMtxByName(char* path);
 
 #ifdef __cplusplus
 }

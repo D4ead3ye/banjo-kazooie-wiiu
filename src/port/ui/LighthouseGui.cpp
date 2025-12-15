@@ -123,8 +123,8 @@ void SetupGuiElements() {
     //     std::make_shared<CosmeticEditorWindow>("gWindows.CosmeticEditor", "Cosmetic Editor", ImVec2(480, 600));
     // gui->AddGuiWindow(mCosmeticEditorWindow);
 
-    // mActorViewerWindow = std::make_shared<ActorViewerWindow>("gWindows.ActorViewer", "Actor Viewer", ImVec2(520, 600));
-    // gui->AddGuiWindow(mActorViewerWindow);
+    // mActorViewerWindow = std::make_shared<ActorViewerWindow>("gWindows.ActorViewer", "Actor Viewer", ImVec2(520,
+    // 600)); gui->AddGuiWindow(mActorViewerWindow);
 
     // mCollisionViewerWindow =
     //     std::make_shared<CollisionViewerWindow>("gWindows.CollisionViewer", "Collision Viewer", ImVec2(390, 475));
@@ -146,7 +146,8 @@ void SetupGuiElements() {
     // gui->AddGuiWindow(mItemTrackerWindow);
 
     // mItemTrackerSettingsWindow = std::make_shared<ItemTrackerSettingsWindow>("gWindows.ItemTrackerSettings",
-    //                                                                          "Item Tracker Settings", ImVec2(800, 400));
+    //                                                                          "Item Tracker Settings", ImVec2(800,
+    //                                                                          400));
     // gui->AddGuiWindow(mItemTrackerSettingsWindow);
 
     // mDisplayOverlayWindow = std::make_shared<DisplayOverlayWindow>("gWindows.DisplayOverlay", "Display Overlay");

@@ -124,9 +124,7 @@ WidgetInfo& LighthouseMenu::AddWidget(WidgetPath& pathInfo, std::string widgetNa
 // clang-format off
 // { git shortlog -sn 2332f63..558f59b ; git shortlog -sn dfcc80e..HEAD; } | sort -k2 | uniq -f1 | sed -E 's/^[[:space:]]*[0-9]+[[:space:]]+/"/' | sed -E 's/(.+)/\1",/'
 // clang-format on
-std::vector<std::string> contributors = {
-    ""
-};
+std::vector<std::string> contributors = { "" };
 
 void LighthouseMenu::AddSettings() {
     // Add Settings menu
@@ -374,8 +372,9 @@ void LighthouseMenu::AddSettings() {
         .Options(CheckboxOptions().Tooltip("Enables Windowed Fullscreen Mode."));
     AddWidget(path, "Allow multi-windows", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENABLE_MULTI_VIEWPORTS)
-        .PreFunc(
-            [](WidgetInfo& info) { info.isHidden = mLighthouseMenu->disabledMap.at(DISABLE_FOR_NO_MULTI_VIEWPORT).active; })
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = mLighthouseMenu->disabledMap.at(DISABLE_FOR_NO_MULTI_VIEWPORT).active;
+        })
         .Options(CheckboxOptions()
                      .Tooltip("Allows multiple windows to be opened at once. Requires a reload to take effect.")
                      .DefaultValue(true));
@@ -446,7 +445,8 @@ void LighthouseMenu::AddSettings() {
     //             .Tooltip(
     //                 "How the timer should be displayed in the overlay.\n\n"
     //                 "- Off: Do not display a timer\n"
-    //                 "- Real-Time: Display the time that has elapsed since creating the save file, regardless of play.\n"
+    //                 "- Real-Time: Display the time that has elapsed since creating the save file, regardless of
+    //                 play.\n"
     //                 "- In-Game Time: Display the time spent playing the save file")
     //             .ComboVec(&timerDisplayOptions));
     AddWidget(path, "Hide Window Background", WIDGET_CVAR_CHECKBOX)
@@ -487,12 +487,10 @@ int32_t motionBlurStrength;
 
 void LighthouseMenu::AddEnhancements() {
     AddMenuEntry("Enhancements", "gSettings.Menu.EnhancementsSidebarSection");
-    
 }
 
 void LighthouseMenu::AddDevTools() {
     AddMenuEntry("Dev Tools", "gSettings.Menu.DevToolsSidebarSection");
-    
 }
 
 LighthouseMenu::LighthouseMenu(const std::string& consoleVariable, const std::string& name)

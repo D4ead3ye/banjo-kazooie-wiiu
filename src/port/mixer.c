@@ -138,7 +138,8 @@ void aOPUSFree(struct OggOpusFile* opusFile) {
 void aSaveBufferImpl(int16_t* dest_addr) {
 }
 
-void aSetVolumeImpl(int8_t f, float v, int a3, int a4){}
+void aSetVolumeImpl(int8_t f, float v, int a3, int a4) {
+}
 
 void aLoadADPCMImpl(int num_entries_times_16, const int16_t* book_source_addr) {
     memcpy(rspa.adpcm_table, book_source_addr, num_entries_times_16);
@@ -364,13 +365,13 @@ static void aMixImplRef(uint16_t count, int16_t gain, uint16_t in_addr, uint16_t
 }
 
 void aMixImpl(uint16_t count, int16_t gain, uint16_t in_addr, uint16_t out_addr) {
-//#if defined(__SSE2__) || defined(_M_AMD64)
-//    aMixImplSSE2(count, gain, in_addr, out_addr);
-//#elif defined(__ARM_NEON)
-//    aMixImplNEON(count, gain, in_addr, out_addr);
-//#else
+    //#if defined(__SSE2__) || defined(_M_AMD64)
+    //    aMixImplSSE2(count, gain, in_addr, out_addr);
+    //#elif defined(__ARM_NEON)
+    //    aMixImplNEON(count, gain, in_addr, out_addr);
+    //#else
     aMixImplRef(count, gain, in_addr, out_addr);
-//#endif
+    //#endif
 }
 
 void aS8DecImpl(uint8_t flags, ADPCM_STATE state) {

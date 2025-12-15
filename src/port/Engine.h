@@ -1,7 +1,9 @@
 #pragma once
 
-#define LOAD_ASSET(path) (path == NULL ? NULL : (GameEngine_OTRSigCheck((const char*) path) ? ResourceGetDataByName((const char*) path) : path))
-#define LOAD_ASSET_RAW(path) ResourceGetDataByName((const char*) path)
+#define LOAD_ASSET(path) \
+    (path == NULL ? NULL \
+                  : (GameEngine_OTRSigCheck((const char*)path) ? ResourceGetDataByName((const char*)path) : path))
+#define LOAD_ASSET_RAW(path) ResourceGetDataByName((const char*)path)
 
 // TODO: Use correct hashes for BK
 typedef enum {
@@ -47,8 +49,8 @@ class GameEngine {
     static void AudioExit();
     static void RunCommands(Gfx* Commands, const std::vector<std::unordered_map<Mtx*, MtxF>>& mtx_replacements);
     static void Destroy();
-	static uint32_t GetInterpolationFPS();
-	static uint32_t GetInterpolationFrameCount();
+    static uint32_t GetInterpolationFPS();
+    static uint32_t GetInterpolationFrameCount();
     static void ProcessGfxCommands(Gfx* commands);
     static ImFont* CreateFontWithSize(float size, std::string fontPath);
 
@@ -58,7 +60,7 @@ class GameEngine {
 };
 
 Fast::Interpreter* GameEngine_GetInterpreter();
-#define memallocn(type, n) (type*) GameEngine_Malloc(sizeof(type) * n)
+#define memallocn(type, n) (type*)GameEngine_Malloc(sizeof(type) * n)
 #define memalloc(type) memallocn(type, 1)
 
 extern "C" {
