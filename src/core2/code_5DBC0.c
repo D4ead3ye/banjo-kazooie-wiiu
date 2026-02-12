@@ -519,24 +519,26 @@ void func_802E6820(s32 arg0) {
 
     if (D_8037E900 != NULL) {
         for(var_s6 = 0; var_s6 < arg0; var_s6++){
-            D_8037E900 = (struct5DBC0s *) defrag(D_8037E900);
-            D_8037E900->unk0 = (struct5DBC0_1s *)defrag(D_8037E900->unk0);
-            D_8037E900->unk4 = (struct5DBC0_2s *)defrag(D_8037E900->unk4);
-            D_8037E900->string = (char *)defrag(D_8037E900->string);
+            // #region Lighthouse [port] defrag is not #region implemented
+            // D_8037E900 = (struct5DBC0s *) defrag(D_8037E900);
+            // D_8037E900->unk0 = (struct5DBC0_1s *)defrag(D_8037E900->unk0);
+            // D_8037E900->unk4 = (struct5DBC0_2s *)defrag(D_8037E900->unk4);
+            // D_8037E900->string = (char *)defrag(D_8037E900->string);
             for(var_s5 = 0; var_s5 < D_8037E900->unk10; var_s5++) {
                 if (D_8037E900->unk4[var_s5].letter_texture != NULL) {
-                    D_8037E900->unk4[var_s5].letter_texture = (BKSpriteTextureBlock **)defrag(D_8037E900->unk4[var_s5].letter_texture);
+                    // D_8037E900->unk4[var_s5].letter_texture = (BKSpriteTextureBlock **)defrag(D_8037E900->unk4[var_s5].letter_texture);
                 }
                 
                 prev_sprite_ptr = D_8037E900->unk4[var_s5].font_bin;
                 if (D_8037E900->unk4[var_s5].font_bin != NULL) {
                     chunk_count = sprite_getFramePtr(prev_sprite_ptr, 0U)->chunkCnt;
-                    D_8037E900->unk4[var_s5].font_bin = (BKSprite *)defrag_asset(D_8037E900->unk4[var_s5].font_bin);
+                    // D_8037E900->unk4[var_s5].font_bin = (BKSprite *)defrag_asset(D_8037E900->unk4[var_s5].font_bin);
                     for(i_chunk = 0; i_chunk < chunk_count; i_chunk++){
                         D_8037E900->unk4[var_s5].letter_texture[i_chunk] = ((u32)(((s32)D_8037E900->unk4[var_s5].letter_texture[i_chunk] - (s32)prev_sprite_ptr)) + (u32)D_8037E900->unk4[var_s5].font_bin);
                     }
                 }
             }
+            // #endregion
         }
     }
 }

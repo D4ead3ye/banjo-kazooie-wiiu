@@ -41,9 +41,9 @@ void func_80241304(Mtx *m, float x, float y, float z);
 
 void _guMtxIdentF_80245D44(float mf[4][4]); //static should NOT be here
 
-void * bk_malloc(s32 size);
+void * bk_malloc(size_t size);
 void bk_free(void*);
-void *bk_realloc(void* ptr, s32 size);
+void *bk_realloc(void* ptr, size_t size);
 
 float gu_sqrtf(float val);
 

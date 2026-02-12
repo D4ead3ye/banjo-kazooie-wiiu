@@ -124,6 +124,11 @@ int animCache_getBoneTransformList(s16 index, BoneTransformList **arg1){
 }
 
 void animCache_defrag(void){
+    // Lighthouse [port] No defragmentation implemented, stub but pay 
+    // attention to callers potentially dangerously assuming they can access
+    // moved memory.
+    return;
+
     int i;
     for(i = 0; i < 340; i++){
         if(D_80379E20[i].alive == true && D_80379E20[i].bone_xform){

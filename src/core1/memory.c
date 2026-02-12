@@ -334,7 +334,10 @@ void func_80254C98(void){
     D_802765B0.unk0 = true;
 }
 
-void *bk_malloc(s32 size){
+void *bk_malloc(size_t size){
+    // Lighthouse [port] Use standard malloc function
+    return malloc(size);
+#if 0
     u32 capacity;
     EmptyHeapBlock *v1;
     EmptyHeapBlock *a0;
@@ -422,6 +425,7 @@ void *bk_malloc(s32 size){
     v1->hdr.unkC_7 = 1;
     heap_occupiedBytes += capacity;
     return (u8*)v1 + sizeof(HeapHeader);
+#endif
 }
 
 void func_80254F90(void){
@@ -465,6 +469,9 @@ void _heap_sortEmptyBlock(EmptyHeapBlock * arg0){
 }
 
 void bk_free(void * ptr){
+    // Lighthouse [port] Use standard free function
+    return free(ptr);
+#if 0
     HeapHeader *sPtr; //stack_ptr
     
     if(ptr){
@@ -479,6 +486,7 @@ void bk_free(void * ptr){
         if((u32)ptr == (u32)D_802765A8)
             D_802765A8 = NULL;
     }
+#endif
 }
 
 void func_80255170(void **arg0){
@@ -543,7 +551,11 @@ void *func_8025534C(void){
     return D_80283228;
 }
 
-void *bk_realloc(void *ptr, s32 size){
+void *bk_realloc(void *ptr, size_t size){
+    // Lighthouse [port] Use standard realloc function
+    return realloc(ptr, size);
+#if 0
+
     
     HeapHeader *sPtr;
     void *newSeg;
@@ -588,6 +600,7 @@ void *bk_realloc(void *ptr, s32 size){
     if(newSeg);
     
     return ptr;
+#endif
 }
 
 u32 heap_get_free_size(void){
@@ -634,6 +647,11 @@ bool func_802555D0(void){
 }
 
 void *defrag(void *this){
+    // Lighthouse [port] No defragmentation implemented, stub but pay 
+    // attention to callers potentially dangerously assuming they can access
+    // moved memory.
+    return this;
+#if 0
     HeapHeader *new_block;
     HeapHeader *this_block;
     EmptyHeapBlock *new_empty;
@@ -684,9 +702,16 @@ void *defrag(void *this){
 
     _heap_defragEmptyBlock(new_empty); //combine new_empty with any surrounding empty blocks
     return  (void *)((s32)new_block + sizeof(HeapHeader));
+#endif
 }
 
 void *defrag_asset(void *arg0){
+    // Lighthouse [port] No defragmentation implemented, stub but pay 
+    // attention to callers potentially dangerously assuming they can access
+    // moved memory.
+    return arg0;
+#if 0
+
     void *sp1C;
     if(arg0 == NULL || arg0 == D_8027659C)
         return arg0;
@@ -694,6 +719,7 @@ void *defrag_asset(void *arg0){
     sp1C = defrag(arg0);
     assetcache_update_ptr(arg0, sp1C);
     return sp1C;
+#endif
 }
 
 //recache??? defrag_cache???

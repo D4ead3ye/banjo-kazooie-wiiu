@@ -106,5 +106,9 @@ void freelist_freeElement(FLA *this, s32 indx){
 }
 
 FLA *freelist_defrag(FLA *this){
-    return (FLA *)defrag(this);
+    // Lighthouse [port] No defragmentation implemented, stub but pay 
+    // attention to callers potentially dangerously assuming they can access
+    // moved memory.
+    return this;
+    // return (FLA *)defrag(this);
 }
