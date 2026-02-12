@@ -1,6 +1,8 @@
 #include "ResolutionEditor.h"
 #include <imgui.h>
-
+#include <libultraship/libultraship.h>
+#include "port/Engine.h"
+#include "UIWidgets.hpp"
 #include <fast/Fast3dWindow.h>
 #include <fast/interpreter.h>
 #include "LighthouseMenu.h"
@@ -98,26 +100,29 @@ void ResolutionCustomWidget(WidgetInfo& info) {
     ImGui::BeginDisabled(disabled_everything);
     // Vertical Resolution
     UIWidgets::CVarCheckbox(
-        "Set fixed vertical resolution (disables Resolution slider)",
+        "Set fixed vertical resolution (disables resolution slider)",
         CVAR_PREFIX_ADVANCED_RESOLUTION ".VerticalResolutionToggle",
         UIWidgets::CheckboxOptions({ { .disabled = disabled_everything } })
             .Tooltip("Override the resolution scale slider and use the settings below, irrespective of window size.")
             .Color(THEME_COLOR));
-
+    // if (disabled_pixelCount || disabled_everything) { // Hide pixel count controls.
+    //     UIWidgets::DisableComponent(ImGui::GetStyle().Alpha * 0.5f);
+    // }
     UIWidgets::PushStyleCombobox(THEME_COLOR);
     if (ImGui::Combo("Pixel Count Presets", &item_pixelCount, pixelCountPresetLabels,
                      IM_ARRAYSIZE(pixelCountPresetLabels)) &&
         item_pixelCount != default_pixelCount) { // don't change anything if "Custom" is selected.
         verticalPixelCount = pixelCountPresets[item_pixelCount];
+
         if (showHorizontalResField) {
             horizontalPixelCount = (verticalPixelCount / aspectRatioY) * aspectRatioX;
         }
+
         CVarSetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".VerticalPixelCount", verticalPixelCount);
         CVarSetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".UIComboItem.PixelCount", item_pixelCount);
         Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
     }
     UIWidgets::PopStyleCombobox();
-
     // Horizontal Resolution, if visibility is enabled for it.
     if (showHorizontalResField) {
         // Only show the field if Aspect Ratio is being enforced.
@@ -150,12 +155,12 @@ void ResolutionCustomWidget(WidgetInfo& info) {
             }
         }
     }
-
     // Vertical Resolution part 2
     UIWidgets::PushStyleInput(THEME_COLOR);
     if (ImGui::InputInt("Vertical Pixel Count", &verticalPixelCount, 8, 240)) {
         item_pixelCount = default_pixelCount;
         update[UPDATE_verticalPixelCount] = true;
+
         // Account for the natural instinct to enter horizontal first.
         // Ignore vertical resolutions that are below the lower clamp constant.
         if (showHorizontalResField && !(verticalPixelCount < minVerticalPixelCount)) {
@@ -177,7 +182,6 @@ void ResolutionCustomWidget(WidgetInfo& info) {
     if (ImGui::CollapsingHeader("Integer Scaling Settings", IntegerScalingResolvedImGuiFlag)) {
         const bool disabled_pixelPerfectMode =
             !CVarGetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".PixelPerfectMode", 0) || disabled_everything;
-
         // Pixel Perfect Mode
         UIWidgets::CVarCheckbox(
             "Pixel Perfect Mode", CVAR_PREFIX_ADVANCED_RESOLUTION ".PixelPerfectMode",
@@ -208,6 +212,7 @@ void ResolutionCustomWidget(WidgetInfo& info) {
             ImGui::SameLine();
             ImGui::TextColored(messageColor[MESSAGE_WARNING], ICON_FA_EXCLAMATION_TRIANGLE " Window exceeded.");
         }
+
         UIWidgets::CVarCheckbox(
             "Automatically scale image to fit viewport",
             CVAR_PREFIX_ADVANCED_RESOLUTION ".IntegerScale.FitAutomatically",
@@ -275,6 +280,8 @@ void ResolutionCustomWidget(WidgetInfo& info) {
 
         // Beginning of Integer Scaling additional settings.
         {
+            // UIWidgets::PaddedSeparator(true, true, 3.0f, 3.0f);
+
             // Integer Scaling - Never Exceed Bounds.
             const bool disabled_neverExceedBounds =
                 !CVarGetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".PixelPerfectMode", 0) ||
@@ -294,6 +301,7 @@ void ResolutionCustomWidget(WidgetInfo& info) {
                                  " Please note that exceeding screen bounds may show a scroll bar on-screen.")
                         .Color(THEME_COLOR)
                         .DefaultValue(true))) {
+
                 // Initialise the (currently unused) "Exceed Bounds By" cvar if it's been changed.
                 if (CVarGetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".IntegerScale.ExceedBoundsBy", 0)) {
                     CVarSetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".IntegerScale.ExceedBoundsBy", 0);
@@ -320,6 +328,16 @@ void ResolutionCustomWidget(WidgetInfo& info) {
                 ImGui::TextColored(messageColor[MESSAGE_INFO],
                                    " " ICON_FA_INFO_CIRCLE
                                    " A scroll bar may become visible if screen bounds are exceeded.");
+
+                // Another support helper button, to disable the unused "Exceed Bounds By" cvar.
+                // (Remove this button if uncommenting the checkbox.)
+                if (CVarGetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".IntegerScale.ExceedBoundsBy", 0)) {
+                    if (UIWidgets::Button("Click to reset a console variable that may be causing this.",
+                                          UIWidgets::ButtonOptions().Color(THEME_COLOR))) {
+                        CVarSetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".IntegerScale.ExceedBoundsBy", 0);
+                        Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+                    }
+                }
             } else {
                 ImGui::Text(" ");
             }
@@ -366,55 +384,75 @@ void RegisterResolutionWidgets() {
     WidgetPath path = { "Settings", "Graphics", SECTION_COLUMN_2 };
 
     // Resolution visualiser
-    mLighthouseMenu->AddWidget(path, "Viewport dimensions: {} x {}", WIDGET_TEXT).PreFunc([](WidgetInfo& info) {
-        auto gfx_current_game_window_viewport = GetInterpreter().get()->mGameWindowViewport;
-        info.name = fmt::format("Viewport dimensions: {} x {}", gfx_current_game_window_viewport.width,
-                                gfx_current_game_window_viewport.height);
-    });
-    mLighthouseMenu->AddWidget(path, "Internal resolution: {} x {}", WIDGET_TEXT).PreFunc([](WidgetInfo& info) {
-        auto gfx_current_dimensions = GetInterpreter().get()->mCurDimensions;
-        info.name =
-            fmt::format("Internal resolution: {} x {}", gfx_current_dimensions.width, gfx_current_dimensions.height);
-    });
+    mLighthouseMenu->AddWidget(path, "Viewport dimensions: {} x {}", WIDGET_TEXT)
+        .RaceDisable(false)
+        .PreFunc([](WidgetInfo& info) {
+            auto gfx_current_game_window_viewport = GetInterpreter().get()->mGameWindowViewport;
+            info.name = fmt::format("Viewport dimensions: {} x {}", gfx_current_game_window_viewport.width,
+                                    gfx_current_game_window_viewport.height);
+        });
+    mLighthouseMenu->AddWidget(path, "Internal resolution: {} x {}", WIDGET_TEXT)
+        .RaceDisable(false)
+        .PreFunc([](WidgetInfo& info) {
+            auto gfx_current_dimensions = GetInterpreter().get()->mCurDimensions;
+            info.name = fmt::format("Internal resolution: {} x {}", gfx_current_dimensions.width,
+                                    gfx_current_dimensions.height);
+        });
 
     //  Activator
     mLighthouseMenu->AddWidget(path, "Enable advanced settings.", WIDGET_CVAR_CHECKBOX)
-        .CVar(CVAR_PREFIX_ADVANCED_RESOLUTION ".Enabled");
+        .CVar(CVAR_PREFIX_ADVANCED_RESOLUTION ".Enabled")
+        .RaceDisable(false);
+    // Error/Warning display
+    mLighthouseMenu
+        ->AddWidget(path, ICON_FA_EXCLAMATION_TRIANGLE " Significant frame rate (FPS) drops may be occuring.",
+                    WIDGET_TEXT)
+        .RaceDisable(false)
+        .PreFunc(
+            [](WidgetInfo& info) { info.isHidden = !(!CVarGetInteger(CVAR_LOW_RES_MODE, 0) && IsDroppingFrames()); })
+        .Options(TextOptions().Color(Colors::Orange));
     mLighthouseMenu->AddWidget(path, ICON_FA_QUESTION_CIRCLE " \"N64 Mode\" is overriding these settings.", WIDGET_TEXT)
+        .RaceDisable(false)
         .PreFunc([](WidgetInfo& info) { info.isHidden = !CVarGetInteger(CVAR_LOW_RES_MODE, 0); })
-        .Options(WidgetOptions().Color(Colors::LightBlue));
+        .Options(TextOptions().Color(Colors::LightBlue));
     mLighthouseMenu->AddWidget(path, "Click to disable N64 mode", WIDGET_BUTTON)
+        .RaceDisable(false)
         .PreFunc([](WidgetInfo& info) { info.isHidden = !CVarGetInteger(CVAR_LOW_RES_MODE, 0); })
         .Callback([](WidgetInfo& info) {
             CVarSetInteger(CVAR_LOW_RES_MODE, 0);
-            CVarSave();
+            Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
         });
 
     // Aspect Ratio
-    mLighthouseMenu->AddWidget(path, "AspectSep", WIDGET_SEPARATOR).PreFunc([](WidgetInfo& info) {
+    mLighthouseMenu->AddWidget(path, "AspectSep", WIDGET_SEPARATOR).RaceDisable(false).PreFunc([](WidgetInfo& info) {
         if (mLighthouseMenu->GetDisabledMap().at(DISABLE_FOR_ADVANCED_RESOLUTION_OFF).active) {
             info.activeDisables.push_back(DISABLE_FOR_ADVANCED_RESOLUTION_OFF);
         }
     });
-    mLighthouseMenu->AddWidget(path, "Force aspect ratio:", WIDGET_TEXT).PreFunc([](WidgetInfo& info) {
-        if (mLighthouseMenu->GetDisabledMap().at(DISABLE_FOR_ADVANCED_RESOLUTION_OFF).active) {
-            info.activeDisables.push_back(DISABLE_FOR_ADVANCED_RESOLUTION_OFF);
-        }
-    });
+    mLighthouseMenu->AddWidget(path, "Force aspect ratio:", WIDGET_TEXT)
+        .RaceDisable(false)
+        .PreFunc([](WidgetInfo& info) {
+            if (mLighthouseMenu->GetDisabledMap().at(DISABLE_FOR_ADVANCED_RESOLUTION_OFF).active) {
+                info.activeDisables.push_back(DISABLE_FOR_ADVANCED_RESOLUTION_OFF);
+            }
+        });
     mLighthouseMenu->AddWidget(path, "(Select \"Off\" to disable.)", WIDGET_TEXT)
+        .RaceDisable(false)
         .PreFunc([](WidgetInfo& info) {
             if (mLighthouseMenu->GetDisabledMap().at(DISABLE_FOR_ADVANCED_RESOLUTION_OFF).active) {
                 info.activeDisables.push_back(DISABLE_FOR_ADVANCED_RESOLUTION_OFF);
             }
         })
         .SameLine(true)
-        .Options(WidgetOptions().Color(Colors::Gray));
-
+        .Options(TextOptions().Color(Colors::Gray));
     // Presets
     mLighthouseMenu->AddWidget(path, "Aspect Ratio", WIDGET_COMBOBOX)
         .ValuePointer(&item_aspectRatio)
+        .RaceDisable(false)
         .PreFunc([](WidgetInfo& info) {
-            info.isHidden = !mLighthouseMenu->GetDisabledMap().at(DISABLE_FOR_ADVANCED_RESOLUTION_ON).active;
+            if (mLighthouseMenu->GetDisabledMap().at(DISABLE_FOR_ADVANCED_RESOLUTION_OFF).active) {
+                info.activeDisables.push_back(DISABLE_FOR_ADVANCED_RESOLUTION_OFF);
+            }
         })
         .Callback([](WidgetInfo& info) {
             if (item_aspectRatio != default_aspectRatio) { // don't change anything if "Custom" is selected.
@@ -429,58 +467,53 @@ void RegisterResolutionWidgets() {
                 CVarSetFloat(CVAR_PREFIX_ADVANCED_RESOLUTION ".AspectRatioY", aspectRatioY);
             }
             CVarSetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".UIComboItem.AspectRatio", item_aspectRatio);
-            CVarSave();
+            Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
         })
-        .Options(ComboboxOptions().ComboMap(&aspectRatioPresetLabels));
-
-    mLighthouseMenu->AddWidget(path, "AspectRatioCustom", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
-        // Hide aspect ratio input fields if using one of the presets.
-        if (item_aspectRatio == default_aspectRatio && !showHorizontalResField) {
-            // Declare input interaction bools outside of IF statement to prevent Y field from disappearing.
-            const bool input_X =
-                UIWidgets::SliderFloat("X", &aspectRatioX,
-                                       UIWidgets::FloatSliderOptions({ { .disabled = disabled_everything } })
-                                           .Min(0.1f)
-                                           .Max(32.0f)
-                                           .Step(0.001f)
-                                           .Format("%3f")
-                                           .Color(THEME_COLOR)
-                                           .LabelPosition(UIWidgets::LabelPosition::Near)
-                                           .ComponentAlignment(UIWidgets::ComponentAlignment::Right));
-            const bool input_Y =
-                UIWidgets::SliderFloat("Y", &aspectRatioY,
-                                       UIWidgets::FloatSliderOptions({ { .disabled = disabled_everything } })
-                                           .Min(0.1f)
-                                           .Max(24.0f)
-                                           .Step(0.001f)
-                                           .Format("%3f")
-                                           .Color(THEME_COLOR)
-                                           .LabelPosition(UIWidgets::LabelPosition::Near)
-                                           .ComponentAlignment(UIWidgets::ComponentAlignment::Right));
-            if (input_X || input_Y) {
-                item_aspectRatio = default_aspectRatio;
-                update[UPDATE_aspectRatioX] = true;
-                update[UPDATE_aspectRatioY] = true;
+        .Options(ComboboxOptions().ComboMap(aspectRatioPresetLabels));
+    mLighthouseMenu->AddWidget(path, "AspectRatioCustom", WIDGET_CUSTOM)
+        .RaceDisable(false)
+        .CustomFunction([](WidgetInfo& info) {
+            // Hide aspect ratio input fields if using one of the presets.
+            if (item_aspectRatio == default_aspectRatio && !showHorizontalResField) {
+                // Declare input interaction bools outside of IF statement to prevent Y field from disappearing.
+                const bool input_X =
+                    UIWidgets::SliderFloat("X", &aspectRatioX,
+                                           UIWidgets::FloatSliderOptions({ { .disabled = disabled_everything } })
+                                               .Min(0.1f)
+                                               .Max(32.0f)
+                                               .Step(0.001f)
+                                               .Format("%3f")
+                                               .Color(THEME_COLOR)
+                                               .LabelPosition(UIWidgets::LabelPositions::Near)
+                                               .ComponentAlignment(UIWidgets::ComponentAlignments::Right));
+                const bool input_Y =
+                    UIWidgets::SliderFloat("Y", &aspectRatioY,
+                                           UIWidgets::FloatSliderOptions({ { .disabled = disabled_everything } })
+                                               .Min(0.1f)
+                                               .Max(24.0f)
+                                               .Step(0.001f)
+                                               .Format("%3f")
+                                               .Color(THEME_COLOR)
+                                               .LabelPosition(UIWidgets::LabelPositions::Near)
+                                               .ComponentAlignment(UIWidgets::ComponentAlignments::Right));
+                if (input_X || input_Y) {
+                    item_aspectRatio = default_aspectRatio;
+                    update[UPDATE_aspectRatioX] = true;
+                    update[UPDATE_aspectRatioY] = true;
+                }
+            } else if (showHorizontalResField) { // Show calculated aspect ratio
+                if (item_aspectRatio) {
+                    auto gfx_current_dimensions = GetInterpreter().get()->mCurDimensions;
+                    ImGui::Dummy({ 0, 2 });
+                    const float resolvedAspectRatio =
+                        (float)gfx_current_dimensions.width / gfx_current_dimensions.height;
+                    ImGui::Text("Aspect ratio: %.2f:1", resolvedAspectRatio);
+                }
             }
-        } else if (showHorizontalResField) { // Show calculated aspect ratio
-            if (item_aspectRatio) {
-                auto gfx_current_dimensions = GetInterpreter().get()->mCurDimensions;
-                ImGui::Dummy({ 0, 2 });
-                const float resolvedAspectRatio = (float)gfx_current_dimensions.width / gfx_current_dimensions.height;
-                ImGui::Text("Aspect ratio: %.2f:1", resolvedAspectRatio);
-            }
-        }
-    });
-
-    mLighthouseMenu->AddWidget(path, "MoreResolutionSettings", WIDGET_CUSTOM).CustomFunction(ResolutionCustomWidget);
-
-    // Error/Warning display
-    mLighthouseMenu
-        ->AddWidget(path, ICON_FA_EXCLAMATION_TRIANGLE " Significant frame rate (FPS) drops may be occuring.",
-                    WIDGET_TEXT)
-        .PreFunc(
-            [](WidgetInfo& info) { info.isHidden = !(!CVarGetInteger(CVAR_LOW_RES_MODE, 0) && IsDroppingFrames()); })
-        .Options(WidgetOptions().Color(Colors::Orange));
+        });
+    mLighthouseMenu->AddWidget(path, "MoreResolutionSettings", WIDGET_CUSTOM)
+        .CustomFunction(ResolutionCustomWidget)
+        .RaceDisable(false);
 }
 
 void UpdateResolutionVars() {
@@ -559,12 +592,12 @@ void UpdateResolutionVars() {
 bool IsDroppingFrames() {
     // a rather imprecise way of checking for frame drops.
     // but it's mostly there to inform the player of large drops.
-    const short targetFPS = CVarGetInteger("gInterpolationFPS", 20);
+    const short targetFPS = GameEngine::Instance->GetInterpolationFPS();
     const float threshold = targetFPS / 20.0f + 4.1f;
     return ImGui::GetIO().Framerate < targetFPS - threshold;
 }
 
 static RegisterMenuUpdateFunc updateFunc(UpdateResolutionVars, "Settings", "Graphics");
-static RegisterMenuInitFunc initFunc(RegisterResolutionWidgets);
+static RegisterMenuInitFunc menuInitFunc(RegisterResolutionWidgets);
 
 } // namespace LighthouseGui

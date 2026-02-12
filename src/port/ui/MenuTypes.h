@@ -1,43 +1,32 @@
 #pragma once
 
+#include <libultraship/libultraship.h>
 #include "UIWidgets.hpp"
 
 typedef enum {
-    DISABLE_FOR_CAMERAS_OFF,
-    DISABLE_FOR_DEBUG_CAM_ON,
-    DISABLE_FOR_DEBUG_CAM_OFF,
-    DISABLE_FOR_FREE_LOOK_ON,
-    DISABLE_FOR_FREE_LOOK_OFF,
-    DISABLE_FOR_GYRO_OFF,
-    DISABLE_FOR_GYRO_ON,
-    DISABLE_FOR_RIGHT_STICK_OFF,
-    DISABLE_FOR_AUTO_SAVE_OFF,
-    DISABLE_FOR_NULL_PLAY_STATE,
-    DISABLE_FOR_DEBUG_MODE_OFF,
     DISABLE_FOR_NO_VSYNC,
     DISABLE_FOR_NO_WINDOWED_FULLSCREEN,
     DISABLE_FOR_NO_MULTI_VIEWPORT,
     DISABLE_FOR_NOT_DIRECTX,
     DISABLE_FOR_DIRECTX,
     DISABLE_FOR_MATCH_REFRESH_RATE_ON,
-    DISABLE_FOR_MOTION_BLUR_MODE,
-    DISABLE_FOR_MOTION_BLUR_OFF,
-    DISABLE_FOR_FRAME_ADVANCE_OFF,
-    DISABLE_FOR_INTRO_SKIP_OFF,
     DISABLE_FOR_ADVANCED_RESOLUTION_ON,
     DISABLE_FOR_VERTICAL_RES_TOGGLE_ON,
     DISABLE_FOR_LOW_RES_MODE_ON,
+    DISABLE_FOR_NULL_PLAY_STATE,
+    DISABLE_FOR_DEBUG_MODE_OFF,
+    DISABLE_FOR_FRAME_ADVANCE_OFF,
     DISABLE_FOR_ADVANCED_RESOLUTION_OFF,
     DISABLE_FOR_VERTICAL_RESOLUTION_OFF,
-    DISABLE_FOR_LINKS_VOICE_PITCH_MULTIPLIER_OFF,
+    DISABLE_FOR_BOOT_TO_DEBUG_WARP_SCREEN_ON,
 } DisableOption;
 
 struct WidgetInfo;
 struct disabledInfo;
-using VoidFunc = void (*)();
-using DisableInfoFunc = bool (*)(disabledInfo&);
+using VoidFunc = std::function<void()>;
+using DisableInfoFunc = std::function<bool(disabledInfo&)>;
 using DisableVec = std::vector<DisableOption>;
-using WidgetFunc = void (*)(WidgetInfo&);
+using WidgetFunc = std::function<void(WidgetInfo&)>;
 
 typedef enum {
     WIDGET_CHECKBOX,
@@ -49,8 +38,10 @@ typedef enum {
     WIDGET_CVAR_SLIDER_INT,
     WIDGET_CVAR_SLIDER_FLOAT,
     WIDGET_BUTTON,
-    WIDGET_COLOR_24, // color picker without alpha
-    WIDGET_COLOR_32, // color picker with alpha
+    WIDGET_INPUT,
+    WIDGET_CVAR_INPUT,
+    WIDGET_CVAR_COLOR_PICKER,
+    WIDGET_COLOR_PICKER,
     WIDGET_SEARCH,
     WIDGET_SEPARATOR,
     WIDGET_SEPARATOR_TEXT,
@@ -68,12 +59,6 @@ typedef enum {
 } SectionColumns;
 
 typedef enum {
-    MOTION_BLUR_DYNAMIC,
-    MOTION_BLUR_ALWAYS_OFF,
-    MOTION_BLUR_ALWAYS_ON,
-} MotionBlurOption;
-
-typedef enum {
     DEBUG_LOG_TRACE,
     DEBUG_LOG_DEBUG,
     DEBUG_LOG_INFO,
@@ -88,7 +73,8 @@ typedef enum {
 using CVarVariant = std::variant<int32_t, const char*, float, Color_RGBA8, Color_RGB8>;
 using OptionsVariant =
     std::variant<UIWidgets::ButtonOptions, UIWidgets::CheckboxOptions, UIWidgets::ComboboxOptions,
-                 UIWidgets::FloatSliderOptions, UIWidgets::IntSliderOptions, UIWidgets::WidgetOptions>;
+                 UIWidgets::FloatSliderOptions, UIWidgets::IntSliderOptions, UIWidgets::TextOptions,
+                 UIWidgets::WidgetOptions, UIWidgets::WindowButtonOptions, UIWidgets::ColorPickerOptions>;
 
 // All the info needed for display and search of all widgets in the menu.
 // `name` is the label displayed,
@@ -97,7 +83,7 @@ using OptionsVariant =
 // `type` is the WidgetType for the widget, which is what determines how the information is used in the draw func
 // `options` is a variant that holds the UIWidgetsOptions struct for the widget type
 // blank objects need to be initialized with specific typing matching the expected Options struct for the widget
-// `callback` is a lambda used for running code on widget change. may need `BenGui::GetMenu()` for specific menu actions
+// `callback` is a lambda used for running code on widget change. may need `SohGui::GetMenu()` for specific menu actions
 // `preFunc` is a lambda called before drawing code starts. It can be used to determine a widget's status,
 // whether disabled or hidden, as well as update pointers for non-CVar widget types.
 // `postFunc` is a lambda called after all drawing code is finished, for reacting to states other than
@@ -124,12 +110,14 @@ struct WidgetInfo {
     const char* windowName = "";
     bool isHidden = false;
     bool sameLine = false;
+    bool raceDisable = true;
     bool hideInSearch = false;
 
     WidgetInfo& CVar(const char* cVar_) {
         cVar = cVar_;
         return *this;
     }
+
     WidgetInfo& Options(OptionsVariant options_) {
         switch (type) {
             case WIDGET_AUDIO_BACKEND:
@@ -152,60 +140,84 @@ struct WidgetInfo {
                 options =
                     std::make_shared<UIWidgets::IntSliderOptions>(std::get<UIWidgets::IntSliderOptions>(options_));
                 break;
+            case WIDGET_COLOR_PICKER:
+            case WIDGET_CVAR_COLOR_PICKER:
+                options =
+                    std::make_shared<UIWidgets::ColorPickerOptions>(std::get<UIWidgets::ColorPickerOptions>(options_));
+                break;
             case WIDGET_BUTTON:
-            case WIDGET_WINDOW_BUTTON:
                 options = std::make_shared<UIWidgets::ButtonOptions>(std::get<UIWidgets::ButtonOptions>(options_));
+                break;
+            case WIDGET_WINDOW_BUTTON:
+                options = std::make_shared<UIWidgets::WindowButtonOptions>(
+                    std::get<UIWidgets::WindowButtonOptions>(options_));
                 break;
             case WIDGET_TEXT:
             case WIDGET_SEPARATOR_TEXT:
+                options = std::make_shared<UIWidgets::TextOptions>(std::get<UIWidgets::TextOptions>(options_));
+                break;
             case WIDGET_SEPARATOR:
             default:
                 options = std::make_shared<UIWidgets::WidgetOptions>(std::get<UIWidgets::WidgetOptions>(options_));
         }
         return *this;
     }
-    void ResetDisables() {
-        isHidden = false;
-        options->disabled = false;
-        options->disabledTooltip = "";
-        activeDisables.clear();
-    }
+
     WidgetInfo& Options(std::shared_ptr<UIWidgets::WidgetOptions> options_) {
         options = options_;
         return *this;
     }
+
     WidgetInfo& Callback(WidgetFunc callback_) {
         callback = callback_;
         return *this;
     }
+
     WidgetInfo& PreFunc(WidgetFunc preFunc_) {
         preFunc = preFunc_;
         return *this;
     }
+
     WidgetInfo& PostFunc(WidgetFunc postFunc_) {
         postFunc = postFunc_;
         return *this;
     }
+
     WidgetInfo& WindowName(const char* windowName_) {
         windowName = windowName_;
         return *this;
     }
+
     WidgetInfo& ValuePointer(std::variant<bool*, int32_t*, float*> valuePointer_) {
         valuePointer = valuePointer_;
         return *this;
     }
+
     WidgetInfo& SameLine(bool sameLine_) {
         sameLine = sameLine_;
         return *this;
     }
+
     WidgetInfo& CustomFunction(WidgetFunc customFunction_) {
         customFunction = customFunction_;
+        return *this;
+    }
+
+    WidgetInfo& RaceDisable(bool disable) {
+        raceDisable = disable;
         return *this;
     }
 
     WidgetInfo& HideInSearch(bool hide) {
         hideInSearch = hide;
         return *this;
+    }
+
+    void ResetDisables() {
+        isHidden = false;
+        options->disabled = false;
+        options->disabledTooltip = "";
+        activeDisables.clear();
     }
 };
 
@@ -228,28 +240,6 @@ struct disabledInfo {
     int32_t value = 0;
 };
 
-// struct Sidebar {
-//     //std::unordered_map<std::string, SidebarEntry> entries;
-//     uint32_t columnCount;
-//     std::vector<std::vector<WidgetInfo>> columnWidgets;
-//
-//     void Insert(std::string entryName, WidgetInfo& entry, int32_t index = -1) {
-//         if (index == -1 || index >= entryOrder.size()) {
-//             entryOrder.push_back(entryName);
-//         } else {
-//             entryOrder.insert(entryOrder.begin() + index, entryName);
-//         }
-//         columnWidgets[entryName].push_back({entry});
-//     }
-//
-//     void Erase(std::string entryName) {
-//         if (columnWidgets.contains(entryName)) {
-//             columnWidgets.erase(entryName);
-//         }
-//         std::erase_if(entryOrder, [entryName](std::string name) { return name == entryName; });
-//     }
-// };
-
 // Contains the name displayed in the sidebar (label), the number of columns to use in drawing (columnCount; for visual
 // separation, 1-3), and nested vectors of the widgets, grouped by column (columnWidgets). The number of widget vectors
 // added to the column groups does not need to match the specified columnCount, e.g. you can have one vector added to
@@ -257,15 +247,6 @@ struct disabledInfo {
 struct SidebarEntry {
     uint32_t columnCount;
     std::vector<std::vector<WidgetInfo>> columnWidgets;
-};
-
-struct SearchWidget {
-    // First four required
-    WidgetInfo& info;
-    std::string menuName;
-    std::string sidebarName;
-    std::string location;
-    std::string extraTerms = "";
 };
 
 // Contains entries for what's listed in the header at the top, including the name displayed on the top bar (label),
@@ -279,8 +260,9 @@ struct MainMenuEntry {
 };
 
 static const std::unordered_map<Ship::AudioBackend, const char*> audioBackendsMap = {
-    { Ship::AudioBackend::WASAPI, "Windows Audio Session API" }, { Ship::AudioBackend::SDL, "SDL" },
-    // { Ship::AudioBackend::NUL, "Null" },
+    { Ship::AudioBackend::WASAPI, "Windows Audio Session API" },
+    { Ship::AudioBackend::SDL, "SDL" },
+    { Ship::AudioBackend::NUL, "Null" },
 };
 
 static const std::unordered_map<Ship::WindowBackend, const char*> windowBackendsMap = {
@@ -308,6 +290,24 @@ struct MenuInit {
             initFunc();
         }
     }
+};
+
+struct SearchEntry {
+    // First four required
+    std::string widgetName;
+    std::string menuName;
+    std::string sidebarName;
+    std::string location;
+    std::string extraTerms = "";
+};
+
+struct SearchWidget {
+    // First four required
+    WidgetInfo& info;
+    std::string menuName;
+    std::string sidebarName;
+    std::string location;
+    std::string extraTerms = "";
 };
 
 struct RegisterMenuInitFunc {

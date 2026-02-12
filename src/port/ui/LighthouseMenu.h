@@ -1,11 +1,13 @@
 #pragma once
 
+#include <libultraship/libultraship.h>
 #include "UIWidgets.hpp"
 #include "Menu.h"
 #include <fast/backends/gfx_rendering_api.h>
+#include "port/ui/cvar_prefixes.h"
+#include "port/ui/enhancementTypes.h"
 
 namespace LighthouseGui {
-
 class LighthouseMenu : public Ship::Menu {
   public:
     LighthouseMenu(const std::string& consoleVariable, const std::string& name);
@@ -17,8 +19,11 @@ class LighthouseMenu : public Ship::Menu {
 
     void AddSidebarEntry(std::string sectionName, std::string sidbarName, uint32_t columnCount);
     WidgetInfo& AddWidget(WidgetPath& pathInfo, std::string widgetName, WidgetType widgetType);
-    void AddSettings();
-    void AddEnhancements();
-    void AddDevTools();
+    void AddMenuSettings();
+    void AddMenuEnhancements();
+
+  private:
+    char mGitCommitHashTruncated[8];
+    bool mIsTaggedVersion;
 };
 } // namespace LighthouseGui

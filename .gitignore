@@ -85,3 +85,4 @@ imgui.ini
 lighthouse.cfg.json
 logs/
 /src/port/build.c
+/clang-format.exe

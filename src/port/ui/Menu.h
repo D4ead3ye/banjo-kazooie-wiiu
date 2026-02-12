@@ -1,11 +1,8 @@
 #pragma once
 
-#include <ship/window/gui/GuiWindow.h>
-#include "UIWidgets.hpp"
+#include <libultraship/libultraship.h>
+#include <fast/backends/gfx_rendering_api.h>
 #include "MenuTypes.h"
-#include <string>
-#include <unordered_map>
-#include <vector>
 
 namespace Ship {
 uint32_t GetVectorIndexOf(std::vector<std::string>& vector, std::string value);

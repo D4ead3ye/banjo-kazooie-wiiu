@@ -1,5 +1,5 @@
-#ifndef UIWidgets_hpp
-#define UIWidgets_hpp
+#ifndef UIWidgets2_hpp
+#define UIWidgets2_hpp
 
 #include <string>
 #include <vector>
@@ -7,14 +7,10 @@
 #include <stdint.h>
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include <imgui.h>
+#include <libultraship/libultraship.h>
 #include <unordered_map>
-#include <memory>
-#include "port/ShipInit.hpp"
-#include "port/ShipUtils.h"
-#include <ship/window/gui/GuiWindow.h>
-#include "ship/Context.h"
-#include "libultraship/bridge/consolevariablebridge.h"
-#include <ship/window/Window.h>
+#include "src/port/ShipUtils.h"
+#include "src/port/ShipInit.hpp"
 
 namespace UIWidgets {
 
@@ -97,7 +93,7 @@ const ImVec2 Inline = ImVec2(0.0f, 0.0f);
 const ImVec2 Fill = ImVec2(-1.0f, 0.0f);
 } // namespace Sizes
 
-enum LabelPosition {
+enum LabelPositions {
     Near,
     Far,
     Above,
@@ -105,7 +101,7 @@ enum LabelPosition {
     Within,
 };
 
-enum ComponentAlignment {
+enum ComponentAlignments {
     Left,
     Right,
 };
@@ -114,12 +110,6 @@ struct WidgetOptions {
     const char* tooltip = "";
     bool disabled = false;
     const char* disabledTooltip = "";
-    Colors color = Colors::NoColor;
-
-    WidgetOptions& Color(Colors color_) {
-        color = color = color_;
-        return *this;
-    }
 
     WidgetOptions& Tooltip(const char* tooltip_) {
         tooltip = tooltip_;
@@ -167,7 +157,65 @@ struct ButtonOptions : WidgetOptions {
     }
 
     ButtonOptions& Color(Colors color_) {
-        WidgetOptions::color = color = color_;
+        color = color_;
+        return *this;
+    }
+};
+
+struct ColorPickerOptions : WidgetOptions {
+    ImVec2 size = Sizes::Fill;
+    ImVec2 padding = ImVec2(10.0f, 8.0f);
+    Colors color = Colors::Gray;
+    Color_RGBA8 defaultValue = { 255, 255, 255, 255 };
+    bool useAlpha, showReset, showRandom, showRainbow, showLock;
+
+    ColorPickerOptions& Size(ImVec2 size_) {
+        size = size_;
+        return *this;
+    }
+
+    ColorPickerOptions& Padding(ImVec2 padding_) {
+        padding = padding_;
+        return *this;
+    }
+
+    ColorPickerOptions& Tooltip(const char* tooltip_) {
+        WidgetOptions::tooltip = tooltip_;
+        return *this;
+    }
+
+    ColorPickerOptions& ShowReset(bool showReset_ = true) {
+        showReset = showReset_;
+        return *this;
+    }
+
+    ColorPickerOptions& ShowRandom(bool showRandom_ = true) {
+        showRandom = showRandom_;
+        return *this;
+    }
+
+    ColorPickerOptions& ShowRainbow(bool showRainbow_ = true) {
+        showRainbow = showRainbow_;
+        return *this;
+    }
+
+    ColorPickerOptions& ShowLock(bool showLock_ = true) {
+        showLock = showLock_;
+        return *this;
+    }
+
+    ColorPickerOptions& UseAlpha(bool useAlpha_ = true) {
+        useAlpha = useAlpha_;
+        return *this;
+    }
+
+    ColorPickerOptions& Color(Colors color_) {
+        color = color_;
+        return *this;
+    }
+
+    ColorPickerOptions& DefaultValue(Color_RGBA8 defaultValue_) {
+        defaultValue = defaultValue_;
         return *this;
     }
 };
@@ -212,22 +260,22 @@ struct WindowButtonOptions : WidgetOptions {
 
 struct CheckboxOptions : WidgetOptions {
     bool defaultValue = false; // Only applicable to CVarCheckbox
-    ComponentAlignment alignment = ComponentAlignment::Left;
-    LabelPosition labelPosition = LabelPosition::Near;
+    ComponentAlignments alignment = ComponentAlignments::Left;
+    LabelPositions labelPosition = LabelPositions::Near;
     ImVec2 padding = ImVec2(10.0f, 8.0f);
-    Colors color = WidgetOptions::color = Colors::LightBlue;
+    Colors color = Colors::LightBlue;
 
     CheckboxOptions& DefaultValue(bool defaultValue_) {
         defaultValue = defaultValue_;
         return *this;
     }
 
-    CheckboxOptions& ComponentAlignment(ComponentAlignment alignment_) {
+    CheckboxOptions& ComponentAlignment(ComponentAlignments alignment_) {
         alignment = alignment_;
         return *this;
     }
 
-    CheckboxOptions& LabelPosition(LabelPosition labelPosition_) {
+    CheckboxOptions& LabelPosition(LabelPositions labelPosition_) {
         labelPosition = labelPosition_;
         return *this;
     }
@@ -238,7 +286,7 @@ struct CheckboxOptions : WidgetOptions {
     }
 
     CheckboxOptions& Color(Colors color_) {
-        WidgetOptions::color = color = color_;
+        color = color_;
         return *this;
     }
 
@@ -253,24 +301,16 @@ struct CheckboxOptions : WidgetOptions {
     }
 };
 
-using ComboMap_t = std::unordered_map<int32_t, const char*>*;
-using ComboVec_t = std::vector<const char*>*;
 struct ComboboxOptions : WidgetOptions {
-    std::variant<ComboMap_t, ComboVec_t> comboVariant;
+    std::unordered_map<int32_t, const char*> comboMap = {};
     uint32_t defaultIndex = 0; // Only applicable to CVarCombobox
-    ComponentAlignment alignment = ComponentAlignment::Left;
-    LabelPosition labelPosition = LabelPosition::Above;
+    ComponentAlignments alignment = ComponentAlignments::Left;
+    LabelPositions labelPosition = LabelPositions::Above;
     ImGuiComboFlags flags = 0;
     Colors color = Colors::LightBlue;
-    std::optional<float> width = std::nullopt; // Override width, -FLT_MIN to stretch
 
-    ComboboxOptions& ComboMap(const std::unordered_map<int32_t, const char*>* comboMap_) {
-        comboVariant = const_cast<std::unordered_map<int32_t, const char*>*>(comboMap_);
-        return *this;
-    }
-
-    ComboboxOptions& ComboVec(const std::vector<const char*>* comboMap_) {
-        comboVariant = const_cast<std::vector<const char*>*>(comboMap_);
+    ComboboxOptions& ComboMap(std::unordered_map<int32_t, const char*> comboMap_) {
+        comboMap = comboMap_;
         return *this;
     }
 
@@ -279,12 +319,12 @@ struct ComboboxOptions : WidgetOptions {
         return *this;
     }
 
-    ComboboxOptions& ComponentAlignment(ComponentAlignment alignment_) {
+    ComboboxOptions& ComponentAlignment(ComponentAlignments alignment_) {
         alignment = alignment_;
         return *this;
     }
 
-    ComboboxOptions& LabelPosition(LabelPosition labelPosition_) {
+    ComboboxOptions& LabelPosition(LabelPositions labelPosition_) {
         labelPosition = labelPosition_;
         return *this;
     }
@@ -295,38 +335,27 @@ struct ComboboxOptions : WidgetOptions {
     }
 
     ComboboxOptions& Color(Colors color_) {
-        WidgetOptions::color = color = color_;
-        return *this;
-    }
-
-    ComboboxOptions& Width(float width_) {
-        width = width_;
+        color = color_;
         return *this;
     }
 };
 
 struct IntSliderOptions : WidgetOptions {
-    bool showAdjustmentButtons = true;
-    bool showResetButton = true;
+    bool showButtons = true;
     const char* format = "%d";
     int32_t step = 1;
     int32_t min = 1;
     int32_t max = 10;
     int32_t defaultValue = 1;
     bool clamp = true;
-    ComponentAlignment alignment = ComponentAlignment::Left;
-    LabelPosition labelPosition = LabelPosition::Above;
+    ComponentAlignments alignment = ComponentAlignments::Left;
+    LabelPositions labelPosition = LabelPositions::Above;
     Colors color = Colors::Gray;
     ImGuiSliderFlags flags = 0;
     ImVec2 size = { 0, 0 };
 
-    IntSliderOptions& ShowAdjustmentButtons(bool showAdjustmentButtons_) {
-        showAdjustmentButtons = showAdjustmentButtons_;
-        return *this;
-    }
-
-    IntSliderOptions& ShowResetButton(bool showResetButton_) {
-        showResetButton = showResetButton_;
+    IntSliderOptions& ShowButtons(bool showButtons_) {
+        showButtons = showButtons_;
         return *this;
     }
 
@@ -355,12 +384,12 @@ struct IntSliderOptions : WidgetOptions {
         return *this;
     }
 
-    IntSliderOptions& ComponentAlignment(ComponentAlignment alignment_) {
+    IntSliderOptions& ComponentAlignment(ComponentAlignments alignment_) {
         alignment = alignment_;
         return *this;
     }
 
-    IntSliderOptions& LabelPosition(LabelPosition labelPosition_) {
+    IntSliderOptions& LabelPosition(LabelPositions labelPosition_) {
         labelPosition = labelPosition_;
         return *this;
     }
@@ -371,7 +400,7 @@ struct IntSliderOptions : WidgetOptions {
     }
 
     IntSliderOptions& Color(Colors color_) {
-        WidgetOptions::color = color = color_;
+        color = color_;
         return *this;
     }
 
@@ -387,8 +416,7 @@ struct IntSliderOptions : WidgetOptions {
 };
 
 struct FloatSliderOptions : WidgetOptions {
-    bool showAdjustmentButtons = true;
-    bool showResetButton = true;
+    bool showButtons = true;
     const char* format = "%f";
     float step = 0.01f;
     float min = 0.01f;
@@ -396,18 +424,14 @@ struct FloatSliderOptions : WidgetOptions {
     float defaultValue = 1.0f;
     bool clamp = true;
     bool isPercentage = false; // Multiplies visual value by 100
-    ComponentAlignment alignment = ComponentAlignment::Left;
-    LabelPosition labelPosition = LabelPosition::Above;
+    ComponentAlignments alignment = ComponentAlignments::Left;
+    LabelPositions labelPosition = LabelPositions::Above;
     Colors color = Colors::Gray;
     ImGuiSliderFlags flags = 0;
     ImVec2 size = { 0, 0 };
 
-    FloatSliderOptions& ShowAdjustmentButtons(bool showAdjustmentButtons_) {
-        showAdjustmentButtons = showAdjustmentButtons_;
-        return *this;
-    }
-    FloatSliderOptions& ShowResetButton(bool showResetButton_) {
-        showResetButton = showResetButton_;
+    FloatSliderOptions& ShowButtons(bool showButtons_) {
+        showButtons = showButtons_;
         return *this;
     }
 
@@ -436,12 +460,12 @@ struct FloatSliderOptions : WidgetOptions {
         return *this;
     }
 
-    FloatSliderOptions& ComponentAlignment(ComponentAlignment alignment_) {
+    FloatSliderOptions& ComponentAlignment(ComponentAlignments alignment_) {
         alignment = alignment_;
         return *this;
     }
 
-    FloatSliderOptions& LabelPosition(LabelPosition labelPosition_) {
+    FloatSliderOptions& LabelPosition(LabelPositions labelPosition_) {
         labelPosition = labelPosition_;
         return *this;
     }
@@ -460,7 +484,7 @@ struct FloatSliderOptions : WidgetOptions {
     }
 
     FloatSliderOptions& Color(Colors color_) {
-        WidgetOptions::color = color = color_;
+        color = color_;
         return *this;
     }
 
@@ -502,8 +526,8 @@ struct RadioButtonsOptions : WidgetOptions {
 };
 
 struct InputOptions : WidgetOptions {
-    ComponentAlignment alignment = ComponentAlignment::Left;
-    LabelPosition labelPosition = LabelPosition::Above;
+    ComponentAlignments alignment = ComponentAlignments::Left;
+    LabelPositions labelPosition = LabelPositions::Above;
     Colors color = Colors::Gray;
     ImVec2 size = { 0, 0 };
     std::string placeholder = "";
@@ -529,7 +553,7 @@ struct InputOptions : WidgetOptions {
         return *this;
     }
 
-    InputOptions& LabelPosition(LabelPosition labelPosition_) {
+    InputOptions& LabelPosition(LabelPositions labelPosition_) {
         labelPosition = labelPosition_;
         return *this;
     }
@@ -549,7 +573,7 @@ struct InputOptions : WidgetOptions {
         return *this;
     }
 
-    InputOptions& ComponentAlignment(ComponentAlignment alignment_) {
+    InputOptions& ComponentAlignment(ComponentAlignments alignment_) {
         alignment = alignment_;
         return *this;
     }
@@ -619,46 +643,23 @@ void Spacer(float height = 0.0f);
 void Separator(bool padTop = true, bool padBottom = true, float extraVerticalTopPadding = 0.0f,
                float extraVerticalBottomPadding = 0.0f);
 
-// Helper for masonry-style multi-column card layouts
-// Cards automatically flow into shortest column, eliminating gaps
-// Usage:
-//   BeginCardLayout({ .columnsPerRow = 2 });
-//   BeginCard("cardId");
-//   // ... card content ...
-//   EndCard();
-//   EndCardLayout();
-struct CardLayoutOptions {
-    int columnsPerRow = 2;
-    float spacing = 8.0f;
-    float minColumnWidth = 0.0f;
-    bool autoItemWidth = true;
-    ImGuiChildFlags childFlags = ImGuiChildFlags_Border | ImGuiChildFlags_AutoResizeY;
-};
-
-void BeginCardLayout(const CardLayoutOptions& options = {});
-void BeginCard(const char* id);
-void EndCard();
-void EndCardLayout();
-
 float CalcComboWidth(const char* preview_value, ImGuiComboFlags flags);
 
 template <typename T>
-bool Combobox(const char* label, T* value, const std::unordered_map<T, const char*>* comboMap,
+bool Combobox(const char* label, T* value, const std::unordered_map<T, const char*>& comboMap,
               const ComboboxOptions& options = {}) {
     bool dirty = false;
+    float startX = ImGui::GetCursorPosX();
     std::string invisibleLabelStr = "##" + std::string(label);
     const char* invisibleLabel = invisibleLabelStr.c_str();
-    if (!comboMap->contains(*value)) {
-        *value = comboMap->begin()->first;
-    }
     ImGui::PushID(label);
     ImGui::BeginGroup();
     ImGui::BeginDisabled(options.disabled);
     PushStyleCombobox(options.color);
+
     const char* longest;
     size_t length = 0;
-    const auto& iterableComboMap = *comboMap;
-    for (const auto& [index, string] : iterableComboMap) {
+    for (auto& [index, string] : comboMap) {
         size_t len = strlen(string);
         if (len > length) {
             longest = string;
@@ -666,28 +667,30 @@ bool Combobox(const char* label, T* value, const std::unordered_map<T, const cha
         }
     }
     float comboWidth = CalcComboWidth(longest, options.flags);
+
     ImGui::AlignTextToFramePadding();
-    if (options.labelPosition != LabelPosition::None) {
-        if (options.alignment == ComponentAlignment::Right) {
+    if (options.labelPosition != LabelPositions::None) {
+        if (options.alignment == ComponentAlignments::Right) {
             ImGui::Text("%s", label);
-            if (options.labelPosition == LabelPosition::Above) {
+            if (options.labelPosition == LabelPositions::Above) {
                 ImGui::NewLine();
                 ImGui::SameLine(ImGui::GetContentRegionAvail().x - comboWidth);
-            } else if (options.labelPosition == LabelPosition::Near) {
+            } else if (options.labelPosition == LabelPositions::Near) {
                 ImGui::SameLine();
-            } else if (options.labelPosition == LabelPosition::Far) {
+            } else if (options.labelPosition == LabelPositions::Far) {
                 ImGui::SameLine(ImGui::GetContentRegionAvail().x - comboWidth);
             }
-        } else if (options.alignment == ComponentAlignment::Left) {
-            if (options.labelPosition == LabelPosition::Above) {
+        } else if (options.alignment == ComponentAlignments::Left) {
+            if (options.labelPosition == LabelPositions::Above) {
                 ImGui::Text("%s", label);
             }
         }
     }
+
     ImGui::SetNextItemWidth(comboWidth);
-    if (ImGui::BeginCombo(invisibleLabel, comboMap->at(*value), options.flags)) {
+    if (ImGui::BeginCombo(invisibleLabel, comboMap.at(*value), options.flags)) {
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(10.0f, 10.0f));
-        for (const auto& pair : *comboMap) {
+        for (const auto& pair : comboMap) {
             if (strlen(pair.second) > 1) {
                 if (ImGui::Selectable(pair.second, pair.first == *value)) {
                     *value = pair.first;
@@ -698,13 +701,14 @@ bool Combobox(const char* label, T* value, const std::unordered_map<T, const cha
         ImGui::PopStyleVar();
         ImGui::EndCombo();
     }
-    if (options.labelPosition != LabelPosition::None) {
-        if (options.alignment == ComponentAlignment::Left) {
-            if (options.labelPosition == LabelPosition::Near) {
+
+    if (options.labelPosition != LabelPositions::None) {
+        if (options.alignment == ComponentAlignments::Left) {
+            if (options.labelPosition == LabelPositions::Near) {
                 ImGui::SameLine();
                 ImGui::Text("%s", label);
-            } else if (options.labelPosition == LabelPosition::Far) {
-                float width = ImGui::CalcTextSize(comboMap->at(*value)).x + ImGui::GetStyle().FramePadding.x * 2;
+            } else if (options.labelPosition == LabelPositions::Far) {
+                float width = ImGui::CalcTextSize(comboMap.at(*value)).x + ImGui::GetStyle().FramePadding.x * 2;
                 ImGui::SameLine(ImGui::GetContentRegionAvail().x - width);
                 ImGui::Text("%s", label);
             }
@@ -747,19 +751,19 @@ bool Combobox(const char* label, T* value, const std::vector<const char*>& combo
     float comboWidth = CalcComboWidth(longest, options.flags);
 
     ImGui::AlignTextToFramePadding();
-    if (options.labelPosition != LabelPosition::None) {
-        if (options.alignment == ComponentAlignment::Right) {
+    if (options.labelPosition != LabelPositions::None) {
+        if (options.alignment == ComponentAlignments::Right) {
             ImGui::Text("%s", label);
-            if (options.labelPosition == LabelPosition::Above) {
+            if (options.labelPosition == LabelPositions::Above) {
                 ImGui::NewLine();
                 ImGui::SameLine(ImGui::GetContentRegionAvail().x - comboWidth);
-            } else if (options.labelPosition == LabelPosition::Near) {
+            } else if (options.labelPosition == LabelPositions::Near) {
                 ImGui::SameLine();
-            } else if (options.labelPosition == LabelPosition::Far) {
+            } else if (options.labelPosition == LabelPositions::Far) {
                 ImGui::SameLine(ImGui::GetContentRegionAvail().x - comboWidth);
             }
-        } else if (options.alignment == ComponentAlignment::Left) {
-            if (options.labelPosition == LabelPosition::Above) {
+        } else if (options.alignment == ComponentAlignments::Left) {
+            if (options.labelPosition == LabelPositions::Above) {
                 ImGui::Text("%s", label);
             }
         }
@@ -781,12 +785,12 @@ bool Combobox(const char* label, T* value, const std::vector<const char*>& combo
         ImGui::EndCombo();
     }
 
-    if (options.labelPosition != LabelPosition::None) {
-        if (options.alignment == ComponentAlignment::Left) {
-            if (options.labelPosition == LabelPosition::Near) {
+    if (options.labelPosition != LabelPositions::None) {
+        if (options.alignment == ComponentAlignments::Left) {
+            if (options.labelPosition == LabelPositions::Near) {
                 ImGui::SameLine();
                 ImGui::Text("%s", label);
-            } else if (options.labelPosition == LabelPosition::Far) {
+            } else if (options.labelPosition == LabelPositions::Far) {
                 float width = ImGui::CalcTextSize(comboVector.at(*value)).x + ImGui::GetStyle().FramePadding.x * 2;
                 ImGui::SameLine(ImGui::GetContentRegionAvail().x - width);
                 ImGui::Text("%s", label);
@@ -831,19 +835,19 @@ bool Combobox(const char* label, T* value, const std::vector<std::string>& combo
     float comboWidth = CalcComboWidth(longest, options.flags);
 
     ImGui::AlignTextToFramePadding();
-    if (options.labelPosition != LabelPosition::None) {
-        if (options.alignment == ComponentAlignment::Right) {
+    if (options.labelPosition != LabelPositions::None) {
+        if (options.alignment == ComponentAlignments::Right) {
             ImGui::Text("%s", label);
-            if (options.labelPosition == LabelPosition::Above) {
+            if (options.labelPosition == LabelPositions::Above) {
                 ImGui::NewLine();
                 ImGui::SameLine(ImGui::GetContentRegionAvail().x - comboWidth);
-            } else if (options.labelPosition == LabelPosition::Near) {
+            } else if (options.labelPosition == LabelPositions::Near) {
                 ImGui::SameLine();
-            } else if (options.labelPosition == LabelPosition::Far) {
+            } else if (options.labelPosition == LabelPositions::Far) {
                 ImGui::SameLine(ImGui::GetContentRegionAvail().x - comboWidth);
             }
-        } else if (options.alignment == ComponentAlignment::Left) {
-            if (options.labelPosition == LabelPosition::Above) {
+        } else if (options.alignment == ComponentAlignments::Left) {
+            if (options.labelPosition == LabelPositions::Above) {
                 ImGui::Text("%s", label);
             }
         }
@@ -865,12 +869,12 @@ bool Combobox(const char* label, T* value, const std::vector<std::string>& combo
         ImGui::EndCombo();
     }
 
-    if (options.labelPosition != LabelPosition::None) {
-        if (options.alignment == ComponentAlignment::Left) {
-            if (options.labelPosition == LabelPosition::Near) {
+    if (options.labelPosition != LabelPositions::None) {
+        if (options.alignment == ComponentAlignments::Left) {
+            if (options.labelPosition == LabelPositions::Near) {
                 ImGui::SameLine();
                 ImGui::Text("%s", label);
-            } else if (options.labelPosition == LabelPosition::Far) {
+            } else if (options.labelPosition == LabelPositions::Far) {
                 float width =
                     ImGui::CalcTextSize(comboVector.at(*value).c_str()).x + ImGui::GetStyle().FramePadding.x * 2;
                 ImGui::SameLine(ImGui::GetContentRegionAvail().x - width);
@@ -918,19 +922,19 @@ bool Combobox(const char* label, T* value, const char* (&comboArray)[N], const C
     float comboWidth = CalcComboWidth(longest, options.flags);
 
     ImGui::AlignTextToFramePadding();
-    if (options.labelPosition != LabelPosition::None) {
-        if (options.alignment == ComponentAlignment::Right) {
+    if (options.labelPosition != LabelPositions::None) {
+        if (options.alignment == ComponentAlignments::Right) {
             ImGui::Text("%s", label);
-            if (options.labelPosition == LabelPosition::Above) {
+            if (options.labelPosition == LabelPositions::Above) {
                 ImGui::NewLine();
                 ImGui::SameLine(ImGui::GetContentRegionAvail().x - comboWidth);
-            } else if (options.labelPosition == LabelPosition::Near) {
+            } else if (options.labelPosition == LabelPositions::Near) {
                 ImGui::SameLine();
-            } else if (options.labelPosition == LabelPosition::Far) {
+            } else if (options.labelPosition == LabelPositions::Far) {
                 ImGui::SameLine(ImGui::GetContentRegionAvail().x - comboWidth);
             }
-        } else if (options.alignment == ComponentAlignment::Left) {
-            if (options.labelPosition == LabelPosition::Above) {
+        } else if (options.alignment == ComponentAlignments::Left) {
+            if (options.labelPosition == LabelPositions::Above) {
                 ImGui::Text("%s", label);
             }
         }
@@ -952,14 +956,13 @@ bool Combobox(const char* label, T* value, const char* (&comboArray)[N], const C
         ImGui::EndCombo();
     }
 
-    if (options.labelPosition != LabelPosition::None) {
-        if (options.alignment == ComponentAlignment::Left) {
-            if (options.labelPosition == LabelPosition::Near) {
+    if (options.labelPosition != LabelPositions::None) {
+        if (options.alignment == ComponentAlignments::Left) {
+            if (options.labelPosition == LabelPositions::Near) {
                 ImGui::SameLine();
                 ImGui::Text("%s", label);
-            } else if (options.labelPosition == LabelPosition::Far) {
-                float width = ImGui::CalcTextSize(comboArray[static_cast<size_t>(*value)]).x +
-                              ImGui::GetStyle().FramePadding.x * 2;
+            } else if (options.labelPosition == LabelPositions::Far) {
+                float width = ImGui::CalcTextSize(comboArray[*value]).x + ImGui::GetStyle().FramePadding.x * 2;
                 ImGui::SameLine(ImGui::GetContentRegionAvail().x - width);
                 ImGui::Text("%s", label);
             }
@@ -979,7 +982,7 @@ bool Combobox(const char* label, T* value, const char* (&comboArray)[N], const C
 }
 
 template <typename T = int32_t>
-bool CVarCombobox(const char* label, const char* cvarName, const std::unordered_map<T, const char*>* comboMap,
+bool CVarCombobox(const char* label, const char* cvarName, const std::unordered_map<T, const char*>& comboMap,
                   const ComboboxOptions& options = {}) {
     bool dirty = false;
     int32_t value = CVarGetInteger(cvarName, options.defaultIndex);
@@ -987,19 +990,6 @@ bool CVarCombobox(const char* label, const char* cvarName, const std::unordered_
         CVarSetInteger(cvarName, value);
         Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
         ShipInit::Init(cvarName);
-        dirty = true;
-    }
-    return dirty;
-}
-
-template <typename T = int32_t>
-bool CVarCombobox(const char* label, const char* cvarName, const std::vector<std::string>& comboVector,
-                  const ComboboxOptions& options = {}) {
-    bool dirty = false;
-    int32_t value = CVarGetInteger(cvarName, options.defaultIndex);
-    if (Combobox<T>(label, &value, comboVector, options)) {
-        CVarSetInteger(cvarName, value);
-        Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
         dirty = true;
     }
     return dirty;
@@ -1016,108 +1006,6 @@ bool CVarCombobox(const char* label, const char* cvarName, const std::vector<con
         ShipInit::Init(cvarName);
         dirty = true;
     }
-    return dirty;
-}
-
-// Combobox with built-in search functionality for filtering large lists
-template <typename T>
-bool ComboboxWithSearch(const char* label, T* value, const std::unordered_map<T, const char*>* comboMap,
-                        const ComboboxOptions& options = {}) {
-    bool dirty = false;
-    std::string invisibleLabelStr = "##" + std::string(label);
-    const char* invisibleLabel = invisibleLabelStr.c_str();
-    if (!comboMap->contains(*value)) {
-        *value = comboMap->begin()->first;
-    }
-    ImGui::PushID(label);
-    ImGui::BeginGroup();
-    ImGui::BeginDisabled(options.disabled);
-    PushStyleCombobox(options.color);
-
-    const char* longest;
-    size_t length = 0;
-    const auto& iterableComboMap = *comboMap;
-    for (const auto& [index, string] : iterableComboMap) {
-        size_t len = strlen(string);
-        if (len > length) {
-            longest = string;
-            length = len;
-        }
-    }
-    float comboWidth = CalcComboWidth(longest, options.flags);
-
-    ImGui::AlignTextToFramePadding();
-    if (options.labelPosition != LabelPosition::None) {
-        if (options.alignment == ComponentAlignment::Right) {
-            ImGui::Text("%s", label);
-            if (options.labelPosition == LabelPosition::Above) {
-                ImGui::NewLine();
-                ImGui::SameLine(ImGui::GetContentRegionAvail().x - comboWidth);
-            } else if (options.labelPosition == LabelPosition::Near) {
-                ImGui::SameLine();
-            } else if (options.labelPosition == LabelPosition::Far) {
-                ImGui::SameLine(ImGui::GetContentRegionAvail().x - comboWidth);
-            }
-        } else if (options.alignment == ComponentAlignment::Left) {
-            if (options.labelPosition == LabelPosition::Above) {
-                ImGui::Text("%s", label);
-            }
-        }
-    }
-
-    ImGui::SetNextItemWidth(options.width.value_or(comboWidth));
-    if (ImGui::BeginCombo(invisibleLabel, comboMap->at(*value), options.flags)) {
-        // Local filter, no persistence
-        ImGuiTextFilter filter;
-
-        // Focus search input when dropdown first opens
-        if (ImGui::IsWindowAppearing()) {
-            ImGui::SetKeyboardFocusHere();
-        }
-
-        ImGui::SetNextItemWidth(-FLT_MIN);
-        filter.Draw("##search", -FLT_MIN);
-
-        ImGui::Separator();
-
-        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(10.0f, 10.0f));
-        for (const auto& [itemId, itemName] : *comboMap) {
-            if (!filter.PassFilter(itemName)) {
-                continue;
-            }
-
-            if (ImGui::Selectable(itemName, itemId == *value)) {
-                *value = itemId;
-                dirty = true;
-            }
-        }
-        ImGui::PopStyleVar();
-
-        ImGui::EndCombo();
-    }
-
-    if (options.labelPosition != LabelPosition::None) {
-        if (options.alignment == ComponentAlignment::Left) {
-            if (options.labelPosition == LabelPosition::Near) {
-                ImGui::SameLine();
-                ImGui::Text("%s", label);
-            } else if (options.labelPosition == LabelPosition::Far) {
-                float width = ImGui::CalcTextSize(comboMap->at(*value)).x + ImGui::GetStyle().FramePadding.x * 2;
-                ImGui::SameLine(ImGui::GetContentRegionAvail().x - width);
-                ImGui::Text("%s", label);
-            }
-        }
-    }
-    PopStyleCombobox();
-    ImGui::EndDisabled();
-    ImGui::EndGroup();
-    if (options.disabled && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled) &&
-        !Ship_IsCStringEmpty(options.disabledTooltip)) {
-        ImGui::SetTooltip("%s", WrappedText(options.disabledTooltip).c_str());
-    } else if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled) && !Ship_IsCStringEmpty(options.tooltip)) {
-        ImGui::SetTooltip("%s", WrappedText(options.tooltip).c_str());
-    }
-    ImGui::PopID();
     return dirty;
 }
 
@@ -1153,9 +1041,11 @@ bool StateButton(const char* str_id, const char* label, ImVec2 size, UIWidgets::
                  ImGuiButtonFlags flags = ImGuiButtonFlags_None);
 void DrawFlagArray32(const std::string& name, uint32_t& flags, Colors color = Colors::LightBlue);
 void DrawFlagArray16(const std::string& name, uint16_t& flags, Colors color = Colors::LightBlue);
-// void DrawFlagTableArray16(const FlagTable& flagTable, uint16_t& flags);
-// void DrawFlagTableArray8(const FlagTable& flagTable, uint16_t row, uint8_t& flags);
-// void DrawFlagTableArray8Mask(const FlagTable& flagTable, uint16_t row, uint8_t& flags);
+void DrawFlagArray8(const std::string& name, uint8_t& flags, Colors color = Colors::LightBlue);
+void DrawFlagArray8Mask(const std::string& name, uint8_t& flags, Colors color = Colors::LightBlue);
+
+void InsertHelpHoverText(const std::string& text);
+void InsertHelpHoverText(const char* text);
 } // namespace UIWidgets
 ImVec4 GetRandomValue();
 
