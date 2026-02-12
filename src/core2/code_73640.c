@@ -28,7 +28,8 @@ s16 D_803692E0[6] = {
     0x360, 
     -1
 };
-s16 D_803692EC[6] = {
+// Lighthouse [port] This array was incorrectly sized
+s16 D_803692EC[5] = {
     ASSET_580_SPRITE_RED_FEATHER, 
     ASSET_6D1_SPRITE_GOLDFEATHTER, 
     ASSET_41A_SPRITE_MUMBO_TOKEN, 

@@ -33,8 +33,8 @@ void func_8034A2A8(struct5Bs *this) {
 
 struct5Bs *func_8034A2C8(void) {
     struct5Bs *this = (struct5Bs *) bk_malloc(sizeof(struct5Bs) + sizeof(f32[3]) * CORE2_C31A0_VEC_COUNT);
-    this->unk0 = (f32(*)[3])((s32) this + sizeof(struct5Bs));
-    this->unk4 = (f32(*)[3])((s32) this->unk0 + sizeof(f32[3]) * CORE2_C31A0_VEC_COUNT);
+    this->unk0 = (f32(*)[3])((uintptr_t) this + sizeof(struct5Bs));
+    this->unk4 = (f32(*)[3])((uintptr_t) this->unk0 + sizeof(f32[3]) * CORE2_C31A0_VEC_COUNT);
     func_8034A130(this);
     return this;
 }
@@ -46,8 +46,8 @@ void func_8034A308(struct5Bs *this, s32 indx, f32 arg2[3]) {
 struct5Bs *func_8034A348(struct5Bs *this) {
     if (this) {
         this = (struct5Bs *) defrag(this);
-        this->unk0 = (f32(*)[3])(((s32) this + sizeof(struct5Bs)));
-        this->unk4 = (f32(*)[3])((s32) this->unk0 + sizeof(f32[3]) * CORE2_C31A0_VEC_COUNT);
+        this->unk0 = (f32(*)[3])(((uintptr_t) this + sizeof(struct5Bs)));
+        this->unk4 = (f32(*)[3])((uintptr_t) this->unk0 + sizeof(f32[3]) * CORE2_C31A0_VEC_COUNT);
     }
 
     return this;

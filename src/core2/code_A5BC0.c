@@ -319,14 +319,14 @@ void func_8032D3A8(void){
 void func_8032D3D8(Gfx **gdl, Mtx **mptr, Vtx **vptr){
     int i;
     for(i = 0; i < bk_vector_size(D_80383550); i++){
-       __marker_draw(*(u32*) bk_vector_at(D_80383550, i), gdl, mptr, vptr);
+       __marker_draw(*(uintptr_t*) bk_vector_at(D_80383550, i), gdl, mptr, vptr);
     }
 }
 
 void func_8032D474(Gfx **gdl, Mtx **mptr, Vtx **vptr){
     int i;
     for(i = 0; i < bk_vector_size(D_80383554); i++){
-       __marker_draw(*(u32*) bk_vector_at(D_80383554, i), gdl, mptr, vptr);
+       __marker_draw(*(uintptr_t*) bk_vector_at(D_80383554, i), gdl, mptr, vptr);
     }
 }
 

@@ -309,10 +309,10 @@ s32 func_8032056C(void) {
 
 s32 func_80320708(void) {
     u16 temp_t6;
-    s32 addr;
+    uintptr_t addr;
 
-    temp_t6 = ((s32) &gVolatileFlags.unk4 >> 0x10);
-    addr = (s32) &gVolatileFlags.unk4 ^ temp_t6;
+    temp_t6 = ((uintptr_t) &gVolatileFlags.unk4 >> 0x10);
+    addr = (uintptr_t) &gVolatileFlags.unk4 ^ temp_t6;
     return func_80320320() == *(s32*)(addr ^ temp_t6);
 }
 

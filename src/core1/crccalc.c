@@ -13,19 +13,17 @@ void glcrc_calc_checksum(void *start, void *end, u32 checksum[2]) {
     u32 tmp;
 
     // CRC1: Iterate forwards over bytes
-    for (p = start; (void *)p < end; p++) {
+    for (p = (u8*)start; p < (u8*)end; p++) {
         seed += *p << (shift & 15);
-        // Lighthouse TODO this is that weird function
-        //tmp = func_8025C29C(&seed);
+        tmp = func_8025C29C(&seed);
         shift += 7;
         crc1 ^= tmp;
     }
 
     // CRC2: Iterate backwards over bytes
-    for (p = (u8 *)end - 1; (void *)p >= start; p--) {
+    for (p = (u8 *)end - 1; p >= (u8*)start; p--) {
         seed += *p << (shift & 15);
-        // Lighthouse TODO this is that weird function
-        //tmp = func_8025C29C(&seed);
+        tmp = func_8025C29C(&seed);
         shift += 3;
         crc2 ^= tmp;
     }

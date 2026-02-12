@@ -56,7 +56,7 @@ void animationFile_getBoneTransformList(AnimationFile *anim_file, f32 progress, 
     f32 sp54[3][3];
 
     tmp_f22 = func_8033ABA0(anim_file, progress);
-    tmp_s0 = (AnimationFileElement *)((s32)anim_file + sizeof(AnimationFile));
+    tmp_s0 = (AnimationFileElement *)((uintptr_t)anim_file + sizeof(AnimationFile));
     bone_id = 0;
     for(i = 0; i < anim_file->elem_cnt; i++){//L8033AAB8
         if(tmp_s0->unk0_15 != bone_id){
@@ -490,7 +490,7 @@ s32 code_B3A80_func_8033BDAC(enum asset_e id, void *dst, s32 size) {
     s32 var_s0;
     s32 sp34;
     s32 phi_v0;
-    s32 comp_ptr;
+    uintptr_t comp_ptr;
     u8 sp2B;
     s32 sp20;
 
@@ -518,11 +518,11 @@ s32 code_B3A80_func_8033BDAC(enum asset_e id, void *dst, s32 size) {
 
         if (size >= (comp_ptr + var_s0)) {
             sp2B = 1;
-            comp_ptr = (s32)dst + var_s0;
+            comp_ptr = (uintptr_t)dst + var_s0;
         }
         else if(size >= var_s0) {
             sp2B = 2;
-            comp_ptr = (s32)bk_malloc(comp_ptr);
+            comp_ptr = (uintptr_t)bk_malloc(comp_ptr);
         }
         else{
             return 0;
@@ -534,7 +534,7 @@ s32 code_B3A80_func_8033BDAC(enum asset_e id, void *dst, s32 size) {
            var_s0 = (comp_ptr - (comp_ptr & (0x10 -1))) + 0x10;
         
         if(size >= comp_ptr){
-            comp_ptr = (s32)dst;
+            comp_ptr = (uintptr_t)dst;
         }
         else{
             return 0;
@@ -543,7 +543,7 @@ s32 code_B3A80_func_8033BDAC(enum asset_e id, void *dst, s32 size) {
     comp_size = assetSectionRomMetaList[id].offset + D_80383CCC;
     piMgr_read((void *)comp_ptr, comp_size, sp34);
     if (assetSectionRomMetaList[id].compFlag & 1) {
-        rarezip_inflate(comp_ptr, dst);
+        rarezip_inflate((void *)comp_ptr, dst);
         osWritebackDCache(dst, assetCacheCurrentSize);
         if (sp2B == 2) {
             bk_free((void *)comp_ptr);

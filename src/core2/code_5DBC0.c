@@ -117,7 +117,7 @@ BKSpriteTextureBlock **func_802E4D8C(BKSprite *sprite) {
     BKSpriteFrame *frame;
     BKSpriteTextureBlock **chunkPtrArray;
     BKSpriteTextureBlock *chunk;
-    s32 var_v1;
+    uintptr_t var_v1;
     s32 i;
     s32 chunk_size;
 
@@ -127,7 +127,7 @@ BKSpriteTextureBlock **func_802E4D8C(BKSprite *sprite) {
     for (i = 0; i < frame->chunkCnt; i++) {
         chunkPtrArray[i] = chunk;
         chunk_size = (chunk->w * chunk->h);
-        var_v1 = (s32)(chunk + 1);
+        var_v1 = (uintptr_t)(chunk + 1);
         while ((var_v1 % 8)) {var_v1++;}
         chunk = (BKSpriteTextureBlock *)(var_v1 + chunk_size);
     }
@@ -217,7 +217,7 @@ s32 func_802E51A4(char *str, s32 arg1, s32 start, u32 flags) {
 }
 
 void func_802E533C(struct5DBC0_1s *arg0, char arg1, s32 *arg2, s32 *arg3, Gfx **gfx) {
-    s32 timg;
+    uintptr_t timg;
     BKSpriteTextureBlock *chunk;
 
     if (arg1 == ' ') {
@@ -229,7 +229,7 @@ void func_802E533C(struct5DBC0_1s *arg0, char arg1, s32 *arg2, s32 *arg3, Gfx **
         }
     } else{
         chunk = func_802E4D5C(arg0->unkE, arg1);
-        timg = (s32)(chunk + 1);
+        timg = (uintptr_t)(chunk + 1);
         while ((timg % 8)) {
             timg++;
         }

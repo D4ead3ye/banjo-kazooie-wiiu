@@ -223,7 +223,8 @@ void *func_802F2AEC(void) {
 
 
     if (D_80368AB4 == 0) {
-        D_80368AB0 = bk_malloc(0x10);
+        // Lighthouse [port] changed from 0x10 
+        D_80368AB0 = bk_malloc(sizeof(Struct_core2_6B030_0));
         if (D_80368AB0 == NULL) {
             return NULL;
         }
@@ -248,7 +249,8 @@ void *func_802F2AEC(void) {
         };
     }
     D_80368AB4++;
-    temp_v0 = bk_malloc(8);
+    // Lighthouse [port] changed from 8 
+    temp_v0 = bk_malloc(sizeof(Struct64s));
     if (temp_v0 == NULL) {
         return NULL;
     }

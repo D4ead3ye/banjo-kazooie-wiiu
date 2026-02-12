@@ -190,11 +190,20 @@ s32 eeprom_readBlocks(s32 file, s32 offset, void* buffer, s32 count) {
     return 0;
 }
 
-/* BSD memory functions */
-void bzero(void* s, size_t n) {
-    memset(s, 0, n);
+u32 func_8025C29C(u32 *seed) {
+    // Treat as two u32 values (lower and upper half of u64)
+    u32 result = seed[0] ^ seed[1];
+    // Simple transformation to update seed
+    seed[0] = (seed[0] >> 1) ^ seed[1];
+    seed[1] = (seed[1] << 1) ^ seed[0];
+    return result;
 }
 
-void bcopy(const void* src, void* dest, size_t n) {
-    memmove(dest, src, n);
-}
+/* BSD memory functions */
+// void bzero(void* s, size_t n) {
+//     memset(s, 0, n);
+// }
+
+// void bcopy(const void* src, void* dest, size_t n) {
+//     memmove(dest, src, n);
+// }

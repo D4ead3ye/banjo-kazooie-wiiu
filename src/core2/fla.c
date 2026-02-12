@@ -16,7 +16,7 @@
 /* .code */
 void freelist_clear(FLA *this){
     int i;
-    s32 ptr = (s32)(this + 1);
+    uintptr_t ptr = (uintptr_t)(this + 1);
     for(i = 1; i < this->elem_cnt; i++){
         *(s16 *)ptr = i;
         ptr += this->elem_size;
@@ -25,7 +25,7 @@ void freelist_clear(FLA *this){
 }
 
 void *freelist_at(FLA *this, s32 indx){
-    return (void *)((s32)(this + 1) + indx*this->elem_size);
+    return (void *)((uintptr_t)(this + 1) + indx*this->elem_size);
 }
 
 s32 freelist_size(FLA *this){
@@ -54,14 +54,14 @@ void *freelist_next(FLA **this_ptr, s32 *arg1) {
         first_ptr = (s16*)(this + 1);
         this->elem_cnt = new_cnt;
         *this_ptr = this;
-        for(i = new_cnt - 1, next_ptr = (s16*)((s32)(this + 1) + i * this->elem_size); i >= prev_cnt; i--){
+        for(i = new_cnt - 1, next_ptr = (s16*)((uintptr_t)(this + 1) + i * this->elem_size); i >= prev_cnt; i--){
             *next_ptr = *first_ptr;
             *first_ptr = i;
-            next_ptr = (s16*)((s32)next_ptr - this->elem_size);
+            next_ptr = (s16*)((uintptr_t)next_ptr - this->elem_size);
         }
     }
     i = *first_ptr;
-    next_ptr = (s16*)((s32)first_ptr + (i * this->elem_size));
+    next_ptr = (s16*)((uintptr_t)first_ptr + (i * this->elem_size));
     *arg1 = i;
     *first_ptr = *next_ptr;
     return (void *) next_ptr;
@@ -100,7 +100,7 @@ FLA *freelist_new(s32 size, s32 cnt){
 
 //removes first free element
 void freelist_freeElement(FLA *this, s32 indx){
-    void* *ptr_n = (void *)((s32)(this + 1) + indx*this->elem_size);
+    void* *ptr_n = (void *)((uintptr_t)(this + 1) + indx*this->elem_size);
     *(s16 *)ptr_n = *(s16 *)(this +1);
     *(s16 *)(this +1) = indx;
 }
