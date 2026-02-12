@@ -1,5 +1,6 @@
 #include <ultra64.h>
 #include "core1/core1.h"
+#include "functions.h"
 
 /* static */ int huft_build(b, n, s, d, e, t, m)
 unsigned *b;            /* code lengths in bits (all assumed <= BMAX) */

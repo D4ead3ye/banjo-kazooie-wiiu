@@ -36,6 +36,8 @@ extern f32 fabsf(f32);
     position, \
     _SHIFTL(e, 0, 16) + _SHIFTL(f, 16, 16)\
 )
+#define bzero(pointer, size) memset(pointer, 0, size)
+#define bcopy(src, dest, size) memcpy(dest, src, size)
 
 void func_80241304(Mtx *m, float x, float y, float z);
 
