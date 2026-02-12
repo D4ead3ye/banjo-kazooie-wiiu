@@ -4,6 +4,11 @@
 #include "fast/resource/Type/DisplayList.h"
 #include "libultraship/bridge/resourcebridge.h"
 #include "ship/Context.h"
+#include <spdlog/spdlog.h>
+
+extern "C" {
+#include "enums.h"
+}
 
 extern "C" uint16_t ResourceMgr_LoadTexWidthByName(char* texPath);
 
@@ -11,6 +16,34 @@ extern "C" uint16_t ResourceMgr_LoadTexHeightByName(char* texPath);
 
 std::shared_ptr<Ship::IResource> GetResourceByName(const char* path) {
     return Ship::Context::GetInstance()->GetResourceManager()->LoadResource(path);
+}
+
+extern "C" char* ResourceMgr_LoadByAssetId(uint32_t assetId) {
+    if (assetId == 1) {
+        return nullptr;
+    }
+    
+    SPDLOG_INFO("ResourceMgr_LoadByAssetId({})", assetId);
+
+    std::string path = "asset_table/D_";
+    
+    if (
+        (assetId >= ASSET_6D9_SPRITE_PROPELLOR_TIMER && assetId <= ASSET_71B_SPRITE_SPARKLE_ORANGE_2) ||
+        (assetId == ASSET_580_SPRITE_RED_FEATHER)
+    ) {
+        path += "SPRITE_";
+    } else if (assetId <= ASSET_2AB_ANIM_TEEHEE_DIE) {
+        path += "ANIM_";
+    } else {
+        path += "MODEL_";
+    }
+
+    path += std::to_string(assetId);
+
+    auto res = ResourceGetDataByName(path.c_str());
+    SPDLOG_INFO("ResourceMgr_LoadByAssetId returning {}", static_cast<void*>(res));
+
+    return (char*)res;
 }
 
 extern "C" char* ResourceMgr_LoadTexOrDListByName(const char* filePath) {

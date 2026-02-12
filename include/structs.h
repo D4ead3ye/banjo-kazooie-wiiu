@@ -69,7 +69,8 @@ typedef struct bk_sprite_s{
         u32 bit22 : 2;
         u32 pad_bit20 : 21;
     }unkC;
-    s32 offsets[];
+    // Lighthouse [port] changed to pointers, may revert, unsure - Proxy
+    struct bk_sprite_frame_s* frames[];
 } BKSprite;
 
 typedef struct{

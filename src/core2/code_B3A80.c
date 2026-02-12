@@ -4,6 +4,7 @@
 
 #include "assets.h"
 #include "animation.h"
+#include "port/ResourceHelpers.h"
 
 extern f32 glspline_catmull_rom_interpolate(f32, s32, f32 *);
 extern BKSpriteDisplayData * func_80344A1C(BKSprite *arg0);
@@ -350,6 +351,9 @@ void func_8033B788(void ){
 }
 
 void *assetcache_get(enum asset_e assetId) {
+    // Lighthouse [port] Using Resource Manager for asset loading
+    return ResourceMgr_LoadByAssetId(assetId);
+#if 0
     s32 comp_size;//sp_44
     s32 i;
     volatile s32 sp3C; //sp3C
@@ -416,6 +420,7 @@ void *assetcache_get(enum asset_e assetId) {
     assetCacheAssetIdList[assetCacheLength] = assetId;
     assetCacheLength++;
     return uncompressed_file;
+#endif
 }
 
 void func_8033BAB0(enum asset_e asset_id, s32 offset, s32 size, void *dst_ptr) {

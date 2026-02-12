@@ -12,6 +12,8 @@
 #include <fast/resource/factory/TextureFactory.h>
 #include <fast/resource/factory/MatrixFactory.h>
 #include <fast/resource/factory/VertexFactory.h>
+#include "resource/importers/SpriteFactory.h"
+#include "resource/importers/ModelFactory.h"
 #include "audio/GameAudio.h"
 #include "ui/LighthouseGui.hpp"
 // #include "port/patches/DisplayListPatch.h"
@@ -120,6 +122,10 @@ GameEngine::GameEngine() {
 #endif
 
     auto loader = context->GetResourceManager()->GetResourceLoader();
+    loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinarySpriteV0>(),
+                                    RESOURCE_FORMAT_BINARY, "Sprite", static_cast<uint32_t>(Torch::ResourceType::BKSprite), 0);
+    loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinaryModelV0>(),
+                                    RESOURCE_FORMAT_BINARY, "Model", static_cast<uint32_t>(Torch::ResourceType::BKModel), 0);
     // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAnimV0>(), RESOURCE_FORMAT_BINARY,
     //                                 "Animation", static_cast<uint32_t>(SF64::ResourceType::AnimData), 0);
     // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinarySkeletonV0>(),
@@ -154,25 +160,25 @@ GameEngine::GameEngine() {
     // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryGenericArrayV0>(),
     //                                 RESOURCE_FORMAT_BINARY, "GenericArray",
     //                                 static_cast<uint32_t>(SF64::ResourceType::GenericArray), 0);
-    // loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryTextureV0>(), RESOURCE_FORMAT_BINARY,
-    //                                 "Texture", static_cast<uint32_t>(Fast::ResourceType::Texture), 0);
-    // loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryTextureV1>(), RESOURCE_FORMAT_BINARY,
-    //                                 "Texture", static_cast<uint32_t>(Fast::ResourceType::Texture), 1);
+    loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryTextureV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Texture", static_cast<uint32_t>(Fast::ResourceType::Texture), 0);
+    loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryTextureV1>(), RESOURCE_FORMAT_BINARY,
+                                    "Texture", static_cast<uint32_t>(Fast::ResourceType::Texture), 1);
 
-    // loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryVertexV0>(), RESOURCE_FORMAT_BINARY,
-    //                                 "Vertex", static_cast<uint32_t>(Fast::ResourceType::Vertex), 0);
-    // loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryXMLVertexV0>(), RESOURCE_FORMAT_XML,
-    // "Vertex",
-    //                                 static_cast<uint32_t>(Fast::ResourceType::Vertex), 0);
+    loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryVertexV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Vertex", static_cast<uint32_t>(Fast::ResourceType::Vertex), 0);
+    loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryXMLVertexV0>(), RESOURCE_FORMAT_XML,
+    "Vertex",
+                                    static_cast<uint32_t>(Fast::ResourceType::Vertex), 0);
 
-    // loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryDisplayListV0>(),
-    //                                 RESOURCE_FORMAT_BINARY, "DisplayList",
-    //                                 static_cast<uint32_t>(Fast::ResourceType::DisplayList), 0);
-    // loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryXMLDisplayListV0>(), RESOURCE_FORMAT_XML,
-    //                                 "DisplayList", static_cast<uint32_t>(Fast::ResourceType::DisplayList), 0);
+    loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryDisplayListV0>(),
+                                    RESOURCE_FORMAT_BINARY, "DisplayList",
+                                    static_cast<uint32_t>(Fast::ResourceType::DisplayList), 0);
+    loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryXMLDisplayListV0>(), RESOURCE_FORMAT_XML,
+                                    "DisplayList", static_cast<uint32_t>(Fast::ResourceType::DisplayList), 0);
 
-    // loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryMatrixV0>(), RESOURCE_FORMAT_BINARY,
-    //                                 "Matrix", static_cast<uint32_t>(Fast::ResourceType::Matrix), 0);
+    loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryMatrixV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Matrix", static_cast<uint32_t>(Fast::ResourceType::Matrix), 0);
 
     // loader->RegisterResourceFactory(std::make_shared<Ship::ResourceFactoryBinaryBlobV0>(), RESOURCE_FORMAT_BINARY,
     //                                 "Blob", static_cast<uint32_t>(Ship::ResourceType::Blob), 0);
