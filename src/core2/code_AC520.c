@@ -1,7 +1,8 @@
-#include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include <ultra64.h>
 
+#include <bk_math.h>
 #include <core2/file.h>
 #include <core2/lighting.h>
 
@@ -14,11 +15,11 @@ void lighting_init();
 
 /* .bss */
 struct {
-    vector(Lighting) *vector_ptr;
+    bk_vector(Lighting) *bk_vector_ptr;
     Lighting *unk4[NUM_LIGHTING_ELEM];
     Lighting **unk44;
     Lighting **unk48; // copy of unk44
-} sLightingVectorList;
+} sLightingbk_vectorList;
 
 //.code
 static void __lighting_init(f32 position[3], f32 rotation[3], f32 scale, f32 arg3[3], f32 global_norm) {
@@ -26,19 +27,19 @@ static void __lighting_init(f32 position[3], f32 rotation[3], f32 scale, f32 arg
     Lighting * end_ptr;
     Lighting * iPtr;
 
-    start_ptr = (Lighting *)vector_getBegin(sLightingVectorList.vector_ptr);
-    end_ptr = (Lighting *)vector_getEnd(sLightingVectorList.vector_ptr);
+    start_ptr = (Lighting *)bk_vector_getBegin(sLightingbk_vectorList.bk_vector_ptr);
+    end_ptr = (Lighting *)bk_vector_getEnd(sLightingbk_vectorList.bk_vector_ptr);
     mlMtxIdent();
     func_80252CC4(position, rotation, scale, arg3);
-    sLightingVectorList.unk44 = sLightingVectorList.unk4;
+    sLightingbk_vectorList.unk44 = sLightingbk_vectorList.unk4;
     iPtr = start_ptr;
-    for(; iPtr < end_ptr && sLightingVectorList.unk44 < sLightingVectorList.unk48; iPtr++) {
+    for(; iPtr < end_ptr && sLightingbk_vectorList.unk44 < sLightingbk_vectorList.unk48; iPtr++) {
         if(iPtr->unk34 && ml_vec3f_distance(position, iPtr->position) < iPtr->unk1C + global_norm) {
             mlMtx_apply_vec3f(iPtr->positionCopy, iPtr->position);
             iPtr->unk20 = iPtr->unk18/scale;
             iPtr->unk24 = iPtr->unk1C/scale;
-            *sLightingVectorList.unk44 = iPtr;
-            sLightingVectorList.unk44++;
+            *sLightingbk_vectorList.unk44 = iPtr;
+            sLightingbk_vectorList.unk44++;
         }
     }
 }
@@ -50,8 +51,8 @@ void __lighting_freeAndInit() {
 }
 
 s32 __codeAC520_pad_func_8033361C() {
-    Lighting *startPtr = vector_getBegin(sLightingVectorList.vector_ptr);
-    Lighting *endPtr = vector_getEnd(sLightingVectorList.vector_ptr);
+    Lighting *startPtr = bk_vector_getBegin(sLightingbk_vectorList.bk_vector_ptr);
+    Lighting *endPtr = bk_vector_getEnd(sLightingbk_vectorList.bk_vector_ptr);
     Lighting *iPtr;
 
     for(iPtr = startPtr; iPtr < endPtr; iPtr++) {
@@ -64,9 +65,9 @@ s32 __codeAC520_pad_func_8033361C() {
 }
 
 s32 __codeAC520_pad_func_80333698(s32 index) {
-    Lighting *startPtr = vector_getBegin(sLightingVectorList.vector_ptr);
-    Lighting *iPtr = vector_at(sLightingVectorList.vector_ptr, index - 1);
-    Lighting *endPtr = vector_getEnd(sLightingVectorList.vector_ptr);
+    Lighting *startPtr = bk_vector_getBegin(sLightingbk_vectorList.bk_vector_ptr);
+    Lighting *iPtr = bk_vector_at(sLightingbk_vectorList.bk_vector_ptr, index - 1);
+    Lighting *endPtr = bk_vector_getEnd(sLightingbk_vectorList.bk_vector_ptr);
     
     for(++iPtr; iPtr < endPtr; iPtr++) {
         if(iPtr->unk34) {
@@ -78,28 +79,28 @@ s32 __codeAC520_pad_func_80333698(s32 index) {
 }
 
 void __codeAC520_pad_func_80333734(s32 index, f32 *arg1) {
-    Lighting *v0 = vector_at(sLightingVectorList.vector_ptr, index-1);
+    Lighting *v0 = bk_vector_at(sLightingbk_vectorList.bk_vector_ptr, index-1);
     TUPLE_COPY(arg1, v0->position)
 }
 
 void __codeAC520_pad_func_80333784(s32 index, f32 *arg1) {
-    Lighting *v0 = vector_at(sLightingVectorList.vector_ptr, index-1);
+    Lighting *v0 = bk_vector_at(sLightingbk_vectorList.bk_vector_ptr, index-1);
     arg1[0] = v0->unk18;
     arg1[1] = v0->unk1C;
 }
 
 void __codeAC520_pad_func_803337C8(s32 index, s32 *arg1) {
-    Lighting *v0 = vector_at(sLightingVectorList.vector_ptr, index-1);
+    Lighting *v0 = bk_vector_at(sLightingbk_vectorList.bk_vector_ptr, index-1);
     TUPLE_COPY(arg1, v0->rgb)
 }
 
 s32 __codeAC520_pad_func_80333818() {
-    return vector_size(sLightingVectorList.vector_ptr);
+    return bk_vector_size(sLightingbk_vectorList.bk_vector_ptr);
 }
 
 static s32 __lighting_create() {
-    Lighting *beginPtr = vector_getBegin(sLightingVectorList.vector_ptr);
-    Lighting *endPtr = vector_getEnd(sLightingVectorList.vector_ptr);
+    Lighting *beginPtr = bk_vector_getBegin(sLightingbk_vectorList.bk_vector_ptr);
+    Lighting *endPtr = bk_vector_getEnd(sLightingbk_vectorList.bk_vector_ptr);
     Lighting *iPtr;
 
     for(iPtr = beginPtr; iPtr < endPtr; iPtr++) {
@@ -107,7 +108,7 @@ static s32 __lighting_create() {
             break;
     }
     if(iPtr == endPtr)
-        iPtr = vector_pushBackNew(&sLightingVectorList.vector_ptr);
+        iPtr = bk_vector_pushBackNew(&sLightingbk_vectorList.bk_vector_ptr);
 
     iPtr->unk34 = 1;
     iPtr->rgb[0] = 0xff;
@@ -118,27 +119,27 @@ static s32 __lighting_create() {
     iPtr->position[0] = 0.0f;
     iPtr->unk18 = 150.0f;
     iPtr->unk1C = 300.0f;
-    return (iPtr - (Lighting *)vector_getBegin(sLightingVectorList.vector_ptr)) + 1;
+    return (iPtr - (Lighting *)bk_vector_getBegin(sLightingbk_vectorList.bk_vector_ptr)) + 1;
 }
 
 
 void lighting_free() {
-    vector_free(sLightingVectorList.vector_ptr);
+    bk_vector_free(sLightingbk_vectorList.bk_vector_ptr);
 }
 
 void lighting_init() {
-    sLightingVectorList.vector_ptr = vector_new(sizeof(Lighting), 0x10);
-    sLightingVectorList.unk48 = &sLightingVectorList.unk4[NUM_LIGHTING_ELEM];
+    sLightingbk_vectorList.bk_vector_ptr = bk_vector_new(sizeof(Lighting), 0x10);
+    sLightingbk_vectorList.unk48 = &sLightingbk_vectorList.unk4[NUM_LIGHTING_ELEM];
 }
 
 void func_80333974(s32 index) {
-    Lighting *v0 = vector_at(sLightingVectorList.vector_ptr, index-1);
+    Lighting *v0 = bk_vector_at(sLightingbk_vectorList.bk_vector_ptr, index-1);
     v0->unk34 = 0;
 }
 
 s32 __codeAC520_pad_func_803339A4(f32 arg0[3]) {
-    Lighting *beginPtr = vector_getBegin(sLightingVectorList.vector_ptr);
-    Lighting *endPtr = vector_getEnd(sLightingVectorList.vector_ptr);
+    Lighting *beginPtr = bk_vector_getBegin(sLightingbk_vectorList.bk_vector_ptr);
+    Lighting *endPtr = bk_vector_getEnd(sLightingbk_vectorList.bk_vector_ptr);
     Lighting *iPtr;
     Lighting *tmp_s0 = NULL;
     
@@ -154,22 +155,22 @@ s32 __codeAC520_pad_func_803339A4(f32 arg0[3]) {
 }
 
 static void __lighting_setPosition(s32 index , f32 *position) {
-    Lighting *v0 = vector_at(sLightingVectorList.vector_ptr, index-1);
+    Lighting *v0 = bk_vector_at(sLightingbk_vectorList.bk_vector_ptr, index-1);
     TUPLE_COPY(v0->position, position)
 }
 
 static void __lighting_setUnk18AndUnk1C(s32 index , f32 *unk18_and_unk1c) {
-    Lighting *v0 = vector_at(sLightingVectorList.vector_ptr, index-1);
+    Lighting *v0 = bk_vector_at(sLightingbk_vectorList.bk_vector_ptr, index-1);
     v0->unk18 = unk18_and_unk1c[0];
     v0->unk1C = unk18_and_unk1c[1];
 }
 
 static void __lighting_setRgb(s32 index , s32 *rgb) {
-    Lighting *v0 = vector_at(sLightingVectorList.vector_ptr, index-1);
+    Lighting *v0 = bk_vector_at(sLightingbk_vectorList.bk_vector_ptr, index-1);
     TUPLE_COPY(v0->rgb, rgb);
 }
 
-void lightingVectorList_fromFile(File *file_ptr) {
+void lightingbk_vectorList_fromFile(File *file_ptr) {
     f32 position[3];
     f32 unk18_and_unk1c[2];
     s32 rgb[3];
@@ -190,8 +191,8 @@ void lightingVectorList_fromFile(File *file_ptr) {
 }
 
 s32 __codeAC520_pad_func_80333C78(File *arg0) {
-    Lighting *beginPtr = vector_getBegin(sLightingVectorList.vector_ptr);
-    Lighting *endPtr = vector_getEnd(sLightingVectorList.vector_ptr);
+    Lighting *beginPtr = bk_vector_getBegin(sLightingbk_vectorList.bk_vector_ptr);
+    Lighting *endPtr = bk_vector_getEnd(sLightingbk_vectorList.bk_vector_ptr);
     Lighting *iPtr;
 
     for(iPtr = beginPtr; iPtr < endPtr; iPtr++) {
@@ -218,7 +219,7 @@ void codeAC520_func_80333D48(BKVertexList *vertex_list, f32 position[3], f32 rot
     f32 distance_between_vtx_and_lighting_node;
 
     __lighting_init(position, rotation, scale, arg4, vtxList_getGlobalNorm(vertex_list));
-    if (sLightingVectorList.unk44 == (&sLightingVectorList.unk4[0])) {
+    if (sLightingbk_vectorList.unk44 == (&sLightingbk_vectorList.unk4[0])) {
         vtxList_recolor(vertex_list, &sBlackRgb);
         return;
     }
@@ -229,7 +230,7 @@ void codeAC520_func_80333D48(BKVertexList *vertex_list, f32 position[3], f32 rot
         rgb_modifier[0] = rgb_modifier[1] = rgb_modifier[2] = 0.0f;
         TUPLE_COPY(vtx_position, ref_ptr->v.ob);
 
-        for(struct_ptr_ptr = &sLightingVectorList.unk4[0]; struct_ptr_ptr < sLightingVectorList.unk44;struct_ptr_ptr++) {
+        for(struct_ptr_ptr = &sLightingbk_vectorList.unk4[0]; struct_ptr_ptr < sLightingbk_vectorList.unk44;struct_ptr_ptr++) {
             struct_ptr = *struct_ptr_ptr;
             distance_between_vtx_and_lighting_node = ml_vec3f_distance(struct_ptr->positionCopy, vtx_position);
             if (!(struct_ptr->unk24 <= distance_between_vtx_and_lighting_node)) {

@@ -1,6 +1,14 @@
-#include "time.h"
+#include "bk_time.h"
 
 #include "core1/vimgr.h"
+
+#ifndef MIN
+#   define MIN(a,b) (((a)<(b))?(a):(b))
+#endif
+
+#ifndef MAX
+#   define MAX(a,b) (((a)>(b))?(a):(b))
+#endif
 
 /*.data*/
 static f32 s_timeMultiplier = 1.0f;

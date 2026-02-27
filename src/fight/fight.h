@@ -1,6 +1,6 @@
 #ifndef _FIGHT_INTERNAL_H_
 #define _FIGHT_INTERNAL_H_
-
+#include "prop.h"
 enum ch_bossjinjo_e {
     BOSSJINJO_0_UNKNOWN,
     BOSSJINJO_1_ORANGE,

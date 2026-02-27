@@ -2,10 +2,10 @@
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
-
 #include "core2/modelRender.h"
-
 #include "animation.h"
+
+#include "libultraship/libultra/gbi.h"
 
 #define ARRAYLEN(x) (sizeof(x) / sizeof((x)[0]))
 

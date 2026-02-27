@@ -1,6 +1,8 @@
-#include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include <ultra64.h>
+
+#include <bk_math.h>
 
 #define ABS(s) (((s) >= 0) ? (s) : -(s))
 
@@ -127,11 +129,11 @@ void func_80340200(Struct83s *self, f32 position[3], f32 arg2[3], f32 arg3, f32 
 }
 
 void func_80340690(Struct83s *self){
-    free(self);
+    bk_free(self);
 }
 
 Struct83s * func_803406B0(void){
-    Struct83s *self = malloc(sizeof(Struct83s));
+    Struct83s *self = bk_malloc(sizeof(Struct83s));
     self->unk1A = 0;
     return self;
 }

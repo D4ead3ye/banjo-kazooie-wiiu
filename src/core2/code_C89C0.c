@@ -121,7 +121,7 @@ void func_8034FDA0(s32 arg0) {
     if (D_80386150.unkC == D_80386150.unk10) {
         sp34 = ((s32)D_80386150.unkC - (s32)D_80386150.unk8)/0x30;
         sp24 = sp34 * 2;
-        D_80386150.unk8 = (Struct_core2_C89C0_1*) realloc(D_80386150.unk8, sp24 * sizeof(Struct_core2_C89C0_0)); //this size is wrong type(?)
+        D_80386150.unk8 = (Struct_core2_C89C0_1*) bk_realloc(D_80386150.unk8, sp24 * sizeof(Struct_core2_C89C0_0)); //this size is wrong type(?)
         D_80386150.unkC = D_80386150.unk8 + sp34;
         D_80386150.unk10 = D_80386150.unk8 + sp24;
     }
@@ -145,7 +145,7 @@ void func_8034FEE0(Struct_core2_C89C0_1 *arg0) {
     if (D_80386150.unk18 == D_80386150.unk1C) {
         sp2C = D_80386150.unk18 - D_80386150.unk14;
         sp20 = sp2C * 2;
-        D_80386150.unk14 = (Struct_core2_C89C0_0 *) realloc(D_80386150.unk14, sp20 * sizeof(Struct_core2_C89C0_0));
+        D_80386150.unk14 = (Struct_core2_C89C0_0 *) bk_realloc(D_80386150.unk14, sp20 * sizeof(Struct_core2_C89C0_0));
         D_80386150.unk18 = D_80386150.unk14 + sp2C;
         D_80386150.unk1C = D_80386150.unk14 + sp20;
     }
@@ -178,8 +178,8 @@ void func_803500E8(void) {
         }
         assetcache_release(D_80386150.unk0);
         assetcache_release(D_80386150.unk4);
-        free(D_80386150.unk8);
-        free(D_80386150.unk14);
+        bk_free(D_80386150.unk8);
+        bk_free(D_80386150.unk14);
     }
 }
 
@@ -199,10 +199,10 @@ void func_80350174(void) {
 
     D_80386150.unk0 = assetcache_get(0x87C); //ASSET_87C_2D_FISH
     D_80386150.unk4 = assetcache_get(0x7BC); //ASSET_7BC_GREEN_BALL
-    D_80386150.unk8 = malloc(0x60);
+    D_80386150.unk8 = bk_malloc(0x60);
     D_80386150.unkC = D_80386150.unk8;
     D_80386150.unk10 = (s32)D_80386150.unk8 + 0x60;
-    D_80386150.unk14 = malloc(2*sizeof(Struct_core2_C89C0_0));
+    D_80386150.unk14 = bk_malloc(2*sizeof(Struct_core2_C89C0_0));
     D_80386150.unk18 = D_80386150.unk14;
     D_80386150.unk1C = (s32)D_80386150.unk14 + 2*sizeof(Struct_core2_C89C0_0);
     for(i = 0x31; i < 0x36; i++){

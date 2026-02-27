@@ -50,7 +50,7 @@ void *freelist_next(FLA **this_ptr, s32 *arg1) {
     if (*first_ptr == 0) {
         prev_cnt = this->elem_cnt;
         new_cnt = prev_cnt + 10;
-        this = realloc(this, (this->elem_size * new_cnt) + sizeof(FLA));
+        this = bk_realloc(this, (this->elem_size * new_cnt) + sizeof(FLA));
         first_ptr = (s16*)(this + 1);
         this->elem_cnt = new_cnt;
         *this_ptr = this;
@@ -85,13 +85,13 @@ bool freelist_elementIsAlive(FLA *this, s32 index)
   return true;
 }
 void freelist_free(FLA *this){
-    free(this);
+    bk_free(this);
 }
 
 FLA *freelist_new(s32 size, s32 cnt){
     FLA *this;
     cnt++;
-    this = (FLA *) malloc(size*cnt + sizeof(FLA));
+    this = (FLA *) bk_malloc(size*cnt + sizeof(FLA));
     this->elem_size = size;
     this->elem_cnt = cnt;
     freelist_clear(this);

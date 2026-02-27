@@ -22,7 +22,7 @@ typedef struct {
     void (*init)(Struct81s *);
     void (*update)(Struct81s *);
     void (*draw)(Struct81s *, Gfx**, Mtx **, Vtx **);
-    void (*free)(Struct81s *);
+    void (*bk_free)(Struct81s *);
     Struct81s unk10;
 }Struct_core2_ABC00_0;
 
@@ -276,10 +276,10 @@ void jiggy_free(Actor *arg0)
 {
   s32 indx = chjiggy_getJiggyId(arg0) - 1;
   Struct81s *sp18 = &jiggylist_list[indx].unk10;
-  if (jiggylist_list[indx].free)
+  if (jiggylist_list[indx].bk_free)
   {
   }
-  jiggylist_list[indx].free(sp18);
+  jiggylist_list[indx].bk_free(sp18);
   sp18->marker = 0;
 }
 
@@ -290,7 +290,7 @@ void func_80333334(enum jiggy_e jiggy_id) {
     temp_v0->init = func_80347B54;
     temp_v0->update = func_80347B80;
     temp_v0->draw = func_80347C5C;
-    temp_v0->free = func_80347C70;
+    temp_v0->bk_free = func_80347C70;
 }
 
 void func_80333388(enum jiggy_e jiggy_id) {
@@ -300,7 +300,7 @@ void func_80333388(enum jiggy_e jiggy_id) {
     temp_v0->init = func_80347CC8;
     temp_v0->update = func_80347CF4;
     temp_v0->draw = func_80347DD0;
-    temp_v0->free = func_80347DE4;
+    temp_v0->bk_free = func_80347DE4;
 
 }
 

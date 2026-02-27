@@ -1,6 +1,8 @@
-#include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include <ultra64.h>
+
+#include <bk_math.h>
 
 #define CORE2_C31A0_VEC_COUNT 0x21
 
@@ -26,11 +28,11 @@ void func_8034A214(struct5Bs *this, s32 indx1, s32 indx2, f32 dst[3]) {
 }
 
 void func_8034A2A8(struct5Bs *this) {
-    free(this);
+    bk_free(this);
 }
 
 struct5Bs *func_8034A2C8(void) {
-    struct5Bs *this = (struct5Bs *) malloc(sizeof(struct5Bs) + sizeof(f32[3]) * CORE2_C31A0_VEC_COUNT);
+    struct5Bs *this = (struct5Bs *) bk_malloc(sizeof(struct5Bs) + sizeof(f32[3]) * CORE2_C31A0_VEC_COUNT);
     this->unk0 = (f32(*)[3])((s32) this + sizeof(struct5Bs));
     this->unk4 = (f32(*)[3])((s32) this->unk0 + sizeof(f32[3]) * CORE2_C31A0_VEC_COUNT);
     func_8034A130(this);

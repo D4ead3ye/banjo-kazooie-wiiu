@@ -11,7 +11,7 @@ void core1_7090_alloc(void) {
     if (D_802758E0)
         return;
 
-    D_802758E0 = (s16 *) malloc(10 * sizeof(s16));
+    D_802758E0 = (s16 *) bk_malloc(10 * sizeof(s16));
 
     for (i = 0; i < 10; i++) {
         D_802758E0[i] = 0;
@@ -29,7 +29,7 @@ void core1_7090_release(void) {
             func_8030E394(D_802758E0[i]);
     }
 
-    free(D_802758E0);
+    bk_free(D_802758E0);
     D_802758E0 = NULL;
 }
 

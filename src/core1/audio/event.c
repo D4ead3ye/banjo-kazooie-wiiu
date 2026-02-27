@@ -1,6 +1,9 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include "2.0L/PR/libaudio.h"
+#include "libultraship/libultra/interrupt.h"
+#include "libultraship/libultra/exception.h"
 
 void alEvtqNew(ALEventQueue *evtq, ALEventListItem *items, s32 itemCount)
 {

@@ -14,7 +14,7 @@ void __osDevMgrMain(void *args)
   mb = NULL;
   ret = 0;
   dm = (OSDevMgr *)args;
-  while (TRUE)
+  while (true)
   {
     osRecvMesg(dm->cmdQueue, (OSMesg)&mb, OS_MESG_BLOCK);
     if (mb->piHandle != NULL &&
@@ -38,7 +38,7 @@ void __osDevMgrMain(void *args)
       osRecvMesg(dm->acsQueue, &dummy, OS_MESG_BLOCK);
       __osResetGlobalIntMask(OS_IM_PI);
       osEPiRawWriteIo(mb->piHandle, LEO_BM_CTL, (info->bmCtlShadow | 0x80000000));
-      while (TRUE)
+      while (true)
       {
 
         osRecvMesg(dm->evtQueue, &em, OS_MESG_BLOCK);

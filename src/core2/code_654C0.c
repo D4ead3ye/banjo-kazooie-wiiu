@@ -1,7 +1,9 @@
-#include <ultra64.h>
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
+#include <ultra64.h>
+
+#include <bk_math.h>
 
 extern f32 func_8034A9D0(f32[4], f32);
 
@@ -154,7 +156,7 @@ f32 vtxList_getLocalNorm(BKVertexList *this){
 }
 
 void vtxList_free(BKVertexList *vtxList){
-    free(vtxList);
+    bk_free(vtxList);
 }
 
 BKVertexList *vtxList_clone(BKVertexList *vtxList){
@@ -162,7 +164,7 @@ BKVertexList *vtxList_clone(BKVertexList *vtxList){
     size_t list_size;
     
     list_size = sizeof(BKVertexList) + vtxList->count*sizeof(Vtx);
-    out_v0 = (BKVertexList *) malloc(list_size);
+    out_v0 = (BKVertexList *) bk_malloc(list_size);
     wmemcpy(out_v0, vtxList, list_size);
     return out_v0;
 }
@@ -225,7 +227,7 @@ void func_802ECBD4(BKVertexList *dst, BKVertexList *src, f32 position[3], f32 ro
     s32 pad40;
 
     viewport_getPosition_vec3f(vp_position);
-    viewport_getLookVector(vp_look);
+    viewport_getLookbk_vector(vp_look);
     mlMtxIdent();
     func_80252CC4(position, rotation, 1.0f, NULL);
     mlMtx_apply_vec3f(vp_position, vp_position);

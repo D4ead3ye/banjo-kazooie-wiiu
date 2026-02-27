@@ -1,7 +1,8 @@
 #include <ultra64.h>
 #include "synthInternals.h"
 #include "n_synth.h"
-
+#include "libultraship/libultra/interrupt.h"
+#include "libultraship/libultra/exception.h"
 
 void n_alSynAddPlayer( ALPlayer *client)
 {

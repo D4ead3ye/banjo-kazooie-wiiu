@@ -19,6 +19,7 @@ extern BKCollisionTri *func_80320C94(f32[3], f32[3], f32, f32[3], s32, u32);
 void func_80294378(s32 arg0);
 void func_80294384(s32 arg0);
 void func_80294390(void);
+bool func_802946FC(f32 arg0[3][3], s32 arg1);
 
 typedef struct {
     f32 unk0[3];

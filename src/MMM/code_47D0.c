@@ -1,7 +1,9 @@
-#include <ultra64.h>
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
+#include <ultra64.h>
+
+#include <bk_math.h>
 
 /* extern functions */
 extern void sfxsource_setSampleRate(u8, s32);
@@ -30,9 +32,12 @@ void MMM_func_8038ABC0(s32 arg0) {
 }
 
 void func_8038AC04(void) {
+    // Lighthouse TODO is this an anti-piracy check?
+#if 0
     if ((*(u32 *) PHYS_TO_K1(0x1D0)) - 0x356BAAAE) {
         MMM_func_8038ABC0(0x820);
     }
+#endif
 }
 
 void chTumblar_draw(Struct_MMM_47D0_0 *arg0, struct struct_68_s *arg1, f32 position[3], f32 rotation[3], f32 scale, BKModelBin *model_bin, Gfx **gfx, Mtx **mtx, Vtx **vtx) {

@@ -11,7 +11,7 @@ typedef struct{
 
 typedef struct ch_bgs_2270_s{
     u32 unk0;
-    vector(Struct_BGS_2270_0s) *unk4;
+    bk_vector(Struct_BGS_2270_0s) *unk4;
     u8  unk8;
     u8  unk9;
     u8  unkA;
@@ -50,7 +50,7 @@ void chTiptup_activatePattern(ActorMarker *this, s32 arg1){
     actLocalPtr = (ActorLocal_Tiptup *)&thisActor->local;
     actLocalPtr->unkB = arg1;
     if(arg1){
-        tmpPtr = vector_pushBackNew(&actLocalPtr->unk4);
+        tmpPtr = bk_vector_pushBackNew(&actLocalPtr->unk4);
         tmpPtr->unk0 = arg1;
     }
 }
@@ -106,7 +106,7 @@ void chTiptup_correctHit(ActorMarker *this){
 
     thisActor = marker_getActor(this);
     unqPtr = (ActorLocal_Tiptup *)&thisActor->local;
-    sp1C = vector_size(unqPtr->unk4);
+    sp1C = bk_vector_size(unqPtr->unk4);
     chTiptup_sfxCorrectHit();
     if(sp1C != ++unqPtr->unk0)
         return;
@@ -159,7 +159,7 @@ void chTiptup_setState(Actor *this, s32 arg1){
     }
     if(this->state == 3){
         unqPtr->unk0 = 0;
-        vector_clear(unqPtr->unk4);
+        bk_vector_clear(unqPtr->unk4);
         func_80324E38(0.0f, 3);
         timed_setStaticCameraToNode(0.5f, 0);
         tmpf = 0.5f;
@@ -193,15 +193,15 @@ void chTiptup_setState(Actor *this, s32 arg1){
         func_80324E38(0.0f, 3);
         timed_setStaticCameraToNode(0.5f, 0);
         tmpf = 0.5f;
-        for(j = 0; j < vector_size(unqPtr->unk4); j++){
-            s1 = (Struct_BGS_2270_0s *)vector_at(unqPtr->unk4,j);
+        for(j = 0; j < bk_vector_size(unqPtr->unk4); j++){
+            s1 = (Struct_BGS_2270_0s *)bk_vector_at(unqPtr->unk4,j);
             tmpf += randf2(1.0f, 1.5f);
             timedFunc_set_2(tmpf, (GenFunction_2)chTiptup_activatePattern, reinterpret_cast(s32, this->marker), s1->unk0);
             timedFunc_set_2(tmpf + 0.1, (GenFunction_2)chTiptup_activatePattern, reinterpret_cast(s32, this->marker), 0);
         }
         timed_exitStaticCamera(tmpf += 2.5);
         func_80324E38(tmpf + 0.6,0);
-        vector_clear(unqPtr->unk4);
+        bk_vector_clear(unqPtr->unk4);
         this->state = 0x05;
     }//L80388D8C
     if(this->state == 6){
@@ -234,11 +234,11 @@ void chTiptup_choirHitReaction(ActorMarker *this, s32 arg1){
 
     thisActor = marker_getActor(this);
     unqPtr = (ActorLocal_Tiptup *)&thisActor->local;
-    if((s32)unqPtr->unk0 >= (s32) vector_size(unqPtr->unk4)){
+    if((s32)unqPtr->unk0 >= (s32) bk_vector_size(unqPtr->unk4)){
         if(!mapSpecificFlags_get(0) && gcdialog_showText(ASSET_C76_DIALOG_UNKNOWN, 0, 0, 0, 0, 0))
             mapSpecificFlags_set(0,1);
     }else{
-        tmp = (Struct_BGS_2270_0s *)vector_at(unqPtr->unk4, unqPtr->unk0);
+        tmp = (Struct_BGS_2270_0s *)bk_vector_at(unqPtr->unk4, unqPtr->unk0);
         if(arg1 == tmp->unk0){
             timedFunc_set_1(0.5f, (GenFunction_1)chTiptup_correctHit, reinterpret_cast(s32, thisActor->marker));
         }
@@ -256,7 +256,7 @@ void func_80388FC0(Actor *this){
 
     local = (ActorLocal_Tiptup *)&this->local;
     fileProgressFlag_setN(FILEPROG_0_TIPTUP_MINIGAME_PROGRESS, local->unkA, 2);
-    vector_free(local->unk4);
+    bk_vector_free(local->unk4);
 }
 
 void func_80388FFC(ActorMarker *this, s32 *arg1, f32* arg2){
@@ -288,7 +288,7 @@ void chTiptup_update(Actor *this){
         marker_setCollisionScripts(this->marker, func_80388E44, NULL, NULL);
         
         unqPtr->unk0 = 0;
-        unqPtr->unk4 = vector_new(sizeof(Struct_BGS_2270_0s), 8);
+        unqPtr->unk4 = bk_vector_new(sizeof(Struct_BGS_2270_0s), 8);
         unqPtr->unk8 = 0;
         unqPtr->unk9 = 0;
         unqPtr->unkA = fileProgressFlag_getN(FILEPROG_0_TIPTUP_MINIGAME_PROGRESS, 2);

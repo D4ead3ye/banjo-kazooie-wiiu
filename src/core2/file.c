@@ -12,13 +12,13 @@ void file_close(File *file) {
         assetcache_release(file->asset_base_ptr);
     }
     
-    free(file);
+    bk_free(file);
 }
 
 File *file_open(enum asset_e asset_id) {
     File * this;
 
-    this = (File *) malloc(sizeof(File));
+    this = (File *) bk_malloc(sizeof(File));
 
     if (this == NULL) {
         return NULL;
@@ -34,7 +34,7 @@ File *file_open(enum asset_e asset_id) {
         return this;
     }
 
-    free(this);
+    bk_free(this);
     return NULL;
 }
 
@@ -50,7 +50,7 @@ File *file_openWithBaseIndex(s32 indx, enum asset_e base_indx) {
 File *file_openFromMem(void *ptr, s32 size) {
     File * this;
 
-    this = (File *) malloc(sizeof(File));
+    this = (File *) bk_malloc(sizeof(File));
     this->mode = FILE_MODE_3_FROM_MEMORY;
     this->last_expected = -1;
     this->unk80 = -1;
@@ -64,11 +64,11 @@ File *file_openFromMem(void *ptr, s32 size) {
 File *file_allocNew(void) {
     File *this;
 
-    this = (File *) malloc(sizeof(File));
+    this = (File *) bk_malloc(sizeof(File));
     this->mode = FILE_MODE_4_ALLOCATED;
     this->last_expected = -1;
     this->unk80 = -1;
-    this->base_ptr = malloc(FILE_DEFAULT_SIZE);
+    this->base_ptr = bk_malloc(FILE_DEFAULT_SIZE);
     this->current_ptr = this->base_ptr;
     this->end_ptr = (u8 *) this->base_ptr + FILE_DEFAULT_SIZE;
 
@@ -77,7 +77,7 @@ File *file_allocNew(void) {
 
 void file_realloc(File *file, void **arg1, s32 *size) {
     *size = ((u32)file->current_ptr - (u32)file->base_ptr);
-    *arg1 = realloc(file->base_ptr, *size);
+    *arg1 = bk_realloc(file->base_ptr, *size);
     file->base_ptr = NULL;
     file_close(file);
 }
@@ -140,7 +140,7 @@ void file_read(File *file, void *dst, s32 len) {
                 capacity *= 2;
             }
 
-            new_base_ptr = realloc(file->base_ptr, capacity);
+            new_base_ptr = bk_realloc(file->base_ptr, capacity);
             file->base_ptr = new_base_ptr;
             file->current_ptr = (u8 *) new_base_ptr + curr_offset;
             file->end_ptr = (u8 *) new_base_ptr + capacity;

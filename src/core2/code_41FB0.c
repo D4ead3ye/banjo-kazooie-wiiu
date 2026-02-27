@@ -1,6 +1,8 @@
-#include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include <ultra64.h>
+
+#include <bk_math.h>
 
 extern bool func_80309DBC(f32[3], f32[3], f32, f32 sp54[3], s32, s32);
 extern bool func_80320C94(f32[3], f32[3], f32, f32 sp54[3], s32, s32);

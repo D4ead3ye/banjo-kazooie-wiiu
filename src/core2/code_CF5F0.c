@@ -28,14 +28,18 @@ s32 D_80372808 = 0;
 
 // init bk_boot crc
 void func_80356580(void) {
+#if 0
     D_803727FC = (s32) boot_bk_boot_ROM_START;
     D_80372800 = 0;
     D_80372804 = -1;
     D_80372808 = (s32) (boot_bk_boot_ROM_END - boot_bk_boot_ROM_START);
+#endif
 }
 
 // advance bk_boot crc by one word
 s32 func_803565BC(void) {
+    // Lighthouse TODO what should this actually return?
+#if 0
     u32 crc1;
     u32 crc2;
     u8 romBytes[4];
@@ -72,6 +76,7 @@ s32 func_803565BC(void) {
                 return 0;
         }
     }
+#endif
     return 1;
 }
 

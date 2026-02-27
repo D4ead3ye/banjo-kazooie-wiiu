@@ -49,7 +49,7 @@ s32 D_80275764 = 9; //lbits
 s32 D_80275768 = 6; //dbits
 
 /* .data */
-extern struct huft D_803FBE00;
+struct huft D_803FBE00;
 struct huft *D_8027BF00;
 u8 pad_8027BF08[0x8];
 u8 *D_8027BF10; //inbuf

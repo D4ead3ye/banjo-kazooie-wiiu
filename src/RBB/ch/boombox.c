@@ -1,8 +1,9 @@
-#include <ultra64.h>
+#include "core2/particle.h"
 #include "functions.h"
 #include "variables.h"
-#include "core2/particle.h"
+#include <ultra64.h>
 
+#include <bk_math.h>
 
 extern void bundle_setYaw(f32);
 extern int  func_80309EB0(f32(*)[3], f32, f32 (*)[3], s32);

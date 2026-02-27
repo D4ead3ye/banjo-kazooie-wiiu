@@ -1,9 +1,11 @@
-#include <ultra64.h>
+#include "2.0L/PR/n_libaudio.h"
 #include "core1/core1.h"
 #include "functions.h"
-#include "variables.h"
-#include "n_libaudio.h"
 #include "n_synth.h"
+#include "variables.h"
+#include <ultra64.h>
+
+#include <libultra/exception.h>
 
 void  func_802444C0(N_AL_Struct81s *arg0);
 void  func_80244050(ALEventQueue *arg0, N_AL_Struct81s *arg1, u16 arg2);

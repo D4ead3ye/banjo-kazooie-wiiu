@@ -2,7 +2,7 @@
 #define __CORE2_ANIM_SPRITE_H__
 
 #include <ultra64.h>
-
+#include "libultraship/libultra/types.h"
 
 typedef struct{
     u8 index;

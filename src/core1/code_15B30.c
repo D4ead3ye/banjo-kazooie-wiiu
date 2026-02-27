@@ -1,5 +1,7 @@
-#include <ultra64.h>
 #include "core1/core1.h"
+#include <ultra64.h>
+
+#include <libultra/convert.h>
 
 static Gfx *sGfxStack[2] = { NULL, NULL };
 s32 gFramebufferWidth = DEFAULT_FRAMEBUFFER_WIDTH;
@@ -24,7 +26,7 @@ void func_80253550(void){
 }
 
 void func_8025357C(void){
-    osSendMesg(&D_802831F0, NULL, OS_MESG_BLOCK);
+    osSendMesgPtr(&D_802831F0, NULL, OS_MESG_BLOCK);
 }
 
 void func_802535A8(Gfx **arg0, Gfx **arg1, UNK_TYPE(s32) arg2, UNK_TYPE(s32) arg3) {
@@ -122,7 +124,7 @@ void func_80253E14(Gfx *arg0, Gfx *arg1, s32 arg2){
     sp1C->unk4 = arg2;
     sp1C->unk8 = arg0;
     sp1C->unkC = arg1;
-    func_80246670((OSMesg) sp1C);
+    func_80246670(OS_MESG_PTR(sp1C));
 }
 
 void func_80253EA4(Gfx *arg0, Gfx *arg1){
@@ -173,7 +175,7 @@ void func_80254008(void){
 void func_80254028(void){
     D_802831E8 = 0;
     osCreateMesgQueue(&D_802831F0, &D_80283208, 1);
-    osSendMesg(&D_802831F0, NULL, 1);
+    osSendMesgPtr(&D_802831F0, NULL, 1);
     func_80247560();
     scissorBox_setDefault();
 }
@@ -189,24 +191,24 @@ void drawRectangle2D(Gfx **gfx, s32 x, s32 y, s32 w, s32 h, s32 r, s32 g, s32 b)
 
 void graphicsCache_release(void) {
     if (sGfxStack[0]) {
-        free(sGfxStack[0]);
-        free(sGfxStack[1]);
-        free(sMtxStack[0]);
-        free(sMtxStack[1]);
-        free(sVtxStack[0]);
-        free(sVtxStack[1]);
+        bk_free(sGfxStack[0]);
+        bk_free(sGfxStack[1]);
+        bk_free(sMtxStack[0]);
+        bk_free(sMtxStack[1]);
+        bk_free(sVtxStack[0]);
+        bk_free(sVtxStack[1]);
         sGfxStack[0] = NULL;
     }
 }
 
 void graphicsCache_init(void){
     if(sGfxStack[0] == NULL){
-        sGfxStack[0] = (Gfx *)malloc(29600); // 3700 dlist commands
-        sGfxStack[1] = (Gfx *)malloc(29600);
-        sMtxStack[0] = (Mtx *)malloc(44800); // 700 matrices
-        sMtxStack[1] = (Mtx *)malloc(44800);
-        sVtxStack[0] = (Vtx *)malloc(6880); // 430 vertices
-        sVtxStack[1] = (Vtx *)malloc(6880);
+        sGfxStack[0] = (Gfx *)bk_malloc(29600); // 3700 dlist commands
+        sGfxStack[1] = (Gfx *)bk_malloc(29600);
+        sMtxStack[0] = (Mtx *)bk_malloc(44800); // 700 matrices
+        sMtxStack[1] = (Mtx *)bk_malloc(44800);
+        sVtxStack[0] = (Vtx *)bk_malloc(6880); // 430 vertices
+        sVtxStack[1] = (Vtx *)bk_malloc(6880);
         dummy_func_80254464();
     }
     sStackSelector = 0;

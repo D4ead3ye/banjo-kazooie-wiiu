@@ -1,5 +1,6 @@
 #ifndef BANJO_KAZOOIE_CORE1_MAIN_H
 #define BANJO_KAZOOIE_CORE1_MAIN_H
+#include <libultra/thread.h>
 
 void func_8023DA20(s32 arg0);
 void func_8023DA74(void);

@@ -3,7 +3,7 @@
 #include "functions.h"
 #include "variables.h"
 
-#include "time.h"
+#include "bk_time.h"
 
 f32 func_802FB0DC(struct8s *);
 f32 func_802FB0E4(struct8s *);

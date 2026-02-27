@@ -45,6 +45,8 @@ struct {
     s32 unkC; //calculated SM_data_crc2
 } D_8038B320;
 
+static bool __codeF0_areRomCrcsCorrect();
+static bool __codeF0_areCrcsValid();
 
 /* .code */
 static u32 *__codeF0_getLearnedAbilitiesAddress(){
@@ -114,6 +116,7 @@ void __codeF0_pad_func_80386614(u8 *arg0, u8 *arg1, s32 *arg2, s32 *arg3){
 extern u8 crc_ROM_START[];
 
 static bool __codeF0_areRomCrcsCorrect(){
+#if 0
     u32 sp24;
 
     if( (osPiReadIo((u32)crc_ROM_START + 8, &sp24), sp24 == D_803FFE00[0])
@@ -125,6 +128,8 @@ static bool __codeF0_areRomCrcsCorrect(){
     }
 
     return false;
+#endif
+    return true;
 }
 
 static bool __codeF0_areCrcsValid(){

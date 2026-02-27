@@ -26,7 +26,8 @@
         $Revision: 1.1 $
         $Date: 1998/10/09 08:01:04 $
  *---------------------------------------------------------------------*/
-
+#include "libultraship/libultra/os.h"
+#if 0
 #ifndef _OS_AI_H_
 #define	_OS_AI_H_
 
@@ -90,3 +91,4 @@ extern s32		osAiSetNextBuffer(void *, u32);
 #endif
 
 #endif /* !_OS_AI_H_ */
+#endif

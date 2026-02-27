@@ -1,6 +1,7 @@
 #include <ultra64.h>
 #include "n_synth.h"
-
+#include "2.0L/PR/ultraerror.h"
+#include "2.0L/PR/os_error.h"
 
 void n_alSynSetVol( N_ALVoice *v, s16 volume, ALMicroTime t)
 {

@@ -26,7 +26,7 @@ void mapSavestate_free_all(void){
     int i;
     for(i = 0; i < 0x9A; i++){
         if((u32*)D_8037E650[i] != NULL){
-            free((void *)D_8037E650[i]);
+            bk_free((void *)D_8037E650[i]);
             D_8037E650[i] = NULL;
         }
     }
@@ -51,9 +51,9 @@ void mapSavestate_save(enum map_e map)
   wSize = 4;
   if (D_8037E650[map] != 0)
   {
-    free(D_8037E650[map]);
+    bk_free(D_8037E650[map]);
   }
-  D_8037E650[map] = (MapSavestate *) malloc(4 * (sizeof(u32)));
+  D_8037E650[map] = (MapSavestate *) bk_malloc(4 * (sizeof(u32)));
   valPtr = (u32 *) D_8037E650[map];
   *valPtr = mapSpecificFlags_getAll();
   iBit = 0x20;
@@ -65,7 +65,7 @@ void mapSavestate_save(enum map_e map)
     if (!(iBit < ((wSize * (sizeof(u32))) * 8)))
     {
       wSize += 4;
-      D_8037E650[map] = (MapSavestate *) realloc(D_8037E650[map], wSize * new_var);
+      D_8037E650[map] = (MapSavestate *) bk_realloc(D_8037E650[map], wSize * new_var);
       valPtr = ((s32) D_8037E650[map]) + (wSize * new_var);
       valPtr[-1] = 0;
       new_var = 1;
@@ -109,7 +109,7 @@ void mapSavestate_apply(enum map_e map_id) {
 
     actor_list_ptr = (ActorListSaveState *)D_8037E650[map_id] + (((iBit + (0x80 - 1)) >> 7) * 4);
     func_8032A09C(D_8037E650[map_id], actor_list_ptr);
-    free((void*)D_8037E650[map_id] );
+    bk_free((void*)D_8037E650[map_id] );
     D_8037E650[map_id] = NULL;
 }
 

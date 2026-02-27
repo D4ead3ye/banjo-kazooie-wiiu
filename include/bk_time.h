@@ -2,6 +2,7 @@
 #define __GL_TIME_H__
 
 #include <ultra64.h>
+#include "libultraship/libultra/types.h"
 
 void time_reset(void);
 void time_setDeltaReal_sec(f32 d_seconds);

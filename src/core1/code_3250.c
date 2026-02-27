@@ -1,5 +1,7 @@
-#include <ultra64.h>
 #include "core1/core1.h"
+#include <ultra64.h>
+
+#include <libultra/gu.h>
 
 extern f32 gu_sqrtf(f32);
 
@@ -10,8 +12,8 @@ static void __guMtxF2L(float mf[4][4], Mtx *m)
     int	*ai,*af;
 
 
-    ai=(int *) &m->m[0][0];
-    af=(int *) &m->m[2][0];
+    ai=(int *) &m->mf[0][0];
+    af=(int *) &m->mf[2][0];
 
     for (i=0; i<4; i++)
     for (j=0; j<2; j++) {
@@ -81,7 +83,7 @@ void guLookAtReflectF(float mf[4][4], LookAt *l,
 	yUp *= len;
 	zUp *= len;
 
-	/* reflectance vectors = Up and Right */
+	/* reflectance bk_vectors = Up and Right */
 
 	l->l[0].l.dir[0] = FTOFRAC8(xRight);
 	l->l[0].l.dir[1] = FTOFRAC8(yRight);

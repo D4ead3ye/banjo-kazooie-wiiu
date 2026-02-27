@@ -1,6 +1,8 @@
-#include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include <ultra64.h>
+
+#include <bk_math.h>
 
 extern f32 mapModel_getFloorY(f32*);
 extern void spawnQueue_bundle_f32(s32, f32, f32, f32);
@@ -33,7 +35,7 @@ static void __chVegetables_update(Actor*);
 
 /* .data */
 static ActorAnimationInfo sChCarrotAnimations[5] = {
-    {NULL, NULL},
+    {NULL, 0.0f},
     {ASSET_223_ANIM_TOPPER_UNKNOWN, 1000000.0f},
     {ASSET_223_ANIM_TOPPER_UNKNOWN, 1.0f},
     {ASSET_224_ANIM_TOPPER_UNKNOWN, 0.75f},
@@ -53,7 +55,7 @@ ActorInfo gChVegetablesTopperB = {
 };
 
 static ActorAnimationInfo sChOnionAnimations[5] = {
-    {NULL, NULL},
+    {NULL, 0.0f},
     {ASSET_226_ANIM_BAWL_UNKNOWN, 1000000.0f},
     {ASSET_226_ANIM_BAWL_UNKNOWN, 1.0f},
     {ASSET_227_ANIM_BAWL_UNKNOWN, 0.75f},
@@ -73,7 +75,7 @@ ActorInfo gChVegetablesBawlB = {
 };
 
 static ActorAnimationInfo sChCauliflowerAnimations[5] = {
-    {NULL, NULL},
+    {NULL, 0.0f},
     {ASSET_225_ANIM_COLLYWOBBLE_UNKNOWN, 10000000.0f},
     {ASSET_225_ANIM_COLLYWOBBLE_UNKNOWN, 1.0f},
     {ASSET_225_ANIM_COLLYWOBBLE_UNKNOWN, 10000000.0f},
@@ -151,7 +153,7 @@ static ParticleSettingsVelocityAccelerationPosition sD_8038AF0C = {
 
 /* .code */
 static void __chVegetables_setSpriteDustParticles(ParticleEmitter *emitter, f32 *position, s32 emit_count) {
-    s32 sp24[3] = sChVegetablesParticleRGB;
+    s32* sp24 = sChVegetablesParticleRGB; // Lighthouse [port] this was s32 sp24[3]
     particleEmitter_setRGB(emitter, sp24);
     particleEmitter_setSprite(emitter, ASSET_700_SPRITE_DUST);
     particleEmitter_setStartingFrameRange(emitter, 0, 7);

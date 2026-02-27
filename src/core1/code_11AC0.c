@@ -4,9 +4,11 @@
 #include "variables.h"
 
 #include "music.h"
-#include "n_libaudio.h"
+#include "2.0L/PR/n_libaudio.h"
 
 #include "version.h"
+
+#include <libultra/exception.h>
 
 extern void func_8025F570(ALCSPlayer *, u8);
 extern void func_8025F510(ALCSPlayer *, u8, u8);
@@ -218,18 +220,20 @@ structBs     D_80282110[0x20];
 
 /* .code */
 void musicInstruments_init(void){
+    // Lighthouse TODO Audio
+#if 0
     s32 size;
     ALBankFile * bnk_f; //sp38
     s32 i;
     f32 tmpf1;
     
     size = soundfont2ctl_ROM_END - soundfont2ctl_ROM_START;
-    bnk_f = malloc(size);
-    osWriteBackDCacheAll();
+    bnk_f = bk_malloc(size);
+    osWritebackDCacheAll();
     osPiStartDma(func_802405D0(), 0, 0, (u32)soundfont2ctl_ROM_START, bnk_f, size, func_802405C4());
     osRecvMesg(func_802405C4(), 0, 1); //osRecvMesg
     D_80282104 = 0xAD;
-    D_802820E0 = (MusicTrack **) malloc(D_80282104 * sizeof(MusicTrack *));
+    D_802820E0 = (MusicTrack **) bk_malloc(D_80282104 * sizeof(MusicTrack *));
     for(i = 0; i < D_80282104; i++){
         D_802820E0[i] = NULL;
     }
@@ -259,6 +263,7 @@ void musicInstruments_init(void){
         D_80281720[i].unk180 = 1.0f;
     }
     func_8024FB8C();
+#endif
 }
 
 ALBank *music_get_sound_bank(void){

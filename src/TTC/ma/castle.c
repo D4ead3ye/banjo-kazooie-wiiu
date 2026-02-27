@@ -116,7 +116,7 @@ static LetterFloorTile sLetterFloorTiles[] = {
     {0x34, FLOOR_LETTER_H, 0, 0.0f}, 
     {0x36, FLOOR_LETTER_B, 0, 0.0f}, 
     {0x38, FLOOR_LETTER_K, 0, 0.0f}, 
-    {NULL, NULL, NULL, NULL}
+    {NULL, NULL, NULL, 0.0f}
 };
 
 static CheatCode sCheatCodes[0xD] = {
@@ -146,6 +146,9 @@ struct
     f32 unkC; // time in map?
     u8 timerState; // 0 = nothing, 1 = timer running, 2 = no timer required / time trial completed
 } sMapState;
+
+static bool __maCastle_isFloorTileValidForSecretCheatCode(LetterFloorTile *floor_tile);
+static bool __maCastle_isCurrentSecretCheatCodeCharacter0();
 
 /* .code */
 static void __maCastle_transformMeshCallbackOverlayUpdate(s32 arg0, BKVtxRef *vtx_ref, Vtx *vtx, s32 arg2)

@@ -1,7 +1,9 @@
-#include <ultra64.h>
+#include "core2/statetimer.h"
 #include "functions.h"
 #include "variables.h"
-#include "core2/statetimer.h"
+#include <ultra64.h>
+
+#include <bk_math.h>
 
 /* TODO move declarations to respective headers*/
 extern void player_stateTimer_set(enum state_timer_e, f32);

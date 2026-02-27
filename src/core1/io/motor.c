@@ -124,9 +124,9 @@ s32 osMotorInit(OSMesgQueue *mq, OSPfs *pfs, int channel)
     for (i = 0; i < ARRLEN(temp); i++)
         temp[i] = 0x80;
 
-    ret = __osContRamWrite(mq, channel, 1024, temp, FALSE);
+    ret = __osContRamWrite(mq, channel, 1024, temp, false);
     if (ret == 2) //TODO: remove magic constant
-        ret = __osContRamWrite(mq, channel, 1024, temp, FALSE);
+        ret = __osContRamWrite(mq, channel, 1024, temp, false);
     if (ret != 0)
         return ret;
 
@@ -141,9 +141,9 @@ s32 osMotorInit(OSMesgQueue *mq, OSPfs *pfs, int channel)
     // for (i = 0; i < ARRLEN(temp); i++)
     //     temp[i] = 128;
 
-    // ret = __osContRamWrite(mq, channel, 1024, temp, FALSE);
+    // ret = __osContRamWrite(mq, channel, 1024, temp, false);
     // if (ret == 2)
-    //     ret = __osContRamWrite(mq, channel, 1024, temp, FALSE);
+    //     ret = __osContRamWrite(mq, channel, 1024, temp, false);
     // if (ret != 0)
     //     return ret;
 

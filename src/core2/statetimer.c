@@ -1,5 +1,5 @@
 #include "core2/statetimer.h"
-#include "time.h"
+#include "bk_time.h"
 
 typedef struct{
     f32 now;

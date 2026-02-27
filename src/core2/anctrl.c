@@ -99,7 +99,7 @@ void func_802871A4(AnimCtrl *this){
 AnimCtrl *anctrl_new(s32 arg0){ //new
     ActorAnimCtrl *this;
 
-    this = (ActorAnimCtrl *)malloc( anim_getSize() + 0x28);
+    this = (ActorAnimCtrl *)bk_malloc( anim_getSize() + 0x28);
     this->anctrl.animation = &this->animation;
     anim_new(&this->animation, 1);
     this->anctrl.playback_type = 0;
@@ -118,7 +118,7 @@ AnimCtrl *anctrl_new(s32 arg0){ //new
 
 void anctrl_free(AnimCtrl * this){ //free
     anim_release(this->animation);
-    free(this);
+    bk_free(this);
 }
 
 void anctrl_update(AnimCtrl *this){//update
@@ -141,7 +141,7 @@ void anctrl_update(AnimCtrl *this){//update
     }
 }
 
-AnimCtrl *anctrl_defrag(AnimCtrl *this){ //realloc
+AnimCtrl *anctrl_defrag(AnimCtrl *this){ //bk_realloc
     ActorAnimCtrl *full_struct;
     full_struct = (ActorAnimCtrl *)defrag(this);
     full_struct->anctrl.animation = &full_struct->animation;
@@ -220,9 +220,13 @@ void anctrl_setSmoothTransition(AnimCtrl *this, s32 arg1){
 }
 
 void anctrl_setDuration(AnimCtrl *this, f32 arg1){
+    arg1 += 3.0f;
+    // Lighthouse TOOD controller related?
+    #if 0
     if(IO_READ(0x238) - 0x10000003){
         arg1 += 3.0f;
     }
+#endif
     this->animation_duration = arg1;
 }
 

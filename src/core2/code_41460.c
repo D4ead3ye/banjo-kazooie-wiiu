@@ -1,6 +1,8 @@
-#include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include <ultra64.h>
+
+#include <bk_math.h>
 
 extern void func_802EE6CC(f32[3], f32[3], s32[4], s32, f32, f32, s32, s32, s32);
 
@@ -63,7 +65,7 @@ void func_802C83F0(Actor *actor) {
         }
         phi_s0->unk3C = NULL;
     }
-    free(actor->unk40);
+    bk_free(actor->unk40);
 }
 
 Actor *func_802C8484(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx) {
@@ -91,7 +93,7 @@ Actor *func_802C8484(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx) {
 }
 
 Actor *func_802C8580(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags){
-    Struct25s *s1 =  malloc(sizeof(Struct25s) + D_8037DD90 * sizeof(Struct24s));
+    Struct25s *s1 =  bk_malloc(sizeof(Struct25s) + D_8037DD90 * sizeof(Struct24s));
     Actor *actor = actor_new(position, yaw, actorInfo, flags);
     f32 f24;
     f32 sp68[3];
@@ -254,7 +256,7 @@ void func_802C8C5C(Actor *actor) {
     f32 sp84[3];
     Struct25s *temp_s2 = actor->unk40;
     Struct24s *phi_s0;
-    s32 sp70[3] = D_80366418;
+    s32* sp70 = D_80366418;
 
     for(phi_s0 = temp_s2->begin; phi_s0 < temp_s2->current; phi_s0++){
         if (phi_s0->unk0 == 2) {

@@ -269,7 +269,7 @@ void pfsManager_update(void) {
 
 void pfsManager_readData(){
     func_8024F35C(0);
-    if(!pfsManagerContStatus.errno)
+    if(!pfsManagerContStatus.err_no)
         osContGetReadData(pfsManagerContPadData);
 }
 
@@ -281,7 +281,7 @@ void pfsManager_entry(void *arg) {
             pfsManager_readData();
         }
         else{
-            osSendMesg(&pfsManagerContReplyMsgQ, 0, 0);
+            osSendMesg32(&pfsManagerContReplyMsgQ, 0, 0);
         }
     } while (1);
 }
@@ -290,7 +290,7 @@ void pfsManager_init(void) {
     osCreateMesgQueue(&pfsManagerContPollingMsqQ, &pfsManagerContPollingMsqBuf, 1);
     osCreateMesgQueue(&pfsManagerContReplyMsgQ, &pfsManagerContReplyMsgBuf, 1);
     osCreateThread(&sPfsManagerThread, 7, pfsManager_entry, NULL, sPfsManagerThreadStack + PFSMANAGER_THREAD_STACK_SIZE, 40);
-    osSetEventMesg(OS_EVENT_SI, &pfsManagerContPollingMsqQ, &pfsManagerContPollingMsqBuf);
+    osSetEventMesg(OS_EVENT_SI, &pfsManagerContPollingMsqQ, OS_MESG_PTR(&pfsManagerContPollingMsqBuf));
     osContInit(&pfsManagerContPollingMsqQ, &pfsManagerBitPattern, &pfsManagerContStatus);
     osContSetCh(1);
     func_8024F224();
@@ -299,7 +299,7 @@ void pfsManager_init(void) {
 }
 
 bool pfsManager_contErr(void) {
-    return BOOL(pfsManagerContStatus.errno);
+    return BOOL(pfsManagerContStatus.err_no);
 }
 
 void func_8024F150(void){
@@ -393,16 +393,16 @@ OSContPad *func_8024F3F4(void){
 void func_8024F400(void) {
     D_80275D38 = true;
     osCreateMesgQueue(&D_802816E8, &D_80281700, 5);
-    osSendMesg(&D_802816E8, 0, OS_MESG_NOBLOCK);
+    osSendMesgPtr(&D_802816E8, NULL, OS_MESG_NOBLOCK);
 }
 
 void func_8024F450(void){
     if(!D_80275D38)
         func_8024F400();
     osRecvMesg(&D_802816E8, NULL, OS_MESG_BLOCK);
-    osSetEventMesg(OS_EVENT_SI, &pfsManagerContPollingMsqQ, &pfsManagerContPollingMsqBuf);
+    osSetEventMesg(OS_EVENT_SI, &pfsManagerContPollingMsqQ, OS_MESG_PTR(&pfsManagerContPollingMsqBuf));
 }
 
 void func_8024F4AC(void){
-    osSendMesg(&D_802816E8, NULL, OS_MESG_NOBLOCK);
+    osSendMesgPtr(&D_802816E8, NULL, OS_MESG_NOBLOCK);
 }

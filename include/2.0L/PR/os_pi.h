@@ -26,7 +26,8 @@
         $Revision: 1.1 $
         $Date: 1998/10/09 08:01:16 $
  *---------------------------------------------------------------------*/
-
+#include "libultraship/libultra/pi.h"
+#if 0
 #ifndef _OS_PI_H_
 #define	_OS_PI_H_
 
@@ -226,3 +227,4 @@ extern s32 osPiRawStartDma(s32, u32, void *, u32);
 #endif
 
 #endif /* !_OS_PI_H_ */
+#endif

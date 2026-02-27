@@ -1,7 +1,7 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
-#include "n_libaudio.h"
+#include "2.0L/PR/n_libaudio.h"
 
 extern ALBank *music_get_sound_bank(void);
 extern OSIoMesg *func_802405D0(void);
@@ -23,6 +23,8 @@ ALBank * sfx_sound_bank;
 
 /* .code */
 void sfxInstruments_init(void){
+    // Lighthouse TODO audio
+#if 0
     ALBank *bnk;
     s32 size;
     ALInstrument *inst;
@@ -30,7 +32,7 @@ void sfxInstruments_init(void){
     
     
     size = soundfont1ctl_ROM_END - soundfont1ctl_ROM_START;
-    bnkf = (ALBankFile *)malloc(size);
+    bnkf = (ALBankFile *)bk_malloc(size);
     osWritebackDCache(bnkf, size);
     osPiStartDma(func_802405D0(), 0, 0, (u32)soundfont1ctl_ROM_START, bnkf, size, func_802405C4());
     osRecvMesg(func_802405C4(), NULL, 1);
@@ -44,6 +46,7 @@ void sfxInstruments_init(void){
     D_803835F0.unkC = func_802405B8();
     func_80243070(&D_803835F0);
     sfx_sound_bank = bnk;
+#endif
 }
 
 int func_8033531C(enum sfx_e uid, struct46s *arg1){

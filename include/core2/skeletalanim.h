@@ -24,7 +24,7 @@ typedef struct {
     struct animation_file_s *animation_bin;
     f32 progress;
     f32 duration;
-    vector(SkeletalAnimationCallback) *callback_list;
+    bk_vector(SkeletalAnimationCallback) *callback_list;
     u8 unk14;
     u8 behavior;
     s16 animation_id;

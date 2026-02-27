@@ -4,6 +4,7 @@
 
 #include "core2/ba/model.h"
 #include "core2/ba/physics.h"
+#include "bk_math.h"
 
 void func_80254008(void);
 void assetcache_release(void *); //assetcache_free

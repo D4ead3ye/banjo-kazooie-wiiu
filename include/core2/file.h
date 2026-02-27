@@ -4,6 +4,7 @@
 #include <ultra64.h>
 #include <bool.h> // for bool
 #include <enums.h> // for enum asset_e, enum map_e 
+#include "libultraship/libultra/types.h"
 
 enum file_mode_e {
     FILE_MODE_0_UNKNOWN,

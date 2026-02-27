@@ -3,6 +3,7 @@
 #include "functions.h"
 #include "variables.h"
 #include "version.h"
+#include "bk_math.h"
 
 #if VERSION == VERSION_USA_1_0
 u32 D_80276CB0 = 0xD22FFFD8; //WHAT IS THIS?
@@ -341,7 +342,7 @@ f32 func_80256AB4(f32 x1, f32 y1, f32 x2, f32 y2)
     return 0;
 }
 
-//ml_vec3f_sin_of_angle_between_vectors
+//ml_vec3f_sin_of_angle_between_bk_vectors
 f32 func_80256B54(f32 vec1[3], f32 vec2[3])
 {
     f32 a = LENGTH_VEC3F(vec1);
@@ -378,7 +379,7 @@ void func_80256D0C(f32 val1, f32 val2, f32 x, f32 y, f32 z, f32 *dstX, f32 *dstY
     *dstZ = tmp * cosf(val2) - sinf(val2) * x;
 }
 
-// rotates direction vector (x, y, z)
+// rotates direction bk_vector (x, y, z)
 void func_80256E24(f32 dst[3], f32 theta, f32 phi, f32 x, f32 y, f32 z)
 {
     f32 tmp;
@@ -513,7 +514,7 @@ void ml_init(void)
     u16 i;
 
     // Allocate table
-    D_80276CB8 = (u16 *)malloc(10001 * sizeof(u16));
+    D_80276CB8 = (u16 *)bk_malloc(10001 * sizeof(u16));
 
     // Generate all entries in the table
     for (i = 0; i < 10001; i++)
@@ -529,7 +530,7 @@ void ml_init(void)
 //ml_free
 void ml_free(void)
 {
-    free(D_80276CB8);
+    bk_free(D_80276CB8);
     D_80276CB8 = NULL;
 }
 

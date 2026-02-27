@@ -55,6 +55,8 @@ ActorInfo D_80391CE8 = { MARKER_97_BOGGY_2, ACTOR_C8_BOGGY_2, ASSET_38A_MODEL_BO
 /* .bss */
 s32 D_80392F20[3];
 
+bool func_8038A1A0(ActorMarker *marker);
+
 /* .code */
 Actor *func_80388740(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
     Actor *this = marker_getActor(marker);

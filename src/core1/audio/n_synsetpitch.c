@@ -1,5 +1,6 @@
-#include <ultra64.h>
+#include "PR/ultraerror.h"
 #include "n_synth.h"
+#include <ultra64.h>
 
 void    n_alSynSetPitch( N_ALVoice *v, f32 pitch)
 {

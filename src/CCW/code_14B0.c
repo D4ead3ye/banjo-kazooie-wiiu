@@ -1,6 +1,8 @@
-#include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include <ultra64.h>
+
+#include <bk_math.h>
 
 extern void func_8030DBFC(u8, f32, f32, f32);
 extern void sfxsource_setSampleRate(u8, s32);

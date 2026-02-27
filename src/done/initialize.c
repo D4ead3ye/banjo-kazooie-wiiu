@@ -15,15 +15,15 @@ typedef struct
    /* 0x4 */ unsigned int inst2;
    /* 0x8 */ unsigned int inst3;
    /* 0xC */ unsigned int inst4;
-} __osExceptionVector;
-extern __osExceptionVector __osExceptionPreamble;
+} __osExceptionbk_vector;
+extern __osExceptionbk_vector __osExceptionPreamble;
 
 // osInitialize
 void __osInitialize_common()
 {
    u32 pifdata;
    u32 clock = 0;
-   __osFinalrom = TRUE;
+   __osFinalrom = true;
    __osSetSR(__osGetSR() | SR_CU1);    //enable fpu
    __osSetFpcCsr(FPCSR_FS | FPCSR_EV); //flush denorm to zero, enable invalid operation
 
@@ -35,12 +35,12 @@ void __osInitialize_common()
    {
       ; //todo: magic contant
    }
-   *(__osExceptionVector *)UT_VEC = __osExceptionPreamble;
-   *(__osExceptionVector *)XUT_VEC = __osExceptionPreamble;
-   *(__osExceptionVector *)ECC_VEC = __osExceptionPreamble;
-   *(__osExceptionVector *)E_VEC = __osExceptionPreamble;
-   osWritebackDCache((void *)UT_VEC, E_VEC - UT_VEC + sizeof(__osExceptionVector));
-   osInvalICache((void *)UT_VEC, E_VEC - UT_VEC + sizeof(__osExceptionVector));
+   *(__osExceptionbk_vector *)UT_VEC = __osExceptionPreamble;
+   *(__osExceptionbk_vector *)XUT_VEC = __osExceptionPreamble;
+   *(__osExceptionbk_vector *)ECC_VEC = __osExceptionPreamble;
+   *(__osExceptionbk_vector *)E_VEC = __osExceptionPreamble;
+   osWritebackDCache((void *)UT_VEC, E_VEC - UT_VEC + sizeof(__osExceptionbk_vector));
+   osInvalICache((void *)UT_VEC, E_VEC - UT_VEC + sizeof(__osExceptionbk_vector));
    osMapTLBRdb();
    osPiRawReadIo(4, &clock); //TODO: remove magic constant;
    clock &= ~0xf;            //clear lower 4 bits

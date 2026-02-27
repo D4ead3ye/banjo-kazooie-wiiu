@@ -1,5 +1,5 @@
 #include <ultra64.h>
-
+#include "PR/libaudio.h"
 
 void alCSPStop(ALCSPlayer *seqp)
 {

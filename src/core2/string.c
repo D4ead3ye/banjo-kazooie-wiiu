@@ -3,7 +3,7 @@
 #include "variables.h"
 
 #include "string.h"
-
+#if 0
 void strcat(char *dst, char *src){
     while(*(dst) != '\0'){
         dst++;
@@ -13,7 +13,7 @@ void strcat(char *dst, char *src){
     }
     *(dst) = 0;
 }
-
+#endif
 void strcatc(char *dst, char src){
     while(*(dst) != '\0'){
         dst++;
@@ -90,7 +90,7 @@ void _strIToA(char *str, s32 num, char prefix){
     //Terminate the string with NULL
     *str = '\0';
 }
-
+#if 0
 s32 strcmp(const char *str1, const char *str2){
     while (*str1 && *str2 && *str1 == *str2) {
         str1++;
@@ -125,7 +125,7 @@ s32 strlen(char *str){
     }
     return len;
 }
-
+#endif
 s32 strcmpToTok(char *str1, char* str2, char* str3){
     while (*str2 == *str3) {
         str2++;

@@ -27,6 +27,8 @@
         $Date: 1999/06/15 12:39:40 $
  *---------------------------------------------------------------------*/
 
+#include "libultraship/libultra/thread.h"
+#if 0
 #ifndef _OS_THREAD_H_
 #define	_OS_THREAD_H_
 
@@ -152,3 +154,4 @@ extern OSPri		osGetThreadPri(OSThread *);
 #endif
 
 #endif /* !_OS_THREAD_H_ */
+#endif

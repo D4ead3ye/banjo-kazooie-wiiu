@@ -29,7 +29,7 @@ void** assetCachePtrList; //assetCache_ptrs;
 BKSpriteDisplayData **D_80383CD4;
 u8* assetCacheDependencyCount; //assetCache_dependencies;
 s16 *assetCacheAssetIdList; //assetCache_indexs
-vector(struct21s) *D_80383CE0[2];
+bk_vector(struct21s) *D_80383CE0[2];
 
 /* .public */
 extern s32 assetcache_release(void * arg0);
@@ -162,8 +162,8 @@ void func_8033B020(void *ptr){
     struct21s *end_ptr;
     struct21s *iPtr;
 
-    end_ptr = (struct21s *) vector_getEnd(D_80383CE0[0]);
-    start_ptr = (struct21s *) vector_getBegin(D_80383CE0[0]);
+    end_ptr = (struct21s *) bk_vector_getEnd(D_80383CE0[0]);
+    start_ptr = (struct21s *) bk_vector_getBegin(D_80383CE0[0]);
 
     for (iPtr = start_ptr; iPtr < end_ptr && ptr != iPtr->unk1; iPtr++);
 
@@ -171,7 +171,7 @@ void func_8033B020(void *ptr){
         iPtr->unk0++;
     }
     else {
-        iPtr = (struct21s *) vector_pushBackNew(&D_80383CE0[0]);
+        iPtr = (struct21s *) bk_vector_pushBackNew(&D_80383CE0[0]);
         iPtr->unk0 = 1;
         iPtr->unk1 = ptr;
     }
@@ -184,8 +184,8 @@ bool func_8033B0D0(void *arg0) {
     s32 j;
 
     for(j = 0; j < 2; j++){
-        end_ptr = (struct21s *) vector_getEnd(D_80383CE0[j]);
-        start_ptr = (struct21s *) vector_getBegin(D_80383CE0[j]);
+        end_ptr = (struct21s *) bk_vector_getEnd(D_80383CE0[j]);
+        start_ptr = (struct21s *) bk_vector_getBegin(D_80383CE0[j]);
         for(iPtr = start_ptr; iPtr < end_ptr && arg0 != iPtr->unk1; iPtr++){
         }
         if (iPtr < end_ptr){
@@ -196,12 +196,12 @@ bool func_8033B0D0(void *arg0) {
 }
 
 void func_8033B180(void){
-    D_80383CE0[0] = vector_new(sizeof(struct21s), 0x10);
-    D_80383CE0[1] = vector_new(sizeof(struct21s), 0x10);
+    D_80383CE0[0] = bk_vector_new(sizeof(struct21s), 0x10);
+    D_80383CE0[1] = bk_vector_new(sizeof(struct21s), 0x10);
 }
 
 void func_8033B1BC(void){
-    vector(struct21s) *tmp_a0;
+    bk_vector(struct21s) *tmp_a0;
     struct21s *iPtr;
     struct21s *start_ptr;
     struct21s *endPtr;
@@ -211,23 +211,23 @@ void func_8033B1BC(void){
     D_80383CE0[0] = D_80383CE0[1];
     D_80383CE0[1] = tmp_a0;
     
-    endPtr = (struct21s *) vector_getEnd(D_80383CE0[0]);
-    start_ptr = (struct21s *) vector_getBegin(D_80383CE0[0]);
+    endPtr = (struct21s *) bk_vector_getEnd(D_80383CE0[0]);
+    start_ptr = (struct21s *) bk_vector_getBegin(D_80383CE0[0]);
     for(iPtr = start_ptr; iPtr < endPtr; iPtr++){
         for(i = 0; i < iPtr->unk0; i++)
             assetcache_release(iPtr->unk1);
     }
     
-    vector_clear(D_80383CE0[0]);
+    bk_vector_clear(D_80383CE0[0]);
 }
 
 void func_8033B268(void){
-    D_80383CE0[0] = (vector(struct21s) *)defrag(D_80383CE0[0]);
-    D_80383CE0[1] = (vector(struct21s) *)defrag(D_80383CE0[1]);
+    D_80383CE0[0] = (bk_vector(struct21s) *)defrag(D_80383CE0[0]);
+    D_80383CE0[1] = (bk_vector(struct21s) *)defrag(D_80383CE0[1]);
 }
 
 void func_8033B2A4(s32 arg0) {
-    assetCachePtrList[assetCacheLength] = malloc(arg0);
+    assetCachePtrList[assetCacheLength] = bk_malloc(arg0);
     D_80383CD4[assetCacheLength] = NULL;
     assetCacheDependencyCount[assetCacheLength] = 1;
     assetCacheAssetIdList[assetCacheLength] = -1;
@@ -273,7 +273,7 @@ s32 assetcache_release(void * arg0){
         if(assetCacheDependencyCount[i] == 1){
             if(D_80383CD4[i])
                 func_803449DC(D_80383CD4[i]);
-            free(arg0);
+            bk_free(arg0);
             assetCacheLength--;
             assetCacheDependencyCount[i] = assetCacheDependencyCount[assetCacheLength];
             assetCachePtrList[i] = assetCachePtrList[assetCacheLength];
@@ -386,27 +386,27 @@ void *assetcache_get(enum asset_e assetId) {
         
         if (func_8025498C((u32)comp_size + uncomp_size) && !sp28) {
             sp33 = 1;
-            uncompressed_file = malloc((u32)comp_size + uncomp_size);
+            uncompressed_file = bk_malloc((u32)comp_size + uncomp_size);
             compressed_file = (void *)((s32) uncompressed_file + uncomp_size);
         } else {
             sp33 = 2;
             if (sp28 != 0) {
                 func_80254C98();
             }
-            uncompressed_file = malloc(uncomp_size);
-            compressed_file = malloc(comp_size);
+            uncompressed_file = bk_malloc(uncomp_size);
+            compressed_file = bk_malloc(comp_size);
         }
     } else { //uncompressed
-        uncompressed_file = malloc(comp_size);
+        uncompressed_file = bk_malloc(comp_size);
         compressed_file = uncompressed_file;
     }
     piMgr_read(compressed_file, assetSectionRomMetaList[assetId].offset + D_80383CCC, sp3C);
     if(assetSectionRomMetaList[assetId].compFlag & 0x0001){//decompress
         rarezip_inflate(compressed_file, uncompressed_file);
-        realloc(uncompressed_file, assetCacheCurrentSize);
+        bk_realloc(uncompressed_file, assetCacheCurrentSize);
         osWritebackDCache(uncompressed_file, assetCacheCurrentSize);
         if (sp33 == 2) {
-            free(compressed_file);
+            bk_free(compressed_file);
         }
     }
     assetCacheCurrentIndex = assetCacheLength;
@@ -427,23 +427,26 @@ void assetCache_resizeAsset(void *assetPtr, s32 size){
     s32 i;
 
     for(i = 0; i < assetCacheLength  && assetPtr != assetCachePtrList[i]; i++);
-    assetCachePtrList[i] = realloc(assetPtr, size);
+    assetCachePtrList[i] = bk_realloc(assetPtr, size);
 }
 
 void assetCache_init(void){
+    // Lighthouse TODO assets
+#if 0
     D_80370A1C = 0;
     func_8033B180();
-    assetCachePtrList = (void **)malloc(150*sizeof(void*));
-    D_80383CD4 = malloc(600);
-    assetCacheDependencyCount = (u8*)malloc(150*sizeof(u8));
-    assetCacheAssetIdList = (s16 *)malloc(150*sizeof(s16));
+    assetCachePtrList = (void **)bk_malloc(150*sizeof(void*));
+    D_80383CD4 = bk_malloc(600);
+    assetCacheDependencyCount = (u8*)bk_malloc(150*sizeof(u8));
+    assetCacheAssetIdList = (s16 *)bk_malloc(150*sizeof(s16));
     assetCacheLength = 0;
-    assetSectionRomHeader = (AssetROMHead *)malloc(sizeof(AssetROMHead));
+    assetSectionRomHeader = (AssetROMHead *)bk_malloc(sizeof(AssetROMHead));
     D_80383CC8 = (u32)assets_ROM_START;
     piMgr_read(assetSectionRomHeader, D_80383CC8, sizeof(AssetROMHead));
-    assetSectionRomMetaList = (AssetFileMeta *)malloc(assetSectionRomHeader->count*sizeof(AssetFileMeta));
+    assetSectionRomMetaList = (AssetFileMeta *)bk_malloc(assetSectionRomHeader->count*sizeof(AssetFileMeta));
     piMgr_read(assetSectionRomMetaList, D_80383CC8 + sizeof(AssetROMHead),assetSectionRomHeader->count*sizeof(AssetFileMeta));
     D_80383CCC = D_80383CC8 + sizeof(AssetROMHead) + assetSectionRomHeader->count*sizeof(AssetFileMeta);
+#endif
 }
 
 s32 asset_getCompressedSize(enum asset_e arg0){
@@ -514,7 +517,7 @@ s32 code_B3A80_func_8033BDAC(enum asset_e id, void *dst, s32 size) {
         }
         else if(size >= var_s0) {
             sp2B = 2;
-            comp_ptr = (s32)malloc(comp_ptr);
+            comp_ptr = (s32)bk_malloc(comp_ptr);
         }
         else{
             return 0;
@@ -538,7 +541,7 @@ s32 code_B3A80_func_8033BDAC(enum asset_e id, void *dst, s32 size) {
         rarezip_inflate(comp_ptr, dst);
         osWritebackDCache(dst, assetCacheCurrentSize);
         if (sp2B == 2) {
-            free((void *)comp_ptr);
+            bk_free((void *)comp_ptr);
         }
     }
     return var_s0;

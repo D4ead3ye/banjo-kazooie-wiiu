@@ -1,6 +1,7 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include "bk_math.h"
 
 extern Actor *spawnQueue_bundle_f32(s32, s32, s32, s32);
 extern ActorProp * func_80320EB0(ActorMarker *, f32, s32);
@@ -9,7 +10,7 @@ static void __chClam_updateFunc(Actor *this);
 
 /* .data */
 ActorAnimationInfo gChClamAnimations[4] = {
-    {NULL, NULL},
+    {NULL, 0.0f},
     {ASSET_AA_ANIM_CLAM_IDLE, 2.0f},
     {ASSET_24_ANIM_CLAM_HOP,  1.0f},
     {ASSET_AB_ANIM_CLAM_EAT,  0.6f}

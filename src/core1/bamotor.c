@@ -5,6 +5,8 @@
 
 #include "version.h"
 
+#include <libultra/pfs.h>
+
 #define RUMBLE_THREAD_STACK_SIZE 0x200
 
 void func_8024F35C(s32);
@@ -111,6 +113,8 @@ void baMotor_80250C08(void) {
 }
 
 void baMotor_init(void) {
+    // Lighthouse TODO handle with LUS?
+#if 0
     s32 pfs_status;
     
     func_8024F35C(4);
@@ -126,8 +130,9 @@ void baMotor_init(void) {
         osCreateMesgQueue(&D_80282390, &D_802823A8, 1);
         osCreateThread(&sRumbleThread, 8, rumbleThread_entry, NULL, sRumbleThreadStack + RUMBLE_THREAD_STACK_SIZE, 25);
         osStartThread(&sRumbleThread);
-        viMgr_func_8024BDAC(&D_80282390, 0);
+        viMgr_func_8024BDAC(&D_80282390, OS_MESG_32(NULL));
     }
+#endif
 }
 
 void __baMotor_80250D8C(void){}

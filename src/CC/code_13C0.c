@@ -6,6 +6,8 @@
 
 #include "core2/modelRender.h"
 
+#include <bk_math.h>
+
 typedef struct{
     void (*unk0)(s32 arg0);
     u8 pad4[0x14];

@@ -4,7 +4,7 @@
 #include "variables.h"
 
 #include "gc/gctransition.h"
-#include "time.h"
+#include "bk_time.h"
 
 extern void func_802F5374(void);
 extern void func_802FA0F8(void);
@@ -28,7 +28,7 @@ void func_802E40A8(s32 map, s32 exit);
 void func_802E40C4( s32 arg0);
 void func_802E40D0(s32 map, s32 exit);
 void func_802E40E8(s32 transition);
-int  func_802E4A08(void);
+bool func_802E4A08(void);
 
 f32 func_8033DC20(void);
 extern void func_80324C58(void);

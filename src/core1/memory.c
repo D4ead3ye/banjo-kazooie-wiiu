@@ -1,15 +1,17 @@
-#include <ultra64.h>
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
 #include "version.h"
-/* 
+#include <ultra64.h>
+#include "2.0L/PR/region.h"
+
+/*
  *  Every chunk of allocated memory is prefixed with a HeapHeader.
- * 
+ *
  *  Chunks are 0x10 aligned, and cannot have a capacity < 1.
  *  This means the smallest chunksize with the header is 0x20.
- * 
- *  If a chunk is empty, it's contains ptrs to the previous and 
+ *
+ *  If a chunk is empty, it's contains ptrs to the previous and
  *  next empty chunks. This forms a link list over all the empty
  *  chunks (EmptyHeapBlock)
  */
@@ -43,9 +45,9 @@ typedef struct empty_heap_block{
     struct empty_heap_block *next_free;
     u8 pad18[0x8];
 } EmptyHeapBlock;
-
-extern EmptyHeapBlock D_8002D500[LAST_HEAP_BLOCK + 1];
-extern EmptyHeapBlock D_8023DA00;
+// Lighthouse [port] this was extern. Probably still defined in ASM
+EmptyHeapBlock D_8002D500[LAST_HEAP_BLOCK + 1];
+EmptyHeapBlock D_8023DA00;
 
 /* .data */
 u32 heap_occupiedBytes = 0; //occupied heap size
@@ -134,7 +136,7 @@ void func_8025456C(EmptyHeapBlock * arg0){
     }
     _heap_defragEmptyBlock(arg0);
 }
-
+#if 0
 void memcpy(void * dst, void *src, int size){
     while(size > 0){
         *(u8*)dst = *(u8*)src;
@@ -166,7 +168,7 @@ void memmove(u8* dst, u8* src, s32 n) {
         }
     }
 }
-
+#endif
 s32 heap_get_size(void){ return HEAP_SIZE; }
 
 s32 func_802546DC(void){ return 0; }
@@ -216,27 +218,27 @@ void heap_init(void){
 }
 
 void *func_8025484C(s32 size){
-    D_802765B4 = malloc(ALIGN((u32)&D_8002D500[1] + 0x100, 0x100)  - (u32)&D_8002D500[1] - sizeof(EmptyHeapBlock));
-    return malloc(0x80);
+    D_802765B4 = bk_malloc(ALIGN((u32)&D_8002D500[1] + 0x100, 0x100)  - (u32)&D_8002D500[1] - sizeof(EmptyHeapBlock));
+    return bk_malloc(0x80);
 }
 
 void *func_80254898(s32 arg0){
-    void * sp1C = malloc(ALIGN(((u32)&D_8002D500[LAST_HEAP_BLOCK] - (u32)D_8002D500[LAST_HEAP_BLOCK].prev_free) - 0x2FF, 0x100) + - sizeof(EmptyHeapBlock));
-    void * sp18 = malloc(0x80);
-    free(sp1C);
-    free(D_802765B4);
+    void * sp1C = bk_malloc(ALIGN(((u32)&D_8002D500[LAST_HEAP_BLOCK] - (u32)D_8002D500[LAST_HEAP_BLOCK].prev_free) - 0x2FF, 0x100) + - sizeof(EmptyHeapBlock));
+    void * sp18 = bk_malloc(0x80);
+    bk_free(sp1C);
+    bk_free(D_802765B4);
     D_802765B4 =  NULL;
     return sp18;
 }
 
 void func_80254908(void){
     if(D_802765A0){
-        free(D_802765A0);
+        bk_free(D_802765A0);
         D_802765A0 = NULL;
     }
 
     if(D_802765A8){
-        free(D_802765A8);
+        bk_free(D_802765A8);
         D_802765A8 = NULL;
     }
 }
@@ -332,7 +334,7 @@ void func_80254C98(void){
     D_802765B0.unk0 = true;
 }
 
-void *malloc(s32 size){
+void *bk_malloc(s32 size){
     u32 capacity;
     EmptyHeapBlock *v1;
     EmptyHeapBlock *a0;
@@ -462,7 +464,7 @@ void _heap_sortEmptyBlock(EmptyHeapBlock * arg0){
     }
 }
 
-void free(void * ptr){
+void bk_free(void * ptr){
     HeapHeader *sPtr; //stack_ptr
     
     if(ptr){
@@ -489,7 +491,7 @@ void func_80255170(void **arg0){
 void func_80255198(void){
     while(D_80283238.unk40 > &D_80283238.unk0[0]){
         D_80283238.unk40--;
-        free(*D_80283238.unk40);
+        bk_free(*D_80283238.unk40);
     }
 }
 
@@ -541,7 +543,7 @@ void *func_8025534C(void){
     return D_80283228;
 }
 
-void *realloc(void *ptr, s32 size){
+void *bk_realloc(void *ptr, s32 size){
     
     HeapHeader *sPtr;
     void *newSeg;
@@ -573,12 +575,12 @@ void *realloc(void *ptr, s32 size){
         return ptr;
     }//L80255430
 
-    if(!(newSeg = malloc(size))){
+    if(!(newSeg = bk_malloc(size))){
         return 0;
     }
 
     func_80253010(newSeg, ptr, __heap_align(size));
-    free(ptr);
+    bk_free(ptr);
     ptr = newSeg;
     D_8027659C = 0;
     D_80283228 = newSeg;
@@ -613,11 +615,11 @@ void func_80255524(void){
     D_80283220 = (D_80276598)? -6000000 : 0;
 
     if(D_802765A0 && D_802765A4 + 1 < D_802765AC){
-        free(D_802765A0);
+        bk_free(D_802765A0);
         D_802765A0 = NULL;
 
         if(D_802765A8){
-            free(D_802765A8);
+            bk_free(D_802765A8);
             D_802765A8 = NULL;
         }
     }
@@ -721,7 +723,7 @@ void *func_80255774(void *this){
         return this;
     }
 
-    sp24 = malloc(size - sizeof(HeapHeader));
+    sp24 = bk_malloc(size - sizeof(HeapHeader));
     func_80253010(sp24, this, size - sizeof(HeapHeader));
     osWritebackDCache(sp24, size - sizeof(HeapHeader));
     D_80283220 += size  - sizeof(HeapHeader);

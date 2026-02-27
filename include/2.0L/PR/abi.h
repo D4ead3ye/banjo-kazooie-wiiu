@@ -1,6 +1,6 @@
 #ifndef _ABI_H_
 #define	_ABI_H_
-
+#if 1
 /**************************************************************************
  *									  *
  *		 Copyright (C) 1994, Silicon Graphics, Inc.		  *
@@ -403,7 +403,7 @@ typedef short ENVMIX_STATE[40];
 }
 
 #endif /* _LANGUAGE_C */
-
+#endif
 #endif /* !_ABI_H_ */
 
 

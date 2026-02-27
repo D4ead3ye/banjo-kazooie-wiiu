@@ -11,7 +11,10 @@ void func_80388CF0(void){
 }
 
 void func_80388D48(void){
+    // Lighthouse TODO is this an anti-piracy check?
+    #if 0
     if(*(u32*)PHYS_TO_K1(0x200) - PHYS_TO_K1(0xC290000)){
         func_80388CF0();
     }
+#endif
 }

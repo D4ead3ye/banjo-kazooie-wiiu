@@ -6,10 +6,10 @@ static void __chTreasure_updateFunc(Actor *this);
 
 /* .data */
 ActorAnimationInfo gChTreasureAnimations[4] = {
-    {NULL, NULL},
+    {NULL, 0.0f},
     {ASSET_153_ANIM_BURIED_TREASURE_APPEAR, 2.0f},
     {ASSET_166_ANIM_BURIED_TREASURE_BOUNCE, 0.33f},
-    {NULL, NULL}
+    {NULL, 0.0f}
 };
 
 ActorInfo gChTreasure = {

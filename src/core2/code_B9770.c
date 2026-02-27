@@ -378,10 +378,10 @@ void func_803411B0(void){
     s32 tmp;
 
     D_80371E80 = 0;
-    D_80371E70 = malloc(0);
-    D_80371E74 = malloc(0);
+    D_80371E70 = bk_malloc(0);
+    D_80371E74 = bk_malloc(0);
     D_80371E78 = 0;
-    D_803858A0 = malloc(128 * sizeof(s16));
+    D_803858A0 = bk_malloc(128 * sizeof(s16));
 
     for (spE0 = 0; spE0 < 128; spE0++) {
         D_803858A0[spE0] = 0;
@@ -393,7 +393,7 @@ void func_803411B0(void){
         return;
     }
 
-    spD8 = (Struct_glspline_803411B0 *) malloc(spE4 * sizeof(Struct_glspline_803411B0));
+    spD8 = (Struct_glspline_803411B0 *) bk_malloc(spE4 * sizeof(Struct_glspline_803411B0));
 
     for (spE0 = 0; spE0 < spE4; spE0++) {
         (spD8 + spE0)->unk0 = -1;
@@ -458,12 +458,12 @@ void func_803411B0(void){
             }
 
             tmp = var_s7 * 3;
-            spB4 = (struct56s *) malloc(8 + tmp * sizeof(f32));
+            spB4 = (struct56s *) bk_malloc(8 + tmp * sizeof(f32));
             spA4 = (f32 *) spB4;
             spB4->unk0 = var_s7;
             spB4->unk4 = 0;
 
-            spA8 = (SplineList *) malloc(4 + var_s0 * sizeof(Union_glspline));
+            spA8 = (SplineList *) bk_malloc(4 + var_s0 * sizeof(Union_glspline));
             spA8->unk0 = var_s0;
 
             var_s1_2 = &spA8->spline[0];
@@ -517,7 +517,7 @@ void func_803411B0(void){
         }
     }
 
-    free(spD8);
+    bk_free(spD8);
 }
 
 //glspline_free
@@ -537,12 +537,12 @@ void func_80341A54(void) {
     }
 
     for(var_s0 = 0; var_s0 < D_80371E78; var_s0++){
-        free(D_80371E70[var_s0]);
-        free(D_80371E74[var_s0]);
+        bk_free(D_80371E70[var_s0]);
+        bk_free(D_80371E74[var_s0]);
     }
-    free(D_80371E70);
-    free(D_80371E74);
-    free(D_803858A0);
+    bk_free(D_80371E70);
+    bk_free(D_80371E74);
+    bk_free(D_803858A0);
     D_80371E70 = NULL;
     D_80371E74 = NULL;
     D_80371E78 = 0;
@@ -560,10 +560,10 @@ s32 func_80341BC8(struct56s *arg0, SplineList * arg1) {
     void *temp_v0_2;
 
     D_80371E78++;
-    D_80371E70 = (struct56s **)realloc(D_80371E70, D_80371E78 * sizeof(struct56s *));
+    D_80371E70 = (struct56s **)bk_realloc(D_80371E70, D_80371E78 * sizeof(struct56s *));
 
     D_80371E70[D_80371E78 - 1] = arg0;
-    D_80371E74 = (SplineList **)realloc(D_80371E74, D_80371E78 * sizeof(SplineList *));
+    D_80371E74 = (SplineList **)bk_realloc(D_80371E74, D_80371E78 * sizeof(SplineList *));
     D_80371E74[D_80371E78 - 1] = arg1;
     return D_80371E78 - 1;
 }

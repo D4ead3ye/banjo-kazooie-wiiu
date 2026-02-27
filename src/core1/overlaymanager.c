@@ -17,7 +17,7 @@ typedef struct struct_2a_s{
     u8* bss_end;
 } OverlayAddressMap;
 
-
+#if 0
 
 #define SEGMENT_EXTERNS(segname) \
     extern u8 segname##_VRAM[]; \
@@ -80,9 +80,10 @@ enum overlay_e overlayMgrLoadedId;
 
 
 void overlayManagerdebug(void);
-
+#endif
 /* .code */
 OverlayAddressMap *__overlayManagergetLargetOverlayAddressMap(void){
+#if 0
     //returns OverlayAddressMap ptr with largest RAM size
     int i;
     OverlayAddressMap * largest_overlay;
@@ -94,6 +95,8 @@ OverlayAddressMap *__overlayManagergetLargetOverlayAddressMap(void){
         }
     }
     return largest_overlay;
+#endif
+    return 0;
 }
 
 s32 __overlayManager80251170(void){
@@ -101,6 +104,7 @@ s32 __overlayManager80251170(void){
 }
 
 s32 __overlayManager80251178(void){
+#if 0
     int sp24;
     OverlayAddressMap *largest_overlay;
     s32 sp1C;
@@ -112,9 +116,11 @@ s32 __overlayManager80251178(void){
     sp1C = __overlayManager80251170();
 
     return ((sp1C + (u8 *)gFramebuffers) - largest_overlay->ram_end) + sp18;
+#endif
 }
 
 void __overlayManager802511C4(void){
+#if 0
     s32 sp24;
     int sp20;
     int sp1C;
@@ -131,17 +137,21 @@ void __overlayManager802511C4(void){
         tmp_v0 = sp1C + sp24;
         while( tmp_v0 & 0xF){tmp_v0--;}
     }
+#endif
 }
 
 int overlayManagergetLoadedId(void){
-    return overlayMgrLoadedId;
+    return 0;
+    //return overlayMgrLoadedId;
 }
 
 bool overlayManagerisOverlayLoaded(int overlay_id){
-    return overlayMgrLoadedId == overlay_id;
+return true;
+    //return overlayMgrLoadedId == overlay_id;
 }
 
-bool overlayManagerload(enum overlay_e overlay_id){ 
+bool overlayManagerload(enum overlay_e overlay_id){
+#if 0
     s32 rom_addr;
     
     if(overlay_id == 0)
@@ -167,13 +177,16 @@ bool overlayManagerload(enum overlay_e overlay_id){
         ((OverlayAddressMap*)rom_addr)->bss_end 
     );
     return true;
+#endif
+    return true;
 }
 
 s32 overlayManagerclearLoadedId(void){
-    overlayMgrLoadedId = 0;
+    //overlayMgrLoadedId = 0;
 }
 
 void overlayManagerloadCore2(void){
+#if 0
     overlayManagerclearLoadedId();
     overlay_load(0, 
         core2_VRAM, core2_VRAM_END,
@@ -183,6 +196,7 @@ void overlayManagerloadCore2(void){
         core2_BSS_START, core2_BSS_END
     );
     __overlayManager802511C4();
+#endif
 }
 
 void overlayManagerdebug(void){}

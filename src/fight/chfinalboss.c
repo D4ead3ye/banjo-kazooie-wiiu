@@ -1,7 +1,9 @@
-#include <ultra64.h>
+#include "fight.h"
 #include "functions.h"
 #include "variables.h"
-#include "fight.h"
+#include <ultra64.h>
+
+#include <bk_math.h>
 
 extern void func_8028F4B8(f32[3], f32, f32);
 extern void func_80320ED8(ActorMarker *, f32, s32);

@@ -48,14 +48,14 @@ Struct_core2_C4F40_1 D_80371FC0[] = {
 };
 
 /* .bss */
-vector(Struct6Es) *D_80386130;
+bk_vector(Struct6Es) *D_80386130;
 
 /* .code */
 Struct6Es *func_8034BED0(ActorMarker *marker, s32 arg1, s32 arg2, s32 arg3) {
     Struct6Es *sp1C;
     s32 temp_a2;
 
-    sp1C = (Struct6Es *)vector_pushBackNew(&marker->unk4C);
+    sp1C = (Struct6Es *)bk_vector_pushBackNew(&marker->unk4C);
     sp1C->unk0 = arg2;
     sp1C->unk4 = marker->unk48;
     sp1C->unk8 = arg1;
@@ -68,12 +68,12 @@ void func_8034BF54(ActorMarker *marker) {
     Struct6Es *end_ptr;
     Struct6Es *i_ptr;
 
-    end_ptr = (Struct6Es *)vector_getEnd(marker->unk4C);
-    begin_ptr = (Struct6Es *)vector_getBegin(marker->unk4C);
+    end_ptr = (Struct6Es *)bk_vector_getEnd(marker->unk4C);
+    begin_ptr = (Struct6Es *)bk_vector_getBegin(marker->unk4C);
     for(i_ptr = begin_ptr; i_ptr < end_ptr; i_ptr++){
         D_80371FC0[i_ptr->unk0].unk8(&i_ptr->unkC);
     }
-    vector_free(marker->unk4C);
+    bk_vector_free(marker->unk4C);
 }
 
 void func_8034BFF8(ActorMarker *marker) {
@@ -82,7 +82,7 @@ void func_8034BFF8(ActorMarker *marker) {
     s32 phi_s2;
 
     if (marker->unk48 != NULL) {
-        marker->unk4C = vector_new(sizeof(Struct6Es), 0);
+        marker->unk4C = bk_vector_new(sizeof(Struct6Es), 0);
         sp2C = BKModel_getMeshList(marker->unk48);
         phi_s1 = (BKMesh *)(sp2C + 1);
         for(phi_s2 = 0; phi_s2 < sp2C->meshCount_0; phi_s2++){
@@ -119,9 +119,9 @@ void func_8034C21C(ActorMarker *marker) {
     Struct6Es *end_ptr;
     Struct6Es *begin_ptr;
 
-    end_ptr = (Struct6Es *)vector_getEnd(marker->unk4C);
+    end_ptr = (Struct6Es *)bk_vector_getEnd(marker->unk4C);
     D_80386130 = marker->unk4C;
-    begin_ptr = (Struct6Es *)vector_getBegin(marker->unk4C);
+    begin_ptr = (Struct6Es *)bk_vector_getBegin(marker->unk4C);
     for(i_ptr = begin_ptr; i_ptr < end_ptr; i_ptr++){
         D_80371FC0[i_ptr->unk0].unk4(&i_ptr->unkC, i_ptr->unk4, i_ptr->unk8);
     }
@@ -132,8 +132,8 @@ Struct70s *func_8034C2C4(ActorMarker *marker, s32 arg1) {
     Struct6Es *end_ptr;
     Struct6Es *begin_ptr;
 
-    end_ptr = (Struct6Es *)vector_getEnd(marker->unk4C);
-    begin_ptr = (Struct6Es *)vector_getBegin(marker->unk4C);
+    end_ptr = (Struct6Es *)bk_vector_getEnd(marker->unk4C);
+    begin_ptr = (Struct6Es *)bk_vector_getBegin(marker->unk4C);
     for(i_ptr = begin_ptr; i_ptr < end_ptr; i_ptr++){
         if ((i_ptr->unk0 == 3) && (arg1 == i_ptr->unk8)) {
             return &i_ptr->unkC;
@@ -147,8 +147,8 @@ Struct70s *func_8034C344(s32 arg0) {
     Struct6Es *end_ptr;
     Struct6Es *begin_ptr;
 
-    end_ptr =  (Struct6Es *)vector_getEnd(D_80386130);
-    begin_ptr = (Struct6Es *)vector_getBegin(D_80386130);
+    end_ptr =  (Struct6Es *)bk_vector_getEnd(D_80386130);
+    begin_ptr = (Struct6Es *)bk_vector_getBegin(D_80386130);
     for(i_ptr = begin_ptr; i_ptr < end_ptr; i_ptr++){
         if ((i_ptr->unk0 == 8) && (arg0 == i_ptr->unk8)) {
             return &i_ptr->unkC;

@@ -3,7 +3,7 @@
 #include "functions.h"
 #include "variables.h"
 
-#include "time.h"
+#include "bk_time.h"
 
 void func_80346DB4(s32);
 
@@ -18,6 +18,8 @@ f32 D_80385FEC;
 u8  D_80385FF0[0xB];
 f32 D_80386000[0xE]; //timescores
 s32 D_80386038;
+
+bool func_80347A4C(void);
 
 /* .code */
 void func_80345EB0(enum item_e item){

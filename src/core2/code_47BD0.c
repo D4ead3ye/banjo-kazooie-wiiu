@@ -66,7 +66,7 @@ void chBeeSwarm_802CEBA8(Actor *this){
     local = (ActorLocal_core2_47BD0 *)&this->local;
     this->unk100 = NULL;
     
-    free(local->unk8);
+    bk_free(local->unk8);
     local->unk8 = NULL;
     
     assetcache_release(local->unk20);
@@ -164,7 +164,7 @@ void chBeeSwarm_802CF040(Actor *this) {
     ActorLocal_core2_47BD0 *local;
 
     local = (ActorLocal_core2_47BD0 *) &this->local;
-    local->unk8 = (Struct_core2_47BD0_0 *) malloc(local->unk0 * sizeof(Struct_core2_47BD0_0));
+    local->unk8 = (Struct_core2_47BD0_0 *) bk_malloc(local->unk0 * sizeof(Struct_core2_47BD0_0));
     
     for(phi_s1 = 0, phi_s0 = local->unk8; phi_s1 < local->unk0; phi_s1++){
         phi_s0->unk0[0] = randf2(-150.0f, 150.0f);

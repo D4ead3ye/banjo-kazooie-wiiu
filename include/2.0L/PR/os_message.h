@@ -26,7 +26,8 @@
         $Revision: 1.1 $
         $Date: 1998/10/09 08:01:15 $
  *---------------------------------------------------------------------*/
-
+#include "libultraship/libultra/message.h"
+#if 0
 #ifndef _OS_MESSAGE_H_
 #define	_OS_MESSAGE_H_
 
@@ -161,3 +162,4 @@ extern void		osSetEventMesg(OSEvent, OSMesgQueue *, OSMesg);
 #endif
 
 #endif /* !_OS_MESSAGE_H_ */
+#endif

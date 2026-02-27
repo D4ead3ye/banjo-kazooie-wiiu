@@ -1,7 +1,9 @@
-#include <ultra64.h>
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
+#include <ultra64.h>
+
+#include <libultra/convert.h>
 
 extern void func_8025A788(enum comusic_e, f32, f32);
 extern void func_8031CC40(enum map_e, s32);

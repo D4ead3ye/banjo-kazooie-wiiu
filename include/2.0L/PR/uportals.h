@@ -35,7 +35,7 @@
 
 #include <ultra64.h>
 #include "matrix.h"
-#include "vector.h"
+#include "bk_vector.h"
 
 #ifdef __cplusplus
 extern "C" {

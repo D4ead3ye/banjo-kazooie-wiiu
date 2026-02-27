@@ -85,8 +85,8 @@ u8  D_80383428[0x1C];
 s32 D_80383444;
 int D_80383448;
 s32 D_80383450[0x40];
-vector(ActorMarker *) *D_80383550;
-vector(ActorMarker *) *D_80383554;
+bk_vector(ActorMarker *) *D_80383550;
+bk_vector(ActorMarker *) *D_80383554;
 Method_Core2_A5BC0 D_80383558;
 s32 D_8038355C;
 
@@ -300,33 +300,33 @@ static void __marker_draw(ActorMarker *this, Gfx **gfx, Mtx **mtx, Vtx **vtx){
 }
 
 void func_8032D330(){
-    D_80383550 = vector_new(sizeof(ActorMarker *),2);
-    D_80383554 = vector_new(sizeof(ActorMarker *),2);
+    D_80383550 = bk_vector_new(sizeof(ActorMarker *),2);
+    D_80383554 = bk_vector_new(sizeof(ActorMarker *),2);
 }
 
 void func_8032D36C(void){
-    vector_free(D_80383550);
+    bk_vector_free(D_80383550);
     D_80383550 = NULL;
-    vector_free(D_80383554);
+    bk_vector_free(D_80383554);
     D_80383554 = NULL;
 }
 
 void func_8032D3A8(void){
-    vector_clear(D_80383550);
-    vector_clear(D_80383554);
+    bk_vector_clear(D_80383550);
+    bk_vector_clear(D_80383554);
 }
 
 void func_8032D3D8(Gfx **gdl, Mtx **mptr, Vtx **vptr){
     int i;
-    for(i = 0; i < vector_size(D_80383550); i++){
-       __marker_draw(*(u32*) vector_at(D_80383550, i), gdl, mptr, vptr);
+    for(i = 0; i < bk_vector_size(D_80383550); i++){
+       __marker_draw(*(u32*) bk_vector_at(D_80383550, i), gdl, mptr, vptr);
     }
 }
 
 void func_8032D474(Gfx **gdl, Mtx **mptr, Vtx **vptr){
     int i;
-    for(i = 0; i < vector_size(D_80383554); i++){
-       __marker_draw(*(u32*) vector_at(D_80383554, i), gdl, mptr, vptr);
+    for(i = 0; i < bk_vector_size(D_80383554); i++){
+       __marker_draw(*(u32*) bk_vector_at(D_80383554, i), gdl, mptr, vptr);
     }
 }
 
@@ -356,11 +356,11 @@ void func_8032D510(Cube *cube, Gfx **gfx, Mtx **mtx, Vtx **vtx){
             tmp_v0.word = *(u32 *)((s32)iProp + 0x8);
             if(tmp_v0.unk0){//actorProp;
                 if(iProp->actorProp.marker->unk40_22){
-                    markerPtr = (ActorMarker **)vector_pushBackNew(&D_80383550);
+                    markerPtr = (ActorMarker **)bk_vector_pushBackNew(&D_80383550);
                     *markerPtr = iProp->actorProp.marker;
                 }
                 else if(iProp->actorProp.marker->unk40_19){
-                    markerPtr = (ActorMarker **)vector_pushBackNew(&D_80383554);
+                    markerPtr = (ActorMarker **)bk_vector_pushBackNew(&D_80383554);
                     *markerPtr = iProp->actorProp.marker;
                 }
                 else{
@@ -398,10 +398,10 @@ Prop *__codeA5BC0_initProp2Ptr(Cube *cube) {
 
     if (cube->prop2Ptr != NULL) {
         cube->prop2Cnt++;
-        cube->prop2Ptr = realloc(cube->prop2Ptr, cube->prop2Cnt * sizeof(Prop));
+        cube->prop2Ptr = bk_realloc(cube->prop2Ptr, cube->prop2Cnt * sizeof(Prop));
     } else {
         cube->prop2Cnt = 1;
-        cube->prop2Ptr = malloc(sizeof(Prop));
+        cube->prop2Ptr = bk_malloc(sizeof(Prop));
     }
     sp1C = &cube->prop2Ptr[cube->prop2Cnt-1];
     sp1C->markerFlag = false;
@@ -412,10 +412,10 @@ Prop *__codeA5BC0_initProp2Ptr(Cube *cube) {
 NodeProp *__codeA5BC0_pad_func_8032D8F0(Cube *cube) {
     if (cube->prop1Ptr != 0) {
         cube->prop1Cnt++;
-        cube->prop1Ptr = realloc(cube->prop1Ptr, cube->prop1Cnt * sizeof(NodeProp));
+        cube->prop1Ptr = bk_realloc(cube->prop1Ptr, cube->prop1Cnt * sizeof(NodeProp));
     } else {
         cube->prop1Cnt = 1;
-        cube->prop1Ptr = malloc(sizeof(NodeProp));
+        cube->prop1Ptr = bk_malloc(sizeof(NodeProp));
     }
     return &cube->prop1Ptr[cube->prop1Cnt - 1];
 }
@@ -436,10 +436,10 @@ s32 func_8032D9C0(Cube *cube, Prop* prop){
         }
         cube->prop2Cnt--;
         if(cube->prop2Cnt){
-            cube->prop2Ptr = realloc(cube->prop2Ptr, cube->prop2Cnt*sizeof(Prop));
+            cube->prop2Ptr = bk_realloc(cube->prop2Ptr, cube->prop2Cnt*sizeof(Prop));
             code_A5BC0_initCubePropActorProp(cube);
         }else{
-            free(cube->prop2Ptr);
+            bk_free(cube->prop2Ptr);
             cube->prop2Ptr = NULL;
         }
         return sp24;
@@ -463,10 +463,10 @@ void func_8032DB2C(Cube *cube, NodeProp *arg1) {
 
     cube->prop1Cnt--;
     if (cube->prop1Cnt != 0) {
-        cube->prop1Ptr = realloc(cube->prop1Ptr, cube->prop1Cnt * sizeof(NodeProp));
+        cube->prop1Ptr = bk_realloc(cube->prop1Ptr, cube->prop1Cnt * sizeof(NodeProp));
     }
     else{
-        free(cube->prop1Ptr);
+        bk_free(cube->prop1Ptr);
         cube->prop1Ptr = NULL;
         cube->unk0_4 = 0;
     }
@@ -628,11 +628,11 @@ void cube_free(Cube *cube){
                 func_80332B2C(iProp->actorProp.marker);
             }
         }
-        free(cube->prop2Ptr);
+        bk_free(cube->prop2Ptr);
         cube->prop2Ptr = NULL;
     }
     if(cube->prop1Ptr){
-        free(cube->prop1Ptr);
+        bk_free(cube->prop1Ptr);
         cube->prop1Ptr = NULL;
     }
     cube->prop2Cnt = 0;
@@ -821,7 +821,7 @@ bool func_8032E6CC(Cube *cube, s32 *arg1, s32 arg2) {
 
 static void __codeA5BC0_freeCube1Pointer(Cube *cube, s32 cnt){
     if(cube->prop1Ptr != NULL){
-        free(cube->prop1Ptr);
+        bk_free(cube->prop1Ptr);
     }
 
     cube->prop1Cnt = cnt;
@@ -852,7 +852,7 @@ static void __codeA5BC0_initPropPointerForCube(NodeProp *node, Cube *cube, s32 c
         }
     }
 
-    free(node);
+    bk_free(node);
     
     for(i = 0; i < cnt; i++){
         iPtr = &cube->prop1Ptr[i];
@@ -874,15 +874,15 @@ void code7AF80_initCubeFromFile(File *file_ptr, Cube *cube) {
     cube_free(cube);
     if (file_getByte_ifExpected(file_ptr, 0xA, &cube1_count)) {
         __codeA5BC0_freeCube1Pointer(cube, cube1_count);
-        cube->prop1Ptr = (NodeProp*) malloc(cube1_count * sizeof(NodeProp));
-        node_prop_ptr = (NodeProp*) malloc(cube1_count * sizeof(NodeProp));
+        cube->prop1Ptr = (NodeProp*) bk_malloc(cube1_count * sizeof(NodeProp));
+        node_prop_ptr = (NodeProp*) bk_malloc(cube1_count * sizeof(NodeProp));
         file_getNBytes_ifExpected(file_ptr, 0xB, node_prop_ptr, cube->prop1Cnt * sizeof(NodeProp));
         __codeA5BC0_initPropPointerForCube(node_prop_ptr, cube, cube1_count);
         
     } else if (file_getByte_ifExpected(file_ptr, 6, &cube1_count)) {
         __codeA5BC0_freeCube1Pointer(cube, cube1_count);
-        cube->prop1Ptr = (OtherNode*) malloc(cube1_count * sizeof(OtherNode));
-        node_prop_ptr = (OtherNode*) malloc(cube1_count * sizeof(OtherNode));
+        cube->prop1Ptr = (OtherNode*) bk_malloc(cube1_count * sizeof(OtherNode));
+        node_prop_ptr = (OtherNode*) bk_malloc(cube1_count * sizeof(OtherNode));
         file_getNBytes_ifExpected(file_ptr, 7, node_prop_ptr, cube->prop1Cnt * sizeof(OtherNode));
         for(other_prop_ptr = node_prop_ptr; other_prop_ptr < (OtherNode*)&node_prop_ptr[cube1_count]; other_prop_ptr++){
             if(other_prop_ptr->unk4_0 && !other_prop_ptr->unkC_0){
@@ -900,10 +900,10 @@ void code7AF80_initCubeFromFile(File *file_ptr, Cube *cube) {
             sp34 = 0;
         }
         if (cube->prop2Ptr != NULL) {
-            free(cube->prop2Ptr);
+            bk_free(cube->prop2Ptr);
         }
         cube->prop2Cnt = sp47;
-        cube->prop2Ptr = (Prop *) malloc(sp47 * sizeof(Prop));
+        cube->prop2Ptr = (Prop *) bk_malloc(sp47 * sizeof(Prop));
         file_getNBytes_ifExpected(file_ptr, 9, cube->prop2Ptr, cube->prop2Cnt * sizeof(Prop));
         for(var_v1_2 = cube->prop2Ptr; var_v1_2 < cube->prop2Ptr + sp47; var_v1_2++){
                 var_v1_2->unk8_4 = 1;
@@ -922,12 +922,12 @@ void code7AF80_initCubeFromFile(File *file_ptr, Cube *cube) {
             
     }
     if ((cube->prop2Ptr != NULL) && ((cube->prop2Cnt) == 0)) {
-        free(cube->prop2Ptr);
+        bk_free(cube->prop2Ptr);
         cube->prop2Ptr = NULL;
     }
     
     if ((cube->prop1Ptr != NULL) && (cube->prop1Cnt == 0)) {
-        free(cube->prop1Ptr);
+        bk_free(cube->prop1Ptr);
         cube->prop1Ptr = NULL;
         cube->unk0_4 = 0;
     }
@@ -1382,7 +1382,7 @@ bool func_8033056C(Actor *actor){
 void func_803305AC(void){
     s32 i;
 
-    modelCache = (ModelCache *)malloc(AssetCacheSize * sizeof(ModelCache));
+    modelCache = (ModelCache *)bk_malloc(AssetCacheSize * sizeof(ModelCache));
     for(i = 0; i<AssetCacheSize; i++){
         modelCache[i].modelPtr = NULL;
         modelCache[i].unk4 = 0;
@@ -1457,7 +1457,7 @@ void func_803308A0(void) {
         }
     }
     
-    free(modelCache);
+    bk_free(modelCache);
     modelCache = 0;
 }
 
@@ -2200,7 +2200,7 @@ void func_80332894(void) {
     s32 i;
 
     size = 0x579;
-    D_8036E7C4 = malloc(size);
+    D_8036E7C4 = bk_malloc(size);
     i = 0;
     do{
         D_8036E7C4[i] = 0;
@@ -2214,7 +2214,7 @@ void func_80332894(void) {
 }
 
 void func_8033297C(void){
-    free(D_8036E7C4);
+    bk_free(D_8036E7C4);
     D_8036E7C4 = NULL;
     func_8032D36C();
 }
@@ -2223,7 +2223,7 @@ void func_8033297C(void){
 void func_803329AC(void){
     s32 i;
     
-    D_8036E7C8 = (ActorMarker *)malloc(0xE0*sizeof(ActorMarker));
+    D_8036E7C8 = (ActorMarker *)bk_malloc(0xE0*sizeof(ActorMarker));
 
     for( i = 0; i < 0x1C; i++){
         D_80383428[i] = 0;
@@ -2235,7 +2235,7 @@ void func_803329AC(void){
 }
 
 void func_80332A38(void){
-    free(D_8036E7C8);
+    bk_free(D_8036E7C8);
     D_8036E7C8 = NULL;
 }
 

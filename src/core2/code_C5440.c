@@ -66,7 +66,7 @@ struct1Es D_80372030[] = {
 /* .bss */
 struct {
     u8 unk0;
-    vector(struct1Ds) *unk4;
+    bk_vector(struct1Ds) *unk4;
 } D_80386140;
 
 /* .public */
@@ -74,7 +74,7 @@ void func_8034C9B0(int arg0);
 
 //.code
 func_8034C3D0(BKModel *arg0, s32 arg1, s32 vtx_xform_id, s32 arg3){
-    struct1Ds * v0 = vector_pushBackNew(&D_80386140.unk4);
+    struct1Ds * v0 = bk_vector_pushBackNew(&D_80386140.unk4);
     v0->xform_id = vtx_xform_id;
     v0->model = arg0;
     v0->unk4 = arg1;
@@ -83,9 +83,9 @@ func_8034C3D0(BKModel *arg0, s32 arg1, s32 vtx_xform_id, s32 arg3){
 
 Struct70s *func_8034C448(s32 arg0){
     struct1Ds *iPtr;
-    struct1Ds *endPtr = vector_getEnd(D_80386140.unk4);
+    struct1Ds *endPtr = bk_vector_getEnd(D_80386140.unk4);
 
-    for(iPtr = vector_getBegin(D_80386140.unk4); iPtr < endPtr; iPtr++){
+    for(iPtr = bk_vector_getBegin(D_80386140.unk4); iPtr < endPtr; iPtr++){
         if(iPtr->xform_id == 8 && iPtr->unk4 == arg0)
             return &iPtr->unk8;
     }
@@ -115,9 +115,9 @@ s16 func_8034C50C(s32 arg0) {
 
 Struct70s *func_8034C528(s32 arg0){
     struct1Ds *iPtr;
-    struct1Ds *endPtr = vector_getEnd(D_80386140.unk4);
+    struct1Ds *endPtr = bk_vector_getEnd(D_80386140.unk4);
 
-    for(iPtr = vector_getBegin(D_80386140.unk4); iPtr < endPtr; iPtr++){
+    for(iPtr = bk_vector_getBegin(D_80386140.unk4); iPtr < endPtr; iPtr++){
         if(iPtr->xform_id == 2 && iPtr->unk4 == arg0)
             return &iPtr->unk8;
     }
@@ -126,9 +126,9 @@ Struct70s *func_8034C528(s32 arg0){
 
 Struct70s *func_8034C5AC(s32 arg0){
     struct1Ds *iPtr;
-    struct1Ds *endPtr = vector_getEnd(D_80386140.unk4);
+    struct1Ds *endPtr = bk_vector_getEnd(D_80386140.unk4);
 
-    for(iPtr = vector_getBegin(D_80386140.unk4); iPtr < endPtr; iPtr++){
+    for(iPtr = bk_vector_getBegin(D_80386140.unk4); iPtr < endPtr; iPtr++){
         if(iPtr->xform_id == 3 && iPtr->unk4 == arg0)
             return &iPtr->unk8;
     }
@@ -137,9 +137,9 @@ Struct70s *func_8034C5AC(s32 arg0){
 
 Struct70s *func_8034C630(s32 arg0){
     struct1Ds *iPtr;
-    struct1Ds *endPtr = vector_getEnd(D_80386140.unk4);
+    struct1Ds *endPtr = bk_vector_getEnd(D_80386140.unk4);
 
-    for(iPtr = vector_getBegin(D_80386140.unk4); iPtr < endPtr; iPtr++){
+    for(iPtr = bk_vector_getBegin(D_80386140.unk4); iPtr < endPtr; iPtr++){
         if( (iPtr->xform_id == 3)
             && meshList_meshContainsVtx(BKModel_getMeshList(iPtr->model), iPtr->unk4, arg0)
         ){
@@ -190,16 +190,16 @@ void func_8034C6DC(BKModel *arg0){
 
 void func_8034C8D8(void){
     struct1Ds *iPtr;
-    struct1Ds *endPtr = vector_getEnd(D_80386140.unk4);
+    struct1Ds *endPtr = bk_vector_getEnd(D_80386140.unk4);
 
-    for(iPtr = vector_getBegin(D_80386140.unk4); iPtr < endPtr; iPtr++){
+    for(iPtr = bk_vector_getBegin(D_80386140.unk4); iPtr < endPtr; iPtr++){
        D_80372030[iPtr->xform_id].unk8(&iPtr->unk8);
     }
-    vector_free(D_80386140.unk4);
+    bk_vector_free(D_80386140.unk4);
 }
 
 void func_8034C97C(void){
-    D_80386140.unk4 = vector_new(sizeof(struct1Ds), 0x10);
+    D_80386140.unk4 = bk_vector_new(sizeof(struct1Ds), 0x10);
     func_8034C9B0(1);
 }
 
@@ -209,9 +209,9 @@ void func_8034C9B0(int arg0){
 
 void * func_8034C9D4(void){
     struct1Ds *iPtr;
-    struct1Ds *endPtr = vector_getEnd(D_80386140.unk4);
+    struct1Ds *endPtr = bk_vector_getEnd(D_80386140.unk4);
 
-    for(iPtr = vector_getBegin(D_80386140.unk4); iPtr < endPtr; iPtr++){
+    for(iPtr = bk_vector_getBegin(D_80386140.unk4); iPtr < endPtr; iPtr++){
        D_80372030[iPtr->xform_id].unk4(&iPtr->unk8, iPtr->model, iPtr->unk4);
     }
 

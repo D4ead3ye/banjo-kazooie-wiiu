@@ -1,7 +1,9 @@
-#include <ultra64.h>
-#include "rand.h"
 #include "functions.h"
+#include "rand.h"
 #include "variables.h"
+#include <ultra64.h>
+
+#include <bk_math.h>
 #include <math.h>
 #ifndef MIN
 #define MIN(s,t) ((s)<(t)?(s):(t))

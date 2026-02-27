@@ -221,7 +221,7 @@ bool func_802E7588(f32 arg0[3], f32 arg1, f32 arg2[3], f32 arg3) {
     return (ml_vec3f_distance(arg0, arg2) < (arg1 + arg3));
 }
 
-void calculateBoundsAndDirection(f32 startPoint[3], f32 endPoint[3], s32 minBounds[3], s32 maxBounds[3], f32 directionVector[3]) {
+void calculateBoundsAndDirection(f32 startPoint[3], f32 endPoint[3], s32 minBounds[3], s32 maxBounds[3], f32 directionbk_vector[3]) {
     s32 i;
 
     for(i = 0; i < 3; i++){
@@ -238,9 +238,9 @@ void calculateBoundsAndDirection(f32 startPoint[3], f32 endPoint[3], s32 minBoun
         maxBounds[i] += 1;
     }
 
-    directionVector[0] = (endPoint[0] - startPoint[0]);
-    directionVector[1] = (endPoint[1] - startPoint[1]);
-    directionVector[2] = (endPoint[2] - startPoint[2]);
+    directionbk_vector[0] = (endPoint[0] - startPoint[0]);
+    directionbk_vector[1] = (endPoint[1] - startPoint[1]);
+    directionbk_vector[2] = (endPoint[2] - startPoint[2]);
 }
 
 BKCollisionTri *func_802E76B0(BKCollisionList *collisionList, BKVertexList *vertexList, f32 startPoint[3], f32 endPoint[3], f32 arg4[3], u32 flagFilter) {
@@ -257,7 +257,7 @@ BKCollisionTri *func_802E76B0(BKCollisionList *collisionList, BKVertexList *vert
     Vtx *sp164[3];
     s32 min_bounds[3];
     s32 max_bounds[3];
-    f32 direction_vector[3];
+    f32 direction_bk_vector[3];
     Vtx *temp_a2;
     f32 sp130[3];
     f32 sp124[3];
@@ -284,7 +284,7 @@ BKCollisionTri *func_802E76B0(BKCollisionList *collisionList, BKVertexList *vert
 
     result_collision = NULL;
     temp_f20 = (f32) vertexList->global_norm;
-    calculateBoundsAndDirection(startPoint, endPoint, min_bounds, max_bounds, direction_vector);
+    calculateBoundsAndDirection(startPoint, endPoint, min_bounds, max_bounds, direction_bk_vector);
     for(i = 0; i < 3; i++){
         if ((max_bounds[i] <= -temp_f20) || (temp_f20 <= min_bounds[i])) {
             return NULL;
@@ -355,7 +355,7 @@ BKCollisionTri *func_802E76B0(BKCollisionList *collisionList, BKVertexList *vert
                     spBC[2] = -spBC[2];
                 }
                 
-                temp_f12_3 = spBC[0]*direction_vector[0] + spBC[1]*direction_vector[1] + spBC[2]*direction_vector[2];
+                temp_f12_3 = spBC[0]*direction_bk_vector[0] + spBC[1]*direction_bk_vector[1] + spBC[2]*direction_bk_vector[2];
                 pad = (sp90[0][0]*spBC[0] + sp90[0][1]*spBC[1] + sp90[0][2]*spBC[2]);
                 if (temp_f12_3 == 0.0f) 
                     continue;
@@ -364,9 +364,9 @@ BKCollisionTri *func_802E76B0(BKCollisionList *collisionList, BKVertexList *vert
                 if(temp_f0_2 <= 0.0f || 1.0f <= temp_f0_2)
                     continue;
                 
-                spFC[0] = startPoint[0] + (direction_vector[0] * temp_f0_2);
-                spFC[1] = startPoint[1] + (direction_vector[1] * temp_f0_2);
-                spFC[2] = startPoint[2] + (direction_vector[2] * temp_f0_2);
+                spFC[0] = startPoint[0] + (direction_bk_vector[0] * temp_f0_2);
+                spFC[1] = startPoint[1] + (direction_bk_vector[1] * temp_f0_2);
+                spFC[2] = startPoint[2] + (direction_bk_vector[2] * temp_f0_2);
 
                 phi_a0_2 = (ABS_F(spBC[0]) > ABS_F(spBC[1])) ? 0 : 1;
                 phi_a0_2 = (ABS_F(spBC[2]) > ABS_F(spBC[phi_a0_2])) ? 2 : phi_a0_2;
@@ -396,7 +396,7 @@ BKCollisionTri *func_802E76B0(BKCollisionList *collisionList, BKVertexList *vert
                 endPoint[1] = spFC[1];
                 endPoint[2] = spFC[2];
                 ml_vec3f_normalize_copy(arg4, spBC);
-                calculateBoundsAndDirection(startPoint, endPoint, min_bounds, max_bounds, direction_vector);
+                calculateBoundsAndDirection(startPoint, endPoint, min_bounds, max_bounds, direction_bk_vector);
             }
             
         }

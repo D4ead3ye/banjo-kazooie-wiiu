@@ -1,5 +1,6 @@
+#include "PR/n_libaudio.h"
+#include "PR/ultraerror.h"
 #include <ultra64.h>
-#include "n_libaudio.h"
 
 static u32 __readVarLen(ALCSeq *s,u32 track);
 static u8  __getTrackByte(ALCSeq *s,u32 track);
@@ -185,7 +186,7 @@ static u32 __n_alCSeqGetTrackEvent(ALCSeq *seq, u32 track, N_ALEvent *event)
         else
             event->msg.midi.byte2 = 0;
     }
-    return TRUE;
+    return true;
 }
 
 

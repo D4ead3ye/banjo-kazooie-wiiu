@@ -112,7 +112,7 @@ void func_80247818(s32 x, s32 y, s32 w, s32 h) {
             func_8024776C(x + ix, y + iy);
         }
     }
-    osWriteBackDCacheAll();
+    osWritebackDCacheAll();
 }
 
 void func_802478C0(s32 r, s32 g, s32 b) {
@@ -208,7 +208,7 @@ void func_80247C20(void) {
                 gFramebuffers[0][i] = 0;
                 gFramebuffers[1][i] = 0;
         }
-        osWriteBackDCacheAll();
+        osWritebackDCacheAll();
     }
 }
 

@@ -1,7 +1,9 @@
-#include <ultra64.h>
 #include "functions.h"
-#include "variables.h"
 #include "structs.h"
+#include "variables.h"
+#include <ultra64.h>
+
+#include <bk_math.h>
 
 extern s32 func_80244E54(f32[3], f32[3], f32 [3], u32, f32, f32);
 

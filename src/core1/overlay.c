@@ -19,12 +19,13 @@ void overlay_load(
     s32 overlay_id, u32 ram_start, u32 ram_end, u32 rom_start, u32 rom_end, 
     u32 code_start, u32 code_end, u32 data_start, u32 data_end, u32 bss_start, u32 bss_end
 ){
+#if 0
     u32 sp34;
     u32 sp30;
     u32 sp2C;
     u32 *tmp;
 
-    osWriteBackDCacheAll();
+    osWritebackDCacheAll();
     osInvalDCache(ram_start, ram_end - ram_start);
     osInvalICache(ram_start, ram_end - ram_start);
 
@@ -50,11 +51,12 @@ void overlay_load(
 
     if(bss_start){
         bzero(bss_start, bss_end - bss_start);
-        osWriteBackDCacheAll();
+        osWritebackDCacheAll();
         tmp = (u32*) bss_start;
         tmp[0] = sp2C;
         tmp[1] = sp30;
         tmp[2] = D_8027BF2C;
         tmp[3] = D_8027BF30;
     }
+#endif
 }

@@ -1,13 +1,14 @@
-#include <ultra64.h>
+#include "PR/libaudio.h"
 #include "functions.h"
 #include "variables.h"
-
-
+#include <ultra64.h>
+#include "2.0L/PR/os_error.h"
+#include "2.0L/PR/ultraerror.h"
 /* copt used??? */
 
 void alSeqFileNew(ALSeqFile *file, u8 *base)
 {
-    s32 offset = (s32) base;
+    uintptr_t offset = (uintptr_t) base;
     s32 i;
     
     /*

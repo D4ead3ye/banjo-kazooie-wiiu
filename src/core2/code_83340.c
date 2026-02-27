@@ -123,9 +123,9 @@ void func_8030A6B0(void){//clear
             func_8033B338(&jPtr->unk0, &jPtr->unk4);
         }
     }
-    free(D_80382390);
+    bk_free(D_80382390);
     D_80382390 = NULL;
-    free(D_80382394);
+    bk_free(D_80382394);
     D_80382394 = NULL;
 }
 
@@ -133,8 +133,8 @@ void func_8030A78C(void){//init
     struct_7AF80_0* iPtr;
     struct_7AF80_1* jPtr;
 
-    D_80382390 = (struct_7AF80_0 *)malloc(0x2A2 * sizeof(struct_7AF80_0));
-    D_80382394 = (struct_7AF80_1 *)malloc(0x168 * sizeof(struct_7AF80_1));
+    D_80382390 = (struct_7AF80_0 *)bk_malloc(0x2A2 * sizeof(struct_7AF80_0));
+    D_80382394 = (struct_7AF80_1 *)bk_malloc(0x168 * sizeof(struct_7AF80_1));
     D_8036B800 = 0;
     for(iPtr = D_80382390; iPtr < &D_80382390[0x2A2]; iPtr++){
         iPtr->unk0 = NULL;

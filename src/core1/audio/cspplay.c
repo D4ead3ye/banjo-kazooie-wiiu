@@ -1,7 +1,7 @@
-#include <ultra64.h>
+#include "PR/libaudio.h"
 #include "functions.h"
 #include "variables.h"
-
+#include <ultra64.h>
 
 void alCSPPlay(ALCSPlayer *seqp)
 {

@@ -25,8 +25,8 @@ static void __guMtxF2L(float mf[4][4], Mtx *m)
 	int	*ai,*af;
 
 
-	ai=(int *) &m->m[0][0];
-	af=(int *) &m->m[2][0];
+	ai=(int *) &m->mf[0][0];
+	af=(int *) &m->mf[2][0];
 
 	for (i=0; i<4; i++)
 	for (j=0; j<2; j++) {
@@ -47,8 +47,8 @@ void _guMtxF2L(float mf[4][4], Mtx *m) //should be mf[4][4]
   int *af;
     float * a2;
     
-  ai = (int *) (&m->m[0][0]);
-  af = (int *) (&m->m[2][0]);
+  ai = (int *) (&m->mf[0][0]);
+  af = (int *) (&m->mf[2][0]);
   a2 = mf[0];
   for (i = 0; i < 8; i+=4)
     for (j = 0; j < 4; j++) {

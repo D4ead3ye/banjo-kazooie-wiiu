@@ -540,10 +540,10 @@ void lair_func_8038CC9C(void)
 
 void func_8038CCEC(void)
 {
-    free(D_8037DCB8->unk48);
+    bk_free(D_8037DCB8->unk48);
     D_8037DCB8->unk48 = NULL;
 
-    free(D_8037DCB8);
+    bk_free(D_8037DCB8);
     D_8037DCB8 = NULL;
 
     gcquiz_free();
@@ -589,7 +589,7 @@ void func_8038CE28(void)
     s32 i;
 
     gcquiz_init();
-    D_8037DCB8 = malloc(sizeof(struct FF_StorageStruct));
+    D_8037DCB8 = bk_malloc(sizeof(struct FF_StorageStruct));
     quizQuestionAskedBitfield_init();
 
     // dump currently unlocked moves to storage
@@ -607,7 +607,7 @@ void func_8038CE28(void)
     D_8037DCB8->unk14     = 1.f;
     D_8037DCB8->UNK_18     = 0;
     D_8037DCB8->currFfMode = 1;
-    D_8037DCB8->unk48     = malloc(0x90);
+    D_8037DCB8->unk48     = bk_malloc(0x90);
 
     gzquiz_initGruntyQuestions();
 }

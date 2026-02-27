@@ -3,7 +3,7 @@
 #include "functions.h"
 #include "variables.h"
 
-#include "time.h"
+#include "bk_time.h"
 
 #ifndef ABS
 #define	ABS(d)		((d) >= 0) ? (d) : -(d)

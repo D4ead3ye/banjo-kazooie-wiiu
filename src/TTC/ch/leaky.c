@@ -10,7 +10,7 @@ static void __chLeaky_updateFunc(Actor *this);
 
 /* .data */
 ActorAnimationInfo gChLeakyAnimations[3] = {
-    {NULL, NULL},
+    {NULL, 0.0f},
     {ASSET_239_ANIM_LEAKY_IDLE, 2.5f},
     {ASSET_239_ANIM_LEAKY_IDLE, 2.5f}
 };

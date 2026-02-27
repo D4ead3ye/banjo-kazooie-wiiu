@@ -5,7 +5,7 @@
 #include "variables.h"
 #include "zoombox.h"
 
-#include "time.h"
+#include "bk_time.h"
 
 extern void func_80344090(BKSpriteDisplayData *self, s32 frame, Gfx **gfx);
 BKSprite *func_8033B6C4(enum asset_e sprite_id, BKSpriteDisplayData **arg1);
@@ -476,7 +476,7 @@ void gczoombox_free(GcZoombox *this){
     if(this){
         func_80315200(this);
         func_80315300(this);
-        free(this);
+        bk_free(this);
     }
 }
 
@@ -1379,7 +1379,7 @@ GcZoombox *gczoombox_new(s32 y, GcZoomboxSprite portrait_id, s32 arg2, s32 arg3,
     s32 i;
     s32 temp_v1;
 
-    this = (GcZoombox *)malloc(sizeof(GcZoombox));
+    this = (GcZoombox *)bk_malloc(sizeof(GcZoombox));
     this->callback = callback;
     this->state = 0xB;
     this->portrait_id = portrait_id;

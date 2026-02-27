@@ -1,6 +1,8 @@
 #ifndef BANJO_KAZOOIE_CORE1_VIMGR_H
 #define BANJO_KAZOOIE_CORE1_VIMGR_H
 
+#include "libultra/message.h"
+
 typedef struct struct_1_s{
     OSMesgQueue *messageQueue;
     OSMesg message;

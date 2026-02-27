@@ -1,6 +1,6 @@
 #include <ultra64.h>
 #include "functions.h"
-#include "math.h"
+#include "bk_math.h"
 #include "variables.h"
 
 extern f32 *chVile_getPostion(ActorMarker *);
@@ -21,7 +21,7 @@ struct vilegame_piece{
 typedef struct {
     u8 current_type;
     // u8 pad1[3];
-    vector(struct vilegame_piece) *game_pieces;
+    bk_vector(struct vilegame_piece) *game_pieces;
     BKModelBin *grumblie_model_bin;
     u8 unkC;
     u8 unkD;
@@ -423,8 +423,8 @@ void chvilegame_player_consume_piece(Actor *this) {
 
     local = (ActorLocal_BGS_3420 *)&this->local;
 
-    begin = (struct vilegame_piece *)vector_getBegin(local->game_pieces);
-    end = (struct vilegame_piece *) vector_getEnd(local->game_pieces);
+    begin = (struct vilegame_piece *)bk_vector_getBegin(local->game_pieces);
+    end = (struct vilegame_piece *) bk_vector_getEnd(local->game_pieces);
     if ((end != begin) && BGS_func_80389810(sp44)){
         sp44[1] = 0.0f;
         for(i_ptr = begin; i_ptr < end; i_ptr++){
@@ -463,8 +463,8 @@ bool chvilegame_cpu_consume_piece(ActorMarker *marker, f32 position[3]) {
     if (this->state != 5){
         return false;
     }
-    begin = vector_getBegin(local->game_pieces);
-    end = vector_getEnd(local->game_pieces);
+    begin = bk_vector_getBegin(local->game_pieces);
+    end = bk_vector_getEnd(local->game_pieces);
     for(i_ptr = begin; i_ptr < end; i_ptr++){
         if ((ml_vec3f_distance(i_ptr->position, position) < 50.0f) && func_8038B684(i_ptr->marker)) {
             local->vile_score++;
@@ -494,7 +494,7 @@ s32 chvilegame_get_piece_count(ActorMarker *marker){
 
     this = marker_getActor(marker);
     local = (ActorLocal_BGS_3420 *)&this->local;
-    return vector_size(local->game_pieces);
+    return bk_vector_size(local->game_pieces);
 }
 
 s32 func_8038A9E0(ActorMarker *marker){
@@ -536,8 +536,8 @@ bool chvilegame_find_closest_piece(ActorMarker *marker, f32 position[0], f32 yaw
     target_direction[2] = 100.0f;
     ml_vec3f_yaw_rotate_copy(target_direction, target_direction, yaw);
     closest_piece = NULL;
-    begin = (struct vilegame_piece *) vector_getBegin(local->game_pieces);
-    end = (struct vilegame_piece *) vector_getEnd(local->game_pieces);
+    begin = (struct vilegame_piece *) bk_vector_getBegin(local->game_pieces);
+    end = (struct vilegame_piece *) bk_vector_getEnd(local->game_pieces);
     for(i_ptr = begin; i_ptr < end; i_ptr++){
         if( ((local->current_type != YUMBLIE) && (i_ptr->type != YUMBLIE)) 
             || ((local->current_type == YUMBLIE) && (i_ptr->type == YUMBLIE))
@@ -572,7 +572,7 @@ void chvilegame_new_piece(ActorMarker *game_marker, ActorMarker *piece_marker, f
 
     this = marker_getActor(game_marker);
     local = (ActorLocal_BGS_3420 *)&this->local;
-    temp_v0 = (struct vilegame_piece *)vector_pushBackNew(&local->game_pieces);
+    temp_v0 = (struct vilegame_piece *)bk_vector_pushBackNew(&local->game_pieces);
     temp_v0->type = yumblie_type;
     temp_v0->marker = piece_marker;
     temp_v0->position[0] = position[0];
@@ -586,7 +586,7 @@ void chvilegame_free(Actor *this){
 
     local = (ActorLocal_BGS_3420 *)&this->local;
     func_8038A068(this, 0);
-    vector_free(local->game_pieces);
+    bk_vector_free(local->game_pieces);
     assetcache_release(local->grumblie_model_bin);
 }
 
@@ -599,11 +599,11 @@ void chvilegame_remove_piece(ActorMarker *game_marker, ActorMarker *piece_marker
 
     this = marker_getActor(game_marker);
     local = (ActorLocal_BGS_3420 *)&this->local;
-    begin = (struct vilegame_piece *)vector_getBegin(local->game_pieces);
-    end = (struct vilegame_piece *)vector_getEnd(local->game_pieces);
+    begin = (struct vilegame_piece *)bk_vector_getBegin(local->game_pieces);
+    end = (struct vilegame_piece *)bk_vector_getEnd(local->game_pieces);
     for(i_ptr = begin; i_ptr < end; i_ptr++){
         if (piece_marker == i_ptr->marker) {
-            vector_remove(local->game_pieces, i_ptr - begin);
+            bk_vector_remove(local->game_pieces, i_ptr - begin);
             return;
         }
     }
@@ -622,7 +622,7 @@ void chvilegame_update(Actor *this) {
     if (!this->volatile_initialized) {
         this->volatile_initialized = true;
         this->marker->actorFreeFunc = &chvilegame_free;
-        local->game_pieces = vector_new(sizeof(struct vilegame_piece), 0x20);
+        local->game_pieces = bk_vector_new(sizeof(struct vilegame_piece), 0x20);
         local->grumblie_model_bin = assetcache_get(0x3F7);
         local->unkC = 0;
         local->vile_marker = NULL;

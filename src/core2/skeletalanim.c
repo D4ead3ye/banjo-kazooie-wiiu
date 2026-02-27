@@ -45,7 +45,7 @@ static void __perform_callback(SkeletalAnimationCallback* arg0){
 
 void skeletalAnim_clearCallbacks(SkeletalAnimation *self){
     if(self->callback_list != NULL){
-        vector_clear(self->callback_list);
+        bk_vector_clear(self->callback_list);
     }
 }
 
@@ -101,9 +101,9 @@ s32 skeletalAnim_getLoopCount(SkeletalAnimation *self){
 void skeletalAnim_setCallback_0(SkeletalAnimation *self, f32 when, GenFunction_0 fn){
     SkeletalAnimationCallback *ptr;
     if(self->callback_list == NULL){
-        self->callback_list = vector_new(sizeof(SkeletalAnimationCallback), 8);
+        self->callback_list = bk_vector_new(sizeof(SkeletalAnimationCallback), 8);
     }
-    ptr = (SkeletalAnimationCallback *)vector_pushBackNew(&self->callback_list);
+    ptr = (SkeletalAnimationCallback *)bk_vector_pushBackNew(&self->callback_list);
     ptr->when = when;
     ptr->arg_count = 0;
     ptr->callback_fn = fn;
@@ -113,9 +113,9 @@ void skeletalAnim_setCallback_0(SkeletalAnimation *self, f32 when, GenFunction_0
 void skeletalAnim_setCallback_1(SkeletalAnimation *self, f32 when, GenFunction_1 fn, s32 arg){
     SkeletalAnimationCallback *ptr;
     if(self->callback_list == NULL){
-        self->callback_list = vector_new(sizeof(SkeletalAnimationCallback), 8);
+        self->callback_list = bk_vector_new(sizeof(SkeletalAnimationCallback), 8);
     }
-    ptr = (SkeletalAnimationCallback *)vector_pushBackNew(&self->callback_list);
+    ptr = (SkeletalAnimationCallback *)bk_vector_pushBackNew(&self->callback_list);
     ptr->when = when;
     ptr->arg_count = 1;
     ptr->callback_fn = fn;
@@ -127,15 +127,15 @@ void skeletalAnim_free(SkeletalAnimation *self){
     skeletalAnim_clearTransition(self);
     temp_a0 = self->callback_list;
     if(temp_a0 != NULL){
-        vector_free(temp_a0);
+        bk_vector_free(temp_a0);
     }
-    free(self);
+    bk_free(self);
 }
 
 SkeletalAnimation *skeletalAnim_new(void){
     SkeletalAnimation *self;
 
-    self = (SkeletalAnimation *)malloc(sizeof(SkeletalAnimation));
+    self = (SkeletalAnimation *)bk_malloc(sizeof(SkeletalAnimation));
     self->bone_transform = NULL;
     self->animation_bin = NULL;
     self->callback_list = 0;
@@ -166,7 +166,7 @@ void skeletalAnim_set(SkeletalAnimation *self, enum asset_e anim_id, f32 transis
     }
 
     if(self->callback_list != NULL && anim_id != self->animation_id){
-        vector_free(self->callback_list);
+        bk_vector_free(self->callback_list);
         self->callback_list = NULL;
     }
 
@@ -252,8 +252,8 @@ void skeletalAnim_update(SkeletalAnimation *self, f32 dt, s32 arg2) {
         }
 
         if (self->callback_list != NULL) {
-            begin_ptr = vector_getBegin(self->callback_list);
-            end_ptr = vector_getEnd(self->callback_list);
+            begin_ptr = bk_vector_getBegin(self->callback_list);
+            end_ptr = bk_vector_getEnd(self->callback_list);
             for(i_ptr = begin_ptr; i_ptr < end_ptr; i_ptr++) {
                 if (((self->prev_progress <  i_ptr->when) || (self->progress < self->prev_progress)) && ( i_ptr->when <= self->progress)) {
                     __perform_callback(i_ptr);

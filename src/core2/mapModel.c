@@ -178,6 +178,7 @@ struct {
 }mapModel;
 
 enum asset_e mapModel_getOpaModelId(void);
+bool mapModel_has_xlu_bin(void);
 
 /* .code */
 static MapModelDescription *_mapModel_mapIdToDescription(enum map_e map_id){

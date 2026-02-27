@@ -1,3 +1,5 @@
+#include "PR/libaudio.h"
+
 #include <ultra64.h>
 
 void alCSPSetSeq(ALCSPlayer *seqp, ALCSeq *seq)

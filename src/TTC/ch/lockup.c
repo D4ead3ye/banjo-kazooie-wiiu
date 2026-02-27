@@ -22,7 +22,7 @@ enum ch_lockup_states_e {
 
 /* .data */
 ActorAnimationInfo gChLockupAnimations[6] ={
-    {NULL, NULL},
+    {NULL, 0.0f},
     {ASSET_BC_ANIM_LOCKUP, 8000000.0f},
     {ASSET_BC_ANIM_LOCKUP, 4.0f},
     {ASSET_BC_ANIM_LOCKUP, 8000000.0f},

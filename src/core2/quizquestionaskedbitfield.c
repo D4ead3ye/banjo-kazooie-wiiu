@@ -13,13 +13,13 @@ bool quizQuestionAskedBitfield_get(s32 index){
 }
 
 void quizQuestionAskedBitfield_free(void){
-    free(quizQuestionAskedBitfield);
+    bk_free(quizQuestionAskedBitfield);
     quizQuestionAskedBitfield = NULL;
 }
 
 void quizQuestionAskedBitfield_init(void){
     int i;
-    quizQuestionAskedBitfield =(u8*) malloc(FF_QUESTION_ASKED_BITFIELD_SIZE);
+    quizQuestionAskedBitfield =(u8*) bk_malloc(FF_QUESTION_ASKED_BITFIELD_SIZE);
     for(i = 0; i < FF_QUESTION_ASKED_BITFIELD_SIZE; i++){
         quizQuestionAskedBitfield[i] = 0;
     }

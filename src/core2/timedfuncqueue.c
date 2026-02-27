@@ -68,8 +68,8 @@ TimedFunction* __timedFuncQueue_insert(f32 time, s32 cnt, void *funcPtr, s32 arg
     TimedFunction * iPtr;
     TimedFunction * endPtr;
 
-    startPtr = (TimedFunction * )vector_getBegin(D_80383380.ptr);
-    endPtr = (TimedFunction * )vector_getEnd(D_80383380.ptr);
+    startPtr = (TimedFunction * )bk_vector_getBegin(D_80383380.ptr);
+    endPtr = (TimedFunction * )bk_vector_getEnd(D_80383380.ptr);
     if(endPtr == startPtr){
         D_80383380.time = 0.0f; 
     }
@@ -80,7 +80,7 @@ TimedFunction* __timedFuncQueue_insert(f32 time, s32 cnt, void *funcPtr, s32 arg
         if(iPtr->time > time)
             break;
     }
-    retVal = (TimedFunction * )vector_insertNew((vector(TimedFunction)**)&D_80383380, ((s32)iPtr - (s32)startPtr)/(s32)sizeof(TimedFunction));
+    retVal = (TimedFunction * )bk_vector_insertNew((bk_vector(TimedFunction)**)&D_80383380, ((s32)iPtr - (s32)startPtr)/(s32)sizeof(TimedFunction));
     retVal->time = time;
     retVal->arg_cnt = cnt;
     retVal->func5 = (GenFunction_5) funcPtr;
@@ -157,7 +157,7 @@ void __spawnjiggy(DelayedJiggyInfo *jigInfo){
 }
 
 void func_80324C58(void){
-    vector_clear(D_80383380.ptr);
+    bk_vector_clear(D_80383380.ptr);
 }
 
 f32 func_80324C7C(void){
@@ -267,7 +267,7 @@ void timedJiggySpawn(f32 time, s32 jiggyId, f32 *position){
 }
 
 bool timedFuncQueue_is_empty(void){
-    return !vector_size(D_80383380.ptr);
+    return !bk_vector_size(D_80383380.ptr);
 }
 
 /* 
@@ -278,20 +278,20 @@ void timedFuncQueue_flush(void){
     TimedFunction *iPtr;
     TimedFunction iFunc;
 
-    while(vector_size(D_80383380.ptr) > 0){
-        iPtr = vector_getBegin(D_80383380.ptr);
+    while(bk_vector_size(D_80383380.ptr) > 0){
+        iPtr = bk_vector_getBegin(D_80383380.ptr);
         memcpy(&iFunc, iPtr, sizeof(TimedFunction));
-        vector_remove(D_80383380.ptr, 0);
+        bk_vector_remove(D_80383380.ptr, 0);
         __timedFunc_execute(&iFunc);
     }
 }
 
 void timedFuncQueue_free(void){
-    vector_free(D_80383380.ptr);
+    bk_vector_free(D_80383380.ptr);
 }
 
 void timedFuncQueue_init(void){
-    D_80383380.ptr = vector_new(0x70, 0x10);
+    D_80383380.ptr = bk_vector_new(0x70, 0x10);
     D_80383380.time = 0.0f;
 }
 
@@ -303,23 +303,23 @@ void timedFuncQueue_update(void){
     TimedFunction *iPtr;
     TimedFunction iFunc;
 
-    if(vector_size(D_80383380.ptr) == 0)
+    if(bk_vector_size(D_80383380.ptr) == 0)
         return;
 
     D_80383380.time += time_getDelta();
 
-    while(vector_size(D_80383380.ptr) > 0){
-        iPtr = vector_getBegin(D_80383380.ptr);
+    while(bk_vector_size(D_80383380.ptr) > 0){
+        iPtr = bk_vector_getBegin(D_80383380.ptr);
         if(D_80383380.time < iPtr->time)
             break;
         memcpy(&iFunc, iPtr, sizeof(TimedFunction));
-        vector_remove(D_80383380.ptr, 0);
+        bk_vector_remove(D_80383380.ptr, 0);
         __timedFunc_execute(&iFunc);
     }
 }
 
 void timedFuncQueue_defrag(void){
-    D_80383380.ptr = vector_defrag(D_80383380.ptr);
+    D_80383380.ptr = bk_vector_defrag(D_80383380.ptr);
 }
 
 void mapSpecificFlags_setTrue(s32 flag){

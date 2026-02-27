@@ -1,8 +1,11 @@
-#include <ultra64.h>
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
+#include <ultra64.h>
 
+#include <bk_math.h>
+#include <libultra/convert.h>
+#include <libultra/gu.h>
 
 extern void guPerspective(Mtx *, u16*, f32, f32, f32, f32, f32);
 
@@ -13,7 +16,7 @@ f32 sViewportFOVy = VIEWPORT_FOVY_DEFAULT;
 f32 sViewportAspect = 1.35185182f;
 f32 sViewportNear = 30.0f;
 f32 sViewportFar = 4000.0f;
-f32 sViewportLookVector[3];
+f32 sViewportLookbk_vector[3];
 f32 sViewportPosition[3];
 f32 sViewportRotation[3];
 f32 sViewportUnused1; // debug?
@@ -38,8 +41,8 @@ f32 viewport_getDistance(f32 arg0[3]) {
     ml_vec3f_distance(arg0, sViewportPosition);
 }
 
-void viewport_getLookVector(f32 arg0[3]) {
-    ml_vec3f_copy(arg0, sViewportLookVector);
+void viewport_getLookbk_vector(f32 arg0[3]) {
+    ml_vec3f_copy(arg0, sViewportLookbk_vector);
 }
 
 void viewport_getPosition_vec3f(f32 arg0[3]) {
@@ -236,11 +239,11 @@ void viewport_update(void) {
     mlMtxRotPitch(sViewportRotation[0]);
     mlMtxGet(&sViewportMatrix);
 
-    sViewportLookVector[0] = 0.0f;
-    sViewportLookVector[1] = 0.0f;
-    sViewportLookVector[2] = -1.0f;
+    sViewportLookbk_vector[0] = 0.0f;
+    sViewportLookbk_vector[1] = 0.0f;
+    sViewportLookbk_vector[2] = -1.0f;
 
-    mlMtx_apply_vec3f(sViewportLookVector, sViewportLookVector);
+    mlMtx_apply_vec3f(sViewportLookbk_vector, sViewportLookbk_vector);
 }
 
 void viewport_getFrustumPlanes(f32 arg0[4], f32 arg1[4], f32 arg2[4], f32 arg3[4]) {
@@ -455,7 +458,7 @@ f32 viewport_transformCoordinate(f32 x, f32 y, f32 viewport_translation[3], f32 
 f32 sViewportBackupPosition[3];
 f32 sViewportBackupRotation[3];
 f32 sViewportBackupFrustumPlanes[4][4];
-f32 sViewportBackupLookVector[3];
+f32 sViewportBackupLookbk_vector[3];
 BKMtxF sViewportBackupMatrix;
 
 // ??
@@ -502,7 +505,7 @@ void viewport_backupState(void) {
     viewport_getPosition_vec3f(sViewportBackupPosition);
     viewport_getRotation_vec3f(sViewportBackupRotation);
     viewport_getFrustumPlanes(sViewportBackupFrustumPlanes[0], sViewportBackupFrustumPlanes[1], sViewportBackupFrustumPlanes[2], sViewportBackupFrustumPlanes[3]);
-    viewport_getLookVector(sViewportBackupLookVector);
+    viewport_getLookbk_vector(sViewportBackupLookbk_vector);
 
     for(i = 0; i < 4; i++){
         for(j = 0; j < 4; j++){
@@ -517,7 +520,7 @@ void viewport_restoreState(void) {
     viewport_setPosition_vec3f(sViewportBackupPosition);
     viewport_setRotation_vec3f(sViewportBackupRotation);
     viewport_setFrustumPlanes(sViewportBackupFrustumPlanes[0], sViewportBackupFrustumPlanes[1], sViewportBackupFrustumPlanes[2], sViewportBackupFrustumPlanes[3]);
-    ml_vec3f_copy(sViewportLookVector, sViewportBackupLookVector);
+    ml_vec3f_copy(sViewportLookbk_vector, sViewportBackupLookbk_vector);
 
     for(i = 0; i < 4; i++){
         for(j = 0; j < 4; j++){

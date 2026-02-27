@@ -2,7 +2,7 @@
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
-#include "n_libaudio.h"
+#include "2.0L/PR/n_libaudio.h"
 
 extern void func_80335394(N_AL_Struct81s *, f32);
 extern f32 sfx_randf2(f32, f32);
@@ -219,7 +219,7 @@ s32 func_8030CDE4(SfxSource *arg0){
     f32 pad;
 
     viewport_getPosition_vec3f(sp44);
-    viewport_getLookVector(sp38);
+    viewport_getLookbk_vector(sp38);
     sp2C[0] = arg0->position[0] - sp44[0];
     sp2C[1] = arg0->position[1] - sp44[1];
     sp2C[2] = arg0->position[2] - sp44[2];

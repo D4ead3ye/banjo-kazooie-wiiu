@@ -2,7 +2,7 @@
 #include "functions.h"
 #include "variables.h"
 
-void __codeBF0_draw(Actor *this);
+static void __codeBF0_draw(Actor *this);
 
 /* .data */
 ActorInfo gCodeBF0 = {

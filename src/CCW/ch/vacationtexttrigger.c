@@ -4,6 +4,8 @@
 
 #include "math.h" // for SQ()
 
+#include <bk_math.h>
+
 void chVacationTextTrigger_update(Actor* this);
 
 /* .data */

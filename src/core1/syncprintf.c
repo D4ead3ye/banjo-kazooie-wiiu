@@ -1,6 +1,7 @@
 #include <stdarg.h>
-#include <rmon.h>
-#include <os.h>
+// Lighthouse [port] These functions aren't used so we can remove these includes
+//#include <rmon.h>
+//#include <os.h>
 
 void osSyncPrintf(const char *fmt, ...)
 {

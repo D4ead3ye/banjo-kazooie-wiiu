@@ -1,7 +1,7 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
-#include <math.h>
+#include "bk_math.h"
 
 extern f32 mapModel_getFloorY(f32[3]);
 

@@ -67,6 +67,7 @@ typedef struct {
 static void __gcquiz_advanceStateTo(enum gcquiz_state state);
 static void __gcquiz_func_80319E20(s32 portrait_id, s32 state);
 static void __gcquiz_closeZoomboxes(void);
+bool gcquiz_isNotInInitialState();
 
 #define SELECTABLE_PORTAIT_COUNT 0x2C
 
@@ -221,8 +222,8 @@ static f32 __gcquiz_animation_duration(s32 arg0){
 void gcquiz_init() {
     s32 i;
 
-    sD_803830E0 = malloc(sizeof(Struct_Core2_91E10));
-    sD_803830E0->unkC = malloc(0x400);
+    sD_803830E0 = bk_malloc(sizeof(Struct_Core2_91E10));
+    sD_803830E0->unkC = bk_malloc(0x400);
     sD_803830E0->unk16 = 0x14U;
     sD_803830E0->unk17 = 0x1E;
     sD_803830E0->portait_ids[0] = 0;
@@ -239,13 +240,13 @@ void gcquiz_free() {
     s32 i;
 
     if (sD_803830E0 != NULL) {
-        free(sD_803830E0->unkC);
+        bk_free(sD_803830E0->unkC);
         sD_803830E0->unkC = NULL;
         for(i = 0; i < 4; i++){
             gczoombox_free(sD_803830E0->zoomboxes[i]);
             sD_803830E0->zoomboxes[i] = NULL;
         }
-        free(sD_803830E0);
+        bk_free(sD_803830E0);
         sD_803830E0 = NULL;
     }
 }
@@ -285,7 +286,7 @@ static bool __gcquiz_func_803192A4(enum ff_question_type_e q_type, s32 q_index, 
 
     // not in asset cache?
     if (code_B3A80_func_8033BDAC(quiz_question_index, sD_803830E0->unkC, 0x400) == 0) {
-        free(sD_803830E0->unkC);
+        bk_free(sD_803830E0->unkC);
         sD_803830E0->unkC = (QuizQuestionBin *) assetcache_get(quiz_question_index);
     }
 

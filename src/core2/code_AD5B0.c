@@ -396,7 +396,7 @@ void func_80335140(enum map_e map_id) {
         } else if (file_isNextByteExpected(fp, 3)) {
             ncCameraNodeList_fromFile(fp);
         } else if (file_isNextByteExpected(fp, 4)) {
-            lightingVectorList_fromFile(fp);
+            lightingbk_vectorList_fromFile(fp);
         }
     }
     file_close(fp); //file close

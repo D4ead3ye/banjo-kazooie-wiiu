@@ -23,7 +23,7 @@ s32 osContInit(OSMesgQueue *mq, u8 *bitpattern, OSContStatus *data)
     ret = 0;
     if (__osContinitialized)
         return ret;
-    __osContinitialized = TRUE;
+    __osContinitialized = true;
     t = osGetTime();
     if (500000 * osClockRate / 1000000 > t)
     {

@@ -29,13 +29,13 @@ void defragManager_free(void){
 
 void defragManager_80240874(void){
     if(func_8023E000() == 3){
-        osSendMesg(&D_8027E120, NULL, OS_MESG_BLOCK);
+        osSendMesgPtr(&D_8027E120, NULL, OS_MESG_BLOCK);
     }
 }
 
 void defragManager_802408B0(void){
     if(func_8023E000() == 3){
-        osSendMesg(&D_8027E140, NULL, OS_MESG_BLOCK);
+        osSendMesgPtr(&D_8027E140, NULL, OS_MESG_BLOCK);
     }
 }
 

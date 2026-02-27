@@ -19,7 +19,8 @@
 
 #ifndef _GBI_H_
 #define	_GBI_H_
-
+#include <libultraship/libultra/gbi.h>
+#if 0
 #include <PR/ultratypes.h>
 
 /*
@@ -4568,5 +4569,5 @@ typedef union {
 
 #endif /* _LANGUAGE_C */
 
-
+#endif
 #endif /* _GBI_H_ */

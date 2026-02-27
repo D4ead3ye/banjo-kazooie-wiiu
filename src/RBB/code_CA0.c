@@ -1,7 +1,8 @@
-#include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include <ultra64.h>
 
+#include <bk_math.h>
 
 /* typedefs and declarations */
 void func_803878B0(Actor *this);

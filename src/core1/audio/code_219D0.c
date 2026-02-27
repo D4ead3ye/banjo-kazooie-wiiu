@@ -1,7 +1,7 @@
-#include <ultra64.h>
+#include "PR/libaudio.h"
 #include "functions.h"
 #include "variables.h"
-
+#include <ultra64.h>
 
 void func_8025F3F0(ALCSPlayer *seqp, f32 arg1, f32 arg2)
 {

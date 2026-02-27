@@ -152,7 +152,7 @@ void func_8030F078(void){
             g_Dialog.string_list[i][j].str = NULL;
         }
         g_Dialog.string_count[i] = 0;
-        free(g_Dialog.string_list[i]);
+        bk_free(g_Dialog.string_list[i]);
         g_Dialog.string_list[i] = NULL;
     }
     if(g_Dialog.unk130 != -1){
@@ -624,7 +624,7 @@ void func_80310574(s32 text_id){
     
     for(i = 0; i < 2; i++){
         g_Dialog.string_count[i] = *(txt++);
-        g_Dialog.string_list[i] = (struct13s *) malloc(g_Dialog.string_count[i]*sizeof(struct13s));
+        g_Dialog.string_list[i] = (struct13s *) bk_malloc(g_Dialog.string_count[i]*sizeof(struct13s));
         for(j = 0; j < g_Dialog.string_count[i]; j++){//L803105F0
             ch = *(txt++);
             if(ch > 0 && ch < 0x20){

@@ -3,7 +3,9 @@
 #include "functions.h"
 #include "variables.h"
 
-#include "time.h"
+#include "bk_time.h"
+
+#include <libultra/convert.h>
 
 #define _76D90_MAX(s,t) ((s < t)? t : s)
 #define _76D90_MIN(s,t) ((s > t)? t : s)

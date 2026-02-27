@@ -462,7 +462,7 @@ CodeAD110Callback sRadiusTriggers[] ={
 };
 
 /* .bss */
-vector(Struct_core2_AD110_0) *D_803835C0;
+bk_vector(Struct_core2_AD110_0) *D_803835C0;
 
 /* .code */
 bool func_803340A0(f32 arg0[3], f32 arg1[3], f32 arg2) {
@@ -483,8 +483,8 @@ bool func_803340A0(f32 arg0[3], f32 arg1[3], f32 arg2) {
         }
     }
 
-    end_ptr = (Struct_core2_AD110_0 *)vector_getEnd(D_803835C0);
-    begin_ptr = (Struct_core2_AD110_0 *)vector_getBegin(D_803835C0);
+    end_ptr = (Struct_core2_AD110_0 *)bk_vector_getEnd(D_803835C0);
+    begin_ptr = (Struct_core2_AD110_0 *)bk_vector_getBegin(D_803835C0);
     for(i_ptr = begin_ptr; i_ptr < end_ptr; i_ptr++) {
         if( (i_ptr->unk1C == 1) 
             && ((!((i_ptr->unk0[0] + i_ptr->unk18) <= sp4C[0])) || !((i_ptr->unkC[0] + i_ptr->unk18) <= sp4C[0]))
@@ -506,13 +506,13 @@ s32 func_803342AC(f32 arg0[3], f32 arg1[3], f32 arg2){
     if(!func_803340A0(arg0, arg1, arg2))
         return 0;
 
-    end_ptr = (Struct_core2_AD110_0 *)vector_getEnd(D_803835C0);
-    for(iPtr = (Struct_core2_AD110_0 *)vector_getBegin(D_803835C0); iPtr < end_ptr; iPtr++){
+    end_ptr = (Struct_core2_AD110_0 *)bk_vector_getEnd(D_803835C0);
+    for(iPtr = (Struct_core2_AD110_0 *)bk_vector_getBegin(D_803835C0); iPtr < end_ptr; iPtr++){
         if(iPtr->unk1C == 0)
             break;
     }
     if(iPtr == end_ptr){
-        iPtr = (Struct_core2_AD110_0 *)vector_pushBackNew(&D_803835C0);
+        iPtr = (Struct_core2_AD110_0 *)bk_vector_pushBackNew(&D_803835C0);
     }
     iPtr->unk1C = 1;
 
@@ -525,21 +525,21 @@ s32 func_803342AC(f32 arg0[3], f32 arg1[3], f32 arg2){
     iPtr->unkC[2] = arg1[2];
 
     iPtr->unk18 = arg2;
-    return (iPtr - (Struct_core2_AD110_0 *)vector_getBegin(D_803835C0)) + 1;
+    return (iPtr - (Struct_core2_AD110_0 *)bk_vector_getBegin(D_803835C0)) + 1;
 }
 
 
 void func_803343AC(void){
-    vector_free(D_803835C0);
+    bk_vector_free(D_803835C0);
 }
 
 void func_803343D0(void){
-    D_803835C0 = vector_new(sizeof(Struct_core2_AD110_0), 2);
+    D_803835C0 = bk_vector_new(sizeof(Struct_core2_AD110_0), 2);
 }
 
 void func_803343F8(s32 indx){
     Struct_core2_AD110_0 *elem;
-    elem = (Struct_core2_AD110_0 *)vector_at(D_803835C0, indx - 1);
+    elem = (Struct_core2_AD110_0 *)bk_vector_at(D_803835C0, indx - 1);
     elem->unk1C = 0;
 }
 

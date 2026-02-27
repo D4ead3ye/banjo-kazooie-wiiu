@@ -1,7 +1,8 @@
 #include <ultra64.h>
 #include "synthInternals.h"
 #include "n_synth.h"
-
+#include "2.0L/PR/ultraerror.h"
+#include "2.0L/PR/os_error.h"
 
 void n_alSynStartVoiceParams(N_ALVoice *v, ALWaveTable *w,
                            f32 pitch, s16 vol, ALPan pan, u8 fxmix,

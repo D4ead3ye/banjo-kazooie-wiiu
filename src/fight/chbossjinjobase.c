@@ -1,7 +1,9 @@
-#include <ultra64.h>
+#include "fight.h"
 #include "functions.h"
 #include "variables.h"
-#include "fight.h"
+#include <ultra64.h>
+
+#include <bk_math.h>
 
 typedef struct {
     u8 sfxsourceIdx;

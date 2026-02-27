@@ -2,7 +2,7 @@
 #define __BA_PHYSICS_H__
 
 #include <ultra64.h>
-
+#include "libultraship/libultra/types.h"
 typedef enum ba_physics_type_e{
     BA_PHYSICS_NONE,
     BA_PHYSICS_UNK1,

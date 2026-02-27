@@ -1,7 +1,7 @@
 #ifndef _ULTRATYPES_H_
 #define _ULTRATYPES_H_
-
-
+#include <libultraship/libultra/types.h>
+#if 0
 /**************************************************************************
  *                                                                        *
  *               Copyright (C) 1995, Silicon Graphics, Inc.               *
@@ -85,6 +85,6 @@ typedef unsigned long   size_t;
 #ifndef NULL
 #define NULL    0
 #endif
-
+#endif
 #endif  /* _ULTRATYPES_H_ */
 

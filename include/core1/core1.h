@@ -70,7 +70,7 @@ extern u8 D_8000E800;
 
 void func_80253190(Gfx **gfx);
 void func_80253208(Gfx **gfx, s32 x, s32 y, s32 w, s32 h, void *color_buffer);
-bool func_80253400(void);
+int func_80253400(void);
 bool depthBuffer_isPointerSet(void);
 void depthBuffer_stub(void);
 void func_80253428(int arg0);

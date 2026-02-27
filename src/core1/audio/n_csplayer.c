@@ -5,6 +5,8 @@
 #include "n_synth.h"
 #include "seqp.h"
 #include "file_and_line.h"
+#include "2.0L/PR/ultraerror.h"
+#include <libultra/exception.h>
 
 extern void func_8033F000(const char *, const char *, int);
 void    n_alSynSetVol( N_ALVoice *v, s16 volume, ALMicroTime t);
@@ -321,7 +323,7 @@ static ALMicroTime __n_CSPVoiceHandler(void *node)
 	case (AL_SEQ_END_EVT):
 	case (AL_TEMPO_EVT):
 	case (AL_SEQ_MIDI_EVT):
-        matching_assert(FALSE, n_csplayer.c, 0x128);
+        matching_assert(false, n_csplayer.c, 0x128);
 	    break;
         }
         seqp->nextDelta = alEvtqNextEvent(&seqp->evtq, &seqp->nextEvent); 
@@ -404,7 +406,7 @@ __CSPHandleNextSeqEvent(ALCSPlayer *seqp)
 	  break;
 	  
       default:
-	  matching_assert(FALSE, n_csplayer.c, 0x161);	/* Sequence event type not supported. */
+	  matching_assert(false, n_csplayer.c, 0x161);	/* Sequence event type not supported. */
     }
 }
 

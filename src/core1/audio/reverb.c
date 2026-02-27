@@ -4,6 +4,7 @@
 
 #include "synthInternals.h"
 #include "initfx.h"
+#include "2.0L/PR/ultraerror.h"
 
 #ifndef assert
 #define assert(s) 

@@ -1,10 +1,9 @@
-#include <ultra64.h>
+#include "core2/particle.h"
 #include "functions.h"
 #include "variables.h"
-#include "core2/particle.h"
+#include <ultra64.h>
 
-
-
+#include <bk_math.h>
 
 /* typedefs and declarations */
 void func_803881E8(Actor *this, s32 arg1);

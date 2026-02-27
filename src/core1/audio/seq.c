@@ -1,6 +1,8 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include "2.0L/PR/libaudio.h"
+#include "2.0L/PR/ultraerror.h"
 
 extern f64 D_80278D50;
 extern f64 D_80278D58;
@@ -162,7 +164,7 @@ void alSeqNextEvent(ALSeq *seq, ALEvent *event)
   Returns the delta time in ticks for the next event in the sequence.
   Assumes that the sequence data pointer is pointing to the delta time.
   
-  If the curPtr is at or beyond the end of the sequence, then return FALSE
+  If the curPtr is at or beyond the end of the sequence, then return false
   to indicate no next event.
   sct 11/6/95
 */
@@ -172,13 +174,13 @@ char __alSeqNextDelta (ALSeq *seq, s32 *pDeltaTicks)
 
   /* sct 1/16/96 - Put in safety check here to make sure we don't read past sequence data. */
   if (seq->curPtr >= seq->base + seq->len)
-      return FALSE;
+      return false;
 
   savedPtr = seq->curPtr;
   *pDeltaTicks = readVarLen(seq);   /* read the delta time */
   seq->curPtr = savedPtr;
 
-  return TRUE;
+  return true;
 }  
 
 f32 alSeqTicksToSec(ALSeq *seq, s32 ticks, u32 tempo)

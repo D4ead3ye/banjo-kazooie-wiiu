@@ -1,12 +1,24 @@
-#include <ultra64.h>
+// Needs to be included here because interrupt.h contains:
+// typedef u32 OSIntMask; and u32 isn't defined before that.
+
+#include "libultraship/libultra/types.h"
+#include "2.0L/PR/os_system.h"
+#include "2.0L/PR/ucode.h"
 #include "core1/core1.h"
 #include "functions.h"
+#include "libultraship/libultra/rcp.h"
+#include "libultraship/libultra/sptask.h"
+#include "libultraship/libultra/types.h"
 #include "variables.h"
 #include "version.h"
+#include <libultra/r4300.h>
+#include <ultra64.h>
+
+#include <libultra/rdp.h>
 
 typedef struct {
-    s32 unk0;
-    s32 unk4;
+    OSMesgQueue unk0;
+    OSMesg unk4;
     s32 unk8;
     s32 unkC;
 }Struct_Core1_8C50_s;
@@ -93,7 +105,8 @@ void func_80246670(OSMesg arg0){
     static s32 D_802759A0 = 1;
     
     osSendMesg(&D_8027FB60, arg0, 1);
-    if((s32) arg0 == 3 ){
+    // Lighthouse TODO verify this is right
+    if(((Struct_Core1_15B30*)arg0.ptr)->unk0 == 3 ){
         D_80275994 = 0x1e;
         if(D_802759A0){
             osDpSetStatus(DPC_CLR_FREEZE);
@@ -107,7 +120,7 @@ void func_80246670(OSMesg arg0){
 void func_802466F4(OSMesg arg0){
     s32 tmp = (D_80280680 + 1) % 0x14;
     if(D_80280684 != tmp){
-        D_80280630[D_80280680] = arg0;
+        D_80280630[D_80280680] = arg0.ptr;
         D_80280680 = tmp;
     }
 }
@@ -115,12 +128,13 @@ void func_802466F4(OSMesg arg0){
 void func_80246744(OSMesg arg0){
     s32 tmp = (D_80280628 + 1) % 0x14;
     if(D_8028062C != tmp){
-        D_802805D8[D_80280628] = arg0;
+        D_802805D8[D_80280628] = arg0.ptr;
         D_80280628 = tmp;
     }
 }
 
 void func_80246794(Struct_Core1_8C50_s * arg0){
+#if 0
     ucode_getPtrAndSize(&D_80275910.t.ucode_boot, &D_80275910.t.ucode_boot_size);
     D_80275910.t.ucode = n_aspMainTextStart;
     D_80275910.t.ucode_data = n_aspMainDataStart;
@@ -132,9 +146,11 @@ void func_80246794(Struct_Core1_8C50_s * arg0){
     osSpTaskLoad(&D_80275910);
     osSpTaskStartGo(&D_80275910);
     D_8027FC1C = 4;
+#endif
 }
 
 void func_80246844(Struct_Core1_8C50_s * arg0){
+#if 0
     ucode_getPtrAndSize(&D_80275950.t.ucode_boot, &D_80275950.t.ucode_boot_size);
     D_80275950.t.ucode = gSPF3DEX_fifoTextStart;
     D_80275950.t.ucode_data = gSPF3DEX_fifoDataStart;
@@ -150,9 +166,12 @@ void func_80246844(Struct_Core1_8C50_s * arg0){
         D_8027FC14 = D_8027FC18;
         D_80275998 = 0x1e;
     }
+   #endif
 }
 
 void func_8024692C(Struct_Core1_8C50_s * arg0){
+// Lighthouse [port] This functions loads ucode. We don't need to and this code is bad anyway
+#if 0
     ucode_getPtrAndSize(&D_80275950.t.ucode_boot, &D_80275950.t.ucode_boot_size);
     D_80275950.t.ucode = gSPL3DEX_fifoTextStart;
     D_80275950.t.ucode_data = gSPL3DEX_fifoDataStart;
@@ -167,10 +186,12 @@ void func_8024692C(Struct_Core1_8C50_s * arg0){
     if(!(osDpGetStatus() & DPC_STATUS_FREEZE)){
         D_8027FC14 = D_8027FC18;
         D_80275998 = 0x1e;
-    }
+
+    #endif
 }
 
 void func_80246A14(Struct_Core1_8C50_s *arg0){
+#if 0
     switch(arg0->unk0){
         case 1:
             func_80246844(arg0);
@@ -179,7 +200,8 @@ void func_80246A14(Struct_Core1_8C50_s *arg0){
         case 2:
             func_8024692C(arg0);
             break;
-    }
+
+    #endif
 }
 
 void func_80246A64(OSMesg msg){
@@ -203,19 +225,22 @@ void func_80246B0C(OSMesg msg){
 }
 
 void func_80246B94(void){
+#if 0
     if( D_8027FC1C == 0x10 
         && D_8027FC14 == 2 
         && D_8028062C == D_80280628
         && !(osDpGetStatus() & DPC_STATUS_FREEZE)
     ){
-        osSendMesg(&D_8027FBC8, NULL, OS_MESG_NOBLOCK);
+        osSendMesgPtr(&D_8027FBC8, NULL, OS_MESG_NOBLOCK);
     }
     else{
         D_8027FC0C++;
     }
+#endif
 }
-
+extern u64 osClockRate;
 void func_80246C2C(void){
+#if 0
     if((D_8027FC14 << 1) < 0){
         osDpSetStatus(DPC_SET_FREEZE);
         D_80280688 = osViGetCurrentFramebuffer();
@@ -229,13 +254,15 @@ void func_80246C2C(void){
     }
     else{
         if(D_8027FC0C && D_8028062C == D_80280628 && !(osDpGetStatus() & DPC_STATUS_FREEZE)){
-            osSendMesg(&D_8027FBC8, NULL, 0);
+            osSendMesgPtr(&D_8027FBC8, NULL, 0);
             D_8027FC0C--;
         }
     }
+#endif
 }
 
 void func_80246D78(void){
+#if 0
     static s32 D_802759A4 = 0;
     s32 sp2C = (D_8027FC0C != 0) && (D_8028062C == D_80280628) && (D_8027FC18 == 2) && (D_8027FC1C == 0x10);
     volatile s32 sp30;
@@ -254,7 +281,7 @@ void func_80246D78(void){
         }
 
         if(sp2C){
-            osSendMesg(&D_8027FBC8, NULL, OS_MESG_NOBLOCK);
+            osSendMesgPtr(&D_8027FBC8, NULL, OS_MESG_NOBLOCK);
             D_8027FC0C--;
         }
     }
@@ -279,20 +306,23 @@ void func_80246D78(void){
     D_802759A4++;
     if(!(D_802759A4 & 1)){
         osStopTimer(&D_80280690);
-        osSetTimer(&D_80280690, 280000, 0, &D_8027FB60, CORE1_8C50_EVENT_AUDIO_TIMER);
+        osSetTimer(&D_80280690, 280000, 0, &D_8027FB60, OS_MESG_32(CORE1_8C50_EVENT_AUDIO_TIMER));
     }
 
     if(D_802806D0){
         osStopTimer(&D_802806B0);
 #if VERSION == VERSION_USA_1_0
-        osSetTimer(&D_802806B0, ((osClockRate / 60)* 2) / 3, 0, &D_8027FB60, CORE1_8C50_EVENT_CONT_TIMER);
+        osSetTimer(&D_802806B0, ((osClockRate / 60)* 2) / 3, 0, &D_8027FB60, OS_MESG_32(CORE1_8C50_EVENT_CONT_TIMER));
 #elif VERSION == VERSION_PAL
         osSetTimer(&D_802806B0, ((osClockRate / 60.0)* 2) / 3, 0, &D_8027FB60, CORE1_8C50_EVENT_CONT_TIMER);
 #endif
     }
+#endif
 }
 
 void func_80247000(void) {
+    // Lighthouse TODO what is this?
+#if 0
     Struct_Core1_8C50_s *sp1C;
     s32 temp_v1;
     Struct_Core1_8C50_s *temp_v0;
@@ -308,7 +338,7 @@ void func_80247000(void) {
     }
 
     if (D_8027FC1C == 4) {
-        osSendMesg(D_8027FC08[1].unk0, D_8027FC08[1].unk4, 0);
+        osSendMesg(&D_8027FC08[1].unk0, D_8027FC08[1].unk4, 0);
     }
 
     if ((D_8027FC1C == 4) && (D_8027FC24 != 0)) {
@@ -327,9 +357,10 @@ void func_80247000(void) {
     }
     
     if ((D_8027FC0C != 0) && (D_8027FC14 == 2) && !(osDpGetStatus() & 2)) {
-        osSendMesg(&D_8027FBC8, NULL, 0);
+        osSendMesgPtr(&D_8027FBC8, NULL, 0);
         D_8027FC0C -= 1;
     }
+#endif
 }
 
 void func_802471D8(OSMesg arg0){
@@ -337,7 +368,7 @@ void func_802471D8(OSMesg arg0){
 }
 
 void func_802471EC(void){
-    osSendMesg(audioManager_getFrameMesgQueue(), NULL, OS_MESG_NOBLOCK);
+    osSendMesgPtr(audioManager_getFrameMesgQueue(), NULL, OS_MESG_NOBLOCK);
     func_80247224();
 }
 
@@ -356,7 +387,7 @@ void func_80247224(void){
 }
 
 void func_80247304(void){}
-
+extern s32 	osTvType;
 void func_8024730C(void){
     static OSViMode D_802759A8 = {
         OS_VI_MPAL_LPN1, /* type */
@@ -436,13 +467,14 @@ void func_8024730C(void){
 }
 
 void func_80247380(void){
-    if(!(___osGetSR() & SR_IBIT5)){
+    if(!(__osGetSR() & SR_IBIT5)){
         func_8024730C();
     }
 }
 
 //resetproc
 void func_802473B4(void *arg0){
+#if 0
     OSMesg msg = NULL;
     do{
         osRecvMesg(&D_8027FB60, &msg, OS_MESG_BLOCK);
@@ -463,10 +495,12 @@ void func_802473B4(void *arg0){
             else if(*(u32*)msg == 7){ func_802471D8(msg); }
         }
     }while(1);
+        #endif
 }
 
 //resetThreadCreate
 void func_80247560(void){
+#if 0
     u64 *tmp_v0;
     osCreateMesgQueue(&D_8027FB60, &D_8027FB78, 20);
     osCreateMesgQueue(&D_8027FBC8, &D_8027FBE0, 10);
@@ -474,7 +508,7 @@ void func_80247560(void){
     osSetEventMesg(OS_EVENT_SP, &D_8027FB60, CORE1_8C50_EVENT_SP);
     osSetEventMesg(OS_EVENT_FAULT, &D_8027FB60, CORE1_8C50_EVENT_FAULT);
     osSetEventMesg(OS_EVENT_PRENMI, &D_8027FB60, CORE1_8C50_EVENT_PRENMI);
-    viMgr_func_8024BDAC(&D_8027FB60, 5);
+    viMgr_func_8024BDAC(&D_8027FB60, OS_MESG_32(5));
     D_8027FC0C = 0;
     D_8027FC10 = 0;
     D_8027FC14 = D_8027FC18 = 2;
@@ -493,6 +527,7 @@ void func_80247560(void){
     D_80275950.t.yield_data_ptr = tmp_v0;
     osCreateThread(&D_80280428, 5, func_802473B4, NULL, &D_8027FC28[2048], 60);
     osStartThread(&D_80280428);
+#endif
 }
 
 void func_802476DC(void){

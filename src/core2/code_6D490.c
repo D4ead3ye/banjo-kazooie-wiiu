@@ -157,11 +157,11 @@ void func_802F46F4(Struct5Ds *this){
 void func_802F4798(Struct5Ds *this){
     sfxsource_freeSfxsourceByIndex(this->unk1C);
     sfxsource_freeSfxsourceByIndex(this->unk1D);
-    free(this);
+    bk_free(this);
 }
 
 Struct5Ds *func_802F47D0(void){
-    Struct5Ds *this = (Struct5Ds *)malloc(sizeof(Struct5Ds));
+    Struct5Ds *this = (Struct5Ds *)bk_malloc(sizeof(Struct5Ds));
     this->unk1E = 0;
     this->unk1F = 1;
     

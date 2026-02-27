@@ -169,7 +169,7 @@ extern void guMtxXFMF(float mf[4][4], float x, float y, float z,
 extern void guMtxXFML(Mtx *m, float x, float y, float z, 
 		      float *ox, float *oy, float *oz);
 
-/* vector utility: */
+/* bk_vector utility: */
 extern void guNormalize(float *x, float *y, float *z);
 
 /* light utilities: */

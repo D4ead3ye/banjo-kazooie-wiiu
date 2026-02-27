@@ -1,6 +1,7 @@
 #ifndef BANJO_KAZOOIE_CORE1_PFSMANAGER_H
 #define BANJO_KAZOOIE_CORE1_PFSMANAGER_H
-
+#include "libultraship/libultra/message.h"
+#include "libultraship/libultra/controller.h"
 typedef struct pfs_manager_face_buttons_s {
     bool button_a;
     bool button_b;

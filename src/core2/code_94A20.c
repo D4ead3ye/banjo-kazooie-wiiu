@@ -25,7 +25,7 @@ s32 func_8031B9B0(struct0 *this, s32 arg1){
 struct0 *func_8031B9D8(void){
     struct0 *this;
 
-    this = (struct0 *)malloc(0x60);
+    this = (struct0 *)bk_malloc(0x60);
     ml_vec3f_clear(this->unk1C);
     ml_vec3f_clear(this->unk28);
     this->normX = 0.0f;
@@ -52,7 +52,7 @@ void func_8031BA7C(struct0 *this){
 }
 
 void func_8031BA9C(struct0 *this){
-    free(this);
+    bk_free(this);
 }
 
 BKCollisionTri *func_8031BABC(f32 *arg0, f32 arg1, f32 arg2, u32 arg3, struct86s *arg4) {

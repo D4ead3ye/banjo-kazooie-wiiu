@@ -1,6 +1,7 @@
 #include <ultra64.h>
 #include "n_synth.h"
-
+#include <libultra/convert.h>
+#include <libultra/r4300.h>
 #ifndef MIN
 #   define MIN(a,b) (((a)<(b))?(a):(b))
 #endif

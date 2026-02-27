@@ -1,5 +1,8 @@
-#include <ultra64.h>
+#include "PR/os_internal_error.h"
+#include "PR/ultraerror.h"
 #include "n_synth.h"
+
+#include <ultra64.h>
 
 static s32 _n_allocatePVoice(N_PVoice **pvoice, s16 priority);
 
@@ -9,7 +12,7 @@ s32 n_alSynAllocVoice( N_ALVoice *voice, ALVoiceConfig *vc)
     ALParam *update;
     s32 stolen;
     
-#ifdef _DEBUG
+#if 0// _DEBUG
     /* need two updates if voice is stolen */
     if (drvr->paramList == 0) {
         __osError(ERR_ALSYN_NO_UPDATE, 0);

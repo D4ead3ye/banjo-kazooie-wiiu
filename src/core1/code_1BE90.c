@@ -83,7 +83,7 @@ void comusicPlayer_init(void){
     if(D_80276E30 != NULL)
         comusicPlayer_free();
 
-    D_80276E30 = (CoMusic *) malloc(6*sizeof(CoMusic));
+    D_80276E30 = (CoMusic *) bk_malloc(6*sizeof(CoMusic));
     for(iPtr = D_80276E30; iPtr < D_80276E30 + 6; iPtr++){
         iPtr->track_id = -1;
         iPtr->unk8 = 0;
@@ -109,7 +109,7 @@ void comusicPlayer_free(void){
     for(iPtr = D_80276E30; iPtr < D_80276E30 + 6; iPtr++){
         freelist_free(iPtr->unk18);
     }
-    free(D_80276E30);
+    bk_free(D_80276E30);
     D_80276E30 = NULL;
 }
 

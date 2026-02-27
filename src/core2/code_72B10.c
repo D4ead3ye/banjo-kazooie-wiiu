@@ -5,7 +5,7 @@
 f32 sfx_randf2(f32, f32);
 
 /* .bss */
-vector(struct4Es) *D_803810A0;
+bk_vector(struct4Es) *D_803810A0;
 
 /* public */
 void func_802F9D38(s32 arg0);
@@ -24,19 +24,19 @@ s32 func_802F9AA8(enum sfx_e arg0){
     struct4Es *startPtr;
     
 
-    endPtr = vector_getEnd(D_803810A0);
-    startPtr = vector_getBegin(D_803810A0);
+    endPtr = bk_vector_getEnd(D_803810A0);
+    startPtr = bk_vector_getBegin(D_803810A0);
 
     for(iPtr = startPtr + 1; iPtr < endPtr && iPtr->unk0; iPtr++);
     if(iPtr == endPtr)
-        iPtr = vector_pushBackNew(&D_803810A0);
+        iPtr = bk_vector_pushBackNew(&D_803810A0);
 
     iPtr->unk0 = sfxsource_createSfxsourceAndReturnIndex();
     sfxsource_setSfxId(iPtr->unk0, arg0);
     func_8030DD14(iPtr->unk0, 3);
     sfxsource_setSampleRate(iPtr->unk0, 0x64);
     func_8030E2C4(iPtr->unk0);
-    startPtr = vector_getBegin(D_803810A0);
+    startPtr = bk_vector_getBegin(D_803810A0);
     indx = iPtr - startPtr;
     iPtr->unk3C = 0;
     iPtr->unk3E = 0;
@@ -53,7 +53,7 @@ s32 func_802F9AA8(enum sfx_e arg0){
 
 int func_802F9C0C(s32 arg0){
     struct4Es *ptr;
-    ptr = vector_at(D_803810A0, arg0);
+    ptr = bk_vector_at(D_803810A0, arg0);
     return (ptr->unk0)? 1 : 0;
 }
 
@@ -62,28 +62,28 @@ void func_802F9C48(void){
     struct4Es *startPtr;
     struct4Es *endPtr;
 
-    startPtr = vector_getBegin(D_803810A0);
-    endPtr = vector_getEnd(D_803810A0);
+    startPtr = bk_vector_getBegin(D_803810A0);
+    endPtr = bk_vector_getEnd(D_803810A0);
     for(iPtr = startPtr; iPtr < endPtr; iPtr++){
         if(iPtr->unk0)
             func_802F9D38(iPtr - startPtr);
     }
-    vector_free(D_803810A0);
+    bk_vector_free(D_803810A0);
 }
 
 void func_802F9CD8(void){
     int i;
     struct4Es *iPtr;
-    D_803810A0 = (vector(struct4Es) *) vector_new(sizeof(struct4Es), 0x10);
+    D_803810A0 = (bk_vector(struct4Es) *) bk_vector_new(sizeof(struct4Es), 0x10);
     for(i = 0; i< 0x10; i++){
-        iPtr = vector_pushBackNew(&D_803810A0);
+        iPtr = bk_vector_pushBackNew(&D_803810A0);
         iPtr->unk0 = 0;
     }
 }
 
 void func_802F9D38(s32 arg0){
     struct4Es *ptr;
-    ptr = vector_at(D_803810A0, arg0);
+    ptr = bk_vector_at(D_803810A0, arg0);
     if(ptr->unk0){
         func_8030E394(ptr->unk0);
         sfxsource_freeSfxsourceByIndex(ptr->unk0);
@@ -93,13 +93,13 @@ void func_802F9D38(s32 arg0){
 
 s32 func_802F9D8C(s32 arg0){
     struct4Es *ptr;
-    ptr = vector_at(D_803810A0, arg0);
+    ptr = bk_vector_at(D_803810A0, arg0);
     return ptr->unk0;
 }
 
 void func_802F9DB8(s32 arg0, f32 arg1, f32 arg2, f32 arg3){
     struct4Es *ptr;
-    ptr = vector_at(D_803810A0, arg0);
+    ptr = bk_vector_at(D_803810A0, arg0);
     func_802F9AA0(ptr, 1);
     ptr->unk18 = arg3;
     ptr->unk20 = arg1;
@@ -111,7 +111,7 @@ void func_802F9DB8(s32 arg0, f32 arg1, f32 arg2, f32 arg3){
 
 void func_802F9E44(s32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4){
     struct4Es *ptr;
-    ptr = vector_at(D_803810A0, arg0);
+    ptr = bk_vector_at(D_803810A0, arg0);
     func_802F9AA0(ptr, 2);
     ptr->unk24 = arg1;
     ptr->unk28 = arg2;
@@ -125,7 +125,7 @@ void func_802F9E44(s32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4){
 void func_802F9EC4(s32 arg0, s32 arg1, s32 arg2, s32 arg3){
     struct4Es *iPtr;
 
-    iPtr = vector_at(D_803810A0, arg0);
+    iPtr = bk_vector_at(D_803810A0, arg0);
     if(iPtr->unk0){
         sfxsource_set_fade_distances(iPtr->unk0, (f32)arg2, (f32)arg3);
         sfxsource_set_position(iPtr->unk0, arg1);
@@ -134,13 +134,13 @@ void func_802F9EC4(s32 arg0, s32 arg1, s32 arg2, s32 arg3){
 
 void func_802F9F48(s32 arg0, s32 arg1){
     struct4Es *iPtr;
-    iPtr = vector_at(D_803810A0, arg0);
+    iPtr = bk_vector_at(D_803810A0, arg0);
     iPtr->unk3F = arg1;
 }
 
 void func_802F9F80(s32 arg0, f32 arg1, f32 arg2, f32 arg3){
     struct4Es *iPtr;
-    iPtr = vector_at(D_803810A0, arg0);
+    iPtr = bk_vector_at(D_803810A0, arg0);
     iPtr->unkC = arg1;
     iPtr->unk10 = arg3;
     iPtr->unk14 = arg2;
@@ -148,7 +148,7 @@ void func_802F9F80(s32 arg0, f32 arg1, f32 arg2, f32 arg3){
 
 void func_802F9FD0(s32 arg0, f32 arg1, f32 arg2, f32 arg3){
     struct4Es *iPtr;
-    iPtr = vector_at(D_803810A0, arg0);
+    iPtr = bk_vector_at(D_803810A0, arg0);
     iPtr->unkC = arg1;
     iPtr->unk10 = arg3;
     iPtr->unk14 = arg2;
@@ -157,13 +157,13 @@ void func_802F9FD0(s32 arg0, f32 arg1, f32 arg2, f32 arg3){
 
 void func_802FA028(s32 arg0, s32 arg1){
     struct4Es *iPtr;
-    iPtr = vector_at(D_803810A0, arg0);
+    iPtr = bk_vector_at(D_803810A0, arg0);
     iPtr->unk3D = arg1;
 }
 
 void func_802FA060(s32 arg0, s32 arg1, s32 arg2, f32 arg3){
     struct4Es *iPtr;
-    iPtr = vector_at(D_803810A0, arg0);
+    iPtr = bk_vector_at(D_803810A0, arg0);
     iPtr->unk3A = arg1;
     iPtr->unk38 = arg2;
     iPtr->unk34 = arg3;
@@ -171,7 +171,7 @@ void func_802FA060(s32 arg0, s32 arg1, s32 arg2, f32 arg3){
 
 void func_802FA0B0(s32 arg0, s32 arg1){
     struct4Es *iPtr;
-    iPtr = vector_at(D_803810A0, arg0);
+    iPtr = bk_vector_at(D_803810A0, arg0);
     if(iPtr->unk0){
         func_8030DD90(iPtr->unk0, arg1);
     }
@@ -185,8 +185,8 @@ void func_802FA0F8(void){
     struct4Es *iPtr;
 
     tick = time_getDelta();
-    startPtr = vector_getBegin(D_803810A0);
-    endPtr = vector_getEnd(D_803810A0);
+    startPtr = bk_vector_getBegin(D_803810A0);
+    endPtr = bk_vector_getEnd(D_803810A0);
 
     for(iPtr = startPtr; iPtr < endPtr; iPtr++){//L802FA178
         if(iPtr->unk0){
@@ -245,7 +245,7 @@ void func_802FA0F8(void){
 }
 
 void func_802FA4E0(void){
-    D_803810A0 = vector_defrag(D_803810A0);
+    D_803810A0 = bk_vector_defrag(D_803810A0);
 }
 
 void func_802FA508(void){
@@ -253,8 +253,8 @@ void func_802FA508(void){
     struct4Es *endPtr;
     struct4Es *iPtr;
 
-    startPtr = vector_getBegin(D_803810A0);
-    endPtr = vector_getEnd(D_803810A0);
+    startPtr = bk_vector_getBegin(D_803810A0);
+    endPtr = bk_vector_getEnd(D_803810A0);
     for(iPtr = startPtr; iPtr < endPtr; iPtr++){
         if(iPtr->unk0){
             if(iPtr->unk3D == 0){

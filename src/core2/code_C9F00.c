@@ -1,6 +1,8 @@
-#include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include <ultra64.h>
+
+#include <bk_math.h>
 
 extern BKCollisionTri *func_802E805C(BKCollisionList *arg0, BKVertexList *vtxList, f32 arg2[3], f32 arg3[3], f32 arg4, f32 arg5[3], f32 arg6[3], f32 arg7[3], s32 arg8);
 extern BKCollisionTri *func_802E9118(BKCollisionList *arg0, BKVertexList *vtxList, f32 arg2[3], f32 arg3[3], f32 arg4, f32 arg5[3], f32 arg6[3], f32 arg7, f32 arg8[3], s32 arg9, s32 arg10);
@@ -179,7 +181,7 @@ Struct68s * func_8035126C(f32 position[3], f32 arg1[3], f32 arg2, s32 arg3, enum
     if (D_803861B0.unk8 == D_803861B0.unkC) {
         sp2C = D_803861B0.unk8 - D_803861B0.unk4;
         sp1C = sp2C * 2;
-        D_803861B0.unk4 = (Struct68s *) realloc(D_803861B0.unk4, sp1C * sizeof(Struct68s));
+        D_803861B0.unk4 = (Struct68s *) bk_realloc(D_803861B0.unk4, sp1C * sizeof(Struct68s));
         D_803861B0.unk8 = D_803861B0.unk4 + sp2C;
         D_803861B0.unkC = D_803861B0.unk4 + sp1C;
     }
@@ -338,7 +340,7 @@ void func_803518E8(void){
     for(phi_s0 = D_803861B0.unk4; phi_s0 < D_803861B0.unk8; phi_s0++){
         func_803514F4(phi_s0);
     }
-    free(D_803861B0.unk4);
+    bk_free(D_803861B0.unk4);
 }
 
 void func_80351954(Struct68s *arg0){
@@ -351,7 +353,7 @@ void func_80351954(Struct68s *arg0){
 
 void func_80351998(void) {
 
-    D_803861B0.unk4 = (Struct68s*)malloc(2*sizeof(Struct68s));
+    D_803861B0.unk4 = (Struct68s*)bk_malloc(2*sizeof(Struct68s));
     D_803861B0.unk8 = D_803861B0.unk4;
     D_803861B0.unkC = D_803861B0.unk4 + 2;
 

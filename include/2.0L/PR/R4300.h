@@ -36,14 +36,14 @@
 #define	K2SIZE		0x20000000
 
 /*
- * Exception vectors
+ * Exception bk_vectors
  */
 #define SIZE_EXCVEC	0x80			/* Size of an exc. vec */
-#define	UT_VEC		K0BASE			/* utlbmiss vector */
-#define	R_VEC		(K1BASE+0x1fc00000)	/* reset vector */
+#define	UT_VEC		K0BASE			/* utlbmiss bk_vector */
+#define	R_VEC		(K1BASE+0x1fc00000)	/* reset bk_vector */
 #define	XUT_VEC		(K0BASE+0x80)		/* extended address tlbmiss */
-#define	ECC_VEC		(K0BASE+0x100)		/* Ecc exception vector */
-#define	E_VEC		(K0BASE+0x180)		/* Gen. exception vector */
+#define	ECC_VEC		(K0BASE+0x100)		/* Ecc exception bk_vector */
+#define	E_VEC		(K0BASE+0x180)		/* Gen. exception bk_vector */
 
 /*
  * Address conversion macros
@@ -136,7 +136,7 @@
 #define	SR_FR		0x04000000	/* MIPS III FP register mode */
 #define	SR_RE		0x02000000	/* Reverse endian */
 #define	SR_ITS		0x01000000	/* Instruction trace support */
-#define	SR_BEV		0x00400000	/* Use boot exception vectors */
+#define	SR_BEV		0x00400000	/* Use boot exception bk_vectors */
 #define	SR_TS		0x00200000	/* TLB shutdown */
 #define	SR_SR		0x00100000	/* Soft reset occured */
 #define	SR_CH		0x00040000	/* Cache hit for last 'cache' op */

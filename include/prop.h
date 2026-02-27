@@ -111,7 +111,7 @@ typedef struct actorMarker_s{
     u32         pad40_18:19;
     struct5Bs * unk44;
     BKModel *   unk48;
-    vector(Struct70s) * unk4C;
+    bk_vector(Struct70s) * unk4C;
     s32         unk50;
     void        (*unk54)(struct actorMarker_s *, struct actorMarker_s *, u16*);
     s32         (*unk58)(struct actorMarker_s *, struct actorMarker_s *);
@@ -255,7 +255,7 @@ typedef struct actor_s{
     f32 scale;
     /* 0x12C */ struct actor_info_s *actor_info;
     void (* unk130)(struct actor_s *);
-    vector(AnSeqElement) **unk134; //vector<AnSeqElement> //saved marker->dieFunc
+    bk_vector(AnSeqElement) **unk134; //bk_vector<AnSeqElement> //saved marker->dieFunc
     u32 unk138_31:1;
     u32 unk138_30:1;
     u32 unk138_29:1;

@@ -1,8 +1,10 @@
-#include <ultra64.h>
+#include "actor.h"
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
-#include "actor.h"
+#include <ultra64.h>
+
+#include <libultra/r4300.h>
 
 extern void core1_7090_initSfxSource(s32, s32, s32, f32);
 extern void func_802D3D54(Actor *this);
@@ -511,6 +513,9 @@ void GV_func_8038F154(void)
 }
 
 s32 func_8038F4C0(Actor *arg0, s32 arg1){
+    // Lighthouse TODO is this an anti-piracy check?
+    return arg1;
+#if 0
     if( getGameMode() != GAME_MODE_7_ATTRACT_DEMO 
         && (0xDBF4E829 + *(s32*)PHYS_TO_K1(0x284))
     ){
@@ -519,4 +524,5 @@ s32 func_8038F4C0(Actor *arg0, s32 arg1){
     else{
         return arg0->state;
     }
+#endif
 }

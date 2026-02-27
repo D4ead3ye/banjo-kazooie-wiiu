@@ -4,7 +4,7 @@
 #include "variables.h"
 
 #include <core2/file.h>
-#include <math.h>
+#include "bk_math.h"
 #include "prop.h"
 
 extern void mapModel_getCubeBounds(s32 min[3], s32 max[3]);
@@ -14,6 +14,8 @@ extern void func_8032D510(Cube *, Gfx **, Mtx **, Vtx **);
 extern ActorProp *func_803322F0(Cube *, ActorMarker *, f32, s32, s32 *);
 extern BKCollisionTri *func_803319C0(Cube *cube, f32 position[3], f32 radius, f32 arg2[3], u32 flags);
 extern BKCollisionTri *func_80331638(Cube *cube, f32 volume_p1[3], f32 volume_p2[3], f32 radius, f32 arg2[3], s32, u32 flags);
+
+bool func_80305C30(s32 arg0);
 
 typedef struct{
     s32 position[3];
@@ -33,10 +35,11 @@ NodeProp *cubeList_findNodePropByActorIdAndPosition_s32(enum actor_e actor_id, s
 s32 func_80304FC4(enum actor_e *actor_id_list, NodeProp **node_list, s32 arg2);
 void cube_positionToIndices(s32 arg0[3], f32 arg1[3]);
 NodeProp *func_803080C8(s32 arg0);
-void __code7AF80_func_80308984(void);
+static void __code7AF80_func_80308984(void);
 void func_80308D2C(Gfx **gfx, Mtx **mtx, Vtx **vtx);
-void __code7AF80_func_80308F0C(Cube *cube);
+static void __code7AF80_func_80308F0C(Cube *cube);
 void func_80308EC8(void);
+bool func_80308F54(s32 cube_index);
 
 extern ActorInfo D_803675F0;
 extern ActorInfo D_80367838;
@@ -776,16 +779,16 @@ void cubeList_free(){
     for(iCube = sCubeList.cubes; iCube < sCubeList.cubes + sCubeList.cubeCnt; iCube++){
         cube_free(iCube);
     }
-    free(sCubeList.cubes);
+    bk_free(sCubeList.cubes);
     
     if(sCubeList.unk3C){
         cube_free(sCubeList.unk3C);
-        free(sCubeList.unk3C);
+        bk_free(sCubeList.unk3C);
     }
 
     if(sCubeList.unk40){
         cube_free(sCubeList.unk40);
-        free(sCubeList.unk40);
+        bk_free(sCubeList.unk40);
     }
     bitfield_free(D_8036A9E0);
     D_8036A9E0 = NULL;
@@ -806,7 +809,7 @@ void cubeList_init(){
     sCubeList.stride[0] = sCubeList.width[0];
     sCubeList.stride[1] = sCubeList.stride[0]*sCubeList.width[1];
     sCubeList.cubeCnt   = sCubeList.stride[1]*sCubeList.width[2];
-    sCubeList.cubes = (Cube *)malloc(sCubeList.cubeCnt*sizeof(Cube));
+    sCubeList.cubes = (Cube *)bk_malloc(sCubeList.cubeCnt*sizeof(Cube));
     for(indx[0] = sCubeList.min[0]; sCubeList.max[0] >= indx[0]; indx[0]++){
         for(indx[1] = sCubeList.min[1]; sCubeList.max[1] >= indx[1]; indx[1]++){
             for(indx[2] = sCubeList.min[2]; sCubeList.max[2] >= indx[2]; indx[2]++){
@@ -823,7 +826,7 @@ void cubeList_init(){
             }
         }
     }
-    sCubeList.unk3C = (Cube *)malloc(sizeof(Cube));
+    sCubeList.unk3C = (Cube *)bk_malloc(sizeof(Cube));
     sCubeList.unk3C->x = 16;
     sCubeList.unk3C->y = 16;
     sCubeList.unk3C->z = 16;
@@ -834,7 +837,7 @@ void cubeList_init(){
     sCubeList.unk3C->unk0_4 = 0;
 
 
-    sCubeList.unk40 = (Cube *)malloc(sizeof(Cube));
+    sCubeList.unk40 = (Cube *)bk_malloc(sizeof(Cube));
     sCubeList.unk40->x = 16;
     sCubeList.unk40->y = 16;
     sCubeList.unk40->z = 16;
@@ -1209,19 +1212,19 @@ bool func_80305344(s32 arg0, u32 *arg1) {
 }
 
 void spawnableActorList_new(void){
-    sSpawnableActorList = malloc(0);
+    sSpawnableActorList = bk_malloc(0);
     sSpawnableActorSize = 0;
 }
 
 void spawnableActorList_free(void){
-    free(sSpawnableActorList);
+    bk_free(sSpawnableActorList);
     sSpawnableActorList = NULL;
     sSpawnableActorSize = 0;
 }
 
 void spawnableActorList_add(ActorInfo *arg0, Actor *(*arg1)(s32[3], s32, ActorInfo *, u32), u32 arg2){
     sSpawnableActorSize++;
-    sSpawnableActorList = realloc(sSpawnableActorList, sSpawnableActorSize*sizeof(ActorSpawn));
+    sSpawnableActorList = bk_realloc(sSpawnableActorList, sSpawnableActorSize*sizeof(ActorSpawn));
     sSpawnableActorList[sSpawnableActorSize - 1].infoPtr = arg0;
     sSpawnableActorList[sSpawnableActorSize - 1].spawnFunc = arg1;
     sSpawnableActorList[sSpawnableActorSize - 1].unk8 = arg2;
@@ -1325,7 +1328,7 @@ s16 *func_80305924(void) {
     s16 *temp_a0;
     s16 *var_v0;
 
-    temp_a0 = (s16*) malloc(D_8036ABA8 * sizeof(s16));
+    temp_a0 = (s16*) bk_malloc(D_8036ABA8 * sizeof(s16));
     for(var_v1 = 0; var_v1 < D_8036ABA8; var_v1++){
         var_v0 = (new_var = temp_a0) + var_v1;
         *var_v0 = 0;
@@ -1366,12 +1369,12 @@ void func_80305990(s32 mode) {
 
 void code7AF80_freeTotalCounts(void){
     if(sProp1TotalCounts != NULL){
-        free(sProp1TotalCounts);
+        bk_free(sProp1TotalCounts);
         sProp1TotalCounts = NULL;
     }
 
     if(sProp2TotalCounts != NULL){
-        free(sProp2TotalCounts);
+        bk_free(sProp2TotalCounts);
         sProp2TotalCounts = NULL;
     }
 
@@ -1403,13 +1406,13 @@ bool func_80305D14(void) {
 }
 
 void func_80305D38(void){
-    D_8036A9BC = malloc(0);
+    D_8036A9BC = bk_malloc(0);
     D_8036A9B8 = 0;
 
-    D_8036A9C8 = malloc(0);
+    D_8036A9C8 = bk_malloc(0);
     D_8036A9C4 = 0;
 
-    D_8036A9D4 = malloc(0);
+    D_8036A9D4 = bk_malloc(0);
     D_8036A9D0 = 0;
 }
 
@@ -1420,9 +1423,9 @@ void func_80305D94(void){
     if(D_8036A9BC != NULL){
         end_ptr = &D_8036A9BC[D_8036A9B8];
         for(iPtr = D_8036A9BC; iPtr < end_ptr; iPtr++){
-            free(iPtr->unk8);
+            bk_free(iPtr->unk8);
         }
-        free(D_8036A9BC);
+        bk_free(D_8036A9BC);
         D_8036A9BC = NULL;
         D_8036A9B8 = 0;
     }
@@ -1430,9 +1433,9 @@ void func_80305D94(void){
     if(D_8036A9C8 != NULL){
         end_ptr = &D_8036A9C8[D_8036A9C4];
         for(iPtr = D_8036A9C8; iPtr < end_ptr; iPtr++){
-            free(iPtr->unk8);
+            bk_free(iPtr->unk8);
         }
-        free(D_8036A9C8);
+        bk_free(D_8036A9C8);
         D_8036A9C8 = NULL;
         D_8036A9C4 = 0;
     }
@@ -1440,9 +1443,9 @@ void func_80305D94(void){
     if(D_8036A9D4 != NULL){
         end_ptr = &D_8036A9D4[D_8036A9D0];
         for(iPtr = D_8036A9D4; iPtr < end_ptr; iPtr++){
-            free(iPtr->unk8);
+            bk_free(iPtr->unk8);
         }
-        free(D_8036A9D4);
+        bk_free(D_8036A9D4);
         D_8036A9D4 = NULL;
         D_8036A9D0 = 0;
     }
@@ -1470,12 +1473,12 @@ void __code7AF80_concatElementsAndRemoveEmpty(s32 *count, Struct_core2_7AF80_1 *
                                 (a_elem->radius + b_elem->radius) * (a_elem->radius + b_elem->radius)
                             )) {
                                 //concat b_list to end of a_list
-                                a_list->unk8 = (Struct_core2_7AF80_2 *) realloc(a_list->unk8, (a_list->count + b_list->count)*sizeof(Struct_core2_7AF80_2));
+                                a_list->unk8 = (Struct_core2_7AF80_2 *) bk_realloc(a_list->unk8, (a_list->count + b_list->count)*sizeof(Struct_core2_7AF80_2));
                                 memcpy(a_list->unk8 + a_list->count, b_list->unk8, b_list->count * sizeof(Struct_core2_7AF80_2));
                                 a_list->count = (s32) (a_list->count + b_list->count);
                                 
                                 b_list->count = 0;
-                                free(b_list->unk8);
+                                bk_free(b_list->unk8);
                                 b_list->unk8 = NULL;
                                 
                                 b_list = a_list;
@@ -1508,7 +1511,7 @@ void __code7AF80_concatElementsAndRemoveEmpty(s32 *count, Struct_core2_7AF80_1 *
         for(a_list = *arg1; (a_list < *arg1 + *count) && (a_list->count != 0); a_list++) { }
 
         *count = (a_list - *arg1); //count
-        *arg1 = (Struct_core2_7AF80_1 *)realloc((void *) *arg1, *count * sizeof(Struct_core2_7AF80_1)); //ptr
+        *arg1 = (Struct_core2_7AF80_1 *)bk_realloc((void *) *arg1, *count * sizeof(Struct_core2_7AF80_1)); //ptr
     }
 }
 
@@ -1603,7 +1606,7 @@ void func_803065E4(s32 arg0, s32 position[3], s32 radius, s32 arg3, s32 arg4) {
     while(func_803063D8(arg0) != NULL){
         if (func_80306534(D_8036A9C0, arg0, position, radius)) {
             D_8036A9C0->count++;
-            D_8036A9C0->unk8 = realloc(D_8036A9C0->unk8, D_8036A9C0->count * sizeof(Struct_core2_7AF80_2));
+            D_8036A9C0->unk8 = bk_realloc(D_8036A9C0->unk8, D_8036A9C0->count * sizeof(Struct_core2_7AF80_2));
             temp_v1 = &D_8036A9C0->unk8[D_8036A9C0->count - 1];
             temp_v1->position[0] = position[0];
             temp_v1->position[1] = position[1];
@@ -1616,10 +1619,10 @@ void func_803065E4(s32 arg0, s32 position[3], s32 radius, s32 arg3, s32 arg4) {
         }
     }
     D_8036A9B8++;
-    D_8036A9BC = realloc(D_8036A9BC, D_8036A9B8*sizeof(Struct_core2_7AF80_1));
+    D_8036A9BC = bk_realloc(D_8036A9BC, D_8036A9B8*sizeof(Struct_core2_7AF80_1));
     D_8036A9BC[D_8036A9B8-1].count = 1;
     D_8036A9BC[D_8036A9B8-1].unk4 = arg0;
-    D_8036A9BC[D_8036A9B8-1].unk8 = malloc(sizeof(Struct_core2_7AF80_2));
+    D_8036A9BC[D_8036A9B8-1].unk8 = bk_malloc(sizeof(Struct_core2_7AF80_2));
     temp_v1 = (D_8036A9BC + D_8036A9B8-1)->unk8;
     temp_v1->position[0] = position[0];
     temp_v1->position[1] = position[1];
@@ -1648,7 +1651,7 @@ void func_8030688C(s32 arg0, s32 position[3], s32 radius, s32 arg3){
     while(func_8030644C(arg0) != NULL){
         if (func_80306534(D_8036A9CC, arg0, position, radius)) {
             D_8036A9CC->count++;
-            D_8036A9CC->unk8 = realloc(D_8036A9CC->unk8, D_8036A9CC->count * sizeof(Struct_core2_7AF80_2));
+            D_8036A9CC->unk8 = bk_realloc(D_8036A9CC->unk8, D_8036A9CC->count * sizeof(Struct_core2_7AF80_2));
             temp_v1 = &D_8036A9CC->unk8[D_8036A9CC->count - 1];
             temp_v1->position[0] = position[0];
             temp_v1->position[1] = position[1];
@@ -1659,10 +1662,10 @@ void func_8030688C(s32 arg0, s32 position[3], s32 radius, s32 arg3){
         }
     }
     D_8036A9C4++;
-    D_8036A9C8 = realloc(D_8036A9C8, D_8036A9C4*sizeof(Struct_core2_7AF80_1));
+    D_8036A9C8 = bk_realloc(D_8036A9C8, D_8036A9C4*sizeof(Struct_core2_7AF80_1));
     D_8036A9C8[D_8036A9C4-1].count = 1;
     D_8036A9C8[D_8036A9C4-1].unk4 = arg0;
-    D_8036A9C8[D_8036A9C4-1].unk8 = malloc(sizeof(Struct_core2_7AF80_2));
+    D_8036A9C8[D_8036A9C4-1].unk8 = bk_malloc(sizeof(Struct_core2_7AF80_2));
     temp_v1 = (D_8036A9C8 + D_8036A9C4-1)->unk8;
     temp_v1->position[0] = position[0];
     temp_v1->position[1] = position[1];
@@ -1678,7 +1681,7 @@ void func_80306AA8(s32 arg0, s32 position[3], s32 radius){
     while(func_803064C0(arg0) != NULL){
         if (func_80306534(D_8036A9D8, arg0, position, radius)) {
             D_8036A9D8->count++;
-            D_8036A9D8->unk8 = realloc(D_8036A9D8->unk8, D_8036A9D8->count * sizeof(Struct_core2_7AF80_2));
+            D_8036A9D8->unk8 = bk_realloc(D_8036A9D8->unk8, D_8036A9D8->count * sizeof(Struct_core2_7AF80_2));
             temp_v1 = &D_8036A9D8->unk8[D_8036A9D8->count - 1];
             temp_v1->position[0] = position[0];
             temp_v1->position[1] = position[1];
@@ -1689,10 +1692,10 @@ void func_80306AA8(s32 arg0, s32 position[3], s32 radius){
         }
     }
     D_8036A9D0++;
-    D_8036A9D4 = realloc(D_8036A9D4, D_8036A9D0*sizeof(Struct_core2_7AF80_1));
+    D_8036A9D4 = bk_realloc(D_8036A9D4, D_8036A9D0*sizeof(Struct_core2_7AF80_1));
     D_8036A9D4[D_8036A9D0-1].count = 1;
     D_8036A9D4[D_8036A9D0-1].unk4 = arg0;
-    D_8036A9D4[D_8036A9D0-1].unk8 = malloc(sizeof(Struct_core2_7AF80_2));
+    D_8036A9D4[D_8036A9D0-1].unk8 = bk_malloc(sizeof(Struct_core2_7AF80_2));
     temp_v1 = (D_8036A9D4 + D_8036A9D0-1)->unk8;
     temp_v1->position[0] = position[0];
     temp_v1->position[1] = position[1];
@@ -2464,5 +2467,5 @@ static void __code7AF80_func_80308F0C(Cube *cube) {
 }
 
 bool func_80308F54(s32 cube_index) {
-    return BOOL(D_803821E0[cube_index >> 5] & (1 << (cube_index & 0x1F)));
+    return D_803821E0[cube_index >> 5] & (1 << (cube_index & 0x1F));
 }

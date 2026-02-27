@@ -104,13 +104,13 @@ void func_802F1858(Struct_Core2_6A4B0_2 *arg0, Gfx **gfx, Mtx **mtx, Vtx **vtx){
 
 void func_802F1884(Struct_Core2_6A4B0_2 *arg0){
     func_802F18B8(arg0);
-    free(arg0->vtx_coord);
-    free(arg0);
+    bk_free(arg0->vtx_coord);
+    bk_free(arg0);
 }
 
 void func_802F18B8(Struct_Core2_6A4B0_2 *arg0){
     if(arg0->tmem_raw_ptr != NULL){
-        free(arg0->tmem_raw_ptr);
+        bk_free(arg0->tmem_raw_ptr);
         arg0->tmem_raw_ptr = NULL;
     }
 }
@@ -118,8 +118,8 @@ void func_802F18B8(Struct_Core2_6A4B0_2 *arg0){
 Struct_Core2_6A4B0_2 *func_802F18F0(void){
     Struct_Core2_6A4B0_2 *self;
 
-    self = (Struct_Core2_6A4B0_2 *) malloc(sizeof(Struct_Core2_6A4B0_2));
-    self->vtx_coord = malloc(6*9*2*3*3*sizeof(u16));
+    self = (Struct_Core2_6A4B0_2 *) bk_malloc(sizeof(Struct_Core2_6A4B0_2));
+    self->vtx_coord = bk_malloc(6*9*2*3*3*sizeof(u16));
     self->tmem_raw_ptr = NULL;
     self->draw_method = 0;
     self->unk10 = 0;
@@ -128,13 +128,13 @@ Struct_Core2_6A4B0_2 *func_802F18F0(void){
 
 void func_802F1934(Struct_Core2_6A4B0_2 * arg0, s32 arg1){
     func_802F18B8(arg0);
-    arg0->tmem_raw_ptr = malloc(gFramebufferWidth*gFramebufferHeight*sizeof(u16) + 0x10);
+    arg0->tmem_raw_ptr = bk_malloc(gFramebufferWidth*gFramebufferHeight*sizeof(u16) + 0x10);
     arg0->tmem_ptr = arg0->tmem_raw_ptr;
     while(((s32)arg0->tmem_ptr & 0x10) == 0){
         arg0->tmem_ptr = (u16*)((s32)arg0->tmem_ptr + 1);
     }
     func_80253010(arg0->tmem_ptr, gFramebuffers[arg1], gFramebufferWidth*gFramebufferHeight*sizeof(u16));
-    osWriteBackDCacheAll();
+    osWritebackDCacheAll();
 }
 
 void func_802F1A08(s32 arg0) { }

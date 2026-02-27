@@ -14,13 +14,13 @@ void func_802F7EB0(struct3s *this){
     f32 sp4C[3];
 
 
-    if(vector_size(this->unk20) >= this->unk24)
+    if(bk_vector_size(this->unk20) >= this->unk24)
         return;
 
     player_getPosition(plyrPos);
-    viewport_getLookVector(camNorm);
+    viewport_getLookbk_vector(camNorm);
     viewport_getRotation_vec3f(camRot);
-    sp50 = vector_pushBackNew(&this->unk20);
+    sp50 = bk_vector_pushBackNew(&this->unk20);
     tmpf = randf2(50.0f, 1100.0f);
     sp4C[0] = 0.0f;
     sp4C[1] = randf2(200.0f, 300.0f);
@@ -53,7 +53,7 @@ void func_802F80E8(struct3s *this, u32 arg1){
 }
 
 void func_802F80F0(struct3s *this){
-    vector_clear(this->unk20);
+    bk_vector_clear(this->unk20);
 }
 
 
@@ -62,8 +62,8 @@ void func_802F8110(struct3s *this, Gfx **gdl, Mtx **mptr, u32 arg3){
     struct4s * endPtr;
     struct4s * iPtr;
 
-    startPtr = vector_getBegin(this->unk20);
-    endPtr = vector_getEnd(this->unk20);
+    startPtr = bk_vector_getBegin(this->unk20);
+    endPtr = bk_vector_getEnd(this->unk20);
     for(iPtr = startPtr; iPtr < endPtr; iPtr++){
         modelRender_setDepthMode(MODEL_RENDER_DEPTH_COMPARE);
         modelRender_draw(gdl, mptr, iPtr, 0, 1.0f, 0, this->unk2C);
@@ -72,26 +72,26 @@ void func_802F8110(struct3s *this, Gfx **gdl, Mtx **mptr, u32 arg3){
 }
 
 bool func_802F81D8(struct3s *this){
-    return (this->unk28 != 1) && (vector_size(this->unk20) == 0);
+    return (this->unk28 != 1) && (bk_vector_size(this->unk20) == 0);
 }
 
 void func_802F8214(struct3s * this){
     if(this->unk0)
         func_802F9D38(this->unk0);
-    vector_free(this->unk20);
+    bk_vector_free(this->unk20);
     func_8033BD20(&this->unk2C);
-    free(this);
+    bk_free(this);
 
 }
 
 struct3s *func_802F8264(s32 arg0){
-    struct3s * ptr = (struct3s *) malloc(sizeof(struct3s));
+    struct3s * ptr = (struct3s *) bk_malloc(sizeof(struct3s));
     ptr->unk0 = 0;
     ptr->unk1C = 0;
     ptr->unk34 = 0;
     ptr->unk4[0] = ptr->unk4[1] = ptr->unk4[2] =0.0f;
     ptr->unk10[0] = ptr->unk10[1] = ptr->unk10[2] =0.0f;
-    ptr->unk20 = vector_new(sizeof(struct4s), arg0);
+    ptr->unk20 = bk_vector_new(sizeof(struct4s), arg0);
     ptr->unk24 = arg0;
     ptr->unk28 = 0;
     ptr->unk2C = assetcache_get(0x898); //rain
@@ -137,9 +137,9 @@ void func_802F83AC(struct3s *arg0) {
     arg0->unk4[1] = sp3C[1];
     arg0->unk4[2] = sp3C[2];
     if (func_802BEF64()) {
-        vector_clear(arg0->unk20);
+        bk_vector_clear(arg0->unk20);
     }
-    if (vector_size(arg0->unk20) > 0) {
+    if (bk_vector_size(arg0->unk20) > 0) {
         if (arg0->unk0 == 0) {
             arg0->unk0 = func_802F9AA8(SFX_BE_WATERFALL);
             func_802F9DB8(arg0->unk0, 0.95f, 1.05f, 0.01f);
@@ -153,21 +153,21 @@ void func_802F83AC(struct3s *arg0) {
             arg0->unk0 = 0;
         }
     }
-    for(phi_s0 = 0; phi_s0 < vector_size(arg0->unk20); phi_s0++){
-        temp_v0 = (struct4s *)vector_at(arg0->unk20, phi_s0);
+    for(phi_s0 = 0; phi_s0 < bk_vector_size(arg0->unk20); phi_s0++){
+        temp_v0 = (struct4s *)bk_vector_at(arg0->unk20, phi_s0);
         temp_v0->unk0[0] += temp_v0->unkC[0] * temp_f20;
         temp_v0->unk0[1] += temp_v0->unkC[1] * temp_f20;
         temp_v0->unk0[2] += temp_v0->unkC[2] * temp_f20;
         if ((temp_v0->unk0[1] < (sp3C[1] - 500.0f)) && (temp_v0->unk18 == 0)) {
-            vector_remove(arg0->unk20, phi_s0);
+            bk_vector_remove(arg0->unk20, phi_s0);
             phi_s0--;
         }
     }
     arg0->unk1C++;
-    if (arg0->unk1C < vector_size(arg0->unk20)) {
-        temp_v0 = (struct4s *)vector_at(arg0->unk20, arg0->unk1C);
+    if (arg0->unk1C < bk_vector_size(arg0->unk20)) {
+        temp_v0 = (struct4s *)bk_vector_at(arg0->unk20, arg0->unk1C);
         if (1210.0 < ml_vec3f_distance(temp_v0->unk0, sp3C)) {
-            vector_remove(arg0->unk20, arg0->unk1C);
+            bk_vector_remove(arg0->unk20, arg0->unk1C);
         }
     } else {
         arg0->unk1C = 0;

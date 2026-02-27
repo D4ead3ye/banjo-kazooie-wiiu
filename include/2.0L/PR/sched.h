@@ -27,7 +27,8 @@
  *  $Source: /exdisk2/cvs/N64OS/Master/cvsmdev2/PR/include/sched.h,v $
  *
  **************************************************************************/
-
+#include "libultraship/libultra/sptask.h"
+#if 0
 #ifndef __sched__
 #define __sched__
 
@@ -112,4 +113,4 @@ void            osScRemoveClient(OSSched *s, OSScClient *c);
 OSMesgQueue     *osScGetCmdQ(OSSched *s);
 
 #endif
-
+#endif

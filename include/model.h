@@ -1,5 +1,6 @@
 #ifndef __MODEL_H__
 #define __MODEL_H__
+#include <libultra/gbi.h>
 #include <ultra64.h>
 
 typedef struct {

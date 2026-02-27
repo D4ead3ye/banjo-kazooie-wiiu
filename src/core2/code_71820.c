@@ -1,7 +1,9 @@
-#include <ultra64.h>
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
+#include <ultra64.h>
+
+#include <bk_math.h>
 
 #define _SQ3(x, y, z)  (((x) * (x)) + ((y) * (y)) + ((z) * (z)))
 
@@ -15,13 +17,13 @@ void func_802F87B0(struct6s *this){
     int i;
     f32 sp4C[3];
 
-    if(vector_size(this->unk1C) >= this->unk20)
+    if(bk_vector_size(this->unk1C) >= this->unk20)
         return;
     
     player_getPosition(plyrPos);
-    viewport_getLookVector(camNorm);
+    viewport_getLookbk_vector(camNorm);
     viewport_getRotation_vec3f(camRot);
-    ptr = vector_pushBackNew(&this->unk1C);
+    ptr = bk_vector_pushBackNew(&this->unk1C);
     f20 = randf2(50.0f, 1200.0f);
     sp4C[0] = 0.0f;
     sp4C[1] = randf2(200.0f, 500.0f);
@@ -67,13 +69,13 @@ void func_802F8A68(struct6s *this, s32 arg1){
 }
 
 void func_802F8A70(struct6s *this){
-    vector_clear(this->unk1C);
+    bk_vector_clear(this->unk1C);
 }
 
 void func_802F8A90(struct6s *this, Gfx **gdl, Mtx **mptr, Vtx **vptr){
-    struct5s * startPtr = vector_getBegin(this->unk1C);
+    struct5s * startPtr = bk_vector_getBegin(this->unk1C);
     struct5s * iPtr;
-    struct5s * endPtr = vector_getEnd(this->unk1C);
+    struct5s * endPtr = bk_vector_getEnd(this->unk1C);
     for(iPtr = startPtr; iPtr < endPtr; iPtr++){
         modelRender_setDepthMode(MODEL_RENDER_DEPTH_COMPARE);
         modelRender_draw(gdl, mptr, iPtr->unk4, iPtr->unk1C, 1.0f, NULL, iPtr->unk0);
@@ -82,21 +84,21 @@ void func_802F8A90(struct6s *this, Gfx **gdl, Mtx **mptr, Vtx **vptr){
 }
 
 int func_802F8B50(struct6s *this){
-    return this->unk22 != 1  &&  (u32)vector_size(this->unk1C) < 1;
+    return this->unk22 != 1  &&  (u32)bk_vector_size(this->unk1C) < 1;
 }
 
 void func_802F8B8C(struct6s *this){
-    vector_free(this->unk1C);
+    bk_vector_free(this->unk1C);
     func_8033BD20(&this->unk24[0]);
     func_8033BD20(&this->unk24[1]);
     func_8033BD20(&this->unk24[2]);
     func_8033BD20(&this->unk24[3]);
-    free(this);
+    bk_free(this);
 }
 
 struct6s * func_802F8BE0(s32 arg0){
-    struct6s *this = (struct6s *) malloc(sizeof(struct6s));
-    vector(struct5s) *vecPtr;
+    struct6s *this = (struct6s *) bk_malloc(sizeof(struct6s));
+    bk_vector(struct5s) *vecPtr;
     this->unk18 = 0;
     this->unk8 = 0.0f;
     this->unk4 = 0.0f;
@@ -104,7 +106,7 @@ struct6s * func_802F8BE0(s32 arg0){
     this->unk14 = 0.0f;
     this->unk10 = 0.0f;
     this->unkC = 0.0f;
-    vecPtr = vector_new(sizeof(struct5s), arg0);
+    vecPtr = bk_vector_new(sizeof(struct5s), arg0);
     this->unk1C = vecPtr;
     this->unk20 = arg0;
     this->unk22 = 0;
@@ -139,12 +141,12 @@ void func_802F8CD0(struct6s * this){
     this->unk4 = plyr_pos[1];
     this->unk8 = plyr_pos[2];
     if(func_802BEF64()){
-        vector_clear(this->unk1C);
+        bk_vector_clear(this->unk1C);
     }
 
-    for(i = 0; i < vector_size(this->unk1C); i++){
+    for(i = 0; i < bk_vector_size(this->unk1C); i++){
         iPtr;
-        iPtr = vector_at(this->unk1C, i);
+        iPtr = bk_vector_at(this->unk1C, i);
         iPtr->unk4[0] += iPtr->unk10[0]*f20;
         iPtr->unk4[1] += iPtr->unk10[1]*f20;
         iPtr->unk4[2] += iPtr->unk10[2]*f20;
@@ -161,15 +163,15 @@ void func_802F8CD0(struct6s * this){
         iPtr->unk28[2] += randf2(-300.0f, 300.0f)*f20;
 
         if(iPtr->unk4[1] < plyr_pos[1] - 500.0f && !iPtr->unk34){
-            vector_remove(this->unk1C, i);
+            bk_vector_remove(this->unk1C, i);
             i--;
         }
     }
     this->unk18++;
-    if((s32)this->unk18 < vector_size(this->unk1C)){
-        iPtr = vector_at(this->unk1C, this->unk18);
+    if((s32)this->unk18 < bk_vector_size(this->unk1C)){
+        iPtr = bk_vector_at(this->unk1C, this->unk18);
         if(1320.0 < ml_vec3f_distance(iPtr->unk4, plyr_pos)){
-            vector_remove(this->unk1C, this->unk18);
+            bk_vector_remove(this->unk1C, this->unk18);
         }
     }
     else{

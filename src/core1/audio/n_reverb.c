@@ -1,6 +1,8 @@
 #include <ultra64.h>
-#include "n_libaudio.h"
+#include "PR/n_libaudio.h"
 #include "n_synth.h"
+#include "2.0L/PR/os_error.h"
+#include "2.0L/PR/ultraerror.h"
 
 
 #define RANGE 2.0

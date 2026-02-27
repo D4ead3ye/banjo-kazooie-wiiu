@@ -1,7 +1,8 @@
-#include <ultra64.h>
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
+#include <ultra64.h>
+#include "2.0L/PR/region.h"
 
 void func_803382D8(s32 arg0);
 void func_803382E4(s32 arg0);

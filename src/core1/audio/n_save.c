@@ -1,5 +1,6 @@
 #include <ultra64.h>
 #include "n_synth.h"
+#include "mixer.h"
 
 Acmd *n_alSavePull( s32 sampleOffset, Acmd *p) 
 {

@@ -26,7 +26,8 @@
         $Revision: 1.1 $
         $Date: 1998/10/09 08:01:19 $
  *---------------------------------------------------------------------*/
-
+#include "libultraship/libultra/time.h"
+#if 0
 #ifndef _OS_TIME_H_
 #define	_OS_TIME_H_
 
@@ -112,3 +113,4 @@ extern int		osStopTimer(OSTimer *);
 #endif
 
 #endif /* !_OS_TIME_H_ */
+#endif

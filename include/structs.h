@@ -169,7 +169,7 @@ typedef struct struct_3_s{
     f32 unk10[3];
     u8 unk1C;
     u8 pad1D[0x3];
-    vector(struct struct_4_s) *unk20;
+    bk_vector(struct struct_4_s) *unk20;
     s32 unk24;
     s32 unk28;
     void *unk2C;
@@ -206,7 +206,7 @@ typedef struct struct_6_s{
     f32 unk10;
     f32 unk14;
     u32 unk18;
-    vector(struct5s) *unk1C;
+    bk_vector(struct5s) *unk1C;
     s16 unk20;
     u8 unk22;
     u8 pad23[1];
@@ -566,7 +566,7 @@ typedef struct {
 typedef struct struct_63_s{
     s16 unk0;
     // u8 pad2[2];
-    void (*unk4)(vector(AnSeqElement) **, struct actorMarker_s *);
+    void (*unk4)(bk_vector(AnSeqElement) **, struct actorMarker_s *);
 } Struct63s;
 
 typedef struct struct_64_s{
@@ -798,11 +798,13 @@ typedef struct{
     void *unk18;
 }struct86s;
 
+struct ALHeap;
+
 typedef struct {
     s32 unk0; //sound state cnt
     s32 unk4;
     s32 unk8; //maxSounds
-    ALHeap *unkC; //heap
+    struct ALHeap *unkC; //heap
     u16 unk10;
 }Struct87s;
 #endif

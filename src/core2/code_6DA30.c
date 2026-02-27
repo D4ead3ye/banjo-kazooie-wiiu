@@ -285,7 +285,7 @@ void func_802F4B58(BKSpriteTextureBlock *alphaMask, BKSpriteTextureBlock *textur
 FontLetter *func_802F4C3C(BKSprite *alphaMask, BKSprite *textureSprite){
     BKSpriteFrame * font = sprite_getFramePtr(alphaMask, 0);
     BKSpriteTextureBlock *chunkPtr;
-    FontLetter * sp2C = malloc((font->chunkCnt + 1)*sizeof(FontLetter));
+    FontLetter * sp2C = bk_malloc((font->chunkCnt + 1)*sizeof(FontLetter));
     u8* palDataPtr;
     u8* chunkDataPtr;
     s32 chunkSize;
@@ -366,11 +366,11 @@ void func_802F4F64(void){
         assetcache_release(D_80380AB8[i]);
         D_80380AB8[i] = NULL;
         if(i < 4){
-            free(print_sFonts[i]);
+            bk_free(print_sFonts[i]);
             print_sFonts[i] = NULL;
         }
     }
-    free(print_sPrintBuffer);
+    bk_free(print_sPrintBuffer);
     print_sPrintBuffer = NULL;
 }
 
@@ -400,10 +400,10 @@ void func_802F5060(s32 textureId){
         }
     }//L802F510C
     D_80380AB8[4] = assetcache_get(textureId);
-    free(print_sFonts[1]);
+    bk_free(print_sFonts[1]);
     print_sFonts[1] = func_802F4C3C(D_80380AB8[1], D_80380AB8[4]);
     if(D_80380AB8[3]){
-        free(print_sFonts[3]);
+        bk_free(print_sFonts[3]);
         print_sFonts[3] = func_802F4C3C(D_80380AB8[3], D_80380AB8[4]);
     }
     assetcache_release(D_80380AB8[4]);
@@ -440,7 +440,7 @@ void func_802F51B8(void){
     D_80380AB8[4] = assetcache_get(func_802F49C0());
     print_sFonts[0] =  func_802F4C3C(D_80380AB8[0], D_80380AB8[4]);
     print_sFonts[1] =  func_802F4C3C(D_80380AB8[1], D_80380AB8[4]);
-    print_sPrintBuffer = malloc(0x20*sizeof(PrintBuffer));
+    print_sPrintBuffer = bk_malloc(0x20*sizeof(PrintBuffer));
     func_802F5010();
 
     for(i = 0; i < 0x80; i++){//L802F52EC
@@ -463,7 +463,7 @@ void func_802F5374(void){
     if(D_80380B18 > 0 && --D_80380B18 == 0){
         assetcache_release(D_80380AB8[3]);
         D_80380AB8[3] = 0;
-        free(print_sFonts[3]);
+        bk_free(print_sFonts[3]);
         print_sFonts[3] = NULL;
     }
 }
@@ -474,7 +474,7 @@ void func_802F53D0(void){
         D_80380AB8[3] = NULL;
     }
     if(print_sFonts[3]){
-        free(print_sFonts[3]);
+        bk_free(print_sFonts[3]);
         print_sFonts[3] = NULL;
     }
     D_80380B18 = 0;

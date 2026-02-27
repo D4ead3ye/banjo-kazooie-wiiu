@@ -17,14 +17,14 @@ enum ch_nipper_states_e {
 
 /* .data */
 ActorAnimationInfo gChNipperAnimations[8] = {
-    {NULL, NULL},
+    {NULL, 0.0},
     {ASSET_C0_ANIM_NIPPER_IDLE, 2.0f},
     {ASSET_BD_ANIM_NIPPER_VULNERABLE, 1.5f},
     {ASSET_BF_ANIM_NIPPER_ATTACK, 1.2f},
     {ASSET_BE_ANIM_NIPPER_OW, 1.3f},
     {ASSET_C0_ANIM_NIPPER_IDLE, 2.0f},
     {ASSET_133_ANIM_NIPPER_DIE, 3.0f},
-    {NULL, NULL}
+    {NULL, 0.0}
 };
 
 ActorInfo gChNipper = { 

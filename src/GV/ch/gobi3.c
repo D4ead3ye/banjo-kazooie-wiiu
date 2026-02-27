@@ -1,6 +1,8 @@
-#include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include <ultra64.h>
+
+#include <bk_math.h>
 
 void chGobi3_setState(Actor *this, s32 next_state);
 void chGobi3_update(Actor *this);

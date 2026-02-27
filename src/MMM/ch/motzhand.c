@@ -1,6 +1,7 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include "bk_math.h"
 
 typedef struct {
     f32 alpha; //motzhand_alpha

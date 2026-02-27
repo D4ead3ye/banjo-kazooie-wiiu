@@ -2,7 +2,7 @@
 #include "functions.h"
 #include "variables.h"
 
-#include "time.h"
+#include "bk_time.h"
 
 #define _73640_MAX(s,t) ((s < t)? t: s)
 #define _73640_MIN(s,t) ((s > t)? t: s)

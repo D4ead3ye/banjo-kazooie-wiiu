@@ -25,7 +25,7 @@ void func_80348044(Gfx **gfx, BKSprite* sprite, s32 frame, s32 tmem, s32 rtile, 
 		(uls),			\
 		(ult),			\
 		((width)-1) << G_TEXTURE_IMAGE_FRAC,			\
-		((height)-1) << G_TEXTURE_IMAGE_FRAC)			\
+		((height)-1) << G_TEXTURE_IMAGE_FRAC);			\
 }
 
 #define	rare_gDPLoadMultiBlock_4b(pkt, timg, tmem, rtile, fmt, width, height, \
@@ -47,7 +47,7 @@ void func_80348044(Gfx **gfx, BKSprite* sprite, s32 frame, s32 tmem, s32 rtile, 
 		(uls),			\
 		(ult),			\
 		((width)-1) << G_TEXTURE_IMAGE_FRAC,			\
-		((height)-1) << G_TEXTURE_IMAGE_FRAC)			\
+		((height)-1) << G_TEXTURE_IMAGE_FRAC);			\
 }
 
 /* .bss */

@@ -1,6 +1,7 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include "bk_math.h"
 
 /* external function declarations */
 void func_8028E668(f32 *, f32, f32, f32);

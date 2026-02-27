@@ -26,7 +26,8 @@
         $Revision: 1.1 $
         $Date: 1998/10/09 08:01:18 $
  *---------------------------------------------------------------------*/
-
+#include "libultraship/libultra/interrupt.h"
+#if 0
 #ifndef _OS_SYSTEM_H_
 #define	_OS_SYSTEM_H_
 
@@ -83,7 +84,7 @@ extern "C" {
 
 extern s32 	osRomType;	/* Bulk or cartridge ROM. 0=cartridge 1=bulk */
 extern void 	*osRomBase;	/* Rom base address of the game image */
-extern s32 	osTvType;	/* 0 = PAL, 1 = NTSC, 2 = MPAL */
+`	/* 0 = PAL, 1 = NTSC, 2 = MPAL */
 extern s32 	osResetType;	/* 0 = cold reset, 1 = NMI */
 extern s32 	osCicId;
 extern s32 	osVersion;
@@ -116,3 +117,4 @@ extern s32		osAfterPreNMI(void);
 #endif
 
 #endif /* !_OS_SYSTEM_H_ */
+#endif

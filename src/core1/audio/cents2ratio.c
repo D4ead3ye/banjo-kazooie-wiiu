@@ -1,4 +1,4 @@
-#include <libaudio.h>
+#include <ultratypes.h>
 
 f32 alCents2Ratio(s32 cents) 
 {

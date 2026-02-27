@@ -3,6 +3,7 @@
 #include "functions.h"
 #include "variables.h"
 #include "version.h"
+#include "libultraship/libultra/rcp.h"
 
 #define VIMANAGER_THREAD_STACK_SIZE 0x400
 
@@ -110,6 +111,8 @@ void viMgr_func_8024BDAC(OSMesgQueue *mq, OSMesg msg){
 
 }
 
+s32 osTvType; // Lighthouse [Port] This was in assembly in the original codebase
+
 void viMgr_init(void) {
     s32 i;
 
@@ -132,7 +135,7 @@ void viMgr_init(void) {
     osCreateMesgQueue(&sMesgQueue1, sMesgBuffer1, 10);
     osCreateMesgQueue(&sMesgQueue2, sMesgBuffer2, 1);
     osCreateMesgQueue(&sMesgQueue3, sMesgBuffer3, FRAMERATE);
-    osViSetEvent(&sMesgQueue1, NULL, 1);
+    osViSetEvent(&sMesgQueue1, OS_MESG_PTR(NULL), 1);
 
     sActiveFramebuffer = 0;
     D_80280724 = 1;
@@ -158,10 +161,12 @@ s32 viMgr_func_8024BFA0(void){
 }
 
 void viMgr_func_8024BFAC(void){
-    osSendMesg(&sMesgQueue2, 0, OS_MESG_NOBLOCK);
+    osSendMesg32(&sMesgQueue2, 0, OS_MESG_NOBLOCK);
 }
 
 void viMgr_func_8024BFD8(s32 arg0){
+    // Lighthouse TODO we might need this
+#if 0
     static s32 D_80280E90;
     
     osSetThreadPri(NULL, 0x7f);
@@ -190,6 +195,7 @@ void viMgr_func_8024BFD8(s32 arg0){
     defragManager_802408B0();
     osSetThreadPri(NULL, 0x14);
     defragManager_setPriority(0xA);
+#endif
 }
 
 void viMgr_func_8024C1B4(void){
@@ -205,7 +211,7 @@ void viMgr_func_8024C1FC(OSMesgQueue *mq, OSMesg msg) {
     s32 i;
 
     for (i = 0; i < 8; i++) {
-        if (D_80280730[i].messageQueue == mq && D_80280730[i].message == msg) {
+        if (D_80280730[i].messageQueue == mq && D_80280730[i].message.data32 == msg.data32) {
             D_80280730[i].messageQueue = NULL;
             return;
         }
@@ -229,7 +235,7 @@ void viMgr_entry(void *arg0){
             func_802485BC();
 #endif
         }
-        osSendMesg(&sMesgQueue3, NULL, OS_MESG_NOBLOCK);
+        osSendMesgPtr(&sMesgQueue3, NULL, OS_MESG_NOBLOCK);
 
         for(i = 0; i < 8; i++){
             if(D_80280730[i].messageQueue != NULL){
@@ -244,8 +250,11 @@ void viMgr_setScreenBlack(s32 active) {
 }
 
 void viMgr_clearFramebuffers(void) {
+    // Lighthouse TODO there is something weird happening here
+#if 0
     func_80253034(&gFramebuffers, 0, (s32) ((f32)gFramebufferWidth*2*gFramebufferHeight*2)); // TODO: This function does not exist in source code, why does it work?
     osWritebackDCache(&gFramebuffers, (s32) ((f32)gFramebufferWidth*2*gFramebufferHeight*2));
+#endif
 }
 
 s32 viMgr_func_8024C4E8(void) {

@@ -30,7 +30,7 @@ void func_8032ACA8(Actor *arg0);
 void func_8032B5C0(ActorMarker *arg0, ActorMarker *arg1, struct5Cs *arg2);
 void subaddie_set_state_with_direction(Actor * this, s32 arg1, f32 arg2, s32 arg3);
 void func_8032BB88(Actor *this, s32 arg1, s32 arg2);
-int  subaddie_playerIsWithinSphere(Actor *this, s32 dist);
+bool subaddie_playerIsWithinSphere(Actor *this, s32 dist);
 extern void func_8033A4A0(enum asset_e mode_id, f32, f32);
 extern void func_80338338(s32, s32, s32);
 extern void func_803382FC(s32);
@@ -39,6 +39,7 @@ extern void func_8033687C(Gfx **);
 extern void func_80335D30(Gfx **);
 extern void func_80344138(s32, s32, s32, f32[3], f32[3], Gfx **, Mtx **);
 extern BKVertexList *vtxList_clone(BKVertexList *vtxList);
+bool func_803296D8(Actor *this, s32 dist);
 
 typedef struct {
     f32 unk0[3];
@@ -422,7 +423,7 @@ void actorArray_free(void) {
             }
             var_s0->marker = NULL;
         }
-        free(suBaddieActorArray);
+        bk_free(suBaddieActorArray);
         suBaddieActorArray = NULL;
     }
     func_8034A2A8(D_8036E568);
@@ -763,14 +764,14 @@ Actor *actor_new(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags){
     f32 sp44[3];
     
     if(suBaddieActorArray == NULL){
-        suBaddieActorArray = (ActorArray *)malloc(sizeof(ActorArray) + 20*sizeof(Actor));
+        suBaddieActorArray = (ActorArray *)bk_malloc(sizeof(ActorArray) + 20*sizeof(Actor));
         suBaddieActorArray->cnt = 0;
         suBaddieActorArray->max_cnt = 20;
     }
     
     if(suBaddieActorArray->cnt + 1 > suBaddieActorArray->max_cnt){
         suBaddieActorArray->max_cnt = suBaddieActorArray->cnt + 5;
-        suBaddieActorArray = (ActorArray *)realloc(suBaddieActorArray, sizeof(ActorArray) + suBaddieActorArray->max_cnt*sizeof(Actor));
+        suBaddieActorArray = (ActorArray *)bk_realloc(suBaddieActorArray, sizeof(ActorArray) + suBaddieActorArray->max_cnt*sizeof(Actor));
     }
 
     ++suBaddieActorArray->cnt;
@@ -1049,7 +1050,7 @@ static void __actor_free(ActorMarker *arg0, Actor *arg1){
     //shrink actor array capacity
     if(suBaddieActorArray->cnt + 8 <= suBaddieActorArray->max_cnt){
         suBaddieActorArray->max_cnt = suBaddieActorArray->cnt + 4;
-        suBaddieActorArray = (ActorArray *)realloc(suBaddieActorArray, suBaddieActorArray->max_cnt*sizeof(Actor) + sizeof(ActorArray));
+        suBaddieActorArray = (ActorArray *)bk_realloc(suBaddieActorArray, suBaddieActorArray->max_cnt*sizeof(Actor) + sizeof(ActorArray));
     }
 
     marker_free(arg0);
@@ -1726,7 +1727,7 @@ void *actors_appendToSavestate(void * begin, u32 end){
             }
         }
         sp2C = end - (u32)sp3C;
-        sp3C = realloc(sp3C, sp2C + sizeof(u32) + sp30*sizeof(Actor));
+        sp3C = bk_realloc(sp3C, sp2C + sizeof(u32) + sp30*sizeof(Actor));
 
         end = (u32)sp3C + sp2C;
         *(u32 *)end = sp30;
@@ -1812,9 +1813,9 @@ void func_8032A09C(s32 arg0, ActorListSaveState *arg1) {
 
         var_s3++;
         
-        sp60 = malloc(var_s3*sizeof(Actor *));
+        sp60 = bk_malloc(var_s3*sizeof(Actor *));
         pad = sp5C + var_s2;
-        sp5C = malloc(var_s3*sizeof(Actor *));
+        sp5C = bk_malloc(var_s3*sizeof(Actor *));
         for (var_s2 = 0; var_s2 < var_s3; var_s2++) {
             *(u32*)&sp60[var_s2] = 0; 
             *(u32*)&sp5C[var_s2] = 0;
@@ -1869,8 +1870,8 @@ void func_8032A09C(s32 arg0, ActorListSaveState *arg1) {
             var_s0++;
         }
         func_803283D4();
-        free(sp60);
-        free(sp5C);
+        bk_free(sp60);
+        bk_free(sp5C);
     }
     spawnQueue_unlock();
 }

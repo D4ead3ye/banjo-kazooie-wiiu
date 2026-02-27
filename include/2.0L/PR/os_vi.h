@@ -26,7 +26,8 @@
         $Revision: 1.1 $
         $Date: 1998/10/09 08:01:20 $
  *---------------------------------------------------------------------*/
-
+#include "libultraship/libultra/vi.h"
+#if 0
 #ifndef _OS_VI_H_
 #define	_OS_VI_H_
 
@@ -296,3 +297,4 @@ extern void		osCreateViManager(OSPri);
 #endif
 
 #endif /* !_OS_VI_H_ */
+#endif

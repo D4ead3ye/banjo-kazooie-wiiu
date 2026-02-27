@@ -12,6 +12,8 @@ extern u32 vol_num, vol_cnt, vol_max, vol_min;
 #endif
 
 #define EQPOWER_LENGTH 128
+#include "mixer.h"
+
 static s16 eqpower[ EQPOWER_LENGTH ] = {
     32767,  32764,  32757,  32744,  32727,  32704,
     32677,  32644,  32607,  32564,  32517,  32464,

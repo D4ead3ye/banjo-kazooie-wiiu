@@ -15,7 +15,8 @@ void glcrc_calc_checksum(void *start, void *end, u32 checksum[2]) {
     // CRC1: Iterate forwards over bytes
     for (p = start; (void *)p < end; p++) {
         seed += *p << (shift & 15);
-        tmp = func_8025C29C(&seed);
+        // Lighthouse TODO this is that weird function
+        //tmp = func_8025C29C(&seed);
         shift += 7;
         crc1 ^= tmp;
     }
@@ -23,7 +24,8 @@ void glcrc_calc_checksum(void *start, void *end, u32 checksum[2]) {
     // CRC2: Iterate backwards over bytes
     for (p = (u8 *)end - 1; (void *)p >= start; p--) {
         seed += *p << (shift & 15);
-        tmp = func_8025C29C(&seed);
+        // Lighthouse TODO this is that weird function
+        //tmp = func_8025C29C(&seed);
         shift += 3;
         crc2 ^= tmp;
     }

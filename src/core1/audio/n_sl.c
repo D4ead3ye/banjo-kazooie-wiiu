@@ -2,7 +2,7 @@
 #include "functions.h"
 #include "variables.h"
 
-#include "n_libaudio.h"
+#include "2.0L/PR/n_libaudio.h"
 
 
 N_ALSynth *D_80276E80 = NULL;

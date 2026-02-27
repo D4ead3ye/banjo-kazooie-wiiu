@@ -1,7 +1,9 @@
-#include <ultra64.h>
+#include "core2/ba/physics.h"
 #include "functions.h"
 #include "variables.h"
-#include "core2/ba/physics.h"
+#include <ultra64.h>
+
+#include <bk_math.h>
 
 extern f32 climbGetRadius(void);
 extern f32 func_8029CED0(void);

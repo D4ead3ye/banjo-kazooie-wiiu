@@ -74,13 +74,13 @@ void mapSpecificFlags_setAll(u32 arg0){
 s32 *bitfield_new(s32 arg0){
     s32 *phi_v0;
 
-    phi_v0 = (s32*)malloc( (((arg0 + 0x1F)>>5) + 1)*sizeof(s32));
+    phi_v0 = (s32*)bk_malloc( (((arg0 + 0x1F)>>5) + 1)*sizeof(s32));
     *phi_v0 = arg0;
     return phi_v0;
 }
 
 void bitfield_free(s32 *arg0){
-    free(arg0);
+    bk_free(arg0);
 }
 
 void bitfield_setBit(s32 *arg0, s32 arg1, bool arg2){

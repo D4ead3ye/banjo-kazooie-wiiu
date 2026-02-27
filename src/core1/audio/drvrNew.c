@@ -3,6 +3,7 @@
 #include "variables.h"
 
 #include "synthInternals.h"
+#include "2.0L/PR/libaudio.h"
 
 /*
  * WARNING: THE FOLLOWING CONSTANT MUST BE KEPT IN SYNC

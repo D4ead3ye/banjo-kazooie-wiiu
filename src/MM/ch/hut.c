@@ -5,6 +5,8 @@
 
 #include "prop.h"
 
+#include <bk_math.h>
+
 /* extern function declarations */
 
 void bundle_setYaw(f32);

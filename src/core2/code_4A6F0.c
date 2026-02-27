@@ -101,10 +101,12 @@ bool chMumbo_withinHorzDistToPlayer(s32 x, s32 z, s32 dist) {
     return (x - player_position[0]) * (x - player_position[0]) + (z - player_position[2]) * (z - player_position[2]) < dist * dist;
 }
 
+// Forward declared because decomp didn't put it in a header
+NodeProp *cubeList_findNodePropByActorIdAndPosition_s32(enum actor_e actor_id, s32 position[3]);
 
 bool chMumbo_func_802D181C(s32 arg0) {
-    s32 search_start_cube[3] = D_80367504;
-    return BOOL(cubeList_findNodePropByActorIdAndPosition_s32(arg0, search_start_cube));
+    s32* search_start_cube = D_80367504;
+    return cubeList_findNodePropByActorIdAndPosition_s32(arg0, search_start_cube) != NULL;
 }
 
 void chMumbo_func_802D186C(Actor *this) {
@@ -480,7 +482,7 @@ Actor *chMumbo_draw(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx) {
     Actor *this = marker_getActor(marker);
     Actor *out;
     f32 sp44[3];
-    f32 sp38[3] = D_80367510;
+    f32* sp38 = D_80367510;
 
     func_8033A45C(4, (this->lifetime_value == 0.0f));
     func_8033A45C(5, (this->lifetime_value == 1.0f));

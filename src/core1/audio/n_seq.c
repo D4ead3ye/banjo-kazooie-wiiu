@@ -1,7 +1,8 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
-
+#include "2.0L/PR/libaudio.h"
+#include "2.0L/PR/ultraerror.h"
 
 #define IFF_FILE_HDR    0x4d546864	/* 'MThd' */
 #define IFF_TRACK_HDR   0x4d54726b	/* 'MTrk' */

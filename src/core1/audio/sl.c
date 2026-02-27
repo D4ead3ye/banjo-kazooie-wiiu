@@ -1,6 +1,7 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include "2.0L/PR/libaudio.h"
 
 ALGlobals *alGlobals = NULL;
 

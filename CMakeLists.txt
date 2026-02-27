@@ -133,12 +133,17 @@ include_directories(
 )
 
 # Collect source files to build the executable
+message(${CMAKE_CURRENT_SOURCE_DIR})
 file(GLOB_RECURSE ALL_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     # "src/assets/*.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp
+    "${CMAKE_CURRENT_SOURCE_DIR}/port/*.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/port/*.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/port/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/port/*.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/**/*.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/**/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/**/*.h"
@@ -146,14 +151,13 @@ file(GLOB_RECURSE ALL_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     "${CMAKE_CURRENT_SOURCE_DIR}/include/**/*"
 )
 
-set (EXCLUDES 
-    "src/core1/audio"
+set (EXCLUDES
+#    "src/core1/audio"
     "src/core1/gu"
     "src/core1/io"
     "src/core1/os"
     "src/done"
-    "include/2.0L"
-    "eeprom.c"
+   "eeprom.c"
 )
 
 # Function to filter out files whose paths start with any exclude directory.
@@ -259,6 +263,8 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/libultraship/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/2.0L
+  #${CMAKE_CURRENT_SOURCE_DIR}/include/2.0L/PR
   ${CMAKE_CURRENT_SOURCE_DIR}/libultraship/include/libultraship
   ${CMAKE_CURRENT_SOURCE_DIR}/libultraship/src
   ${CMAKE_CURRENT_SOURCE_DIR}/libultraship/src/log
@@ -284,9 +290,11 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/libultraship/libultraship/Lib/spdlog/include/
   ${CMAKE_CURRENT_SOURCE_DIR}/libultraship/src/graphic/Fast3D/U64/PR
   ${CMAKE_CURRENT_SOURCE_DIR}/libultraship/src/graphic
+  ${CMAKE_CURRENT_SOURCE_DIR}/port
   ${SDL2_INCLUDE_DIRS}
   ${GLEW_INCLUDE_DIRS}
   ${dr_libs_SOURCE_DIR}
+        .
 )
 
 add_subdirectory(libultraship ${CMAKE_CURRENT_SOURCE_DIR}/libultraship)
@@ -600,7 +608,8 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
           -Wno-missing-braces
           -Wno-int-conversion
           $<$<COMPILE_LANGUAGE:C>:
-              -Werror-implicit-function-declaration
+              # TODO remove this... there are a lot of these...
+              -Wno-implicit-function-declaration
               -Wno-incompatible-pointer-types
               -fpermissive
           >

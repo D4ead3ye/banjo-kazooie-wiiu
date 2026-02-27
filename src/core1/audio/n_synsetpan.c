@@ -1,5 +1,6 @@
-#include <ultra64.h>
+#include "PR/ultraerror.h"
 #include "n_synth.h"
+#include <ultra64.h>
 
 void    n_alSynSetPan(N_ALVoice *v, u8 pan)
 {

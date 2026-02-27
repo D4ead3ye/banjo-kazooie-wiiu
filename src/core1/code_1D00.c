@@ -4,12 +4,14 @@
 #include "variables.h"
 #include "version.h"
 #include "2.0L/PR/sched.h"
-#include "n_libaudio.h"
+#include "2.0L/PR/n_libaudio.h"
+#include "2.0L/PR/os_system.h"
 
 #define AUDIO_HEAP_SIZE VER_SELECT(0x21000, 0x23A00, 0x21000, 0x21000)
 #define AUDIOMANAGER_THREAD_STACK_SIZE 0xE78
 
 extern void n_alInit(N_ALGlobals *, ALSynConfig *);
+
 
 typedef struct AudioInfo_s {
 	short         *data;          /* Output data pointer */
@@ -63,6 +65,7 @@ void audioManager_handleDoneMsg(AudioInfo *info);
 void *func_802403B8(void *state);
 void func_802403F0(void);
 void audioManager_startThread(void);
+bool audioManager_handleFrameMsg(AudioInfo *info, AudioInfo *prev_info);
 
 
 s32 D_80275770 = 0;
@@ -286,8 +289,10 @@ void func_8023FA64(ALSeqpConfig *arg0) {
     arg0->stopOsc   = stopOsc;
 }
 
+extern s32 	osTvType;
+
 void audioManager_init(void){
-    D_8027D000 = (u8 *) malloc(AUDIO_HEAP_SIZE);
+    D_8027D000 = (u8 *) bk_malloc(AUDIO_HEAP_SIZE);
     bzero(D_8027D000, AUDIO_HEAP_SIZE);
     alHeapInit(&D_8027CFF0, D_8027D000, AUDIO_HEAP_SIZE);
 #if VERSION == VERSION_USA_1_0
@@ -334,7 +339,7 @@ void audioManager_create(void) {
     }
     D_8027D5C0[i].unk10 = alHeapDBAlloc(0, 0, D_8027DD50.heap, 1, VER_SELECT(0x200, 0x270, 0x200, 0x200));
     for(i = 0; i < 2; i++){
-        audioManager.ACMDList[i] = malloc(1200000/FRAMERATE);
+        audioManager.ACMDList[i] = bk_malloc(1200000/FRAMERATE);
     }
 
     D_8027DD80 = 150000/FRAMERATE;
@@ -342,7 +347,7 @@ void audioManager_create(void) {
         audioManager.audioInfo[i] = alHeapDBAlloc(0, 0, D_8027DD50.heap, 1, 0x10);
         audioManager.audioInfo[i]->unk8 = 0;
         audioManager.audioInfo[i]->unkC = audioManager.audioInfo[i];
-        audioManager.audioInfo[i]->data = malloc(D_8027DD7C * 4);
+        audioManager.audioInfo[i]->data = bk_malloc(D_8027DD7C * 4);
     }
 
     osCreateThread(&audioManager.thread, 4, &audioManagerThread_entry, 0, sAudioManagerThreadStack + AUDIOMANAGER_THREAD_STACK_SIZE, 50);
@@ -572,7 +577,7 @@ void func_802403F0(void) {
     Struct_1D00_3 *phi_s1;
     Struct_1D00_3 *phi_s0_2;
 
-    sp40 = NULL;
+    sp40.ptr = NULL;
     for(phi_s0 = 0; phi_s0 < D_8027DCCC; phi_s0++){
 
 #if VERSION == VERSION_USA_1_0
