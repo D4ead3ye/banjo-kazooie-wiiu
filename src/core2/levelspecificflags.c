@@ -14,6 +14,9 @@ struct{
 
 /* .code */
 u32 _levelSpecificFlags_calcCRC1(void) {
+    // Lighthouse [port] Disabled CRC calculation, stub
+    return 0;
+#if 0
     s32 scrambled_ptr;
     u8 *ptr;
     u32 var_a3;
@@ -28,16 +31,24 @@ u32 _levelSpecificFlags_calcCRC1(void) {
         var_v1 = ((((var_v1 + ptr[var_a3]) & 0x7F) << 0x14) ^ (var_v1 >> 7)) ^ (ptr[var_a3] * 0xD);
     }
     return var_v1;
+#endif
 }
 
 void _levelSpecificFlags_updateCRC1(void) {
+    // Lighthouse [port] Disabled CRC calculation, stub
+    return;
+#if 0
     s32 temp_a0;
 
     temp_a0 = (s32) &D_80383320.unk0 ^ ((((s32) &D_80383320.unk0 >> 8) & 0xFF0000) + (((s32) &D_80383320.unk0 & 0xFF) << 8));
     *(u32 *)((((u32) (temp_a0 & 0xFF000000) >> 8) + ((temp_a0 << 8) & 0xFF00)) ^ temp_a0) = _levelSpecificFlags_calcCRC1();
+#endif
 }
 
 s32 _levelSpecificFlags_calcCRC2(void) {
+    // Lighthouse [port] Disabled CRC calculation, stub
+    return 0;
+#if 0
     s32 temp_t7;
     s32 var_v1;
     u32 var_a2;
@@ -54,10 +65,15 @@ s32 _levelSpecificFlags_calcCRC2(void) {
         var_v1 += (var_a2 + 7) * scrambled_ptr[var_a2];
     };
     return var_v1;
+#endif
 }
 
 void _levelSpecificFlags_updateCRC2(void) {
+    // Lighthouse [port] Disabled CRC calculation, stub
+    return;
+#if 0
     *(u32 *)(((((s32) (((((s32) &D_80383320.unk4 >> 0x10) & 0xFFFF) ^ 0x195D) * 0x2F) / 0x2F) << 0x10) + ((s32) ((((s32) &D_80383320.unk4 & 0xFFFF) ^ 0xA832) << 0xD) / 0x2000)) ^ 0x195DA832) = _levelSpecificFlags_calcCRC2();
+#endif
 }
 
 s32 levelSpecificFlags_get(s32 i){

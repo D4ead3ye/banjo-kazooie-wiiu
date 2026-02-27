@@ -26,8 +26,9 @@ u16 gFramebuffers[2][DEFAULT_FRAMEBUFFER_WIDTH * DEFAULT_FRAMEBUFFER_HEIGHT];
 int ResourceMgr_OTRSigCheck(char* imgData) {
     uintptr_t i = (uintptr_t)(imgData);
 
-    // if (i == 0xD9000000 || i == 0xE7000000 || (i & 1) == 1)
-    if ((i & 1) == 1)
+    // if ((i & 1) == 1)
+    // Lighthouse [port] Something something add 1 for segments??? need archez :[
+    if (i == 0x1000000 || i == 0xE7000000 || (i & 1) == 1)
         return 0;
 
     // if ((i & 0xFF000000) != 0xAB000000 && (i & 0xFF000000) != 0xCD000000 && i != 0) {

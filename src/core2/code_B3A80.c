@@ -263,6 +263,9 @@ bool func_8033B388(BKSprite **sprite_ptr, BKSpriteDisplayData **arg1){
 }
 
 s32 assetcache_release(void * arg0){
+    // Lighthouse [port] Stubbing for now, not sure if we want this stuff happening...
+    return 0;
+#if 0
     s32 i;
     if(arg0){
         for(i = 0; i < assetCacheLength  && arg0 != assetCachePtrList[i]; i++);
@@ -289,6 +292,7 @@ s32 assetcache_release(void * arg0){
     } else{
         return 3;
     }
+#endif
 }
 
 void assetcache_update_ptr(void * arg0, void* arg1){
@@ -437,11 +441,12 @@ void assetCache_resizeAsset(void *assetPtr, s32 size){
 
 void assetCache_init(void){
     // Lighthouse TODO assets
-#if 0
     D_80370A1C = 0;
     func_8033B180();
     assetCachePtrList = (void **)bk_malloc(150*sizeof(void*));
-    D_80383CD4 = bk_malloc(600);
+    // Lighthouse [port] Changed from 600 to sizeof
+    D_80383CD4 = bk_malloc(150*sizeof(BKSpriteDisplayData*));
+#if 0
     assetCacheDependencyCount = (u8*)bk_malloc(150*sizeof(u8));
     assetCacheAssetIdList = (s16 *)bk_malloc(150*sizeof(s16));
     assetCacheLength = 0;

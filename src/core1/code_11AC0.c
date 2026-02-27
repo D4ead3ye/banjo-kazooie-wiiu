@@ -271,6 +271,8 @@ ALBank *music_get_sound_bank(void){
 }
 
 void func_8024F764(s32 arg0){//music track load
+    // Lighthouse [audio] stub
+    return;
     if(D_802820E0[arg0] == NULL){
         func_8033B788();
 #if VERSION == VERSION_USA_1_0

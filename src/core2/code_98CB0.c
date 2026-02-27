@@ -41,6 +41,9 @@ u8 glVolatileFlagsCopy[0x21]; //copy of gVolatileFlags
 
 /* .code */
 void func_8031FC40(void) {
+    // Lighthouse [port] Bunch of weird obfuscation going on here, stubbed for now - Proxy
+    return;
+#if 0
     s32 *scrambled_ptr;
     s32 *unscrambled_ptr;
     u32 a1;
@@ -81,9 +84,13 @@ void func_8031FC40(void) {
     scrambled_ptr = (s32 *) ((((s32) &gFileProgressFlags & 0x55555555) << 1) + (((s32) &gFileProgressFlags & 0xAAAAAAAA) >> 1));
     unscrambled_ptr = (s32 *) ((((s32) scrambled_ptr & 0x55555555) << 1) | (((s32) scrambled_ptr & 0xAAAAAAAA) >> 1));
     *unscrambled_ptr = v0;
+#endif
 }
 
 u32 func_8031FE40(void) {
+    // Lighthouse [port] Bunch of weird obfuscation going on here, stubbed for now - Proxy
+    return 0;
+#if 0
     u8 *obscured_addr;
     u32 var_v1;
     u32 var_a2;
@@ -96,12 +103,17 @@ u32 func_8031FE40(void) {
         var_v1 += ((var_v1 % 4) + var_a2) * obscured_addr[var_a2];
     }
     return var_v1;
+#endif
 }
 
 void func_8031FEC0(void) {
+    // Lighthouse [port] Bunch of weird obfuscation going on here, stubbed for now - Proxy
+    return;
+#if 0
     u32 *obscured_addr;
     obscured_addr = (u32*)OBSCURE(&gFileProgressFlags.unk4);
     *obscured_addr = func_8031FE40();
+#endif
 }
 
 bool fileProgressFlag_get(enum file_progress_e index) {
@@ -192,6 +204,10 @@ s32 dummy_func_80320240(void){return 1;}
 s32 dummy_func_80320248(void){return 1;}
 
 u32 func_80320250(void) {
+    // Lighthouse [port] Bunch of weird obfuscation going on here, stubbed for now - Proxy
+    return 0;
+#if 0
+
     u32 checksum = 0x6CE9E91F;
     u8 *obscured_addr = (u8*)OBSCURE(&gVolatileFlags.unk8[0]);
     s32 len = 25;
@@ -203,21 +219,29 @@ u32 func_80320250(void) {
     }
 
     return checksum;
+#endif
 }
 
 void func_803202D0(void) {
+    // Lighthouse [port] Bunch of weird obfuscation going on here, stubbed for now - Proxy
+    return;
+#if 0
     s32 addr = (s32) &gVolatileFlags.unk0;
     addr ^= 0x7EDDF5F4;
     addr ^= 0x7BEF9D80;
     addr ^= 0x5326874;
     *(s32*)(addr) = func_80320250();
+#endif
 }
 
 s32 func_80320320(void) {
-    s32 addr = (s32) &gVolatileFlags.unk8[0];
+    // Lighthouse [port] Bunch of weird obfuscation going on here, stubbed for now - Proxy
+    return 0;
+#if 0
+    uintptr_t addr = (uintptr_t) &gVolatileFlags.unk8[0];
     s32 checksum = 0x281E421C;
     s32 len = 25;
-    s32 scrambled;
+    uintptr_t scrambled;
     u32 i;
 
     // Scrambles the address of D_803831D8
@@ -234,12 +258,18 @@ s32 func_80320320(void) {
     }
 
     return checksum;
+#endif
 }
 
 void func_803203A0(void) {
+    // Lighthouse [port] Bunch of weird obfuscation going on here, stubbed for now - Proxy
+    return;
+#if 0
+
     u32 *obscured_addr = (u32*)OBSCURE(&gVolatileFlags.unk4);
 
     *obscured_addr = func_80320320();
+#endif
 }
 
 s32 volatileFlag_get(enum volatile_flags_e index) {

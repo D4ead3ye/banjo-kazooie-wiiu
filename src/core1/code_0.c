@@ -121,7 +121,7 @@ void core1_init(void) {
     gctransition_reset();
     D_8027A130 = 0;
     gGlobalTimer = 0;
-    // func_8023DA9C(3);
+    func_8023DA9C(3);
 }
 
 void globalTimer_incTimer(void){

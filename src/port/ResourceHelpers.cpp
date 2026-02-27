@@ -1,7 +1,7 @@
 
 #include "ship/resource/ResourceManager.h"
 #include "fast/resource/ResourceType.h"
-#include "fast/resource/Type/DisplayList.h"
+#include "fast/resource/type/DisplayList.h"
 #include "libultraship/bridge/resourcebridge.h"
 #include "ship/Context.h"
 #include <spdlog/spdlog.h>

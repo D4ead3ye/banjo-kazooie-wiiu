@@ -4,8 +4,8 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 project(Lighthouse VERSION 0.0.1 LANGUAGES C CXX ASM)
 include(FetchContent)
 
-include(CMake/lighthouse-cvars.cmake)
-include(CMake/lus-cvars.cmake)
+include(cmake/lighthouse-cvars.cmake)
+include(cmake/lus-cvars.cmake)
 
 if(APPLE)
   enable_language(OBJCXX)
@@ -434,6 +434,9 @@ else()
         "Vorbis::vorbisenc"
         "Vorbis::vorbisfile"
 	)
+    if(UNIX AND NOT APPLE)
+        list(APPEND ADDITIONAL_LIBRARY_DEPENDENCIES dl)
+    endif()
 endif()
 
 if(USE_NETWORKING)
@@ -636,7 +639,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
       if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
         set(CPU_OPTION -msse2 -mfpmath=sse)
       elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
-        set(CPU_OPTION -mfpu=native)
+        set(CPU_OPTION -mcpu=native)
       endif()
 
       target_compile_options(${PROJECT_NAME} PRIVATE

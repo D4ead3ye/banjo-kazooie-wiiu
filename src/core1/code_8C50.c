@@ -17,8 +17,8 @@
 #include <libultra/rdp.h>
 
 typedef struct {
-    OSMesgQueue unk0;
-    OSMesg unk4;
+    s32 unk0;
+    s32 unk4;
     s32 unk8;
     s32 unkC;
 }Struct_Core1_8C50_s;
@@ -105,8 +105,8 @@ void func_80246670(OSMesg arg0){
     static s32 D_802759A0 = 1;
     
     osSendMesg(&D_8027FB60, arg0, 1);
-    // Lighthouse TODO verify this is right
-    if(((Struct_Core1_15B30*)arg0.ptr)->unk0 == 3 ){
+    // Lighthouse [port] Adjustment here to account for our OSMesg union definition
+    if(arg0.data32 == 3){
         D_80275994 = 0x1e;
         if(D_802759A0){
             osDpSetStatus(DPC_CLR_FREEZE);

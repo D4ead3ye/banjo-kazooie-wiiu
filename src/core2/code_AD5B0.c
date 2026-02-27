@@ -37,9 +37,10 @@ void func_80334540(Gfx** gdl, Mtx **mptr, Vtx **vptr) {
         viewport_setRenderViewportAndPerspectiveMatrix(gdl, mptr);
         return;
     }
-    if (func_80320708() == 0) {
-        eeprom_writeBlocks(0, 0, 0x80BC7230, EEPROM_MAXBLOCKS);
-    }
+    // Lighthouse [port] Crashing here, not sure what this is.
+    // if (func_80320708() == 0) {
+    //     eeprom_writeBlocks(0, 0, 0x80BC7230, EEPROM_MAXBLOCKS);
+    // }
     spawnQueue_unlock();
     sky_draw(gdl, mptr, vptr);
     func_802BBD2C(&sp44, &sp40);
@@ -211,7 +212,8 @@ void func_80334B20(enum map_e arg0, s32 arg1, s32 arg2) {
     func_8031B718();
     func_80298700();
     if (func_802E4A08() == 0) {
-        itemPrint_init();
+        // Lighthouse [port] Crashing here
+        // itemPrint_init();
     }
     dialogBin_initialize();
     spawnQueue_malloc();
@@ -241,12 +243,14 @@ void func_80334B20(enum map_e arg0, s32 arg1, s32 arg2) {
     func_802FA69C();
     func_8033DEA0();
     if (arg2 == 0) {
+        // Lighthouse [port] Crashing here, we don't currently have maps loaded or something? (MAP_1F_CS_START_RAREWARE)
         func_80335140(arg0);
     }
     func_80305990(0);
     func_8030C740();
     gcdialog_init();
     mapSpecificFlags_clearAll();
+     // Lighthouse [port] Crashing here, we don't currently have maps loaded, no cubeslist
     func_803411B0();
     spawnQueue_reset();
     func_80322FBC();

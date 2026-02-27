@@ -299,12 +299,11 @@ void game_draw(s32 arg0){
     }
 
     gfx_start = gfx;
-    // Stub for now
-    gSPEndDisplayList(gfx++);
-    Graphics_PushFrame(gfx_start);
-    return;
 
     func_802E39D0(&gfx, &mtx, &vtx, getActiveFramebuffer(), arg0);
+
+    // Lighthouse [Port] not sure if this should be here or after the following block
+    Graphics_PushFrame(gfx_start);
 
     if(D_8037E8E0.unkC == 0){
         sp2C = gfx;
@@ -392,7 +391,8 @@ void func_802E4214(enum map_e map_id){
     savedata_init();
     sns_save_and_update_global_data();
     func_8030D86C();
-    comusicPlayer_init();
+    // Lighthouse [audio] stubbed
+    // comusicPlayer_init();
     func_80322764();
     timedFuncQueue_init();
     func_802F9CD8();

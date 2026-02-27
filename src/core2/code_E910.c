@@ -219,8 +219,9 @@ void func_80295914(void){
     eggShatter_init();
     bacarry_init();
     func_80293DA4();
-    baAnim_init();
-    baModel_reset();
+    // Lighthouse [port] No animations yet
+    // baAnim_init();
+    // baModel_reset();
     baMarker_init();
     basfx_reset();
     func_8029A4D0();
