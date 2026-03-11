@@ -3,7 +3,7 @@
 #include "n_synth.h"
 #include "file_and_line.h"
 #include "assert.h"
-#include "2.0L/PR/os_error.h"
+//#include "2.0L/PR/os_error.h"
 #include "2.0L/PR/ultraerror.h"
 // #include "functions.h"
 // #include "variables.h"

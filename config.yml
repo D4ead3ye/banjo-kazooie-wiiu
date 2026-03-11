@@ -2,7 +2,7 @@
   name: Banjo Kazooie (USA (Rev0))
   path: assets/yaml/us/rev0
   config:
-    gbi: F3DEX
+    gbi: F3DEX_BK64
     sort: OFFSET
     logging: ERROR
     textures: ADDITIONAL_DEFINES

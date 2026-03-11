@@ -79,8 +79,8 @@ void func_80390B2C(ActorMarker *marker){
 void func_80390B70(Actor *this){
     func_80324E38(0.0f, 3);
     timed_setStaticCameraToNode(0.0f, 0);
-    timedFunc_set_1(0.6f, (GenFunction_1)func_80390ABC, reinterpret_cast(s32, this->marker));
-    timedFunc_set_1(2.5f, (GenFunction_1)func_80390B2C, reinterpret_cast(s32, this->marker));
+    timedFunc_set_1(0.6f, (GenFunction_1)func_80390ABC, (uintptr_t)this->marker);
+    timedFunc_set_1(2.5f, (GenFunction_1)func_80390B2C, (uintptr_t)this->marker);
 }
 
 void func_80390BDC(Actor *this) {

@@ -31,13 +31,13 @@ MtxF * s_mtx_stack;
  * @param dst 
  */
 void mlMtxGet(MtxF *dst) {
+    // [port] rewrite: original used (MtxF*) cast to advance by sizeof(float),
+    // creating an interior pointer — UB that MSVC optimizes incorrectly in RWDI.
     s32 row, col;
-
+    f32 *d = &dst->mf[0][0];
     for(row = 0; row < 4; row++){
         for(col = 0; col < 4; col++){
-            dst->mf[0][0] = s_mtx_stack->mf[row][col];
-            // TODO figure out how to avoid this pointer arithmetic.
-            dst = (MtxF*)&dst->mf[0][1];
+            *d++ = s_mtx_stack->mf[row][col];
         }
     }
 }
@@ -51,17 +51,18 @@ void mlMtxApply(Mtx *mPtr){
 }
 
 void func_802514BC(MtxF *arg0) {
+    // [port] rewrite: original used (MtxF*) cast to advance by one row — UB in optimized builds.
     s32 row;
     s32 col;
     s32 i;
     f32 sum;
     f32 prod[4][4];
 
-    for(row = 0; row < 4; row++, arg0 = (MtxF*)&arg0->mf[1][0]) {
+    for(row = 0; row < 4; row++) {
         for(col = 0; col < 4; col++) {
             sum = 0.0;
             for(i = 0; i < 4; i++) {
-                sum += arg0->mf[0][i] * s_mtx_stack->mf[i][col];
+                sum += arg0->mf[row][i] * s_mtx_stack->mf[i][col];
             }
             prod[row][col] = sum;
         }
@@ -198,20 +199,21 @@ void mlMtx_push_multiplied(f32* l_mtx) {
  * @param r_mtx 
  */
 void mlMtx_push_multiplied_2(MtxF * l_mtx, MtxF * r_mtx) {
+    // [port] rewrite: original used (MtxF*) cast to advance r_mtx by one row — UB in optimized builds.
     s32 row;
     s32 col;
     MtxF * dst = (s_mtx_stack + 1);
-    
-    for (row = 0; row < 4; row++, r_mtx = (MtxF*)&r_mtx->mf[1][0])
+
+    for (row = 0; row < 4; row++)
     {
         for (col = 0; col < 4; col++)
         {
             dst->mf[row][col] =
             (
-                r_mtx->mf[0][0] * l_mtx->mf[0][col] +
-                r_mtx->mf[0][1] * l_mtx->mf[1][col] +
-                r_mtx->mf[0][2] * l_mtx->mf[2][col] +
-                r_mtx->mf[0][3] * l_mtx->mf[3][col]
+                r_mtx->mf[row][0] * l_mtx->mf[0][col] +
+                r_mtx->mf[row][1] * l_mtx->mf[1][col] +
+                r_mtx->mf[row][2] * l_mtx->mf[2][col] +
+                r_mtx->mf[row][3] * l_mtx->mf[3][col]
             );
         }
     }
@@ -242,16 +244,15 @@ void func_80251B5C(f32 x, f32 y, f32 z){
 }
 
 void mlMtxSet(MtxF* arg0) {
+    // [port] rewrite: original used (MtxF*) cast to advance by sizeof(float) — UB in optimized builds.
     s32 i, j;
-    MtxF *v0;
-    
-    v0 = s_mtx_stack = D_80282810;
-    for(i = 0; i < 4*4; i+=4){
+    f32 *src = &arg0->mf[0][0];
+    f32 *dst;
+    s_mtx_stack = D_80282810;
+    dst = &s_mtx_stack->mf[0][0];
+    for(i = 0; i < 4; i++){
         for(j = 0; j < 4; j++){
-            v0->mf[0][0] = arg0->mf[0][0];
-            // TODO figure out how to avoid this pointer arithmetic.
-            v0 = (MtxF*)(&v0->mf[0][1]);
-            arg0 = (MtxF*)(&arg0->mf[0][1]); 
+            *dst++ = *src++;
         }
     }
 }

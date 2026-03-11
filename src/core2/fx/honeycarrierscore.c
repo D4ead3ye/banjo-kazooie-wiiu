@@ -11,8 +11,7 @@
 #define _76D90_MIN(s,t) ((s > t)? t : s)
 
 f32 func_802FDE60(f32);
-void timedFunc_set_1(f32, void (*)(s32), s32);
-void timedFunc_set_2(f32, void (*)(s32,s32), s32, s32);
+#include "core2/timedfunc.h"
 void item_inc(s32);
 void gcpausemenu_80314AC8(s32);
 void item_set(s32, s32);
@@ -162,7 +161,7 @@ void fxhoneycarrierscore_draw(s32 arg0, struct8s *arg1, Gfx **arg2, Mtx **arg3, 
                     for(var_v0 = 0; var_v0 < 2; var_v0++, (*arg4)++){
                         (*arg4)->v.ob[0] = ((((sp13C * D_803815D0) * var_v0) - ((sp13C * D_803815D0) / 2)) + (s32) (sp130 + sp128)) * 4.0f;
                         (*arg4)->v.ob[1] = ((((sp138 * D_803815D0) / 2) - ((sp138 * D_803815D0) * var_v1)) + (s32) (sp12C + sp124)) * 4.0f;
-                        (*arg4)->v.ob[2] = -0x14;
+                        (*arg4)->v.ob[2] = -0xA; // [port] was -0x14; Z=-20 at guOrtho far clip plane, gets clipped on PC
                         (*arg4)->v.tc[0] = (s16) ((sp13C - 1) * var_v0 << 9);
                         (*arg4)->v.tc[1] = (s16) ((sp138 - 1) * var_v1 << 9);
                           

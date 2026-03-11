@@ -1,6 +1,7 @@
 #include <ultra64.h>
 #include "core1/core1.h"
 #include "functions.h"
+#include "model.h"
 #include "variables.h"
 
 
@@ -151,12 +152,12 @@ static bool __maCastle_isFloorTileValidForSecretCheatCode(LetterFloorTile *floor
 static bool __maCastle_isCurrentSecretCheatCodeCharacter0();
 
 /* .code */
-static void __maCastle_transformMeshCallbackOverlayUpdate(s32 arg0, BKVtxRef *vtx_ref, Vtx *vtx, s32 arg2)
+static void __maCastle_transformMeshCallbackOverlayUpdate(s32 arg0, BKVtxRef *vtx_ref, Vtx *vtx, void *arg2)
 {
     vtx->v.ob[1] += 2;
 }
 
-static void __maCastle_transformMeshCallbackOverlayInit(s32 arg0, BKVtxRef *vtx_ref, Vtx *vtx, s32 arg2)
+static void __maCastle_transformMeshCallbackOverlayInit(s32 arg0, BKVtxRef *vtx_ref, Vtx *vtx, void *arg2)
 {
     vtx->v.ob[1] += 0xf0;
 }
@@ -215,7 +216,7 @@ static void __maCastle_initFloorTiles(void)
     mapSpecificFlags_set(TTC_SPECIFIC_FLAG_1_UNKNOWN, false);
 }
 
-static void __maCastle_meshCallbackFloorTileState_1(s32 arg0, BKVtxRef *ref, Vtx *dst, s32 arg3)
+static void __maCastle_meshCallbackFloorTileState_1(s32 arg0, BKVtxRef *ref, Vtx *dst, void *arg3)
 {
     LetterFloorTile *ptr = (LetterFloorTile *)arg3;
     f32 temp_f2;
@@ -249,7 +250,7 @@ static void __maCastle_setLetterFloorTileState(LetterFloorTile *arg0, s32 arg1)
     }
 }
 
-static void __maCastle_meshCallbackFloorTileState_3(s32 arg0, BKVtxRef *ref, Vtx *dst, s32 arg3)
+static void __maCastle_meshCallbackFloorTileState_3(s32 arg0, BKVtxRef *ref, Vtx *dst, void *arg3)
 {
     LetterFloorTile *ptr = (LetterFloorTile *)arg3;
     f32 temp_f12;
@@ -267,7 +268,7 @@ static void __maCastle_meshCallbackFloorTileState_3(s32 arg0, BKVtxRef *ref, Vtx
     }
 }
 
-static void __maCastle_meshCallbackFloorTileState_5(s32 arg0, BKVtxRef *ref, Vtx *dst, s32 arg3)
+static void __maCastle_meshCallbackFloorTileState_5(s32 arg0, BKVtxRef *ref, Vtx *dst, void *arg3)
 {
     LetterFloorTile *ptr = (LetterFloorTile *)arg3;
     f32 temp_f2;
@@ -299,15 +300,15 @@ static void __maCastle_updateTimeDeltaSumForFloorTiles()
         floor_tile->timeDeltaSum += time_delta;
         if (floor_tile->state == 1)
         {
-            BKModel_transformMesh(sMapState.model1, floor_tile->meshId, __maCastle_meshCallbackFloorTileState_1, (s32)floor_tile);
+            BKModel_transformMesh(sMapState.model1, floor_tile->meshId, __maCastle_meshCallbackFloorTileState_1, (void *)floor_tile);
         }
         else if (floor_tile->state == 3)
         {
-            BKModel_transformMesh(sMapState.model1, floor_tile->meshId, __maCastle_meshCallbackFloorTileState_3, (s32)floor_tile);
+            BKModel_transformMesh(sMapState.model1, floor_tile->meshId, __maCastle_meshCallbackFloorTileState_3, (void *)floor_tile);
         }
         else if (floor_tile->state == 5)
         {
-            BKModel_transformMesh(sMapState.model1, floor_tile->meshId, __maCastle_meshCallbackFloorTileState_5, (s32)floor_tile);
+            BKModel_transformMesh(sMapState.model1, floor_tile->meshId, __maCastle_meshCallbackFloorTileState_5, (void *)floor_tile);
         }
     }
 }
@@ -855,8 +856,8 @@ static void __maCastle_resetSecretCheatCodeProgress(void)
 
 static u32 __maCastle_scrambleAddressForSecretCheatCode()
 {
-    s32 addr = (s32)&sSecretsCheatCodes;
-    s32 scrambled;
+    uintptr_t addr = (uintptr_t)&sSecretsCheatCodes; // [port] s32 -> uintptr_t for 64-bit pointer safety
+    uintptr_t scrambled;
     SecretCheatCode *i_ptr;
     u32 var_a3;
     u32 var_v0;
@@ -1185,7 +1186,7 @@ static bool __maCastle_isFloorTileValidForSecretCheatCode(LetterFloorTile *floor
 
 static bool __maCastle_isCurrentSecretCheatCodeCharacter0()
 {
-    return *(u8 *)(sSecretsCheatCodes[0].codeCharacterIdx + (s32)sSecretsCheatCodes[0].code) == 0;
+    return *(u8 *)(sSecretsCheatCodes[0].codeCharacterIdx + (uintptr_t)sSecretsCheatCodes[0].code) == 0;
 }
 
 bool maCastle_isSecretCheatCodeRelatedValueEqualToScrambledAddressValue()

@@ -123,7 +123,7 @@ void lair_func_8038A864(Actor *this) {
 }
 
 void func_8038A96C(Actor *this, s32 arg1) {
-    s32 sp5C;
+    Struct70s *sp5C; // [port] was s32
     s32 i;
     f32 sp48[4];
     f32 sp38[4];

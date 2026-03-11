@@ -65,10 +65,10 @@ void chGobi3_setState(Actor *this, s32 next_state){
 
     if(next_state == 3){
         func_80324E38(0.0f, 3);
-        timedFunc_set_1(0.02f, (GenFunction_1)__chGobi3_func_80388270, (s32)this);
+        timedFunc_set_1(0.02f, (GenFunction_1)__chGobi3_func_80388270, (uintptr_t)this);
         timed_setStaticCameraToNode(0.1f, 0x12);
         timed_playSfx(0.2f, SFX_4C_LIP_SMACK, 1.0f, 32000);
-        timedFunc_set_1(0.2f, (GenFunction_1)__chGobi3_spawnHoneyComb, (s32)this);
+        timedFunc_set_1(0.2f, (GenFunction_1)__chGobi3_spawnHoneyComb, (uintptr_t)this);
         skeletalAnim_set(this->unk148, ASSET_FC_ANIM_GOBI_SPITTING, 0.2f, 1.0f);
     }
 

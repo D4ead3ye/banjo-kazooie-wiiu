@@ -17,6 +17,9 @@ typedef struct sprite_prop_s{
     u32 unk0_9:0x8;
     u32 unk0_1:0x1;
     u32 unk0_0:0x1;
+#if UINTPTR_MAX > 0xFFFFFFFFu
+    u32 _pad64; // [port] align unk4/flags with ActorProp on 64-bit
+#endif
     s16 unk4[3];
     u16 unk8_15: 5;
     u16 unk8_10: 5;
@@ -31,13 +34,16 @@ typedef struct sprite_prop_s{
 typedef struct model_prop_s{
     union{
         u16 unk0;
-        struct{    
+        struct{
             u16 unk0_31:12;
             u16 pad0_19:4;
         };
     };
     u8 unk0_15;
     u8 unk0_7;
+#if UINTPTR_MAX > 0xFFFFFFFFu
+    u32 _pad64; // [port] align unk4/flags with ActorProp on 64-bit
+#endif
     s16 unk4[3];
     u8 unkA;
     u8 padB_7 :2;
@@ -46,6 +52,11 @@ typedef struct model_prop_s{
     u8 padB_3 :4;
 } ModelProp;
 
+
+// [port] On N64 the marker pointer is 4 bytes, so words[3] (12 bytes) covers
+// the entire struct. On 64-bit, the pointer is 8 bytes (16 bytes total).
+// ACTORPROP_WORD_BASE gives the word index where position data starts.
+#define ACTORPROP_WORD_BASE (sizeof(void*) / sizeof(s32))
 
 typedef struct actor_prop_s{
     union {
@@ -63,7 +74,7 @@ typedef struct actor_prop_s{
             u16 unk8_1:1;
             u16 unk8_0:1;
         };
-        s32 words[3];
+        s32 words[ACTORPROP_WORD_BASE + 2]; // [port] was words[3], sized for pointer width
     };
 } ActorProp;
 
@@ -85,7 +96,7 @@ typedef struct actorMarker_s{
     u32         unk14_10:11; //used in ch/jiggy
     Struct6Cs   *unk18;
     MarkerCollisionFunc dieFunc;
-    s32         unk20;
+    struct AnimMtxList_s *unk20; // [port] was s32, stores AnimMtxList* (truncates on 64-bit)
     ActorUpdateFunc actorUpdateFunc;
     s32         unk28;
     u32         actrArrayIdx:11; //unk2C
@@ -112,7 +123,7 @@ typedef struct actorMarker_s{
     struct5Bs * unk44;
     BKModel *   unk48;
     bk_vector(Struct70s) * unk4C;
-    s32         unk50;
+    void        *unk50; // [port] was s32, stores pointer from func_803406B0
     void        (*unk54)(struct actorMarker_s *, struct actorMarker_s *, u16*);
     s32         (*unk58)(struct actorMarker_s *, struct actorMarker_s *);
     s32         unk5C;
@@ -284,7 +295,7 @@ typedef struct actor_s{
     u8  unk164[0x2];
     u8  unk166;
     s8  pad167[0x1];
-    s32 unk168; //saved marker->unk58
+    uintptr_t unk168; //saved marker->unk58 — [port] was s32, but stores function pointer (64 bits on PC)
     u32  unk16C_31:27; //saved s1->marker->unk5C
     u32  volatile_initialized:1; // the difference between this flag and initialized is that it is reset in actors_appendToSavestate
     u32  unk16C_3:1;
@@ -326,7 +337,11 @@ typedef union prop_s
     SpriteProp  spriteProp;
     ModelProp    modelProp;
     struct{
+#if UINTPTR_MAX > 0xFFFFFFFFu
+        u64 pad0; // [port] 8-byte pad to match ActorProp marker pointer on 64-bit
+#else
         u32 pad0;
+#endif
         s16 unk4[3];
         // s16 unk6;
         s16 pad8_15: 10;

@@ -3,6 +3,8 @@
 #include "functions.h"
 #include "variables.h"
 
+extern void func_8034C6DC(BKModel *arg0);
+
 typedef struct {
     s16 model_id;
     // u8 pad2[0x2];
@@ -75,7 +77,7 @@ void sky_draw(Gfx **gfx, Mtx **mtx, Vtx **vtx){
 
     viewport_setNearAndFar(5.0f, 15000.0f);
     if(gcSky.model_bins[0]){
-        drawRectangle2D(gfx, 0, 0, (s32)(f32) gFramebufferWidth, (s32)(f32)gFramebufferHeight,0, 0, 0); //fill screen with black
+        drawRectangle2D(gfx, 0, 0, (s32)(f32) gFramebufferWidth, (s32)(f32)gFramebufferHeight, 0, 0, 0);
         viewport_setRenderViewportAndPerspectiveMatrix(gfx, mtx);
         viewport_getPosition_vec3f(position);
         for(i = 0; i < 3; i++){
@@ -117,7 +119,7 @@ void sky_reset(void){
         if(gcSky.sky_info->sky_list[i].model_id){
             gcSky.model_bins[i] = assetcache_get(gcSky.sky_info->sky_list[i].model_id);
             if(func_8033A0B0(gcSky.model_bins[i])){
-                gcSky.model[i] = func_8033F5F8(func_8033A0B0(gcSky.model_bins[i]), model_getVtxList( gcSky.model_bins[i]));
+                gcSky.model[i] = func_8033F5F8((BKMeshList *)func_8033A0B0(gcSky.model_bins[i]), model_getVtxList( gcSky.model_bins[i]));
                 func_8034C6DC(gcSky.model[i]);
             }
         }

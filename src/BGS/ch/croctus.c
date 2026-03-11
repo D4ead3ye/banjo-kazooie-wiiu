@@ -8,7 +8,7 @@ extern void func_80324CFC(f32, enum comusic_e, s32);
 extern void func_803289EC(Actor *, f32, s32);
 extern void func_80326310(Actor *);
 extern void actor_setOpacity(Actor *, s32);
-extern void __spawnQueue_add_2(void (*)(s32, s32), s32, s32);
+extern void __spawnQueue_add_2(void (*)(uintptr_t, uintptr_t), uintptr_t, uintptr_t);
 extern void func_802BAFE4(s32 arg0);
 
 
@@ -67,14 +67,15 @@ void *func_80387D90(ActorMarker * arg0){
     func_802BAFE4(0x19);
     jiggy_spawn(JIGGY_22_CROCTUS, spawnPos);
     func_8025A6EC(COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 0x7FFF);
+    return NULL; // [port] MIPS implicit return
 }
 
-void func_80387E00(s32 arg0){
+void func_80387E00(uintptr_t arg0){
     ActorMarker *marker = reinterpret_cast(ActorMarker *, arg0);
     Actor * this = marker_getActor(marker);
 
     func_803262E4(this);
-    __spawnQueue_add_2((GenFunction_2)func_80387D18, reinterpret_cast(s32, marker), 0x1E);
+    __spawnQueue_add_2((GenFunction_2)func_80387D18, (uintptr_t)marker, 0x1E);
 }
 
 void func_80387E40(ActorMarker * arg0){
@@ -95,10 +96,10 @@ void func_80387E68(ActorMarker *caller, enum asset_e text_id, s32 arg2){
         subaddie_set_state_with_direction(this, 5, 0.79f, 1);
         func_80326310(this); //did not disappear when moved, after cutscene still there with collision but broken
         bgs_D_803907B8[this->unkF4_8]->propPtr->unk8_4 = true;
-        timedFunc_set_1(1.1f, (GenFunction_1)func_80387E00, reinterpret_cast(s32, bgs_D_803907B8[this->unkF4_8]));
+        timedFunc_set_1(1.1f, (GenFunction_1)func_80387E00, (uintptr_t)bgs_D_803907B8[this->unkF4_8]);
         timed_setStaticCameraToNode(0.8f, 9);
         func_80324DBC(3.4f, 0xC87, 0xE, NULL, NULL, func_80387E68, NULL);
-        __spawnQueue_add_2((GenFunction_2) func_80387D18, reinterpret_cast(s32, this->marker), 0x46);
+        __spawnQueue_add_2((GenFunction_2) func_80387D18, (uintptr_t)this->marker, 0x46);
     }
     else{
         timed_exitStaticCamera(0.0f);
@@ -152,18 +153,18 @@ void func_80387FD4(Actor *this){
                 func_80324D2C(4.5f, COMUSIC_43_ENTER_LEVEL_GLITTER);
                 subaddie_set_state_with_direction(this, 5, 0.79f, 1);
                 if (this->unkF4_8 == 5) {
-                    timedFunc_set_1(0.9f, (GenFunction_1) func_80387E40, (s32) this->marker);
+                    timedFunc_set_1(0.9f, (GenFunction_1) func_80387E40, (uintptr_t)this->marker);
                 } else {
                     func_80326310(this);
                 }
                 if (this->unkF4_8 < 5) {
                     bgs_D_803907B8[this->unkF4_8]->propPtr->unk8_4 = true;
-                    timedFunc_set_1(1.1f, (GenFunction_1)func_80387E00, reinterpret_cast(s32, bgs_D_803907B8[this->unkF4_8]));
+                    timedFunc_set_1(1.1f, (GenFunction_1)func_80387E00, (uintptr_t)bgs_D_803907B8[this->unkF4_8]);
                     func_802BAFE4(D_803907B0[this->unkF4_8-1]);
                 } else {
-                    timedFunc_set_1(0.8f, (GenFunction_1)func_80387D90, (s32) this->marker);
+                    timedFunc_set_1(0.8f, (GenFunction_1)func_80387D90, (uintptr_t)this->marker);
                 }
-                __spawnQueue_add_2((GenFunction_2)func_80387D18, reinterpret_cast(s32, this->marker), 0x46);
+                __spawnQueue_add_2((GenFunction_2)func_80387D18, (uintptr_t)this->marker, 0x46);
             }
         }
     }//L80388348

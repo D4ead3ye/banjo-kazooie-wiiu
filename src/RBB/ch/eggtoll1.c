@@ -94,7 +94,7 @@ void func_803865D0(ActorMarker *marker){
     ActorLocal_RBB_0 * local = (ActorLocal_RBB_0 *) &actor->local;
     RBB_func_803863F0(actor, 1);
     timed_setStaticCameraToNode(0.0f, D_80390074[local->unk4].unk0);
-    timedFunc_set_2(0.75*D_80390074[local->unk4].unk4, (GenFunction_2) func_803865A4, (s32)actor->marker, 4);
+    timedFunc_set_2(0.75*D_80390074[local->unk4].unk4, (GenFunction_2) func_803865A4, (uintptr_t)actor->marker, 4);
     timed_exitStaticCamera(0.75*D_80390074[local->unk4].unk4);
     func_80324E38(0.75*D_80390074[local->unk4].unk4, 0);
     timed_playSfx(D_80390074[local->unk4].unk4, SFX_7F_HEAVYDOOR_SLAM, 0.8f, 0x7fd0);
@@ -114,7 +114,7 @@ void func_803866F4(Actor *this, s32 arg1){
         func_8025A6EC(COMUSIC_2B_DING_B, 28000);
         func_80324E38(0.0f, 3);
         timedFunc_set_2(0.5f, (GenFunction_2) func_8025A6EC, COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 28000);
-        timedFunc_set_1(1.0f,  (GenFunction_1) func_803865D0, (s32)this->marker);
+        timedFunc_set_1(1.0f,  (GenFunction_1) func_803865D0, (uintptr_t)this->marker);
     }//L803867D4
     if(arg1 == 4){
         if(local->unk8 == 1 && D_80390074[local->unk4].unk2 > 0){

@@ -2,8 +2,9 @@
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
+#include "port/ShipUtils.h"
 
-#include "zoombox.h"
+#include "core2/gc/zoombox.h"
 
 extern void func_803114D0(void );
 extern int func_803114B0(void);
@@ -572,7 +573,8 @@ void gcdialog_update(void) {
         break;
 
     case 3:
-        if ((g_Dialog.u8_s.unk128_31 & 1) && controller_face_buttons[FACE_BUTTON(BUTTON_B)] == 1u) {
+        // [port] Allow B to always advance/skip dialog (QoL: original only allowed B when flag & 1)
+        if (controller_face_buttons[FACE_BUTTON(BUTTON_B)] == 1u) {
             gcdialog_setState(6);
             break;
         }
@@ -617,11 +619,11 @@ void func_80310574(s32 text_id){
     s32 j;
     u8 *txt;
     s32 _v0;
-    char ch;
+    u8 ch; // [port] MIPS char is unsigned; PC char is signed. Must be u8 for 0x80+ portrait bytes.
     s32 len;
 
     txt = g_Dialog.dialog_bin_ptr = dialogBin_get(text_id);
-    
+
     for(i = 0; i < 2; i++){
         g_Dialog.string_count[i] = *(txt++);
         g_Dialog.string_list[i] = (struct13s *) bk_malloc(g_Dialog.string_count[i]*sizeof(struct13s));

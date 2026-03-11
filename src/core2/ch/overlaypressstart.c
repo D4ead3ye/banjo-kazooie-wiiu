@@ -48,8 +48,8 @@ Actor *chOverlayPressStart_draw(ActorMarker *marker, Gfx **gdl, Mtx **mptr, Vtx 
     if(D_8037DE84)
         return actor;
 
-    modelRender_preDraw((GenFunction_1)actor_predrawMethod, (s32)actor);
-    modelRender_postDraw((GenFunction_1)actor_postdrawMethod, (s32)marker);
+    modelRender_preDraw((GenFunction_1)actor_predrawMethod, (uintptr_t)actor);
+    modelRender_postDraw((GenFunction_1)actor_postdrawMethod, (uintptr_t)marker);
     viewport_backupState();
     {sp58[0] = 0.0f; sp58[1] = 0.0f; sp58[2] = 1312.5f;};
     {sp4C[0] = 0.0f; sp4C[1] = 0.0f; sp4C[2] = 0.0f;};
@@ -92,7 +92,7 @@ void __chOverlayPressStart_spawn(void){
     }
 }
 
-void chOverlayPressStart_spawn(s32 arg0, s32 arg1){
+void chOverlayPressStart_spawn(NodeProp *arg0, ActorMarker *arg1){
     if(D_8037DE80 == NULL){
         __spawnQueue_add_0(__chOverlayPressStart_spawn);
     }
@@ -102,7 +102,7 @@ void chOverlayPressStart_func_802DCDB0(void){
     D_8037DE84 = true;
 }
 
-void chOverlayPressStart_func_802DCDC0(s32 arg0, s32 arg1) {
+void chOverlayPressStart_func_802DCDC0(NodeProp *arg0, ActorMarker *arg1) {
     ActorMarker *temp_a0;
 
     temp_a0 = D_8037DE80;

@@ -81,6 +81,11 @@ enum overlay_e overlayMgrLoadedId;
 
 void overlayManagerdebug(void);
 #endif
+// [port] On PC all overlay code is statically linked — no dynamic loading needed.
+// We just track which overlay ID is "loaded" so overlay_init() can find the right
+// function table entry.
+static enum overlay_e overlayMgrLoadedId_port = 0;
+
 /* .code */
 OverlayAddressMap *__overlayManagergetLargetOverlayAddressMap(void){
 #if 0
@@ -141,48 +146,25 @@ void __overlayManager802511C4(void){
 }
 
 int overlayManagergetLoadedId(void){
-    return 0;
-    //return overlayMgrLoadedId;
+    return overlayMgrLoadedId_port; // [port] return tracked overlay ID
 }
 
 bool overlayManagerisOverlayLoaded(int overlay_id){
-return true;
-    //return overlayMgrLoadedId == overlay_id;
+    return overlayMgrLoadedId_port == overlay_id; // [port]
 }
 
 bool overlayManagerload(enum overlay_e overlay_id){
-#if 0
-    s32 rom_addr;
-    
-    if(overlay_id == 0)
+    // [port] On PC, all overlay code is statically linked. Just track the ID.
+    if (overlay_id == 0)
         return false;
-
-    if(overlay_id == overlayMgrLoadedId)
+    if (overlay_id == overlayMgrLoadedId_port)
         return false;
-
-    overlayMgrLoadedId = overlay_id;
-    rom_addr = (s32)(overlayAddressMap + overlay_id);
-    
-    overlay_load(
-        overlay_id,
-        ((OverlayAddressMap*)rom_addr)->ram_start,
-        ((OverlayAddressMap*)rom_addr)->ram_end,
-        ((OverlayAddressMap*)rom_addr)->unkC,
-        ((OverlayAddressMap*)rom_addr)->unk10,
-        ((OverlayAddressMap*)rom_addr)->code_start,
-        ((OverlayAddressMap*)rom_addr)->code_end,
-        ((OverlayAddressMap*)rom_addr)->data_start,
-        ((OverlayAddressMap*)rom_addr)->data_end,
-        ((OverlayAddressMap*)rom_addr)->bss_start,
-        ((OverlayAddressMap*)rom_addr)->bss_end 
-    );
-    return true;
-#endif
+    overlayMgrLoadedId_port = overlay_id;
     return true;
 }
 
 s32 overlayManagerclearLoadedId(void){
-    //overlayMgrLoadedId = 0;
+    overlayMgrLoadedId_port = 0; // [port]
 }
 
 void overlayManagerloadCore2(void){

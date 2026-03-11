@@ -45,7 +45,7 @@ void func_80253428(int arg0) {
     int new_var;
     if (arg0) {
         var_v0 = (sDepthBuffer.data = &D_8000E800);
-        while (((s32) sDepthBuffer.data) % 0x40) {
+        while (((uintptr_t) sDepthBuffer.data) % 0x40) { // [port] was (s32)
           var_v0 = (sDepthBuffer.data = var_v0 + 1);
         }
         

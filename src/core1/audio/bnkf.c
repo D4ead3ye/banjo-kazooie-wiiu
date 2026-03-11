@@ -2,7 +2,7 @@
 #include "functions.h"
 #include "variables.h"
 #include <ultra64.h>
-#include "2.0L/PR/os_error.h"
+//#include "2.0L/PR/os_error.h"
 #include "2.0L/PR/ultraerror.h"
 /* copt used??? */
 
@@ -19,7 +19,7 @@ void alSeqFileNew(ALSeqFile *file, u8 *base)
     }
 }
 
-static void _bnkfPatchWaveTable(ALWaveTable *w, s32 offset, s32 table)
+static void _bnkfPatchWaveTable(ALWaveTable *w, uintptr_t offset, uintptr_t table)
 {
     if (w->flags)
         return;
@@ -42,7 +42,7 @@ static void _bnkfPatchWaveTable(ALWaveTable *w, s32 offset, s32 table)
     }	
 }
 
-static void _bnkfPatchSound(ALSound *s, s32 offset, s32 table)
+static void _bnkfPatchSound(ALSound *s, uintptr_t offset, uintptr_t table)
 {
     if (s->flags)
         return;
@@ -56,7 +56,7 @@ static void _bnkfPatchSound(ALSound *s, s32 offset, s32 table)
     _bnkfPatchWaveTable(s->wavetable, offset, table);
 }
 
-static void _bnkfPatchInst(ALInstrument *inst, s32 offset, s32 table)
+static void _bnkfPatchInst(ALInstrument *inst, uintptr_t offset, uintptr_t table)
 {
     s32 i;
 
@@ -73,7 +73,7 @@ static void _bnkfPatchInst(ALInstrument *inst, s32 offset, s32 table)
     }
 }
 
-static void _bnkfPatchBank(ALBank *bank, s32 offset, s32 table) 
+static void _bnkfPatchBank(ALBank *bank, uintptr_t offset, uintptr_t table)
 {
     s32 i;
     
@@ -97,8 +97,8 @@ static void _bnkfPatchBank(ALBank *bank, s32 offset, s32 table)
 
 void alBnkfNew(ALBankFile *file, u8 *table)
 {
-    s32 offset = (s32) file;
-    s32 woffset = (s32) table;
+    uintptr_t offset = (uintptr_t) file; // [port] pointer-width offset for patching
+    uintptr_t woffset = (uintptr_t) table; // [port] pointer-width offset for patching
     
     s32 i;
     

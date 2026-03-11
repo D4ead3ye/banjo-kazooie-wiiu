@@ -23,7 +23,7 @@ s32 alSaveParam(void *filter, s32 paramID, void *param)
 {
     ALSave *a = (ALSave *) filter;
     ALFilter *f = (ALFilter *) filter;
-    s32 pp = (s32) param;
+    uintptr_t pp = (uintptr_t) param;
 
     switch (paramID) {
         case (AL_FILTER_SET_SOURCE):

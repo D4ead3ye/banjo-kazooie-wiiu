@@ -1,10 +1,16 @@
 #include "GameExtractor.h"
 
 #include <fstream>
+#include <filesystem>
 
 #include "ship/Context.h"
 #include "spdlog/spdlog.h"
 #include <port/Engine.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#include <commdlg.h>
+#endif
 
 std::unordered_map<std::string, std::string> mGameList = {
     { "1fe1632098865f639e22c11b9a81ee8f29c75d7a", "Banjo Kazooie (U) (V1.0)" },
@@ -12,11 +18,44 @@ std::unordered_map<std::string, std::string> mGameList = {
 };
 
 bool GameExtractor::SelectGameFromUI() {
-    this->mGamePath = Ship::Context::GetPathRelativeToAppDirectory("baserom.z64");
+    // First try to find a ROM in the standard locations
+    this->mGamePath = Ship::Context::LocateFileAcrossAppDirs("baserom.z64", "bk");
+
+    if (this->mGamePath.empty() || !std::filesystem::exists(this->mGamePath)) {
+#ifdef _WIN32
+        // Open a native file picker dialog
+        char filePath[MAX_PATH] = { 0 };
+        OPENFILENAMEA ofn = {};
+        ofn.lStructSize = sizeof(ofn);
+        ofn.lpstrFilter = "N64 ROM Files\0*.z64;*.n64;*.v64\0All Files\0*.*\0";
+        ofn.lpstrFile = filePath;
+        ofn.nMaxFile = MAX_PATH;
+        ofn.lpstrTitle = "Select Banjo-Kazooie ROM";
+        ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR;
+
+        if (!GetOpenFileNameA(&ofn)) {
+            return false;
+        }
+        this->mGamePath = filePath;
+#else
+        SPDLOG_ERROR("No ROM found at standard locations");
+        return false;
+#endif
+    }
 
     std::ifstream file(this->mGamePath, std::ios::binary);
+    if (!file.is_open()) {
+        SPDLOG_ERROR("Failed to open ROM: {}", this->mGamePath.string());
+        return false;
+    }
     this->mGameData = std::vector<uint8_t>(std::istreambuf_iterator(file), {});
     file.close();
+
+    if (this->mGameData.empty()) {
+        SPDLOG_ERROR("ROM file is empty: {}", this->mGamePath.string());
+        return false;
+    }
+
     return true;
 }
 
@@ -36,7 +75,7 @@ bool GameExtractor::GenerateOTR() const {
     const std::string assets_path = Ship::Context::GetAppBundlePath();
     const std::string game_path = Ship::Context::GetAppDirectoryPath();
 
-    Companion::Instance = new Companion(this->mGameData, ArchiveType::O2R, false, assets_path, game_path);
+    Companion::Instance = new Companion(this->mGameData, ArchiveType::O2R, false, game_path, game_path);
 
     try {
         Companion::Instance->Init(ExportType::Binary);

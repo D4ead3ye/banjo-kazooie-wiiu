@@ -68,7 +68,7 @@ typedef struct {
 }BKCollisionList;
 
 typedef struct {
-    u8 pad0[0];
+    u8 pad0[1];
 }BKEffectsList; //see BKMeshList
 
 typedef struct {
@@ -201,5 +201,15 @@ typedef struct{
 
 BKVertexList *model_getVtxList(BKModelBin *arg0);
 Vtx *vtxList_getVertices(BKVertexList *vtxList);
+BKEffectsList *func_8033A0B0(BKModelBin *arg0);
+BKModel *func_8033F5F8(BKMeshList *meshList, BKVertexList *vertexList);
+void model_free(BKModel *model);
+BKMeshList *BKModel_getMeshList(BKModel *arg0);
+void BKModel_transformMesh(BKModel *model, s32 mesh_id, void (*fn)(s32, BKVtxRef *, Vtx *, void *), void *arg3);
+void BKModel_transformMeshes(BKModel *model, void (*fn)(s32, BKVtxRef *, Vtx *, void *), void *arg3);
+void BKModel_getMeshCenter(BKModel *model, s32 mesh_id, s16 arg2[3]);
+void BKModel_getMeshCoordRange(BKModel *model, s32 mesh_id, s16 min[3], s16 max[3]);
+BKMesh *meshList_getMesh(BKMeshList *meshList, s32 mesh_id);
+s32 meshList_getVtxCount(BKMeshList *meshList);
 void codeAC520_func_80333D48(BKVertexList *arg0, f32 position[3], f32 rotation[3], f32 scale, f32 arg4[3], BKVertexList *arg5);
 #endif

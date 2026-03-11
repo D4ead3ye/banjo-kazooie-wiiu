@@ -2,9 +2,9 @@
 #include "functions.h"
 #include "variables.h"
 
-extern Actor *func_802EBAE0(UNK_TYPE(s32), f32 position[3], f32 rotation[3], f32 scale, UNK_TYPE(s32), UNK_TYPE(s32), UNK_TYPE(s32), f32, UNK_TYPE(s32));
+extern s32 func_802EBAE0(BKModelUnk14List *arg0, f32 position[3], f32 rotation[3], f32 scale, f32 arg4[3], AnimMtxList *arg5, f32 arg6[3], f32 arg7, f32 arg8[3]); // [port] was UNK_TYPE(s32) params — pointer truncation
 
-Actor *func_8038C0B0(ActorMarker *marker, UNK_TYPE(s32) arg1, f32 arg2, UNK_TYPE(s32) arg3);
+Actor *func_8038C0B0(ActorMarker *marker, f32 arg1[3], f32 arg2, f32 arg3[3], s32 arg4_unused); // [port] matched to Struct6Cs.unkC signature
 Actor *func_8038C1F8(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx);
 void func_8038C9A0(Actor *this);
 
@@ -59,8 +59,8 @@ s32 D_803920B0[4] =  {0xFF, 0xFF, 0xFF, 0x00};
 
 
 /* .code */
-Actor *func_8038C0B0(ActorMarker *marker, UNK_TYPE(s32) arg1, f32 arg2, UNK_TYPE(s32) arg3){
-    UNK_TYPE(s32) sp5C = func_8033A12C(marker_loadModelBin(marker));
+Actor *func_8038C0B0(ActorMarker *marker, f32 arg1[3], f32 arg2, f32 arg3[3], s32 arg4_unused){ // [port] matched to Struct6Cs.unkC
+    BKModelUnk14List *sp5C = func_8033A12C(marker_loadModelBin(marker)); // [port] was UNK_TYPE(s32) — pointer truncation
     Actor *this = marker_getActor(marker);
     f32 sp4C[3];
     f32 sp40[3];
@@ -244,7 +244,7 @@ void func_8038C94C(ActorMarker *caller, enum asset_e text_id, s32 arg2){
     Actor *this = marker_getActor(caller);
     if(!volatileFlag_get(VOLATILE_FLAG_C1_IN_FINAL_CHARACTER_PARADE)){
         subaddie_set_state(this, 6);
-        __spawnQueue_add_1((GenFunction_1)func_8038C8F0, reinterpret_cast(s32, this->marker));
+        __spawnQueue_add_1((GenFunction_1)func_8038C8F0, (uintptr_t)this->marker);
     }
 }
 

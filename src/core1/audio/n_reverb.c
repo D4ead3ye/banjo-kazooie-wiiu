@@ -1,7 +1,8 @@
 #include <ultra64.h>
 #include "2.0L/PR/n_libaudio.h"
+#include "functions.h"
 #include "n_synth.h"
-#include "2.0L/PR/os_error.h"
+//#include "2.0L/PR/os_error.h"
 #include "2.0L/PR/ultraerror.h"
 
 
@@ -244,7 +245,7 @@ Acmd *_n_loadOutputBuffer(ALFx *r, ALDelay *d, s32 buff, Acmd *p)
          * value then bumps it up if it is below the  delay buffer.
          */ 
         out_ptr = &r->input[-(d->output - d->rsdelta)];
-        ramalign = (((s32)out_ptr & 0x7) >> 1); /* calculate the number of samples needed 
+        ramalign = (((uintptr_t)out_ptr & 0x7) >> 1); /* calculate the number of samples needed
                                                to align the buffer*/
 #ifdef _DEBUG
 #if 0

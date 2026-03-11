@@ -79,7 +79,7 @@ void func_80386444(ActorMarker *marker) {
     }
 }
 
-void func_80386744(s32 arg0, ActorMarker *arg1) {
+void func_80386744(NodeProp *arg0, ActorMarker *arg1) {
     func_80386444(arg1);
 }
 

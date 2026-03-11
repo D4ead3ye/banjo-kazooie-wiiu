@@ -192,35 +192,6 @@ file(GLOB_RECURSE ALL_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     "${CMAKE_CURRENT_SOURCE_DIR}/include/**/*"
 )
 
-set (EXCLUDES
-#    "src/core1/audio"
-    "src/core1/gu"
-    "src/core1/io"
-    "src/core1/os"
-    "src/done"
-   "eeprom.c"
-)
-
-# Function to filter out files whose paths start with any exclude directory.
-function(filter_excluded_files out_var)
-    set(filtered_list "")
-    foreach(file ${ARGN})
-        set(skip OFF)
-        foreach(exclude ${EXCLUDES})
-            string(FIND ${file} ${exclude} pos)
-            if(pos GREATER -1)
-                set(skip ON)
-                break()
-            endif() # if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
-        endforeach()
-        if(NOT skip)
-            list(APPEND filtered_list ${file})
-        endif()
-    endforeach()
-    set(${out_var} ${filtered_list} PARENT_SCOPE)
-endfunction()
-
-filter_excluded_files(ALL_FILES ${ALL_FILES})
 
 # Create source groups that match the real file directory paths
 foreach(source IN LISTS ALL_FILES)
@@ -265,7 +236,13 @@ if (MSVC)
 			  $<$<CONFIG:Release>:
                 MultiThreaded
 			  >
-			  $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:Release>>>:${MSVC_RUNTIME_LIBRARY_DEFAULT}>
+			  $<$<CONFIG:RelWithDebInfo>:
+                MultiThreaded
+			  >
+			  $<$<CONFIG:MinSizeRel>:
+                MultiThreaded
+			  >
+			  $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>,$<CONFIG:MinSizeRel>>>:${MSVC_RUNTIME_LIBRARY_DEFAULT}>
 		  )
 	  elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
 		  string(CONCAT "MSVC_RUNTIME_LIBRARY_STR"
@@ -275,7 +252,13 @@ if (MSVC)
 			  $<$<CONFIG:Release>:
 				  MultiThreaded
 			  >
-			  $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:Release>>>:${MSVC_RUNTIME_LIBRARY_DEFAULT}>
+			  $<$<CONFIG:RelWithDebInfo>:
+				  MultiThreaded
+			  >
+			  $<$<CONFIG:MinSizeRel>:
+				  MultiThreaded
+			  >
+			  $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>,$<CONFIG:MinSizeRel>>>:${MSVC_RUNTIME_LIBRARY_DEFAULT}>
 		  )
 	  endif()
 	  set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUNTIME_LIBRARY_STR})
@@ -358,6 +341,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         "_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS;"
         "NOMINMAX;"
         "WIN32_LEAN_AND_MEAN;"
+        "SPDLOG_ACTIVE_LEVEL=0;"
     )
     add_compile_definitions(STORMLIB_NO_AUTO_LINK)
 	set(STORMLIB_NO_AUTO_LINK ON)
@@ -452,6 +436,7 @@ endif()
 option(USE_STANDALONE "Build as a standalone executable" OFF)
 option(BUILD_STORMLIB "Build with StormLib support" OFF)
 
+option(BUILD_BK64 "Build with Banjo-Kazooie support" ON)
 option(BUILD_SM64 "Build with Super Mario 64 support" OFF)
 option(BUILD_MK64 "Build with Mario Kart 64 support" OFF)
 option(BUILD_SF64 "Build with Star Fox 64 support" OFF)
@@ -549,12 +534,13 @@ if(MSVC)
       )
   endif()
 
-  # Remove /RTC from msvc flags
+  # Remove /RTC and /Zi from msvc default flags to avoid conflicts with our /ZI and /Zi settings
   foreach (fentry
-    CMAKE_C_FLAGS
-    CMAKE_CXX_FLAGS
+    CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELWITHDEBINFO
+    CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELWITHDEBINFO
   )
     string (REGEX REPLACE "/RTC(su|[1su])" "" ${fentry} "${${fentry}}")
+    string (REGEX REPLACE "/Z[iI]" "" ${fentry} "${${fentry}}")
   endforeach(fentry)
 endif()
 

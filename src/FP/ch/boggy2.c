@@ -584,7 +584,7 @@ void func_803896FC(Actor *this){
                     case 1: //L80389F78
                         if(this->unk38_31 == 2){
                             if(jiggyscore_isCollected(JIGGY_30_FP_BOGGY_2)){
-                                __spawnQueue_add_1((GenFunction_1)func_80388F54, reinterpret_cast(s32, this->marker));
+                                __spawnQueue_add_1((GenFunction_1)func_80388F54, (uintptr_t)this->marker);
                                 maSlalom_unlinkBoggy();
                                 marker_despawn(this->marker);
                             }
@@ -627,7 +627,7 @@ void func_8038A09C(f32 arg0[3]){
     arg0[2] = (f32)D_80392F20[2];
 }
 
-void func_8038A0E4(UNK_TYPE(s32) arg0, ActorMarker *marker){
+void func_8038A0E4(NodeProp *arg0, ActorMarker *marker){ // [port] was UNK_TYPE(s32) — NodeProp* per code_AD110.c extern
     Actor *actor = marker_getActor(marker);
     
     if(actor){
@@ -640,7 +640,7 @@ void func_8038A0E4(UNK_TYPE(s32) arg0, ActorMarker *marker){
     };
 }
 
-void func_8038A150(UNK_TYPE(s32) arg0, ActorMarker *marker){
+void func_8038A150(NodeProp *arg0, ActorMarker *marker){ // [port] was UNK_TYPE(s32) — NodeProp* per code_AD110.c extern
     Actor *actor = marker_getActor(marker);
     
     if(actor && actor->state != 8){

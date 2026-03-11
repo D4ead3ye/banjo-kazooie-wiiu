@@ -5,6 +5,7 @@
 #include "libultraship/libultra/thread.h"
 #include "libultraship/bridge/resourcebridge.h"
 #include <math.h>
+#include <string.h>
 #include "bk_string.h"
 
 #include <libultra/convert.h>
@@ -19,16 +20,21 @@ s32 osViClock = VI_NTSC_CLOCK;
 u32 __osShutdown = 0;
 u32 __OSGlobalIntMask = OS_IM_ALL;
 s32 osCicId = 6103;
-u8 D_8000E800;
+// [port] On N64 this was a fixed-address depth buffer at 0x8000E800 (naturally 0x40-aligned).
+// On PC we need a properly sized and aligned buffer to avoid the alignment loop in func_80253428.
+_Alignas(0x40) u8 D_8000E800[DEFAULT_FRAMEBUFFER_WIDTH * DEFAULT_FRAMEBUFFER_HEIGHT * sizeof(u16)];
 
 u16 gFramebuffers[2][DEFAULT_FRAMEBUFFER_WIDTH * DEFAULT_FRAMEBUFFER_HEIGHT];
 
 int ResourceMgr_OTRSigCheck(char* imgData) {
     uintptr_t i = (uintptr_t)(imgData);
 
-    // if ((i & 1) == 1)
-    // Lighthouse [port] Something something add 1 for segments??? need archez :[
-    if (i == 0x1000000 || i == 0xE7000000 || (i & 1) == 1)
+    // [port] Reject N64 segmented addresses and special sentinels.
+    // Segmented addresses fit in 32 bits with a non-zero segment byte (bits 24-31).
+    // Bit 0 set = already-tagged segmented address from stub GBI functions.
+    if ((i & 1) == 1)
+        return 0;
+    if (i != 0 && i <= 0xFFFFFFFF && (i >> 24) != 0)
         return 0;
 
     // if ((i & 0xFF000000) != 0xAB000000 && (i & 0xFF000000) != 0xCD000000 && i != 0) {
@@ -66,6 +72,13 @@ void gSPDisplayListOffset(Gfx* pkt, Gfx* dl, int offset) {
 void gSPVertex(Gfx* pkt, uintptr_t v, int n, int v0) {
     if (ResourceMgr_OTRSigCheck((char*)v) == 1)
         v = (uintptr_t)ResourceMgr_LoadVtxByName((char*)v);
+
+    // [port] Mark N64 segmented addresses with bit 0 so the interpreter's SegAddr resolves them.
+    // SEGMENT_ADDR(num, off) produces values like 0x01000000 without bit 0 set.
+    // Segmented addresses fit in 32 bits with a non-zero segment byte (bits 24-31).
+    if (v != 0 && v <= 0xFFFFFFFF && (v >> 24) != 0) {
+        v |= 1;
+    }
 
     __gSPVertex(pkt, v, n, v0);
 }
@@ -113,6 +126,17 @@ void gSPSegmentLoadRes(void* value, int segNum, uintptr_t target) {
     }
 
     __gSPSegment(value, segNum, target);
+}
+
+// [port] Override gDPSetTextureImage to pass all texture addresses through safely.
+// The OtrSignatureCheck and gfx_check_image_signature in LUS have been patched to
+// handle raw heap pointers without crashing (byte-by-byte check, address filtering).
+// Raw sprite texture data embedded in BKSprite structures passes through as-is;
+// OTR-tagged model textures (__OTR__ paths) are handled by LUS natively.
+void port_gDPSetTextureImage(Gfx* pkt, int fmt, int siz, int width, const void* img) {
+    Gfx* _g = (Gfx*)(pkt);
+    _g->words.w0 = _SHIFTL(G_SETTIMG, 24, 8) | _SHIFTL(fmt, 21, 3) | _SHIFTL(siz, 19, 2) | _SHIFTL((width)-1, 0, 12);
+    _g->words.w1 = (uintptr_t)(img);
 }
 
 f32 gu_sqrtf(f32 f) {
@@ -164,8 +188,9 @@ OSIntMask osSetIntMask(OSIntMask a) {
 void __osError(s16 error_code, s16 num_args, ...) {
 }
 
-// Lighthouse TODO why is this stubbed and not decompiled?
+// [port] This is bcopy/memcpy from the N64 OS. Implement as memcpy.
 void func_80253010(void* dest, void* src, s32 size) {
+    memcpy(dest, src, size);
 }
 
 s32 osMotorStop(void* pfs) {
@@ -191,7 +216,7 @@ s32 eeprom_readBlocks(s32 file, s32 offset, void* buffer, s32 count) {
     return 0;
 }
 
-u32 func_8025C29C(u32 *seed) {
+u32 func_8025C29C(u32* seed) {
     // Treat as two u32 values (lower and upper half of u64)
     u32 result = seed[0] ^ seed[1];
     // Simple transformation to update seed

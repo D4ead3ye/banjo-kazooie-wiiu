@@ -79,7 +79,7 @@ Acmd *n_alAdpcmPull(void *filter, s16 *outp, s32 outCount, Acmd *p)
          * Now fix up state info to reflect the loop start point
          */
         f->lastsam = f->loop.start &0xf;
-        f->memin = (s32) f->table->base + ADPCMFBYTES *
+        f->memin = (uintptr_t) f->table->base + ADPCMFBYTES *
             ((s32) (f->loop.start>>LFSAMPLES) + 1);
         f->sample = f->loop.start;
 
@@ -141,7 +141,7 @@ Acmd *n_alAdpcmPull(void *filter, s16 *outp, s32 outCount, Acmd *p)
      * overFlow is the number of bytes past the end
      * of the bitstream I try to generate
      */
-    overFlow = f->memin + nbytes - ((s32) f->table->base + f->table->len);
+    overFlow = f->memin + nbytes - ((uintptr_t) f->table->base + f->table->len);
     if (overFlow < 0)
         overFlow = 0;
     nOver = (overFlow/ADPCMFBYTES)<<LFSAMPLES;
@@ -187,7 +187,7 @@ Acmd *n_alAdpcmPull(void *filter, s16 *outp, s32 outCount, Acmd *p)
 
 Acmd *_n_decodeChunk(Acmd *ptr, N_ALLoadFilter *f, s32 tsam, s32 nbytes, s16 outp, s16 inp, u32 flags)
 {
-    s32
+    uintptr_t // [port] was s32, stores DMA addresses
         dramAlign,
         dramLoc;
     

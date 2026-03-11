@@ -76,7 +76,7 @@ File *file_allocNew(void) {
 }
 
 void file_realloc(File *file, void **arg1, s32 *size) {
-    *size = ((u32)file->current_ptr - (u32)file->base_ptr);
+    *size = ((uintptr_t)file->current_ptr - (uintptr_t)file->base_ptr);
     *arg1 = bk_realloc(file->base_ptr, *size);
     file->base_ptr = NULL;
     file_close(file);
@@ -119,17 +119,17 @@ void file_getNWords(File *file, s32 *dst, s32 cnt) {
 }
 
 void file_read(File *file, void *dst, s32 len) {
-    u32 curr_offset;
-    u32 capacity;
+    uintptr_t curr_offset;
+    uintptr_t capacity;
     void *new_base_ptr;
 
     if (file->mode == FILE_MODE_2_FROM_ASSET) {
         memcpy(dst, file->asset_current_ptr, len);
-        file->asset_current_ptr = (void *) ((u32)file->asset_current_ptr + len);
+        file->asset_current_ptr = (void *) ((uintptr_t)file->asset_current_ptr + len);
     }
     else if (file->mode == FILE_MODE_3_FROM_MEMORY) {
         memcpy(dst, file->current_ptr, len);
-        file->current_ptr = (void *) ((u32)file->current_ptr + len);
+        file->current_ptr = (void *) ((uintptr_t)file->current_ptr + len);
     }
     else if (file->mode == FILE_MODE_4_ALLOCATED) { // why does it write in read function?
         if ((u8 *) file->end_ptr < (u8 *) file->current_ptr + len) {

@@ -4,7 +4,7 @@
 #include "variables.h"
 
 
-extern void __spawnQueue_add_2(void (*)(s32, s32), s32, s32);
+extern void __spawnQueue_add_2(void (*)(uintptr_t, uintptr_t), uintptr_t, uintptr_t);
 
 Actor *chBadShad_draw(ActorMarker *this, Gfx **gdl, Mtx **mptr, Vtx **arg3);
 void chBadShad_update(Actor *this);
@@ -97,7 +97,7 @@ void func_802D7124(Actor *actor, f32 arg1) {
 }
 
 
-void func_802D71A0(s32 this, s32 arg1){
+void func_802D71A0(uintptr_t this, uintptr_t arg1){
     ActorMarker *marker;
     f32 sp40;
     Actor *sp3C;
@@ -139,7 +139,7 @@ void func_802D729C(Actor *actor, f32 arg1){
         return;
     }
     if(!actor->unk104){
-        __spawnQueue_add_2((GenFunction_2)func_802D71A0, (s32) actor->marker, reinterpret_cast(s32, arg1));
+        __spawnQueue_add_2((GenFunction_2)func_802D71A0, (uintptr_t)actor->marker, reinterpret_cast(s32, arg1));
         return;
     }
 

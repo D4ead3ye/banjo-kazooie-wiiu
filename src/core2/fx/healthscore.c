@@ -119,7 +119,7 @@ void fxhealthscore_draw(enum item_e item_id, struct8s *arg1, Gfx **gfx, Mtx **mt
             for (tmp_v0 = 0; tmp_v0 < 2; tmp_v0++) {//L80301030
                 (*vtx)->v.ob[0] = (((honeycomb_width * D_80381EFC) * tmp_v0 - (honeycomb_width * D_80381EFC) / 2) + f20) * 4.0f;
                 (*vtx)->v.ob[1] = (((honeycomb_height * D_80381EFC) / 2 - (honeycomb_height * D_80381EFC) * tmp_v1) + f14) * 4.0f;
-                (*vtx)->v.ob[2] = -0x14;
+                (*vtx)->v.ob[2] = -0xA; // [port] was -0x14; Z=-20 at guOrtho far clip plane, gets clipped on PC
 
                 (*vtx)->v.tc[0] = ((honeycomb_width - 1) * tmp_v0) << 6;
                 (*vtx)->v.tc[1] = ((honeycomb_height - 1) * tmp_v1) << 6;

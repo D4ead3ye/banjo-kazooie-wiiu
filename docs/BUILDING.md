@@ -22,7 +22,8 @@ It is recommended that you install Python and Git standalone, the install proces
 
 _Note: Be sure to either clone with the ``--recursive`` flag or do ``git submodule update --init`` after cloning to pull in the libultraship submodule!_
 
-2. After setup and initial build, use the built-in OTR extraction to make your sf64.o2r file.
+2. Place a Banjo-Kazooie `.z64` ROM in the `baseroms/` directory.
+3. Build and generate the `bk.o2r` asset archive.
 
 _Note: Instructions assume using powershell_
 ```powershell
@@ -33,10 +34,10 @@ cd lighthouse
 # Add `-DCMAKE_BUILD_TYPE:STRING=Release` if you're packaging
 & 'C:\Program Files\CMake\bin\cmake' -S . -B "build/x64" -G "Visual Studio 17 2022" -T v143 -A x64
 
-# Generate sf64.o2r
+# Generate bk.o2r (extracts assets from ROM via Torch)
 & 'C:\Program Files\CMake\bin\cmake.exe' --build .\build\x64 --target ExtractAssets
 
-# Generate lighthouse.o2r
+# Generate lighthouse.o2r (port-specific assets)
 & 'C:\Program Files\CMake\bin\cmake.exe' --build .\build\x64 --target GeneratePortO2R
 
 # Compile project
@@ -133,17 +134,17 @@ git submodule update --init
 # Add `-DPython3_EXECUTABLE=$(which python3)` if you are using non-standard Python installations such as PyEnv
 cmake -H. -Bbuild-cmake -GNinja
 
-# Generate sf64.o2r
+# Generate bk.o2r (extracts assets from ROM via Torch)
 cmake --build build-cmake --target ExtractAssets
 
-# Generate lighthouse.o2r
+# Generate lighthouse.o2r (port-specific assets)
 cmake --build build-cmake --target GeneratePortO2R
 
 # Compile the project
 # Add `--config Release` if you're packaging
 cmake --build build-cmake
 
-# Now you can run the executable in ./build-cmake/mm/2s2h.elf
+# Now you can run the executable in ./build-cmake/Lighthouse
 # To develop the project open the repository in VSCode (or your preferred editor)
 ```
 
@@ -183,10 +184,10 @@ git submodule update --init
 # Add `-DCMAKE_BUILD_TYPE:STRING=Release` if you're packaging
 cmake -H. -Bbuild-cmake -GNinja
 
-# Generate sf64.o2r
+# Generate bk.o2r (extracts assets from ROM via Torch)
 cmake --build build-cmake --target ExtractAssets
 
-# Generate lighthouse.o2r
+# Generate lighthouse.o2r (port-specific assets)
 cmake --build build-cmake --target GeneratePortO2R
 
 # Compile the project
@@ -219,7 +220,7 @@ See [`supportedHashes.json`](supportedHashes.json)
 
 ## Getting CI to work on your fork
 
-The CI works via [Github Actions](https://github.com/features/actions) where we mostly make use of machines hosted by Github; except for the very first step of the CI process called "Extract assets". This steps extracts assets from the game file and generates an "assets" folder in `mm/`.
+The CI works via [Github Actions](https://github.com/features/actions) where we mostly make use of machines hosted by Github; except for the very first step of the CI process called "Extract assets". This step extracts assets from the ROM and generates the `bk.o2r` archive.
 
 To get this step working on your fork, you'll need to add a machine to your own repository as a self-hosted runner via "Settings > Actions > Runners" in your repository settings. Make sure to add the 'asset-builder' tag to your newly added runner to assign it to run this step. To setup your runner as a service read the docs [here](https://docs.github.com/en/actions/hosting-your-own-runners/configuring-the-self-hosted-runner-application-as-a-service?platform=linux).
 

@@ -564,7 +564,7 @@ void chfinalboss_setPhase(ActorMarker *this, enum ch_finalboss_phase_e phase_id)
             timed_setStaticCameraToNode(0.0f, 0);
             timed_exitStaticCamera(2.0f);
             timed_setStaticCameraToNode(2.0f, 1);
-            timedFunc_set_1(2.0f, (GenFunction_1)chfinalboss_func_8038B780, reinterpret_cast(s32, actor->marker));
+            timedFunc_set_1(2.0f, (GenFunction_1)chfinalboss_func_8038B780, (uintptr_t)actor->marker);
             break;
 
         case FINALBOSS_PHASE_1_BROOMSTICK:
@@ -1318,7 +1318,7 @@ void chfinalboss_phase3_update(ActorMarker *marker) {
             chfinalboss_phase3_setState(this, 0x15);
             if (local->unkB == 0) {
                 local->unkB = 1;
-                timedFunc_set_1(1.2f, (GenFunction_1)chfinalboss_dropHealth, (s32) this->marker);
+                timedFunc_set_1(1.2f, (GenFunction_1)chfinalboss_dropHealth, (uintptr_t)this->marker);
             }
         }
         break;
@@ -1690,7 +1690,7 @@ void chfinalboss_phase5_setState(Actor *this, s32 next_state) {
             timedFunc_set_1(0.0f, chfinalboss_spawnStatue, 5);
             timed_setStaticCameraToNode(0.0f, sp28);
             timed_exitStaticCamera(7.5f);
-            timedFunc_set_1(7.5f, (GenFunction_1)chfinalboss_func_8038AC50, (s32) this->marker);
+            timedFunc_set_1(7.5f, (GenFunction_1)chfinalboss_func_8038AC50, (uintptr_t)this->marker);
             func_80324E38(7.5f, 0);
             break;
 
@@ -1786,7 +1786,7 @@ void chfinalboss_phase5_update(ActorMarker *marker) {
                 if (__chFinalBossJinjonatorHits == 9) {
                     sp2C = 0x16;
                     if(local->mirror_phase5) sp2C = 0x25;
-                    timedFunc_set_1(2.4f, (GenFunction_1)chfinalboss_func_8038AF84, (s32) this->marker);
+                    timedFunc_set_1(2.4f, (GenFunction_1)chfinalboss_func_8038AF84, (uintptr_t)this->marker);
                     timed_setStaticCameraToNode(2.4f, sp2C);
                     timed_exitStaticCamera(4.4f);
                     timed_setStaticCameraToNode(4.4f, sp38 + 3 + __chFinalBossJinjonatorHits);
@@ -2123,7 +2123,7 @@ void chfinalboss_update(Actor *this){
             __chFinalBossJinjoStatueMarker[i] = NULL;
         }
 
-        __spawnQueue_add_1((GenFunction_1) chfinalboss_spawnShadow, (s32) this->marker);
+        __spawnQueue_add_1((GenFunction_1) chfinalboss_spawnShadow, (uintptr_t)this->marker);
         chfinalboss_setPhase(this->marker, FINALBOSS_PHASE_0_INTRO);
         local->hits = 0;
         chfinalboss_func_80386600(this->marker, 0);
@@ -2251,7 +2251,7 @@ void chfinalboss_setBossDefeated(void) {
     timed_setStaticCameraToNode(temp_f20, camera_node + 1);
 
     timed_exitStaticCamera(temp_f20 + sp40);
-    timedFunc_set_1(temp_f20 + sp40, chfinalboss_func_8038C10C, (s32)sp4C->marker);
+    timedFunc_set_1(temp_f20 + sp40, chfinalboss_func_8038C10C, (uintptr_t)sp4C->marker);
     timed_setStaticCameraToNode(temp_f20 + sp40, camera_node + 2);
 
     timed_exitStaticCamera(temp_f20 + sp40 + 2.88f);

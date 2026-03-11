@@ -1,6 +1,16 @@
 #ifndef _ULTRATYPES_H_
 #define _ULTRATYPES_H_
 #include <libultraship/libultra/types.h>
+#include <stdlib.h> // [port] Ensure malloc/free/realloc prototypes are visible on all platforms
+
+// [port] Cross-platform alignment macros
+#ifdef _MSC_VER
+#define ALIGNED(x) __declspec(align(x))
+#else
+#define ALIGNED(x) __attribute__((aligned(x)))
+#endif
+#define ALIGNED8  ALIGNED(8)
+#define ALIGNED16 ALIGNED(16)
 #if 0
 /**************************************************************************
  *                                                                        *

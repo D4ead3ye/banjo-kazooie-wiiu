@@ -358,7 +358,7 @@ void chmole_update(Actor *this){
             nodeprop_getPosition(node_prop, this->unk1C);
         }
         // Spawns molehill
-        __spawnQueue_add_1((GenFunction_1)chmole_spawnMolehill, reinterpret_cast(s32, this->marker));
+        __spawnQueue_add_1((GenFunction_1)chmole_spawnMolehill, (uintptr_t)this->marker);
         this->marker->propPtr->unk8_3 = false;
         this->marker->collidable = false;
         this->initialized = true;

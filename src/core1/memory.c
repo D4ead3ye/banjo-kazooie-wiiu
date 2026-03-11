@@ -17,7 +17,7 @@
  */
 extern void func_80253010(void *dest, void *src, s32 size);
 
-#define chunkSize(s) ((u32)(s)->next - (u32)(s) - sizeof(HeapHeader))
+#define chunkSize(s) ((uintptr_t)(s)->next - (uintptr_t)(s) - sizeof(HeapHeader)) // [port] u32 -> uintptr_t for 64-bit pointer safety
 #if VERSION == VERSION_USA_1_0
 #define HEAP_SIZE 0x210520
 #elif VERSION == VERSION_PAL
@@ -218,12 +218,12 @@ void heap_init(void){
 }
 
 void *func_8025484C(s32 size){
-    D_802765B4 = bk_malloc(ALIGN((u32)&D_8002D500[1] + 0x100, 0x100)  - (u32)&D_8002D500[1] - sizeof(EmptyHeapBlock));
+    D_802765B4 = bk_malloc(ALIGN((uintptr_t)&D_8002D500[1] + 0x100, 0x100)  - (uintptr_t)&D_8002D500[1] - sizeof(EmptyHeapBlock));
     return bk_malloc(0x80);
 }
 
 void *func_80254898(s32 arg0){
-    void * sp1C = bk_malloc(ALIGN(((u32)&D_8002D500[LAST_HEAP_BLOCK] - (u32)D_8002D500[LAST_HEAP_BLOCK].prev_free) - 0x2FF, 0x100) + - sizeof(EmptyHeapBlock));
+    void * sp1C = bk_malloc(ALIGN(((uintptr_t)&D_8002D500[LAST_HEAP_BLOCK] - (uintptr_t)D_8002D500[LAST_HEAP_BLOCK].prev_free) - 0x2FF, 0x100) + - sizeof(EmptyHeapBlock));
     void * sp18 = bk_malloc(0x80);
     bk_free(sp1C);
     bk_free(D_802765B4);
@@ -251,12 +251,29 @@ u32 heap_get_occupied_size(void){
     return _heap_get_occupied_size();
 }
 
+// [port] Custom heap not used (heap_init commented out), stub heap query functions
 bool func_8025498C(s32 size){
+    return true; // always report enough space
+}
+
+EmptyHeapBlock *func_802549BC(s32 size){
+    return NULL; // no heap blocks to return
+}
+
+EmptyHeapBlock *func_80254A60(bool arg0){
+    return NULL;
+}
+
+EmptyHeapBlock *func_80254B84(s32 arg0){
+    return NULL;
+}
+#if 0
+bool _func_8025498C(s32 size){
     s32 v0 = func_802549BC(size);
     return BOOL(v0);
 }
 
-EmptyHeapBlock *func_802549BC(s32 size){
+EmptyHeapBlock *_func_802549BC(s32 size){
     EmptyHeapBlock *a1;
     s32 aligned_size;
     u32 block_size;
@@ -269,7 +286,7 @@ EmptyHeapBlock *func_802549BC(s32 size){
    return (chunkSize(&a1->hdr) < aligned_size)? 0 : a1;
 }
 
-EmptyHeapBlock *func_80254A60(bool arg0){
+EmptyHeapBlock *_func_80254A60(bool arg0){
         EmptyHeapBlock *v1;
         EmptyHeapBlock *v0;
     if(!arg0){
@@ -278,7 +295,7 @@ EmptyHeapBlock *func_80254A60(bool arg0){
         while( chunkSize(&v1->hdr) < heap_requested_size && v1->next_free != &D_8002D500[LAST_HEAP_BLOCK] ){
             v1 = v1->next_free;
         }
-        
+
         if(chunkSize(&v1->hdr) < heap_requested_size)
             return NULL;
         return v1;
@@ -301,20 +318,25 @@ EmptyHeapBlock *func_80254A60(bool arg0){
     }
 }
 
-EmptyHeapBlock *func_80254B84(s32 arg0){
+EmptyHeapBlock *_func_80254B84(s32 arg0){
     if(D_80283234){
         return func_80254A60(1); //closest to back
     }else{
         return func_80254A60(0); //closest to from
     }
 }
+#endif
 
 int func_80254BC4(int arg0){
     return false;
 }
 
-//returns n'th free block and size
+// [port] Custom heap is not used (heap_init commented out), stub to report large free size
+// so callers skip cache eviction logic
 void *func_80254BD0(s32 *size, u32 arg1) {
+    *size = 0x7FFFFFFF;
+    return NULL;
+#if 0
     EmptyHeapBlock *var_v1;
 
     var_v1 = &D_8023DA00;
@@ -326,8 +348,9 @@ void *func_80254BD0(s32 *size, u32 arg1) {
         }
         arg1--;
     }
-    *size = ((s32)(var_v1->hdr.next) - (s32)var_v1) - sizeof(HeapHeader);
-    return (s32)var_v1 + 0x10;
+    *size = ((uintptr_t)(var_v1->hdr.next) - (uintptr_t)var_v1) - sizeof(HeapHeader);
+    return (uintptr_t)var_v1 + 0x10;
+#endif
 }
 
 void func_80254C98(void){
@@ -392,7 +415,7 @@ void *bk_malloc(size_t size){
         if(D_80283234){
             //reverse split chunk => //split empty chunk: |prev| a0 |next| => |prev| a0 | v1 |next|
             a0 = v1;
-            v1 = (EmptyHeapBlock *)((u32)v1->hdr.next - (heap_requested_size + sizeof(HeapHeader)));
+            v1 = (EmptyHeapBlock *)((uintptr_t)v1->hdr.next - (heap_requested_size + sizeof(HeapHeader)));
             v1->hdr.next = a0->hdr.next;
             a0->hdr.next->prev = v1;
             a0->hdr.next = v1;
@@ -401,7 +424,7 @@ void *bk_malloc(size_t size){
         }
         else{//L80254EA4
             //split chunk: |prev| v1 |next| => |prev| v1 | __a0__ |next|
-            a0 = (HeapHeader *)((u32)v1 + (heap_requested_size + sizeof(HeapHeader)));
+            a0 = (HeapHeader *)((uintptr_t)v1 + (heap_requested_size + sizeof(HeapHeader)));
             a0->next_free = v1->next_free;
             a0->prev_free = v1->prev_free;
             a0->next_free->prev_free = a0;
@@ -420,7 +443,7 @@ void *bk_malloc(size_t size){
         v1->next_free->prev_free = v1->prev_free;
         v1->prev_free->next_free = v1->next_free;
     }//L80254F20
-    capacity = (u32)v1->hdr.next - (u32)v1 ;
+    capacity = (uintptr_t)v1->hdr.next - (uintptr_t)v1 ;
     v1->hdr.unusedBytes_C_31 = capacity - size - 0x10;
     v1->hdr.unkC_7 = 1;
     heap_occupiedBytes += capacity;
@@ -476,14 +499,14 @@ void bk_free(void * ptr){
     
     if(ptr){
         sPtr = (HeapHeader *) ptr - 1;
-        heap_occupiedBytes =  heap_occupiedBytes - (u32)((u8*)sPtr->next - (u8*)ptr) - sizeof(HeapHeader);
+        heap_occupiedBytes =  heap_occupiedBytes - (uintptr_t)((u8*)sPtr->next - (u8*)ptr) - sizeof(HeapHeader);
         
         func_8025456C(sPtr);
         
-        if((u32)ptr == (u32)D_802765A0)
+        if(ptr == D_802765A0)
             D_802765A0 = NULL;
 
-        if((u32)ptr == (u32)D_802765A8)
+        if(ptr == D_802765A8)
             D_802765A8 = NULL;
     }
 #endif
@@ -510,7 +533,7 @@ void func_80255200(HeapHeader *block, s32 size){
     u32 tmp, tmp2, tmp3;
 
     block->unusedBytes_C_31 = chunkSize(block) - size;
-    tmp = ((u32) (block)->next) - ((u32) (block));
+    tmp = ((uintptr_t) (block)->next) - ((uintptr_t) (block));
     if(size > 0)
     {
         // tmp2 = chunkSize(block) - sizeof(HeapHeader);
@@ -524,7 +547,7 @@ void func_80255200(HeapHeader *block, s32 size){
     if(remaining_bytes >= sizeof(EmptyHeapBlock)){
         tmp = (chunkSize(block) + sizeof(HeapHeader)) - remaining_bytes;
         if(tmp);
-        a0 = (s32)block + tmp;
+        a0 = (EmptyHeapBlock *)((uintptr_t)block + tmp);
         heap_occupiedBytes -= remaining_bytes;
 
         a0->hdr.prev = block;
@@ -565,7 +588,7 @@ void *bk_realloc(void *ptr, size_t size){
     D_80283224 = ptr;
     D_80283228 = ptr;
     sPtr = (HeapHeader *)ptr - 1;
-    if(!((u32)((u8*) sPtr->next - (u8*)ptr) < size)){ 
+    if(!((uintptr_t)((u8*) sPtr->next - (u8*)ptr) < size)){
         //current pointer has enough free space to accomidate size change
         func_80255300(sPtr, size);
         return ptr;
@@ -574,7 +597,7 @@ void *bk_realloc(void *ptr, size_t size){
     D_8027659C = ptr;
     emptySeg = (EmptyHeapBlock*) sPtr->next;
     if( emptySeg->hdr.unkC_7 == HEAP_BLOCK_EMPTY
-        && !((u32)((u8*)emptySeg->hdr.next - (u8*)sPtr) - 0x10 < size)
+        && !((uintptr_t)((u8*)emptySeg->hdr.next - (u8*)sPtr) - 0x10 < size)
     ){//combine current heap segment with the next one (if next one is free).
         //remove empty segment from list
         emptySeg->next_free->prev_free = emptySeg->prev_free;
@@ -616,7 +639,7 @@ s32 heap_findLargestEmptyBlock(s32 *size_ptr){
     *size_ptr = 0;
     i = 0;
     while(v0 != &D_8002D500[LAST_HEAP_BLOCK]){
-        size = (s32)v0->hdr.next - (s32)v0;
+        size = (uintptr_t)v0->hdr.next - (uintptr_t)v0;
         *size_ptr = (size < *size_ptr) ? *size_ptr : size;
         v0 = v0->next_free;
         i++;
@@ -664,7 +687,7 @@ void *defrag(void *this){
         return this;
     }
     
-    size = (s32)((HeapHeader*)this)[-1].next - (s32)this + 0x10;
+    size = (uintptr_t)((HeapHeader*)this)[-1].next - (uintptr_t)this + 0x10;
 
     this_block = &((HeapHeader*)this)[-1];
     if(D_80283220 + size >= 1000000){
@@ -685,7 +708,7 @@ void *defrag(void *this){
     prev_block = new_block->prev;
     func_80253010(new_block, this_block, size);
     //create new empty block at end of new_block;
-    new_empty = (EmptyHeapBlock *)((s32)new_block + size);
+    new_empty = (EmptyHeapBlock *)((uintptr_t)new_block + size);
     new_empty->hdr.prev = new_block;
     new_empty->hdr.next = new_block->next;
     new_block->next = &new_empty->hdr;
@@ -701,7 +724,7 @@ void *defrag(void *this){
     if(new_block);
 
     _heap_defragEmptyBlock(new_empty); //combine new_empty with any surrounding empty blocks
-    return  (void *)((s32)new_block + sizeof(HeapHeader));
+    return  (void *)((uintptr_t)new_block + sizeof(HeapHeader));
 #endif
 }
 
@@ -738,7 +761,7 @@ void *func_80255774(void *this){
         return this;
     }
 
-    size = (s32)((HeapHeader*)this)[-1].next - (s32)this + 0x10;
+    size = (uintptr_t)((HeapHeader*)this)[-1].next - (uintptr_t)this + 0x10;
     this_block = &((HeapHeader*)this)[-1];
 
     if(D_80283220 + size >= 1000000)
@@ -794,7 +817,7 @@ bool func_80255920(void *arg0) {
 }
 
 HeapHeader * func_80255978(void *ptr){
-    return ((HeapHeader* )((s32)ptr - sizeof(HeapHeader)))->prev;
+    return ((HeapHeader* )((uintptr_t)ptr - sizeof(HeapHeader)))->prev;
 }
 
 void func_80255980(void *arg0, int arg1){

@@ -1,5 +1,6 @@
 #include <ultra64.h>
 #include "synthInternals.h"
+#include "functions.h"
 
 #ifndef assert
 #define assert(s) 

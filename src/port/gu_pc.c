@@ -1,12 +1,17 @@
 #include <math.h>
+#include <string.h>
 #include "libultraship/libultra/types.h"
 
 void guMtxF2L(float mf[4][4], Mtx* m) {
+#ifdef GBI_FLOATS
+    // [port] With GBI_FLOATS, Mtx is MtxF (float[4][4]) — just copy
+    memcpy(m->mf, mf, sizeof(float) * 16);
+#else
     unsigned int r, c;
     s32 tmp1;
     s32 tmp2;
-    s32* m1 = &m->mf[0][0];
-    s32* m2 = &m->mf[2][0];
+    s32* m1 = &m->m[0][0];
+    s32* m2 = &m->m[2][0];
     for (r = 0; r < 4; r++) {
         for (c = 0; c < 2; c++) {
             tmp1 = mf[r][2 * c] * 65536.0f;
@@ -15,17 +20,22 @@ void guMtxF2L(float mf[4][4], Mtx* m) {
             *m2++ = ((tmp1 << 0x10) & 0xffff0000) | (tmp2 & 0xffff);
         }
     }
+#endif
 }
 
 void guMtxL2F(float mf[4][4], Mtx* m) {
+#ifdef GBI_FLOATS
+    // [port] With GBI_FLOATS, Mtx is MtxF (float[4][4]) — just copy
+    memcpy(mf, m->mf, sizeof(float) * 16);
+#else
     unsigned int r, c;
     u32 tmp1;
     u32 tmp2;
     u32* m1;
     u32* m2;
     s32 stmp1, stmp2;
-    m1 = (u32*)&m->mf[0][0];
-    m2 = (u32*)&m->mf[2][0];
+    m1 = (u32*)&m->m[0][0];
+    m2 = (u32*)&m->m[2][0];
     for (r = 0; r < 4; r++) {
         for (c = 0; c < 2; c++) {
             tmp1 = (*m1 & 0xffff0000) | ((*m2 >> 0x10) & 0xffff);
@@ -36,6 +46,7 @@ void guMtxL2F(float mf[4][4], Mtx* m) {
             mf[r][c * 2 + 1] = stmp2 / 65536.0f;
         }
     }
+#endif
 }
 
 void guMtxIdentF(f32 mf[4][4]) {
@@ -158,5 +169,5 @@ void guOrthoF(float m[4][4], float l, float r, float b, float t, float n, float 
 void guOrtho(Mtx* m, float l, float r, float b, float t, float n, float f, float scale) {
     float mf[4][4];
     guOrthoF(mf, l, r, b, t, n, f, scale);
-    // guMtxF2L(mf, m);
+    guMtxF2L(mf, m);
 }

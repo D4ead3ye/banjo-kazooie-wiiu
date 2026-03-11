@@ -48,6 +48,18 @@ typedef struct freelist_s{
 #define FREE_LIST(T) struct freelist_s
 //^defined to keep element type with sla
 
+/* Freelist function declarations - required for 64-bit pointer safety */
+void freelist_clear(FLA *fla);
+void *freelist_at(FLA *fla, s32 indx);
+s32 freelist_size(FLA *fla);
+void *freelist_freeListPtr(FLA *fla);
+void *freelist_next(FLA **fla_ptr, s32 *arg1);
+bool freelist_elementIsAlive(FLA *fla, s32 index);
+void freelist_free(FLA *fla);
+FLA *freelist_new(s32 size, s32 cnt);
+void freelist_freeElement(FLA *fla, s32 indx);
+FLA *freelist_defrag(FLA *fla);
+
 typedef struct {
     f32 m[4][4];
 #if 0
@@ -158,9 +170,9 @@ typedef struct struct_2_s{
     f32 duration;
     u8 argCount;
     u8 activationFrameDelay;
-    s32 arg0;
-    s32 arg1;
-    s32 arg2;
+    uintptr_t arg0; // [port] s32 -> uintptr_t for 64-bit pointer safety
+    uintptr_t arg1;
+    uintptr_t arg2;
     void *funcPtr;
 } AnSeqElement;
 
@@ -249,7 +261,7 @@ typedef struct struct_8_s{
     f32 unk44; //added to x string print position (sprite w)
     f32 unk48; //added to y string print position (sprite h)
     f32 unk4C; 
-    u32 unk50; //asset_ptr (indx in unk24)
+    uintptr_t unk50; //asset_ptr (was u32, now uintptr_t for pointer safety)
     s8 string_54[0xC]; //value string
     f32 unk60;
 }struct8s;

@@ -3,7 +3,7 @@
 #include "functions.h"
 #include "variables.h"
 
-#include "zoombox.h"
+#include "core2/gc/zoombox.h"
 
 #ifndef MIN
 #define MIN(s, t) (((s) < t)?(s):(t))
@@ -33,7 +33,7 @@ s32 level_get(void);
 s32 getGameMode(void);
 
 void func_802DC5B8(void);
-void func_802DC560(s32, s32);
+void func_802DC560(NodeProp*, ActorMarker*);
 s32 controller_getStartButton(s32 controller_index);
 bool fileProgressFlag_get(enum file_progress_e);
 enum map_e map_get(void);

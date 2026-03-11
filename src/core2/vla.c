@@ -94,6 +94,8 @@ void bk_vector_assign(VLA *this, s32 indx, void* value){
 }
 
 VLA * bk_vector_defrag(VLA *this){
+    /*
+    [port] Lighthouse - No N64 heap to compact on PC
     return NULL;
 
     intptr_t oldSize;
@@ -105,5 +107,6 @@ VLA * bk_vector_defrag(VLA *this){
     this->begin = &this->data;
     this->end = (void *)((uintptr_t)this->begin + oldSize);
     this->mem_end = (void *)((uintptr_t)this->begin + oldMemSize);
+    */
     return this;
 }

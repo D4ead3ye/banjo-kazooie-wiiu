@@ -1,5 +1,6 @@
 #include <ultra64.h>
 #include "synthInternals.h"
+#include "functions.h"
 
 #ifdef AUD_PROFILE
 extern u32 cnt_index, resampler_num, resampler_cnt, resampler_max, resampler_min, lastCnt[];

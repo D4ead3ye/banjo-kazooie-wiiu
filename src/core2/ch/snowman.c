@@ -185,7 +185,7 @@ void __chSnowman_deathCallback(ActorMarker *marker, ActorMarker *other_marker){
     FUNC_8030E8B4(SFX_3EA_UNKNOWN, 1.0f, 30000, actor->position, 1500, 4500);
     FUNC_8030E8B4(SFX_2F_ORANGE_SPLAT, 1.0f, 30000, actor->position, 1500, 4500);
 
-    __spawnQueue_add_1((GenFunction_1)__chSnowman_spawnHat, (s32)actor->marker);
+    __spawnQueue_add_1((GenFunction_1)__chSnowman_spawnHat, (uintptr_t)actor->marker);
     if(map_get() == MAP_27_FP_FREEZEEZY_PEAK)
         maSnowy_decRemaining();
     __chSnowman_spawnSnowballParticles(actor->position, 0xC);
@@ -311,7 +311,7 @@ void chSnowman_update(Actor *this){
                     && local->unkB
                 ){
                     func_8030E878(SFX_8F_SNOWBALL_FLYING, randf2(0.95f, 1.05f), 30000, this->position, 800.0f, 3050.0f);
-                    __spawnQueue_add_1((GenFunction_1)__chSnowman_spawnSnowball, (s32)this->marker);
+                    __spawnQueue_add_1((GenFunction_1)__chSnowman_spawnSnowball, (uintptr_t)this->marker);
                     local->unk9 = false;
                 }
                 

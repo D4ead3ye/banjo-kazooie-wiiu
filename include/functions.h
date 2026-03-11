@@ -18,6 +18,7 @@
 
 #include "bsint.h"
 #include "generic.h"
+#include "port_prototypes.h"
 
 #include "enums.h"
 
@@ -116,6 +117,7 @@ void actor_collisionOff(Actor *);
 
 void *assetcache_get(enum asset_e assetId);
 
+
 Actor *actor_new(s32 position[3], s32 yaw, ActorInfo *actorInfo, u32 flags);
 Actor *func_802C8A54(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags);
 Actor *func_802C8AA8(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags);
@@ -126,7 +128,7 @@ Actor *func_802C8C04(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags);
 
 Actor *marker_getActor(ActorMarker *);
 
-#include "time.h"
+#include "bk_time.h"
 void jiggy_spawn(enum jiggy_e jiggy_id, f32 pos[3]);
 
 struct3s *func_802F8264(s32 arg0);
@@ -186,8 +188,8 @@ void particleEmitter_setSprite(ParticleEmitter *, enum asset_e);
 void particleEmitter_setPosition(ParticleEmitter *, f32[3]);
 ParticleEmitter *partEmitMgr_newEmitter(u32);
 void func_802BB3DC(s32, f32, f32);
-void __spawnQueue_add_4(GenFunction_4, s32, s32, s32, s32);
-Actor *spawnQueue_actor_f32(enum actor_e actor_id, s32 x, s32 y, s32 z);
+void __spawnQueue_add_4(GenFunction_4, uintptr_t, uintptr_t, uintptr_t, uintptr_t);
+Actor *spawnQueue_actor_f32(enum actor_e actor_id, uintptr_t x, uintptr_t y, uintptr_t z);
 void sfxsource_freeSfxsourceByIndex(u8);
 
 
@@ -405,6 +407,8 @@ void func_80347A14(s32);
 void func_8034A174(struct5Bs *this, s32 indx,f32 dst[3]);
 Struct70s *func_8034C528(s32);
 Struct70s *func_8034C5AC(s32);
+BKModel *func_8034C4F0(Struct70s *arg0);
+s16 func_8034C50C(Struct70s *arg0);
 void func_8034DC08(Struct6Ds *, f32[3], f32[3], f32, s32);
 void func_8034DDF0(Struct6Ds *arg0, f32 arg1[3], f32 arg2[3], f32 arg3, s32 arg4);
 void func_8034DE60(Struct6Ds *, f32, f32, f32, s32);
@@ -447,6 +451,7 @@ void func_802F9F80(s32, f32, f32, f32);
 void func_802FA060(s32, s32, s32, f32);
 Actor *actorArray_findActorFromActorId(enum actor_e);
 f32 func_8038A6B8(ActorMarker *);
+void *defrag(void *);
 void *defrag_asset(void *);
 void sfxsource_set_fade_distances(u8, f32, f32);
 void func_8030DB04(u8, s32, f32 position[3], f32, f32);
@@ -476,8 +481,8 @@ void func_802596AC(f32 a0[3], f32 a1[3], f32 a2[3], f32 a3[3]);
 
 void controller_copyFaceButtons(s32, s32 [6]);
 
-void __spawnQueue_add_1(GenFunction_1, s32);
-#define SPAWNQUEUE_ADD_1(method, arg0) __spawnQueue_add_1((GenFunction_1) (method), reinterpret_cast(s32, (arg0)))
+void __spawnQueue_add_1(GenFunction_1, uintptr_t);
+#define SPAWNQUEUE_ADD_1(method, arg0) __spawnQueue_add_1((GenFunction_1) (method), reinterpret_cast(uintptr_t, (arg0)))
 
 void func_802FAD64(enum item_e);
 void nodeprop_getPosition(NodeProp *, f32[3]);

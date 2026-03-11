@@ -34,7 +34,7 @@ typedef struct N_ALLoadFilter_s{
     s32                         sample;
     s32                         lastsam;
     s32                         first;
-    s32                         memin; 
+    uintptr_t                   memin; // [port] stores table base pointer, needs pointer width
 } N_ALLoadFilter;
 
 typedef struct N_ALResampler_s {
@@ -84,7 +84,7 @@ typedef struct N_PVoice_s {
     s32                         dc_sample;
     s32                         dc_lastsam;
     s32                         dc_first;
-    s32                         dc_memin; 
+    uintptr_t                   dc_memin; // [port] stores table base pointer, needs pointer width
 /** ALResampler *********************************/
     RESAMPLE_STATE      *rs_state;
     f32                 rs_ratio;

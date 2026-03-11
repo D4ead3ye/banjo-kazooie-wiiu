@@ -103,7 +103,7 @@ static void __chBlubber_checkJiggySpawnedTextAndAdvanceState(Actor *this){
     mapSpecificFlags_set(TTC_SPECIFIC_FLAG_3_BLUBBER_SHOW_JIGGY_SPAWNED_TEXT_FLAG, true);
     func_8028F918(2);
     timed_setStaticCameraToNode(0.0f, 4);
-    timedFunc_set_1(1.0f, (GenFunction_1)__chBlubber_showJiggySpawnedText, (s32)this->marker);
+    timedFunc_set_1(1.0f, (GenFunction_1)__chBlubber_showJiggySpawnedText, (uintptr_t)this->marker);
     subaddie_set_state_with_direction(this, CH_BLUBBER_STATE_1_UNKNOWN, 0.0f, 1);
 }
 

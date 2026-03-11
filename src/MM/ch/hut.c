@@ -93,7 +93,7 @@ void chhut_update(Actor *this) {
                 sfxsource_playHighPriority(SFX_5B_HEAVY_STUFF_FALLING);
                 subaddie_set_state(this, HUT_STATE_1_DAMAGED);
                 actor_playAnimationOnce(this);
-                __spawnQueue_add_1((GenFunction_1) __chhut_spawnExplosion, (s32) this->marker);
+                __spawnQueue_add_1((GenFunction_1) __chhut_spawnExplosion, (uintptr_t)this->marker);
                 bundle_setYaw(this->yaw);
 
                 if (mm_hut_smash_count < 5) {

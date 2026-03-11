@@ -1,8 +1,8 @@
 #include "2.0L/PR/libaudio.h"
 #include "2.0L/PR/ultraerror.h"
-#include "2.0L/PR/os_error.h"
+//#include "2.0L/PR/os_error.h"
 #include <ultra64.h>
-#include <libultra/convert.h>
+//#include <libultra/convert.h>
 
 static u32 __readVarLen(ALCSeq *s,u32 track);
 static u8  __getTrackByte(ALCSeq *s,u32 track);
@@ -29,7 +29,7 @@ void alCSeqNew(ALCSeq *seq, u8 *ptr)
         {
             flagTmp = 1 << i;
             seq->validTracks |= flagTmp;
-            seq->curLoc[i] = (u8*)((u32)ptr + tmpOff);
+            seq->curLoc[i] = (u8*)((uintptr_t)ptr + tmpOff);
             seq->evtDeltaTicks[i] = __readVarLen(seq,i);
             /*__alCSeqGetTrackEvent(seq,i); prime the event buffers  */
         }

@@ -41,9 +41,9 @@ const float aspectRatioPresetsX[] = { 0.0f, 16.0f, 4.0f, 16.0f, 5.0f, 16.0f, 21.
 const float aspectRatioPresetsY[] = { 0.0f, 9.0f, 3.0f, 9.0f, 3.0f, 10.0f, 9.0f };
 const int default_aspectRatio = 1; // Default combo list option
 
-const char* pixelCountPresetLabels[] = { "Custom",     "Native N64 (240p)", "2x (480p)",       "3x (720p)", "4x (960p)",
-                                         "5x (1200p)", "6x (1440p)",        "Full HD (1080p)", "4K (2160p)" };
-const int pixelCountPresets[] = { 480, 240, 480, 720, 960, 1200, 1440, 1080, 2160 };
+const char* pixelCountPresetLabels[] = { "Custom",     "Native BK (216p)", "2x (432p)",       "3x (648p)", "4x (864p)",
+                                         "5x (1080p)", "6x (1296p)",       "Full HD (1080p)", "4K (2160p)" };
+const int pixelCountPresets[] = { 432, 216, 432, 648, 864, 1080, 1296, 1080, 2160 };
 const int default_pixelCount = 0; // Default combo list option
 
 // Resolution clamp values as hardcoded in LUS::Gui::ApplyResolutionChanges()

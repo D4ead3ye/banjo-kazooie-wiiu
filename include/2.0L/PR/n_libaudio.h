@@ -64,7 +64,7 @@ typedef struct {
     s32                 maxAuxBusses;
     s32                 outputRate;
     s32                 maxOutSamples;
-    s32	       		sv_dramout;
+    uintptr_t	       	sv_dramout; // [port] stores buffer pointer, needs pointer width
     s32                 sv_first;
     ALPlayer *unk5C;
     ALPlayer *unk60;
@@ -142,9 +142,10 @@ typedef struct {
 
 typedef struct {
     union {
-        s32 i;
+        intptr_t i; // [port] was s32 — must hold pointers on 64-bit
         f32 f;
-    }data[2];
+        void *p;    // [port] explicit pointer member
+    }data[3]; // [port] was 2 — BK sound player events pass up to 3 parameters
 } N_ALGenericEvent;
 
 typedef struct {

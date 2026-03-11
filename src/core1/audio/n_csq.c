@@ -27,7 +27,7 @@ void n_alCSeqNew(ALCSeq *seq, u8 *ptr)
         {
             flagTmp = 1 << i;
             seq->validTracks |= flagTmp;
-            seq->curLoc[i] = (u8*)((u32)ptr + tmpOff);
+            seq->curLoc[i] = (u8*)((uintptr_t)ptr + tmpOff);
             seq->evtDeltaTicks[i] = __readVarLen(seq,i);
             /*__n_alCSeqGetTrackEvent(seq,i); prime the event buffers  */
         }

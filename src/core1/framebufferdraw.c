@@ -120,7 +120,7 @@ void framebufferdraw_draw_CI8(s32 x, s32 y, BKSprite *sprite, s32 frame, s32 alp
     }
 
     palette = (u16 *) (sprite_frame + 1);
-    for (palette_unaligned = palette; ((s32) palette_unaligned) % 8; palette_unaligned++){
+    for (palette_unaligned = palette; ((uintptr_t) palette_unaligned) % 8; palette_unaligned++){ // [port] was (s32) — pointer truncation for alignment check
         ;
     }
     palette = palette_unaligned;
@@ -186,7 +186,7 @@ void framebufferdraw_draw_RGBA16(s32 x, s32 y, BKSprite *sprite, s32 frame, bool
     }
     chunk_ptr = (BKSpriteTextureBlock *)(sprite_ptr + 1);
     for(i_chunk = 0; i_chunk < sprite_ptr->chunkCnt; i_chunk++) {
-        for(tmem = (u16 *)(chunk_ptr + 1); (s32)tmem % 8; tmem++);
+        for(tmem = (u16 *)(chunk_ptr + 1); (uintptr_t)tmem % 8; tmem++);
 
         for(txtr_y = 0; txtr_y < chunk_ptr->h; txtr_y++) {
             for(txtr_x = 0; txtr_x < chunk_ptr->w; txtr_x++) {
@@ -233,7 +233,7 @@ void framebufferdraw_draw_I4(s32 x, s32 y, BKSprite *sprite, s32 frame, bool apl
     }
     chunk_ptr = (BKSpriteTextureBlock *)(frame_ptr + 1);
     for(i_chunk = 0; i_chunk < frame_ptr->chunkCnt; i_chunk++) {
-        for(tmem = (u8*)(chunk_ptr + 1); (s32)tmem % 8; tmem++);
+        for(tmem = (u8*)(chunk_ptr + 1); (uintptr_t)tmem % 8; tmem++);
         
         for(txtr_y = 0; txtr_y < chunk_ptr->h; txtr_y++) {
             for(txtr_x = 0; txtr_x < chunk_ptr->w; txtr_x += 2) {
@@ -290,7 +290,7 @@ void framebufferdraw_draw_IA4(s32 x, s32 y, BKSprite *sprite, s32 frame, bool ap
     }
     chunk_ptr = (BKSpriteTextureBlock *)(frame_ptr + 1);
     for(i_chunk = 0; i_chunk < frame_ptr->chunkCnt; i_chunk++) {
-        for(tmem = (u8*)(chunk_ptr + 1); (s32)tmem % 8; tmem++);
+        for(tmem = (u8*)(chunk_ptr + 1); (uintptr_t)tmem % 8; tmem++);
         
         for(txtr_y = 0; txtr_y < chunk_ptr->h; txtr_y++) {
             for(txtr_x = 0; txtr_x < chunk_ptr->w; txtr_x += 2) {
@@ -346,7 +346,7 @@ void framebufferdraw_draw_I8(s32 x, s32 y, BKSprite *sprite, s32 frame, s32 alph
     chunk_ptr = (BKSpriteTextureBlock *)(frame_ptr + 1);
     for(i_chunk = 0; i_chunk < frame_ptr->chunkCnt; i_chunk++){
         //align
-        for(txtr_ptr = (u8*)(chunk_ptr + 1); (s32)txtr_ptr % 8; txtr_ptr++);
+        for(txtr_ptr = (u8*)(chunk_ptr + 1); (uintptr_t)txtr_ptr % 8; txtr_ptr++);
 
         for(txtr_y = 0; txtr_y < chunk_ptr->h; txtr_y++){
             for(txtr_x = 0; txtr_x < chunk_ptr->w; txtr_x++){
@@ -395,7 +395,7 @@ void framebufferdraw_draw_IA8(s32 x, s32 y, BKSprite *sprite, s32 frame, bool al
     }
     chunk_ptr = (BKSpriteTextureBlock *)(sprite_frame + 1);
     for(i_chunk = 0; i_chunk < sprite_frame->chunkCnt; i_chunk++) {
-        for(var_t2 = (u8*)(chunk_ptr + 1); (s32)var_t2 % 8; var_t2++);//align
+        for(var_t2 = (u8*)(chunk_ptr + 1); (uintptr_t)var_t2 % 8; var_t2++);//align
         
         for(var_t3 = 0; var_t3 < chunk_ptr->h; var_t3++){
             for(var_a3 = 0; var_a3 < chunk_ptr->w; var_a3++) {

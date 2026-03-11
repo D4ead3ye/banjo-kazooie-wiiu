@@ -12,15 +12,22 @@
 #include <fast/resource/factory/TextureFactory.h>
 #include <fast/resource/factory/MatrixFactory.h>
 #include <fast/resource/factory/VertexFactory.h>
-#include "resource/importers/SpriteFactory.h"
+#include <ship/resource/factory/BlobFactory.h>
+#include "resource/importers/AnimFactory.h"
+#include "resource/importers/DemoInputFactory.h"
+#include "resource/importers/DialogFactory.h"
+#include "resource/importers/MapFactory.h"
 #include "resource/importers/ModelFactory.h"
+#include "resource/importers/SpriteFactory.h"
 #include "audio/GameAudio.h"
 #include "ui/LighthouseGui.hpp"
 // #include "port/patches/DisplayListPatch.h"
 // #include "port/mods/PortEnhancements.h"
 
 #include <fast/interpreter.h>
+#include <libultraship/bridge/gfxbridge.h>
 #include <filesystem>
+#include <fstream>
 #include <libultraship/libultraship.h>
 
 #ifdef __SWITCH__
@@ -58,7 +65,7 @@ GameEngine::GameEngine() {
         archiveFiles.push_back(main_path);
     } else {
         if (ShowYesNoBox("Lighthouse - Asset Extraction",
-                         "Please provide a Banjo Kazooie ROM.\n\nSupported Versions:\nUS 1.0\nUS 1.1\n\nAssets will be "
+                         "Please provide a Banjo-Kazooie ROM.\n\nSupported Versions:\nUS 1.0\nUS 1.1\n\nAssets will be "
                          "extracted into an O2R file.") == IDYES) {
             if (!GenAssetFile()) {
                 ShowMessage("Error", "An error occured, no O2R file was generated.\n\nExiting...");
@@ -112,6 +119,13 @@ GameEngine::GameEngine() {
 
     auto window = std::make_shared<Fast::Fast3dWindow>(std::vector<std::shared_ptr<Ship::GuiWindow>>({}));
 
+    // [port] Truncate log file before LUS init so each run starts fresh
+    {
+        auto logPath = Ship::Context::GetPathRelativeToAppDirectory("logs/Lighthouse.log");
+        std::filesystem::create_directories(std::filesystem::path(logPath).parent_path());
+        std::ofstream(logPath, std::ios::trunc).close();
+    }
+
     auto audioChannelsSetting = Ship::Context::GetInstance()->GetConfig()->GetCurrentAudioChannelsSetting();
     this->context->Init(archiveFiles, {}, 3, { 32000, 1024, 1680, audioChannelsSetting }, window, controlDeck);
 
@@ -121,11 +135,33 @@ GameEngine::GameEngine() {
     Ship::Context::GetInstance()->GetLogger()->set_pattern("[%H:%M:%S.%e] [%s:%#] [%l] %v");
 #endif
 
+    // [port] Enable TMEM derivation for raw N64 sprite textures.
+    // BK loads texture data at TMEM 0 and sets tiles at different TMEM offsets.
+    GameEngine_GetInterpreter()->mDeriveTmemFromLoadedTexture = true;
+
     auto loader = context->GetResourceManager()->GetResourceLoader();
     loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinarySpriteV0>(),
-                                    RESOURCE_FORMAT_BINARY, "Sprite", static_cast<uint32_t>(Torch::ResourceType::BKSprite), 0);
-    loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinaryModelV0>(),
-                                    RESOURCE_FORMAT_BINARY, "Model", static_cast<uint32_t>(Torch::ResourceType::BKModel), 0);
+                                    RESOURCE_FORMAT_BINARY, "Sprite",
+                                    static_cast<uint32_t>(Torch::ResourceType::BKSprite), 0);
+    loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinaryModelV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Model", static_cast<uint32_t>(Torch::ResourceType::BKModel), 0);
+    loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinaryBKAnimationV0>(),
+                                    RESOURCE_FORMAT_BINARY, "BKAnimation",
+                                    static_cast<uint32_t>(Torch::ResourceType::BKAnimation), 0);
+    loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinaryBKDialogV0>(),
+                                    RESOURCE_FORMAT_BINARY, "BKDialog",
+                                    static_cast<uint32_t>(Torch::ResourceType::BKDialog), 0);
+    loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinaryBKQuizQuestionV0>(),
+                                    RESOURCE_FORMAT_BINARY, "BKQuizQuestion",
+                                    static_cast<uint32_t>(Torch::ResourceType::BKQuizQuestion), 0);
+    loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinaryBKGruntyQuestionV0>(),
+                                    RESOURCE_FORMAT_BINARY, "BKGruntyQuestion",
+                                    static_cast<uint32_t>(Torch::ResourceType::BKGruntyQuestion), 0);
+    loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinaryBKDemoInputV0>(),
+                                    RESOURCE_FORMAT_BINARY, "BKDemoInput",
+                                    static_cast<uint32_t>(Torch::ResourceType::BKDemoInput), 0);
+    loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinaryBKMapV0>(), RESOURCE_FORMAT_BINARY,
+                                    "BKMap", static_cast<uint32_t>(Torch::ResourceType::BKMap), 0);
     // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAnimV0>(), RESOURCE_FORMAT_BINARY,
     //                                 "Animation", static_cast<uint32_t>(SF64::ResourceType::AnimData), 0);
     // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinarySkeletonV0>(),
@@ -167,8 +203,7 @@ GameEngine::GameEngine() {
 
     loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryVertexV0>(), RESOURCE_FORMAT_BINARY,
                                     "Vertex", static_cast<uint32_t>(Fast::ResourceType::Vertex), 0);
-    loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryXMLVertexV0>(), RESOURCE_FORMAT_XML,
-    "Vertex",
+    loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryXMLVertexV0>(), RESOURCE_FORMAT_XML, "Vertex",
                                     static_cast<uint32_t>(Fast::ResourceType::Vertex), 0);
 
     loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryDisplayListV0>(),
@@ -180,8 +215,8 @@ GameEngine::GameEngine() {
     loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryMatrixV0>(), RESOURCE_FORMAT_BINARY,
                                     "Matrix", static_cast<uint32_t>(Fast::ResourceType::Matrix), 0);
 
-    // loader->RegisterResourceFactory(std::make_shared<Ship::ResourceFactoryBinaryBlobV0>(), RESOURCE_FORMAT_BINARY,
-    //                                 "Blob", static_cast<uint32_t>(Ship::ResourceType::Blob), 0);
+    loader->RegisterResourceFactory(std::make_shared<Ship::ResourceFactoryBinaryBlobV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Blob", static_cast<uint32_t>(Ship::ResourceType::Blob), 0);
 
     // loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryAudioTableV0>(),
     // RESOURCE_FORMAT_BINARY,
@@ -264,6 +299,8 @@ void GameEngine::Create() {
     const auto instance = Instance = new GameEngine();
     // instance->AudioInit();
     // DisplayListPatch::Run();
+    // [port] BK renders at 292x216, not the standard 320x240.
+    GfxSetNativeDimensions(292, 216);
     LighthouseGui::SetupGuiElements();
 #if defined(__SWITCH__) || defined(__WIIU__)
     CVarRegisterInteger("gControlNav", 1); // always enable controller nav on switch/wii u
@@ -316,8 +353,9 @@ void GameEngine::StartFrame() const {
 
 #endif
 
-// TODO: FIGURE OUT BK's "gVIsPerFrame"
-#define gVIsPerFrame 1
+// [port] BK runs at 30fps on N64 (2 vertical interrupts per game frame).
+// gVIsPerFrame=2 means original_fps = 60/2 = 30, which correctly paces game logic.
+#define gVIsPerFrame 2
 
 void GameEngine::HandleAudioThread() {
     static unsigned short samples_high = SAMPLES_HIGH;
@@ -482,7 +520,8 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
 
     if (wnd != nullptr) {
         wnd->SetTargetFps(fps);
-        wnd->SetMaximumFrameLatency(CVarGetInteger("gRenderParallelization", 1) ? 2 : 1);
+        wnd->SetMaximumFrameLatency(
+            2); // [port] Hardcoded: CVarGetInteger crashes due to heap corruption in debug builds
     }
 
     // When the gfx debugger is active, only run with the final mtx
@@ -754,14 +793,14 @@ extern "C" int32_t OTRConvertHUDXToScreenX(int32_t v) {
     float gameAspectRatio = interpreter->mCurDimensions.aspect_ratio;
     int32_t gameHeight = interpreter->mCurDimensions.height;
     int32_t gameWidth = interpreter->mCurDimensions.width;
-    float hudAspectRatio = 4.0f / 3.0f;
+    float hudAspectRatio = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
     int32_t hudHeight = gameHeight;
     int32_t hudWidth = hudHeight * hudAspectRatio;
-    float hudScreenRatio = (hudWidth / 320.0f);
+    float hudScreenRatio = (hudWidth / (float)SCREEN_WIDTH);
     float hudCoord = v * hudScreenRatio;
     float gameOffset = (gameWidth - hudWidth) / 2;
     float gameCoord = hudCoord + gameOffset;
-    float gameScreenRatio = (320.0f / gameWidth);
+    float gameScreenRatio = ((float)SCREEN_WIDTH / gameWidth);
     float screenScaledCoord = gameCoord * gameScreenRatio;
     int32_t screenScaledCoordInt = screenScaledCoord;
     return screenScaledCoordInt;
@@ -775,7 +814,7 @@ extern "C" void* GameEngine_Malloc(size_t size) {
 extern "C" void GameEngine_Free(void* ptr) {
     for (auto it = MemoryPool.begin(); it != MemoryPool.end(); ++it) {
         if (*it == ptr) {
-            free(ptr);
+            delete[] static_cast<uint8_t*>(ptr); // [port] match new uint8_t[] with delete[]
             MemoryPool.erase(it);
             break;
         }

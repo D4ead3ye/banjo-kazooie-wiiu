@@ -17,7 +17,7 @@ enum anctrl_playback_e{
     ANIMCTRL_SUBRANGE_LOOP = 4
 };
 
-typedef struct{
+typedef struct AnimMtxList_s{ // [port] added tag for forward declaration
     MtxF mtx_0;
     s32 size_40;
     s32 capacity_44;
@@ -68,7 +68,7 @@ void anctrl_update(AnimCtrl *this);
 AnimCtrl *anctrl_defrag(AnimCtrl *this);
 void anctrl_setIndex(AnimCtrl *this, enum asset_e index);
 Animation *anctrl_getAnimPtr(AnimCtrl *this);
-void func_8028746C(AnimCtrl *this,  void (* arg1)(s32,s32));
+void func_8028746C(AnimCtrl *this, GenFunction_2 arg1);
 void func_8028748C(AnimCtrl *this, s32 arg1);
 void anctrl_reset(AnimCtrl *this);
 void __anctrl_gotoStart(AnimCtrl *this);

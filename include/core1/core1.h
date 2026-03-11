@@ -24,6 +24,7 @@
 
 
 /* need to sort out in individual header files */
+void* malloc(size_t size);
 
 void glcrc_calc_checksum(void *start, void *end, u32 checksum[2]);
 
@@ -85,10 +86,10 @@ void *zBuffer_get(void);
 typedef struct {
     s32 unk0;
     s32 unk4;
-    Gfx *unk8;
-    Gfx *unkC;
-    s32 unk10;
-    s32 unk14;
+    void *unk8; // [port] Gfx* or Gfx** depending on unk0
+    void *unkC; // [port] Gfx* or Gfx** depending on unk0
+    void *unk10; // [port] was s32 — stores pointer from caller
+    void *unk14; // [port] was s32 — stores pointer from caller
 }Struct_Core1_15B30;
 
 #define DEFAULT_FRAMEBUFFER_WIDTH 292
@@ -100,10 +101,10 @@ extern u16 gFramebuffers[2][DEFAULT_FRAMEBUFFER_WIDTH * DEFAULT_FRAMEBUFFER_HEIG
 
 void func_80253550(void);
 void func_8025357C(void);
-void func_802535A8(Gfx **arg0, Gfx **arg1, UNK_TYPE(s32) arg2, UNK_TYPE(s32) arg3);
+void func_802535A8(Gfx **arg0, Gfx **arg1, void *arg2, void *arg3); // [port] was UNK_TYPE(s32) — receives pointers from caller
 void func_80253640(Gfx ** gdl, void *arg1);
 void scissorBox_SetForGameMode(Gfx **gdl, s32 framebuffer_idx);
-void setupScissorBoxAndFramebuffer(Gfx **gfx, s32 framebuffer_address);
+void setupScissorBoxAndFramebuffer(Gfx **gfx, uintptr_t framebuffer_address); // [port] was s32
 void setupDefaultScissorBoxAndFramebuffer(Gfx **gfx, s32 framebuffer_idx);
 void func_80253DC0(Gfx **gfx);
 void finishFrame(Gfx **gdl);

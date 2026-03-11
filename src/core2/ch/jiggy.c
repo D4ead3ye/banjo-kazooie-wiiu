@@ -82,7 +82,7 @@ void func_802C7B8C(Actor *this, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5
         func_802BAFE4(arg3);
         volatileFlag_setAndTriggerDialog_0(arg6);
         timedFunc_set_4(0.6f, (GenFunction_4)func_802C7AF8, (s32)this->position[0], (s32)this->position[1], (s32)this->position[2], arg4);
-        timedFunc_set_2(0.6f, (GenFunction_2)func_802C7AB0, (s32)this->marker, arg5);
+        timedFunc_set_2(0.6f, (GenFunction_2)func_802C7AB0, (uintptr_t)this->marker, arg5);
         timedFunc_set_0(1.0f, (GenFunction_0)func_802BE720);
         timedFunc_set_1(3.9f, (GenFunction_1)func_802C7B6C, arg4);
         mapSpecificFlags_set(arg1, 1);

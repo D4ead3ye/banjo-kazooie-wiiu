@@ -108,7 +108,7 @@ void fxlifescore_draw(enum item_e item_id, struct8s *arg1, Gfx **gfx, Mtx **mtx,
                 for(var_v0 = 0; var_v0 < 2; var_v0++){
                         (*vtx)->v.ob[0] = (s16) (s32) (((((f32) spF0 * D_80381EB8 * (f32) var_v0) - (((f32) spE8 * D_80381EB8) / 2)) + var_s5) * 4.0f);
                         (*vtx)->v.ob[1] = (s16) (s32) ((((((f32) spE4 * D_80381EB8) / 2) - ((f32) spEC * D_80381EB8 * var_v1)) + var_s4) * 4.0f);
-                        (*vtx)->v.ob[2] = -0x14;
+                        (*vtx)->v.ob[2] = -0xA; // [port] was -0x14; Z=-20 at guOrtho far clip plane, gets clipped on PC
                         (*vtx)->v.tc[0] = ((spF0 - 1) * var_v0) << 6;
                         (*vtx)->v.tc[1] = ((spEC - 1) * var_v1) << 6;
                         (*vtx)++;

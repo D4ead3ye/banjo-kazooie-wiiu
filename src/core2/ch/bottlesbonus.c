@@ -12,8 +12,6 @@ extern f32  time_func_8033DDB8(void);
 BKAnimationList *model_getAnimationList(BKModelBin *arg0);
 extern void func_8034BB08(s32);
 extern void func_803458E4(f32[4], f32[4], f32[4], f32);
-extern BKModel *func_8033F5F8(BKMeshList *, BKVertexList *);
-extern BKMeshList *func_8033A0B0(BKModelBin *);
 
 #define CH_BOTTLES_BONUS_PUZZLE_HEIGHT (4)
 #define CH_BOTTLES_BONUS_PUZZLE_WIDTH  (5)
@@ -178,8 +176,8 @@ Actor *chBottlesBonus_draw(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx)
     
     gDPSetTextureFilter((*gfx)++, G_TF_POINT);
     gSPSegment((*gfx)++, 0x04, osVirtualToPhysical(sp50));
-    modelRender_preDraw((GenFunction_1)actor_predrawMethod, (s32)sp6C);
-    modelRender_postDraw((GenFunction_1)actor_postdrawMethod, (s32)marker);
+    modelRender_preDraw((GenFunction_1)actor_predrawMethod, (uintptr_t)sp6C); // [port] was (s32) — truncates pointer on 64-bit
+    modelRender_postDraw((GenFunction_1)actor_postdrawMethod, (uintptr_t)marker);
 
     modelRender_draw(gfx, mtx, sp60, NULL, D_80368250, sp54, marker_loadModelBin(marker));
     gDPSetTextureFilter((*gfx)++, G_TF_BILERP);
@@ -469,7 +467,7 @@ void chBottlesBonus_update(Actor *this) {
             D_8037DEA8 = assetcache_get(0x471);
         }
         if (D_8037DEAC == NULL) {
-            D_8037DEAC = func_8033F5F8(func_8033A0B0(chBottleBonusBookselfModelBin), model_getVtxList(chBottleBonusBookselfModelBin));
+            D_8037DEAC = func_8033F5F8((BKMeshList *)func_8033A0B0(chBottleBonusBookselfModelBin), model_getVtxList(chBottleBonusBookselfModelBin));
             func_8034CF74(local, 0, D_8037DEAC, 0xF0);
         }
         func_8028746C(this->anctrl, (GenFunction_2)chBottlesBonus_func_802DD8AC);

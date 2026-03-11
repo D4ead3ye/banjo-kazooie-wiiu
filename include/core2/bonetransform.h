@@ -12,4 +12,8 @@ typedef struct bone_transform_list_s{
     BoneTransform *ptr;
     s32 count;
 }BoneTransformList;
+
+BoneTransformList *boneTransformList_new(void);
+BoneTransformList *boneTransformList_defrag(BoneTransformList *this);
+void boneTransformList_free(BoneTransformList *this);
 #endif

@@ -96,7 +96,7 @@ void fxairscore_draw(enum item_e item_id, struct8s *arg1, Gfx **gfx, Mtx **mtx, 
                 for(v_x = 0; v_x < 2; v_x++){
                     (*vtx)->v.ob[0] = (x + (((texture_width * s_texture_scale) * v_x) - ((texture_width * s_texture_scale) / 2))) * 4.0f;
                     (*vtx)->v.ob[1] = (y + (((texture_height * s_texture_scale) / 2) - (texture_height * s_texture_scale) * v_y)) * 4.0f;
-                    (*vtx)->v.ob[2] = -0x14;
+                    (*vtx)->v.ob[2] = -0xA; // [port] was -0x14; Z=-20 at guOrtho far clip plane, gets clipped on PC
                     (*vtx)->v.tc[0] = ((texture_width - 1) * v_x) << 6;
                     (*vtx)->v.tc[1] = ((texture_height - 1) * v_y) << 6;
                     (*vtx)++;

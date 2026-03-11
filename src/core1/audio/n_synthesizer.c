@@ -14,7 +14,7 @@ extern void alN_PVoiceNew(N_PVoice *mv, ALDMANew dmaNew, ALHeap *hp);
 
 
 #ifdef AUD_PROFILE
-#include <os.h>
+//#include <os.h>
 extern u32 cnt_index, drvr_num, drvr_cnt, drvr_max, drvr_min, lastCnt[];
 extern u32 client_num, client_cnt, client_max, client_min;
 #endif
@@ -192,7 +192,7 @@ Acmd *n_alAudioFrame(Acmd *cmdList, s32 *cmdLen, s16 *outBuf, s32 outLen)
          * construct the command list for each physical voice by calling
          * the head of the filter chain.
          */
-        n_syn->sv_dramout = (s32) lOutBuf;
+        n_syn->sv_dramout = (uintptr_t) lOutBuf;
         cmdlEnd = n_alSavePull(n_syn->curSamples, cmdlEnd);
         outLen -= nOut;
         lOutBuf += nOut<<1;     /* For Stereo */

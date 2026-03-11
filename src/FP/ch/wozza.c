@@ -107,7 +107,7 @@ void func_8038F454(Actor *this){
         actor_loopAnimation(this);
         timed_setStaticCameraToNode(0.0f, 0x2e);
         func_80324DBC(0.0f, 0xc1b, 0x2a, this->position, this->marker, func_8038F330, NULL);
-        timedFunc_set_1(2.5f, (GenFunction_1)func_8038F3F4, (s32)this->marker);
+        timedFunc_set_1(2.5f, (GenFunction_1)func_8038F3F4, (uintptr_t)this->marker);
     }
     else{
         func_8038F2B8(this);
@@ -204,7 +204,7 @@ void FP_func_8038F7AC(Actor *this){
             this->position[0] = local->unkC[0];\
             this->position[1] = local->unkC[1];\
             this->position[2] = local->unkC[2];
-            __spawnQueue_add_1((GenFunction_1)FP_func_8038F758, reinterpret_cast(s32, this->marker));
+            __spawnQueue_add_1((GenFunction_1)FP_func_8038F758, (uintptr_t)this->marker);
             local->unk30 = false;
         }
     }//L8038F910

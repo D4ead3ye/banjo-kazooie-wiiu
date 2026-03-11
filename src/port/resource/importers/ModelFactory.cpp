@@ -1,132 +1,759 @@
 #include "ModelFactory.h"
-#include "../type/Model.h"
 #include "spdlog/spdlog.h"
 #include <libultraship/libultraship.h>
+#include <ship/resource/type/Blob.h>
+#include <fast/resource/type/Vertex.h>
+#include <fast/resource/type/Texture.h>
 
-namespace Factories {
-
-// Helper to align offsets to 8-byte boundaries (N64 requirement)
-inline size_t Align8(size_t offset) {
-    return (offset + 7) & ~7;
+extern "C" {
+#include "model.h"
 }
 
-std::shared_ptr<Ship::IResource> ResourceFactoryBinaryModelV0::ReadResource(std::shared_ptr<Ship::File> file,
-                                                                           std::shared_ptr<Ship::ResourceInitData> initData) {
+namespace Factories {
+namespace {
+
+template <typename T> void AppendValue(std::vector<uint8_t>& dst, const T& value) {
+    const auto base = dst.size();
+    dst.resize(base + sizeof(T));
+    std::memcpy(dst.data() + base, &value, sizeof(T));
+}
+
+void AppendBytes(std::vector<uint8_t>& dst, const void* data, size_t size) {
+    const auto base = dst.size();
+    dst.resize(base + size);
+    std::memcpy(dst.data() + base, data, size);
+}
+
+void PadTo8(std::vector<uint8_t>& dst) {
+    while (dst.size() & 7)
+        dst.push_back(0);
+}
+
+std::shared_ptr<Ship::Blob> MakeBlob(const std::shared_ptr<Ship::ResourceInitData>& initData,
+                                     std::vector<uint8_t> data) {
+    auto blob = std::make_shared<Ship::Blob>(initData);
+    blob->Data = std::move(data);
+    return blob;
+}
+
+} // anonymous namespace
+
+std::shared_ptr<Ship::IResource>
+ResourceFactoryBinaryModelV0::ReadResource(std::shared_ptr<Ship::File> file,
+                                           std::shared_ptr<Ship::ResourceInitData> initData) {
     if (!FileHasValidFormatAndReader(file, initData)) {
         return nullptr;
     }
 
-    auto model = std::make_shared<Model>(initData);
+    auto reader = std::get<std::shared_ptr<Ship::BinaryReader>>(file->Reader);
     auto resourceMgr = Ship::Context::GetInstance()->GetResourceManager();
 
-    SPDLOG_INFO("=== Loading Model: {} ===", initData->Path);
+    // ── Read metadata written by ModelBinaryExporter::Export ────────────────
 
-    // Build a contiguous buffer with all model data
-    std::vector<uint8_t> buffer;
-    
-    // Reserve space for the header
-    buffer.resize(sizeof(BKModelBin));
-    BKModelBin* header = reinterpret_cast<BKModelBin*>(buffer.data());
-    memset(header, 0, sizeof(BKModelBin));
-    
-    size_t currentOffset = sizeof(BKModelBin);
+    const uint16_t geoType = reader->ReadUInt16();
+    const uint16_t triCount = reader->ReadUInt16();
+    const uint16_t vertCount = reader->ReadUInt16();
+    (void)triCount;
+    (void)vertCount;
 
-    // Track loaded sub-resources and their data
-    std::vector<uint8_t> geoLayoutData;
-    std::vector<uint8_t> textureListData;
-    std::vector<uint8_t> gfxListData;
-    std::vector<uint8_t> vtxListData;
-    std::vector<uint8_t> unk14Data;
-    std::vector<uint8_t> animationListData;
-    std::vector<uint8_t> collisionListData;
-    std::vector<uint8_t> unk20Data;
-    std::vector<uint8_t> effectsListData;
-    std::vector<uint8_t> unk28Data;
-    std::vector<uint8_t> animatedTextureData;
+    const bool hasGeo = reader->ReadUByte() != 0;
+    const bool hasVtx = reader->ReadUByte() != 0;
+    const bool hasDL = reader->ReadUByte() != 0;
+    const uint16_t texCount = reader->ReadUInt16();
+    const bool hasAnim = reader->ReadUByte() != 0;
+    const bool hasCol = reader->ReadUByte() != 0;
+    const bool hasUnk14 = reader->ReadUByte() != 0;
+    const bool hasUnk20 = reader->ReadUByte() != 0;
+    const bool hasEffects = reader->ReadUByte() != 0;
+    const bool hasUnk28 = reader->ReadUByte() != 0;
+    const bool hasAnimTex = reader->ReadUByte() != 0;
 
-    // Try to load GeoLayout
-    {
-        std::string geoPath = initData->Path + "_GEO";
-        auto geoResource = resourceMgr->LoadResourceProcess(geoPath);
-        if (geoResource) {
-            SPDLOG_INFO("  Loaded GeoLayout: {}", geoPath);
-            // TODO: Extract geo data when GeoLayout resource type is implemented
-            // For now, store the offset where it would go
-            currentOffset = Align8(currentOffset);
-            header->geo_list_offset_4 = static_cast<int32_t>(currentOffset);
-            // currentOffset += geoLayoutData.size();
+    // [port] Debug: dump parsed flags so we can verify stream alignment
+    SPDLOG_TRACE("[BKModel] '{}' flags: geoType={} tri={} vert={} geo={} vtx={} dl={} tex={} anim={} col={} u14={} "
+                 "u20={} fx={} u28={} animTex={}",
+                 initData->Path, geoType, triCount, vertCount, hasGeo, hasVtx, hasDL, texCount, hasAnim, hasCol,
+                 hasUnk14, hasUnk20, hasEffects, hasUnk28, hasAnimTex);
+
+    // VTX header fields
+    int16_t vtxMin[3] = {}, vtxMax[3] = {}, vtxCenter[3] = {};
+    int16_t vtxLocalNorm = 0, vtxGlobalNorm = 0;
+    uint16_t vtxCount = 0;
+    if (hasVtx) {
+        vtxMin[0] = reader->ReadInt16();
+        vtxMin[1] = reader->ReadInt16();
+        vtxMin[2] = reader->ReadInt16();
+        vtxMax[0] = reader->ReadInt16();
+        vtxMax[1] = reader->ReadInt16();
+        vtxMax[2] = reader->ReadInt16();
+        vtxCenter[0] = reader->ReadInt16();
+        vtxCenter[1] = reader->ReadInt16();
+        vtxCenter[2] = reader->ReadInt16();
+        vtxLocalNorm = reader->ReadInt16();
+        vtxCount = reader->ReadUInt16();
+        vtxGlobalNorm = reader->ReadInt16();
+    }
+
+    // GFX info + raw N64 display list command words
+    uint32_t dlCount = 0, dlUnkInfo = 0, gfxSubCount = 0;
+    std::vector<uint32_t> rawDLWords;
+    if (hasDL) {
+        dlCount = reader->ReadUInt32();
+        dlUnkInfo = reader->ReadUInt32();
+        gfxSubCount = reader->ReadUInt32();
+        SPDLOG_TRACE("[BKModel] '{}' DL: count={} unkInfo=0x{:X} subCount={} (need {} more bytes for raw words)",
+                     initData->Path, dlCount, dlUnkInfo, gfxSubCount, dlCount * 2 * 4);
+        // Read raw N64 DL words embedded by Torch (w0,w1 pairs, dlCount commands)
+        rawDLWords.resize(dlCount * 2);
+        for (uint32_t i = 0; i < dlCount * 2; i++) {
+            rawDLWords[i] = reader->ReadUInt32();
         }
     }
 
-    // Try to load Vertex List
-    {
-        std::string vtxPath = initData->Path + "_VTX";
-        auto vtxResource = resourceMgr->LoadResourceProcess(vtxPath);
-        if (vtxResource) {
-            SPDLOG_INFO("  Loaded VTX: {}", vtxPath);
-            // TODO: Extract vertex data when VTX resource type is implemented
-            currentOffset = Align8(currentOffset);
-            header->vtx_list_offset_10 = static_cast<int32_t>(currentOffset);
-            // currentOffset += vtxListData.size();
+    // Texture metadata
+    struct TexMeta {
+        uint16_t type;
+        uint8_t width, height;
+        uint16_t tlutColors;
+        uint32_t textureDataOffset;
+    };
+    std::vector<TexMeta> texMetas(texCount);
+    for (uint16_t ti = 0; ti < texCount; ti++) {
+        auto& tm = texMetas[ti];
+        tm.type = reader->ReadUInt16();
+        tm.width = reader->ReadUByte();
+        tm.height = reader->ReadUByte();
+        tm.tlutColors = reader->ReadUInt16();
+        tm.textureDataOffset = reader->ReadUInt32();
+        SPDLOG_TRACE("[BKModel] '{}' tex[{}]: type=0x{:X} {}x{} tlutColors={} romOff=0x{:X}", initData->Path, ti,
+                     tm.type, tm.width, tm.height, tm.tlutColors, tm.textureDataOffset);
+    }
+
+    // [port] Raw texture data blob — full contiguous texture data area from ROM.
+    // This preserves data between listed textures that DL commands may reference.
+    uint32_t rawTexDataSize = reader->ReadUInt32();
+    std::vector<uint8_t> rawTexData;
+    if (rawTexDataSize > 0) {
+        rawTexData.resize(rawTexDataSize);
+        for (uint32_t i = 0; i < rawTexDataSize; i++) {
+            rawTexData[i] = reader->ReadUByte();
         }
     }
 
-    // Try to load GFX display lists
-    {
-        uint32_t gfxIdx = 0;
-        bool foundAny = false;
-        while (true) {
-            std::string gfxPath = initData->Path + "_GFX_" + std::to_string(gfxIdx);
-            auto gfxResource = resourceMgr->LoadResourceProcess(gfxPath);
-            if (!gfxResource) {
-                break; // No more GFX resources
-            }
-            if (!foundAny) {
-                currentOffset = Align8(currentOffset);
-                header->gfx_list_offset_C = static_cast<int32_t>(currentOffset);
-                foundAny = true;
-            }
-            SPDLOG_INFO("  Loaded GFX_{}: {}", gfxIdx, gfxPath);
-            // TODO: Extract GFX data when GFX resource type is implemented
-            gfxIdx++;
+    // Animation
+    float animScale = 0.0f;
+    uint16_t boneCount = 0;
+    struct BoneEntry {
+        float pos[3];
+        uint16_t id, parentId;
+    };
+    std::vector<BoneEntry> bones;
+    if (hasAnim) {
+        animScale = reader->ReadFloat();
+        boneCount = reader->ReadUInt16();
+        for (uint16_t i = 0; i < boneCount; i++) {
+            BoneEntry b{};
+            b.pos[0] = reader->ReadFloat();
+            b.pos[1] = reader->ReadFloat();
+            b.pos[2] = reader->ReadFloat();
+            b.id = reader->ReadUInt16();
+            b.parentId = reader->ReadUInt16();
+            bones.push_back(b);
         }
     }
 
-    // Try to load Textures
-    {
-        uint32_t texIdx = 0;
-        bool foundAny = false;
-        while (true) {
-            std::string texPath = initData->Path + "_TEX_" + std::to_string(texIdx);
-            auto texResource = resourceMgr->LoadResourceProcess(texPath);
-            if (!texResource) {
-                break; // No more texture resources
-            }
-            if (!foundAny) {
-                currentOffset = Align8(currentOffset);
-                header->texture_list_offset_8 = static_cast<int16_t>(currentOffset);
-                foundAny = true;
-            }
-            SPDLOG_INFO("  Loaded TEX_{}: {}", texIdx, texPath);
-            
-            // Also try to load associated TLUT if it's a CI format
-            std::string tlutPath = initData->Path + "_TLUT_" + std::to_string(texIdx);
-            auto tlutResource = resourceMgr->LoadResourceProcess(tlutPath);
-            if (tlutResource) {
-                SPDLOG_INFO("    Loaded TLUT_{}: {}", texIdx, tlutPath);
-            }
-            
-            texIdx++;
+    // Collision
+    int16_t colMin[3] = {}, colMax[3] = {};
+    uint16_t colYStride = 0, colZStride = 0, colCubeScale = 0;
+    struct ColCubeEntry {
+        uint16_t startTri, triCount;
+    };
+    struct ColTriEntry {
+        uint16_t vtxIds[3], unk6;
+        uint32_t flags;
+    };
+    std::vector<ColCubeEntry> colCubes;
+    std::vector<ColTriEntry> colTris;
+    if (hasCol) {
+        SPDLOG_TRACE("[BKModel] '{}' reading collision...", initData->Path);
+        colMin[0] = reader->ReadInt16();
+        colMin[1] = reader->ReadInt16();
+        colMin[2] = reader->ReadInt16();
+        colMax[0] = reader->ReadInt16();
+        colMax[1] = reader->ReadInt16();
+        colMax[2] = reader->ReadInt16();
+        colYStride = reader->ReadUInt16();
+        colZStride = reader->ReadUInt16();
+        colCubeScale = reader->ReadUInt16();
+        const uint16_t cubeCnt = reader->ReadUInt16();
+        const uint16_t triCnt = reader->ReadUInt16();
+        SPDLOG_TRACE("[BKModel] '{}' collision: cubes={} tris={}", initData->Path, cubeCnt, triCnt);
+        for (uint16_t i = 0; i < cubeCnt; i++) {
+            ColCubeEntry e{};
+            e.startTri = reader->ReadUInt16();
+            e.triCount = reader->ReadUInt16();
+            colCubes.push_back(e);
+        }
+        for (uint16_t i = 0; i < triCnt; i++) {
+            ColTriEntry e{};
+            e.vtxIds[0] = reader->ReadUInt16();
+            e.vtxIds[1] = reader->ReadUInt16();
+            e.vtxIds[2] = reader->ReadUInt16();
+            e.unk6 = reader->ReadUInt16();
+            e.flags = reader->ReadUInt32();
+            colTris.push_back(e);
         }
     }
 
-    // Allocate final buffer
-    model->mModelData = std::make_unique<uint8_t[]>(buffer.size());
-    model->mModelDataSize = buffer.size();
-    std::memcpy(model->mModelData.get(), buffer.data(), buffer.size());
+    // Unk14
+    int16_t u14c0 = 0, u14c1 = 0, u14c2 = 0, u14unk6 = 0;
+    struct U14_0 {
+        int16_t scale1[3], scale2[3], pos[3];
+        uint8_t rot[3], unk15;
+        int8_t animIdx;
+        uint8_t pad;
+    };
+    struct U14_1 {
+        int16_t unk0, unk2, pos[3];
+        uint8_t rot[3], unkD;
+        int8_t animIdx;
+        uint8_t pad;
+    };
+    struct U14_2 {
+        int16_t unk0, unk2[3];
+        uint8_t unk8;
+        int8_t unk9;
+        uint8_t pad[2];
+    };
+    std::vector<U14_0> u14_0;
+    std::vector<U14_1> u14_1;
+    std::vector<U14_2> u14_2;
+    if (hasUnk14) {
+        u14c0 = reader->ReadInt16();
+        u14c1 = reader->ReadInt16();
+        u14c2 = reader->ReadInt16();
+        u14unk6 = reader->ReadInt16();
+        for (int16_t i = 0; i < u14c0; i++) {
+            U14_0 e{};
+            e.scale1[0] = reader->ReadInt16();
+            e.scale1[1] = reader->ReadInt16();
+            e.scale1[2] = reader->ReadInt16();
+            e.scale2[0] = reader->ReadInt16();
+            e.scale2[1] = reader->ReadInt16();
+            e.scale2[2] = reader->ReadInt16();
+            e.pos[0] = reader->ReadInt16();
+            e.pos[1] = reader->ReadInt16();
+            e.pos[2] = reader->ReadInt16();
+            e.rot[0] = reader->ReadUByte();
+            e.rot[1] = reader->ReadUByte();
+            e.rot[2] = reader->ReadUByte();
+            e.unk15 = reader->ReadUByte();
+            e.animIdx = reader->ReadInt8();
+            e.pad = reader->ReadUByte();
+            u14_0.push_back(e);
+        }
+        for (int16_t i = 0; i < u14c1; i++) {
+            U14_1 e{};
+            e.unk0 = reader->ReadInt16();
+            e.unk2 = reader->ReadInt16();
+            e.pos[0] = reader->ReadInt16();
+            e.pos[1] = reader->ReadInt16();
+            e.pos[2] = reader->ReadInt16();
+            e.rot[0] = reader->ReadUByte();
+            e.rot[1] = reader->ReadUByte();
+            e.rot[2] = reader->ReadUByte();
+            e.unkD = reader->ReadUByte();
+            e.animIdx = reader->ReadInt8();
+            e.pad = reader->ReadUByte();
+            u14_1.push_back(e);
+        }
+        for (int16_t i = 0; i < u14c2; i++) {
+            U14_2 e{};
+            e.unk0 = reader->ReadInt16();
+            e.unk2[0] = reader->ReadInt16();
+            e.unk2[1] = reader->ReadInt16();
+            e.unk2[2] = reader->ReadInt16();
+            e.unk8 = reader->ReadUByte();
+            e.unk9 = reader->ReadInt8();
+            e.pad[0] = reader->ReadUByte();
+            u14_2.push_back(e);
+        }
+    }
 
-    SPDLOG_INFO("=== Model loading complete: {} bytes ===", buffer.size());
+    // Unk20
+    uint8_t u20count = 0;
+    struct U20_0 {
+        int16_t unk0[3], unk6[3];
+        uint8_t unkC, pad;
+    };
+    std::vector<U20_0> u20_entries;
+    if (hasUnk20) {
+        u20count = reader->ReadUByte();
+        for (uint8_t i = 0; i < u20count; i++) {
+            U20_0 e{};
+            e.unk0[0] = reader->ReadInt16();
+            e.unk0[1] = reader->ReadInt16();
+            e.unk0[2] = reader->ReadInt16();
+            e.unk6[0] = reader->ReadInt16();
+            e.unk6[1] = reader->ReadInt16();
+            e.unk6[2] = reader->ReadInt16();
+            e.unkC = reader->ReadUByte();
+            e.pad = reader->ReadUByte();
+            u20_entries.push_back(e);
+        }
+    }
 
-    return model;
+    // Effects
+    uint16_t effectCount = 0;
+    struct EffectEntry {
+        uint16_t dataInfo;
+        std::vector<uint16_t> vtxIndices;
+    };
+    std::vector<EffectEntry> effects;
+    if (hasEffects) {
+        // Guard against truncated effect data (stale o2r): if the MemoryStream runs
+        // out of bytes, at() throws std::out_of_range.  Catch it, emit a warning, and
+        // continue without an effects section so the model still loads safely.
+        try {
+            effectCount = reader->ReadUInt16();
+            for (uint16_t i = 0; i < effectCount; i++) {
+                EffectEntry e{};
+                e.dataInfo = reader->ReadUInt16();
+                const uint16_t vtxCnt = reader->ReadUInt16();
+                for (uint16_t j = 0; j < vtxCnt; j++)
+                    e.vtxIndices.push_back(reader->ReadUInt16());
+                effects.push_back(e);
+            }
+        } catch (const std::out_of_range& ex) {
+            SPDLOG_WARN("[BKModel] Truncated effects section in {} — ignoring effects: {}", initData->Path, ex.what());
+            effects.clear();
+        }
+    }
+
+    // Unk28
+    int16_t u28count = 0;
+    struct U28_0 {
+        int16_t coord[3];
+        int8_t animIdx;
+        std::vector<int16_t> vtxList;
+    };
+    std::vector<U28_0> u28_entries;
+    if (hasUnk28) {
+        u28count = reader->ReadInt16();
+        for (int16_t i = 0; i < u28count; i++) {
+            U28_0 e{};
+            e.coord[0] = reader->ReadInt16();
+            e.coord[1] = reader->ReadInt16();
+            e.coord[2] = reader->ReadInt16();
+            e.animIdx = reader->ReadInt8();
+            const int8_t vtxCnt = reader->ReadInt8();
+            for (int8_t j = 0; j < vtxCnt; j++)
+                e.vtxList.push_back(reader->ReadInt16());
+            u28_entries.push_back(e);
+        }
+    }
+
+    // AnimTextures (always 4 slots)
+    struct AnimTexEntry {
+        uint16_t frameSize, frameCount;
+        float frameRate;
+    };
+    std::vector<AnimTexEntry> animTextures;
+    if (hasAnimTex) {
+        for (int i = 0; i < 4; i++) {
+            AnimTexEntry at{};
+            at.frameSize = reader->ReadUInt16();
+            at.frameCount = reader->ReadUInt16();
+            at.frameRate = reader->ReadFloat();
+            animTextures.push_back(at);
+        }
+    }
+
+    // GFX sub-resources are no longer loaded individually — raw N64 DL words
+    // are embedded directly in the model resource and widened at assembly time.
+    // This preserves the original N64 command layout so geo indices remain valid.
+
+    SPDLOG_TRACE("[BKModel] '{}' metadata read complete, assembling buffer...", initData->Path);
+
+    // ── Load GEO sub-resource (GeoLayout render tree) ─────────────────────────
+    std::shared_ptr<Ship::Blob> geoBlob;
+    if (hasGeo) {
+        SPDLOG_TRACE("[BKModel] '{}' loading _GEO sub-resource...", initData->Path);
+        geoBlob = std::static_pointer_cast<Ship::Blob>(resourceMgr->LoadResourceProcess(initData->Path + "_GEO"));
+        if (!geoBlob) {
+            SPDLOG_WARN("[BKModel] _GEO not found: {}", initData->Path);
+        }
+    }
+
+    // ── Assemble contiguous BKModelBin buffer ─────────────────────────────────
+    //
+    // Layout (each section padded to 8-byte alignment):
+    //   [  0 ] BKModelBin header (zero-init, geo_typ_A set)
+    //   [ GL ] GeoLayout command tree                          → geo_list_offset_4
+    //   [ T  ] BKTextureList + BKTextureHeader[] + pixel data  → texture_list_offset_8
+    //   [ A  ] BKAnimationList + BKAnimation[]                 → animation_list_offset_18
+    //   [ B  ] BKCollisionList + ColGeo[] + ColTri[]           → collision_list_offset_1C
+    //   [ 14 ] BKModelUnk14List + entries                      → unk14
+    //   [ 20 ] BKModelUnk20List + entries                      → unk20
+    //   [ E  ] effect count (s16) + effects                    → effects_list_setup_24
+    //   [ 28 ] BKModelUnk28List + entries                      → unk28
+    //   [ AT ] AnimTexture[4]                                  → animated_texture_list_offset
+    //   [ V  ] BKVertexList header + Vtx[]                     → vtx_list_offset_10
+    //   [ G  ] BKGfxList header + Gfx[]                        → gfx_list_offset_C
+
+    auto out = std::vector<uint8_t>(sizeof(BKModelBin), 0);
+    auto hdr = [&]() -> BKModelBin* { return reinterpret_cast<BKModelBin*>(out.data()); };
+    hdr()->geo_typ_A = static_cast<int16_t>(geoType);
+
+    // GeoLayout section
+    if (geoBlob && !geoBlob->Data.empty()) {
+        PadTo8(out);
+        hdr()->geo_list_offset_4 = static_cast<int32_t>(out.size());
+        AppendBytes(out, geoBlob->Data.data(), geoBlob->Data.size());
+    }
+
+    // Texture section
+    if (texCount > 0) {
+        PadTo8(out);
+        hdr()->texture_list_offset_8 = static_cast<int16_t>(out.size());
+
+        // [port] Use the raw texture blob from o2r — full contiguous data from ROM decompression.
+        // Preserves data between listed textures that DL commands may reference.
+        uint32_t totalPixSize = rawTexDataSize;
+        std::vector<uint8_t> pixelArea = std::move(rawTexData);
+
+        // BKTextureList: s32 size_0, s16 cnt_4, u8 pad[2]
+        AppendValue<int32_t>(out, static_cast<int32_t>(totalPixSize));
+        AppendValue<int16_t>(out, static_cast<int16_t>(texCount));
+        AppendValue<uint8_t>(out, 0);
+        AppendValue<uint8_t>(out, 0);
+
+        // BKTextureHeader[] (16 bytes each) — use original ROM offsets
+        for (uint16_t i = 0; i < texCount; i++) {
+            const auto& tm = texMetas[i];
+            AppendValue<int32_t>(out, static_cast<int32_t>(tm.textureDataOffset));
+            AppendValue<int16_t>(out, static_cast<int16_t>(tm.type));
+            AppendValue<uint8_t>(out, 0);
+            AppendValue<uint8_t>(out, 0);
+            AppendValue<uint8_t>(out, tm.width);
+            AppendValue<uint8_t>(out, tm.height);
+            for (int p = 0; p < 6; p++)
+                AppendValue<uint8_t>(out, 0);
+        }
+
+        // Write pixel data area
+        AppendBytes(out, pixelArea.data(), pixelArea.size());
+    }
+
+    // Animation section
+    if (hasAnim) {
+        PadTo8(out);
+        hdr()->animation_list_offset_18 = static_cast<int32_t>(out.size());
+
+        // BKAnimationList: f32 scalingFactor, s16 boneCount, u8 pad[2], BKAnimation[]
+        AppendValue<float>(out, animScale);
+        AppendValue<int16_t>(out, static_cast<int16_t>(boneCount));
+        AppendValue<uint8_t>(out, 0);
+        AppendValue<uint8_t>(out, 0);
+        for (const auto& b : bones) {
+            AppendValue<float>(out, b.pos[0]);
+            AppendValue<float>(out, b.pos[1]);
+            AppendValue<float>(out, b.pos[2]);
+            AppendValue<int16_t>(out, static_cast<int16_t>(b.id));
+            AppendValue<int16_t>(out, static_cast<int16_t>(b.parentId));
+        }
+    }
+
+    // Collision section
+    if (hasCol) {
+        PadTo8(out);
+        hdr()->collision_list_offset_1C = static_cast<int32_t>(out.size());
+
+        // BKCollisionList header (24 bytes)
+        AppendValue<int16_t>(out, colMin[0]);
+        AppendValue<int16_t>(out, colMin[1]);
+        AppendValue<int16_t>(out, colMin[2]);
+        AppendValue<int16_t>(out, colMax[0]);
+        AppendValue<int16_t>(out, colMax[1]);
+        AppendValue<int16_t>(out, colMax[2]);
+        AppendValue<int16_t>(out, static_cast<int16_t>(colYStride));
+        AppendValue<int16_t>(out, static_cast<int16_t>(colZStride));
+        AppendValue<int16_t>(out, static_cast<int16_t>(colCubes.size()));
+        AppendValue<int16_t>(out, static_cast<int16_t>(colCubeScale));
+        AppendValue<int16_t>(out, static_cast<int16_t>(colTris.size()));
+        AppendValue<uint8_t>(out, 0);
+        AppendValue<uint8_t>(out, 0);
+
+        for (const auto& gc : colCubes) {
+            AppendValue<int16_t>(out, static_cast<int16_t>(gc.startTri));
+            AppendValue<int16_t>(out, static_cast<int16_t>(gc.triCount));
+        }
+        for (const auto& ct : colTris) {
+            AppendValue<int16_t>(out, static_cast<int16_t>(ct.vtxIds[0]));
+            AppendValue<int16_t>(out, static_cast<int16_t>(ct.vtxIds[1]));
+            AppendValue<int16_t>(out, static_cast<int16_t>(ct.vtxIds[2]));
+            AppendValue<int16_t>(out, static_cast<int16_t>(ct.unk6));
+            AppendValue<int32_t>(out, static_cast<int32_t>(ct.flags));
+        }
+    }
+
+    // Unk14 section
+    if (hasUnk14) {
+        PadTo8(out);
+        hdr()->unk14 = static_cast<int32_t>(out.size());
+
+        AppendValue<int16_t>(out, u14c0);
+        AppendValue<int16_t>(out, u14c1);
+        AppendValue<int16_t>(out, u14c2);
+        AppendValue<int16_t>(out, u14unk6);
+        for (const auto& e : u14_0) {
+            AppendValue<int16_t>(out, e.scale1[0]);
+            AppendValue<int16_t>(out, e.scale1[1]);
+            AppendValue<int16_t>(out, e.scale1[2]);
+            AppendValue<int16_t>(out, e.scale2[0]);
+            AppendValue<int16_t>(out, e.scale2[1]);
+            AppendValue<int16_t>(out, e.scale2[2]);
+            AppendValue<int16_t>(out, e.pos[0]);
+            AppendValue<int16_t>(out, e.pos[1]);
+            AppendValue<int16_t>(out, e.pos[2]);
+            AppendValue<uint8_t>(out, e.rot[0]);
+            AppendValue<uint8_t>(out, e.rot[1]);
+            AppendValue<uint8_t>(out, e.rot[2]);
+            AppendValue<uint8_t>(out, e.unk15);
+            AppendValue<int8_t>(out, e.animIdx);
+            AppendValue<uint8_t>(out, e.pad);
+        }
+        for (const auto& e : u14_1) {
+            AppendValue<int16_t>(out, e.unk0);
+            AppendValue<int16_t>(out, e.unk2);
+            AppendValue<int16_t>(out, e.pos[0]);
+            AppendValue<int16_t>(out, e.pos[1]);
+            AppendValue<int16_t>(out, e.pos[2]);
+            AppendValue<uint8_t>(out, e.rot[0]);
+            AppendValue<uint8_t>(out, e.rot[1]);
+            AppendValue<uint8_t>(out, e.rot[2]);
+            AppendValue<uint8_t>(out, e.unkD);
+            AppendValue<int8_t>(out, e.animIdx);
+            AppendValue<uint8_t>(out, e.pad);
+        }
+        for (const auto& e : u14_2) {
+            AppendValue<int16_t>(out, e.unk0);
+            AppendValue<int16_t>(out, e.unk2[0]);
+            AppendValue<int16_t>(out, e.unk2[1]);
+            AppendValue<int16_t>(out, e.unk2[2]);
+            AppendValue<uint8_t>(out, e.unk8);
+            AppendValue<int8_t>(out, e.unk9);
+            AppendValue<uint8_t>(out, e.pad[0]);
+        }
+    }
+
+    // Unk20 section
+    if (hasUnk20) {
+        PadTo8(out);
+        hdr()->unk20 = static_cast<int32_t>(out.size());
+
+        AppendValue<uint8_t>(out, u20count);
+        AppendValue<uint8_t>(out, 0);
+        for (const auto& e : u20_entries) {
+            AppendValue<int16_t>(out, e.unk0[0]);
+            AppendValue<int16_t>(out, e.unk0[1]);
+            AppendValue<int16_t>(out, e.unk0[2]);
+            AppendValue<int16_t>(out, e.unk6[0]);
+            AppendValue<int16_t>(out, e.unk6[1]);
+            AppendValue<int16_t>(out, e.unk6[2]);
+            AppendValue<uint8_t>(out, e.unkC);
+            AppendValue<uint8_t>(out, e.pad);
+        }
+    }
+
+    // Effects section (only when effects were successfully parsed and non-empty)
+    if (hasEffects && !effects.empty()) {
+        PadTo8(out);
+        hdr()->effects_list_setup_24 = static_cast<int32_t>(out.size());
+
+        AppendValue<int16_t>(out, static_cast<int16_t>(effects.size()));
+        for (const auto& fx : effects) {
+            AppendValue<uint16_t>(out, fx.dataInfo);
+            AppendValue<uint16_t>(out, static_cast<uint16_t>(fx.vtxIndices.size()));
+            for (auto idx : fx.vtxIndices)
+                AppendValue<uint16_t>(out, idx);
+        }
+    }
+
+    // Unk28 section
+    if (hasUnk28) {
+        PadTo8(out);
+        hdr()->unk28 = static_cast<int32_t>(out.size());
+
+        AppendValue<int16_t>(out, u28count);
+        AppendValue<uint8_t>(out, 0);
+        AppendValue<uint8_t>(out, 0);
+        for (const auto& e : u28_entries) {
+            AppendValue<int16_t>(out, e.coord[0]);
+            AppendValue<int16_t>(out, e.coord[1]);
+            AppendValue<int16_t>(out, e.coord[2]);
+            AppendValue<int8_t>(out, e.animIdx);
+            AppendValue<int8_t>(out, static_cast<int8_t>(e.vtxList.size()));
+            for (auto idx : e.vtxList)
+                AppendValue<int16_t>(out, idx);
+        }
+    }
+
+    // AnimTexture section
+    if (hasAnimTex) {
+        PadTo8(out);
+        hdr()->animated_texture_list_offset = static_cast<int32_t>(out.size());
+
+        for (const auto& at : animTextures) {
+            AppendValue<int16_t>(out, static_cast<int16_t>(at.frameSize));
+            AppendValue<int16_t>(out, static_cast<int16_t>(at.frameCount));
+            AppendValue<float>(out, at.frameRate);
+        }
+    }
+
+    // Vertex section
+    if (hasVtx) {
+        PadTo8(out);
+        hdr()->vtx_list_offset_10 = static_cast<int32_t>(out.size());
+
+        auto vtxRes = std::static_pointer_cast<Fast::Vertex>(resourceMgr->LoadResourceProcess(initData->Path + "_VTX"));
+
+        // [port] Fast::Vertex resource already holds properly-sized Vtx structs
+        // (with GBI_FLOATS, sizeof(Vtx) = 24, not the N64's 16 bytes).
+        if (vtxRes) {
+            const size_t resBytes = vtxRes->GetPointerSize();
+            const uint16_t resCount = static_cast<uint16_t>(resBytes / sizeof(Vtx));
+            if (resCount != vtxCount) {
+                SPDLOG_TRACE("[BKModel] {} VTX count mismatch: model o2r says {} but _VTX resource has {} vertices "
+                             "({} bytes, sizeof(Vtx)={}) — using resource-derived count.",
+                             initData->Path, vtxCount, resCount, resBytes, sizeof(Vtx));
+                vtxCount = resCount;
+            }
+        }
+
+        // BKVertexList header — must match sizeof(BKVertexList) so vtx_18[] starts
+        // at the correct offset. sizeof(BKVertexList) includes trailing padding for
+        // Vtx alignment (8 bytes due to long long in Vtx union).
+        AppendValue<int16_t>(out, vtxMin[0]);
+        AppendValue<int16_t>(out, vtxMin[1]);
+        AppendValue<int16_t>(out, vtxMin[2]);
+        AppendValue<int16_t>(out, vtxMax[0]);
+        AppendValue<int16_t>(out, vtxMax[1]);
+        AppendValue<int16_t>(out, vtxMax[2]);
+        AppendValue<int16_t>(out, vtxCenter[0]);
+        AppendValue<int16_t>(out, vtxCenter[1]);
+        AppendValue<int16_t>(out, vtxCenter[2]);
+        AppendValue<int16_t>(out, vtxLocalNorm);
+        AppendValue<uint16_t>(out, vtxCount);
+        AppendValue<int16_t>(out, vtxGlobalNorm);
+        // [port] Pad header to sizeof(BKVertexList) so vtx_18[] aligns correctly.
+        // BKVertexList has 24 bytes of fields but sizeof may be larger due to
+        // flexible array member alignment (Vtx requires 8-byte alignment).
+        {
+            const size_t headerFieldBytes = 24; // 12 s16 fields = 24 bytes
+            const size_t headerSize = sizeof(BKVertexList);
+            if (headerSize > headerFieldBytes) {
+                for (size_t p = 0; p < headerSize - headerFieldBytes; p++)
+                    out.push_back(0);
+            }
+        }
+
+        if (vtxRes) {
+            // [port] Fast::Vertex stores Vtx structs (with GBI_FLOATS, ob[] are
+            // floats, sizeof(Vtx) = 24 not N64's 16). Copy at native stride so
+            // the interpreter can index as F3DVtx* (same layout).
+            const Vtx* vtxArray = vtxRes->GetPointer();
+            const size_t vtxBytes = static_cast<size_t>(vtxCount) * sizeof(Vtx);
+            AppendBytes(out, vtxArray, vtxBytes);
+        } else {
+            SPDLOG_WARN("[BKModel] _VTX not found: {}", initData->Path);
+        }
+    }
+
+    // GFX section — widen raw N64 commands (8 bytes each) to native Gfx (16 bytes each).
+    // This preserves the exact N64 command count and indices so geo layout references
+    // (list[cmd->unk8]) remain correct. No OTR markers or expanded commands.
+    if (hasDL && !rawDLWords.empty()) {
+        PadTo8(out);
+        hdr()->gfx_list_offset_C = static_cast<int32_t>(out.size());
+
+        // BKGfxList: s32 dlCount, s32 dlUnkInfo
+        AppendValue<int32_t>(out, static_cast<int32_t>(dlCount));
+        AppendValue<int32_t>(out, static_cast<int32_t>(dlUnkInfo));
+
+        // Widen each N64 command: (u32 w0, u32 w1) → (uintptr_t w0, uintptr_t w1)
+        // [port] N64 display lists contain segmented addresses in w1 (e.g. 0x03000000
+        // for segment 3). The interpreter's SegAddr() uses bit 0 to identify segmented
+        // addresses, so we tag them with |= 1 after any offset scaling.
+        // G_DL byte offsets need scaling for the widened Gfx stride (16 vs 8 bytes).
+        for (uint32_t i = 0; i < dlCount; i++) {
+            uintptr_t w0 = rawDLWords[i * 2];
+            uintptr_t w1 = rawDLWords[i * 2 + 1];
+
+            // [port] F3DEX opcodes that carry a segmented address in w1.
+            // G_DL byte offsets must be scaled for widened Gfx (16 bytes vs N64's 8).
+            uint8_t opcode = (uint8_t)(w0 >> 24);
+            if (opcode == 0x06 && sizeof(uintptr_t) > 4) { // G_DL
+                if (w1 != 0 && (w1 >> 24) != 0 && w1 <= 0xFFFFFFFF) {
+                    uint32_t seg = (uint32_t)(w1 >> 24);
+                    uint32_t off = (uint32_t)(w1 & 0x00FFFFFF);
+                    off *= (sizeof(Gfx) / 8);
+                    w1 = ((uintptr_t)seg << 24) | (off & 0x00FFFFFF);
+                }
+            }
+            // [port] G_VTX (F3DEX opcode 0x04): w1 is a segmented address into the
+            // vertex buffer. With GBI_FLOATS, sizeof(Vtx) = 24 instead of N64's 16,
+            // so byte offsets must be scaled: new_off = (old_off / 16) * sizeof(Vtx).
+            if (opcode == 0x04 && sizeof(Vtx) != 16) {
+                if (w1 != 0 && (w1 >> 24) != 0 && w1 <= 0xFFFFFFFF) {
+                    uint32_t seg = (uint32_t)(w1 >> 24);
+                    uint32_t off = (uint32_t)(w1 & 0x00FFFFFF);
+                    off = (off / 16) * sizeof(Vtx);
+                    w1 = ((uintptr_t)seg << 24) | (off & 0x00FFFFFF);
+                }
+            }
+
+            // [port] Tag segmented addresses with bit 0 so SegAddr() identifies them.
+            // Only tag opcodes that carry a segmented address in w1. Other commands
+            // (G_SETTILE, G_LOADBLOCK, G_SETCOMBINE, G_SETPRIMCOLOR, etc.) have
+            // literal values in w1 that must NOT be modified.
+            switch (opcode) {
+                case 0x01: // G_MTX
+                case 0x03: // G_MOVEMEM
+                case 0x04: // G_VTX
+                case 0x06: // G_DL
+                case 0xFD: // G_SETTIMG (gDPSetTextureImage)
+                case 0xFE: // G_SETZIMG
+                case 0xFF: // G_SETCIMG
+                    if (w1 != 0 && w1 <= 0xFFFFFFFF && (w1 >> 24) != 0) {
+                        w1 |= 1;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            AppendValue<uintptr_t>(out, w0);
+            AppendValue<uintptr_t>(out, w1);
+        }
+    }
+
+    // [port] Diagnostic: log final buffer layout for debugging heap corruption
+    {
+        auto* h = hdr();
+        SPDLOG_TRACE("[BKModel] '{}' total={} bytes | geo={} tex={} gfx={} vtx={} anim={} col={} unk14={} unk20={} "
+                     "fx={} unk28={} animTex={}",
+                     initData->Path, out.size(), h->geo_list_offset_4, h->texture_list_offset_8, h->gfx_list_offset_C,
+                     h->vtx_list_offset_10, h->animation_list_offset_18, h->collision_list_offset_1C, h->unk14,
+                     h->unk20, h->effects_list_setup_24, h->unk28, h->animated_texture_list_offset);
+
+        // Warn if texture offset overflowed s16
+        if (texCount > 0 && (h->texture_list_offset_8 <= 0 || h->texture_list_offset_8 > 32000)) {
+            SPDLOG_WARN("[BKModel] '{}' POSSIBLE s16 OVERFLOW: texture_list_offset_8={} (buffer was {} bytes at "
+                        "texture section)",
+                        initData->Path, h->texture_list_offset_8, out.size());
+        }
+    }
+
+    return MakeBlob(initData, std::move(out));
 }
 } // namespace Factories

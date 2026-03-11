@@ -255,7 +255,7 @@ Acmd *_loadOutputBuffer(ALFx *r, ALDelay *d, s32 buff, s32 incount, Acmd *p)
          * value then bumps it up if it is below the  delay buffer.
          */ 
         out_ptr = &r->input[-(d->output - d->rsdelta)];
-        ramalign = ((s32)out_ptr & 0x7) >> 1; /* calculate the number of samples needed 
+        ramalign = ((uintptr_t)out_ptr & 0x7) >> 1; /* calculate the number of samples needed
                                                to align the buffer*/
 #ifdef _DEBUG
 #if 0

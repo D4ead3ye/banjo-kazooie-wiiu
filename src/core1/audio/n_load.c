@@ -11,7 +11,7 @@ n_alLoadParam(N_PVoice *v, s32 paramID, void *param)
     switch (paramID) {
         case (AL_FILTER_SET_WAVETABLE):
             v->dc_table = (ALWaveTable *) param;
-            v->dc_memin = (s32) v->dc_table->base;
+            v->dc_memin = (uintptr_t) v->dc_table->base;
             v->dc_sample = 0;
             switch (v->dc_table->type){
                 case (AL_ADPCM_WAVE):
@@ -66,7 +66,7 @@ n_alLoadParam(N_PVoice *v, s32 paramID, void *param)
 	    /* Get loop info according to table type. */
 	    if (v->dc_table)
 	    {
-		v->dc_memin  = (s32) v->dc_table->base;
+		v->dc_memin  = (uintptr_t) v->dc_table->base;
 		if (v->dc_table->type == AL_ADPCM_WAVE)
 		{
 		    if (v->dc_table->waveInfo.adpcmWave.loop)
@@ -84,4 +84,5 @@ n_alLoadParam(N_PVoice *v, s32 paramID, void *param)
         default:
             break;
     }
+    return 0; // [port] MIPS implicit return, callers ignore value
 }

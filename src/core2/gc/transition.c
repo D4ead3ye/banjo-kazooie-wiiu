@@ -172,12 +172,12 @@ void _gctranstion_changeState(s32 state, TransitionInfo *desc){
         anctrl_free(s_current_transition.anctrl);
         s_current_transition.anctrl = NULL;
     }
-    
+
     s_current_transition.unk0 = 0;
     s_current_transition.transistion_info = desc;
     s_current_transition.state = state;
     s_current_transition.timer = 0.0f;
-    
+
     //Loading screen model??
     if(state == TRANSITION_STATE_1_LOADING)
         s_current_transition.model_ptr = assetcache_get(0x7D2); //scene transition black
@@ -424,7 +424,6 @@ void gctransition_reset(void){
 void gctransition_update(void){
     f32 dt;
     f32 tmp;
-    
 
     dt = time_getDelta();
     if(s_current_transition.transistion_info == NULL)

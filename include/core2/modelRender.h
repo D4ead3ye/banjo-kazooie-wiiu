@@ -17,8 +17,8 @@ BKTextureList *model_getTextureList(BKModelBin *arg0);
 void modelRender_reset(void);
 BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation[3], f32 scale, f32*arg5, BKModelBin* model_bin);
 
-void modelRender_preDraw(GenFunction_1 func, s32 arg);
-void modelRender_postDraw(GenFunction_1 func, s32 arg);
+void modelRender_preDraw(GenFunction_1 func, uintptr_t arg); // [port] s32 -> uintptr_t for 64-bit pointer safety
+void modelRender_postDraw(GenFunction_1 func, uintptr_t arg);
 void modelRender_setDisplayList(BKGfxList *gfx_list);
 void func_8033A308(f32 arg0[3]);
 void modelRender_setPrimAndEnvColors(s32 env[4], s32 prim[4]);

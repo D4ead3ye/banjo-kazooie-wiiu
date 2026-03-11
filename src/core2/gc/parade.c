@@ -2,7 +2,7 @@
 #include "functions.h"
 #include "variables.h"
 
-#include "../snackerctl.h"
+#include "core2/snackerctl.h"
 
 
 extern void func_8028F918(s32);

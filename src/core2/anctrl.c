@@ -99,7 +99,7 @@ void func_802871A4(AnimCtrl *this){
 AnimCtrl *anctrl_new(s32 arg0){ //new
     ActorAnimCtrl *this;
 
-    this = (ActorAnimCtrl *)bk_malloc( anim_getSize() + 0x28);
+    this = (ActorAnimCtrl *)bk_malloc( anim_getSize() + sizeof(AnimCtrl)); // [port] 0x28 is N64 sizeof(AnimCtrl)
     this->anctrl.animation = &this->animation;
     anim_new(&this->animation, 1);
     this->anctrl.playback_type = 0;
@@ -132,7 +132,7 @@ void anctrl_update(AnimCtrl *this){//update
     case ANIMCTRL_LOOP: //loop
         __anctrl_update_looped(this);
         break;
-    case ANIMCTRL_SUBRANGE_LOOP: 
+    case ANIMCTRL_SUBRANGE_LOOP:
         func_802870E0(this);
         break;
     case ANIMCTRL_STOPPED: //stopped
@@ -156,7 +156,7 @@ Animation *anctrl_getAnimPtr(AnimCtrl *this){
     return this->animation;
 }
 
-void func_8028746C(AnimCtrl *this,  void (* arg1)(s32,s32)){
+void func_8028746C(AnimCtrl *this, GenFunction_2 arg1){ // [port] was void(*)(s32,s32)
     anim_80289790(this->animation, arg1);
 }
 
@@ -220,13 +220,9 @@ void anctrl_setSmoothTransition(AnimCtrl *this, s32 arg1){
 }
 
 void anctrl_setDuration(AnimCtrl *this, f32 arg1){
-    arg1 += 3.0f;
-    // Lighthouse TOOD controller related?
-    #if 0
-    if(IO_READ(0x238) - 0x10000003){
-        arg1 += 3.0f;
-    }
-#endif
+    // [port] Original N64: if(IO_READ(0x238) - 0x10000003) arg1 += 3.0f;
+    // IO_READ(0x238) reads SI status — adds 3s when no controller is present.
+    // On PC we always have input, so the condition is always false.
     this->animation_duration = arg1;
 }
 
@@ -301,10 +297,10 @@ s32  anctrl_8028780C(f32 position[3], s32 arg1){
 void anctrl_drawSetup(AnimCtrl *this, f32 *position, s32 arg2){
     s32 map;
     map = map_get();
-    if( map != MAP_1E_CS_START_NINTENDO 
+    if( map != MAP_1E_CS_START_NINTENDO
         && map != MAP_1F_CS_START_RAREWARE
-        && map != MAP_20_CS_END_NOT_100 
-        && this->unk23 !=0 
+        && map != MAP_20_CS_END_NOT_100
+        && this->unk23 !=0
         && position != NULL
     ){
         this->unk24 = this->unk24 -1;
@@ -350,5 +346,5 @@ int anctrl_isAt(AnimCtrl *this, f32 arg1){
 }
 
 s32 anctrl_isContiguous(AnimCtrl *this){
-    return (s32)this->animation - (s32) this == 0x28;
+    return (uintptr_t)this->animation - (uintptr_t) this == sizeof(AnimCtrl); // [port] 0x28 is N64 sizeof(AnimCtrl)
 }

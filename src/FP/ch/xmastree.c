@@ -53,7 +53,7 @@ void __chXmasTree_80386F84(Actor * this){
 
 void __chXmasTree_spawnSwitch(void){
     static s32 chXmasTree_switch_spawn_position[3] = {-0x1220, 0x6A, 0x1945};
-    actor_spawnWithYaw_s32(ACTOR_338_XMAS_TREE_SWITCH, chXmasTree_switch_spawn_position, 350);
+    actor_spawnWithYaw_s32(ACTOR_338_XMAS_TREE_SWITCH, &chXmasTree_switch_spawn_position, 350); // [port] added & for s32(*)[3] param
 }
 
 void __chXmasTree_spawnStar(void *marker){
@@ -99,7 +99,7 @@ void chXmasTree_update(Actor *this){
             sfxsource_setSampleRate(this->unk44_31, 28000);
         }
         __spawnQueue_add_0(__chXmasTree_spawnSwitch);
-        __spawnQueue_add_1((GenFunction_1)__chXmasTree_spawnStar, reinterpret_cast(s32, this->marker));
+        __spawnQueue_add_1((GenFunction_1)__chXmasTree_spawnStar, (uintptr_t)this->marker);
         if(fileProgressFlag_get(FILEPROG_13_COMPLETED_TWINKLIES_MINIGAME)){
             __chXmasTree_80386F84(this);
             mapSpecificFlags_set(2, false);

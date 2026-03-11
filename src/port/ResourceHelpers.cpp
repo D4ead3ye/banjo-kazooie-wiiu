@@ -1,10 +1,20 @@
 
 #include "ship/resource/ResourceManager.h"
+#include "ship/resource/type/Blob.h"
 #include "fast/resource/ResourceType.h"
 #include "fast/resource/type/DisplayList.h"
 #include "libultraship/bridge/resourcebridge.h"
 #include "ship/Context.h"
 #include <spdlog/spdlog.h>
+#include <algorithm>
+#include <cstring>
+#include <mutex>
+#include <string>
+#include <unordered_map>
+
+#ifdef _DEBUG
+#include <crtdbg.h>
+#endif
 
 extern "C" {
 #include "enums.h"
@@ -14,36 +24,147 @@ extern "C" uint16_t ResourceMgr_LoadTexWidthByName(char* texPath);
 
 extern "C" uint16_t ResourceMgr_LoadTexHeightByName(char* texPath);
 
+namespace {
+const std::unordered_map<uint32_t, std::string>& GetAssetSymbolMap() {
+    static std::once_flag mapOnce;
+    static std::unordered_map<uint32_t, std::string> symbolMap;
+
+    std::call_once(mapOnce, [] {
+        // [port] Load the asset ID → o2r path manifest from the archive.
+        // Torch writes this as a Blob at "asset_table/aBKAssetTable".
+        // Format: u32 count, then for each entry: u32 assetId, s32 pathLen, char path[pathLen]
+        auto res = Ship::Context::GetInstance()->GetResourceManager()->LoadResource("asset_table/aBKAssetTable");
+        if (!res) {
+            SPDLOG_ERROR("Failed to load asset manifest from o2r");
+            return;
+        }
+
+        auto blob = std::dynamic_pointer_cast<Ship::Blob>(res);
+        if (!blob || blob->Data.empty()) {
+            SPDLOG_ERROR("Asset manifest blob is empty or wrong type");
+            return;
+        }
+
+        const uint8_t* data = blob->Data.data();
+        const size_t dataSize = blob->Data.size();
+        size_t pos = 0;
+
+        if (dataSize < 4) {
+            SPDLOG_ERROR("Asset manifest too small");
+            return;
+        }
+
+        uint32_t count;
+        std::memcpy(&count, data + pos, 4);
+        pos += 4;
+
+        for (uint32_t i = 0; i < count && pos + 8 <= dataSize; i++) {
+            uint32_t assetId;
+            std::memcpy(&assetId, data + pos, 4);
+            pos += 4;
+
+            int32_t pathLen;
+            std::memcpy(&pathLen, data + pos, 4);
+            pos += 4;
+
+            if (pathLen < 0 || pos + static_cast<size_t>(pathLen) > dataSize) {
+                SPDLOG_ERROR("Asset manifest corrupt at entry {}", i);
+                break;
+            }
+
+            std::string path(reinterpret_cast<const char*>(data + pos), static_cast<size_t>(pathLen));
+            pos += static_cast<size_t>(pathLen);
+
+            symbolMap[assetId] = std::move(path);
+        }
+
+        SPDLOG_INFO("Loaded asset manifest from o2r with {} entries", symbolMap.size());
+    });
+
+    return symbolMap;
+}
+} // namespace
+
 std::shared_ptr<Ship::IResource> GetResourceByName(const char* path) {
-    return Ship::Context::GetInstance()->GetResourceManager()->LoadResource(path);
+    try {
+        return Ship::Context::GetInstance()->GetResourceManager()->LoadResource(path);
+    } catch (const std::exception& e) {
+        SPDLOG_ERROR("[port] GetResourceByName('{}') exception: {}", path, e.what());
+        return nullptr;
+    }
+}
+
+// [port] Keep shared_ptr references alive so raw pointers from GetResourceRawPointer
+// don't become dangling when the resource manager evicts entries from its cache.
+static std::unordered_map<uint32_t, std::shared_ptr<Ship::IResource>> sResourceRefCache;
+
+static char* LoadAndRetainResource(const std::string& path, uint32_t assetId) {
+    auto res = GetResourceByName(path.c_str());
+    if (res && res->GetRawPointer() != nullptr) {
+        sResourceRefCache[assetId] = res;
+        return reinterpret_cast<char*>(res->GetRawPointer());
+    }
+    return nullptr;
 }
 
 extern "C" char* ResourceMgr_LoadByAssetId(uint32_t assetId) {
     if (assetId == 1) {
         return nullptr;
     }
-    
-    SPDLOG_INFO("ResourceMgr_LoadByAssetId({})", assetId);
 
-    std::string path = "asset_table/D_";
-    
-    if (
-        (assetId >= ASSET_6D9_SPRITE_PROPELLOR_TIMER && assetId <= ASSET_71B_SPRITE_SPARKLE_ORANGE_2) ||
-        (assetId == ASSET_580_SPRITE_RED_FEATHER)
-    ) {
-        path += "SPRITE_";
-    } else if (assetId <= ASSET_2AB_ANIM_TEEHEE_DIE) {
-        path += "ANIM_";
-    } else {
-        path += "MODEL_";
+    // Return cached resource if already loaded
+    if (auto it = sResourceRefCache.find(assetId); it != sResourceRefCache.end()) {
+        auto ptr = it->second->GetRawPointer();
+        if (ptr != nullptr) {
+            return reinterpret_cast<char*>(ptr);
+        }
+        sResourceRefCache.erase(it);
     }
 
-    path += std::to_string(assetId);
+    const auto& symbolMap = GetAssetSymbolMap();
+    if (const auto entry = symbolMap.find(assetId); entry != symbolMap.end()) {
+        auto mappedPath = std::string("asset_table/") + entry->second;
+        std::replace(mappedPath.begin(), mappedPath.end(), '\\', '/');
 
-    auto res = ResourceGetDataByName(path.c_str());
-    SPDLOG_INFO("ResourceMgr_LoadByAssetId returning {}", static_cast<void*>(res));
+        if (auto result = LoadAndRetainResource(mappedPath, assetId); result != nullptr) {
+            SPDLOG_INFO("Loading '{}'", mappedPath);
+            return result;
+        } else {
+            SPDLOG_WARN("[port] ResourceMgr_LoadByAssetId({}) symbol '{}' found but resource data is NULL", assetId,
+                        mappedPath);
+        }
+    }
 
-    return (char*)res;
+    std::string fallbackPath = "asset_table/D_";
+    if ((assetId >= ASSET_6D9_SPRITE_PROPELLOR_TIMER && assetId <= ASSET_71B_SPRITE_SPARKLE_ORANGE_2) ||
+        (assetId == ASSET_580_SPRITE_RED_FEATHER)) {
+        fallbackPath += "SPRITE_";
+    } else if (assetId <= ASSET_2AB_ANIM_TEEHEE_DIE) {
+        fallbackPath += "ANIM_";
+    } else {
+        fallbackPath += "MODEL_";
+    }
+
+    fallbackPath += std::to_string(assetId);
+    if (auto result = LoadAndRetainResource(fallbackPath, assetId); result != nullptr) {
+        return result;
+    }
+
+    SPDLOG_WARN("[port] ResourceMgr_LoadByAssetId({}) FAILED - not in symbol map, fallback '{}' also not found",
+                assetId, fallbackPath);
+    return nullptr;
+}
+
+// [port] On N64, sprites and models were raw binary blobs that could be type-punned.
+// On PC, they're separate resource types from different importers. Actors with sprite
+// assets can be spawned as "model" props (unk8_1=1), causing collision code to call
+// marker_loadModelBin which reinterprets sprite data as BKModelBin. This helper lets
+// decomp code detect and skip the model path for sprite assets.
+extern "C" int ResourceMgr_IsModelAsset(uint32_t assetId) {
+    if (auto it = sResourceRefCache.find(assetId); it != sResourceRefCache.end()) {
+        return it->second->GetInitData()->Type == 0x424B4D4F; // Torch::ResourceType::BKModel
+    }
+    return 0;
 }
 
 extern "C" char* ResourceMgr_LoadTexOrDListByName(const char* filePath) {

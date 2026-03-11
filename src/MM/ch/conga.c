@@ -18,7 +18,6 @@ void func_80328FB0(Actor *, f32);
 void subaddie_set_state_with_direction(Actor*, s32, f32, s32);
 void bundle_setYaw(f32);
 void timed_exitStaticCamera(f32);
-Actor *actor_spawnWithYaw_s32(s32 actor_id, s32 position[3], s32 yaw);
 void MM_func_80387F44(void);
 
 void func_803876D0(Actor *);
@@ -184,7 +183,7 @@ void __chConga_sendOrangeProjectile(ActorMarker *congaMarker){
     congaPtr->unk10_12 -= (congaPtr->unk10_12 && ( conga_state == 7));
     MM_func_80387F44();
     congaPtr->actor_specific_1_f = 2.0f;
-    orangePtr = actor_spawnWithYaw_s32(ACTOR_14_ORANGE_PROJECTILE, conga_localPtr->orangeSpawnPosition, congaPtr->yaw);
+    orangePtr = actor_spawnWithYaw_s32(ACTOR_14_ORANGE_PROJECTILE, &conga_localPtr->orangeSpawnPosition, congaPtr->yaw); // [port] added & for s32(*)[3] param
 
     if(orangePtr != NULL){
         player_getPosition(plyr.pos);
@@ -233,7 +232,7 @@ void func_803876D0(Actor *this){
     if(0.0f != this->velocity_x){
         this->velocity_x -= 1.0f; 
         if(0.0f == this->velocity_x){
-            __spawnQueue_add_1((GenFunction_1)func_80387100, (s32)this->marker);
+            __spawnQueue_add_1((GenFunction_1)func_80387100, (uintptr_t)this->marker);
         }
     }
     marker_setCollisionScripts(this->marker, NULL, NULL, func_80387168);
@@ -374,6 +373,6 @@ void func_803876D0(Actor *this){
         || (this->state == 7 && actor_animationIsAt(this, 0.468f))
     ){
         func_8034A1B4(this->marker->unk44, 5, &this->local);
-        __spawnQueue_add_1((GenFunction_1)__chConga_sendOrangeProjectile, (s32)this->marker); //spawn orange
+        __spawnQueue_add_1((GenFunction_1)__chConga_sendOrangeProjectile, (uintptr_t)this->marker); //spawn orange
     }
 }

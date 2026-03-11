@@ -1,0 +1,468 @@
+# Banjo-Kazooie Game Architecture
+
+This document describes the major game systems in the Banjo-Kazooie codebase and how they interconnect. It is intended as a reference for collaborators working on any subsystem.
+
+## Table of Contents
+
+- [Levels, Maps, and Overlays](#levels-maps-and-overlays)
+- [Props and Spatial Cubes](#props-and-spatial-cubes)
+- [Actor System](#actor-system)
+- [Player State Machine (bs/ba)](#player-state-machine)
+- [Animation System](#animation-system)
+- [Collision System](#collision-system)
+- [Camera System](#camera-system)
+- [Particle System](#particle-system)
+- [Sound and Music](#sound-and-music)
+- [Collectibles and Scoring](#collectibles-and-scoring)
+- [Model Rendering](#model-rendering)
+- [Sprite Rendering](#sprite-rendering)
+- [Cutscenes](#cutscenes)
+- [Save Data](#save-data)
+
+---
+
+## Levels, Maps, and Overlays
+
+The game world is organized in three layers: **levels**, **maps**, and **overlays**.
+
+### Levels
+
+A level is a player-facing world (Mumbo's Mountain, Treasure Trove Cove, etc.). There are 13 levels defined in `enum level_e` (enums.h). Each level contains one or more maps.
+
+### Maps
+
+A map is an individual room or zone. There are 155+ maps defined in `enum map_e`. A level like Mad Monster Mansion has separate maps for the main area, the church, the cellar, etc.
+
+Each map contains:
+- **3D geometry** — display lists and vertex data for the environment
+- **Cubes** — spatial grid cells containing spawn data (see below)
+- **Camera nodes** — predefined camera positions and behaviors
+- **Lighting** — directional lights, ambient color, fog parameters
+
+Map transitions happen through `func_802E4078(map, exit, transition)`. The flow:
+1. Save current state (actor positions, flags)
+2. Free old map (cubes, models, cameras, lighting)
+3. Load new map data from assets
+4. Determine and activate the overlay for the new level
+5. Spawn player at the exit position
+6. Process the actor spawn queue
+
+### Overlays
+
+On N64, overlays were dynamically loaded code segments — one per level region. On PC, all code is statically linked. The overlay manager (`overlaymanager.c`) tracks the active overlay ID and dispatches callbacks.
+
+Each overlay defines four callbacks:
+- `init()` — called when the overlay loads
+- `update()` — called each frame
+- `draw(Gfx**, Mtx**, Vtx**)` — render level-specific elements
+- `release()` — called when unloading
+
+There are 14 overlays (`enum overlay_e`): one stub (`overlay_stub/`), one per game world, plus cutscenes, Grunty's lair, and the final battle.
+
+The map-to-overlay mapping is in `overlay.c`. Multiple maps within the same level share one overlay.
+
+---
+
+## Props and Spatial Cubes
+
+### Cubes
+
+Every map is divided into a spatial grid of **Cubes** (`struct cube_s` in `prop.h`). Each cube represents a region of 3D space and contains two arrays:
+
+- **prop1 (NodeProp)** — 20-byte spawn markers used by the glspline system, cameras, and special triggers. Contains position, radius, yaw, scale, and flag bitfields.
+- **prop2 (Prop)** — Actor, model, and sprite placement data.
+
+Cubes are loaded from assets in `actor_cubepropsystem.c` and `actor_cubebounds.c`, which read NodeProp and Prop arrays and then initialize actor markers from the ActorProp entries.
+
+### Prop Union
+
+`Prop` is a union (`union prop_s` in `prop.h`) with three variants:
+
+| Variant | Purpose | Key Fields |
+|---------|---------|------------|
+| `ActorProp` | Spawnable actor | `marker` pointer, position (s16 x/y/z), flags |
+| `SpriteProp` | Billboard sprite | sprite asset ID, position, display params |
+| `ModelProp` | Static 3D model | model asset ID, position, rotation, flags |
+
+On N64 all variants are 12 bytes. On 64-bit, ActorProp grows due to its 8-byte marker pointer; other variants use `_pad64` to match.
+
+---
+
+## Actor System
+
+Actors are the runtime instances of spawnable game objects — enemies, NPCs, collectibles, triggers, and effects.
+
+### ActorInfo
+
+Every actor type has an `ActorInfo` struct (`prop.h`) that serves as its template:
+
+```
+markerId          — asset ID type (enum marker_e)
+actorId           — actor type ID (enum actor_e)
+modelId           — 3D model to render
+startAnimation    — initial animation state
+animations        — animation table
+update_func       — per-frame logic
+draw_func         — rendering function
+draw_distance     — culling distance
+shadow_scale      — shadow circle size
+```
+
+Level-specific actor implementations live in `src/<LEVEL>/ch/` directories. Each `ch/` file typically defines one `ActorInfo` and its update/draw functions.
+
+### ActorMarker
+
+`ActorMarker` is the runtime handle linking an actor to the spatial system. Key fields:
+
+- `propPtr` — backpointer to the ActorProp in its cube
+- `cubePtr` — backpointer to the cube it belongs to
+- `drawFunc`, `collisionFunc`, `dieFunc` — behavior callbacks
+- `actorUpdateFunc` — per-frame update
+- `actrArrayIdx` — index into the global actor array
+- `yaw`, `pitch`, `roll` — orientation (bitfields)
+- `modelId` — model asset for rendering
+- `unk48` — loaded BKModel data
+
+### Actor
+
+`Actor` (`prop.h`, ~0x180 bytes) is the full runtime state of a spawned actor:
+
+- Position, velocity, rotation (yaw, pitch, roll)
+- `state` — 6-bit state machine index
+- `anctrl` — animation controller
+- `actor_info` — pointer to ActorInfo template
+- `scale`, `alpha` — visual properties
+- Local data union — actor-specific state (varies by type)
+- `marker` — backpointer to ActorMarker
+- Particle emitters, SFX source index, despawn flag
+
+### Lifecycle
+
+1. **Spawn**: `actor_new()` allocates an Actor in `suBaddieActorArray`, calls `marker_init()` to create the marker, sets up callbacks from ActorInfo
+2. **Update**: `marker->actorUpdateFunc(actor)` called each frame
+3. **Despawn**: `marker_despawn()` sets `despawn_flag`, actor is freed in batch by `func_803283D4()`
+
+The actor array starts at 20 slots and grows by 5 via realloc when full.
+
+---
+
+## Player State Machine
+
+The player (Banjo-Kazooie) uses a dedicated state machine split across two subsystems.
+
+### BS (Banjo States)
+
+Files in `src/core2/bs/` implement the state machine core. There are **166 states** defined in `enum bs_e` (enums.h):
+
+- Movement: Idle, Walk (slow/normal/fast), Jump, Crouch, Skid
+- Attacks: Claw Swipe, Beak Buster, Beak Barge, Rat-a-tat Rap, Wonderwing
+- Abilities: Talon Trot (enter/idle/walk/jump/exit), Flight, Swimming, Diving, Climbing
+- Transformations: Termite, Pumpkin, Walrus, Crocodile, Bee (each with enter/idle/walk/exit states)
+- Special: Drone (scripted movement for cutscenes), Death, Locked, Carrying objects
+
+Each state has four handlers:
+- `init_func` — enter state
+- `update_func` — per-frame logic
+- `end_func` — leave state
+- `interrupt_func` — handle interrupts (e.g., taking damage, collecting a jiggy)
+
+State transitions go through `bs_setState(state_id)`, which calls end on the old state and init on the new one. `bs_checkInterrupt()` tests if the current state handles a given interrupt type.
+
+### BA (Banjo Attributes)
+
+Files in `src/core2/ba/` are ~40 decomposed subsystems that each manage one aspect of the player:
+
+| File | Purpose |
+|------|---------|
+| `ba_position.c` | XYZ coordinates |
+| `ba_yaw.c` | Facing direction |
+| `ba_momentum.c` | Velocity and acceleration |
+| `ba_stick.c` | Joystick input processing |
+| `ba_stickinterp.c` | Joystick smoothing |
+| `ba_health.c` | Health and damage |
+| `ba_falldamage.c` | Fall damage calculation |
+| `ba_falling.c` | Falling state |
+| `ba_underwater.c` | Underwater behavior |
+| `ba_groundsurface.c` | Surface type detection |
+| `ba_hitbox.c` | Collision volumes |
+| `ba_animcache.c` | Animation caching |
+| `ba_animstate.c` | Current animation |
+| `ba_modelselect.c` | Character model switching |
+| `ba_eyes.c` / `ba_eyeblink.c` | Eye animation |
+| `ba_sfx.c` / `ba_sfxintensity.c` | Sound effects |
+| `ba_motor.c` | Controller rumble |
+| `ba_flag.c` / `ba_statusflags.c` | Internal state flags |
+| `ba_key.c` / `ba_input.c` | Input mapping |
+| `ba_lookat.c` / `ba_lookdir.c` | Look targeting |
+| `ba_recoil.c` | Knockback |
+| `ba_bounds.c` | Bounding box |
+| `ba_timer.c` | Frame timers |
+| `ba_state.c` | State-to-handler mapping table |
+| `ba_musicstate.c` | Turbo trainers/wading boots music |
+
+### Stored State
+
+`bs_storedstate.c` persists state across map transitions:
+- Wading Boots timer remaining
+- Turbo Trainers timer remaining
+- Current transformation type (Banjo, Termite, Pumpkin, Walrus, Croc, Bee, Wishwashy)
+
+---
+
+## Animation System
+
+### Skeletal Animation
+
+The skeletal animation pipeline:
+
+1. `SkeletalAnimation` holds current progress (0.0–1.0), duration, behavior (loop/once/backwards/stopped), and a callback list
+2. `skeletalAnim_update()` advances progress by `dt / duration` each frame
+3. `AnimationFile` binary data contains per-bone keyframe tracks. Each `AnimationFileElement` stores a bone ID, component (rotation/scale/translation), and keyframe array
+4. `animationFile_getBoneTransformList()` interpolates keyframes using Catmull-Rom splines
+5. `BoneTransformList` (array of `BoneTransform`: quaternion rotation, scale[3], position[3]) is passed to the renderer
+
+The system supports smooth transitions between animations using double/triple buffered bone transform slots and `boneTransformList_interpolate()` for crossfading.
+
+### Animation Cache
+
+`animCache` (`anim/anim_cache.c`) pools 340 cached bone transform results. Each entry has a lifetime counter; stale entries are evicted incrementally by `animCache_flushStale()`. This avoids redundant computation when multiple actors share the same animation at the same frame.
+
+### Glspline (Path Animation)
+
+`glspline.c` handles spline path animation for objects that follow predefined paths (file select screen objects, map decorations). It casts `NodeProp*` data to `Union_glspline*` structs, reinterpreting the 20-byte NodeProp through different bitfield boundaries to extract animation timing, path control points, and behavior flags.
+
+---
+
+## Collision System
+
+Files in `src/core2/collision/` implement spatial collision queries.
+
+### Data Structures
+
+- `BKCollisionList` — spatial acceleration grid stored per-model. Contains bounding box, grid dimensions, and arrays of `BKCollisionGeo` (cell references) and `BKCollisionTri` (triangle primitives)
+- `BKCollisionTri` — triangle with vertex indices and surface type flags
+- `BKCollisionGeo` — cell entry pointing to a range of triangles
+
+### Query Types
+
+Each actor's `ActorMarker` has a `Struct6Cs` with four collision function pointers:
+
+| Function | Purpose |
+|----------|---------|
+| `unk0` | **Raycast**: origin + direction → first hit triangle + normal |
+| `unk4` | **Sphere cast**: origin + movement + radius → swept collision |
+| `unk8` | **Sphere check**: origin + radius → overlapping triangle |
+| `unkC` | **Distance query**: origin + radius → nearest surface distance |
+
+### Process
+
+1. Spatial grid lookup (O(1) cell find using stride arithmetic)
+2. Triangle intersection tests against all triangles in the cell
+3. Surface type extraction from the triangle's flags field
+4. Normal vector written to caller-provided buffer
+
+Collision is toggled per-actor with `actor_collisionOn()` / `actor_collisionOff()`.
+
+---
+
+## Camera System
+
+Files in `src/core2/camera/` manage the game camera.
+
+### Camera Nodes
+
+Each map defines up to 70 camera nodes (`CameraNode` in `camera.h`), loaded from assets. The `type` field selects behavior:
+
+| Type | Purpose | Key Fields |
+|------|---------|------------|
+| 0 | Empty/unset | default state on init and after removal |
+| 1 | Dynamic follow | position, horizontal/vertical speed, acceleration, rotation, flags |
+| 2 | Static | fixed position and pitch/yaw/roll |
+| 3 | Tracked follow | extends Type1 with close/far distance limits |
+| 4 | Special behavior | control flags only |
+
+### Camera Motors
+
+Two motor systems (`camera_motor1.c`, `camera_motor2.c`) handle smooth interpolation. Each motor tracks:
+- Current position component
+- Target position
+- Velocity with damping (typically 0.65)
+- Maximum speed
+- Frame time delta
+
+Motors smooth all camera transitions so cuts don't pop.
+
+### Pipeline
+
+1. Load camera nodes from map assets
+2. Select active node based on player position and game state
+3. Interpolate position/rotation through motor system
+4. Apply FOV and fog parameters
+5. Feed final transform to the rendering viewport
+
+---
+
+## Particle System
+
+Files in `src/core2/particle_*.c` implement a factory-based particle system.
+
+### Architecture
+
+- **Factory** (`particle_factory.c`): Manages 16 emitter slots. `func_802F0F78(cnt)` allocates a slot; `func_802F0EF0(slot)` returns or creates the `ParticleEmitter`.
+- **ParticleEmitter** (~0x130 bytes): Defines all spawn parameters — position, velocity ranges, acceleration, lifetime, scale, color, sprite or model to render, spawn interval, fade in/out, draw mode.
+- **Particle** (~0x60 bytes): Individual particle instance with position, velocity, acceleration, rotation, angular velocity, scale, age, and lifetime.
+
+### Lifecycle
+
+1. **Create emitter**: Set ranges for velocity, scale, lifetime, color, etc.
+2. **Spawn**: `__particleEmitter_initParticle()` randomizes fields from emitter ranges. Supports Cartesian or spherical velocity modes.
+3. **Update**: `func_802F10A4()` ages particles, defragments dead ones, frees idle emitters after a cooldown.
+4. **Draw**: `__particleEmitter_drawOnPass()` renders each particle as either a model (`modelRender_draw`) or sprite billboard (`func_80344720`). Supports alpha fade, RGB overlay, and depth mode.
+
+---
+
+## Sound and Music
+
+### SFX Sources
+
+`sfx_source.c` manages up to 35 concurrent spatial sound sources (`SfxSource`). Each source has:
+- 3D position
+- Inner/outer fade radii (distance attenuation)
+- SFX ID, sample rate, volume, priority
+- Play/stop state
+
+Key functions: `sfxsource_createSfxsourceAndReturnIndex()`, `sfxsource_setSfxId()`, `sfxsource_set_position()`, `func_8030E2C4()` (play).
+
+### Audio Manager
+
+`audio_manager.c` (core1) runs the audio synthesis thread. `audio_soundplayer.c` handles voice allocation and event processing. The N64 audio system uses an event queue with types for MIDI events, note on/off, and voice state changes.
+
+### Music
+
+`sfx_musicplay.c` wraps the N_AL audio API for background music. Music tracks are associated with asset IDs, sample rates, and reverb types.
+
+---
+
+## Collectibles and Scoring
+
+### State Tracking
+
+Files in `src/core2/collectible_*.c` track collectible counts and persistent state:
+
+| File | Purpose |
+|------|---------|
+| `collectible_bundle.c` | Spawns groups of collectibles in a burst (e.g., 5 notes from a hut in Mumbo's Mountain). Defines 36 bundle types with physics parameters. |
+| `collectible_honeycombdata.c` | Honeycomb piece tracking per level |
+| `collectible_musicnotedata.c` | Music note tracking per level |
+| `collectible_printui.c` | HUD counter display and animation |
+| `collectible_printdraw.c` | Drawing routines for score popups |
+
+### HUD System
+
+`collectible_printui.c` manages 44 item print effects. Each has new/update/draw/free callbacks. When an item count changes, the display value interpolates smoothly toward the target. Sound effects and musical stings trigger on acquisition.
+
+### Collectible Actors
+
+The spawnable actor implementations (the pickup objects themselves) live in `src/core2/ch/` — e.g., `ch/honeycomb.c`, `ch/musicnote.c`, `ch/feather.c`, `ch/extralife.c`. These define ActorInfo structs with models, animations, and pickup behavior.
+
+---
+
+## Model Rendering
+
+### Geometry Layout
+
+Models use a command-based geometry layout. `GeoCmd` structures define a sequence of operations:
+
+| Command | Purpose |
+|---------|---------|
+| GeoCmd0 | Load matrix (position, rotation, scale) |
+| GeoCmd1 | Billboard transform |
+| GeoCmd2 | Draw indexed mesh |
+| GeoCmd3+ | Matrix push/pop, texture load, light setup |
+
+`model_render.c` dispatches these commands to build display lists.
+
+### Skinning
+
+`model_skinning.c` applies skeletal animation to mesh vertices:
+1. For each mesh, look up the bone's animation matrix via `animMtxList_get()`
+2. Transform each vertex position through the bone matrix with `mlMtx_apply_vec3s()`
+3. Flush vertex cache with `osWritebackDCache()`
+
+### Lighting
+
+`model_lighting.c` and `lighting_*.c` apply per-map directional and ambient lighting to models. Light configuration is loaded as part of the map data.
+
+---
+
+## Sprite Rendering
+
+Sprites are 2D billboard images used for dialog portraits, particles, trees, and UI elements.
+
+### BKSprite Structure
+
+`BKSprite` (structs.h) contains:
+- Frame count, type, display width/height
+- Animation metadata (speed, direction, flip) in `unkC` bitfield
+- Array of frame pointers, each containing a display list and vertex array
+
+### Rendering
+
+`sprite_render.c` handles billboard rendering:
+1. Compute vector from camera to sprite position
+2. Project onto camera direction for distance
+3. Cull if beyond 3000 units or below minimum pixel size
+4. Set up billboard matrix (always face camera)
+5. Submit frame's display list with vertex data in segment 1
+
+`sprite_animstep.c` advances the current frame based on the animation speed and direction defined in the sprite's metadata.
+
+---
+
+## Cutscenes
+
+Files in `src/core2/cutscene_*.c` handle scripted sequences.
+
+- `cutscene_ctrl.c` — main control loop, manages cutscene state progression
+- `cutscene_flag.c` — tracks which cutscenes have been seen (integrates with save data)
+- `cutscene_animated.c` — manages actors participating in cutscenes (position, animation, SFX, callbacks)
+- `cutscene_lair.c` — Grunty's lair-specific sequences
+- `cutscene_nodeupdate.c` — updates cutscene camera/actor nodes
+
+Level-specific cutscene code lives in `src/cutscenes/`.
+
+---
+
+## Save Data
+
+### Structure
+
+Save data (`include/save.h`) is organized as:
+
+```
+SaveData (120 bytes per slot)
+  magic, slotIndex
+  data[0x70]:
+    jiggy collection state
+    honeycomb collection state
+    mumbo token state
+    note high scores per level
+    time scores
+    progress flags (~380 bits)
+    saved items
+    ability unlocks
+  checksum (CRC32)
+```
+
+A separate `GlobalData` struct stores cross-file data (SNS items).
+
+### Flags
+
+Two flag systems track game state:
+
+- **File progress flags** (`enum file_progress_e`, ~380 flags): Persistent across saves. Track map unlocks, jiggy/honeycomb collection, ability learns, NPC interactions, puzzle completion.
+- **Volatile flags** (`enum volatile_flags_e`, ~200 flags): Reset on load. Track current map, minigame state, boss phase, quiz answers, cheat activation.
+
+### I/O
+
+`savedata.c` handles read/write through `eeprom_readBlocks()` / `eeprom_writeBlocks()` (stubbed on PC to use file I/O). CRC verification via `glcrc_calc_checksum()` protects against corruption.

@@ -13,7 +13,7 @@ extern void func_8031B908(s32, s32, s32, f32);
 s32 s_activationFrameDelay;
 
 /* .code */
-void __anSeq_func_802888C0(s32 arg0, s32 arg1)
+void __anSeq_func_802888C0(uintptr_t arg0, uintptr_t arg1)
 {
   u8 sp1C[3];
   f32 f0;
@@ -24,31 +24,31 @@ void __anSeq_func_802888C0(s32 arg0, s32 arg1)
   func_8031B908(sp1C[0], sp1C[1], sp1C[2], f0);
 }
 
-void __anSeq_func_80288914(s32 arg0, s32 arg1, s32 arg2){
+void __anSeq_func_80288914(uintptr_t arg0, uintptr_t arg1, uintptr_t arg2){
     f32 f0 = reinterpret_cast(f32, arg1);
     f32 f2 = reinterpret_cast(f32, arg2);
     func_802BB378(arg0, f0, f2);
 }
 
-void __anSeq_func_8028894C(s32 arg0, s32 arg1, s32 arg2){
+void __anSeq_func_8028894C(uintptr_t arg0, uintptr_t arg1, uintptr_t arg2){
     f32 f0 = reinterpret_cast(f32, arg1);
     f32 f2 = reinterpret_cast(f32, arg2);
     func_802BB3DC(arg0, f0, f2);
 }
 
-void __anSeq_func_8028984(s32 arg0, s32 arg1){
+void __anSeq_func_8028984(uintptr_t arg0, uintptr_t arg1){
     f32 f0 = reinterpret_cast(f32, arg1);
     func_802BB360(arg0, f0);
     func_802BB3AC(arg0, 1.0f);
     func_802BB3C4(arg0);
 }
 
-void __anSeq_func_80289C8(s32 arg0, s32 arg1){
+void __anSeq_func_80289C8(uintptr_t arg0, uintptr_t arg1){
     f32 f0 = reinterpret_cast(f32, arg1);
     func_802BB3AC(arg0, f0);
 }
 
-void __anSeq_func_80289F4(s32 arg0) {
+void __anSeq_func_80289F4(uintptr_t arg0) {
     s32 sp18;
     s32 temp_t6;
     s32 phi_a3;
@@ -62,21 +62,21 @@ void __anSeq_func_80289F4(s32 arg0) {
 }
 
 
-void __anSeq_func_8028AE0(s32 arg0){
+void __anSeq_func_8028AE0(uintptr_t arg0){
     func_8025A6EC((u16) (arg0 >> 16), (u16)arg0 - 1);
 }
 
-void __anSeq_func_8028B14(enum sfx_e arg0){
+void __anSeq_func_8028B14(uintptr_t arg0){
     func_8025A7DC(arg0);
 }
 
-void __anSeq_func_80288B34(s32 arg0, s32 arg1){
+void __anSeq_func_80288B34(uintptr_t arg0, uintptr_t arg1){
     f32 f12 = reinterpret_cast(f32, arg0);
     f32 f14 = reinterpret_cast(f32, arg1);
     baMotor_80250E6C(f12, f14);
 }
 
-void __anSeq_func_80288B60(s32 arg0, s32 arg1, s32 arg2){
+void __anSeq_func_80288B60(uintptr_t arg0, uintptr_t arg1, uintptr_t arg2){
     f32 f12 = reinterpret_cast(f32, arg0);
     f32 f14 = reinterpret_cast(f32, arg1);
     f32 f0 = reinterpret_cast(f32, arg2);
@@ -100,13 +100,13 @@ void __anSeq_updateStep(bk_vector(AnSeqElement) **ppAnSeq, AnSeqElement *pStep){
             ((void (*)(void)) pStep->funcPtr)();
             break;
         case 1:// 80288C0C
-            ((void (*)(s32)) pStep->funcPtr)(pStep->arg0);
+            ((void (*)(uintptr_t)) pStep->funcPtr)(pStep->arg0);
             break;
         case 2:// 80288C24
-            ((void (*)(s32, s32)) pStep->funcPtr)(pStep->arg0, pStep->arg1);
+            ((void (*)(uintptr_t, uintptr_t)) pStep->funcPtr)(pStep->arg0, pStep->arg1);
             break;
         case 3:// 80288C40
-            ((void (*)(s32, s32, s32)) pStep->funcPtr)(pStep->arg0, pStep->arg1, pStep->arg2);
+            ((void (*)(uintptr_t, uintptr_t, uintptr_t)) pStep->funcPtr)(pStep->arg0, pStep->arg1, pStep->arg2);
             break;
         case 4:// 80288C5C
             ((void (*)(void*)) pStep->funcPtr)(&pStep->arg0);
@@ -118,7 +118,7 @@ void anSeq_clear(bk_vector(AnSeqElement) **ppAnSeq){
     bk_vector_clear(*ppAnSeq);
 }
 
-AnSeqElement * __anSeq_pushStep( bk_vector(AnSeqElement) **ppAnSeq, f32 duration, s32 arg_cnt, void *funcPtr, s32 arg0, s32 arg1, s32 arg2){
+AnSeqElement * __anSeq_pushStep( bk_vector(AnSeqElement) **ppAnSeq, f32 duration, s32 arg_cnt, void *funcPtr, uintptr_t arg0, uintptr_t arg1, uintptr_t arg2){
     AnSeqElement *ptr = (AnSeqElement *) bk_vector_pushBackNew(ppAnSeq);
     ptr->duration = duration;
     ptr->argCount = arg_cnt;
@@ -135,15 +135,15 @@ void anSeq_PushStep_0Arg(bk_vector(AnSeqElement) **ppAnSeq, f32 duration, void *
     __anSeq_pushStep(ppAnSeq, duration, 0, func_ptr, 0, 0, 0);
 }
 
-void anSeq_PushStep_1Arg(bk_vector(AnSeqElement) **ppAnSeq, f32 duration, void *func_ptr, s32 arg0){
+void anSeq_PushStep_1Arg(bk_vector(AnSeqElement) **ppAnSeq, f32 duration, void *func_ptr, uintptr_t arg0){
     __anSeq_pushStep(ppAnSeq, duration, 1, func_ptr, arg0, 0, 0);
 }
 
-void anSeq_PushStep_2Arg(bk_vector(AnSeqElement) **ppAnSeq, f32 duration, void *func_ptr, s32 arg0, s32 arg4){
+void anSeq_PushStep_2Arg(bk_vector(AnSeqElement) **ppAnSeq, f32 duration, void *func_ptr, uintptr_t arg0, uintptr_t arg4){
     __anSeq_pushStep(ppAnSeq, duration, 2, func_ptr, arg0, arg4, 0);
 }
 
-void anSeq_PushStep_3Arg(bk_vector(AnSeqElement) **ppAnSeq, f32 duration, void *func_ptr, s32 arg0, s32 arg4, s32 arg5){
+void anSeq_PushStep_3Arg(bk_vector(AnSeqElement) **ppAnSeq, f32 duration, void *func_ptr, uintptr_t arg0, uintptr_t arg4, uintptr_t arg5){
     __anSeq_pushStep(ppAnSeq, duration, 3, func_ptr, arg0, arg4, arg5);
 }
 
@@ -193,7 +193,7 @@ void anSeq_func_80289048(bk_vector(AnSeqElement) **ppAnSeq, f32 duration, s32 ar
 }
 
 void anSeq_func_80289090(bk_vector(AnSeqElement) **ppAnSeq, f32 duration, s32 arg2, f32 arg3){
-    anSeq_PushStep_2Arg(ppAnSeq, duration, __anSeq_func_802888C0, arg2, reinterpret_cast(s32, arg3));
+    anSeq_PushStep_2Arg(ppAnSeq, duration, __anSeq_func_802888C0, arg2, (uintptr_t)reinterpret_cast(u32, arg3)); // [port] u32 intermediate avoids 8-byte read from 4-byte f32
 }
 
 void anSeq_free(bk_vector(AnSeqElement)** ppAnSeq){

@@ -212,7 +212,7 @@ void func_802AFFAC(void){
     }
 }
 
-void func_802B0060(UNK_TYPE(s32) arg0, UNK_TYPE(s32) arg1){
+void func_802B0060(uintptr_t arg0, uintptr_t arg1){ // [port] was UNK_TYPE(s32) — truncates 64-bit pointers
     f32 sp4C[3];
     int i;
 

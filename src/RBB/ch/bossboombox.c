@@ -228,7 +228,7 @@ void func_8038CB68(ActorMarker *marker, enum asset_e arg1, s32 arg2){
     Actor *actor = marker_getActor(marker);
     timed_exitStaticCamera(0.0f);
     func_80324E38(0.0f, 0);
-    timedFunc_set_2(0.0f, (GenFunction_2)RBB_func_8038C370, (s32)actor->marker, 3);
+    timedFunc_set_2(0.0f, (GenFunction_2)RBB_func_8038C370, (uintptr_t)actor->marker, 3);
 }
 
 void chbossboombox_hideJiggy(void){
@@ -293,7 +293,7 @@ void RBB_func_8038CC9C(Actor *this, s32 new_state){
 
     if(local->unk20){
         func_803343F8(local->unk20);
-        local->unk20 = NULL;
+        local->unk20 = 0; // [port] was NULL
     }
     
     if(this->state == 1){
@@ -318,7 +318,7 @@ void RBB_func_8038CC9C(Actor *this, s32 new_state){
             item_set(ITEM_0_HOURGLASS_TIMER, 0x1067);
             timed_exitStaticCamera(2.4f);
             func_80324E38(2.4f, 0);
-            timedFunc_set_2(2.4f, (GenFunction_2)RBB_func_8038C370, (s32)this->marker, 3);
+            timedFunc_set_2(2.4f, (GenFunction_2)RBB_func_8038C370, (uintptr_t)this->marker, 3);
         }
         else{//L8038CEFC
             timedFunc_set_3(2.4f, (GenFunction_3)comusic_8025AB44, COMUSIC_62_RBB_BOOMBOX, 0x1f40, 0x12C);
@@ -463,8 +463,8 @@ Actor *func_8038D638(ActorMarker *marker, Gfx **gdl, Mtx ** mptr, Vtx **arg3){
         func_8033A45C(6, (actor->state == 4)? 2: 1);
         func_8033A45C(7, (actor->state == 4)? 2: 1);
     }
-    modelRender_preDraw( (GenFunction_1)actor_predrawMethod, (s32)actor);
-    modelRender_postDraw((GenFunction_1)actor_postdrawMethod, (s32)marker);
+    modelRender_preDraw( (GenFunction_1)actor_predrawMethod, (uintptr_t)actor);
+    modelRender_postDraw((GenFunction_1)actor_postdrawMethod, (uintptr_t)marker);
     modelRender_draw(gdl, mptr, actor->position, sp3C, actor->scale, NULL, marker_loadModelBin(marker));
     
     return actor;

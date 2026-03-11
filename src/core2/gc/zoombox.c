@@ -3,7 +3,7 @@
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
-#include "zoombox.h"
+#include "core2/gc/zoombox.h"
 
 #include "bk_time.h"
 
@@ -873,8 +873,7 @@ void func_803164B0(GcZoombox *this, Gfx **gfx, Mtx **mtx, s32 arg3, s32 arg4, BK
 void func_80316764(GcZoombox *this, s32 arg1) {
     s32 sp38[6];
     f32 phi_f0;
-    s32 sp2C[2];
-    f32 pad0;
+    s32 sp2C[3]; // [port] was [2] — func_8024E60C/func_8024E640 write s32[3]
 
     if (!this->unk1A4_10 ) {
         controller_copyFaceButtons(0, sp38);

@@ -8,7 +8,7 @@
 Actor *chvile_draw(ActorMarker*, Gfx **, Mtx **, Vtx **);
 void chvile_update(Actor *);
 void func_8038BB40(ActorMarker *);
-extern bool func_80320C94(f32[3], f32[3], f32, f32[3], s32, u32);
+extern BKCollisionTri *func_80320C94(f32[3], f32[3], f32, f32[3], s32, u32); // [port] was bool — returns BKCollisionTri*, truncated on 64-bit
 
 extern bool chvilegame_find_closest_piece(ActorMarker *, f32[3], f32, f32[3]);
 
@@ -107,7 +107,7 @@ void BGS_func_8038BBA0(Actor *this, s32 arg1){
         skeletalAnim_swap(this->unk148, 0x124, 0.1f, 0.5f); //0x124 = croc_munch
         if(this->state == 4){
             timed_playSfx(0.31f, SFX_4C_LIP_SMACK, 0.90f, 25000);
-            timedFunc_set_1(0.31f, (GenFunction_1)func_8038BB40, reinterpret_cast(s32, this->marker));
+            timedFunc_set_1(0.31f, (GenFunction_1)func_8038BB40, (uintptr_t)this->marker);
         }
         else{
             timed_playSfx(0.31f, SFX_4C_LIP_SMACK, 0.90f, 25000);
