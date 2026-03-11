@@ -210,7 +210,7 @@ void func_802F962C(Gfx **gfx, Mtx **mtx, Vtx **vtx) {
         D_80381094 = (Struct_core2_72060_0 *)((uintptr_t)D_80369288 + D_80369288->geo_list_offset_4);
         
         for(phi_s0 = D_80369280->unk1C; phi_s0 < D_80369280->unk1C + D_80369284; phi_s0++) {
-            if ((func_802F989C(gfx, mtx, phi_s0) == 0) && (phi_s0->unk0[1] < D_8038104C)) {
+            if ((func_802F989C(gfx, mtx, phi_s0->unk0) == 0) && (phi_s0->unk0[1] < D_8038104C)) { // [port] pass f32[3] position member, not struct4Ds*
                 func_802F9134(phi_s0 - D_80369280->unk1C);
                 phi_s0--;
             }

@@ -5,6 +5,8 @@
 #include "synthInternals.h"
 #include "2.0L/PR/libaudio.h"
 
+#if 0 // [port] N64 SDK audio stub
+
 /*
  * WARNING: THE FOLLOWING CONSTANT MUST BE KEPT IN SYNC
  * WITH SCALING IN MICROCODE!!!
@@ -277,5 +279,7 @@ void alSaveNew(ALSave *f)
     
     f->dramout = 0;
     f->first = 1;
-    
+
 }
+
+#endif // [port] N64 SDK audio stub

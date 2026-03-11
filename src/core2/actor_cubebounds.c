@@ -1925,7 +1925,7 @@ s32 func_80307504(f32 arg0[3], s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         for(var_s0 = temp_s1->unk8; var_s0 < temp_s1->unk8 + temp_s1->count; var_s0++){
             if (var_s0->unk10_3 & arg4)
                 if (!(max < var_s0->position[1]) && (min < var_s0->position[1]))
-                    if (ml_vec3w_within_horizontal_distance(&sp4C, var_s0, var_s0->radius))
+                    if (ml_vec3w_within_horizontal_distance(&sp4C, var_s0->position, var_s0->radius)) // [port] pass position field explicitly
                         return (var_s0 - temp_s1->unk8);
         }
     }
@@ -1933,7 +1933,7 @@ s32 func_80307504(f32 arg0[3], s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         for(var_s0 = temp_s1->unk8; var_s0 < temp_s1->unk8 + temp_s1->count; var_s0++){
             if ((var_s0->unk10_3 & arg4))
                 if(((var_s0->unk10_3 & 2) || (!(max < var_s0->position[1]) && (min < var_s0->position[1]))))
-                    if (ml_vec3w_within_horizontal_distance(&sp4C, var_s0, var_s0->radius))
+                    if (ml_vec3w_within_horizontal_distance(&sp4C, var_s0->position, var_s0->radius)) // [port] pass position field explicitly
                         return var_s0 - temp_s1->unk8;
         }
     }

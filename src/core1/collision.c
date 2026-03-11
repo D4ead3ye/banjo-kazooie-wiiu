@@ -185,16 +185,16 @@ f32 func_802453DC(f32 arg0[3], f32 arg1, f32 arg2[3], s32 arg3) {
     f32 sp24[3];
     f32 phi_f0;
 
-    func_80323240(arg0, arg1, sp24);
+    func_80323240((struct56s *)arg0, arg1, sp24); // [port] arg0 is f32* in decomp but func expects struct56s*
     if (!func_802453A0(arg2, sp24, arg3)) {
         return arg1;
     }
-    func_80323240(arg0, 1.0f, sp24);
+    func_80323240((struct56s *)arg0, 1.0f, sp24); // [port] arg0 is f32* in decomp but func expects struct56s*
     if (!func_802453A0(arg2, sp24, arg3)) {
         return 1.0f;
     }
 
-    func_80323240(arg0, 0.0f, sp24);
+    func_80323240((struct56s *)arg0, 0.0f, sp24); // [port] arg0 is f32* in decomp but func expects struct56s*
     if (!func_802453A0(arg2, sp24, arg3)) {
         return 0.0f;
     }

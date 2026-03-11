@@ -717,7 +717,7 @@ void func_803106BC(s32 text_id, s32 arg1, ActorMarker *marker, void(*callback)(A
     g_Dialog.caller = marker;
     g_Dialog.unk13C = callback;
     g_Dialog.unk140 = arg4;
-    g_Dialog.unk144 = (void *)arg5;
+    g_Dialog.unk144 = (void *)(uintptr_t)arg5; // [port] s32 to void* via uintptr_t
     g_Dialog.unk138 = (marker != NULL )? ((marker->unk5C)? marker->unk5C : -1) : 0;
     gcdialog_setState(((func_802E4A08() || volatileFlag_get(VOLATILE_FLAG_1F_IN_CHARACTER_PARADE)) && g_Dialog.unk128_3) ? 6 : 1);
     //L803109EC

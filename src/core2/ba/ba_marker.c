@@ -648,12 +648,12 @@ void __baMarker_resolveCollision(Prop *other_prop){
                         for(i = 0 ; i < 3; i++){
                             sp88[i] = D_8036366C[tmp_v0_2 + i];
                         }
-                        func_802EE354(actor, 0x3ED, 0x23, sp78, 0.2f, tmp_f0, 3.0f, sp88, 0, &sp64);
+                        func_802EE354(actor, 0x3ED, 0x23, sp78, 0.2f, tmp_f0, 3.0f, (f32*)sp88, 0, (f32*)&sp64); // [port] s32[] → f32*, tmp_struct_type* → f32*
                         
                         for(i = 0 ; i < 3; i++){
                             sp88[i] = 0xFF;
                         }
-                        func_802EE354(actor, 0x3ED, 0xe, sp78, 0.2f, tmp_f0, 3.0f, sp88, 0, &sp64);
+                        func_802EE354(actor, 0x3ED, 0xe, sp78, 0.2f, tmp_f0, 3.0f, (f32*)sp88, 0, (f32*)&sp64); // [port] s32[] → f32*, tmp_struct_type* → f32*
                         
                         sp78 += 0x32;
                         tmp_f0 += -0.15;

@@ -1,6 +1,8 @@
 #include "2.0L/PR/ultraerror.h"
 #include "synthInternals.h"
 #include <ultra64.h>
+// [port] N64 SDK audio library - stubbed for PC port
+#if 0
 
 void *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size)
 {
@@ -42,3 +44,5 @@ void *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size)
 
     return ptr;
 }
+
+#endif // [port] N64 SDK audio stub

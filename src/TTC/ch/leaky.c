@@ -23,7 +23,7 @@ ActorInfo gChLeaky = {
 };
 
 /* .code */
-static bool __chLeaky_isCurrentModelShrapnel(Actor *this){
+static int __chLeaky_isCurrentModelShrapnel(Actor *this){ // [port] match func_803272D0 callback signature
     return this->modelCacheIndex == ACTOR_56_SHRAPNEL;
 }
 
@@ -86,11 +86,11 @@ static void __chLeaky_updateFunc(Actor *this) {
 
 static void __chLeaky_showDoneText(ActorMarker *caller, enum asset_e text_id, s32 arg2){
     Actor *this = marker_getActor(caller);
-    Struct73s *temp_v0;
+    Struct70s *temp_v0; // [port] func_8034C5AC returns Struct70s*
     subaddie_set_state(this, 2);
     temp_v0 = func_8034C5AC(300);
     if(temp_v0 != NULL){
-        func_8034E7B8(temp_v0, -600, 4.0f, 2, 10.0f);
+        func_8034E7B8(&temp_v0->type_73, -600, 4.0f, 2, 10.0f); // [port] Struct70s union → Struct73s member
     }
 
     func_80324E38(0.0f, 3);

@@ -200,7 +200,7 @@ void func_8032CD60(Prop *prop) {
         // ((u16*)prop)[5] bits 10:6 → spriteProp.unk8_10
         // ((u16*)prop)[1] bit 1 → spriteProp.unk0_1
         sp2C = (s32)((prop->spriteProp.unk8_10 * sp30) / 32);
-        var_v1 = (((globalTimer_getTime(sp34, sp30, prop, sp40) % (sp30 * sp48)) / sp48) + sp2C) % sp30; // TODO: globalTimer_getTime has no parameters, but if we remove them here (to forward declare them in include/core1/main.h, it doesn't match anymore)
+        var_v1 = (((globalTimer_getTime() % (sp30 * sp48)) / sp48) + sp2C) % sp30; // [port] globalTimer_getTime(void) — MIPS ignored extra args, removed for C compliance
         var_t5 = 0;
         switch (sp40) {                          /* irregular */
             default:
@@ -500,7 +500,7 @@ ActorMarker *func_8032DCAC(void){
 SpriteProp *func_8032DCB8(Cube *cube) {
     SpriteProp *sp1C;
 
-    sp1C = __codeA5BC0_initProp2Ptr(cube);
+    sp1C = (SpriteProp *)__codeA5BC0_initProp2Ptr(cube); // [port] Prop* to SpriteProp* — union member cast
     sp1C->unk8_0 = false;
     sp1C->unk8_1 = false;
     sp1C->unk8_15 = 0;
@@ -887,15 +887,15 @@ void code7AF80_initCubeFromFile(File *file_ptr, Cube *cube) {
         __codeA5BC0_freeCube1Pointer(cube, cube1_count);
         cube->prop1Ptr = (NodeProp*) bk_malloc(cube1_count * sizeof(NodeProp));
         node_prop_ptr = (NodeProp*) bk_malloc(cube1_count * sizeof(NodeProp));
-        file_getNBytes_ifExpected(file_ptr, 0xB, node_prop_ptr, cube->prop1Cnt * sizeof(NodeProp));
+        file_getNBytes_ifExpected(file_ptr, 0xB, (u8*)node_prop_ptr, cube->prop1Cnt * sizeof(NodeProp)); // [port] NodeProp* to u8*
         __codeA5BC0_initPropPointerForCube(node_prop_ptr, cube, cube1_count);
         
     } else if (file_getByte_ifExpected(file_ptr, 6, &cube1_count)) {
         __codeA5BC0_freeCube1Pointer(cube, cube1_count);
-        cube->prop1Ptr = (OtherNode*) bk_malloc(cube1_count * sizeof(OtherNode));
-        node_prop_ptr = (OtherNode*) bk_malloc(cube1_count * sizeof(OtherNode));
-        file_getNBytes_ifExpected(file_ptr, 7, node_prop_ptr, cube->prop1Cnt * sizeof(OtherNode));
-        for(other_prop_ptr = node_prop_ptr; other_prop_ptr < (OtherNode*)&node_prop_ptr[cube1_count]; other_prop_ptr++){
+        cube->prop1Ptr = (NodeProp*) bk_malloc(cube1_count * sizeof(OtherNode)); // [port] OtherNode* to NodeProp* — OtherNode can substitute NodeProp in prop1Ptr
+        node_prop_ptr = (NodeProp*) bk_malloc(cube1_count * sizeof(OtherNode)); // [port] OtherNode* to NodeProp* — same substitution
+        file_getNBytes_ifExpected(file_ptr, 7, (u8*)node_prop_ptr, cube->prop1Cnt * sizeof(OtherNode)); // [port] NodeProp* to u8*
+        for(other_prop_ptr = (OtherNode*)node_prop_ptr; other_prop_ptr < (OtherNode*)&node_prop_ptr[cube1_count]; other_prop_ptr++){ // [port] NodeProp* to OtherNode* — iterating as OtherNode layout
             if(other_prop_ptr->unk4_0 && !other_prop_ptr->unkC_0){
                 other_prop_ptr->unk4_17 = 0;
                 other_prop_ptr->unk10_4 = 0;
@@ -1100,7 +1100,7 @@ void func_8032F194(ActorMarker *marker, s32 position[3], Cube *cube) {
     v0->y = position[1];
     v0->z = position[2];
 
-    func_8032F21C(cube, position, marker, func_8032D9C0(marker->cubePtr, propPtr));
+    func_8032F21C(cube, position, marker, func_8032D9C0(marker->cubePtr, (Prop *)propPtr)); // [port] ActorProp* to Prop* — union member cast
 
     propPtr = marker->propPtr;
     propPtr->words[ACTORPROP_WORD_BASE] = sp24.words[ACTORPROP_WORD_BASE]; // [port] was words[1]
@@ -1347,7 +1347,7 @@ void func_803300B8(ActorMarker *marker, MarkerCollisionFunc method){
     marker->unk54 = method;
 }
 
-void func_803300C0(ActorMarker *marker, bool (*method)(ActorMarker *, ActorMarker *)){
+void func_803300C0(ActorMarker *marker, s32 (*method)(ActorMarker *, ActorMarker *)){ // [port] bool to s32 — matches unk58 signature in ActorMarker
     marker->unk58 = method;
 }
 
@@ -1935,13 +1935,13 @@ BKCollisionTri *func_80331638(Cube *cube, f32 arg1[3], f32 arg2[3], f32 arg3, f3
     else
       if ((var_s0->markerFlag && var_s0->unk8_3) && var_s0->unk8_4)
     {
-      model_collision_list = func_80330DE4(var_s0->actorProp.marker);
-      pad9C = model_collision_list;
+      model_collision_list = (BKCollisionList *)func_80330DE4(var_s0->actorProp.marker); // [port] BKModelBin* to BKCollisionList* — decomp variable type mismatch
+      pad9C = (BKModelBin *)model_collision_list; // [port] BKCollisionList* to BKModelBin* — decomp variable type mismatch
       if (model_collision_list == 0)
       {
         continue;
       }
-      model_bin = model_getCollisionList(pad9C);
+      model_bin = (BKModelBin *)model_getCollisionList(pad9C); // [port] BKCollisionList* to BKModelBin* — decomp variable type mismatch
       if (model_bin == 0)
       {
         continue;
@@ -1955,7 +1955,7 @@ BKCollisionTri *func_80331638(Cube *cube, f32 arg1[3], f32 arg2[3], f32 arg3, f3
         sp8C[0] = (f32) var_s0->actorProp.marker->pitch;
         sp8C[1] = (f32) var_s0->actorProp.marker->yaw;
         sp8C[2] = (f32) var_s0->actorProp.marker->roll;
-        var_v0 = func_802E9118(model_bin, temp_a1, sp98, new_var2, temp_v0_6->scale, arg1, arg2, arg3, arg4, arg5, flags);
+        var_v0 = func_802E9118((BKCollisionList *)model_bin, temp_a1, sp98, new_var2, temp_v0_6->scale, arg1, arg2, arg3, arg4, arg5, flags); // [port] BKModelBin* to BKCollisionList* — decomp variable type mismatch
       }
       if (var_v0 != 0)
       {
@@ -2032,10 +2032,10 @@ BKCollisionTri *func_803319C0(Cube *cube, f32 position[3], f32 radius, s32 arg3,
             {
             model_bin = func_80330DE4(aProp->marker);
             if (model_bin != 0) {
-            new_var = model_getCollisionList(model_bin);
+            new_var = (BKModelBin *)model_getCollisionList(model_bin); // [port] BKCollisionList* to BKModelBin* — decomp variable type mismatch
             if (new_var != 0)
             {
-        
+
             temp_v0_6 = marker_getActor(aProp->marker);
             temp_a1 = func_80330C74(temp_v0_6);
             sp88[0] = (f32) aProp->x;
@@ -2044,7 +2044,7 @@ BKCollisionTri *func_803319C0(Cube *cube, f32 position[3], f32 radius, s32 arg3,
             sp7C[0] = aProp->marker->pitch;
             sp7C[1] = aProp->marker->yaw;
             sp7C[2] = aProp->marker->roll;
-            var_v0 = func_802E9DD8(new_var, temp_a1, sp88, sp7C, temp_v0_6->scale, position, radius, arg3, arg4);
+            var_v0 = func_802E9DD8((BKCollisionList *)new_var, temp_a1, sp88, sp7C, temp_v0_6->scale, position, radius, arg3, arg4); // [port] BKModelBin* to BKCollisionList* — decomp variable type mismatch
             if (var_v0 != 0)
             {
             var_s7 = var_v0;
@@ -2219,7 +2219,7 @@ Prop *func_803322F0(Cube *cube, ActorMarker *marker, f32 arg2, s32 arg3, s32 *ar
                                 && (phi_s1->actorProp.marker->unk18 != NULL) 
                                 && (phi_s1->actorProp.marker->unk18->unkC != NULL)
                             ) {
-                                func_803320BC(phi_s1, &func_80331F54);
+                                func_803320BC((ActorProp *)phi_s1, &func_80331F54); // [port] Prop* to ActorProp* — union member cast
                                 sp68[0] = (f32) (marker->unk38[0] + marker->propPtr->x);
                                 sp68[1] = (f32) (marker->unk38[1] + marker->propPtr->y);
                                 sp68[2] = (f32) (marker->unk38[2] + marker->propPtr->z);
@@ -2231,10 +2231,10 @@ Prop *func_803322F0(Cube *cube, ActorMarker *marker, f32 arg2, s32 arg3, s32 *ar
                                 phi_f22 = func_80332050(phi_s1, marker, 2);
                                 if (phi_s1->actorProp.unk8_1) {
                                     phi_f20 = func_80332050(phi_s1, marker, 1);
-                                    phi_f2 = func_803320BC(phi_s1, func_80331F54);
+                                    phi_f2 = func_803320BC((ActorProp *)phi_s1, func_80331F54); // [port] Prop* to ActorProp* — union member cast
                                 } else {
                                     phi_f20 = func_80332050(phi_s1, marker, 1);
-                                    phi_f2 = func_803320BC(phi_s1, &func_80331E64);
+                                    phi_f2 = func_803320BC((ActorProp *)phi_s1, &func_80331E64); // [port] Prop* to ActorProp* — union member cast
                                 }
                                 phi_f2 = phi_f2 + arg2;
                                 if ((phi_f24*phi_f24 + phi_f20*phi_f20 +  phi_f22*phi_f22) < phi_f2*phi_f2) {

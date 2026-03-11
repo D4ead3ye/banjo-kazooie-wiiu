@@ -1,6 +1,8 @@
 #include "2.0L/PR/ultraerror.h"
 #include "n_synth.h"
 #include <ultra64.h>
+// [port] N64 SDK audio library - stubbed for PC port
+#if 0
 
 void    n_alSynSetPan(N_ALVoice *v, u8 pan)
 {
@@ -26,3 +28,5 @@ void    n_alSynSetPan(N_ALVoice *v, u8 pan)
         n_alEnvmixerParam(v->pvoice, AL_FILTER_ADD_UPDATE, update);        
     }
 }
+
+#endif // [port] N64 SDK audio stub

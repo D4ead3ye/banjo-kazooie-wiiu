@@ -3,6 +3,9 @@
 #include "variables.h"
 #include "n_synth.h"
 
+// [port] N64 SDK audio library - stubbed for PC port
+#if 0
+
 /*
  * WARNING: THE FOLLOWING CONSTANT MUST BE KEPT IN SYNC
  * WITH SCALING IN MICROCODE!!!
@@ -185,4 +188,4 @@ void alN_PVoiceNew(N_PVoice *mv, ALDMANew dmaNew, ALHeap *hp)
   mv->em_ctrlTail = 0;
 }
 
-
+#endif // [port] N64 SDK audio stub

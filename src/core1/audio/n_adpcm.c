@@ -2,6 +2,10 @@
 #include "n_synth.h"
 #include <libultra/convert.h>
 #include <libultra/r4300.h>
+
+// [port] N64 SDK audio library - stubbed for PC port
+#if 0
+
 #ifndef MIN
 #   define MIN(a,b) (((a)<(b))?(a):(b))
 #endif
@@ -212,3 +216,5 @@ Acmd *_n_decodeChunk(Acmd *ptr, N_ALLoadFilter *f, s32 tsam, s32 nbytes, s16 out
 
     return ptr;
 }
+
+#endif // [port] N64 SDK audio stub

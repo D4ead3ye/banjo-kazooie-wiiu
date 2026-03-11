@@ -467,7 +467,7 @@ if(MSVC)
   if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
       target_compile_options(${PROJECT_NAME} PRIVATE
           $<$<CONFIG:Debug>:
-              /w;
+              /W3;
               /Od;
               /MTd
           >
@@ -479,6 +479,10 @@ if(MSVC)
           >
           /permissive-;
           /MP;
+          # 32→64-bit pointer truncation warnings as errors
+          /we4311;  # pointer truncation (e.g. void* to int)
+          /we4312;  # conversion to pointer of greater size (e.g. int to void*)
+          /we4133;  # incompatible pointer types
           ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
           ${DEFAULT_CXX_EXCEPTION_HANDLING}
       )
@@ -637,11 +641,13 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
           -Wno-parentheses
           -Wno-narrowing
           -Wno-missing-braces
-          -Wno-int-conversion
+          # 32→64-bit pointer truncation warnings as errors
+          -Werror=pointer-to-int-cast
+          -Werror=int-to-pointer-cast
+          -Werror=int-conversion
           $<$<COMPILE_LANGUAGE:C>:
-              # TODO remove this... there are a lot of these...
-              -Wno-implicit-function-declaration
-              -Wno-incompatible-pointer-types
+              -Werror=implicit-function-declaration
+              -Werror=incompatible-pointer-types
               -fpermissive
           >
           $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>

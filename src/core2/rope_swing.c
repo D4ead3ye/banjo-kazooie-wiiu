@@ -282,7 +282,7 @@ void func_802C8C5C(Actor *actor) {
                 phi_s0->unk0 = 1;
                 phi_s0->unk3C = func_802EE5E0(1);
                 if (phi_s0->unk3C != 0) {
-                    func_802EE6CC(phi_s0->unk8, sp70, phi_s0->unk40, 1, D_80366330, D_80366334, (s32)D_80366338, (s32)D_8036633C, 1);
+                    func_802EE6CC(phi_s0->unk8, (f32 *)sp70, phi_s0->unk40, 1, D_80366330, D_80366334, (s32)D_80366338, (s32)D_8036633C, 1); // [port] s32* D_80366418 reinterpreted as f32[3]
                 }
             }
         }

@@ -63,7 +63,7 @@ void func_802DF2C4(Actor *this) {
         this->initialized = true;
         actor_collisionOff(this);
         for(i = 0; i < 20; i++){
-            func_8034DFB0(func_8034C2C4(this->marker, i + 0x190), D_8036837C, D_8036836C, 0.0f);
+            func_8034DFB0(&func_8034C2C4(this->marker, i + 0x190)->type_6D, D_8036837C, D_8036836C, 0.0f); // [port] Struct70s* → Struct6Ds* via union member
         }
         marker_setFreeMethod(this->marker, func_802DF2B4);
     }

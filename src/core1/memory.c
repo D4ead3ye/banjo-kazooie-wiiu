@@ -99,11 +99,11 @@ void _heap_defragEmptyBlock(EmptyHeapBlock * arg0){
         ((EmptyHeapBlock *)arg0->hdr.next)->next_free->prev_free = ((EmptyHeapBlock *)arg0->hdr.next)->prev_free;
         ((EmptyHeapBlock *)arg0->hdr.next)->prev_free->next_free = ((EmptyHeapBlock *)arg0->hdr.next)->next_free;
         //remove next from block link list
-        arg0->hdr.next->next->prev = arg0;
+        arg0->hdr.next->next->prev = (HeapHeader *)arg0; // [port] EmptyHeapBlock* -> HeapHeader*
         arg0->hdr.next = arg0->hdr.next->next;
     }
     if(arg0->hdr.prev->unkC_7 == HEAP_BLOCK_EMPTY){
-        defrag_ptr = arg0->hdr.prev;
+        defrag_ptr = (EmptyHeapBlock *)arg0->hdr.prev; // [port] HeapHeader* -> EmptyHeapBlock*
         //remove self from empty block link list
         arg0->next_free->prev_free = arg0->prev_free;
         arg0->prev_free->next_free = arg0->next_free;
@@ -195,21 +195,21 @@ void heap_init(void){
     D_802765AC = 0;
     D_802765B0.unk0 = false;
     D_8002D500[0].hdr.prev = NULL;
-    D_8002D500[0].hdr.next = &D_8002D500[1];
+    D_8002D500[0].hdr.next = (HeapHeader *)&D_8002D500[1]; // [port] EmptyHeapBlock* -> HeapHeader*
     D_8002D500[0].hdr.unkC_7 = 2;
     D_8002D500[0].hdr.unusedBytes_C_31 = 0;
     D_8002D500[0].prev_free = NULL;
     D_8002D500[0].next_free = &D_8002D500[1];
 
-    D_8002D500[1].hdr.prev = &D_8002D500[0];
-    D_8002D500[1].hdr.next = &D_8002D500[LAST_HEAP_BLOCK];
+    D_8002D500[1].hdr.prev = (HeapHeader *)&D_8002D500[0]; // [port] EmptyHeapBlock* -> HeapHeader*
+    D_8002D500[1].hdr.next = (HeapHeader *)&D_8002D500[LAST_HEAP_BLOCK]; // [port] EmptyHeapBlock* -> HeapHeader*
     D_8002D500[1].hdr.unkC_7 = 0;
     D_8002D500[1].hdr.unusedBytes_C_31 = 0;
     D_8002D500[1].prev_free = &D_8002D500[0];
     D_8002D500[1].next_free = &D_8002D500[LAST_HEAP_BLOCK];
 
-    D_8002D500[LAST_HEAP_BLOCK].hdr.prev = &D_8002D500[1];
-    D_8002D500[LAST_HEAP_BLOCK].hdr.next = &D_8002D500[LAST_HEAP_BLOCK + 1];
+    D_8002D500[LAST_HEAP_BLOCK].hdr.prev = (HeapHeader *)&D_8002D500[1]; // [port] EmptyHeapBlock* -> HeapHeader*
+    D_8002D500[LAST_HEAP_BLOCK].hdr.next = (HeapHeader *)&D_8002D500[LAST_HEAP_BLOCK + 1]; // [port] EmptyHeapBlock* -> HeapHeader*
     D_8002D500[LAST_HEAP_BLOCK].hdr.unkC_7 = 2;
     D_8002D500[LAST_HEAP_BLOCK].hdr.unusedBytes_C_31 = 0;
     D_8002D500[LAST_HEAP_BLOCK].prev_free = &D_8002D500[1];
@@ -562,7 +562,7 @@ void func_80255200(HeapHeader *block, s32 size){
 void func_80255300(HeapHeader *block, s32 size){
     func_80255200(block, size);
     if(block->next->unkC_7 == HEAP_BLOCK_EMPTY){
-        _heap_sortEmptyBlock(block->next);
+        _heap_sortEmptyBlock((EmptyHeapBlock *)block->next); // [port] HeapHeader* -> EmptyHeapBlock*
     }
 }
 

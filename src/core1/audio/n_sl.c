@@ -3,6 +3,8 @@
 #include "variables.h"
 
 #include "2.0L/PR/n_libaudio.h"
+// [port] N64 SDK audio library - stubbed for PC port
+#if 0
 
 
 N_ALSynth *D_80276E80 = NULL;
@@ -33,3 +35,5 @@ void n_alClose(N_ALGlobals *glob)
         n_syn = NULL;
     }
 }
+
+#endif // [port] N64 SDK audio stub

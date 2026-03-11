@@ -152,7 +152,7 @@ void viewport_reset(void) {
     mlMtxIdent();
     mlMtxRotYaw(-60.0f);
     mlMtxRotPitch(-90.0f);
-    mlMtxGet(&sViewportDefaultMatrix);
+    mlMtxGet((MtxF *)&sViewportDefaultMatrix); // [port] BKMtxF* → MtxF* (structurally equivalent 4x4 float matrices)
 }
 
 void viewport_debug4(int arg0) {
@@ -239,7 +239,7 @@ void viewport_update(void) {
     mlMtxIdent();
     mlMtxRotYaw(sViewportRotation[1]);
     mlMtxRotPitch(sViewportRotation[0]);
-    mlMtxGet(&sViewportMatrix);
+    mlMtxGet((MtxF *)&sViewportMatrix); // [port] BKMtxF* → MtxF* (structurally equivalent 4x4 float matrices)
 
     sViewportLookbk_vector[0] = 0.0f;
     sViewportLookbk_vector[1] = 0.0f;
@@ -396,11 +396,11 @@ bool viewport_isPointPlane_3f(f32 arg0, f32 arg1, f32 arg2) {
 }
 
 MtxF *viewport_getMatrix(void) {
-    return &sViewportMatrix;
+    return (MtxF *)&sViewportMatrix; // [port] BKMtxF* → MtxF*
 }
 
 MtxF *viewport_getDefaultMatrix(void) {
-    return &sViewportDefaultMatrix;
+    return (MtxF *)&sViewportDefaultMatrix; // [port] BKMtxF* → MtxF*
 }
 
 f32 viewport_getFOVy(void) {

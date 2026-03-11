@@ -290,7 +290,7 @@ static bool __gcquiz_func_803192A4(enum ff_question_type_e q_type, s32 q_index, 
         sD_803830E0->unkC = (QuizQuestionBin *) assetcache_get(quiz_question_index);
     }
 
-    char_iter = sD_803830E0->unkC;
+    char_iter = (u8 *)sD_803830E0->unkC; // [port] QuizQuestionBin* to u8* for byte iteration
     quiz_question_bin_unk0 = *(char_iter++); // NEXT
     quiz_question_bin_unk1 = *(char_iter++); // NEXT
     quiz_question_bin_unk2 = *(char_iter++); // NEXT

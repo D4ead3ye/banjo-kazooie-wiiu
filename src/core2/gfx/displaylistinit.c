@@ -45,7 +45,7 @@ void func_80314BB0(Gfx **gfx, Mtx **mtx, Vtx **vtx, void * frame_buffer_1, void 
         for(x = 0; x < gFramebufferWidth / 32 + 1; x++){
             gDPLoadTextureTile((*gfx)++, osVirtualToPhysical(frame_buffer_2), G_IM_FMT_RGBA, G_IM_SIZ_16b, gFramebufferWidth, gFramebufferHeight,
                 0x20*x, 0x20*y, 0x20*(x + 1) - 1, 0x20*(y + 1) - 1,
-                NULL, G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, 0, 0
+                0, G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, 0, 0 // [port] NULL→0 for pal
             );
             gSPScisTextureRectangle((*gfx)++, (0x20*x)*4, (0x20*y)*4, 0x20*(x + 1)*4, (0x20*(y + 1)*4), 
                 G_TX_RENDERTILE, (0x20*x)<<5, (0x20*y)<<5, 0x400, 0x400

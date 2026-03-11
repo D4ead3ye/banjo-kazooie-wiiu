@@ -4,6 +4,8 @@
 #include "2.0L/PR/libaudio.h"
 #include "libultraship/libultra/interrupt.h"
 #include "libultraship/libultra/exception.h"
+// [port] N64 SDK audio library - stubbed for PC port
+#if 0
 
 void alEvtqNew(ALEventQueue *evtq, ALEventListItem *items, s32 itemCount)
 {
@@ -138,3 +140,5 @@ void alEvtqFlushType(ALEventQueue *evtq, s16 type)
 }
 
 
+
+#endif // [port] N64 SDK audio stub

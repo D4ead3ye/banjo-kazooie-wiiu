@@ -400,7 +400,7 @@ void func_80325FE8(Actor *this) {
        marker->actorFreeFunc(this);
        marker->actorFreeFunc = NULL;
     }
-    if ((s32)marker->unk44 < 0) {
+    if ((intptr_t)marker->unk44 < 0) { // [port] 64-bit pointer
         func_8033E7CC(marker);
         func_8034A2A8(marker->unk44);
        marker->unk44 = 0;
@@ -659,7 +659,7 @@ Actor *actorArray_findClosestActorFromActorId(f32 position[3], enum actor_e acto
     Actor *i_actor;
     f32 i_dist;
     f32 min_dist;
-    s32 *closest_actor;
+    Actor *closest_actor; // [port] was s32*, should be Actor* to match return type
 
     if (suBaddieActorArray != NULL) {
         begin = suBaddieActorArray->data;
@@ -1797,7 +1797,7 @@ void *actors_appendToSavestate(void * begin, uintptr_t end){ // [port] u32 -> ui
 
 void func_8032A09C(s32 arg0, ActorListSaveState *arg1) {
     Actor **temp_v1;
-    s32 pad;
+    intptr_t pad; // [port] was s32, stores pointer arithmetic results
     Actor *var_s0;
     Actor *temp_v0_6;
     s32 var_s2;
@@ -2128,7 +2128,7 @@ void actorArray_defrag(void) {
             }
             i_actor = &suBaddieActorArray->data[D_8036E5AC];
 
-            if ((s32)i_actor->marker->unk44 < 0) {
+            if ((intptr_t)i_actor->marker->unk44 < 0) { // [port] 64-bit pointer
                 i_actor->marker->unk44 = func_8034A348(i_actor->marker->unk44);
             }
 
@@ -2314,11 +2314,11 @@ void func_8032B5C0(ActorMarker *arg0, ActorMarker *arg1, struct5Cs *arg2) {
                     sp3C[0] = (s32) this->position[0];
                     sp3C[1] = (s32) this->position[1];
                     sp3C[2] = (s32) this->position[2];
-                    if ((s32)arg0->unk44 < 0) {
+                    if ((intptr_t)arg0->unk44 < 0) { // [port] 64-bit pointer
                         func_8034A174(arg0->unk44, 0x20, sp50);
                     }
                     func_8032EE0C(func_8032B38C, this);
-                    if (((s32)arg0->unk44 < 0) && ((sp50[0] != 0.0f) || (sp50[1] != 0.0f) || (sp50[2] != 0.0f))) {
+                    if (((intptr_t)arg0->unk44 < 0) && ((sp50[0] != 0.0f) || (sp50[1] != 0.0f) || (sp50[2] != 0.0f))) { // [port] 64-bit pointer
                         __spawnQueue_add_5((GenFunction_5)spawnQueue_bundleWithYaw_f32, sp70 + BUNDLE_15__JIGGY, reinterpret_cast(s32, sp50[0]), reinterpret_cast(s32, sp50[1]), reinterpret_cast(s32, sp50[2]), reinterpret_cast(s32, player_yaw));
                     } else if (this->unk16C_3 && func_803048E0(sp3C, &sp4C, &sp48, 3, (s32) (func_8033229C(arg0) * 4.0f))) {
                         sp50[0] = (f32) sp48->x;

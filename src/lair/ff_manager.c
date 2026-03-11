@@ -441,7 +441,7 @@ void *lair_func_8038C5B8(s32 a0)
 
 void lair_func_8038C610(s32 a0)
 {
-    func_8034DEB4(func_8034C528(a0 + 200), -3000);
+    { Struct70s *_tmp = func_8034C528(a0 + 200); func_8034DEB4(&_tmp->type_6D, -3000); } // [port] Struct70s* to Struct6Ds* via union member
 }
 
 void lair_func_8038C640(s32 a0, Struct_lair_5ED0_0 *a1)

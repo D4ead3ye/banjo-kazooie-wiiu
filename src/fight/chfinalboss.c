@@ -187,18 +187,18 @@ void chfinalboss_func_80386628(ActorMarker *marker, s32 arg1) {
 }
 
 void chfinalboss_func_80386654(f32 arg0, f32 arg1[4], f32 arg2[4]) {
-    Struct6Ds *temp_v0 = func_8034C528(0x190);
+    Struct70s *temp_v0 = func_8034C528(0x190); // [port] func_8034C528 returns Struct70s*
 
     if (temp_v0 != NULL) {
-        func_8034DF30(temp_v0, arg1, arg2, arg0);
+        func_8034DF30(&temp_v0->type_6D, arg1, arg2, arg0); // [port] Struct70s* to Struct6Ds* via union member
     }
 }
 
 void chfinalboss_func_80386698(f32 arg0) {
-    Struct6Ds * temp_v0 = func_8034C528(0x19A);
+    Struct70s *temp_v0 = func_8034C528(0x19A); // [port] func_8034C528 returns Struct70s*
 
     if (temp_v0 != NULL) {
-        func_8034DDF0(temp_v0, fight_D_80391524, D_80391530, arg0, 1);
+        func_8034DDF0(&temp_v0->type_6D, fight_D_80391524, D_80391530, arg0, 1); // [port] Struct70s* to Struct6Ds* via union member
     }
 }
 
@@ -2216,7 +2216,7 @@ void chfinalboss_spellBarrierInactive() {
 }
 
 void chfinalboss_func_8038C10C(s32 arg0) {
-    chfinalboss_phase5_setState(marker_getActor((ActorMarker*)arg0), 0x28);
+    chfinalboss_phase5_setState(marker_getActor((ActorMarker*)(uintptr_t)arg0), 0x28); // [port] s32 to pointer via uintptr_t to avoid truncation
 }
 
 void chfinalboss_func_8038C138() {

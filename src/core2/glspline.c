@@ -360,12 +360,12 @@ s32 func_80340760(s32 arg0, s32 *arg1, f32 *arg2, f32 arg3[3], s32 arg4, f32 *ar
     *arg6 = -9999.0f;
     if (arg4 != -1) {
         temp_a0 = temp_t0[arg4];
-        var_v1 = (temp_a0 + 1);
+        var_v1 = (Union_glspline *)(temp_a0 + 1); // [port] SplineList* to Union_glspline*
         temp_v0 = var_v1 + temp_a0->unk0;
         for(var_v1 = var_v1; (arg0 != var_v1->t1.unk10.bit31) && (var_v1 < temp_v0); var_v1++){
             continue;
         }
-        
+
         if (var_v1 < temp_v0) {
             if (var_v1->t1.unk4.bit0 == 1) {
                 if (!var_v1->t1.unkC.bit0  && (var_v1->t1.unk4.bit6 == 7)) {
@@ -379,11 +379,11 @@ s32 func_80340760(s32 arg0, s32 *arg1, f32 *arg2, f32 arg3[3], s32 arg4, f32 *ar
             return 1;
         }
     }
-    
+
     for(var_a2 = 0; var_a2 < D_80371E78; var_a2++){
         if (var_a2 != arg4) {
             temp_a0 = temp_t0[var_a2];
-            var_v1 = (temp_a0 + 1);
+            var_v1 = (Union_glspline *)(temp_a0 + 1); // [port] SplineList* to Union_glspline*
             temp_v0 = var_v1 + temp_a0->unk0;
             for(var_v1 = var_v1; (arg0 != var_v1->t1.unk10.bit31) && (var_v1 < temp_v0); var_v1++){
                 continue;
@@ -639,7 +639,7 @@ void func_803411B0(void){
             for (; var_s2 != 0; a0 = (spD8+a0)->unk0) {
                 if (0);
                 if ((spD8+a0)->unk8_13 == 1) {
-                    temp_v0_16 = func_803080C8(a0);
+                    temp_v0_16 = (Union_glspline *)func_803080C8(a0); // [port] NodeProp* to Union_glspline*
 #if UINTPTR_MAX > 0xFFFFFFFFu
                     // [port] Write pad_bit7 directly to byte 11 (padB in NodeProp)
                     // since the Union_glspline bitfield layout differs from NodeProp on LE
@@ -1176,8 +1176,8 @@ s32 func_803422D4(Actor *arg0, Union_glspline *arg1, SplineList *arg2){
             }
         }
         if (arg1->t1.unk4.bit31 != 0){
-            temp_v0_6 = arg2->unk0 + &arg2->spline[0];
-            for (sp48 = &arg2->spline[0]; (sp48->unk10.bit31 != (arg1->t1.unk4.bit31 ^ 0)) && (sp48 < temp_v0_6); sp48++){
+            temp_v0_6 = (Struct_glspline_t1 *)(&arg2->spline[0] + arg2->unk0); // [port] Union_glspline* to Struct_glspline_t1*
+            for (sp48 = (Struct_glspline_t1 *)&arg2->spline[0]; (sp48->unk10.bit31 != (arg1->t1.unk4.bit31 ^ 0)) && (sp48 < temp_v0_6); sp48++){ // [port] same cast
                 ;
             }
 

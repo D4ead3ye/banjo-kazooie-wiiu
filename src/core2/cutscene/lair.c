@@ -564,7 +564,7 @@ void func_8031DC10(NodeProp *arg0, ActorMarker *arg1) {
     f32 vec[3];
 
     if (player_getTransformation() == TRANSFORM_3_PUMPKIN) {
-        ml_vec3h_to_vec3f(vec, arg0);
+        ml_vec3h_to_vec3f(vec, (s16*)arg0); // [port] NodeProp* to s16* — first member is position
         func_8028F6E4(BS_INTR_2F_LOGGO, vec);
         timedFunc_set_0(0.8f, &func_8031DBE8);
     }

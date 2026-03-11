@@ -34,7 +34,7 @@ s16 *assetCacheAssetIdList; //assetCache_indexs
 bk_vector(struct21s) *D_80383CE0[2];
 
 /* .public */
-extern s32 assetcache_release(void * arg0);
+// [port] removed local 'extern s32 assetcache_release' — conflicts with void prototype in port_prototypes.h
 
 f32  func_8033ABA0(AnimationFile *anim_file, f32 arg1);
 f32  func_8033AC38(AnimationFile *anim_file, AnimationFileElement *arg1, f32 arg2);
@@ -271,9 +271,10 @@ bool func_8033B388(BKSprite **sprite_ptr, BKSpriteDisplayData **arg1){
     return true;
 }
 
-s32 assetcache_release(void * arg0){
+// [port] return type changed from s32 to void to match port_prototypes.h — callers never use the return value
+void assetcache_release(void * arg0){
     // Lighthouse [port] Stubbing for now, not sure if we want this stuff happening...
-    return 0;
+    return;
 #if 0
     s32 i;
     if(arg0){

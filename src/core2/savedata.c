@@ -352,14 +352,14 @@ s32 savedata_verify(s32 size, SaveData *savedata){
 
 void saveData_load(SaveData *savedata){
     int i;
-    func_8033C460(savedata);
-    __savedata_load_jiggyScore(savedata);
-    __savedata_load_honeycombScore(savedata);
-    __savedata_load_mumboScore(savedata);
-    __savedata_load_highNoteScores(savedata);
-    __savedata_load_timeScores(savedata);
-    func_8033C4E4(savedata);
-    __savedata_load_abilities(savedata);
+    func_8033C460((u8*)savedata); // [port] SaveData* → u8* for 64-bit compatibility
+    __savedata_load_jiggyScore((u8*)savedata);
+    __savedata_load_honeycombScore((u8*)savedata);
+    __savedata_load_mumboScore((u8*)savedata);
+    __savedata_load_highNoteScores((u8*)savedata);
+    __savedata_load_timeScores((u8*)savedata);
+    func_8033C4E4((u8*)savedata);
+    __savedata_load_abilities((u8*)savedata);
     for(i = 0; D_80370A20[i].unk0 != -1; i++){
         volatileFlag_set(D_80370A20[i].unk0, fileProgressFlag_get(D_80370A20[i].unk2));
     }
@@ -370,16 +370,16 @@ void saveData_create(SaveData *savedata){
     for(i = 0; D_80370A20[i].unk0 != -1; i++){
         fileProgressFlag_set(D_80370A20[i].unk2, volatileFlag_get(D_80370A20[i].unk0));
     }
-    savedata_clear(savedata);
-    __savedata_save_magic(savedata);
-    __savedata_save_jiggyScore(savedata);
-    __savedata_save_honeycombScore(savedata);
-    __savedata_save_mumboScore(savedata);
-    __savedata_save_highNoteScores(savedata);
-    __savedata_save_timeScores(savedata);
-    __savedata_8033C8A0(savedata);
-    __savedata_8033CA2C(savedata);
-    __savedata_save_abilities(savedata);
+    savedata_clear((u8*)savedata); // [port] SaveData* → u8* for 64-bit compatibility
+    __savedata_save_magic((u8*)savedata);
+    __savedata_save_jiggyScore((u8*)savedata);
+    __savedata_save_honeycombScore((u8*)savedata);
+    __savedata_save_mumboScore((u8*)savedata);
+    __savedata_save_highNoteScores((u8*)savedata);
+    __savedata_save_timeScores((u8*)savedata);
+    __savedata_8033C8A0((u8*)savedata);
+    __savedata_8033CA2C((u8*)savedata);
+    __savedata_save_abilities((u8*)savedata);
     savedata_update_crc(savedata, sizeof(SaveData));
 }
 

@@ -2,8 +2,11 @@
 #include "synthInternals.h"
 #include "functions.h"
 
+// [port] N64 SDK audio library - stubbed for PC port
+#if 0
+
 #ifndef assert
-#define assert(s) 
+#define assert(s)
 #endif
 
 #ifdef AUD_PROFILE
@@ -496,3 +499,4 @@ f32 _getVol(f32 ivol, s32 samples, s16 ratem, u16 ratel)
     return ivol;
 }
 
+#endif // [port] N64 SDK audio stub

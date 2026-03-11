@@ -496,7 +496,7 @@ void chBeeSwarm_update(Actor *this) {
             marker_despawn(this->marker);
         }
         if (ml_vec3f_distance(this->position, this->unk1C) < 50.0f) {
-            func_802CEF54(this, (s32 *) spB4, 50.0f);
+            func_802CEF54(this, spB4, 50.0f);
         }
         if (ml_vec3f_distance(this->position, spB4) > 100.0f) {
             subaddie_set_state(this, 3);

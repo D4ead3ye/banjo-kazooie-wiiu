@@ -161,7 +161,7 @@ void func_802CA1E0(Actor *this){
         reinterpret_cast(s32, this->unkBC[0]) = 0;
     }
     if(func_8025AEEC() && this->unk154){
-        tmp_v0 = (Struct_Core2_43250_1 *)this->unk154 + reinterpret_cast(s32, this->unkBC[0]);
+        tmp_v0 = (Struct_Core2_43250_1 *)(uintptr_t)this->unk154 + reinterpret_cast(s32, this->unkBC[0]); // [port] u32 to pointer via uintptr_t
         phi_a0 = tmp_v0->unk0;
         tmp_f4 = tmp_v0->unk2*0.0078125;
         phi_a2 = tmp_v0->unk3*128.0;

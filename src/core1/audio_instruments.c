@@ -10,6 +10,8 @@
 
 #include <libultra/exception.h>
 
+// [port] BK audio - SDK calls stubbed, functions preserved for game code
+
 extern void func_8025F570(ALCSPlayer *, u8);
 extern void func_8025F510(ALCSPlayer *, u8, u8);
 extern void func_8025F5C0(ALCSPlayer *, u8);
@@ -341,7 +343,7 @@ void func_8024F890(u8 arg0, s32 arg1){
         if(D_80281720[arg0].cseqp.drvr == NULL)
             return;
         if (arg1 >= 0 && arg1 < 0xB0 && D_802820E0 != NULL) {
-            n_alCSeqNew(&D_80281720[arg0].cseq, D_802820E0[arg1]);
+            n_alCSeqNew(&D_80281720[arg0].cseq, (u8 *)D_802820E0[arg1]); // [port] MusicTrack* to u8* for sequence data pointer
         }
         D_80281720[arg0].cseqp.chanMask = func_80250474(arg0);
         alCSPSetSeq(&D_80281720[arg0].cseqp, &D_80281720[arg0].cseq);
@@ -538,7 +540,7 @@ s32 func_802500C0(void){
 }
 
 N_ALCSPlayer *func_802500CC(s32 arg0){
-    return &D_80281720[arg0].cseqp;
+    return (N_ALCSPlayer *)&D_80281720[arg0].cseqp; // [port] ALCSPlayer to N_ALCSPlayer - structurally compatible N64 audio types
 }
 
 void func_802500F4(s32 arg0){}
@@ -569,11 +571,11 @@ s32 func_802501A0(u8 arg0, s32 arg1, s32 *arg2){
 
 void func_80250200(s32 arg0, s16 chan, s16 arg2, f32 arg3){
     s32 i;
-    ALCSPlayer *sp28;
+    ALCSPlayer *sp28; // [port] N_ALCSPlayer* cast to ALCSPlayer* - structurally compatible N64 audio types
     f32 tmpf;
-    s32 mask; 
+    s32 mask;
 
-    sp28 = func_802500CC(arg0);
+    sp28 = (ALCSPlayer *)func_802500CC(arg0);
     mask = osSetIntMask(OS_IM_NONE);
     tmpf = (!func_80250074(arg0))? func_8025F4A0(sp28, chan) :127.0f;
 
@@ -598,12 +600,12 @@ void func_80250200(s32 arg0, s16 chan, s16 arg2, f32 arg3){
 }
 
 void func_80250360(s32 arg0, s32 arg1, f32 arg2){
-    ALCSPlayer * sp24;
+    ALCSPlayer * sp24; // [port] N_ALCSPlayer* cast to ALCSPlayer* - structurally compatible N64 audio types
     s32 i;
     s32 sp1C;
     f32 tempo;
-    
-    sp24 = func_802500CC(arg0);
+
+    sp24 = (ALCSPlayer *)func_802500CC(arg0);
     sp1C = osSetIntMask(1);
     tempo = alCSPGetTempo(sp24);
     if( arg2 < (2.0f/FRAMERATE)){
@@ -691,18 +693,18 @@ void func_80250650(void) {
                 D_80282110[i].unk8 = MAX(D_80282110[i].unk8 + D_80282110[i].unkC, D_80282110[i].unk10);
             }
             if (D_80282110[i].chan == -1) {
-                alCSPSetTempo(csplayer, (s32) D_80282110[i].unk8);
+                alCSPSetTempo((ALCSPlayer *)csplayer, (s32) D_80282110[i].unk8); // [port] N_ALCSPlayer* to ALCSPlayer* - structurally compatible
             } else {
-                func_8025F510(csplayer,D_80282110[i].chan, D_80282110[i].unk8);
+                func_8025F510((ALCSPlayer *)csplayer,D_80282110[i].chan, D_80282110[i].unk8); // [port] N_ALCSPlayer* to ALCSPlayer*
                 channel = D_80282110[i].chan;
 
                 if (((csplayer->chanMask) & (1 << channel))) {
                     if (D_80282110[i].unk8 == 0.0) {
-                        func_8025F5C0(csplayer, D_80282110[i].chan);
+                        func_8025F5C0((ALCSPlayer *)csplayer, D_80282110[i].chan); // [port] N_ALCSPlayer* to ALCSPlayer*
                     }
                 } else {
                     if (D_80282110[i].unk8 != 0.0f) {
-                        func_8025F570(csplayer, D_80282110[i].chan);
+                        func_8025F570((ALCSPlayer *)csplayer, D_80282110[i].chan); // [port] N_ALCSPlayer* to ALCSPlayer*
                     }
                 }
             }

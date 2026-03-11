@@ -7,6 +7,8 @@
 #include "2.0L/PR/n_libaudio.h"
 //#include "2.0L/PR/os_system.h"
 
+// [port] BK audio - SDK calls stubbed, functions preserved for game code
+
 #define AUDIO_HEAP_SIZE VER_SELECT(0x21000, 0x23A00, 0x21000, 0x21000)
 #define AUDIOMANAGER_THREAD_STACK_SIZE 0xE78
 
@@ -469,7 +471,7 @@ uintptr_t func_80240204(uintptr_t addr, s32 len, void *state){ // [port] was s32
             phi_s0->unkC = (uintptr_t) D_8027DCC8; // [port] was (s32)
             return osVirtualToPhysical((void*)(phi_s0->unk10 + (addr - phi_s0->unk8)));
         }
-        phi_s0 = phi_s0->unk0.next;
+        phi_s0 = (Struct_1D00_3 *)phi_s0->unk0.next; // [port] cast ALLink* to container type
 
     }
     phi_s0 = D_8027D5B0.unk8;
@@ -478,10 +480,10 @@ uintptr_t func_80240204(uintptr_t addr, s32 len, void *state){ // [port] was s32
         func_802483D8();
         return osVirtualToPhysical(D_8027D5B0.unk4);
     }
-    D_8027D5B0.unk8 = phi_s0->unk0.next;
-    alUnlink(phi_s0);
+    D_8027D5B0.unk8 = (Struct_1D00_3 *)phi_s0->unk0.next; // [port] cast ALLink* to container type
+    alUnlink((ALLink *)phi_s0); // [port] cast to ALLink* (first member)
     if (sp30 != NULL) {
-        alLink(phi_s0, sp30);
+        alLink((ALLink *)phi_s0, (ALLink *)sp30); // [port] cast to ALLink* (first member)
     } else {
         phi_v0 = D_8027D5B0.unk4;
         if (phi_v0 != NULL) {
@@ -500,7 +502,7 @@ uintptr_t func_80240204(uintptr_t addr, s32 len, void *state){ // [port] was s32
     addr -= sp40;
     phi_s0->unk8 = addr;
     phi_s0->unkC = (uintptr_t) D_8027DCC8; // [port] was (s32)
-    osPiStartDma(&D_8027D100[D_8027DCCC++], 1, 0, addr, sp44, 0x200U, &D_8027D008);
+    osPiStartDma((OSIoMesg *)&D_8027D100[D_8027DCCC++], 1, 0, addr, sp44, 0x200U, &D_8027D008); // [port] cast opaque struct to OSIoMesg*
     return osVirtualToPhysical(sp44) + sp40;
 }
 #elif VERSION == VERSION_PAL
@@ -518,7 +520,7 @@ uintptr_t func_80240204(uintptr_t addr, s32 len, void *state){ // [port] was s32
 
     phi_v0 = D_8027D5B0.unk4;
     sp30 = NULL;
-    for(phi_s0 = phi_v0; phi_s0 != NULL; phi_s0 = phi_s0->unk0.next) {
+    for(phi_s0 = phi_v0; phi_s0 != NULL; phi_s0 = (Struct_1D00_3 *)phi_s0->unk0.next) { // [port] cast ALLink* to container type
         sp40 = (phi_s0->unk8 + 0x270);
         if ((phi_s0->unk8 > addr)) break;
 
@@ -532,10 +534,10 @@ uintptr_t func_80240204(uintptr_t addr, s32 len, void *state){ // [port] was s32
     if (phi_s0 == NULL) {
         return osVirtualToPhysical(phi_v0);
     }
-    D_8027D5B0.unk8 = phi_s0->unk0.next;
-    alUnlink(phi_s0);
+    D_8027D5B0.unk8 = (Struct_1D00_3 *)phi_s0->unk0.next; // [port] cast ALLink* to container type
+    alUnlink((ALLink *)phi_s0); // [port] cast to ALLink* (first member)
     if (sp30 != NULL) {
-        alLink(phi_s0, sp30);
+        alLink((ALLink *)phi_s0, (ALLink *)sp30); // [port] cast to ALLink* (first member)
     } else {
         phi_v0 = D_8027D5B0.unk4;
         if (phi_v0 != NULL) {
@@ -555,7 +557,7 @@ uintptr_t func_80240204(uintptr_t addr, s32 len, void *state){ // [port] was s32
     phi_s0->unk8 = addr;
     phi_s0->unkC = (uintptr_t) D_8027DCC8; // [port] was (s32)
     sp44 = (void*)phi_s0->unk10; // [port] was implicit u32→void*
-    osPiStartDma(&D_8027D100[D_8027DCCC++], 1, 0, phi_s0->unk8, (void*)phi_s0->unk10, 0x270U, &D_8027D008);
+    osPiStartDma((OSIoMesg *)&D_8027D100[D_8027DCCC++], 1, 0, phi_s0->unk8, (void*)phi_s0->unk10, 0x270U, &D_8027D008); // [port] cast opaque struct to OSIoMesg*
     return osVirtualToPhysical(sp44) + new_var;
 }
 #endif
@@ -596,9 +598,9 @@ void func_802403F0(void) {
         phi_s1 = (Struct_1D00_3 *)phi_s0_2->unk0.next;
         if (phi_s0_2->unkC + 1 < D_8027DCC8) {
             if (phi_s0_2 == D_8027D5B0.unk4) {
-                D_8027D5B0.unk4 = phi_s0_2->unk0.next;
+                D_8027D5B0.unk4 = (Struct_1D00_3 *)phi_s0_2->unk0.next; // [port] cast ALLink* to container type
             }
-            alUnlink(phi_s0_2);
+            alUnlink((ALLink *)phi_s0_2); // [port] cast to ALLink* (first member)
             if (D_8027D5B0.unk8 != NULL) {
                 alLink(&phi_s0_2->unk0, &D_8027D5B0.unk8->unk0);
             } else {

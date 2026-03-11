@@ -2,6 +2,9 @@
 #include "synthInternals.h"
 #include "functions.h"
 
+// [port] N64 SDK audio library - stubbed for PC port
+#if 0
+
 #ifdef AUD_PROFILE
 extern u32 cnt_index, resampler_num, resampler_cnt, resampler_max, resampler_min, lastCnt[];
 #endif
@@ -124,3 +127,4 @@ s32 alResampleParam(void *filter, s32 paramID, void *param)
     }
     return 0;
 }
+#endif // [port] N64 SDK audio stub

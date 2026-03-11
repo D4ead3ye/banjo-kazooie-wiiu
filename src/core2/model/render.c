@@ -1252,10 +1252,10 @@ BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation
     }
     else if(D_8038371C == 0 && modelRenderModelBin->animation_list_offset_18){
         if(modelRenderBoneTransformList == NULL){
-            animMtxList_setBoneless(&modelRenderAnimMtxList, (u8*)model_bin + (uintptr_t)(u32)model_bin->animation_list_offset_18);
+            animMtxList_setBoneless(&modelRenderAnimMtxList, (BKAnimationList*)((u8*)model_bin + (uintptr_t)(u32)model_bin->animation_list_offset_18)); // [port] u8* to BKAnimationList*
         }
         else{
-            animMtxList_setBoned(&modelRenderAnimMtxList, (u8*)model_bin + (uintptr_t)(u32)model_bin->animation_list_offset_18, modelRenderBoneTransformList);
+            animMtxList_setBoned(&modelRenderAnimMtxList, (BKAnimationList*)((u8*)model_bin + (uintptr_t)(u32)model_bin->animation_list_offset_18), modelRenderBoneTransformList); // [port] u8* to BKAnimationList*
         }
         D_8038371C = modelRenderAnimMtxList;
     }

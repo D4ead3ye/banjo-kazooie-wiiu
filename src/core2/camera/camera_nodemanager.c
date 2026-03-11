@@ -125,7 +125,7 @@ void func_802BBA84(void) {
     viewport_getPosition_vec3f(vp_position);
     viewport_getRotation_vec3f(vp_rotation);
     viewport_getLookbk_vector(sp48);
-    D_8037D8CC = (f32) coords_func_8033EAF8(min, max, vp_position, sp48);
+    D_8037D8CC = (f32) coords_func_8033EAF8((s32*)min, (s32*)max, vp_position, sp48); // [port] f32[] → s32* — decomp type mismatch
     D_8037D8CC += 100.0f;
     if (D_8037D8CC < 1000.0f) {
         D_8037D8CC = 1000.0f;

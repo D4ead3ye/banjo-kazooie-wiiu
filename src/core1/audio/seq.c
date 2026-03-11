@@ -3,6 +3,8 @@
 #include "variables.h"
 #include "2.0L/PR/libaudio.h"
 #include "2.0L/PR/ultraerror.h"
+// [port] N64 SDK audio library - stubbed for PC port
+#if 0
 
 extern f64 D_80278D50;
 extern f64 D_80278D58;
@@ -309,3 +311,5 @@ static s32 readVarLen(ALSeq *seq)
 }
 
 
+
+#endif // [port] N64 SDK audio stub

@@ -1,6 +1,8 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+// [port] N64 SDK audio library - stubbed for PC port
+#if 0
 
 void alCopy(void *src, void *dest, s32 len)
 {
@@ -12,3 +14,5 @@ void alCopy(void *src, void *dest, s32 len)
         *d++ = *s++;
     }
 }
+
+#endif // [port] N64 SDK audio stub

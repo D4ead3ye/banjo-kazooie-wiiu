@@ -126,7 +126,7 @@ void chHoneycomb_update(Actor *this){
             else if(D_8037DDC8 >= 11){
                 func_802C9D80();
             }
-            tmp_v0 = (ActorMarker **)freelist_next(&D_8037DDC4, &local->uid);
+            tmp_v0 = (ActorMarker **)freelist_next(&D_8037DDC4, (s32*)&local->uid); // [port] honeycomb_e* to s32*
             *tmp_v0 = this->marker;
             D_8037DDCC |= 1 << local->uid;
             local->unk4 = D_8037DDD0;
