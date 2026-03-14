@@ -1,6 +1,7 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include "port/ShipUtils.h" // [port] BK_LOG_*
 
 // [port] removed incorrect local externs — correct prototypes in camera.h
 
@@ -75,8 +76,8 @@ void func_802BF798(s32 camera_node_index) { // [port] was void — MIPS implicit
 
     temp_v0 = ncCameraNodeList_getCameraNodeType3(camera_node_index);
     D_8037DAE4 = code33310_func_802BA4F0(temp_v0);
-    cameraNodeType3_getPositionWithPitchYawRoll(temp_v0, &D_8037DAD0);
-    cameraNodeType3_getPosition(temp_v0, &D_8037DAC0);
+    cameraNodeType3_getPositionWithPitchYawRoll(temp_v0, D_8037DAD0); // [port] &D_8037DAD0 -> D_8037DAD0: f32[3] decays to f32*
+    cameraNodeType3_getPosition(temp_v0, D_8037DAC0); // [port] &D_8037DAC0 -> D_8037DAC0: f32[3] decays to f32*
     cameraNodeType3_getHorizontalAndVerticalSpeed(temp_v0, &sp2C, &sp28);
     func_802BE230(sp2C, sp28);
     cameraNodeType3_getRotationAndAccelaration(temp_v0, &sp2C, &sp28);

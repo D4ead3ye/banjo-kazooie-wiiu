@@ -115,7 +115,7 @@ bool func_802CC57C(Actor *this, f32 arg1[3]) {
     f32 sp40[3];
     f32 sp34[3];
     f32 sp28[3];
-    s32 sp24;
+    BKCollisionTri *sp24; // [port] was s32 — truncates 64-bit pointer return from func_80309B48
 
     local = (ActorLocal_Core2_45310 *)&this->local;
     sp40[0] = arg1[0];

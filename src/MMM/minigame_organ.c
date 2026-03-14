@@ -181,8 +181,8 @@ void func_80389910() {
     gcdialog_showText(ASSET_AD5_DIALOG_UNKNOWN, 0xE, NULL, NULL, MMM_func_80389810, NULL);
     timedFunc_set_2(0.0f, (GenFunction_2)func_8025A6EC, COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 0x7FFF);
     timed_setStaticCameraToNode(2.0f, 0);
-    timedFunc_set_0(2.1f, MMM_func_803898A0);
-    timedFunc_set_0(6.0f, func_803898EC);
+    timedFunc_set_0(2.1f, (GenFunction_0)MMM_func_803898A0); // [port]
+    timedFunc_set_0(6.0f, (GenFunction_0)func_803898EC); // [port]
     timed_exitStaticCamera(6.0f);
     func_80324E38(6.0f, 0);
 }
@@ -190,7 +190,7 @@ void func_80389910() {
 void func_803899BC(void){
     func_80324E38(0.0f, 3);
     timedFunc_set_2(0.0f, (GenFunction_2)func_8025A6EC, COMUSIC_38_MOTZAND_BEATEN, 0x7fff);
-    timedFunc_set_0(2.25f, func_80389910);
+    timedFunc_set_0(2.25f, (GenFunction_0)func_80389910); // [port]
 }
 
 void organMinigame_setState(s32 next_state){

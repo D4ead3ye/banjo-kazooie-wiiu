@@ -32,7 +32,7 @@ ParticleEmitter *func_802F4274(f32 arg0[3]) {
     f32 sp2C[3];
     f32 sp28;
     ParticleEmitter *temp_v0;
-    s32 sp20;
+    intptr_t sp20; // [port] was s32 — stores Struct70s* from func_8024559C
 
     ml_vec3f_copy(sp2C, arg0);
     func_8024559C(sp2C, &sp20, &sp28);
@@ -47,7 +47,7 @@ ParticleEmitter *func_802F4274(f32 arg0[3]) {
     sp2C[2] += sp44[2];
     temp_v0 = func_802F0EF0(D_80380AA0);
     if (sp20 != 0) {
-        func_802EFAB0(temp_v0, sp20, sp2C[1]);
+        func_802EFAB0(temp_v0, (s32)sp20, sp2C[1]); // [port] FIXME: truncation — func_802EFAB0/ParticleEmitter.unk100 chain stores Struct70s* in s32
     }
     particleEmitter_setSprite(temp_v0, ASSET_42A_UNKNOWN);
     particleEmitter_setAlpha(temp_v0, 0xFF);

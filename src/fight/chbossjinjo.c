@@ -6,7 +6,7 @@
 #include "core2/particle.h"
 
 extern void func_80324CFC(f32, enum comusic_e, s32);
-extern void func_80329904(ActorMarker*, s32, f32*);
+// [port] removed: extern void func_80329904 — now provided by port_prototypes.h as s32 return
 
 ActorAnimationInfo chBossJinjoAnimationInfo[] = {
     {0, 0.0f},

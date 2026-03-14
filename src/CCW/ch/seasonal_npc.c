@@ -67,7 +67,7 @@ void func_80387F64(Actor *this, s32 next_state){
         }
         if (local->unk0->unkA != 0) {
             timed_setStaticCameraToNode(6.0f, 1);
-            timedFunc_set_0(6.1f, func_80387F10);
+            timedFunc_set_0(6.1f, (GenFunction_0)func_80387F10); // [port]
             timedFunc_set_2(8.0f, (GenFunction_2)func_80387F38, (uintptr_t)this->marker, 3);
         } else {
             if (map_get() == MAP_43_CCW_SPRING) {
@@ -86,7 +86,7 @@ void func_80387F64(Actor *this, s32 next_state){
     this->state = next_state;
 }
 
-bool func_80388260(ActorMarker *marker, s32 arg1){
+s32 func_80388260(ActorMarker *marker, s32 arg1){ // [port] was bool — callback passed to func_803300C0 expects s32 return
     return marker->unk40_31 != 1;
 }
 

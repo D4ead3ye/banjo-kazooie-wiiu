@@ -2,6 +2,7 @@
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
+#include "port/ShipUtils.h" // [port] BK_LOG_*
 
 
 extern bool func_80245314(f32[3], f32[3], f32, f32, u32);
@@ -211,6 +212,10 @@ void func_802BCBD4(void) {
     func_802C0F4C();
     viewport_getRotation_vec3f(cameraRotation);
     viewport_getPosition_vec3f(cameraPosition);
+    // [port] diagnostic: log camera state at map transition
+    BK_LOG_INFO("[cam_reset] initial pos=(%.1f,%.1f,%.1f) rot=(%.1f,%.1f,%.1f)",
+        cameraPosition[0], cameraPosition[1], cameraPosition[2],
+        cameraRotation[0], cameraRotation[1], cameraRotation[2]);
     ml_vec3f_copy(D_8037D948, cameraPosition);
     ml_vec3f_clear(D_8037D9C8);
     ml_vec3f_clear(D_8037D9E0);
@@ -236,8 +241,7 @@ f32 func_802BCD60(void) {
     f32 sp34[3];
     f32 sp28[3];
     s32 temp_v0;
-
-    if ((D_8037D940 & 1) && !func_802BC428()) 
+    if ((D_8037D940 & 1) && !func_802BC428())
         return D_8037D9A0;
 
     ml_vec3f_copy(sp28, cameraPosition);
@@ -276,10 +280,9 @@ void func_802BCE94(void){
 void ncDynamicCamera_update(void){
     f32 sp24[3];
     f32 sp18[3];
-
     if(!cameraUpdateEnabled)
         return;
-    
+
     func_802BCD60();
     D_8037D948[0] = cameraPosition[0];
     D_8037D948[1] = cameraPosition[1];
@@ -884,8 +887,8 @@ void func_802BE484(f32 arg0[3], f32 arg1[3]){
     f32 sp48[3];
     f32 sp3C[3];
     f32 sp30[3];
-    int sp2C;
-    s32 tmp_v0;
+    BKCollisionTri *sp2C; // [port] was int — truncates 64-bit pointer return from func_80320B98
+    BKCollisionTri *tmp_v0; // [port] was s32 — truncates 64-bit pointer return from func_8024575C
 
     func_802BE258(arg0, 35.0f);
     ml_vec3f_copy(sp48, arg0);

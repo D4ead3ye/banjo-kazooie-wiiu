@@ -12,6 +12,7 @@ extern "C" {
 #include <libultra/gbi.h>
 
 char* ResourceMgr_LoadByAssetId(uint32_t assetId);
+size_t ResourceMgr_GetResourceSize(uint32_t assetId);
 int ResourceMgr_IsModelAsset(uint32_t assetId);
 Gfx* ResourceMgr_LoadGfxByName(const char* path);
 char* ResourceMgr_LoadTexOrDListByName(const char* filePath);

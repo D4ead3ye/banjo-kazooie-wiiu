@@ -230,14 +230,14 @@ bool func_802F989C(Gfx **gfx, Mtx **mtx, f32 arg2[3]) {
     ) {
         func_80251B5C(D_80381070[0], D_80381070[1], D_80381070[2]);
         mlMtxApply(*mtx);
-        mlMtx_apply_vec3f_restricted(&D_80381080, D_80381094->unkC);
+        mlMtx_apply_vec3f_restricted(D_80381080, D_80381094->unkC); // [port] &D_80381080 -> D_80381080: f32[3] decays to f32*
         func_80251B5C(D_80381080[0], D_80381080[1], D_80381080[2]);
         mlMtx_rotate_yaw_deg(D_80381060[1]);
         mlMtx_rotate_pitch_deg(D_80381060[0]);
         func_80252A38(-(D_80381094->unkC[0]), -(D_80381094->unkC[1]), -(D_80381094->unkC[2]));
         mlMtxApply(*mtx);
         gSPMatrix((*gfx)++, (*mtx)++, G_MTX_PUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList((*gfx)++, osVirtualToPhysical(D_80381090));
+        gSPDisplayList((*gfx)++, (Gfx *)osVirtualToPhysical(D_80381090)); // [port] uintptr_t -> Gfx*
         gSPPopMatrix((*gfx)++, G_MTX_MODELVIEW);
         return true;
     }

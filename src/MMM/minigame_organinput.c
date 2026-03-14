@@ -74,10 +74,10 @@ void func_8038A140(s32 arg0) { // [port] was UNK_TYPE(s32)
     if (arg0 == 2) {
         func_80324E38(0.3f, 3);
         timed_setStaticCameraToNode(0.3f, 1);
-        timedFunc_set_2(0.3f, mapSpecificFlags_set, MMM_SPECIFIC_FLAG_3_UNKNOWN, true);
+        timedFunc_set_2(0.3f, (GenFunction_2)mapSpecificFlags_set, MMM_SPECIFIC_FLAG_3_UNKNOWN, true); // [port]
         func_80324E38(3.0f, 0);
         timed_exitStaticCamera(3.0f);
-        timedFunc_set_1(3.0f, func_8038A140, 3);
+        timedFunc_set_1(3.0f, (GenFunction_1)func_8038A140, 3); // [port]
     }
     if (arg0 == 3) {
         if (MMM_D_8038C510.unk8 == 1) {
@@ -238,7 +238,7 @@ void func_8038A9B4(void){
     }
 }
 
-void func_8038AA30(BKModel *arg0, s32 arg1){
+void func_8038AA30(void *arg0, void *arg1){ // [port] was BKModel*, s32 — polymorphic: also called with Struct_MMM_47D0_0*, Struct68s*
     MMM_D_8038C510.unkC = arg0;
     MMM_D_8038C510.unk10 = arg1;
 }

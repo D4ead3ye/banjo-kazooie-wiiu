@@ -85,7 +85,7 @@ void __chlmonkey_complete(ActorMarker *marker, enum asset_e unused_1, s32 unused
     mapSpecificFlags_set(MM_SPECIFIC_FLAG_4_SHAKE, true);
     subaddie_set_state(actor, LMONKEY_STATE_3_WALKING);
     timed_setStaticCameraToNode(2.3f, 0x12);
-    timedFunc_set_3(2.9f, __chlmonkey_spawnJiggy, actor->position_x, actor->position_y + 150.0f, actor->position_z);
+    timedFunc_set_3(2.9f, (GenFunction_3)__chlmonkey_spawnJiggy, actor->position_x, actor->position_y + 150.0f, actor->position_z); // [port]
     timed_exitStaticCamera(4.3f);
     func_80324E38(4.3f, 0);
 }

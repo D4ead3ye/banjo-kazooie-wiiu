@@ -4,6 +4,7 @@
 #include "bsint.h"
 #include "core2/statetimer.h"
 #include "core2/ba/anim.h"
+#include "core2/ba/carry.h" // [port] for bacarry_get_marker prototype
 #include "core2/ba/physics.h"
 
 /* .data */
@@ -94,7 +95,7 @@ int bscarry_inSet(enum bs_e state){
 void bscarry_interrupt(void){
     switch(bs_getInterruptType()){
         case 7:
-            bacarry_set_marker(baMarker_8028D688());
+            bacarry_set_marker((ActorMarker *)(intptr_t)baMarker_8028D688()); // [port] s32 to ActorMarker* — N64 stored pointer as s32
             break;
         case 8:
             func_8029A86C(2);

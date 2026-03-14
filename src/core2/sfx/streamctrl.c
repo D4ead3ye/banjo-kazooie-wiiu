@@ -114,12 +114,12 @@ void func_802F8338(struct3s *this){
 }
 
 void func_802F8358(struct3s *this){
-    void *tmp;
+    u32 tmp; // [port] was void*, matches struct3s.unk0 type (u32)
     func_802F80E8(this, 2);
     if(!(tmp = this->unk0))
         return;
     func_802F9FD0(tmp, 0.0f, 0.0f, 3.0f);
-    this->unk0 = NULL;
+    this->unk0 = 0; // [port] was NULL, use 0 for u32
 }
 
 void func_802F83AC(struct3s *arg0) {

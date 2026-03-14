@@ -824,7 +824,7 @@ void func_802D520C(Gfx **gfx, Mtx **mtx, Vtx **vtx){
 
 void func_802D5260(void) {
     s32 sp3C;
-    s32 sp38;
+    Struct70s *sp38; // [port] was s32 — stores Struct70s* from func_8034C528
     f32 sp34;
     f32 sp28[3];
 
@@ -885,7 +885,7 @@ void func_802D5260(void) {
                      : (fileProgressFlag_get(FILEPROG_23_LAIR_WATER_LEVEL_1)) ? 1
                      : 0];
         }
-        func_8034DEB4(sp38, sp34);
+        func_8034DEB4(&sp38->type_6D, sp34); // [port] Struct70s* -> Struct6Ds* via union member
         player_getPosition(sp28);
         
         fxRipple_802F363C(sp34 + ((sp3C != -1) ? (D_803679E0[sp3C] + ((sp3C == 2) ? (6600.0f < sp28[0]) ? -200 : 0 : 0)) : 0));
@@ -894,11 +894,11 @@ void func_802D5260(void) {
 
 void func_802D5628(void){
     s32 sp7C;
-    s32 sp78;
+    Struct70s *sp78; // [port] was s32 — stores Struct70s* from func_8034C528
     s32 sp74;
-    s32 sp70;
+    Struct70s *sp70; // [port] was s32 — stores Struct70s* from func_8034C528
     s32 sp6C;
-    s32 sp68;
+    Struct70s *sp68; // [port] was s32 — stores Struct70s* from func_8034C528
     s32 sp50[6];
     s32 sp4C;
     static s32 D_803679E8 = 0;
@@ -975,7 +975,7 @@ void func_802D5628(void){
                     sp7C = func_802F9AA8(0x3EC);
                     sp78 = func_8034C528(0x191);
                     if(sp78){
-                        func_8034DE60(sp78, -580.0f, 0.0f, 2.5f, 1);
+                        func_8034DE60(&sp78->type_6D, -580.0f, 0.0f, 2.5f, 1); // [port] Struct70s* -> Struct6Ds* via union member
                     }
                     func_802FA060(sp7C, 20000, 20000, 0.0f);
                     func_802F9F80(sp7C, 0.0f, 2.2f, 0.7f);
@@ -988,7 +988,7 @@ void func_802D5628(void){
                     sp74 = func_802F9AA8(0x3EC);
                     sp70 = func_8034C528(0x191);
                      if(sp70){
-                        func_8034DE60(sp70, 0.0f, 1550.0f, 6.5f, 1);
+                        func_8034DE60(&sp70->type_6D, 0.0f, 1550.0f, 6.5f, 1); // [port] Struct70s* -> Struct6Ds* via union member
                     }
                     func_802FA060(sp74, 20000, 20000, 0.0f);
                     func_802F9F80(sp74, 0.0f, 6.2f, 0.5f);
@@ -1001,7 +1001,7 @@ void func_802D5628(void){
                     sp6C = func_802F9AA8(0x3EC);
                     sp68 = func_8034C528(0x190);
                      if(sp68){
-                        func_8034DE60(sp68, 1200.0f, 1900.0f, 3.0f, 1);
+                        func_8034DE60(&sp68->type_6D, 1200.0f, 1900.0f, 3.0f, 1); // [port] Struct70s* -> Struct6Ds* via union member
                     }
                     func_802FA060(sp6C, 20000, 20000, 0.0f);
                     func_802F9F80(sp6C, 0.0f, 2.7f, 0.5f);

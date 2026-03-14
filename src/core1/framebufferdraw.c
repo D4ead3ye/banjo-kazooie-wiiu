@@ -1,6 +1,8 @@
 #include <ultra64.h>
 #include "core1/core1.h"
 
+extern BKSpriteTextureBlock *func_8033EFB0(void *, s32); // [port] forward declare to avoid implicit int return
+
 #define IA8_I(ia) ((ia) >> 4)
 #define IA8_A(ia) ((ia) & 0xF)
 #define I4_2_RGBA16(i,a) ((i << 12) | (i << 7) | (i << 2) | (a))
@@ -75,7 +77,7 @@ void framebufferdraw_draw_CI4(s32 x, s32 y, BKSprite *sprite, s32 frame, s32 alp
                           *pxl_ptr = color1;
                         } else if (!alpha_enabled) {
                           *pxl_ptr = (unsigned long) 1;
-                          palette_offset = (u16 *) (sprite_frame + 1); //THIS IS GARBAGE for correct reg alloc
+                          palette_offset = (uintptr_t)(u16 *) (sprite_frame + 1); // [port] cast to uintptr_t — THIS IS GARBAGE for correct reg alloc
                         }
                         if (palette[indx2] & 1) { 
                             pxl_ptr[1] = palette[indx2];
@@ -120,10 +122,10 @@ void framebufferdraw_draw_CI8(s32 x, s32 y, BKSprite *sprite, s32 frame, s32 alp
     }
 
     palette = (u16 *) (sprite_frame + 1);
-    for (palette_unaligned = palette; ((uintptr_t) palette_unaligned) % 8; palette_unaligned++){ // [port] was (s32) — pointer truncation for alignment check
+    for (palette_unaligned = (uintptr_t)palette; ((uintptr_t) palette_unaligned) % 8; palette_unaligned++){ // [port] was (s32) — pointer truncation for alignment check
         ;
     }
-    palette = palette_unaligned;
+    palette = (u16 *)palette_unaligned; // [port] uintptr_t back to u16*
     
     chunk = (BKSpriteTextureBlock *) (palette + 0x100);
     for (i_chunk = 0; i_chunk < sprite_frame->chunkCnt; i_chunk++){

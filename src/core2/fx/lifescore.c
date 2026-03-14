@@ -96,7 +96,7 @@ void fxlifescore_draw(enum item_e item_id, struct8s *arg1, Gfx **gfx, Mtx **mtx,
             func_80348044(gfx, D_80381EB0[D_80381EC4], (s32) D_80381EBC % 4, 0, 0, 0, 0, 2, 2, &spF0, &spEC, &spE8, &spE4, &spE0, &spDC, &sp10C);
             
             if (((*vtx - sp108) & 0xF) == 0) {
-                gSPVertex((*gfx)++, *vtx, MIN(0x10, (1 + sp10C) << 2), 0);
+                gSPVertex((*gfx)++, (uintptr_t)*vtx, MIN(0x10, (1 + sp10C) << 2), 0); // [port] Vtx* -> uintptr_t
                 sp104 = 0;
             } else {
                 sp104 = sp104 + 4;

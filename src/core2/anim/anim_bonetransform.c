@@ -423,8 +423,14 @@ void func_8033B788(void ){
 }
 
 void *assetcache_get(enum asset_e assetId) {
-    // Lighthouse [port] Using Resource Manager for asset loading
-    return ResourceMgr_LoadByAssetId(assetId);
+    // Lighthouse [port] Using Resource Manager for asset loading.
+    // Must also set assetCacheCurrentSize so callers of func_8033B678()
+    // (e.g. demo_load) get the correct asset data size.
+    void *result = ResourceMgr_LoadByAssetId(assetId);
+    if (result) {
+        assetCacheCurrentSize = (s32)ResourceMgr_GetResourceSize(assetId);
+    }
+    return result;
 #if 0
     s32 comp_size;//sp_44
     s32 i;
@@ -558,8 +564,8 @@ void func_8033BD6C(void){
     func_8033B1BC();
 }
 
-void func_8033BD8C(void* arg0){
-    func_8033B0D0(arg0);
+bool func_8033BD8C(void* arg0){ // [port] was void — MIPS implicit return from func_8033B0D0
+    return func_8033B0D0(arg0);
 }
 
 s32 code_B3A80_func_8033BDAC(enum asset_e id, void *dst, s32 size) {

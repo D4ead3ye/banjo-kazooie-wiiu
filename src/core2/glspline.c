@@ -1,6 +1,7 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include "port/ShipUtils.h" // [port] BK_LOG_*
 
 extern void sfxsource_setSampleRate(u8, s32);
 extern NodeProp *func_803080C8(s32 arg0); // [port] was void* — returns NodeProp*
@@ -345,7 +346,7 @@ f32 func_80340700(f32 value, f32 min, f32 max) {
          : value;
 }
 
-bool func_80340748(s32 arg0, s32 arg1, s32 arg2, f32 arg3[3], s32 arg4, s32 arg5, s32 arg6){
+bool func_80340748(s32 arg0, s32 *arg1, f32 *arg2, f32 arg3[3], s32 arg4, f32 *arg5, f32 *arg6){ // [port] fixed param types to match func_80340760 and callers
     return false;
 }
 
@@ -556,6 +557,7 @@ void func_803411B0(void){
 
     spE4 = func_80307E1C() + 1;
     if (spE4 <= 1) {
+        BK_LOG_WARN("[port] glspline init: NO splines (max group ID = %d)", spE4 - 1); // [port] diagnostic
         return;
     }
 
@@ -567,17 +569,22 @@ void func_803411B0(void){
 
     func_80307EA8(0, spCC, &spC8, &spC4);
 
-    do {
-        spE0 = func_80307EA8(1, spCC, &spC8, &spC4);
+    {
+        s32 populatedCount = 0; // [port] diagnostic
+        do {
+            spE0 = func_80307EA8(1, spCC, &spC8, &spC4);
 
-        if (spE0 >= 0) {
-            (spD8+spE0)->unk0 = spC8;
-            (spD8+spE0)->unk8_13 = spC4;
-            (spD8+spE0)->unk2[0] = spCC[0];
-            (spD8+spE0)->unk2[1] = spCC[1];
-            (spD8+spE0)->unk2[2] = spCC[2];
-        }
-    } while (spE0 >= 0);
+            if (spE0 >= 0) {
+                (spD8+spE0)->unk0 = spC8;
+                (spD8+spE0)->unk8_13 = spC4;
+                (spD8+spE0)->unk2[0] = spCC[0];
+                (spD8+spE0)->unk2[1] = spCC[1];
+                (spD8+spE0)->unk2[2] = spCC[2];
+                populatedCount++;
+            }
+        } while (spE0 >= 0);
+        BK_LOG_WARN("[port] glspline: %d nodes populated from NodeProp data", populatedCount); // [port] diagnostic
+    }
 
     for (spE0 = 1; spE0 < spE4; spE0++) {
         (spD8+spE0)->unk8_15 = 0;
@@ -603,6 +610,20 @@ void func_803411B0(void){
             (spD8+spE0)->unk0 = -1;
             (spD8+spE0)->unk8_13 = 0;
         }
+    }
+
+    // [port] diagnostic: dump node state before chain building
+    {
+        s32 chainHeads = 0, hasNext = 0, isTarget = 0, isSpecial = 0, unpopulated = 0;
+        for (spE0 = 1; spE0 < spE4; spE0++) {
+            if ((spD8+spE0)->unk0 == 0 && (spD8+spE0)->unk2[0] == 0 && (spD8+spE0)->unk2[1] == 0 && (spD8+spE0)->unk2[2] == 0) unpopulated++;
+            else if ((spD8+spE0)->unk0 > 0) hasNext++;
+            if ((spD8+spE0)->unk8_15) isTarget++;
+            if ((spD8+spE0)->unk8_13) isSpecial++;
+            if ((spD8+spE0)->unk0 > 0 && !(spD8+spE0)->unk8_15 && !(spD8+spE0)->unk8_13) chainHeads++;
+        }
+        BK_LOG_WARN("[port] glspline pre-build: %d unpopulated, %d hasNext, %d isTarget, %d isSpecial, %d chainHeads (of %d nodes)",
+            unpopulated, hasNext, isTarget, isSpecial, chainHeads, spE4 - 1);
     }
 
     for (spE0 = 1; spE0 < spE4; spE0++) {
@@ -695,6 +716,7 @@ void func_803411B0(void){
     }
 
     bk_free(spD8);
+    BK_LOG_WARN("[port] glspline init: %d splines created (max group=%d)", D_80371E78, spE4 - 1); // [port] diagnostic
 }
 
 //glspline_free
@@ -758,7 +780,7 @@ s32 func_80341C78(s32 arg0[3]) {
     sp4[2] = (f32) arg0[2];
     for(var_v1 = 0; var_v1 < D_80371E78; var_v1++){
         temp_a0 = D_80371E70[var_v1];
-        var_a2 = temp_a0->unk8;
+        var_a2 = (f32 *)temp_a0->unk8; // [port] f32(*)[3] to f32*
         for (var_a3 = 0; var_a3 < temp_a0->unk0; var_a3++) {
             if( (sp4[0] == var_a2[0]) && (sp4[1] == var_a2[1]) && (sp4[2] == var_a2[2])) {
                 return var_v1;
@@ -788,7 +810,7 @@ s32 func_80341D5C(s32 arg0[3], s32 arg1[3])
   {
     new_var = D_80371E70[i];
     a0 = new_var;
-    a2 = a0 + 1;
+    a2 = (f32 (*)[3])(a0 + 1); // [port] struct56s* to f32(*)[3] — access flexible array data after header
     for (j = 0; j < new_var->unk0; j++)
     {
       if (((spC[0] == a2[j][0]) && (spC[1] == a2[j][1]) && (spC[2] == a2[j][2])) \
@@ -833,7 +855,7 @@ struct56s *func_80341F64(s32 arg0){
     return D_80371E70[func_80341C78(sp1C)];
 }
 
-f32 func_80341FB0(s32 arg0, f32 arg1, s32 arg2, f32 arg3) {
+f32 func_80341FB0(s32 arg0, f32 arg1, f32 arg2[3], f32 arg3) { // [port] arg2 was s32 — actually f32* passed to func_80323240
     f32 sp1C;
 
     if (arg0 == -1) {
@@ -1393,6 +1415,7 @@ s32 func_803438E0(Actor *actor, s32 arg1, s32 arg2, s32 arg3) {
                 actor->unk54 = 0.0f;
             }
         }
+        // [port] TODO: Cutscenes can stall due to sfx audio wait, known issue and will be fixed when audio is in later
         if ((actor->unk138_3 != 0) && func_802501A0(0, actor->unk138_3 + 0x69, 0)) {
             func_80250170(0, actor->unk138_3 + 0x69, 0);
             actor->unk138_3 = 0;

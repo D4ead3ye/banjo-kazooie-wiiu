@@ -1,6 +1,7 @@
 #include "core1/core1.h"
 #include <ultra64.h>
 #include <string.h>
+#include <math.h>
 
 #include <libultra/gu.h>
 

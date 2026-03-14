@@ -135,10 +135,6 @@ GameEngine::GameEngine() {
     Ship::Context::GetInstance()->GetLogger()->set_pattern("[%H:%M:%S.%e] [%s:%#] [%l] %v");
 #endif
 
-    // [port] Enable TMEM derivation for raw N64 sprite textures.
-    // BK loads texture data at TMEM 0 and sets tiles at different TMEM offsets.
-    GameEngine_GetInterpreter()->mDeriveTmemFromLoadedTexture = true;
-
     auto loader = context->GetResourceManager()->GetResourceLoader();
     loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinarySpriteV0>(),
                                     RESOURCE_FORMAT_BINARY, "Sprite",

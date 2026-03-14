@@ -185,7 +185,7 @@ typedef struct actor_s{
     u32  stored_anctrl_playbackType_:3; //anctrlPlaybackType
     u32  unk38_0:1;
     u32 unk3C;
-    s32 unk40;
+    void *unk40; // [port] was s32, stores pointer (e.g. Struct25s* in rope_swing)
     u32 unk44_31:8; // sfxsource idx
     u32 modelCacheIndex:10; //modelCacheIndex
     s32 unk44_14:10;
@@ -250,7 +250,7 @@ typedef struct actor_s{
     ActorMarker *unk104;
     Struct62s *unk108;
     // void ( *unk108)(struct actorMarker_s *, s32); //saved from marker->collisionFunc
-    s32 unk10C; //saved marker->unk10
+    MarkerCollisionFunc unk10C; // [port] was s32, stores marker->collision2Func (function pointer, 64-bit on PC)
     f32 roll;//110
     f32 sound_timer;
     TUPLE(f32, spawn_position); //0x118
@@ -289,7 +289,7 @@ typedef struct actor_s{
     SkeletalAnimation *unk148;
     void *unk14C[2];
     // void *unk150;
-    u32 unk154;
+    uintptr_t unk154; // [port] was u32 — stores Struct_Core2_43250_1* in musicnote_container.c
     ParticleEmitter *unk158[2];
     void *unk160; //saved marker->unk54
     u8  unk164[0x2];
@@ -406,9 +406,14 @@ typedef struct actor_array{
     Actor data[]; //variable size array
 }ActorArray;
 
+// [port] packed to prevent 64-bit alignment padding after cnt —
+// Actor needs 8-byte alignment on 64-bit, which would insert 4 bytes
+// of padding, but serialized data places Actors immediately after cnt.
+#pragma pack(push, 4)
 typedef struct {
     u32 cnt;
-    Actor *actor_save_state[];
+    Actor actor_save_state[];
 }ActorListSaveState;
+#pragma pack(pop)
 
 #endif

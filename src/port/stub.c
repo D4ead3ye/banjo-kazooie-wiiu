@@ -109,7 +109,7 @@ void gSPSegment(void* value, int segNum, uintptr_t target) {
     if (res) {
         uintptr_t desiredTarget = (uintptr_t)ResourceMgr_LoadIfDListByName(imgData);
 
-        if (desiredTarget != NULL)
+        if (desiredTarget != 0) // [port] was NULL — uintptr_t comparison
             target = desiredTarget;
     }
 

@@ -1,6 +1,7 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include "port/ShipUtils.h" // [port] BK_LOG_*
 
 extern void func_80303F7C(ActorMarker *, f32, s32, s32);
 extern ActorProp *func_80303FE4(ActorMarker *, f32, s32);
@@ -31,7 +32,7 @@ void func_80320B44(Method_Core2_999A0_0 arg0, Method_Core2_999A0_1 arg1, Method_
 /* .code */
 f32 func_80320930(f32 arg0[3], f32 arg1, f32 arg2, u32 arg3) {
     f32 pad48;
-    f32 sp3C[2];
+    f32 sp3C[3]; // [port] was f32[2] — buffer overrun: sp3C[2] written at line 41
     f32 sp30[3];
     f32 sp24[3];
 
@@ -71,7 +72,7 @@ bool func_803209F8(f32 arg0[3], f32 arg1[3], f32 *arg2, f32 arg3[3]) {
     arg0[1] = arg3[1] - 100.0f;
     if (!func_80309B48(sp34, arg0, sp28, 0)) {
         arg0[1] = arg3[1] - 2000.0f;
-        if (!func_80309B48(&sp34, arg0, sp28, 0)) {
+        if (!func_80309B48(sp34, arg0, sp28, 0)) { // [port] &sp34 -> sp34: f32[3] decays to f32*
             return 0;
         }
     }
@@ -113,6 +114,12 @@ BKCollisionTri *func_80320B98(f32 arg0[3], f32 arg1[3], f32 arg2[3], u32 flags) 
     for(var_s0 = &D_80383230.unk0[0]; var_s0 < D_80383230.unk80; var_s0++){
         if (var_s0->unk0 != NULL) {
             temp_v0_2 = var_s0->unk0(arg0, arg1, arg2, flags);
+            // [port] diagnostic — detect garbage collision tri pointer from any handler
+            if (temp_v0_2 != NULL && (uintptr_t)temp_v0_2 > 0x00007FFFFFFFFFFF) {
+                BK_LOG_WARN("col_diag: slot=%d handler=%p returned bad ptr=%p flags=0x%x",
+                    (int)(var_s0 - &D_80383230.unk0[0]), var_s0->unk0, temp_v0_2, flags);
+                temp_v0_2 = NULL; // [port] discard garbage pointer to prevent crash
+            }
             if (temp_v0_2 != NULL) {
                 if (var_s0->unkC != NULL) {
                     D_80383230.unk84 = var_s0->unkC();

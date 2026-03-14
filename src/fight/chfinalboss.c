@@ -1420,16 +1420,16 @@ void chfinalboss_phase4_setState(Actor *this, s32 arg1) {
                 local->unkA = 1U;
                 sFinalBossJinjoStatueActivated = 1;
                 func_80324E38(0.0f, 1);
-                timedFunc_set_1(0.0f, chfinalboss_spawnStatue, BOSSJINJO_1_ORANGE);
+                timedFunc_set_1(0.0f, (GenFunction_1)chfinalboss_spawnStatue, BOSSJINJO_1_ORANGE); // [port]
                 timed_setStaticCameraToNode(0.0f, 4);
                 timed_exitStaticCamera(2.2f);
-                timedFunc_set_1(2.2f, chfinalboss_spawnStatue, BOSSJINJO_2_GREEN);
+                timedFunc_set_1(2.2f, (GenFunction_1)chfinalboss_spawnStatue, BOSSJINJO_2_GREEN); // [port]
                 timed_setStaticCameraToNode(2.2f, 5);
                 timed_exitStaticCamera(4.4f);
-                timedFunc_set_1(4.4f, chfinalboss_spawnStatue, BOSSJINJO_3_PINK);
+                timedFunc_set_1(4.4f, (GenFunction_1)chfinalboss_spawnStatue, BOSSJINJO_3_PINK); // [port]
                 timed_setStaticCameraToNode(4.4f, 6);
                 timed_exitStaticCamera(6.6f);
-                timedFunc_set_1(6.6f, chfinalboss_spawnStatue, BOSSJINJO_4_YELLOW);
+                timedFunc_set_1(6.6f, (GenFunction_1)chfinalboss_spawnStatue, BOSSJINJO_4_YELLOW); // [port]
                 timed_setStaticCameraToNode(6.6f, 7);
                 timed_exitStaticCamera(8.8f);
                 timedFunc_set_0(8.8f, chfinalboss_func_80389F54);
@@ -1687,7 +1687,7 @@ void chfinalboss_phase5_setState(Actor *this, s32 next_state) {
                 sp28 = 0x13;
             }
             func_8028F94C(2, this->position);
-            timedFunc_set_1(0.0f, chfinalboss_spawnStatue, 5);
+            timedFunc_set_1(0.0f, (GenFunction_1)chfinalboss_spawnStatue, 5); // [port]
             timed_setStaticCameraToNode(0.0f, sp28);
             timed_exitStaticCamera(7.5f);
             timedFunc_set_1(7.5f, (GenFunction_1)chfinalboss_func_8038AC50, (uintptr_t)this->marker);
@@ -1967,7 +1967,7 @@ void chfinalboss_phase0_update(ActorMarker *marker) {
     return;
 }
 
-bool chfinalboss_func_8038B834(ActorMarker *marker, ActorMarker *other_marker) {
+s32 chfinalboss_func_8038B834(ActorMarker *marker, ActorMarker *other_marker) { // [port] was bool — callback passed to func_803300C0 expects s32 return
     Actor *this;
     ActorLocal_FinalBoss *local;
 
@@ -2247,11 +2247,11 @@ void chfinalboss_setBossDefeated(void) {
     func_80324E38(0, 1);
     timed_setStaticCameraToNode(0, camera_node);
     timed_exitStaticCamera(temp_f20);
-    timedFunc_set_0(temp_f20 * 0.08, &chfinalboss_func_8038C138);
+    timedFunc_set_0(temp_f20 * 0.08, (GenFunction_0)&chfinalboss_func_8038C138); // [port]
     timed_setStaticCameraToNode(temp_f20, camera_node + 1);
 
     timed_exitStaticCamera(temp_f20 + sp40);
-    timedFunc_set_1(temp_f20 + sp40, chfinalboss_func_8038C10C, (uintptr_t)sp4C->marker);
+    timedFunc_set_1(temp_f20 + sp40, (GenFunction_1)chfinalboss_func_8038C10C, (uintptr_t)sp4C->marker); // [port]
     timed_setStaticCameraToNode(temp_f20 + sp40, camera_node + 2);
 
     timed_exitStaticCamera(temp_f20 + sp40 + 2.88f);

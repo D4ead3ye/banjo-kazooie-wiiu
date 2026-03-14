@@ -178,20 +178,20 @@ s16 D_80393454[] = {
     FILEPROG_37_MMM_OPEN,
     FILEPROG_38_RBB_OPEN,
     FILEPROG_39_CCW_OPEN,
-    NULL
+    0 // [port] was NULL — s16 sentinel
 };
 
 s16 D_80393468[] = {
-    NULL, 
-    NULL, 
-    VOLATILE_FLAG_7F_SANDCASTLE_OPEN_CC, 
+    0, // [port] was NULL — s16 field
+    0, // [port] was NULL — s16 field
+    VOLATILE_FLAG_7F_SANDCASTLE_OPEN_CC,
     VOLATILE_FLAG_84_SANDCASTLE_OPEN_BGS, 
     VOLATILE_FLAG_8B_SANDCASTLE_OPEN_FP, 
     VOLATILE_FLAG_87_SANDCASTLE_OPEN_GV, 
     VOLATILE_FLAG_8C_SANDCASTLE_OPEN_MMM, 
     VOLATILE_FLAG_90_SANDCASTLE_OPEN_RBB, 
-    VOLATILE_FLAG_93_SANDCASTLE_OPEN_CCW, 
-    NULL
+    VOLATILE_FLAG_93_SANDCASTLE_OPEN_CCW,
+    0 // [port] was NULL — s16 sentinel
 };
 
 s16 D_8039347C[] = {50, 180, 260, 350, 450, 640, 765, 810, 828, 846, 864, 882}; //notedoor_notes_required_to_open
@@ -1654,7 +1654,7 @@ f32 func_80389AAC(Actor *this, f32 a1)
 {
     // defs
     f32   randf2(f32, f32);
-    void *func_80309B48(f32 *, f32 *, f32 *, u32);
+    BKCollisionTri *func_80309B48(f32 *, f32 *, f32 *, u32); // [port] was void* — returns BKCollisionTri*
 
     f32 vec3[3]; // $sp + 54
     f32 vec2[3]; // $sp + 48

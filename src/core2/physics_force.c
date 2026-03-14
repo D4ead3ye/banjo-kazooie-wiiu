@@ -112,7 +112,7 @@ void func_80322318(Struct_core2_9B180_0 * arg0){
 bool func_80322340(s32 arg0) {
     f32 sp1C[3];
 
-    if (nodeProp_findPositionFromActorId(arg0, &sp1C)) {
+    if (nodeProp_findPositionFromActorId(arg0, sp1C)) { // [port] &sp1C -> sp1C: f32[3] decays to f32*
         return 1;
     }
     return 0;

@@ -41,53 +41,55 @@ s16 D_803692EC[5] = {
     -1
 };
 
-// [port] cast macro for _new function pointers with varying signatures
+// [port] cast macros for function pointers with varying signatures (enum/s32, struct7s/struct8s/void*)
 #define NF(fn) (ItemPrintNewFn)(fn)
+#define UF(fn) (void (*)(s32, struct8s *))(fn)
+#define DF(fn) (void (*)(enum item_e, struct8s *, Gfx**, Mtx**, Vtx**))(fn)
 ItemPrint D_803692F8[0x2C] = {
-    { NF(fxcommon2score_new), fxcommon2score_update, fxcommon2score_draw, fxcommon2score_free, 5, NULL }, //ITEM_0_HOURGLASS_TIMER
-    { NF(fxcommon2score_new), fxcommon2score_update, fxcommon2score_draw, fxcommon2score_free, 0, NULL }, // ITEM_1_SKULL_HOURGLASS_TIMER
-    { NF(fxcommon1score_new), fxcommon1score_update, fxcommon1score_draw, fxcommon1score_free, 0, NULL }, //2
-    { NF(fxcommon2score_new), fxcommon2score_update, fxcommon2score_draw, fxcommon2score_free, 5, NULL }, //ITEM_3_PROPELLOR_TIMER
-    { NF(fxcommon1score_new), fxcommon1score_update, fxcommon1score_draw, fxcommon1score_free, 0, NULL }, //
-    { NF(fxcommon2score_new), fxcommon2score_update, fxcommon2score_draw, fxcommon2score_free, 0, NULL }, //ITEM_5_XMAS_TREE_TIMER
-    { NF(fxcommon1score_new), fxcommon1score_update, fxcommon1score_draw, fxcommon1score_free, 0, NULL }, //ITEM_6_HOURGLASS
-    { NF(fxcommon1score_new), fxcommon1score_update, fxcommon1score_draw, fxcommon1score_free, 0, NULL }, //ITEM_7_SKULL_HOURGLASS
-    { NF(fxcommon1score_new), fxcommon1score_update, fxcommon1score_draw, fxcommon1score_free, 0, NULL }, //8
-    { NF(fxcommon1score_new), fxcommon1score_update, fxcommon1score_draw, fxcommon1score_free, 0, NULL }, //ITEM_9_PROPELLOR
-    { NF(fxcommon1score_new), fxcommon1score_update, fxcommon1score_draw, fxcommon1score_free, 0, NULL }, //10
-    { NF(fxcommon1score_new), fxcommon1score_update, fxcommon1score_draw, fxcommon1score_free, 0, NULL }, //ITEM_B_XMAS_TREE
-    { NF(fxcommon2score_new), fxcommon2score_update, fxcommon2score_draw, fxcommon2score_free, 1, NULL }, //ITEM_C_NOTE
-    { NF(fxcommon2score_new), fxcommon2score_update, fxcommon2score_draw, fxcommon2score_free, 1, NULL }, //ITEM_D_EGGS
-    { NF(fxcommon3score_new), fxcommon3score_update, fxcommon3score_draw, fxcommon3score_free, 3, NULL }, //ITEM_14_HEALTH
-    { NF(fxcommon2score_new), fxcommon2score_update, fxcommon2score_draw, fxcommon2score_free, 1, NULL }, //ITEM_F_RED_FEATHER
-    { NF(fxcommon2score_new), fxcommon2score_update, fxcommon2score_draw, fxcommon2score_free, 1, NULL }, //ITEM_10_GOLD_FEATHER
-    { NF(fxcommon1score_new), fxcommon1score_update, fxcommon1score_draw, fxcommon1score_free, 0, NULL }, //17
-    { NF(fxjinjoscore_new),   fxjinjoscore_update,   fxjinjoscore_draw,   fxjinjoscore_free,   3, NULL }, //ITEM_12_JINJOS
-    { NF(fxhoneycarrierscore_new), fxhoneycarrierscore_update, fxhoneycarrierscore_draw, fxhoneycarrierscore_free, 0, NULL }, //ITEM_13_EMPTY_HONEYCOMB
-    { NF(fxhealthscore_new),  fxhealthscore_update,  fxhealthscore_draw,  fxhealthscore_free,  0, NULL }, //ITEM_14_HEALTH
-    { NF(fxcommon1score_new), fxcommon1score_update, fxcommon1score_draw, fxcommon1score_free, 0, NULL }, //ITEM_15_HEALTH_TOTAL
-    { NF(fxlifescore_new),    fxlifescore_update,    fxlifescore_draw,    fxlifescore_free,    6, NULL }, //ITEM_16_LIFE
-    { NF(fxairscore_new),     fxairscore_update,     fxairscore_draw,     fxairscore_free,     0, NULL }, //ITEM_17_AIR
-    { NF(fxcommon3score_new), fxcommon3score_update, fxcommon3score_draw, fxcommon3score_free, 2, NULL }, //ITEM_18_GOLD_BULLIONS
-    { NF(fxcommon3score_new), fxcommon3score_update, fxcommon3score_draw, fxcommon3score_free, 2, NULL }, //ITEM_19_ORANGE
-    { NF(fxcommon2score_new), fxcommon2score_update, fxcommon2score_draw, fxcommon2score_free, 6, NULL }, //ITEM_1A_PLAYER_VILE_SCORE
-    { NF(fxcommon2score_new), fxcommon2score_update, fxcommon2score_draw, fxcommon2score_free, 0, NULL }, //ITEM_1B_VILE_VILE_SCORE
-    { NF(fxcommon2score_new), fxcommon2score_update, fxcommon2score_draw, fxcommon2score_free, 2, NULL }, //ITEM_1C_MUMBO_TOKEN
-    { NF(fxcommon3score_new), fxcommon3score_update, fxcommon3score_draw, fxcommon3score_free, 0, NULL }, //ITEM_1D_GRUMBLIE
-    { NF(fxcommon3score_new), fxcommon3score_update, fxcommon3score_draw, fxcommon3score_free, 0, NULL }, //ITEM_1E_YUMBLIE
-    { NF(fxcommon3score_new), fxcommon3score_update, fxcommon3score_draw, fxcommon3score_free, 2, NULL }, //ITEM_1F_GREEN_PRESENT
-    { NF(fxcommon3score_new), fxcommon3score_update, fxcommon3score_draw, fxcommon3score_free, 2, NULL }, //ITEM_20_BLUE_PRESENT
-    { NF(fxcommon3score_new), fxcommon3score_update, fxcommon3score_draw, fxcommon3score_free, 2, NULL }, //ITEM_21_RED_PRESENT
-    { NF(fxcommon3score_new), fxcommon3score_update, fxcommon3score_draw, fxcommon3score_free, 2, NULL }, //ITEM_22_CATERPILLAR
-    { NF(fxcommon3score_new), fxcommon3score_update, fxcommon3score_draw, fxcommon3score_free, 2, NULL }, //ITEM_23_ACORNS
-    { NF(fxcommon3score_new), fxcommon3score_update, fxcommon3score_draw, fxcommon3score_free, 0, NULL }, //ITEM_24_TWINKLY_SCORE
-    { NF(fxcommon2score_new), fxcommon2score_update, fxcommon2score_draw, fxcommon2score_free, 4, NULL }, //ITEM_25_MUMBO_TOKEN_TOTAL
-    { NF(fxcommon3score_new), fxcommon3score_update, fxcommon3score_draw, fxcommon3score_free, 4, NULL }, //ITEM_26_JIGGY_TOTAL
-    { NF(fxcommon2score_new), fxcommon2score_update, fxcommon2score_draw, fxcommon2score_free, 2, NULL }, //ITEM_27_JOKER_CARD
-    { NF(fxcommon2score_new), fxcommon2score_update, fxcommon1score_draw, fxcommon2score_free, 5, NULL }, //40
-    { NF(fxcommon2score_new), fxcommon2score_update, fxcommon1score_draw, fxcommon2score_free, 3, NULL }, //41
-    { NF(fxcommon2score_new), fxcommon2score_update, fxcommon1score_draw, fxcommon2score_free, 2, NULL }, //42
-    { NF(fxcommon3score_new), fxcommon3score_update, fxcommon3score_draw, fxcommon3score_free, 2, NULL }  //43
+    { NF(fxcommon2score_new), UF(fxcommon2score_update), DF(fxcommon2score_draw), UF(fxcommon2score_free), 5, NULL }, //ITEM_0_HOURGLASS_TIMER
+    { NF(fxcommon2score_new), UF(fxcommon2score_update), DF(fxcommon2score_draw), UF(fxcommon2score_free), 0, NULL }, // ITEM_1_SKULL_HOURGLASS_TIMER
+    { NF(fxcommon1score_new), UF(fxcommon1score_update), DF(fxcommon1score_draw), UF(fxcommon1score_free), 0, NULL }, //2
+    { NF(fxcommon2score_new), UF(fxcommon2score_update), DF(fxcommon2score_draw), UF(fxcommon2score_free), 5, NULL }, //ITEM_3_PROPELLOR_TIMER
+    { NF(fxcommon1score_new), UF(fxcommon1score_update), DF(fxcommon1score_draw), UF(fxcommon1score_free), 0, NULL }, //
+    { NF(fxcommon2score_new), UF(fxcommon2score_update), DF(fxcommon2score_draw), UF(fxcommon2score_free), 0, NULL }, //ITEM_5_XMAS_TREE_TIMER
+    { NF(fxcommon1score_new), UF(fxcommon1score_update), DF(fxcommon1score_draw), UF(fxcommon1score_free), 0, NULL }, //ITEM_6_HOURGLASS
+    { NF(fxcommon1score_new), UF(fxcommon1score_update), DF(fxcommon1score_draw), UF(fxcommon1score_free), 0, NULL }, //ITEM_7_SKULL_HOURGLASS
+    { NF(fxcommon1score_new), UF(fxcommon1score_update), DF(fxcommon1score_draw), UF(fxcommon1score_free), 0, NULL }, //8
+    { NF(fxcommon1score_new), UF(fxcommon1score_update), DF(fxcommon1score_draw), UF(fxcommon1score_free), 0, NULL }, //ITEM_9_PROPELLOR
+    { NF(fxcommon1score_new), UF(fxcommon1score_update), DF(fxcommon1score_draw), UF(fxcommon1score_free), 0, NULL }, //10
+    { NF(fxcommon1score_new), UF(fxcommon1score_update), DF(fxcommon1score_draw), UF(fxcommon1score_free), 0, NULL }, //ITEM_B_XMAS_TREE
+    { NF(fxcommon2score_new), UF(fxcommon2score_update), DF(fxcommon2score_draw), UF(fxcommon2score_free), 1, NULL }, //ITEM_C_NOTE
+    { NF(fxcommon2score_new), UF(fxcommon2score_update), DF(fxcommon2score_draw), UF(fxcommon2score_free), 1, NULL }, //ITEM_D_EGGS
+    { NF(fxcommon3score_new), UF(fxcommon3score_update), DF(fxcommon3score_draw), UF(fxcommon3score_free), 3, NULL }, //ITEM_14_HEALTH
+    { NF(fxcommon2score_new), UF(fxcommon2score_update), DF(fxcommon2score_draw), UF(fxcommon2score_free), 1, NULL }, //ITEM_F_RED_FEATHER
+    { NF(fxcommon2score_new), UF(fxcommon2score_update), DF(fxcommon2score_draw), UF(fxcommon2score_free), 1, NULL }, //ITEM_10_GOLD_FEATHER
+    { NF(fxcommon1score_new), UF(fxcommon1score_update), DF(fxcommon1score_draw), UF(fxcommon1score_free), 0, NULL }, //17
+    { NF(fxjinjoscore_new), UF(fxjinjoscore_update), DF(fxjinjoscore_draw), UF(fxjinjoscore_free),   3, NULL }, //ITEM_12_JINJOS
+    { NF(fxhoneycarrierscore_new), UF(fxhoneycarrierscore_update), DF(fxhoneycarrierscore_draw), UF(fxhoneycarrierscore_free), 0, NULL }, //ITEM_13_EMPTY_HONEYCOMB
+    { NF(fxhealthscore_new), UF(fxhealthscore_update), DF(fxhealthscore_draw), UF(fxhealthscore_free),  0, NULL }, //ITEM_14_HEALTH
+    { NF(fxcommon1score_new), UF(fxcommon1score_update), DF(fxcommon1score_draw), UF(fxcommon1score_free), 0, NULL }, //ITEM_15_HEALTH_TOTAL
+    { NF(fxlifescore_new), UF(fxlifescore_update), DF(fxlifescore_draw), UF(fxlifescore_free),    6, NULL }, //ITEM_16_LIFE
+    { NF(fxairscore_new), UF(fxairscore_update), DF(fxairscore_draw), UF(fxairscore_free),     0, NULL }, //ITEM_17_AIR
+    { NF(fxcommon3score_new), UF(fxcommon3score_update), DF(fxcommon3score_draw), UF(fxcommon3score_free), 2, NULL }, //ITEM_18_GOLD_BULLIONS
+    { NF(fxcommon3score_new), UF(fxcommon3score_update), DF(fxcommon3score_draw), UF(fxcommon3score_free), 2, NULL }, //ITEM_19_ORANGE
+    { NF(fxcommon2score_new), UF(fxcommon2score_update), DF(fxcommon2score_draw), UF(fxcommon2score_free), 6, NULL }, //ITEM_1A_PLAYER_VILE_SCORE
+    { NF(fxcommon2score_new), UF(fxcommon2score_update), DF(fxcommon2score_draw), UF(fxcommon2score_free), 0, NULL }, //ITEM_1B_VILE_VILE_SCORE
+    { NF(fxcommon2score_new), UF(fxcommon2score_update), DF(fxcommon2score_draw), UF(fxcommon2score_free), 2, NULL }, //ITEM_1C_MUMBO_TOKEN
+    { NF(fxcommon3score_new), UF(fxcommon3score_update), DF(fxcommon3score_draw), UF(fxcommon3score_free), 0, NULL }, //ITEM_1D_GRUMBLIE
+    { NF(fxcommon3score_new), UF(fxcommon3score_update), DF(fxcommon3score_draw), UF(fxcommon3score_free), 0, NULL }, //ITEM_1E_YUMBLIE
+    { NF(fxcommon3score_new), UF(fxcommon3score_update), DF(fxcommon3score_draw), UF(fxcommon3score_free), 2, NULL }, //ITEM_1F_GREEN_PRESENT
+    { NF(fxcommon3score_new), UF(fxcommon3score_update), DF(fxcommon3score_draw), UF(fxcommon3score_free), 2, NULL }, //ITEM_20_BLUE_PRESENT
+    { NF(fxcommon3score_new), UF(fxcommon3score_update), DF(fxcommon3score_draw), UF(fxcommon3score_free), 2, NULL }, //ITEM_21_RED_PRESENT
+    { NF(fxcommon3score_new), UF(fxcommon3score_update), DF(fxcommon3score_draw), UF(fxcommon3score_free), 2, NULL }, //ITEM_22_CATERPILLAR
+    { NF(fxcommon3score_new), UF(fxcommon3score_update), DF(fxcommon3score_draw), UF(fxcommon3score_free), 2, NULL }, //ITEM_23_ACORNS
+    { NF(fxcommon3score_new), UF(fxcommon3score_update), DF(fxcommon3score_draw), UF(fxcommon3score_free), 0, NULL }, //ITEM_24_TWINKLY_SCORE
+    { NF(fxcommon2score_new), UF(fxcommon2score_update), DF(fxcommon2score_draw), UF(fxcommon2score_free), 4, NULL }, //ITEM_25_MUMBO_TOKEN_TOTAL
+    { NF(fxcommon3score_new), UF(fxcommon3score_update), DF(fxcommon3score_draw), UF(fxcommon3score_free), 4, NULL }, //ITEM_26_JIGGY_TOTAL
+    { NF(fxcommon2score_new), UF(fxcommon2score_update), DF(fxcommon2score_draw), UF(fxcommon2score_free), 2, NULL }, //ITEM_27_JOKER_CARD
+    { NF(fxcommon2score_new), UF(fxcommon2score_update), DF(fxcommon1score_draw), UF(fxcommon2score_free), 5, NULL }, //40
+    { NF(fxcommon2score_new), UF(fxcommon2score_update), DF(fxcommon1score_draw), UF(fxcommon2score_free), 3, NULL }, //41
+    { NF(fxcommon2score_new), UF(fxcommon2score_update), DF(fxcommon1score_draw), UF(fxcommon2score_free), 2, NULL }, //42
+    { NF(fxcommon3score_new), UF(fxcommon3score_update), DF(fxcommon3score_draw), UF(fxcommon3score_free), 2, NULL }  //43
 };
 
 /* .bss */
@@ -268,6 +270,6 @@ void func_802FAFD4(enum item_e item_id, enum sfx_e sfx_id){
     D_80381378[item_id] = sfx_id;
 }
 
-void func_802FAFE8(enum item_e item_id){
-    func_802FCD98(D_803692F8[item_id].unk14);
+bool func_802FAFE8(enum item_e item_id){ // [port] was void — MIPS implicit return from func_802FCD98
+    return func_802FCD98(D_803692F8[item_id].unk14);
 }

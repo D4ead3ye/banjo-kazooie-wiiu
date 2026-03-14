@@ -105,7 +105,7 @@ void anim_update(Animation *this){
         __anim_update_doubleBuffer(this);
     }
     if(this->matrices){
-        (*(this->matrices))(animcache_getCurrentTransform(this), this->unk4);
+        (*(this->matrices))((uintptr_t)animcache_getCurrentTransform(this), this->unk4); // [port] cast BoneTransformList* -> uintptr_t for GenFunction_2
     }
     anim_drawSetup(this);
 }
@@ -179,8 +179,8 @@ void anim_setDuration(Animation *this, f32 arg1){
     this->duration = arg1;
 }
 
-void anim_802897D4(AnimMtxList *this, BKAnimationList *arg0, Animation *dst){
-    animMtxList_setBoned(this, arg0, animcache_getCurrentTransform(dst));
+void anim_802897D4(AnimMtxList **this_ptr, BKAnimationList *arg0, Animation *dst){ // [port] was AnimMtxList *this — caller passes &marker->unk20
+    animMtxList_setBoned(this_ptr, arg0, animcache_getCurrentTransform(dst));
 }
 
 void anim_resetNow(Animation *this){

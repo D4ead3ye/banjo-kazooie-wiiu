@@ -16,7 +16,7 @@ extern struct5Bs *func_8034A348(struct5Bs *this);
 extern struct5Bs *func_8034A2C8(void);
 extern void func_8034C6DC(BKModel *arg0);
 
-BKCollisionTri *func_80309B48(f32 arg0[3], f32 arg1[3], f32 arg2[3], s32 arg3) ;
+BKCollisionTri *func_80309B48(f32 arg0[3], f32 arg1[3], f32 arg2[3], u32 arg3) ;
 
 typedef struct {
     s16 map_id; //enum map_e
@@ -163,8 +163,8 @@ MapModelDescription D_8036ABE0[] = {
 
 /* .bss */
 struct {
-    void *unk0;
-    void *unk4;
+    s32 unk0; // [port] was void* — animated texture cache ID (s32 index, not pointer)
+    s32 unk4; // [port] was void* — animated texture cache ID (s32 index, not pointer)
     BKCollisionList *collision_opa;
     BKCollisionList *collision_xlu;
     BKModel *model_opa;
@@ -230,7 +230,7 @@ f32 func_80308FDC(f32 arg0[3], u32 arg1) {
         sp58[0] += randf2(-1.0f, 1.0f);
         sp58[1] -= (f32) phi_s1;
         sp58[2] += randf2(-1.0f, 1.0f);
-        if (func_80309B48(&sp64, &sp58, &sp70, arg1)) {
+        if (func_80309B48(sp64, sp58, sp70, arg1)) { // [port] & removed from f32[3] args
             return sp58[1];
         }
         phi_s1 += 2000;
@@ -452,7 +452,7 @@ f32 func_80309B24(f32 arg0[3]){
     return func_80308FDC(arg0, 0xf800ff0f);
 }
 
-BKCollisionTri *func_80309B48(f32 startPoint[3], f32 endPoint[3], f32 arg2[3], s32 flagFilter) {
+BKCollisionTri *func_80309B48(f32 startPoint[3], f32 endPoint[3], f32 arg2[3], u32 flagFilter) { // [port] was s32 — matches callers and port_prototypes.h
     BKCollisionTri *opaqueTri;
     BKCollisionTri *transparentTri;
 
@@ -636,14 +636,14 @@ void func_8030A078(void) {
         mapModel.unk0 = AnimTextureListCache_newList();
         AnimTextureListCache_at(mapModel.unk0, model_getAnimTextureList(mapModel.model_bin_opa));
     } else {
-        mapModel.unk0 = NULL;
+        mapModel.unk0 = 0; // [port] was NULL — unk0 is now s32 index, not pointer
     }
     if ((mapModel.model_bin_xlu != NULL) && (model_getAnimTextureList(mapModel.model_bin_xlu) != 0)) {
         mapModel.unk4 = AnimTextureListCache_newList();
         AnimTextureListCache_at(mapModel.unk4, model_getAnimTextureList(mapModel.model_bin_xlu));
     }
     else{
-        mapModel.unk4 = NULL;
+        mapModel.unk4 = 0; // [port] was NULL — unk4 is now s32 index, not pointer
     }
 }
 

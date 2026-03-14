@@ -405,7 +405,7 @@ OSContPad *func_8024F3F4(void){
 /* initilizes D_802816E8 message queue */
 void func_8024F400(void) {
     D_80275D38 = true;
-    osCreateMesgQueue(&D_802816E8, &D_80281700, 5);
+    osCreateMesgQueue(&D_802816E8, D_80281700, 5); // [port] array decays to OSMesg*, not &array
     osSendMesgPtr(&D_802816E8, NULL, OS_MESG_NOBLOCK);
 }
 

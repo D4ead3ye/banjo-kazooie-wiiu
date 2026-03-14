@@ -908,8 +908,8 @@ void func_8028FB28(void){
     bacarry_reset_marker();
 }
 
-void func_8028FB48(u32 mask){
-    func_80294610(mask);
+u32 func_8028FB48(u32 mask){ // [port] was void — MIPS implicit return from func_80294610
+    return func_80294610(mask);
 }
 
 void func_8028FB68(void){

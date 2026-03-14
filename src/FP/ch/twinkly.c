@@ -75,7 +75,7 @@ Actor *func_8038C0B0(ActorMarker *marker, f32 arg1[3], f32 arg2, f32 arg3[3], s3
     sp40[2] = (f32)marker->roll;
     sp3C = this->scale;
     if(animMtxList_len(marker->unk20)){
-        return func_802EBAE0(sp5C, sp4C, sp40, sp3C, NULL, marker->unk20, arg1, arg2, arg3);
+        return (Actor *)(intptr_t)func_802EBAE0(sp5C, sp4C, sp40, sp3C, NULL, marker->unk20, arg1, arg2, arg3); // [port] s32 return → Actor *
     }
     else{
         return NULL;

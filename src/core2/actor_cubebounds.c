@@ -6,6 +6,7 @@
 #include <core2/file.h>
 #include "bk_math.h"
 #include "prop.h"
+#include "port/ShipUtils.h" // [port] BK_LOG_*
 
 extern void mapModel_getCubeBounds(s32 min[3], s32 max[3]);
 extern f32 func_803243D0(struct56s *arg0, f32 arg1[3]);
@@ -16,6 +17,7 @@ extern bool bitfield_isBitSet(s32 *arg0, s32 arg1);
 extern void bitfield_setAll(s32 *arg0, bool arg1);
 extern void func_8032D510(Cube *, Gfx **, Mtx **, Vtx **);
 extern ActorProp *func_803322F0(Cube *, ActorMarker *, f32, s32, s32 *);
+extern BKCollisionTri *func_803311D4(Cube *cube, f32 arg1[3], f32 arg2[3], f32 arg3[3], u32 arg4); // [port] missing prototype — implicit int return truncates 64-bit pointer
 extern BKCollisionTri *func_803319C0(Cube *cube, f32 position[3], f32 radius, f32 arg2[3], u32 flags);
 extern BKCollisionTri *func_80331638(Cube *cube, f32 volume_p1[3], f32 volume_p2[3], f32 radius, f32 arg2[3], s32, u32 flags);
 
@@ -705,7 +707,7 @@ void func_80303C54(Cube *cube, ActorMarker *marker, f32 arg2, s32 arg3, s32 *arg
                 }
             }
             if (phi_s0 != NULL) {
-                D_803820B8[*arg5] = phi_s0;
+                D_803820B8[*arg5] = (uintptr_t)phi_s0; // [port] cast ActorProp* to uintptr_t for storage
                 *arg5 += 1;
             }
         }
@@ -905,7 +907,7 @@ static void __code7AF80_initCubeFromFile(Cube *cube, File* file_ptr) {
         }
         if (file_getNWords_ifExpected(file_ptr, 0, pad, 3)) {
             file_getNWords(file_ptr, pad, 3);
-        } else if (!file_getNWords_ifExpected(file_ptr, 2, &pad, 3) && file_isNextByteExpected(file_ptr, 3)
+        } else if (!file_getNWords_ifExpected(file_ptr, 2, pad, 3) && file_isNextByteExpected(file_ptr, 3) // [port] pass array directly (decays to s32*)
         ) {
             code7AF80_initCubeFromFile(file_ptr, cube);
         } else {
@@ -949,7 +951,10 @@ void cubeList_fromFile(File *file_ptr) {
     __code7AF80_func_80308984();
 }
 
-s32 func_803048E0(s32 arg0[3], s32 arg1[3], s32 arg2, s32 arg3, s32 arg4) {
+// [port] arg1 receives &Cube* and arg2 receives &NodeProp*/&ModelProp* from callers;
+// both are written through by func_8032F170 as Cube** and void**.
+// Original s32 types truncated 64-bit pointers.
+s32 func_803048E0(s32 arg0[3], void *arg1, void *arg2, s32 arg3, s32 arg4) {
     Cube * var_s0;
 
     func_8032EE2C(arg0, arg3, arg4);
@@ -1278,6 +1283,20 @@ Actor * func_803055E0(enum actor_e arg0, s32 position[3], s32 yaw, s32 arg3, s32
         }
         else{
             actor->unk44_14 = func_80341C78(position);
+        }
+        // [port] diagnostic: log spline assignment for spawned actors
+        if(actor->unk44_14 >= 0){
+            BK_LOG_WARN("[port] actor %d at (%d,%d,%d): spline=%d, group=%d, unk2C_2=true",
+                arg0, position[0], position[1], position[2], actor->unk44_14, arg3);
+        } else {
+            static s32 noSplineCount = 0;
+            noSplineCount++;
+            if(noSplineCount <= 5) {
+                BK_LOG_WARN("[port] actor %d at (%d,%d,%d): NO spline (group=%d, tmp=%p)",
+                    arg0, position[0], position[1], position[2], arg3, (void*)tmp);
+            } else if(noSplineCount == 6) {
+                BK_LOG_WARN("[port] (suppressing further no-spline messages)");
+            }
         }
         if(!(actor->unk44_14  < 0)){
             sp28[0] = (f32)position[0];
@@ -1792,7 +1811,6 @@ s32 func_80306EF4(s32 arg0[3], s32 arg1, u32 arg2) {
     s32 temp_s6;
     Struct_core2_7AF80_2 *var_s0;
     Struct_core2_7AF80_1 *var_s1;
-
     temp_s4 = arg0[1] + arg1 / 2;
     temp_s6 = arg0[1] - arg1 / 2;
     for(var_s1 = D_8036A9C8; var_s1 < D_8036A9C8 + D_8036A9C4; var_s1++) {
@@ -1801,7 +1819,7 @@ s32 func_80306EF4(s32 arg0[3], s32 arg1, u32 arg2) {
                 var_s0 = var_s1->unk8;
                 for(var_s0 = var_s1->unk8; var_s0 < var_s1->unk8 + var_s1->count; var_s0++){
                     if( (var_s0->unk10_3 & arg2)
-                        && (temp_s4 >= var_s0->position[1]) && (temp_s6 < var_s0->position[1]) 
+                        && (temp_s4 >= var_s0->position[1]) && (temp_s6 < var_s0->position[1])
                         && (ml_vec3w_within_horizontal_distance(arg0, (void *) var_s0, var_s0->radius))
                     ) {
                             return var_s1 - D_8036A9C8;
@@ -1810,7 +1828,7 @@ s32 func_80306EF4(s32 arg0[3], s32 arg1, u32 arg2) {
             }
             else{
                 for(var_s0 = var_s1->unk8; var_s0 < var_s1->unk8 + var_s1->count; var_s0++){
-                    if( (var_s0->unk10_3 & arg2) 
+                    if( (var_s0->unk10_3 & arg2)
                         && ((var_s0->unk10_3 & 2) || ((temp_s4 >= var_s0->position[1]) && (temp_s6 < var_s0->position[1])))
                         && (ml_vec3w_within_horizontal_distance(arg0, (void *) var_s0, var_s0->radius))
                     ) {
@@ -1917,7 +1935,7 @@ s32 func_80307504(f32 arg0[3], s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     else{
         if( (var_s0->unk10_3 & arg4))
             if( ((var_s0->unk10_3 & 2) || (!(max < var_s0->position[1]) && (min < var_s0->position[1]))))
-                if (ml_vec3w_within_horizontal_distance(&sp4C, var_s0->position, var_s0->radius))
+                if (ml_vec3w_within_horizontal_distance(sp4C, var_s0->position, var_s0->radius)) // [port] pass array directly (decays to s32*)
                     return arg2;
     }
 
@@ -1925,7 +1943,7 @@ s32 func_80307504(f32 arg0[3], s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         for(var_s0 = temp_s1->unk8; var_s0 < temp_s1->unk8 + temp_s1->count; var_s0++){
             if (var_s0->unk10_3 & arg4)
                 if (!(max < var_s0->position[1]) && (min < var_s0->position[1]))
-                    if (ml_vec3w_within_horizontal_distance(&sp4C, var_s0->position, var_s0->radius)) // [port] pass position field explicitly
+                    if (ml_vec3w_within_horizontal_distance(sp4C, var_s0->position, var_s0->radius)) // [port] pass array directly (decays to s32*)
                         return (var_s0 - temp_s1->unk8);
         }
     }
@@ -1933,7 +1951,7 @@ s32 func_80307504(f32 arg0[3], s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         for(var_s0 = temp_s1->unk8; var_s0 < temp_s1->unk8 + temp_s1->count; var_s0++){
             if ((var_s0->unk10_3 & arg4))
                 if(((var_s0->unk10_3 & 2) || (!(max < var_s0->position[1]) && (min < var_s0->position[1]))))
-                    if (ml_vec3w_within_horizontal_distance(&sp4C, var_s0->position, var_s0->radius)) // [port] pass position field explicitly
+                    if (ml_vec3w_within_horizontal_distance(sp4C, var_s0->position, var_s0->radius)) // [port] pass array directly (decays to s32*)
                         return var_s0 - temp_s1->unk8;
         }
     }
@@ -2418,7 +2436,7 @@ static void __code7AF80_func_80308984(void) {
                     if(D_8036ABAC[i] != -1){
                         temp_s4 = D_8036ABD4;
                         __code7AF80_addCubeIndexToD_80382150(iCube - sCubeList.cubes);
-                        __code7AF80_addCubeIndexToD_80382150(NULL);
+                        __code7AF80_addCubeIndexToD_80382150(0); // [port] was NULL — function takes s32, not pointer
 
                         for(jCube = sCubeList.cubes; jCube < sCubeList.cubes + sCubeList.cubeCnt; jCube++){
                             for(jNode = jCube->prop1Ptr; jNode < jCube->prop1Ptr + jCube->prop1Cnt; jNode++){

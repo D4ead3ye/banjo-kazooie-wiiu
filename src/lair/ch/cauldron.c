@@ -7,7 +7,7 @@ extern void func_8028F4B8(f32[3], f32, f32);
 extern void func_802D6310(f32, enum map_e, s32, s32, enum file_progress_e);
 extern void func_802EE354(Actor *, s32, s32, s32, f32, f32, f32, s32[4], s32, s32);
 extern void func_80324CFC(f32, enum comusic_e, s32);
-extern void func_8034DF30(s32, f32[4], f32[4], f32);
+extern void func_8034DF30(Struct70s *, f32[4], f32[4], f32); // [port] was s32, takes Struct70s *
 
 /* .h */
 typedef struct {

@@ -4,7 +4,7 @@
 
 extern void func_8028F7D4(f32, f32);
 void chLevelCollectible_update(Actor *this);
-extern void func_80329904(ActorMarker *, s32, f32*);
+// [port] removed: extern void func_80329904 — now provided by port_prototypes.h as s32 return
 extern ActorMarker *func_8028E86C(void);
 extern void timed_mapSpecificFlags_setTrue(f32, s32);
 extern void func_8035646C(s32);
@@ -118,7 +118,7 @@ void __chLevelCollectible_collide(ActorMarker *marker, ActorMarker *other_marker
                 
             case MARKER_37_GOLD_BULLION:
                 func_8025A6EC(COMUSIC_2B_DING_B, 0x7FFF);
-                timedFunc_set_1(0.5f, func_8035646C, FILEPROG_9_GOLD_BULLION_TEXT);
+                timedFunc_set_1(0.5f, (GenFunction_1)func_8035646C, FILEPROG_9_GOLD_BULLION_TEXT); // [port]
                 dialog_id = 0;
                 break;
 

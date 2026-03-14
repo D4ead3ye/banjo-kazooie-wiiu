@@ -44,10 +44,10 @@ ActorInfo D_80367AF8 = {
 void func_802D7420(Actor *this){
     ActorLocal_core2_50490 * local = (ActorLocal_core2_50490 *)&this->local;
 
-    if(local->unk0 != NULL){
-        func_802EE5E8(local->unk0);
+    if(local->unk0 != 0){ // [port] was != NULL — unk0 is s32 (particle emitter index)
+        func_802EE5E8((ParticleEmitter *)(uintptr_t)local->unk0); // [port] s32 to ParticleEmitter* via uintptr_t
     }
-    local->unk0 = NULL;
+    local->unk0 = 0; // [port] was = NULL — unk0 is s32
 }
 
 Actor *func_802D745C(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){

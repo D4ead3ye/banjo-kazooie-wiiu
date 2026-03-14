@@ -156,7 +156,7 @@ void func_802CA1E0(Actor *this){
     if(!this->volatile_initialized){
         this->volatile_initialized = true;
         tmp_v1 = (s32)this->yaw;
-        this->unk154 = D_80366E64[tmp_v1].unk0;
+        this->unk154 = (uintptr_t)D_80366E64[tmp_v1].unk0; // [port] Struct_Core2_43250_1* to uintptr_t
         reinterpret_cast(s32, this->unkBC[4]) = D_80366E64[tmp_v1].unk4;
         reinterpret_cast(s32, this->unkBC[0]) = 0;
     }

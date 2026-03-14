@@ -819,7 +819,7 @@ void func_80338904(Gfx **gfx, Mtx **mtx, void *arg2){
 
     if(D_80370990){
         vptr = &modelRenderDisplayList->list[cmd->unk8];
-        gSPDisplayList((*gfx)++, osVirtualToPhysical(vptr));
+        gSPDisplayList((*gfx)++, (Gfx *)osVirtualToPhysical(vptr)); // [port] uintptr_t -> Gfx*
     }
 }
 
@@ -829,14 +829,14 @@ void func_80338970(Gfx **gfx, Mtx **mtx, void *arg2){
     int i;
 
     if(D_80370990){
-        gSPDisplayList((*gfx)++, osVirtualToPhysical(modelRenderDisplayList->list + cmd->unk8[0]));
+        gSPDisplayList((*gfx)++, (Gfx *)osVirtualToPhysical(modelRenderDisplayList->list + cmd->unk8[0])); // [port] uintptr_t -> Gfx*
     }
 
     if(D_80370990){
         for(i = 1; cmd->unk8[i]; i++){
             mlMtxApply(*mtx);
             gSPMatrix((*gfx)++, (*mtx)++, G_MTX_PUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList((*gfx)++, osVirtualToPhysical(modelRenderDisplayList->list + cmd->unk8[i]));
+            gSPDisplayList((*gfx)++, (Gfx *)osVirtualToPhysical(modelRenderDisplayList->list + cmd->unk8[i])); // [port] uintptr_t -> Gfx*
         }
     }
 }
@@ -850,7 +850,7 @@ void func_80338AC4(Gfx **gfx, Mtx **mtx, void *arg2){
 //Cmd7_LOAD_DL???
 void func_80338AE8(Gfx **gfx, Mtx **mtx, void *arg2){
     if(D_80370990){
-        gSPDisplayList((*gfx)++, osVirtualToPhysical(modelRenderDisplayList->list + ((GeoCmd7*)arg2)->unkA));
+        gSPDisplayList((*gfx)++, (Gfx *)osVirtualToPhysical(modelRenderDisplayList->list + ((GeoCmd7*)arg2)->unkA)); // [port] uintptr_t -> Gfx*
     }
 }
 
@@ -1110,9 +1110,7 @@ BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation
         return 0;
     }
 
-    // [port] FEAT: frustum culling bypass — restore original call when culling is ready
-    D_80370990 = 1;
-    // D_80370990 = (D_80383704) ? viewport_func_8024DB50(object_position, spD0*scale) : 1;
+    D_80370990 = (D_80383704) ? viewport_func_8024DB50(object_position, spD0*scale) : 1;
     if(D_80370990 == 0){
         modelRender_reset();
         return 0;

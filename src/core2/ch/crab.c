@@ -153,7 +153,7 @@ void __chCrab_mutantTextCallback(ActorMarker *caller, enum asset_e text_id, s32 
     levelSpecificFlags_set(LEVEL_FLAG_E_CC_UNKNOWN, false);
 }
 
-bool __chCrab_802CB76C(ActorMarker *marker, ActorMarker *other) {
+s32 __chCrab_802CB76C(ActorMarker *marker, ActorMarker *other) { // [port] was bool — callback passed to func_803300C0 expects s32 return
     Actor *this;
 
     this = marker_getActor(marker);

@@ -20,7 +20,7 @@ extern BKCollisionTri *func_80320C94(f32[3], f32[3], f32, f32[3], s32, u32);
 void func_80294378(s32 arg0);
 void func_80294384(s32 arg0);
 void func_80294390(void);
-bool func_802946FC(f32 arg0[3][3], s32 arg1);
+bool func_802946FC(f32 arg0[3][3], BKCollisionTri *arg1); // [port] was s32 — receives BKCollisionTri* on 64-bit
 
 typedef struct {
     f32 unk0[3];
@@ -29,7 +29,7 @@ typedef struct {
     f32 unk1C[3];
     f32 unk28[3];
     f32 unk34[3];
-    s32 unk40;
+    BKCollisionTri *unk40; // [port] was s32 — stores BKCollisionTri* from func_80244E54
     f32 unk44[3][3];
     f32 unk68[3][3];
     s32 unk8C;
@@ -147,7 +147,7 @@ void func_80293668(void) {
         temp_f0 = ((D_8037C1F8[1] * 2) - 4.0f);
         if ((sp380[0]*sp380[0] + sp380[1]*sp380[1] + sp380[2]*sp380[2]) > (temp_f0 * temp_f0)) {
             sp38C = sp88->unk0[1];
-            sp88->unk40 = func_80244E54(sp88->unkC, sp88->unk0, sp88->unk44, temp_v0 | 0x1E0000, D_8037C1F8[1] - 1.0f, D_8037C1F8[0]);
+            sp88->unk40 = func_80244E54(sp88->unkC, sp88->unk0, sp88->unk44[0], temp_v0 | 0x1E0000, D_8037C1F8[1] - 1.0f, D_8037C1F8[0]); // [port] sp88->unk44 -> sp88->unk44[0]: f32[][3] decays to f32*
             if (sp88->unk40 != 0) {
                 ml_vec3f_normalize(sp380);
                 temp_f0 = sp380[0]*sp88->unk44[0][0] + sp380[1]*sp88->unk44[0][1] +  sp380[2]*sp88->unk44[0][2];
@@ -491,8 +491,8 @@ u32 func_80294660(void){
      return func_8031C59C(D_8037C200);
 }
 
-void func_80294684(void){
-     func_8031C5A4(D_8037C200);
+s32 func_80294684(void){ // [port] was void — MIPS implicit return from func_8031C5A4
+     return func_8031C5A4(D_8037C200);
 }
 
 // [port] was void — returns BKModelBin* (from func_8031C5DC)
@@ -509,7 +509,7 @@ BKCollisionTri *func_802946F0(void){
      return D_8037C204;
 }
 
-bool func_802946FC(f32 arg0[3][3], s32 arg1){
+bool func_802946FC(f32 arg0[3][3], BKCollisionTri *arg1){ // [port] was s32 — receives BKCollisionTri*
      if(arg1 == 0){
           return 0;
      }

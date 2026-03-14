@@ -180,7 +180,7 @@ s32 func_8033E368(void){
 //commonParticle_new
 int func_8033E3F0(enum common_particle_e particle_id, int arg1){
     f32 sp34[3];
-    s32 a0;
+    uintptr_t a0; // [port] was s32 — reused for u8 indices and AnimSprite* pointer
 
     if(arg1 == 0)
         return -1;
@@ -205,9 +205,9 @@ int func_8033E3F0(enum common_particle_e particle_id, int arg1){
         if(a0){
             func_8033FB64(a0);
         }
-        a0 = D_80384490[D_80384FD0].unk34;
+        a0 = (uintptr_t)D_80384490[D_80384FD0].unk34; // [port] AnimSprite* to uintptr_t
         if(a0){
-            animsprite_free(a0);
+            animsprite_free((AnimSprite *)a0); // [port] uintptr_t back to AnimSprite*
         }
         a0 = D_80384490[D_80384FD0].unk46;
         if(a0){
@@ -222,7 +222,7 @@ int func_8033E3F0(enum common_particle_e particle_id, int arg1){
     }
     
     //L8033E5B4
-    D_80384490[D_80384FD0].marker_30 = func_8032FBE4(sp34, func_8033DE60, 1, commonParticleType_80352C7C(particle_id));
+    D_80384490[D_80384FD0].marker_30 = func_8032FBE4(sp34, (MarkerDrawFunc)func_8033DE60, 1, commonParticleType_80352C7C(particle_id));
     D_80384490[D_80384FD0].marker_30->unk40_22 = 1;
     func_8032FFEC(D_80384490[D_80384FD0].marker_30, (u32)D_80384FD0);
     D_80384490[D_80384FD0].marker_30->collidable = false;

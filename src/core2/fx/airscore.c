@@ -91,7 +91,7 @@ void fxairscore_draw(enum item_e item_id, struct8s *arg1, Gfx **gfx, Mtx **mtx, 
 
             //stagger x position
             x = (i_part & 1) ? x + 5.0f : x - 5.0f;
-            gSPVertex((*gfx)++, *vtx, 4, 0);
+            gSPVertex((*gfx)++, (uintptr_t)*vtx, 4, 0); // [port] Vtx* -> uintptr_t
             for(v_y = 0; v_y < 2; v_y++){
                 for(v_x = 0; v_x < 2; v_x++){
                     (*vtx)->v.ob[0] = (x + (((texture_width * s_texture_scale) * v_x) - ((texture_width * s_texture_scale) / 2))) * 4.0f;

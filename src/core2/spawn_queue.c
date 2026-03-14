@@ -547,7 +547,7 @@ Actor *spawnQueue_actor_s16(uintptr_t actor_id, uintptr_t x, uintptr_t y, uintpt
     position[0] = reinterpret_cast(s16, x);
     position[1] = reinterpret_cast(s16, y);
     position[2] = reinterpret_cast(s16, z);
-    return actor_spawnWithYaw_s16(reinterpret_cast(enum actor_e, actor_id), position, 0);
+    return actor_spawnWithYaw_s16(reinterpret_cast(enum actor_e, actor_id), &position, 0); // [port] s16* to s16(*)[3]
 }
 
 Actor *spawnQueue_actor_s32(uintptr_t actor_id, uintptr_t x, uintptr_t y, uintptr_t z) {
@@ -555,7 +555,7 @@ Actor *spawnQueue_actor_s32(uintptr_t actor_id, uintptr_t x, uintptr_t y, uintpt
     position[0] = reinterpret_cast(s32, x);
     position[1] = reinterpret_cast(s32, y);
     position[2] = reinterpret_cast(s32, z);
-    return actor_spawnWithYaw_s32(reinterpret_cast(enum actor_e, actor_id), position, 0);
+    return actor_spawnWithYaw_s32(reinterpret_cast(enum actor_e, actor_id), &position, 0); // [port] s32* to s32(*)[3]
 }
 
 Actor *spawnQueue_bundle_f32(uintptr_t bundle_id, uintptr_t x, uintptr_t y, uintptr_t z) {

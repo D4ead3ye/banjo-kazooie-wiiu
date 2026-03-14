@@ -472,8 +472,8 @@ void func_8024FE44(u8 arg0, f32 arg1, f32 arg2){
     }
 }
 
-void func_8024FEEC(u8 arg0){
-    alCSeqGetTicks(&D_80281720[arg0].cseq);
+s32 func_8024FEEC(u8 arg0){ // [port] was void — MIPS implicit return from alCSeqGetTicks
+    return alCSeqGetTicks(&D_80281720[arg0].cseq);
 }
 
 void func_8024FF34(void){

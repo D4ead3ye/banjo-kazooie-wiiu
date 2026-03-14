@@ -118,9 +118,9 @@ void func_802DEE1C(Actor *this) {
                 break;
         }
         sp38 = (f32) ((f64) (sp44 + 1) * 0.75);
-        timedFunc_set_1(sp38, func_80311714, 0);
+        timedFunc_set_1(sp38, (GenFunction_1)func_80311714, 0); // [port]
         func_80324DBC(sp38, sp48, 0x80, NULL, NULL, NULL, NULL);
-        timedFunc_set_1(sp38, func_80311714, 1);
+        timedFunc_set_1(sp38, (GenFunction_1)func_80311714, 1); // [port]
         D_8037DFE4 = sp4C;
     }
     switch(this->state){

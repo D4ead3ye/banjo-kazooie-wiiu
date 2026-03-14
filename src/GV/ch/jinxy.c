@@ -3,7 +3,7 @@
 #include "variables.h"
 
 extern f32 mapModel_getFloorY(f32[3]);
-void func_80329904(ActorMarker *, s32, void *);
+// [port] removed: void func_80329904 — now provided by port_prototypes.h as s32 return
 
 void func_8038A314(Actor *this);
 void func_8038A31C(Actor *this);

@@ -122,7 +122,7 @@ void func_8025456C(EmptyHeapBlock * arg0){
     arg0->hdr.unkC_7 = HEAP_BLOCK_EMPTY;
     arg0->hdr.unusedBytes_C_31 = 0;
     if((u8*)arg0->hdr.next - (u8*)arg0 < 10000){
-        arg0->prev_free = &D_8002D500;
+        arg0->prev_free = &D_8002D500[0]; // [port] was &D_8002D500 — use element 0 for correct type
         arg0->next_free = D_8002D500->next_free;
         D_8002D500->next_free->prev_free = arg0;
         D_8002D500->next_free = arg0;

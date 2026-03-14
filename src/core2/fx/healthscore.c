@@ -113,7 +113,7 @@ void fxhealthscore_draw(enum item_e item_id, struct8s *arg1, Gfx **gfx, Mtx **mt
         f14 = (f32) gFramebufferHeight / 2 - func_802FB0E4(arg1) - D_80381F08[s6] - -48.0f;
         f14 = (i & 1) ? f14 + 5.75 : f14 - 5.75;
 
-        gSPVertex((*gfx)++, *vtx, 4, 0);
+        gSPVertex((*gfx)++, (uintptr_t)*vtx, 4, 0); // [port] Vtx* -> uintptr_t
 
         for (tmp_v1 = 0; tmp_v1 < 2; tmp_v1++) {//L8030101C
             for (tmp_v0 = 0; tmp_v0 < 2; tmp_v0++) {//L80301030

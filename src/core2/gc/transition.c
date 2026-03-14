@@ -187,7 +187,7 @@ void _gctranstion_changeState(s32 state, TransitionInfo *desc){
         s_current_transition.model_ptr = assetcache_get(desc->model_index);
 
     //load transistion animation
-    if(desc != NULL && desc->anim_index != NULL){
+    if(desc != NULL && desc->anim_index != 0){ // [port] was NULL, use 0 for s32
         s_current_transition.anctrl = anctrl_new(0);
         anctrl_reset(s_current_transition.anctrl);
         anctrl_setIndex(s_current_transition.anctrl, desc->anim_index);

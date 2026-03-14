@@ -16,6 +16,7 @@ This document describes the major game systems in the Banjo-Kazooie codebase and
 - [Collectibles and Scoring](#collectibles-and-scoring)
 - [Model Rendering](#model-rendering)
 - [Sprite Rendering](#sprite-rendering)
+- [Model/Sprite Asset Interchangeability (N64 vs PC)](#modelsprite-asset-interchangeability-n64-vs-pc)
 - [Cutscenes](#cutscenes)
 - [Save Data](#save-data)
 
@@ -416,6 +417,32 @@ Sprites are 2D billboard images used for dialog portraits, particles, trees, and
 5. Submit frame's display list with vertex data in segment 1
 
 `sprite_animstep.c` advances the current frame based on the animation speed and direction defined in the sprite's metadata.
+
+---
+
+## Model/Sprite Asset Interchangeability (N64 vs PC)
+
+### N64 Behavior
+
+On N64, model and sprite assets were raw binary blobs stored at contiguous ROM addresses. Because the game accessed them through direct ROM-to-RAM DMA, the same data pointer could be interpreted as either a model or a sprite — they shared the same memory space with no type enforcement. The prop system distinguishes model props from sprite props using the `unk8_1` flag (bit 1 of the setup data flags u16): a value of 1 indicates a model prop, 0 indicates a sprite prop.
+
+Some actors have `unk8_1=1` in their N64 setup data despite their underlying asset being a sprite. Mumbo Tokens are a notable example. On N64 this was harmless: `func_80330F50` would return data from the asset, and because the sprite data happened to have `animType=0`, the animation code in `func_8032D510` would exit early without attempting model-specific animation operations on the sprite data.
+
+### PC Port Incompatibility
+
+On PC, models and sprites are loaded through separate resource factories (`ModelFactory` and `SpriteFactory`) that produce distinct runtime types. An asset exported as a sprite cannot be accessed through the model loading path and vice versa. This breaks the N64's implicit interchangeability: when the prop system sees `unk8_1=1` and treats the prop as a model, it attempts to load the asset through `ModelFactory`, which fails because the asset was exported by `SpriteFactory`.
+
+### Fix Strategy
+
+The fix introduces a runtime asset type check rather than relying solely on the setup data flag:
+
+1. **`ResourceMgr_IsModelAsset()`** queries the resource manager to determine whether a given asset ID was actually exported as a model or a sprite, regardless of what the prop's `unk8_1` flag claims.
+
+2. **Animation path expansion in `func_8032D510`**: The original code only entered the sprite animation path for props with `unk8_1=0`. The fix expands the condition so that marker/actor props with `unk8_1=1` also enter the sprite animation path when `ResourceMgr_IsModelAsset()` reports the asset is not a model.
+
+3. **Division-by-zero guard in `func_8032CD60`**: Actors that newly enter the sprite animation path (because the expanded condition now routes them there) may have `speed=0` or a zero frame range. A guard prevents the resulting division by zero. This is a port-specific safety measure for the expanded code path, not a change to original decomp logic.
+
+This approach preserves the original decomp behavior for all correctly-flagged props while handling the edge cases where N64's memory model allowed type mismatches to silently succeed.
 
 ---
 

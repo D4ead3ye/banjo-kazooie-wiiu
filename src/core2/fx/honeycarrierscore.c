@@ -17,7 +17,7 @@ void gcpausemenu_80314AC8(s32);
 void item_set(s32, s32);
 
 
-f32 func_802FB0E4(s32);
+f32 func_802FB0E4(struct8s *); // [port] was s32, actually takes struct8s*
 
 /* .data*/
 void *D_8036A010 = NULL;
@@ -156,7 +156,7 @@ void fxhoneycarrierscore_draw(s32 arg0, struct8s *arg1, Gfx **arg2, Mtx **arg3, 
             sp130 = cosf(((D_803815CC + sp110) * 0.017453292519943295)) * (var_f24 * 24.5) * D_803815D0;
             var_f24 = MIN(1.0, MAX(0.0, D_803815C8));
             sp12C = sinf(((D_803815CC + sp110) * 0.017453292519943295))* (var_f24 * 24.5) * D_803815D0;
-            gSPVertex((*arg2)++, *arg4, 4, 0);
+            gSPVertex((*arg2)++, (uintptr_t)*arg4, 4, 0); // [port] Vtx* -> uintptr_t
             for(var_v1 = 0; var_v1 < 2; var_v1++){
                     for(var_v0 = 0; var_v0 < 2; var_v0++, (*arg4)++){
                         (*arg4)->v.ob[0] = ((((sp13C * D_803815D0) * var_v0) - ((sp13C * D_803815D0) / 2)) + (s32) (sp130 + sp128)) * 4.0f;

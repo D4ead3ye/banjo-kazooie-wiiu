@@ -409,12 +409,12 @@ void chBottlesBonus_lose(u8 *arg0, enum asset_e text_id) {
         func_80311714(1);
     }
     else{
-        timedFunc_set_1(1.25f, func_8034BB08, 0);
+        timedFunc_set_1(1.25f, (GenFunction_1)func_8034BB08, 0); // [port]
     }
 }
 
 void chBottlesBonus_IncrementPuzzle(ActorMarker *caller, enum asset_e text_id, s32 arg2){
-    timedFunc_set_1(0.5f, func_8034BB08, 1);
+    timedFunc_set_1(0.5f, (GenFunction_1)func_8034BB08, 1); // [port]
     chBottleBonusPuzzleIndex++;
 }
 

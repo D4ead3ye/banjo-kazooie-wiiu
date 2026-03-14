@@ -66,7 +66,7 @@ void mapSavestate_save(enum map_e map)
     {
       wSize += 4;
       D_8037E650[map] = (uintptr_t) bk_realloc((void *)D_8037E650[map], wSize * new_var);
-      valPtr = ((uintptr_t) D_8037E650[map]) + (wSize * new_var);
+      valPtr = (u32 *)(D_8037E650[map] + (wSize * new_var)); // [port] cast uintptr_t arithmetic to u32*
       valPtr[-1] = 0;
       new_var = 1;
       valPtr[-2] = 0;
@@ -74,13 +74,13 @@ void mapSavestate_save(enum map_e map)
       if (1) if (1) if (1) if (1) if (1) if (1) if (1) ;
       valPtr[-4] = 0;
     }
-    valPtr = D_8037E650[map];
+    valPtr = (u32 *)D_8037E650[map]; // [port] cast uintptr_t to u32*
     valPtr[iBit >> 5] = (reg_s4) ? (valPtr[iBit >> 5] | (1 << (iBit & 0x1f))) : (valPtr[iBit >> 5] & (~((1 ^ 0) << (iBit & 0x1f))));
     iBit++;
     wSize = wSize;
   }
 
-  D_8037E650[map] = (uintptr_t)actors_appendToSavestate((void *)D_8037E650[map], ((u32 *) D_8037E650[map]) + (4 * ((iBit + 0x7F) >> 7)));
+  D_8037E650[map] = (uintptr_t)actors_appendToSavestate((void *)D_8037E650[map], (uintptr_t)(((u32 *) D_8037E650[map]) + (4 * ((iBit + 0x7F) >> 7)))); // [port] cast u32* to uintptr_t
 }
 
 void mapSavestate_apply(enum map_e map_id) {
@@ -90,7 +90,7 @@ void mapSavestate_apply(enum map_e map_id) {
     ActorListSaveState *actor_list_ptr;
     u32 bit_value;
 
-    if(D_8037E650[map_id] == NULL)
+    if(D_8037E650[map_id] == 0) // [port] was NULL, use 0 for uintptr_t
         return;
 
     flag_ptr = reinterpret_cast(u32*, D_8037E650[map_id]);
@@ -107,9 +107,9 @@ void mapSavestate_apply(enum map_e map_id) {
     }
     func_80308230(0);
 
-    actor_list_ptr = (ActorListSaveState *)D_8037E650[map_id] + (((iBit + (0x80 - 1)) >> 7) * 4);
-    func_8032A09C(D_8037E650[map_id], actor_list_ptr);
-    bk_free((void*)D_8037E650[map_id] );
-    D_8037E650[map_id] = NULL;
+    actor_list_ptr = (ActorListSaveState *)((u32 *)D_8037E650[map_id] + (((iBit + (0x80 - 1)) >> 7) * 4)); // [port] was ActorListSaveState* arithmetic — sizeof(ActorListSaveState) differs on 64-bit; use u32* to match save function's byte offset
+    func_8032A09C(0, actor_list_ptr); // [port] arg0 is unused in func_8032A09C; was D_8037E650[map_id] (uintptr_t→s32 truncation)
+    bk_free((void*)D_8037E650[map_id]);
+    D_8037E650[map_id] = 0; // [port] was NULL, use 0 for uintptr_t
 }
 

@@ -536,7 +536,7 @@ void func_8031DAE0(NodeProp *arg0, ActorMarker *arg1) {
         mapSpecificFlags_set(2, 1);
         func_8025A6EC(COMUSIC_3B_MINIGAME_VICTORY, 0x6D60);
         func_8028F918(1);
-        timedFunc_set_2(1.8f, &func_8031DAA8, 0x1C, 1);
+        timedFunc_set_2(1.8f, (GenFunction_2)&func_8031DAA8, 0x1C, 1); // [port]
         func_802D6924();
     }
 }
@@ -552,7 +552,7 @@ void warp_mmmEnterMumbosHut(NodeProp *arg0, ActorMarker *arg1) {
 
 void warp_mmmEnterRainBarrel(NodeProp *arg0, ActorMarker *arg1) {
     if (player_getTransformation() == TRANSFORM_3_PUMPKIN) {
-        func_8031CC8C(arg0, arg1 + 0x2F00);
+        func_8031CC8C(arg0, (s32)(uintptr_t)arg1 + 0x2F00); // [port] arg1 is actually an integer packed into pointer param on N64
     }
 }
 
@@ -571,21 +571,21 @@ void func_8031DC10(NodeProp *arg0, ActorMarker *arg1) {
 }
 
 void warp_mmmEnterRainBarrelBottom(NodeProp *arg0, ActorMarker *arg1) {
-    warp_mmmEnterRainBarrel(arg0, 2);
+    warp_mmmEnterRainBarrel(arg0, (ActorMarker *)(uintptr_t)2); // [port] integer packed into pointer param on N64
 }
 
 void warp_bgsEnterMrVileNostril(NodeProp *arg0, ActorMarker *arg1) {
     if (player_getTransformation() == TRANSFORM_5_CROC) {
-        func_8031CC8C(arg0, arg1 + 0x1000);
+        func_8031CC8C(arg0, (s32)(uintptr_t)arg1 + 0x1000); // [port] arg1 is actually an integer packed into pointer param on N64
     }
 }
 
 void warp_bgsEnterMrVileRightNostril(NodeProp *arg0, ActorMarker *arg1) {
-    warp_bgsEnterMrVileNostril(arg0, 3);
+    warp_bgsEnterMrVileNostril(arg0, (ActorMarker *)(uintptr_t)3); // [port] integer packed into pointer param on N64
 }
 
 void warp_bgsEnterMrVileLeftNostril(NodeProp *arg0, ActorMarker *arg1) {
-    warp_bgsEnterMrVileNostril(arg0, 4);
+    warp_bgsEnterMrVileNostril(arg0, (ActorMarker *)(uintptr_t)4); // [port] integer packed into pointer param on N64
 }
 
 void warp_bgsEnterTanktupConditional(NodeProp *arg0, ActorMarker *arg1) {

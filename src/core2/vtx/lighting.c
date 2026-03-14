@@ -61,21 +61,21 @@ s32 __codeAC520_pad_func_8033361C() {
         }
     }
 
-    return NULL;
+    return 0; // [port] was NULL, use 0 for s32
 }
 
 s32 __codeAC520_pad_func_80333698(s32 index) {
     Lighting *startPtr = bk_vector_getBegin(sLightingbk_vectorList.bk_vector_ptr);
     Lighting *iPtr = bk_vector_at(sLightingbk_vectorList.bk_vector_ptr, index - 1);
     Lighting *endPtr = bk_vector_getEnd(sLightingbk_vectorList.bk_vector_ptr);
-    
+
     for(++iPtr; iPtr < endPtr; iPtr++) {
         if(iPtr->unk34) {
             return (iPtr-startPtr) + 1;
         }
     }
 
-    return NULL;
+    return 0; // [port] was NULL, use 0 for s32
 }
 
 void __codeAC520_pad_func_80333734(s32 index, f32 *arg1) {

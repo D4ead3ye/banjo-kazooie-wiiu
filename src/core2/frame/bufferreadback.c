@@ -429,12 +429,11 @@ void func_802E4384(void){
     }
     else{
         func_8033DC18();
-        ;
-        // [port] Original: time_setDeltaReal_frames((s32)(func_8033DC20()*60.0f + 0.5));
-        // Integer frame conversion truncates wall-clock delta (e.g. 0.0154→1/60=0.0167 at 65fps).
-        // Pass real delta directly to avoid cumulative speed error.
-        // TODO: s_dTimeReal_frames stays 0 — dynamicCamera, zoombox, clam.c depend on it.
-        time_setDeltaReal_sec(func_8033DC20());
+        // [port] Restored original integer-frame timing. The port's Game.cpp runs game logic
+        // at a fixed 30fps timestep, so this quantizes to ~2 VIs matching N64 behavior.
+        // Previously used time_setDeltaReal_sec() which left s_dTimeReal_frames at 0,
+        // breaking dynamicCamera, zoombox, clam.c, and demo playback timing.
+        time_setDeltaReal_frames((s32)(func_8033DC20()*60.0f + 0.5));
     }
     func_8033DC10();
 
@@ -593,7 +592,7 @@ void func_802E48B8(enum game_mode_e mode, s32 arg1){
 s32 game_defrag(void){
     func_802555C4(); //reset defragged flag in memory.c
     if( !level_get() )
-        return NULL;
+        return 0; // [port] was NULL — s32 return, not pointer
     
     glspline_defrag();
     animCache_defrag();

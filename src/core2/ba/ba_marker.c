@@ -5,6 +5,7 @@
 #include "core2/ba/physics.h"
 #include "version.h"
 #include "prop.h"
+#include "port/ShipUtils.h" // [port] BK_LOG_*
 
 extern void func_803012F8(void);
 extern void __baMarker_8028BA00(s32);
@@ -176,7 +177,7 @@ void __baMarker_resolveMusicNoteCollision(Prop *arg0) {
     }
     if (item_getCount(ITEM_C_NOTE) < 100) {
         func_8025A6EC(COMUSIC_9_NOTE_COLLECTED, 16000);
-        timedFunc_set_1(0.75f, func_8035644C, FILEPROG_3_MUSIC_NOTE_TEXT);
+        timedFunc_set_1(0.75f, (GenFunction_1)func_8035644C, FILEPROG_3_MUSIC_NOTE_TEXT); // [port]
     }
     fxSparkle_musicNote(arg0->unk4);
 }
@@ -251,10 +252,18 @@ void __baMarker_resolveCollision(Prop *other_prop){
     tmp_struct_type sp64;
     s32 tmp1;
 
-    if(*((u32*)(((uintptr_t)other_prop) + 8)) & 1){
+    if(other_prop->markerFlag){ // [port] was raw *(u32*)(prop+8) & 1 — offset wrong on 64-bit due to Prop union padding
         plyr_collision_type = MARKER_COLLISION_FUNC_0;
         obj_collision_type = MARKER_COLLISION_FUNC_0;
         marker = other_prop->actorProp.marker;
+        // [port] diagnostic: log collision resolution
+        {
+            static s32 collisionLogCount = 0;
+            if(collisionLogCount < 10) {
+                BK_LOG_WARN("[port] baMarker collision: marker->id=0x%X", marker->id);
+                collisionLogCount++;
+            }
+        }
         actor = NULL;
         if(marker->unk3E_0){
             actor = marker_getActor(marker);
@@ -353,7 +362,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
                         mapSpecificFlags_set(0xD, 1);
                         func_8030E6D4(SFX_90_SWITCH_PRESS);
                         func_802BAFE4(0x14);
-                        timedFunc_set_1(1.5f, __baMarker_8028BA00, 0xB);
+                        timedFunc_set_1(1.5f, (GenFunction_1)__baMarker_8028BA00, 0xB); // [port]
                     }
                 }
                 break;
@@ -364,7 +373,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
                         mapSpecificFlags_set(0,1);
                         func_8030E6D4(SFX_90_SWITCH_PRESS);
                         func_802BAFE4(0x7E);
-                        timedFunc_set_1(1.5f, __baMarker_8028BA00, 0xf);
+                        timedFunc_set_1(1.5f, (GenFunction_1)__baMarker_8028BA00, 0xf); // [port]
                     }
                 }
                 break;
@@ -573,7 +582,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
                     {
                         honeycombscore_set(sp98, 1);
                         func_8025A6EC(COMUSIC_17_EMPTY_HONEYCOMB_COLLECTED, 28000);
-                        timedFunc_set_1(2.0f, func_8035644C, FILEPROG_B_EMPTY_HONEYCOMB_TEXT);
+                        timedFunc_set_1(2.0f, (GenFunction_1)func_8035644C, FILEPROG_B_EMPTY_HONEYCOMB_TEXT); // [port]
                         item_inc(ITEM_13_EMPTY_HONEYCOMB);
                         if(!(item_getCount(ITEM_13_EMPTY_HONEYCOMB) < 6)){
                             gcpausemenu_80314AC8(0);
@@ -604,7 +613,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
                 }  
 
                 func_8025A6EC(COMUSIC_16_HONEYCOMB_COLLECTED, 28000);
-                timedFunc_set_1(0.75f, func_8035644C, FILEPROG_A_HONEYCOMB_TEXT);
+                timedFunc_set_1(0.75f, (GenFunction_1)func_8035644C, FILEPROG_A_HONEYCOMB_TEXT); // [port]
                 item_inc(ITEM_14_HEALTH);
                 fxSparkle_honeycomb(&other_prop->actorProp.x);
                 marker_despawn(marker);
@@ -715,7 +724,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
                     func_8030E6D4(SFX_127_AUDIENCE_MIXED);
                 }
                 func_8025A6EC(COMUSIC_15_EXTRA_LIFE_COLLECTED, 0x7FFF);
-                timedFunc_set_1(1.5f, func_8035646C, FILEPROG_C_EXTRA_LIFE_TEXT);
+                timedFunc_set_1(1.5f, (GenFunction_1)func_8035646C, FILEPROG_C_EXTRA_LIFE_TEXT); // [port]
                 fxSparkle_extraLife(&other_prop->actorProp.x);
                 item_inc(ITEM_16_LIFE);
                 marker_despawn(marker);

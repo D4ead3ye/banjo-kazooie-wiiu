@@ -337,9 +337,9 @@ void audioManager_create(void) {
     D_8027D5C0[0].unk0.next = NULL;
     for(i = 0; i < 89; i++){
         alLink((ALLink *)&D_8027D5C0[i+1], (ALLink *)&D_8027D5C0[i]);
-        D_8027D5C0[i].unk10 = alHeapDBAlloc(0, 0, D_8027DD50.heap, 1, VER_SELECT(0x200, 0x270, 0x200, 0x200));
+        D_8027D5C0[i].unk10 = (uintptr_t)alHeapDBAlloc(0, 0, D_8027DD50.heap, 1, VER_SELECT(0x200, 0x270, 0x200, 0x200)); // [port] void * → uintptr_t
     }
-    D_8027D5C0[i].unk10 = alHeapDBAlloc(0, 0, D_8027DD50.heap, 1, VER_SELECT(0x200, 0x270, 0x200, 0x200));
+    D_8027D5C0[i].unk10 = (uintptr_t)alHeapDBAlloc(0, 0, D_8027DD50.heap, 1, VER_SELECT(0x200, 0x270, 0x200, 0x200)); // [port] void * → uintptr_t
     for(i = 0; i < 2; i++){
         audioManager.ACMDList[i] = bk_malloc(1200000/FRAMERATE);
     }
@@ -363,7 +363,7 @@ void audioManagerThread_entry(void *arg) {
         osRecvMesg(&audioManager.audioFrameMsgQ, NULL, OS_MESG_BLOCK);
         if (audioManager_handleFrameMsg(audioManager.audioInfo[D_8027DCC8 % 3], D_80275848)){
             if(phi_s1 == 0){
-                osRecvMesg(&audioManager.audioReplyMsgQ, &D_80275844, OS_MESG_BLOCK);
+                osRecvMesg(&audioManager.audioReplyMsgQ, (OSMesg *)&D_80275844, OS_MESG_BLOCK); // [port] Struct_1D00_2 ** → OSMesg *
                 audioManager_handleDoneMsg(D_80275844->unk4);
                 D_80275848 = D_80275844->unk4;
             }else{
@@ -436,7 +436,7 @@ bool audioManager_handleFrameMsg(AudioInfo *info, AudioInfo *prev_info){
     if(sp34 == 0){
         return 0;
     }else{
-        func_802535A8(audioManager.ACMDList[D_8027DCD0], sp38, &audioManager.audioReplyMsgQ, &info->unk8);
+        func_802535A8((Gfx **)audioManager.ACMDList[D_8027DCD0], (Gfx **)sp38, &audioManager.audioReplyMsgQ, &info->unk8); // [port] Acmd * → Gfx **
         func_80250650();
         D_8027DCD0 ^= 1;
         return 1;
@@ -566,7 +566,7 @@ uintptr_t func_80240204(uintptr_t addr, s32 len, void *state){ // [port] was s32
 void *func_802403B8(void *state) {
     if (D_8027D5B0.unk0 == 0) {
         D_8027D5B0.unk4 = NULL;
-        D_8027D5B0.unk8 = &D_8027D5C0;
+        D_8027D5B0.unk8 = &D_8027D5C0[0]; // [port] was &array — use &array[0] for correct pointer type
         D_8027D5B0.unk0 = 1;
     }
     *(void **)state = &D_8027D5B0;

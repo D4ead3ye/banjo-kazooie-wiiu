@@ -3,6 +3,7 @@
 #include "functions.h"
 #include "variables.h"
 #include "enums.h"
+#include "port/ShipUtils.h" // [port] BK_LOG_*
 
 #include <core2/file.h>
 
@@ -80,13 +81,13 @@ s32 D_803833F0[3];
 s32 D_803833FC;
 s32 D_80383400;
 Cube *D_80383404;
-s32 D_80383408;
+void *D_80383408; // [port] was s32; stores Prop*/NodeProp* pointers
 s32 D_8038340C;
 
 //BREAK???
 f32 D_80383410[3];
 ActorMarker *D_8038341C;
-s32 D_80383420;
+BKCollisionTri *D_80383420; // [port] was s32 — stores BKCollisionTri* from func_802E805C
 u8  D_80383428[0x1C];
 s32 D_80383444;
 int D_80383448;
@@ -174,10 +175,10 @@ void func_8032CD60(Prop *prop) {
     s32 sp48;
     s32 sp44;
     s32 sp40;
-    bool sp3C;
+    s32 sp3C;
     s32 sp38;
     bool sp34;
-    bool sp30;
+    s32 sp30;
     s32 sp2C;
     bool var_t5;
     s32 var_v1;
@@ -193,8 +194,12 @@ void func_8032CD60(Prop *prop) {
        sp40 = var_v0->unkC.bit24;
        sp3C = var_v0->unkC.bit22;
         sp38 =  var_v0->frameCnt;
+        // [port] Guard: speed=0 or frameCnt<=0 would cause division by zero.
+        // On N64 this was UB too, so these sprites were never animated.
+        if (sp48 == 0 || sp38 <= 0) return;
         sp34 = (sp44 == 1) || (sp44 == 2U);
         sp30 = (sp44 == 3) ? sp38 : (sp38 - sp34)*2;
+        if (sp30 == 0) return; // [port] prevent div-by-zero
 
         // [port] Replace raw BE bit ops with struct access:
         // ((u16*)prop)[5] bits 10:6 → spriteProp.unk8_10
@@ -329,14 +334,14 @@ void func_8032D3A8(void){
 void func_8032D3D8(Gfx **gdl, Mtx **mptr, Vtx **vptr){
     int i;
     for(i = 0; i < bk_vector_size(D_80383550); i++){
-       __marker_draw(*(uintptr_t*) bk_vector_at(D_80383550, i), gdl, mptr, vptr);
+       __marker_draw(*(ActorMarker **) bk_vector_at(D_80383550, i), gdl, mptr, vptr); // [port] was *(uintptr_t*) — vector stores ActorMarker* pointers
     }
 }
 
 void func_8032D474(Gfx **gdl, Mtx **mptr, Vtx **vptr){
     int i;
     for(i = 0; i < bk_vector_size(D_80383554); i++){
-       __marker_draw(*(uintptr_t*) bk_vector_at(D_80383554, i), gdl, mptr, vptr);
+       __marker_draw(*(ActorMarker **) bk_vector_at(D_80383554, i), gdl, mptr, vptr); // [port] was *(uintptr_t*) — vector stores ActorMarker* pointers
     }
 }
 
@@ -360,7 +365,14 @@ void func_8032D510(Cube *cube, Gfx **gfx, Mtx **mtx, Vtx **vtx){
         if(!iProp->unk8_4){
 
         }else{
-            if(!iProp->unk8_1){
+            // [port] Original condition: if(!iProp->unk8_1) — only animates sprite props.
+            // Actor/marker props with sprite assets (e.g., mumbo tokens) can have unk8_1=1
+            // in the N64 setup data but still need sprite frame animation.
+            // Call func_8032CD60 for sprites OR for actor sprites with sprite assets.
+            if(!iProp->unk8_1
+                || (iProp->markerFlag && iProp->actorProp.marker != NULL
+                    && iProp->actorProp.marker->modelId != 0
+                    && !ResourceMgr_IsModelAsset(iProp->actorProp.marker->modelId))){
                 func_8032CD60(iProp);
             }
             if(iProp->markerFlag){//actorProp;
@@ -393,8 +405,8 @@ void func_8032D510(Cube *cube, Gfx **gfx, Mtx **mtx, Vtx **vtx){
                     );
                 }
                 else{//L8032D72C
-                    func_8030A350( gfx, mtx, vtx, 
-                        sp94, (f32)iProp->spriteProp.unk0_9/100.0, iProp->spriteProp.unk0_31, cube, 
+                    func_8030A350( gfx, mtx, vtx,
+                        sp94, (f32)iProp->spriteProp.unk0_9/100.0, iProp->spriteProp.unk0_31, cube,
                         iProp->spriteProp.unk0_18, iProp->spriteProp.unk0_15, iProp->spriteProp.unk0_12,
                         iProp->spriteProp.unk0_1, iProp->spriteProp.unk8_15
                     );
@@ -461,7 +473,7 @@ s32 func_8032D9C0(Cube *cube, Prop* prop){
 void func_8032DB2C(Cube *cube, NodeProp *arg1) {
     s32 sp24;
 
-    if(cube->prop1Cnt == NULL)
+    if(cube->prop1Cnt == 0) // [port] was NULL — prop1Cnt is integer, not pointer
         return;
 
     sp24 = arg1 - cube->prop1Ptr;
@@ -1183,7 +1195,7 @@ void func_8032F5B0(f32 position[3], ActorMarker *marker, f32 arg2, s32 arg3) {
     func_80320EB0(marker, arg2, arg3);
 }
 
-void func_8032F5E8(s32 arg0[3], s32 arg1, f32 arg2, s32 arg3) {
+void func_8032F5E8(s32 arg0[3], ActorMarker *arg1, f32 arg2, s32 arg3) { // [port] arg1 was s32 — receives ActorMarker* from callers
     f32 sp1C[3];
 
     sp1C[0] = arg0[0];
@@ -1344,7 +1356,7 @@ void marker_setCollisionScripts(ActorMarker *this, MarkerCollisionFunc ow_func, 
 }
 
 void func_803300B8(ActorMarker *marker, MarkerCollisionFunc method){
-    marker->unk54 = method;
+    marker->unk54 = (void (*)(struct actorMarker_s*, struct actorMarker_s*, u16*))method; // [port] cast - MarkerCollisionFunc lacks u16* param
 }
 
 void func_803300C0(ActorMarker *marker, s32 (*method)(ActorMarker *, ActorMarker *)){ // [port] bool to s32 — matches unk58 signature in ActorMarker
@@ -1527,7 +1539,7 @@ extern void port_spriteDisplayCache_clear(void); // [port]
 void func_803308A0(void) {
     s32 i;
     ModelCache *var_s0;
-    void *var_a1;
+    s32 var_a1; // [port] was void* — animated_texture_cache_id is s32/u32 index, not pointer
 
     port_spriteDisplayCache_clear(); // [port] Clear stale display data pointers before freeing modelCache
     for (i = 0; i < 0x3D5; i++) {
@@ -1665,6 +1677,10 @@ BKVertexList * func_80330DC4(Actor *this){
 }
 
 BKModelBin *func_80330DE4(ActorMarker *this){
+    // [port] On PC, sprite assets produce BKSprite, not BKModelBin.
+    // Return NULL so callers (collision, mesh, vtx) don't interpret sprite data as model data.
+    if (!ResourceMgr_IsModelAsset(this->modelId))
+        return NULL;
     Actor *thisActor = marker_getActor(this);
     return (modelCache + thisActor->modelCacheIndex)->modelPtr;
 }
@@ -1754,7 +1770,7 @@ void func_80330FF4(void){
         scale[0] = phi_s0->pitch;
         scale[1] = phi_s0->yaw;
         scale[2] = phi_s0->roll;
-        func_80340200(D_8038341C->unk50, phi_s0->position, scale, 1.0f, NULL, D_80383420, func_80330DA4(phi_s0), D_80383410);
+        func_80340200(D_8038341C->unk50, phi_s0->position, scale, 1.0f, NULL, D_80383420->unk0, func_80330DA4(phi_s0), D_80383410); // [port] D_80383420 is now BKCollisionTri*, pass ->unk0 for s16[3]
     }//L8033108C
 
     spawnQueue_func_802C39D4();
@@ -1809,7 +1825,7 @@ BKCollisionTri *func_803311D4(Cube *arg0, f32 *arg1, f32 *arg2, f32 *arg3, u32 a
     var_s6 = NULL;
     for(var_s1 = arg0->prop2Ptr, var_s5 = arg0->prop2Cnt; var_s5 > 0; var_s5--, var_s1++) {
         if(var_s1);
-        
+
         if (!var_s1->markerFlag && var_s1->unk8_1 && var_s1->unk8_4) { //ModelProp
             var_s0 = func_8030A4B4(var_s1->modelProp.unk0_31);
             if ((var_s0 != NULL) || (func_8028F280() && ((var_s0 = func_8030A428(var_s1->modelProp.unk0_31)) != NULL))) {
@@ -1823,6 +1839,9 @@ BKCollisionTri *func_803311D4(Cube *arg0, f32 *arg1, f32 *arg2, f32 *arg3, u32 a
                     spA0[2] = (f32) (var_s1->modelProp.unk0_7 * 2);
                     var_v0 = func_802E805C(temp_s2, model_getVtxList(var_s0), spAC, spA0, (f32)var_s1->modelProp.unkA / 100.0, arg1, arg2, arg3, arg4);
                     if (var_v0 != NULL) {
+                        // [port] diagnostic — detect garbage collision tri pointer
+                        if ((uintptr_t)var_v0 > 0x00007FFFFFFFFFFF)
+                            BK_LOG_WARN("col_diag: ModelProp branch bad ptr=%p model_idx=%d model=%p colList=%p", var_v0, var_s1->modelProp.unk0_31, var_s0, temp_s2);
                         var_s6 = var_v0;
                     }
                 }
@@ -1833,7 +1852,6 @@ BKCollisionTri *func_803311D4(Cube *arg0, f32 *arg1, f32 *arg2, f32 *arg3, u32 a
             } else {
                 var_a0 = marker_loadModelBin(var_s1->actorProp.marker);
             }
-
             if(var_a0 != NULL || (func_8028F280() && (var_a0 = marker_loadModelBin(var_s1->actorProp.marker), true))){
                 temp_s0 = model_getCollisionList(var_a0);
                 if (temp_s0 != 0) {
@@ -1845,7 +1863,7 @@ BKCollisionTri *func_803311D4(Cube *arg0, f32 *arg1, f32 *arg2, f32 *arg3, u32 a
                     sp7C[0] = (f32) var_s1->actorProp.marker->pitch;
                     sp7C[1] = (f32) var_s1->actorProp.marker->yaw;
                     sp7C[2] = (f32) var_s1->actorProp.marker->roll;
-                    temp_s0_2 = func_802E805C(temp_s0, temp_a1, &sp88, &sp7C, temp_s2_2->scale, arg1, arg2, arg3, arg4);
+                    temp_s0_2 = func_802E805C(temp_s0, temp_a1, sp88, sp7C, temp_s2_2->scale, arg1, arg2, arg3, arg4); // [port] & removed from f32[3] args
                     if ((temp_s0_2 != NULL) && (func_8029453C())) {
                         marker_loadModelBin(var_s1->actorProp.marker);
                         if (var_s1->actorProp.marker->unk50 != 0) {
@@ -1860,6 +1878,9 @@ BKCollisionTri *func_803311D4(Cube *arg0, f32 *arg1, f32 *arg2, f32 *arg3, u32 a
                         }
                     }
                     if (temp_s0_2 != NULL) {
+                        // [port] diagnostic — detect garbage collision tri pointer
+                        if ((uintptr_t)temp_s0_2 > 0x00007FFFFFFFFFFF)
+                            BK_LOG_WARN("col_diag: ActorProp branch bad ptr=%p modelId=%d", temp_s0_2, var_s1->actorProp.marker->modelId);
                         var_s6 = temp_s0_2;
                     }
                 }
@@ -1869,6 +1890,9 @@ BKCollisionTri *func_803311D4(Cube *arg0, f32 *arg1, f32 *arg2, f32 *arg3, u32 a
                 if (var_s1->actorProp.marker->unk18->unk0 != NULL) {
                     var_v0 = var_s1->actorProp.marker->unk18->unk0(var_s1->actorProp.marker, arg1, arg2, arg3, arg4);
                     if (var_v0 != 0) {
+                        // [port] diagnostic — detect garbage collision tri pointer
+                        if ((uintptr_t)var_v0 > 0x00007FFFFFFFFFFF)
+                            BK_LOG_WARN("col_diag: CustomHandler branch bad ptr=%p handler=%p modelId=%d", var_v0, var_s1->actorProp.marker->unk18->unk0, var_s1->actorProp.marker->modelId);
                         var_s6 = var_v0;
                     }
                 }
@@ -1985,7 +2009,7 @@ BKCollisionTri *func_80331638(Cube *cube, f32 arg1[3], f32 arg2[3], f32 arg3, f3
   return spD8;
 }
 
-BKCollisionTri *func_803319C0(Cube *cube, f32 position[3], f32 radius, s32 arg3, f32 arg4[3], u32 arg5){
+BKCollisionTri *func_803319C0(Cube *cube, f32 position[3], f32 radius, f32 arg3[3], u32 arg4){ // [port] was (s32 arg3, f32 arg4[3], u32 arg5) — MIPS 32-bit passthrough; s32 truncates 64-bit pointer on x64
     BKCollisionTri *var_s7;
     BKCollisionTri *var_v0;
     s32 var_s3;
@@ -2035,7 +2059,6 @@ BKCollisionTri *func_803319C0(Cube *cube, f32 position[3], f32 radius, s32 arg3,
             new_var = (BKModelBin *)model_getCollisionList(model_bin); // [port] BKCollisionList* to BKModelBin* — decomp variable type mismatch
             if (new_var != 0)
             {
-
             temp_v0_6 = marker_getActor(aProp->marker);
             temp_a1 = func_80330C74(temp_v0_6);
             sp88[0] = (f32) aProp->x;
@@ -2112,7 +2135,10 @@ f32 func_80331E64(ActorMarker *marker) {
 
 
 f32 func_80331F1C(Prop *arg0){
-    return vtxList_getGlobalNorm(model_getVtxList(func_8030A428(arg0->modelProp.unk0_31)));
+    // [port] func_8030A428 can return NULL when asset is missing from o2r (N64 ROM always had it)
+    BKModelBin *model = func_8030A428(arg0->modelProp.unk0_31);
+    if (model == NULL) return 0.0f;
+    return vtxList_getGlobalNorm(model_getVtxList(model));
 }
 
 f32 func_80331F54(ActorMarker *marker) {
@@ -2321,8 +2347,8 @@ void func_80332894(void) {
     }while(i != size);
     func_8033283C(0x34D, 0x3A6, 3);
     func_8033283C(0x3A6, 0x572, 3);
-    func_803327D4(&D_8036E7E0, 1);
-    func_803327D4(&D_8036E7FC, 2);
+    func_803327D4(D_8036E7E0, 1); // [port] pass array directly (decays to s16*)
+    func_803327D4(D_8036E7FC, 2); // [port] pass array directly (decays to s16*)
     func_8032D330();
 }
 

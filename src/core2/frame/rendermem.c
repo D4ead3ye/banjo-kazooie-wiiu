@@ -31,7 +31,7 @@ void func_802E31D0(s32 arg0) {
     temp_v0 = D_8037E8C0.unk14;
     if ((temp_v0 == 0) || (temp_v0 == 3)) {
         framebufferdraw_setBufferIndex(arg0);
-        framebufferdraw_func_80249DE0(0, 0, D_8037E8C0.unkC, 0, 0);
+        framebufferdraw_func_80249DE0(0, 0, (s16 *)(intptr_t)D_8037E8C0.unkC, 0, 0); // [port] s32 to s16* — N64 stored pointer as s32
         osWritebackDCache(gFramebuffers[arg0], (s32) ((f32) gFramebufferWidth * (f32) gFramebufferHeight * sizeof(s16)));
     }
 }
@@ -141,7 +141,7 @@ void func_802E35D8(void ) {
         }
     } else if (D_8037E8C0.unk14 == 3) {
         sp38 = 0;
-        controller_copyFaceButtons(0, &sp40);
+        controller_copyFaceButtons(0, sp40); // [port] was &sp40 — array decays to s32*, not pointer to array
         for(i = 0; i < 6; i++){ 
             if (sp40[i] == 1) {
                 sp38++;

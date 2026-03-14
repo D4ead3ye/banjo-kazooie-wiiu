@@ -269,7 +269,7 @@ void func_802C4AF0(Actor * this){
 
     if(D_8037DD28){
         func_802F9D38(D_8037DD28);
-        D_8037DD28 = NULL;
+        D_8037DD28 = 0; // [port] was NULL, use 0 for s32
     }
 
     comusic_8025AB44(COMUSIC_73_GAMEBOY, 0, 4000);
@@ -331,7 +331,7 @@ void func_802C4C14(Actor *this){
     else{//L802C4D24
         func_8024E60C(0, sp74);
         controller_copyFaceButtons(0, sp5C);
-        controller_getJoystick(0, &sp54);
+        controller_getJoystick(0, sp54); // [port] was &sp54, array decays to f32*
         switch(this->state){
             case 2:
             case 5:
@@ -379,7 +379,7 @@ void func_802C4C14(Actor *this){
                     else{
                         if(D_8037DD28){
                             func_802F9D38(D_8037DD28);
-                            D_8037DD28 = NULL;
+                            D_8037DD28 = 0; // [port] was NULL, use 0 for s32
                         }
                     }
                     func_802C4768(sp84);

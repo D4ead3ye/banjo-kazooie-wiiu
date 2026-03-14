@@ -64,7 +64,7 @@ void func_802EE930(ParticleEmitter *this){
 
 int func_802EE974(ParticleEmitter *this, f32 (*arg1)[3], f32 (*arg2)[3], f32 (*arg3)[3], s32 arg4){
     if(-100000.0 == this->unk74 && 100000.0 == this->unk78){
-        return func_80309B48(arg1, arg2, arg3, 0);
+        return (func_80309B48(*arg1, *arg2, *arg3, 0) != NULL); // [port] BKCollisionTri* to int boolean — dereference f32(*)[3] to f32[3]
     }
 
     if(100000.0 != this->unk78 && this->unk78 < (*arg2)[1]){
@@ -652,8 +652,8 @@ void particleEmitter_update(ParticleEmitter *this){
                     particle->position[1] = func_8034E698(this->unk100) + this->unk104;
                 }//L802F0254
 
-                if( 0.0f != this->unkFC 
-                    && !viewport_func_8024DB50(&particle->position, this->unkFC)
+                if( 0.0f != this->unkFC
+                    && !viewport_func_8024DB50(particle->position, this->unkFC) // [port] & removed: f32[3] decays to f32*
                 ){
                     memcpy(particle, --this->pList_end_128, sizeof(Particle));
                 }

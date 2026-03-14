@@ -193,7 +193,7 @@ void func_80350CA4(void) {
     f32 sp3C[3];
     f32 sp30[3];
     f32 sp24[3];
-    s32 var_v0;
+    BKCollisionTri *var_v0; // [port] was s32 — truncates 64-bit pointer return from func_80320B98/func_80309B48
 
     if (D_80386170.unk4 != NULL) {
         viewport_getPosition_vec3f(sp54);
@@ -208,9 +208,9 @@ void func_80350CA4(void) {
         sp24[1] = sp30[1] + sp48[1];
         sp24[2] = sp30[2] + sp48[2];
         if (func_8028F170(sp48[1], sp48[2])) {
-            var_v0 = func_80320B98(&sp30, &sp24, &sp3C, 0x01000000);
+            var_v0 = func_80320B98(sp30, sp24, sp3C, 0x01000000); // [port] & removed from f32[3] args
         } else {
-            var_v0 = func_80309B48(&sp30, &sp24, &sp3C, 0x01000000);
+            var_v0 = func_80309B48(sp30, sp24, sp3C, 0x01000000); // [port] & removed from f32[3] args
         }
         if (var_v0 != 0) {
             D_8038617C.unk0 = 0;

@@ -134,7 +134,7 @@ void func_803892A8(ActorMarker **ptr) {
 
             if (i == 3) {
                 gcpausemenu_80314AC8(0);
-                timedFunc_set_4(1.25f, __chjuju_solvePuzzle, jujuPtr->next_pos_x, jujuPtr->next_pos_y, jujuPtr->next_pos_z, actorPtr->yaw);
+                timedFunc_set_4(1.25f, (GenFunction_4)__chjuju_solvePuzzle, jujuPtr->next_pos_x, jujuPtr->next_pos_y, jujuPtr->next_pos_z, actorPtr->yaw); // [port]
                 func_8025A6EC(COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 0x6d60);
             }
             else {//L80389384

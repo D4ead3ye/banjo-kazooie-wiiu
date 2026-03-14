@@ -266,14 +266,12 @@ void spriteRender_drawWithSegment(Gfx **gfx, Vtx **vtx, BKSprite *sprite, u32 fr
     if (sprite->type & SPRITE_TYPE_CI4) {
         gDPSetTextureLUT((*gfx)++, G_TT_RGBA16);
         // Palette is at Align8(frame_ptr+1) — matches Sprite.cpp and func_802F4C3C
-        // Use explicit 64-bit safe alignment (ALIGN macro casts to u32, truncating 64-bit pointers)
         palette_mem = ((uintptr_t)(frame_ptr + 1) + 7) & ~(uintptr_t)7;
         gDPLoadTLUT_pal16((*gfx)++, 0, palette_mem);
         var_t2 = (BKSpriteTextureBlock *)(palette_mem + 0x20);
     } else if (sprite->type & SPRITE_TYPE_CI8) {
         gDPSetTextureLUT((*gfx)++, G_TT_RGBA16);
         // Palette is at Align8(frame_ptr+1) — matches Sprite.cpp and func_802F4C3C
-        // Use explicit 64-bit safe alignment (ALIGN macro casts to u32, truncating 64-bit pointers)
         palette_mem = ((uintptr_t)(frame_ptr + 1) + 7) & ~(uintptr_t)7;
         gDPLoadTLUT_pal256((*gfx)++, palette_mem);
         var_t2 = (BKSpriteTextureBlock *)(palette_mem + 0x200);
@@ -287,7 +285,7 @@ void spriteRender_drawWithSegment(Gfx **gfx, Vtx **vtx, BKSprite *sprite, u32 fr
     if(segment != 0){
         gSPVertex((*gfx)++, SEGMENT_ADDR(segment, (uintptr_t)sp1B0 - (uintptr_t)vtx_start), 0, 0);
     }else{
-        gSPVertex((*gfx)++, sp1B0, 0, 0);
+        gSPVertex((*gfx)++, (uintptr_t)sp1B0, 0, 0); // [port] Vtx* -> uintptr_t
     }
     //for each texture (chunk) in frame
     // sp1B4 = sp1B4;
@@ -334,7 +332,7 @@ void spriteRender_drawWithSegment(Gfx **gfx, Vtx **vtx, BKSprite *sprite, u32 fr
             if(segment != 0){
                 gSPVertex(sp1B4, SEGMENT_ADDR(segment, (uintptr_t)sp1B0 - (uintptr_t)vtx_start), 16, 0);
             }else{
-                gSPVertex(sp1B4, sp1B0, 16, 0);
+                gSPVertex(sp1B4, (uintptr_t)sp1B0, 16, 0); // [port] Vtx* -> uintptr_t
             }
             //start new vtx seg
             sp1B4 = *gfx;
@@ -342,7 +340,7 @@ void spriteRender_drawWithSegment(Gfx **gfx, Vtx **vtx, BKSprite *sprite, u32 fr
             if (segment) {
                 gSPVertex((*gfx)++, SEGMENT_ADDR(segment, (uintptr_t)sp1B0 - (uintptr_t)vtx_start), 0, 0);
             } else {
-                gSPVertex((*gfx)++, sp1B0, 0, 0);
+                gSPVertex((*gfx)++, (uintptr_t)sp1B0, 0, 0); // [port] Vtx* -> uintptr_t
             }
         }
         var_t2 = (BKSpriteTextureBlock *)(tmem + ((size_t) (var_t2->w * var_t2->h) * pixel_size_nibbles / 2));
@@ -356,8 +354,8 @@ void spriteRender_drawWithSegment(Gfx **gfx, Vtx **vtx, BKSprite *sprite, u32 fr
         if(segment != 0){
             gSPVertex(sp1B4, SEGMENT_ADDR(segment, (uintptr_t)sp1B0 - (uintptr_t)vtx_start), i_vtx, 0);
         }else{
-            if(1); 
-            gSPVertex(sp1B4, sp1B0, i_vtx, 0);
+            if(1);
+            gSPVertex(sp1B4, (uintptr_t)sp1B0, i_vtx, 0); // [port] Vtx* -> uintptr_t
         }
     }
     else {
@@ -416,7 +414,7 @@ void func_80337B68(Gfx **gfx, Vtx **vtx, Struct84s *texture_list, s32 texture_in
     } 
     
     tmem = (u16*)(txtr_ptr + 1);
-    gSPVertex((*gfx)++, start_vtx, 12, 0);
+    gSPVertex((*gfx)++, (uintptr_t)start_vtx, 12, 0); // [port] Vtx* -> uintptr_t
 
     i_vtx0 = 0;
     for(var_s1 = 0; var_s1 < size; var_s1++){

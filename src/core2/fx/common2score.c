@@ -27,103 +27,103 @@ struct8s D_80369960[] = {
         ITEM_C_NOTE, ASSET_7D9_SPRITE_NOTE, 0x1, 0xA,
         0.6f, 1.0f, 212.0f, -8.0f,
         1.0f, 25.0f, 0.0f, 1.0f,
-        NULL, {0}, 0.0f,
+        0, {0}, 0.0f, // [port] NULL -> 0 for uintptr_t unk50
     },
     {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f,
-        ITEM_D_EGGS, ASSET_36D_SPRITE_BLUE_EGG, 0x2, 0x7, 
-        0.3f, 1.0f, 212.0f, -8.0f, 
-        0.8f, 25.0f, 0.0f, 1.0f, 
-        NULL, {0}, 0.0f
+        ITEM_D_EGGS, ASSET_36D_SPRITE_BLUE_EGG, 0x2, 0x7,
+        0.3f, 1.0f, 212.0f, -8.0f,
+        0.8f, 25.0f, 0.0f, 1.0f,
+        0, {0}, 0.0f // [port]
     },
     {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f,
-        ITEM_F_RED_FEATHER, ASSET_580_SPRITE_RED_FEATHER, 0x2, 0xA, 
-        0.18f, 1.0f, 212.0f, -8.0f, 
-        0.5f, 25.0f, 0.0f, 1.0f, 
-        NULL, {0}, 0.0f
+        ITEM_F_RED_FEATHER, ASSET_580_SPRITE_RED_FEATHER, 0x2, 0xA,
+        0.18f, 1.0f, 212.0f, -8.0f,
+        0.5f, 25.0f, 0.0f, 1.0f,
+        0, {0}, 0.0f // [port]
     },
-    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f, 
-        ITEM_10_GOLD_FEATHER, ASSET_6D1_SPRITE_GOLDFEATHTER, 0x2, 0xA, 
-        0.22f, -1.0f, 212.0f, -8.0f, 
-        0.5f, 25.0f, 0.0f, 1.0f, 
-        NULL, {0}, 0.0f
+    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f,
+        ITEM_10_GOLD_FEATHER, ASSET_6D1_SPRITE_GOLDFEATHTER, 0x2, 0xA,
+        0.22f, -1.0f, 212.0f, -8.0f,
+        0.5f, 25.0f, 0.0f, 1.0f,
+        0, {0}, 0.0f // [port]
     },
-    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f, 
-        ITEM_1A_PLAYER_VILE_SCORE, ASSET_7E7_SPRITE_CROC_BANJO, 0xD, 0x6, 
+    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f,
+        ITEM_1A_PLAYER_VILE_SCORE, ASSET_7E7_SPRITE_CROC_BANJO, 0xD, 0x6,
         0.5f, 1.0f, 28.0f, -16.0f,
-        1.0f, 28.0f, 0.0f, 1.0f, 
-        NULL, {0}, 0.0f
+        1.0f, 28.0f, 0.0f, 1.0f,
+        0, {0}, 0.0f // [port]
     },
-    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f, 
-        ITEM_1B_VILE_VILE_SCORE, ASSET_7E6_SPRITE_VILE, 0xD, 0x6, 
-        0.5f, 1.0f, 263.0f, -52.0f, 
-        1.0f, -26.0f, 0.0f, 1.0f, 
-        NULL, {0}, 0.0f
+    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f,
+        ITEM_1B_VILE_VILE_SCORE, ASSET_7E6_SPRITE_VILE, 0xD, 0x6,
+        0.5f, 1.0f, 263.0f, -52.0f,
+        1.0f, -26.0f, 0.0f, 1.0f,
+        0, {0}, 0.0f // [port]
     },
-    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f, 
-        ITEM_1C_MUMBO_TOKEN, ASSET_41A_SPRITE_MUMBO_TOKEN, 0x2, 0xC, 
-        0.3f, 1.0f, 224.0f, 224.0f, 
-        1.1f, 32.0f, 0.0f, -1.0f, 
-        NULL, {0}, 0.0f
+    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f,
+        ITEM_1C_MUMBO_TOKEN, ASSET_41A_SPRITE_MUMBO_TOKEN, 0x2, 0xC,
+        0.3f, 1.0f, 224.0f, 224.0f,
+        1.1f, 32.0f, 0.0f, -1.0f,
+        0, {0}, 0.0f // [port]
     },
-    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f, 
-        ITEM_0_HOURGLASS_TIMER, ASSET_6DA_SPRITE_HOURGLASS, 0x2, 0x16, 
-        0.3f, 1.0f, 24.0f, 224.0f, 
-        1.0f, 20.0f, 0.0f, -1.0f, 
-        NULL, {0}, 0.0f
+    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f,
+        ITEM_0_HOURGLASS_TIMER, ASSET_6DA_SPRITE_HOURGLASS, 0x2, 0x16,
+        0.3f, 1.0f, 24.0f, 224.0f,
+        1.0f, 20.0f, 0.0f, -1.0f,
+        0, {0}, 0.0f // [port]
     },
-    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f, 
-        ITEM_1_SKULL_HOURGLASS_TIMER, ASSET_6DB_SPRITE_SKULL_HOURGLASS, 0x2, 0x16, 
-        0.3f, 1.0f, 24.0f, 266.0f, 
-        1.0f, 20.0f, 0.0f, -1.0f, 
-        NULL, {0}, 0.0f
+    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f,
+        ITEM_1_SKULL_HOURGLASS_TIMER, ASSET_6DB_SPRITE_SKULL_HOURGLASS, 0x2, 0x16,
+        0.3f, 1.0f, 24.0f, 266.0f,
+        1.0f, 20.0f, 0.0f, -1.0f,
+        0, {0}, 0.0f // [port]
     },
-    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f, 
-        ITEM_3_PROPELLOR_TIMER, ASSET_6D9_SPRITE_PROPELLOR_TIMER, 0x2, 0xC, 
-        0.2f, 1.0f, 36.0f, 224.0f, 
-        0.8f, 32.0f, 3.0f, -1.0f, 
-        NULL, {0}, 0.0f
+    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f,
+        ITEM_3_PROPELLOR_TIMER, ASSET_6D9_SPRITE_PROPELLOR_TIMER, 0x2, 0xC,
+        0.2f, 1.0f, 36.0f, 224.0f,
+        0.8f, 32.0f, 3.0f, -1.0f,
+        0, {0}, 0.0f // [port]
     },
-    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f, 
+    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f,
         ITEM_5_XMAS_TREE_TIMER, ASSET_6DC_SPRITE_XMAS_TREE_TIMER, 0x1, 0xE,
-        0.5f, 1.0f, 24.0f, 256.0f, 
-        1.0f, 24.0f, 2.0f, -1.0f, 
-        NULL, {0}, 0.0f
+        0.5f, 1.0f, 24.0f, 256.0f,
+        1.0f, 24.0f, 2.0f, -1.0f,
+        0, {0}, 0.0f // [port]
     },
-    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f, 
-        ITEM_25_MUMBO_TOKEN_TOTAL, ASSET_41A_SPRITE_MUMBO_TOKEN, 0x2, 0xC, 
+    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f,
+        ITEM_25_MUMBO_TOKEN_TOTAL, ASSET_41A_SPRITE_MUMBO_TOKEN, 0x2, 0xC,
         0.3f, 1.0f, 224.0f, 228.0f,
-        1.1f, 32.0f, 0.0f, -1.0f, 
-        NULL, {0}, 0.0f
+        1.1f, 32.0f, 0.0f, -1.0f,
+        0, {0}, 0.0f // [port]
     },
-    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f, 
-        ITEM_27_JOKER_CARD, ASSET_7EE_JOKER_CARD, 0x2, 0x18, 
-        0.3f, 1.0f, 224.0f, 224.0f, 
-        0.8f, 32.0f, 0.0f, -1.0f, 
-        NULL, {0}, 0.0f
+    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f,
+        ITEM_27_JOKER_CARD, ASSET_7EE_JOKER_CARD, 0x2, 0x18,
+        0.3f, 1.0f, 224.0f, 224.0f,
+        0.8f, 32.0f, 0.0f, -1.0f,
+        0, {0}, 0.0f // [port]
     },
-    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f, 
-        0x00000028, 0, 0x2, 0x16, 
-        0.3f, 1.0f, 24.0f, 266.0f, 
-        1.0f, 20.0f, 0.0f, -1.0f, 
-        NULL, {0}, 0.0f
+    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f,
+        0x00000028, 0, 0x2, 0x16,
+        0.3f, 1.0f, 24.0f, 266.0f,
+        1.0f, 20.0f, 0.0f, -1.0f,
+        0, {0}, 0.0f // [port]
     },
-    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f, 
-        0x0000002A, 0, 0x2, 0x0E, 
-        0.3f, 1.0f, 224.0f, 224.0f, 
-        0.6f, 32.0f, 0.0f, -1.0f, 
-        NULL, {0}, 0.0f
+    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f,
+        0x0000002A, 0, 0x2, 0x0E,
+        0.3f, 1.0f, 224.0f, 224.0f,
+        0.6f, 32.0f, 0.0f, -1.0f,
+        0, {0}, 0.0f // [port]
     },
-    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f, 
-        0x00000029, 0, 0x2, 0x0E, 
-        0.3f, 1.0f, 224.0f, 224.0f, 
-        0.6f, 32.0f, 0.0f, -1.0f, 
-        NULL, {0}, 0.0f
+    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f,
+        0x00000029, 0, 0x2, 0x0E,
+        0.3f, 1.0f, 224.0f, 224.0f,
+        0.6f, 32.0f, 0.0f, -1.0f,
+        0, {0}, 0.0f // [port]
     },
-    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f, 
-        -1, 0, 0x0, 0x00, 
-        0.0f, 0.0f, 0.0f, 0.0f, 
-        0.0f, 0.0f, 0.0f, 0.0f, 
-        NULL, {0}, 0.0f
+    {   0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0.0f,
+        -1, 0, 0x0, 0x00,
+        0.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 0.0f,
+        0, {0}, 0.0f // [port]
     },
 };
 
@@ -137,17 +137,17 @@ void func_802FD360(struct8s *arg0, Gfx **gfx, Mtx **mtx, Vtx **vtx){
     f32 f2;
 
 
-    if(arg0->unk50 == NULL) return;
-    gSPDisplayList((*gfx)++, &D_80369920);
+    if(arg0->unk50 == 0) return; // [port] uintptr_t comparison
+    gSPDisplayList((*gfx)++, D_80369920); // [port] was &D_80369920 (Gfx(*)[8] vs Gfx*)
     if(arg0->unk20 == ITEM_C_NOTE){
         gDPSetCombineMode((*gfx)++, G_CC_MODULATEIA, G_CC_MODULATEIA);
     }
     viewport_setRenderViewportAndOrthoMatrix(gfx, mtx);
-    gSPVertex((*gfx)++, *vtx, 4, 0);
+    gSPVertex((*gfx)++, (uintptr_t)*vtx, 4, 0); // [port] Vtx* -> uintptr_t
     if(arg0->unk20 == ITEM_0_HOURGLASS_TIMER){
         tmp_s2 = 0xC;
     }
-    func_80347FC0(gfx, arg0->unk50, ((s32)arg0->unk60 + tmp_s2)%arg0->unk2C, 0, 0, 0, 0, 2, 2, &texture_width, &texture_height);
+    func_80347FC0(gfx, (void *)arg0->unk50, ((s32)arg0->unk60 + tmp_s2)%arg0->unk2C, 0, 0, 0, 0, 2, 2, &texture_width, &texture_height); // [port] cast uintptr_t -> void*
     tmp_f26 = (arg0->unk20 == ITEM_0_HOURGLASS_TIMER && texture_width == 0x10) ? 1.0f : 0.0f;
     for(tmp_s4 = 0; tmp_s4 < 2; tmp_s4++){//L802FD528
         for(tmp_s2 = 0; tmp_s2 < 2; tmp_s2++){//
@@ -211,8 +211,8 @@ void fxcommon2score_update(s32 arg0, struct8s * arg1){
         fxcommon2score_free(arg0, arg1);
     }
     else{
-        if(arg1->unk50 == NULL && arg1->unk24){
-            arg1->unk50 = assetcache_get(arg1->unk24);
+        if(arg1->unk50 == 0 && arg1->unk24){ // [port] uintptr_t comparison
+            arg1->unk50 = (uintptr_t)assetcache_get(arg1->unk24); // [port] void* -> uintptr_t
         }
        
         if(arg0 == 0){
@@ -305,8 +305,8 @@ void fxcommon2score_draw(enum item_e item_id, struct8s *arg1, Gfx **gfx, Mtx **m
 
 void fxcommon2score_free(enum item_e item_id, struct8s *arg1){
     if(arg1->unk50){
-        assetCache_free(arg1->unk50); //assetCache_free
-        arg1->unk50 = NULL;
+        assetCache_free((void *)arg1->unk50); // [port] cast uintptr_t -> void*
+        arg1->unk50 = 0; // [port] uintptr_t, was NULL
     }
 }
 

@@ -698,7 +698,7 @@ void _printbuffer_draw_letter(char letter, f32* xPtr, f32* yPtr, f32 arg3, Gfx *
         
         sp200 += (D_80380FA0 + (sp1F8 - sp214->x) * 0.5);
         f28 -= sp214->h*0.5;
-        sp210 = (sp214 + 1);
+        sp210 = (uintptr_t)(sp214 + 1); // [port] BKSpriteTextureBlock* -> uintptr_t
         while(sp210 % 8){
             sp210++;
         }
@@ -745,7 +745,7 @@ void _printbuffer_draw_letter(char letter, f32* xPtr, f32* yPtr, f32 arg3, Gfx *
             spD0 = sp214->y - 1.0;
             temp_f26 = (f64) sp200 - (f32) gFramebufferWidth * 0.5;
             spC0 = (f64)f28 - (f32)gFramebufferHeight*0.5 -0.5f;
-            gSPVertex((*gfx)++, *vtx, 4, 0);
+            gSPVertex((*gfx)++, (uintptr_t)*vtx, 4, 0); // [port] Vtx* -> uintptr_t
             for(iy = 0.0f; iy < 2.0; iy+= 1.0){
                 for(ix = 0.0f; ix < 2.0; ix += 1.0){
                     s32 s = (ix * temp_f24 * 64.0f);

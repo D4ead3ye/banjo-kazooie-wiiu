@@ -277,7 +277,7 @@ void func_80350250(void) {
                 sp70[0] = -var_s0_2->unk1C * temp_f22;\
                 sp70[1] = 0.0f;\
                 sp70[2] = 0.0f;
-                ml_vec3f_yaw_rotate_copy(&sp70, &sp70, var_s0_2->unk14);
+                ml_vec3f_yaw_rotate_copy(sp70, sp70, var_s0_2->unk14); // [port] & removed: f32[3] decays to f32*
                 var_s0_2->unk8[0] = var_s0_2->unk8[0] + sp70[0];
                 var_s0_2->unk8[1] = var_s0_2->unk8[1] + sp70[1];
                 var_s0_2->unk8[2] = var_s0_2->unk8[2] + sp70[2];

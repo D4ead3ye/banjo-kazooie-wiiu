@@ -7,6 +7,8 @@
 
 #define MAIN_THREAD_STACK_SIZE 0x17F0
 
+extern void ability_setLearned(s32 move, s32 val);
+
 #if VERSION == VERSION_PAL
     extern s32 D_80000300;
 #endif
@@ -86,7 +88,7 @@ enum map_e getSpecialBootMap(void){
 
 // [port] FEAT: Will need to change this dynamically to support conversion mods
 enum map_e getDefaultBootMap(void){
-    return MAP_91_FILE_SELECT; //MAP_1F_CS_START_RAREWARE;
+    return MAP_1E_CS_START_NINTENDO;
 }
 
 void func_8023DBAC(void){
@@ -126,6 +128,13 @@ void core1_init(void) {
     D_8027A130 = 0;
     gGlobalTimer = 0;
     func_8023DA9C(3);
+
+    // [port] DEBUG: unlock all abilities so Banjo can use all moves
+    {
+        int i;
+        for (i = 0; i <= 0x13; i++)
+            ability_setLearned(i, 1);
+    }
 }
 
 void globalTimer_incTimer(void){

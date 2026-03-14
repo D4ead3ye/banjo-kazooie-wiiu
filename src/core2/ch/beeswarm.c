@@ -417,7 +417,7 @@ void chBeeSwarm_update(Actor *this) {
                 subaddie_set_state(this, 6);
             }
         }
-        chBeeSwarm_802CF1C8(this->unk1C, this->position, this->velocity, this->actor_specific_1_f, 100.0f, 0, &spA0);
+        chBeeSwarm_802CF1C8(this->unk1C, this->position, this->velocity, this->actor_specific_1_f, 100.0f, 0, spA0); // [port] &spA0 -> spA0: f32[3] decays to f32*
     }
     if (map_get() == MAP_78_GL_RBB_AND_MMM_PUZZLE) {
         if (this->unk38_31++ == 0x1E) {

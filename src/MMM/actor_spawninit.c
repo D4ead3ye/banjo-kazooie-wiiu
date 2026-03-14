@@ -203,7 +203,7 @@ f32 MMM_func_80388430(Actor *this, s32 arg1, s32 arg2, f32 arg3) {
     return (arg3 >= 90.0f) ? 90.0f : arg3;
 }
 
-bool func_80388670(ActorMarker * this_marker, ActorMarker * other_marker){
+s32 func_80388670(ActorMarker * this_marker, ActorMarker * other_marker){ // [port] was bool — callback passed to func_803300C0 expects s32 return
     Actor *this = marker_getActor(this_marker);
     f32 sp20[3];
 

@@ -5,8 +5,8 @@
 extern void func_8028F3D8(f32[3], f32, void(*)(ActorMarker *), ActorMarker *);
 extern void func_80324CFC(f32, enum comusic_e, s32);
 extern void rand_seed(s32);
-extern void func_8034DF30(s32, f32[3], f32[3], f32);
-extern void func_8034E088(s32, s32, s32,f32);
+extern void func_8034DF30(Struct70s *, f32[3], f32[3], f32); // [port] was s32, takes Struct70s *
+extern void func_8034E088(Struct70s *, s32, s32, f32); // [port] was s32, takes Struct70s *
 
 typedef struct {
     s32 unk0;
@@ -244,7 +244,7 @@ s32 func_8038F0EC(Actor *this) {
 
 
 void func_8038F1EC(Actor *this, s32 arg1, bool arg2) {
-    s32 temp_v0;
+    Struct70s *temp_v0; // [port] was s32, func_8034C528 returns Struct70s *
 
     temp_v0 = func_8034C528(func_8038ED10(this, arg1));
     if (temp_v0 != 0) {
@@ -373,7 +373,7 @@ void func_8038F350(Actor *this, s32 next_state){
 
 
 void lair_func_8038F800(Actor *this) {
-    s32 temp_v0;
+    Struct70s *temp_v0; // [port] was s32, func_8034C528 returns Struct70s *
     s32 phi_s0;
 
     for(phi_s0 = 0; phi_s0 < func_8038EB24(this); phi_s0++){

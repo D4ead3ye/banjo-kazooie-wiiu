@@ -43,7 +43,7 @@ void func_802535A8(Gfx **arg0, Gfx **arg1, void *arg2, void *arg3) { // [port] w
     sp1C->unkC = arg1;
     sp1C->unk10 = arg2;
     sp1C->unk14 = arg3;
-    func_80246670(sp1C);
+    func_80246670(OS_MESG_PTR(sp1C)); // [port] was bare pointer — wrap for OSMesg union
 }
 
 
@@ -148,7 +148,7 @@ void func_80253EE4(Gfx **arg0, Gfx **arg1, s32 arg2) {
     sp1C->unk4 = arg2;
     sp1C->unk8 = arg0;
     sp1C->unkC = arg1;
-    func_80246670(sp1C);
+    func_80246670(OS_MESG_PTR(sp1C)); // [port] was bare pointer — wrap for OSMesg union
 }
 
 void func_80253F74(Gfx **arg0, Gfx **arg1){
@@ -171,7 +171,7 @@ void func_80253FE8(void){
 }
 
 void func_80254008(void){
-    func_80246670(3);
+    func_80246670(OS_MESG_32(3)); // [port] was bare int — wrap for OSMesg union
 }
 
 void func_80254028(void){
@@ -241,7 +241,7 @@ void func_80254374(s32 arg0) {
     D_802831E8 = (s32) (D_802831E8 + 1) % 20;
     func_8025357C();
     sp1C->unk0 = 7;
-    func_80246670(sp1C);
+    func_80246670(OS_MESG_PTR(sp1C)); // [port] was bare pointer — wrap for OSMesg union
 }
 
 void toggleTextureFilterPoint(void){

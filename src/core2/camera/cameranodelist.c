@@ -43,19 +43,19 @@ static void __ncCameraNodeList_removeNode(int camera_node_index) {
 }
 
 CameraNodeType4* ncCameraNodeList_getCameraNodeType4(int camera_node_index) {
-    return sNcCameraNodeList[camera_node_index].data_ptr;
+    return (CameraNodeType4 *)sNcCameraNodeList[camera_node_index].data_ptr; // [port] cast uintptr_t -> ptr
 }
 
 CameraNodeType3* ncCameraNodeList_getCameraNodeType3(int camera_node_index) {
-    return sNcCameraNodeList[camera_node_index].data_ptr;
+    return (CameraNodeType3 *)sNcCameraNodeList[camera_node_index].data_ptr; // [port] cast uintptr_t -> ptr
 }
 
 CameraNodeType1* ncCameraNodeList_getCameraNodeType1(int camera_node_index) {
-    return sNcCameraNodeList[camera_node_index].data_ptr;
+    return (CameraNodeType1 *)sNcCameraNodeList[camera_node_index].data_ptr; // [port] cast uintptr_t -> ptr
 }
 
 CameraNodeType2* ncCameraNodeList_getCameraNodeType2(int camera_node_index) {
-    return sNcCameraNodeList[camera_node_index].data_ptr;
+    return (CameraNodeType2 *)sNcCameraNodeList[camera_node_index].data_ptr; // [port] cast uintptr_t -> ptr
 }
 
 s32 __ncCameraNodeList_capacity() {
@@ -76,16 +76,16 @@ static void __ncCameraNodeList_setCameraNodeType(int camera_node_index, s32 type
 
     switch(sNcCameraNodeList[camera_node_index].type) {
         case 4:
-            cameraNodeType4_free(sNcCameraNodeList[camera_node_index].data_ptr);
+            cameraNodeType4_free((CameraNodeType4 *)sNcCameraNodeList[camera_node_index].data_ptr); // [port]
             break;
         case 3:
-            cameraNodeType3_free(sNcCameraNodeList[camera_node_index].data_ptr);
+            cameraNodeType3_free((CameraNodeType3 *)sNcCameraNodeList[camera_node_index].data_ptr); // [port]
             break;
         case 1:
-            cameraNodeType1_free(sNcCameraNodeList[camera_node_index].data_ptr);
+            cameraNodeType1_free((CameraNodeType1 *)sNcCameraNodeList[camera_node_index].data_ptr); // [port]
             break;
         case 2:
-            cameraNodeType2_free(sNcCameraNodeList[camera_node_index].data_ptr);
+            cameraNodeType2_free((CameraNodeType2 *)sNcCameraNodeList[camera_node_index].data_ptr); // [port]
             break;
         case 0:
             break;
@@ -95,16 +95,16 @@ static void __ncCameraNodeList_setCameraNodeType(int camera_node_index, s32 type
     switch (type)
     {
         case 4:
-            sNcCameraNodeList[camera_node_index].data_ptr = cameraNodeType4_init();
+            sNcCameraNodeList[camera_node_index].data_ptr = (uintptr_t)cameraNodeType4_init(); // [port]
             break;
         case 3:
-            sNcCameraNodeList[camera_node_index].data_ptr = cameraNodeType3_init();
+            sNcCameraNodeList[camera_node_index].data_ptr = (uintptr_t)cameraNodeType3_init(); // [port]
             break;
         case 1:
-            sNcCameraNodeList[camera_node_index].data_ptr = cameraNodeType1_init();
+            sNcCameraNodeList[camera_node_index].data_ptr = (uintptr_t)cameraNodeType1_init(); // [port]
             break;
         case 2:
-            sNcCameraNodeList[camera_node_index].data_ptr = cameraNodeType2_init();
+            sNcCameraNodeList[camera_node_index].data_ptr = (uintptr_t)cameraNodeType2_init(); // [port]
             break;
         case 0:
             break;
@@ -152,16 +152,16 @@ void ncCameraNodeList_defrag() {
         if(sNcCameraNodeList[i].valid) {
             switch(sNcCameraNodeList[i].type) {
                 case 4:
-                    sNcCameraNodeList[i].data_ptr = defrag(sNcCameraNodeList[i].data_ptr);
+                    sNcCameraNodeList[i].data_ptr = (uintptr_t)defrag((void *)sNcCameraNodeList[i].data_ptr); // [port]
                     break;
                 case 3:
-                    sNcCameraNodeList[i].data_ptr = defrag(sNcCameraNodeList[i].data_ptr);
+                    sNcCameraNodeList[i].data_ptr = (uintptr_t)defrag((void *)sNcCameraNodeList[i].data_ptr); // [port]
                     break;
                 case 1:
-                    sNcCameraNodeList[i].data_ptr = defrag(sNcCameraNodeList[i].data_ptr);
+                    sNcCameraNodeList[i].data_ptr = (uintptr_t)defrag((void *)sNcCameraNodeList[i].data_ptr); // [port]
                     break;
                 case 2:
-                    sNcCameraNodeList[i].data_ptr = defrag(sNcCameraNodeList[i].data_ptr);
+                    sNcCameraNodeList[i].data_ptr = (uintptr_t)defrag((void *)sNcCameraNodeList[i].data_ptr); // [port]
                     break;
                 case 0:
                     break;

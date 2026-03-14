@@ -501,11 +501,11 @@ void func_8038C9D0(void) {
         } else if ((phi_s0->unk9 != 0) && (phi_s0->unk10 < 0.95)) {
             phi_s0->unk10 = MIN(phi_s0->unk10 + 0.05, 0.95);
         }
-        BKModel_transformMesh(D_8037DCB8->unk0, phi_s1, func_8038C3A0, (void *) phi_s0);
+        BKModel_transformMesh(D_8037DCB8->unk0, phi_s1, (void (*)(s32, BKVtxRef*, Vtx*, void*))func_8038C3A0, (void *) phi_s0);
         phi_s0++;
     }
 
-    BKModel_transformMesh(D_8037DCB8->unk0, 0x1F1, func_8038C7A0, (void *) phi_s0);
+    BKModel_transformMesh(D_8037DCB8->unk0, 0x1F1, (void (*)(s32, BKVtxRef*, Vtx*, void*))func_8038C7A0, (void *) phi_s0);
     if ( !((D_8037DCB8->currFfMode != FFA_3_TRIGGER_QUESTION) && (D_8037DCB8->currFfMode != FFA_4_UNK)) 
          && (0.5 < D_8037DCB8->unk14)
     ) {
@@ -827,7 +827,7 @@ void func_8038D4BC(void)
 
     // restore moves after a delay
     timedFunc_set_1(0.25f,
-        ability_setAllLearned,
+        (GenFunction_1)ability_setAllLearned, // [port]
         D_8037DCB8->unlockedMoves
     );
 

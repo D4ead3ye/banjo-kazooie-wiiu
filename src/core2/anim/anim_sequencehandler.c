@@ -218,8 +218,8 @@ void func_80361EE0(Actor *this) {
     if (this->anctrl != NULL && this->unk134 != NULL) {
         sp24 = this->unk108;
         sp28 = anctrl_getIndex(this->anctrl);
-        if (sp28 != this->unk10C) {
-            this->unk10C = sp28;
+        if (sp28 != (s32)(uintptr_t)this->unk10C) { // [port] cast — unk10C (MarkerCollisionFunc) repurposed as anim index here
+            this->unk10C = (MarkerCollisionFunc)(uintptr_t)sp28; // [port] cast — store s32 anim index in MarkerCollisionFunc field
             anSeq_clear(this->unk134);
             for(sp20 = sp24->unk4; sp20->unk4 != NULL; sp20++){
                 if (sp28 == sp20->unk0) {

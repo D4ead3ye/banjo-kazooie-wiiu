@@ -10,7 +10,7 @@ static void __chLeaky_updateFunc(Actor *this);
 
 /* .data */
 ActorAnimationInfo gChLeakyAnimations[3] = {
-    {NULL, 0.0f},
+    {0, 0.0f}, // [port] was NULL — u32 field
     {ASSET_239_ANIM_LEAKY_IDLE, 2.5f},
     {ASSET_239_ANIM_LEAKY_IDLE, 2.5f}
 };
@@ -97,7 +97,7 @@ static void __chLeaky_showDoneText(ActorMarker *caller, enum asset_e text_id, s3
     timed_setStaticCameraToNode(0.5f, 7);
     timedFunc_set_0(1.0f, __func_80388F88);
     func_80324E38(2.5f, 0);
-    timedFunc_set_1(2.5f, func_8028F9DC, 2);
+    timedFunc_set_1(2.5f, (GenFunction_1)func_8028F9DC, 2); // [port]
     timedFunc_set_3(2.5f, (GenFunction_3)func_802E4078, MAP_A_TTC_SANDCASTLE, 0, 0);
     func_803228D8();
 }

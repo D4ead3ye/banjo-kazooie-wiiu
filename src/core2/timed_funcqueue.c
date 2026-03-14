@@ -327,5 +327,5 @@ void mapSpecificFlags_setTrue(s32 flag){
 }
 
 void timed_mapSpecificFlags_setTrue(f32 time, s32 flag){
-    timedFunc_set_1(time, mapSpecificFlags_setTrue, flag);
+    timedFunc_set_1(time, (GenFunction_1)mapSpecificFlags_setTrue, flag); // [port]
 }

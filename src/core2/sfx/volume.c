@@ -33,8 +33,8 @@ void func_8034F774(void){
     int s0;
     int s1;
 
-    s0 = nodeProp_findPositionFromActorId(0x2F, &sp38);
-    s1 = nodeProp_findPositionFromActorId(0x30, &sp2C);
+    s0 = nodeProp_findPositionFromActorId(0x2F, sp38); // [port] &sp38 -> sp38: f32[3] decays to f32*
+    s1 = nodeProp_findPositionFromActorId(0x30, sp2C); // [port] &sp2C -> sp2C: f32[3] decays to f32*
     if( !s0 || !s1){
         D_803720A0.unk0 = NULL;
     }else{

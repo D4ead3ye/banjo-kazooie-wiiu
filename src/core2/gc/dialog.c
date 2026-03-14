@@ -103,7 +103,7 @@ void gcdialog_init(void) {
         g_Dialog.string_list[i] = NULL;
         g_Dialog.string_count[i] = 0;
         g_Dialog.zoombox[i] = NULL;
-        g_Dialog.string_index[i] = NULL;
+        g_Dialog.string_index[i] = 0; // [port] was NULL, use 0 for u8
         g_Dialog.string_cmd[i] = -1;
         g_Dialog.string[i] = 0;
         g_Dialog.unk11A[i].unk0_7 = 0;
@@ -573,7 +573,8 @@ void gcdialog_update(void) {
         break;
 
     case 3:
-        // [port] Allow B to always advance/skip dialog (QoL: original only allowed B when flag & 1)
+        // [port] Allow B to always advance/skip dialog
+        // if ((g_Dialog.u8.unk128_31 & 1) && controller_face_buttons[FACE_BUTTON(BUTTON_B)] == 1u) {
         if (controller_face_buttons[FACE_BUTTON(BUTTON_B)] == 1u) {
             gcdialog_setState(6);
             break;

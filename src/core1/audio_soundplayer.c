@@ -48,7 +48,7 @@ void func_80243070(Struct87s *arg0) {
     u32 var_s0;
 
     D_802758CC->maxSounds = (s32) arg0->unk8;
-    D_802758CC->target = NULL;
+    D_802758CC->target = 0; // [port] was NULL — s32 field
     D_802758CC->frameTime = 33000;
     D_802758CC->sndState = alHeapDBAlloc(NULL, 0, (ALHeap *)arg0->unkC, 1, arg0->unk0 * sizeof(N_AL_Struct81s)); // [port] struct ALHeap* → ALHeap*
     alEvtqNew(&D_802758CC->evtq, alHeapDBAlloc(NULL, 0, (ALHeap *)arg0->unkC, 1, arg0->unk4 * 0x1C), arg0->unk4); // [port] struct ALHeap* → ALHeap*
@@ -333,7 +333,7 @@ void func_802432F8(N_ALSndPlayer *sndp, N_ALEvent *event) {
             
             case 0x200:
                 if (temp_s0->unk3F & 0x10) {
-                    sp68 = func_80244608((ALBank*)var_s5->msg.generic.data[2].p, (s16)var_s5->msg.generic.data[1].i, temp_s0->unk30); // [port] was msg.midi.duration overlay — broken by pointer-width generic data
+                    sp68 = (intptr_t)func_80244608((ALBank*)var_s5->msg.generic.data[2].p, (s16)var_s5->msg.generic.data[1].i, (struct46s *)temp_s0->unk30); // [port] cast N_AL_Struct81s** -> struct46s* (first member is compatible pointer)
                     func_80244978(sp68, AL_SEQP_PROG_EVT, temp_s0->unk34);
                     func_80244978(sp68, AL_SEQ_END_EVT, temp_s0->unk3D);
                     func_80244978(sp68, 0x100, temp_s0->unk3E);
@@ -598,7 +598,7 @@ void *func_80244608(ALBank *bank, s16 arg1, struct46s *arg2) {
         temp_v0 = func_8024431C(bank, temp_s2);
         if (temp_v0 != NULL) {
             temp_v0->unk4C = (s32) (arg1 - 1);
-            D_802758CC->target = temp_v0;
+            D_802758CC->target = (s32)(intptr_t)temp_v0; // [port] N_AL_Struct81s * → s32 (N64: 32-bit pointer fit in s32)
             sp50.type = AL_SEQ_MIDI_EVT;
             sp50.msg.generic.data[0].p = temp_v0; // [port] was (s32*) hack — pointer truncation
             var_s4 = temp_s2->keyMap->velocityMax * 0x8235;
@@ -619,7 +619,7 @@ void *func_80244608(ALBank *bank, s16 arg1, struct46s *arg2) {
 
     if (var_fp != NULL) {
         var_fp->unk3F |= 1;
-        var_fp->unk30 = arg2;
+        var_fp->unk30 = (N_AL_Struct81s **)arg2; // [port] struct46s * → N_AL_Struct81s ** (first member is compatible pointer)
         if (sp6E != 0) {
             var_fp->unk3F |= 0x10;
             sp40.type = 0x200;

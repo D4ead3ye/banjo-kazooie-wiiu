@@ -155,6 +155,15 @@ extern "C" char* ResourceMgr_LoadByAssetId(uint32_t assetId) {
     return nullptr;
 }
 
+// [port] Returns the data size of a previously loaded resource (from the ref cache).
+// Used by decomp code that depends on assetCacheCurrentSize (e.g. demo_load).
+extern "C" size_t ResourceMgr_GetResourceSize(uint32_t assetId) {
+    if (auto it = sResourceRefCache.find(assetId); it != sResourceRefCache.end()) {
+        return it->second->GetPointerSize();
+    }
+    return 0;
+}
+
 // [port] On N64, sprites and models were raw binary blobs that could be type-punned.
 // On PC, they're separate resource types from different importers. Actors with sprite
 // assets can be spawned as "model" props (unk8_1=1), causing collision code to call

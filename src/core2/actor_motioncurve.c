@@ -66,7 +66,7 @@ enum bs_e func_80295EE0(enum bs_e arg0){
         }
         else{
             ml_vec3f_to_vec3h(sp20, D_8037C3E0.unk8);
-            sp1C = actor_spawnWithYaw_s16(ACTOR_5A_JIGSAW_DANCE, sp20, 0);
+            sp1C = actor_spawnWithYaw_s16(ACTOR_5A_JIGSAW_DANCE, &sp20, 0); // [port] pass pointer-to-array for s16(*)[3] param
             chJigsawDance_setState(sp1C, 3);
             bsjig_setJiggyMarkerPtr(sp1C->marker);
             sp1C->unk38_31 = D_8037C3E0.unk18;
@@ -530,7 +530,7 @@ void func_80296608(void){
 void func_80296C30(void){
     int i;
     D_8037C3E0.unk18 = 0;
-    D_8037C3E0.unk14 = 0;
+    D_8037C3E0.unk14 = NULL; // [port] was = 0
     ml_vec3f_clear(D_8037C3E0.unk8);
     for(i = 0; i<5; i++)
         D_8037C400[i].unk1C = 0;

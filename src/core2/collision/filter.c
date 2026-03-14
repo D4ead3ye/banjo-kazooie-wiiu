@@ -44,7 +44,7 @@ Struct_Core2_C9F00_1 D_803725C0[] = {
 void func_80351DE0(Struct6Bs *, Struct68s *);
 extern void chTumblar_init(void *, Struct68s *);
 extern void func_80387940(void *, Struct68s *);
-extern void GV_func_80387960(void *, Struct68s *);
+extern void CC_func_80387960(void *, Struct68s *); // [port] was GV_func_80387960 — overlay address conflict (0x80387960)
 extern void func_80387980(void *, Struct68s *);
 extern void func_803879A0(void *, Struct68s *);
 extern void func_803879C0(void *, Struct68s *);
@@ -56,7 +56,7 @@ extern void func_80351FE0(void *, Struct68s *);
 void func_80351E60(Struct6Bs *, Struct68s *, f32);
 extern void chTumblar_update(void *, Struct68s *, f32);
 extern void func_8038B790(void *, Struct68s *, f32);
-extern void CCW_func_80387A40(void *, Struct68s *, f32);
+extern void CC_func_80387A40(void *, Struct68s *, f32); // [port] was CCW_func_80387A40 — overlay address conflict (0x80387A40)
 extern void func_80352114(void *, Struct68s *, f32);
 
 Struct_Core2_C9F00_0 D_803725F4[] = {
@@ -65,14 +65,14 @@ Struct_Core2_C9F00_0 D_803725F4[] = {
     {chTumblar_init, chTumblar_update},
     {         NULL,          NULL}, 
     {         NULL, func_8038B790}, 
-    {func_80387940, CCW_func_80387A40}, 
-    {GV_func_80387960, CCW_func_80387A40}, 
-    {func_80387980, CCW_func_80387A40}, 
-    {func_803879A0, CCW_func_80387A40}, 
-    {func_803879C0, CCW_func_80387A40}, 
-    {CC_func_803879E0, CCW_func_80387A40}, 
-    {CC_func_80387A00, CCW_func_80387A40}, 
-    {CC_func_80387A20, CCW_func_80387A40}, 
+    {func_80387940, CC_func_80387A40},  // [port] was CCW_func_80387A40 — overlay addr 0x80387A40
+    {CC_func_80387960, CC_func_80387A40},  // [port] was GV_func_80387960/CCW_func_80387A40
+    {func_80387980, CC_func_80387A40},
+    {func_803879A0, CC_func_80387A40},
+    {func_803879C0, CC_func_80387A40},
+    {CC_func_803879E0, CC_func_80387A40},
+    {CC_func_80387A00, CC_func_80387A40},
+    {CC_func_80387A20, CC_func_80387A40},
     {func_80351FE0, func_80352114}
 };
 
@@ -238,7 +238,7 @@ void func_80351538(Struct68s *arg0){
 bool func_803515EC(NodeProp *arg0) {
     Struct_Core2_C9F00_1 *phi_s0;
     s32 sp48[3];
-    s32 sp44;
+    Cube *sp44; // [port] was s32; func_8032F170 writes a Cube* here
     ModelProp *sp40;
     s16 temp_v0;
     s16 phi_v0;
@@ -282,7 +282,7 @@ bool func_80351724(void * arg0){
 }
 
 s32 func_80351758_getSfxsourceIndex(Struct68s *arg0) {
-    if (arg0->unk0 == NULL) {
+    if (arg0->unk0 == 0) { // [port] was NULL — u8 value, not pointer
         arg0->unk0 = sfxsource_createSfxsourceAndReturnIndex();
     }
 
