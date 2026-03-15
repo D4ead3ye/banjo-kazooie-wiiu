@@ -67,6 +67,16 @@ UIWidgets::Colors GetMenuThemeColor() {
     return mLighthouseMenu->GetMenuThemeColor();
 }
 
+void SetupMenu() {
+    auto gui = Ship::Context::GetInstance()->GetWindow()->GetGui();
+    mLighthouseMenu = std::make_shared<LighthouseGui::LighthouseMenu>(CVAR_WINDOW("Menu"), "Port Menu");
+    gui->SetMenu(mLighthouseMenu);
+
+    mModalWindow = std::make_shared<LighthouseModalWindow>(CVAR_WINDOW("ModalWindow"), "Modal Window");
+    gui->AddGuiWindow(mModalWindow);
+    mModalWindow->Show();
+}
+
 void SetupGuiElements() {
     auto gui = Ship::Context::GetInstance()->GetWindow()->GetGui();
 
@@ -74,20 +84,6 @@ void SetupGuiElements() {
     style.FramePadding = ImVec2(4.0f, 6.0f);
     style.ItemSpacing = ImVec2(8.0f, 6.0f);
     style.Colors[ImGuiCol_MenuBarBg] = UIWidgets::ColorValues.at(UIWidgets::Colors::DarkGray);
-
-    mLighthouseMenuBar = std::make_shared<LighthouseMenuBar>(CVAR_MENU_BAR_OPEN, CVarGetInteger(CVAR_MENU_BAR_OPEN, 0));
-    gui->SetMenuBar(std::reinterpret_pointer_cast<Ship::GuiMenuBar>(mLighthouseMenuBar));
-
-    if (!gui->GetMenuBar() && !CVarGetInteger("gSettings.DisableMenuShortcutNotify", 0)) {
-#if defined(__SWITCH__) || defined(__WIIU__)
-        gui->GetGameOverlay()->TextDrawNotification(30.0f, true, "Press - to access enhancements menu");
-#else
-        gui->GetGameOverlay()->TextDrawNotification(30.0f, true, "Press F1 to access enhancements menu");
-#endif
-    }
-
-    mLighthouseMenu = std::make_shared<LighthouseMenu>("gWindows.Menu", "Settings Menu");
-    gui->SetMenu(mLighthouseMenu);
 
     mStatsWindow = gui->GetGuiWindow("Stats");
     if (mStatsWindow == nullptr) {
@@ -174,12 +170,10 @@ void SetupGuiElements() {
 
     mInputViewer = std::make_shared<InputViewer>("gWindows.InputViewer", "Input Viewer");
     gui->AddGuiWindow(mInputViewer);
+
     mInputViewerSettings = std::make_shared<InputViewerSettingsWindow>("gWindows.InputViewerSettings",
                                                                        "Input Viewer Settings", ImVec2(500, 525));
     gui->AddGuiWindow(mInputViewerSettings);
-    mModalWindow = std::make_shared<LighthouseModalWindow>("gWindows.ModalWindow", "Modal Window");
-    gui->AddGuiWindow(mModalWindow);
-    mModalWindow->Show();
 }
 
 void Destroy() {
@@ -216,6 +210,10 @@ void Destroy() {
 void RegisterPopup(std::string title, std::string message, std::string button1, std::string button2,
                    std::function<void()> button1callback, std::function<void()> button2callback) {
     mModalWindow->RegisterPopup(title, message, button1, button2, button1callback, button2callback);
+}
+
+size_t PopupsQueued() {
+    return mModalWindow->PopupsQueued();
 }
 
 } // namespace LighthouseGui

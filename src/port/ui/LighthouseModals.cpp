@@ -78,6 +78,10 @@ bool LighthouseModalWindow::IsPopupOpen(std::string title) {
     return !modals.empty() && modals.at(0).title_ == title;
 }
 
+size_t LighthouseModalWindow::PopupsQueued() {
+    return modals.size();
+}
+
 void LighthouseModalWindow::DismissPopup() {
     closePopup = true;
 }

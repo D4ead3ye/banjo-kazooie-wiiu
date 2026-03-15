@@ -40,19 +40,21 @@ class GameEngine {
 
     GameEngine();
     void StartFrame() const;
-    static bool GenAssetFile(bool exitOnFail = true);
-    static void Create();
+    static void Create(int argc, char* argv[]);
     static void HandleAudioThread();
     static void StartAudioFrame();
     static void EndAudioFrame();
     static void AudioInit();
     static void AudioExit();
+    void FinishInit();
+    void RunExtract(int argc, char* argv[]);
     static void RunCommands(Gfx* Commands, const std::vector<std::unordered_map<Mtx*, MtxF>>& mtx_replacements);
     static void Destroy();
     static uint32_t GetInterpolationFPS();
     static uint32_t GetInterpolationFrameCount();
     static void ProcessGfxCommands(Gfx* commands);
     static ImFont* CreateFontWithSize(float size, std::string fontPath);
+    static void ScaleImGui();
 
     static int ShowYesNoBox(const char* title, const char* box);
     static void ShowMessage(const char* title, const char* message, SDL_MessageBoxFlags type = SDL_MESSAGEBOX_ERROR);

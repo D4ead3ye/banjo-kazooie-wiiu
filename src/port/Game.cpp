@@ -32,7 +32,7 @@ void push_frame() {
 #endif
 
 int SDL_main(int argc, char* argv[]) {
-    GameEngine::Create();
+    GameEngine::Create(argc, argv);
     core1_init();
 
     uint64_t prev = SDL_GetPerformanceCounter();
