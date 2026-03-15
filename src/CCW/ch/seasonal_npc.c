@@ -143,7 +143,7 @@ void func_80388478(Actor *this) {
     local = (ActorLocal_CCW_1B20 *)&this->local;
     if (!this->volatile_initialized) {
         this->volatile_initialized = true;
-        func_803300C0(this->marker, func_80388260);
+        func_803300C0(this->marker, (s32 (*)(ActorMarker *, ActorMarker *))func_80388260); // [port]
         marker_setCollisionScripts(this->marker, NULL, CCW_func_80388278, func_803882A4);
         actor_collisionOn(this);
         if (!jiggyscore_isSpawned(JIGGY_4D_CCW_FLOWER)) {

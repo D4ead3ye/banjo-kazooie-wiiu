@@ -25,9 +25,9 @@ typedef struct
 
 typedef struct
 {
-    u8 *code; // string of code where the hex value of floor_letters_e is converted into a char
+    u8 code[20]; // [port] was u8* — strcpy writes in-place, needs writable storage
     s16 flagBitMask;
-    s16 codeCharacterIdx; 
+    s16 codeCharacterIdx;
 } CheatCode;
 
 typedef struct
@@ -133,7 +133,7 @@ static CheatCode sCheatCodes[0xD] = {
     {"k45k6ddbj2k6ig2",     0x0200, 0}, // BIGBOTTLESBONUS
     {"742me7n2meknip6",     0x0400, 0}, // WISHYWASHYBANJO
     {"i6k6ig2",             0x0800, 0}, // NOBONUS
-    NULL
+    {"",                    0x0000, 0}  // [port] sentinel — was NULL, now empty string for array
 };
 
 struct
@@ -367,7 +367,7 @@ static void __maCastle_checkFloorTileForRegularCheatCode(LetterFloorTile *letter
     is_in_ff_minigame = volatileFlag_get(VOLATILE_FLAG_2_FF_IN_MINIGAME);
     is_correct_input = false;
     floor_is_valid_or_correct = __maCastle_isFloorTileValidForSecretCheatCode(letter_floor_tile);
-    for (cheatcode_ptr = sCheatCodes; cheatcode_ptr->code != NULL; cheatcode_ptr++)
+    for (cheatcode_ptr = sCheatCodes; cheatcode_ptr->code[0] != '\0'; cheatcode_ptr++) // [port] array sentinel
     {
         unlocked_cheat_flags = (sMapState.banjoKazooieCodeEnteredState == 0) ? 1 : 0;
         if (!is_in_ff_minigame)
@@ -492,7 +492,7 @@ static void __maCastle_resetCheatCodeProgress(void)
 {
     CheatCode *iPtr;
 
-    for (iPtr = sCheatCodes; iPtr->code != NULL; iPtr++)
+    for (iPtr = sCheatCodes; iPtr->code[0] != '\0'; iPtr++) // [port] array sentinel
     {
         iPtr->codeCharacterIdx = 0;
     }

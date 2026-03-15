@@ -58,6 +58,18 @@ ResourceFactoryBinarySpriteV0::ReadResource(std::shared_ptr<Ship::File> file,
         frameHeaders.push_back(fh);
     }
 
+    // [port] Special sprites: Torch exports ROM sprites with frameCount > 0x100 as
+    // single-chunk RGBA16 textures (e.g., map font textures). These have positions but
+    // no chunk counts or frame headers. Synthesize 1 frame with 1 chunk so the decomp
+    // code can access frames[0] without undefined behavior.
+    if (chunkCountsSize == 0 && positionsSize > 0) {
+        SPDLOG_INFO("[port] Special sprite detected: fmt=0x{:X} positions={} path='{}'", formatCode, positionsSize,
+                    initData->Path);
+        chunkCountsSize = 1;
+        chunkCounts.push_back(static_cast<uint16_t>(positionsSize));
+        formatCode = 0x400; // RGBA16 — Torch always extracts these as RGBA16
+    }
+
     sprite->frameCount = chunkCountsSize;
     sprite->formatType = formatCode;
     sprite->headerUnk4 = hdrUnk4;

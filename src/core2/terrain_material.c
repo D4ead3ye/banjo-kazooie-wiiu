@@ -156,7 +156,7 @@ s32 item_adjustByDiff(enum item_e item, s32 diff, s32 no_hud){
 s32 item_adjustByDiffWithHud(enum item_e item, s32 diff){
     // Modifies the count of an item by the diff
     // Displays the HUD during the adjustment
-    item_adjustByDiff(item, diff, 0);
+    return item_adjustByDiff(item, diff, 0); // [port] implicit MIPS $v0 return
 }
 
 // func_803463F4

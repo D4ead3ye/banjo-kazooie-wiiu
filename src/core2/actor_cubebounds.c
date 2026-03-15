@@ -6,7 +6,6 @@
 #include <core2/file.h>
 #include "bk_math.h"
 #include "prop.h"
-#include "port/ShipUtils.h" // [port] BK_LOG_*
 
 extern void mapModel_getCubeBounds(s32 min[3], s32 max[3]);
 extern f32 func_803243D0(struct56s *arg0, f32 arg1[3]);
@@ -898,17 +897,12 @@ void func_803045D8(){}
 
 static void __code7AF80_initCubeFromFile(Cube *cube, File* file_ptr) {
     s32 pad[3];
-    s32 cubeIter = 0;
-
     while(!file_isNextByteExpected(file_ptr, 1)) {
-        cubeIter++;
-        if (cubeIter > 50) {
-            break; // [port] safety guard against infinite loop
-        }
         if (file_getNWords_ifExpected(file_ptr, 0, pad, 3)) {
             file_getNWords(file_ptr, pad, 3);
-        } else if (!file_getNWords_ifExpected(file_ptr, 2, pad, 3) && file_isNextByteExpected(file_ptr, 3) // [port] pass array directly (decays to s32*)
-        ) {
+        } else if (file_getNWords_ifExpected(file_ptr, 2, pad, 3)) {
+            break; // [port] tag 2: data consumed, exit inner loop (matches original N64 semantics)
+        } else if (file_isNextByteExpected(file_ptr, 3)) {
             code7AF80_initCubeFromFile(file_ptr, cube);
         } else {
             break; // [port] unhandled tag, avoid infinite loop
@@ -1162,7 +1156,7 @@ s32 func_8030508C(s32 arg0, f32 arg1[3], s32 arg2) {
     phi_s0 = sCubeList.cubes;
     phi_s1 = 0;
     while(phi_s0 < &sCubeList.cubes[sCubeList.cubeCnt]){
-        phi_s1 += func_8032E5A8(phi_s0, arg0, (f32 *)(phi_s1*0xC + (uintptr_t)arg1), arg2 - phi_s1);
+        phi_s1 += func_8032E5A8(phi_s0, arg0, (f32(*)[3])(phi_s1*0xC + (uintptr_t)arg1), arg2 - phi_s1);
         phi_s0++;
     }
     return phi_s1;
@@ -1283,20 +1277,6 @@ Actor * func_803055E0(enum actor_e arg0, s32 position[3], s32 yaw, s32 arg3, s32
         }
         else{
             actor->unk44_14 = func_80341C78(position);
-        }
-        // [port] diagnostic: log spline assignment for spawned actors
-        if(actor->unk44_14 >= 0){
-            BK_LOG_WARN("[port] actor %d at (%d,%d,%d): spline=%d, group=%d, unk2C_2=true",
-                arg0, position[0], position[1], position[2], actor->unk44_14, arg3);
-        } else {
-            static s32 noSplineCount = 0;
-            noSplineCount++;
-            if(noSplineCount <= 5) {
-                BK_LOG_WARN("[port] actor %d at (%d,%d,%d): NO spline (group=%d, tmp=%p)",
-                    arg0, position[0], position[1], position[2], arg3, (void*)tmp);
-            } else if(noSplineCount == 6) {
-                BK_LOG_WARN("[port] (suppressing further no-spline messages)");
-            }
         }
         if(!(actor->unk44_14  < 0)){
             sp28[0] = (f32)position[0];
@@ -1806,7 +1786,7 @@ s32 func_80306DDC(s32 *position) {
     return -1;
 }
 
-s32 func_80306EF4(s32 arg0[3], s32 arg1, u32 arg2) {
+s32 func_80306EF4(s32 arg0[3], s32 arg1, s32 arg2) {
     s32 temp_s4;
     s32 temp_s6;
     Struct_core2_7AF80_2 *var_s0;

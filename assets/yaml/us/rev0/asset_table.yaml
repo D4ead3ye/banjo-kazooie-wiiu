@@ -1017,7 +1017,7 @@ aBKAssetTable:
     1129: model/UglyTooty
     1130: model/Klungo
     1131: model/BeautyMachineRoomForceField
-    1132: model/JiggyPicture
+    1132: model/BottlesBonusPicture
     1133: model/Lightning
     1134: model/RoystenInBowl
     1135: model/BanjosHouseCuckooClock
@@ -1046,7 +1046,7 @@ aBKAssetTable:
     1160: model/FPChristmasTree
     1161: model/ShockSpringPad
     1162: model/FlightPad_02
-    1163: model/JiggyPodium_01
+    1163: model/JiggyPicture
     1164: model/RBBBoomBox
     1165: model/CCWNabnutEatingAcorns
     1166: model/CCWAcorn
@@ -1218,7 +1218,7 @@ aBKAssetTable:
     1333: model/FlightPadBlueFragment
     1334: model/FlightPadRedFragment
     1335: model/FlightPadYellowFragment
-    1336: model/JiggyPodium_02
+    1336: model/JiggyPodium
     1337: model/Brentilda
     1338: model/ShrapnelEye
     1339: model/ShrapnelSpike

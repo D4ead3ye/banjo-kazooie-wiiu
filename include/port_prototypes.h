@@ -1,9 +1,3 @@
-// [port] Missing function prototypes that cause silent bugs on 64-bit.
-// Without these, the compiler assumes int return, which:
-//   - Truncates 64-bit pointers (crash on aarch64/x64)
-//   - Misreads float returns from integer register (corrupted values)
-// Generated from build log C4013/C4047 warning analysis.
-
 #ifndef PORT_PROTOTYPES_H
 #define PORT_PROTOTYPES_H
 
@@ -13,6 +7,13 @@
 #include "model.h"
 #include "core2/camera.h"
 #include "core2/anim/sprite.h"
+#include "core2/ba/anim.h" // [port] needed for enum baanim_update_type_e in baanim_setUpdateType prototype
+#include "core2/nc/camera.h" // [port] needed for enum camera_type_e in camera_setType prototype
+// FuncUnk40 defined in core2/sprite_displaydata.h — forward-typedef here to avoid circular include
+#ifndef FUNCUNK40_DEFINED
+#define FUNCUNK40_DEFINED
+typedef s32 (*FuncUnk40)(ActorMarker *, s32, f32[3]);
+#endif
 
 // ============================================================
 // POINTER-RETURNING FUNCTIONS (crash without prototypes)
@@ -105,7 +106,7 @@ BKModelUnk14List *func_8033A12C(BKModelBin *this);
 // --- core2/vtx/colorapply.c ---
 Struct70s *func_8034C344(s32 arg0);
 Struct70s *func_8034C448(s32 arg0);
-Struct70s *func_8034C630(s32 arg0);
+Struct70s *func_8034C630(void *arg0); // [port] was s32 — receives pointer on 64-bit
 
 // --- core2/particle/samplerate.c ---
 Struct5Ds *func_802F47D0(void);
@@ -165,7 +166,7 @@ void animMtxList_setBoned(AnimMtxList **this_ptr, BKAnimationList *anim_list, Bo
 AnimMtxList *animMtxList_defrag(AnimMtxList *this);
 
 // ============================================================
-// FLOAT-RETURNING FUNCTIONS (garbage values without prototypes)
+// FLOAT-RETURNING FUNCTIONS
 // ============================================================
 
 f32 alCents2Ratio(s32 cents);
@@ -209,7 +210,7 @@ f32 func_802D7038(Actor *this);
 f32 player_getYaw(void);
 
 // ============================================================
-// POINTER-RETURNING FUNCTIONS (additional, from void/int section)
+// POINTER-RETURNING FUNCTIONS
 // ============================================================
 
 // These return pointers but are commonly listed with utility functions.
@@ -230,9 +231,7 @@ CameraNodeType4 *ncCameraNodeList_getCameraNodeType4(int camera_node_index);
 s16 *func_8030C704(void);
 
 // ============================================================
-// COMMONLY MISSING PROTOTYPES (C4013 cleanup)
-// These mostly return int/void/bool so implicit int was harmless,
-// but explicit prototypes prevent accidental misuse.
+// COMMONLY MISSING PROTOTYPES
 // ============================================================
 
 // --- core2/cutscene/flag.c ---
@@ -375,7 +374,8 @@ bool ncDynamicCamA_func_802C1EE0(void);
 bool __ncFirstPersonCamera_fullyZoomedIn(void);
 
 // --- core2/collision/funcs.c ---
-void func_80320B24(void *arg0, void *arg1, void *arg2);
+void func_80320B24(void *arg0, void *arg1, void *arg2); // [port] Method_Core2_999A0_* → void* (function pointers passed opaquely)
+void func_80320B44(void *arg0, void *arg1, void *arg2, void *arg3); // [port] same
 
 // --- core2/collision/climbsurface.c ---
 s32 func_8029453C(void);
@@ -400,7 +400,7 @@ void __spawnQueue_add_0(void (*arg0)(void));
 void __spawnQueue_add_2(void (*arg0)(void), uintptr_t arg1, uintptr_t arg2);
 
 // --- core2/sprite/displaydata.c ---
-void func_8033E73C(ActorMarker *arg0, s32 arg1, void *arg2); // arg2 is FuncUnk40 but callers pass varied callback types
+void func_8033E73C(ActorMarker *arg0, s32 arg1, FuncUnk40 arg2); // [port] fixed: FuncUnk40 to match definition
 int func_8033E3F0(enum common_particle_e particle_id, int arg1);
 
 // --- core2/particle/particle.c ---
@@ -450,12 +450,6 @@ void gSPVertex(Gfx* pkt, uintptr_t v, int n, int v0);
 void gSPInvalidateTexCache(Gfx* pkt, uintptr_t texAddr);
 int ResourceMgr_OTRSigCheck(char* imgData);
 
-
-// ============================================================
-// AUTO-GENERATED PROTOTYPES (C4013 warning fixes)
-// 1829 additional prototypes organized by source file
-// ============================================================
-
 // --- src/BGS/actor_spawninit.c ---
 void BGS_func_8038F1E0(void);
 
@@ -500,7 +494,7 @@ bool chvilegame_cpu_consume_piece(ActorMarker *marker, f32 position[3]);
 s32 chvilegame_get_piece_count(ActorMarker *marker);
 s32 chvilegame_get_score_difference(ActorMarker *marker);
 s32 func_8038A9E0(ActorMarker *marker);
-void chvilegame_new_piece(ActorMarker *game_marker, ActorMarker *piece_marker, f32 position[3], enum chvilegame_piece_type_e yumblie_type);
+void chvilegame_new_piece(ActorMarker *game_marker, ActorMarker *piece_marker, f32 position[3], u32 yumblie_type); // [port] enum chvilegame_piece_type_e is file-local; use u32 to avoid incomplete-type conflict
 void chvilegame_remove_piece(ActorMarker *game_marker, ActorMarker *piece_marker);
 
 // --- src/CC/actor_spawninit.c ---
@@ -1959,7 +1953,7 @@ void func_80351C48(void);
 
 // --- src/core2/collision/funcs.c ---
 bool func_803209F8(f32 arg0[3], f32 arg1[3], f32 *arg2, f32 arg3[3]);
-void func_80320B44(void *arg0, void *arg1, void *arg2, void *arg3); // [port] Method_Core2_999A0_* -> void* (local typedefs in funcs.c, these are function pointers passed opaquely)
+// func_80320B44: see funcs.c local forward-decl
 void func_80320B7C(void);
 void func_80320B84(void);
 
@@ -2028,7 +2022,7 @@ void func_80335128(s32);
 s32 cutscenetrigger_update(void);
 void func_8031CC40(enum map_e map_id, s32 arg1);
 void func_8031D04C(enum map_e arg0, s32 exit_id);
-void func_8031D06C(enum map_e arg0, s32 arg1);
+void func_8031D06C(s32 arg0, s32 arg1); // [port] s32 — definition is (enum map_e, s32), nodeupdate.c calls as (NodeProp*, ActorMarker*)
 void func_8031D0C0(NodeProp *arg0, ActorMarker *arg1);
 void func_8031F9E0(void);
 void func_8031F9E8();
@@ -2183,7 +2177,7 @@ void gcpausemenu_80314AC8(int arg0);
 
 // --- src/core2/fx/ripple.c ---
 void fxRipple_802F3554(s32 arg0, f32 position[3]);
-void fxRipple_802F3584(s32 arg0, f32 position[3], s32 arg2);
+void fxRipple_802F3584(s32 arg0, f32 position[3], uintptr_t arg2); // [port] was s32 — carries BKCollisionTri*
 void fxRipple_free(void);
 void fxRipple_init(void);
 
@@ -2263,7 +2257,7 @@ void volatileFlag_restoreAll(void);
 
 // --- src/core2/gc/dialog.c ---
 int func_803110F8(s32 next_state, s32 arg1, s32 arg2, s32 arg3, void (*arg4)(ActorMarker *, enum asset_e, s32)); // [port] fixed truncated function pointer param
-int func_80311174(s32 text_id, s32 arg1, f32 *pos, ActorMarker *marker, void(*callback)(ActorMarker *, enum asset_e, s32), void(*arg5)(ActorMarker *, enum asset_e, s32), s32 arg6); // [port] fixed truncated function pointer param + missing params
+int func_80311174(s32 text_id, s32 arg1, f32 *pos, ActorMarker *marker, void(*callback)(ActorMarker *, enum asset_e, s32), void(*arg5)(ActorMarker *, enum asset_e, s32), s32(*arg6)(ActorMarker *, s32, s32)); // [port] arg6 was s32 — holds function pointer
 int func_803114C4(void);
 int func_803115C4(s32 next_state);
 void func_8030F1D0(void);
@@ -2466,7 +2460,7 @@ void func_8029AF1C(void);
 // --- src/core2/particle/colordefault.c ---
 bool func_802EE5F0(s32 arg0);
 s32 func_802EE5E0(s32 arg0);
-void func_802EE5E8(ParticleEmitter *this);
+void func_802EE5E8(void *this); // [port] ParticleEmitter* in definition, void* for sparkleemit.c compat
 void func_802EE63C(void);
 void func_802EE684(void);
 
@@ -2542,7 +2536,7 @@ void func_8029C5E8(void);
 void func_8029C674(void);
 void func_8029C6D0(void);
 void func_8029C748(void);
-void func_8029C7F4(enum baanim_update_type_e arg0, enum yaw_state_e yaw_state, s32 arg2, s32 arg3); // [port] BaPhysicsType -> s32 (local enum typedef in physics.h, not included here)
+void func_8029C7F4(s32 arg0, s32 yaw_state, s32 arg2, s32 arg3); // [port] enum args → s32 to avoid forward-decl scoping issues with clang
 void func_8029C834(enum map_e map_id, s32 exit_id);
 void func_8029C848(AnimCtrl *arg0);
 void func_8029C984(void);
@@ -2747,7 +2741,7 @@ int func_802F9C0C(s32 arg0);
 void func_802F9C48(void);
 void func_802F9CD8(void);
 void func_802F9D38(s32 arg0);
-void func_802F9EC4(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+void func_802F9EC4(s32 arg0, f32 *arg1, s32 arg2, s32 arg3); // [port] arg1 is f32* position
 void func_802F9F48(s32 arg0, s32 arg1);
 void func_802FA028(s32 arg0, s32 arg1);
 void func_802FA0B0(s32 arg0, s32 arg1);
@@ -2791,7 +2785,7 @@ void func_802FBDFC(void);
 bool func_802FC390(void);
 
 // --- src/core2/spawn_queue.c ---
-// [port] spawnQueue_defrag removed: defined with (FunctionQueue*) but bufferreadback.c calls with no args (decomp pattern)
+// [port] spawnQueue_defrag: prototype at end of file uses void* since FunctionQueue is local to spawn_queue.c
 void spawnQueue_flush(void);
 void spawnQueue_free(void);
 void spawnQueue_func_802C3A18(void);
@@ -2978,5 +2972,107 @@ void osStopThread(OSThread* t);
 
 // --- unmapped (definition not found in src/) ---
 s32 osPiReadIo(u32, u32 *);
+
+// ============================================================
+// MISSING PROTOTYPES (clang -Wimplicit-function-declaration)
+// ============================================================
+
+// --- src/core2/ba/ba_stick.c ---
+s32 bastick_getZone(void);
+
+// --- src/core2/ba/ba_lookdir.c ---
+void func_8028F94C(s32 arg0, f32 arg1[3]);
+
+// --- src/core2/collectible/printdraw.c ---
+s32 func_802FB0D4(void *this); // [port] void* — callers pass struct7s*, struct8s*, Struct_core2_79830_0*
+
+// --- src/core2/particle/particle.c ---
+void particleEmitter_manualFree(ParticleEmitter *this);
+
+// --- src/core2/anim/anim_bonetransform.c ---
+void func_8033BD20(void **arg0); // [port] callers pass BKModelBin**, BKSprite**, void** — use void**
+
+// --- src/core2/timed_funcqueue.c ---
+bool timedFuncQueue_is_empty(void);
+
+// --- src/core2/fx/effect_colordata.c ---
+void vec4f_clone(f32 dst[4], f32 src[4]);
+
+// --- src/core2/collectible/bundle.c ---
+Actor *__bundle_spawnFromFirstActor(enum bundle_e bundle_id, Actor *actor);
+
+// --- src/FP/ch/twinklybox.c ---
+bool func_8038DD14(void);
+
+// --- src/SM/version_compat.c ---
+int func_8038AAB0(); // [port] PAL takes 2 args, US stub ignores them — empty parens for C compat with 0-arg calls
+
+// --- src/GV/crc.c ---
+void func_80389F5C(void);
+
+// --- src/BGS/ch/tanktup.c ---
+s32 func_8038F570(); // [port] definition takes s16* but some callers pass no args
+
+// --- src/core1/collision.c ---
+bool func_80245524(f32 arg0[3], void *arg1, intptr_t *arg2, f32 *arg3);
+
+// --- src/core2/particle/playertrail.c ---
+void func_8029BC60(enum asset_e *anim_id, f32 *anim_duration);
+
+// --- src/core2/frame/bufferreadback.c ---
+s32 func_802E4AD4(s32 arg0);
+
+// --- src/core2/audio_sfxinstruments.c ---
+void func_8033543C(Struct81s *arg0);
+
+// --- src/core2/model/matrixrotate.c ---
+void func_8033F7F0(u8 indx, Gfx **gfx, Mtx **mtx, Vtx **vtx);
+
+// --- src/core2/glspline.c ---
+s32 func_80341EC4(f32 arg0[3]);
+
+// --- src/core2/vtx/normalset.c ---
+void func_8034CF6C(void *arg0); // [port] canonical is Struct72s*, use void* for compat
+void func_8034CF74(void *arg0, s32 arg1, BKModel *arg2, s32 arg3); // [port] arg0 is Struct72s*
+void func_8034CF90(void *arg0, BKModel *arg1, s32 arg2); // [port] arg0 is Struct72s*
+
+// --- src/core2/vtx/renderstart.c ---
+void func_8034E0FC(Struct6Ds *arg0, s32 arg1);
+
+// --- src/core2/map/model.c ---
+BKModel *mapModel_getModel(s32 arg0);
+void mapModel_getBounds(s32 min[3], s32 max[3]);
+
+// --- src/core2/anim/anim_cache.c ---
+int animCache_getBoneTransformList(s16 index, BoneTransformList **arg1);
+
+// --- src/core2/anim_bonetransformlist.c ---
+void boneTransformList_reset(BoneTransformList *this);
+
+// --- src/core2/ch/bottlesbonuscursor.c ---
+void chBottlesBonusCursor_func_802DF460(s32 indx, ActorMarker *caller, f32 arg2[3]);
+s32 chBottlesBonusCursor_func_802E0538(s32 indx);
+
+// --- src/core2/ch/collectible.c ---
+s32 chCollectible_collectEgg(ActorProp *arg0);
+bool chCollectible_collectGoldFeather(ActorProp *arg0);
+bool chCollectible_collectRedFeather(ActorProp *arg0);
+
+// --- src/TTC/ch/nipper.c ---
+bool chNipper_isInState7(); // [port] definition takes s16[3] but lair.c calls with no args
+
+// --- src/core2/actor_cubepropsystem.c ---
+s32 codeA5BC0_getPositionAndReturnRadius(void *arg0, s32 arg1[3]); // [port] void* — callers pass NodeProp*, struct_core2_DB010*
+
+// --- src/core2/terrain_material.c ---
+void itemscore_timeScores_fromSaveData(u16 *savedata);
+
+// --- src/core2/savedata.c ---
+int savedata_8033CE40(void *buffer); // [port] void* — callers pass u8*, GlobalSave*, SaveData*
+int savedata_8033CC98(s32 filenum, void *buffer); // [port] void*
+void savedata_clear(void *savedata); // [port] void*
+
+// --- src/core2/spawn_queue.c ---
+void spawnQueue_defrag(); // [port] definition takes FunctionQueue* but some callers pass no args
 
 #endif // PORT_PROTOTYPES_H

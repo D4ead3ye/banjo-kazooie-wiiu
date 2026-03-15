@@ -192,7 +192,7 @@ void chBossJinjo_update(Actor *this){
             inState3 = (this->state == BOSSJINJO_STATE_3_SPIN_UP);
 
             if (!inState3 || 0.1 < anctrl_getAnimTimer(this->anctrl)) {
-                player_getVelocity(&velocity_player);
+                player_getVelocity(velocity_player);
 
                 velocity_player[0] *=  time_delta * 6.0f;
                 velocity_player[1] *=  time_delta * 6.0f;

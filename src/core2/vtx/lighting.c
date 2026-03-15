@@ -220,7 +220,7 @@ void codeAC520_func_80333D48(BKVertexList *vertex_list, f32 position[3], f32 rot
 
     __lighting_init(position, rotation, scale, arg4, vtxList_getGlobalNorm(vertex_list));
     if (sLightingbk_vectorList.unk44 == (&sLightingbk_vectorList.unk4[0])) {
-        vtxList_recolor(vertex_list, &sBlackRgb);
+        vtxList_recolor(vertex_list, sBlackRgb);
         return;
     }
 

@@ -1,7 +1,6 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
-#include "port/ShipUtils.h" // [port] BK_LOG_*
 
 extern void sfxsource_setSampleRate(u8, s32);
 extern NodeProp *func_803080C8(s32 arg0); // [port] was void* — returns NodeProp*
@@ -22,7 +21,118 @@ extern void func_8032DC70(s32);
 // On LE platforms, C bitfields allocate first member at LSB, so we reverse
 // the declaration order. The data is also converted from NodeProp LE format
 // to BE u32 values via glspline_convert_from_nodeprop() after memcpy.
-#if UINTPTR_MAX > 0xFFFFFFFFu // [port] LE 64-bit platforms
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+
+typedef struct {
+    f32 unk0;
+    u8 pad4[0x8];
+    struct{
+        u32 pad_bit31: 9;
+        u32 bit22: 11;
+        u32 pad_bit11: 12;
+    }unkC;
+} Struct_glspline_0;
+
+typedef struct {
+    u32 bit31: 16;
+    u32 bit15: 12;
+    u32 bit3:       3;
+    u32 bit0:       1;
+}Struct_glspline_t0_unk4_common;
+
+typedef struct {
+    u32 bit31:  1;
+    u32 bit30: 15;
+    u32 bit15:  8;
+    u32 bit7: 4;
+    u32 bit3:       3;
+    u32 bit0:       1;
+}Struct_glspline_t0_unk4_t7;
+
+typedef struct{
+    u8 pad0[0x4];
+    union
+    {
+        Struct_glspline_t0_unk4_common common;
+        Struct_glspline_t0_unk4_t7 t7;
+    }unk4;
+    struct {
+        u32 bit31:24;
+        u32 pad4_7:8;
+    }unk8;
+    struct{
+        u32 pad_bit31:8;
+        u32 bit23:2;
+        u32 bit21:1;
+        u32 bit20:8;
+        u32 bit12:12;
+        u32 bit0:1;
+    }unkC;
+    union {
+        struct {
+            u32 pad_bit31: 24;
+            u32 bit7:7;
+            u32 bit0:1;
+        } common;
+        struct {
+            u32 pad_bit31: 24;
+            u32 bit7:6;
+            u32 pad_bit1:1;
+            u32 bit0:1;
+        }t7;
+        u32 word;
+    } unk10;
+}Struct_glspline_t0;
+
+typedef struct{
+    f32 unk0;
+    struct{
+        u32 bit31: 12;
+        u32 bit19: 2;
+        u32 bit17: 2;
+        u32 bit15: 9;
+        u32 bit6: 3;
+        u32 bit3: 3;
+        u32 bit0: 1;
+    }unk4;
+    struct{
+        u32 bit31: 10;
+        u32 bit21: 11;
+        u32 bit10: 1;
+        u32 bit9: 1;
+        u32 bit8: 1;
+        u32 pad_bit7: 8;
+    } unk8;
+    struct{
+        u32 bit31:9;
+        u32 bit22:11;
+        u32 bit11:11;
+        u32 bit0 : 1;
+    }unkC;
+    struct {
+        u32 bit31: 12;
+        u32 pad_bit19: 13;
+        u32 bit6: 1;
+        u32 bit5: 1;
+        u32 bit4: 1;
+        u32 pad_bit3:3;
+    }unk10;
+}Struct_glspline_t1;
+
+typedef struct{
+    f32 unk0;
+    u8 pad0[0x8];
+    struct{
+        u32 pad_bit31:31;
+        u32 bit0:1;
+    }unkC;
+    struct {
+        u32 pad_31:31;
+        u32 bit0:1;
+    }unk10;
+}Struct_glspline_common;
+
+#else // LE platforms (x86, ARM, etc.) — reversed bitfield order
 
 typedef struct {
     f32 unk0;
@@ -134,118 +244,7 @@ typedef struct{
     }unk10;
 }Struct_glspline_common;
 
-#else // N64 / BE platforms — original layout
-
-typedef struct {
-    f32 unk0;
-    u8 pad4[0x8];
-    struct{
-        u32 pad_bit31: 9;
-        u32 bit22: 11;
-        u32 pad_bit11: 12;
-    }unkC;
-} Struct_glspline_0;
-
-typedef struct {
-    u32 bit31: 16;
-    u32 bit15: 12;
-    u32 bit3:       3;
-    u32 bit0:       1;
-}Struct_glspline_t0_unk4_common;
-
-typedef struct {
-    u32 bit31:  1;
-    u32 bit30: 15;
-    u32 bit15:  8;
-    u32 bit7: 4;
-    u32 bit3:       3;
-    u32 bit0:       1;
-}Struct_glspline_t0_unk4_t7;
-
-typedef struct{
-    u8 pad0[0x4];
-    union
-    {
-        Struct_glspline_t0_unk4_common common;
-        Struct_glspline_t0_unk4_t7 t7;
-    }unk4;
-    struct {
-        u32 bit31:24;
-        u32 pad4_7:8;
-    }unk8;
-    struct{
-        u32 pad_bit31:8;
-        u32 bit23:2;
-        u32 bit21:1;
-        u32 bit20:8;
-        u32 bit12:12;
-        u32 bit0:1;
-    }unkC;
-    union {
-        struct {
-            u32 pad_bit31: 24;
-            u32 bit7:7;
-            u32 bit0:1;
-        } common;
-        struct {
-            u32 pad_bit31: 24;
-            u32 bit7:6;
-            u32 pad_bit1:1;
-            u32 bit0:1;
-        }t7;
-        u32 word;
-    } unk10;
-}Struct_glspline_t0;
-
-typedef struct{
-    f32 unk0;
-    struct{
-        u32 bit31: 12;
-        u32 bit19: 2;
-        u32 bit17: 2;
-        u32 bit15: 9;
-        u32 bit6: 3;
-        u32 bit3: 3;
-        u32 bit0: 1;
-    }unk4;
-    struct{
-        u32 bit31: 10;
-        u32 bit21: 11;
-        u32 bit10: 1;
-        u32 bit9: 1;
-        u32 bit8: 1;
-        u32 pad_bit7: 8;
-    } unk8;
-    struct{
-        u32 bit31:9;
-        u32 bit22:11;
-        u32 bit11:11;
-        u32 bit0 : 1;
-    }unkC;
-    struct {
-        u32 bit31: 12;
-        u32 pad_bit19: 13;
-        u32 bit6: 1;
-        u32 bit5: 1;
-        u32 bit4: 1;
-        u32 pad_bit3:3;
-    }unk10;
-}Struct_glspline_t1;
-
-typedef struct{
-    f32 unk0;
-    u8 pad0[0x8];
-    struct{
-        u32 pad_bit31:31;
-        u32 bit0:1;
-    }unkC;
-    struct {
-        u32 pad_31:31;
-        u32 bit0:1;
-    }unk10;
-}Struct_glspline_common;
-
-#endif // UINTPTR_MAX
+#endif // __BYTE_ORDER__
 
 typedef union{
     Struct_glspline_common common;
@@ -254,7 +253,7 @@ typedef union{
     /* data */
 }Union_glspline;
 
-#if UINTPTR_MAX > 0xFFFFFFFFu
+#if !(defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
 // [port] Convert Union_glspline data from NodeProp LE format to BE u32 values.
 // NodeProp data is serialized field-by-field in LE byte order. Union_glspline
 // overlays the same 20 bytes but interprets them as u32 bitfields with BE bit
@@ -301,7 +300,7 @@ static void glspline_convert_from_nodeprop(Union_glspline *dst) {
     u32 f_unk10_0 = (field16_le >> 30) & 3;
     *(u32 *)(p + 16) = (f_unk10_31 << 20) | (f_unk10_19 << 8) | (f_pad10_7 << 7) | (f_unk10_6 << 6) | (f_pad10_5 << 2) | f_unk10_0;
 }
-#endif
+#endif // !BIG_ENDIAN
 
 typedef struct{
     s32 unk0;
@@ -414,6 +413,8 @@ f32 glspline_catmull_rom_interpolate(f32 x, s32 knotCount, f32 *knotList) {
 
     tmp_t7 = knotCount - 3;
     start_knot = x = tmp_t7 * func_80340700(x, 0.0f, 1.0f);
+    // [port] MIPS trunc.w.s returns 0 for NaN; x86 returns INT_MIN → wild pointer
+    if (start_knot < 0) start_knot = 0;
     start_knot = (start_knot >= (knotCount - 4)) ? (knotCount - 4) : (start_knot);
     knotList += start_knot;
     x -= start_knot;
@@ -557,7 +558,6 @@ void func_803411B0(void){
 
     spE4 = func_80307E1C() + 1;
     if (spE4 <= 1) {
-        BK_LOG_WARN("[port] glspline init: NO splines (max group ID = %d)", spE4 - 1); // [port] diagnostic
         return;
     }
 
@@ -569,22 +569,17 @@ void func_803411B0(void){
 
     func_80307EA8(0, spCC, &spC8, &spC4);
 
-    {
-        s32 populatedCount = 0; // [port] diagnostic
-        do {
-            spE0 = func_80307EA8(1, spCC, &spC8, &spC4);
+    do {
+        spE0 = func_80307EA8(1, spCC, &spC8, &spC4);
 
-            if (spE0 >= 0) {
-                (spD8+spE0)->unk0 = spC8;
-                (spD8+spE0)->unk8_13 = spC4;
-                (spD8+spE0)->unk2[0] = spCC[0];
-                (spD8+spE0)->unk2[1] = spCC[1];
-                (spD8+spE0)->unk2[2] = spCC[2];
-                populatedCount++;
-            }
-        } while (spE0 >= 0);
-        BK_LOG_WARN("[port] glspline: %d nodes populated from NodeProp data", populatedCount); // [port] diagnostic
-    }
+        if (spE0 >= 0) {
+            (spD8+spE0)->unk0 = spC8;
+            (spD8+spE0)->unk8_13 = spC4;
+            (spD8+spE0)->unk2[0] = spCC[0];
+            (spD8+spE0)->unk2[1] = spCC[1];
+            (spD8+spE0)->unk2[2] = spCC[2];
+        }
+    } while (spE0 >= 0);
 
     for (spE0 = 1; spE0 < spE4; spE0++) {
         (spD8+spE0)->unk8_15 = 0;
@@ -610,20 +605,6 @@ void func_803411B0(void){
             (spD8+spE0)->unk0 = -1;
             (spD8+spE0)->unk8_13 = 0;
         }
-    }
-
-    // [port] diagnostic: dump node state before chain building
-    {
-        s32 chainHeads = 0, hasNext = 0, isTarget = 0, isSpecial = 0, unpopulated = 0;
-        for (spE0 = 1; spE0 < spE4; spE0++) {
-            if ((spD8+spE0)->unk0 == 0 && (spD8+spE0)->unk2[0] == 0 && (spD8+spE0)->unk2[1] == 0 && (spD8+spE0)->unk2[2] == 0) unpopulated++;
-            else if ((spD8+spE0)->unk0 > 0) hasNext++;
-            if ((spD8+spE0)->unk8_15) isTarget++;
-            if ((spD8+spE0)->unk8_13) isSpecial++;
-            if ((spD8+spE0)->unk0 > 0 && !(spD8+spE0)->unk8_15 && !(spD8+spE0)->unk8_13) chainHeads++;
-        }
-        BK_LOG_WARN("[port] glspline pre-build: %d unpopulated, %d hasNext, %d isTarget, %d isSpecial, %d chainHeads (of %d nodes)",
-            unpopulated, hasNext, isTarget, isSpecial, chainHeads, spE4 - 1);
     }
 
     for (spE0 = 1; spE0 < spE4; spE0++) {
@@ -661,16 +642,16 @@ void func_803411B0(void){
                 if (0);
                 if ((spD8+a0)->unk8_13 == 1) {
                     temp_v0_16 = (Union_glspline *)func_803080C8(a0); // [port] NodeProp* to Union_glspline*
-#if UINTPTR_MAX > 0xFFFFFFFFu
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+                    temp_v0_16->t1.unk8.pad_bit7 = D_80371E78;
+#else
                     // [port] Write pad_bit7 directly to byte 11 (padB in NodeProp)
                     // since the Union_glspline bitfield layout differs from NodeProp on LE
                     *((u8 *)temp_v0_16 + 11) = (u8)D_80371E78;
-#else
-                    temp_v0_16->t1.unk8.pad_bit7 = D_80371E78;
 #endif
 
                     memcpy(var_s1_2, temp_v0_16, sizeof(Union_glspline));
-#if UINTPTR_MAX > 0xFFFFFFFFu
+#if !(defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
                     // [port] Convert from NodeProp LE format to BE u32 values
                     // so reversed LE bitfield structs extract correct values
                     glspline_convert_from_nodeprop(var_s1_2);
@@ -716,7 +697,6 @@ void func_803411B0(void){
     }
 
     bk_free(spD8);
-    BK_LOG_WARN("[port] glspline init: %d splines created (max group=%d)", D_80371E78, spE4 - 1); // [port] diagnostic
 }
 
 //glspline_free

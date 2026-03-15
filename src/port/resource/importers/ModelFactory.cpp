@@ -275,6 +275,7 @@ ResourceFactoryBinaryModelV0::ReadResource(std::shared_ptr<Ship::File> file,
             e.unk8 = reader->ReadUByte();
             e.unk9 = reader->ReadInt8();
             e.pad[0] = reader->ReadUByte();
+            e.pad[1] = reader->ReadUByte();
             u14_2.push_back(e);
         }
     }
@@ -543,6 +544,7 @@ ResourceFactoryBinaryModelV0::ReadResource(std::shared_ptr<Ship::File> file,
             AppendValue<uint8_t>(out, e.unk8);
             AppendValue<int8_t>(out, e.unk9);
             AppendValue<uint8_t>(out, e.pad[0]);
+            AppendValue<uint8_t>(out, e.pad[1]);
         }
     }
 

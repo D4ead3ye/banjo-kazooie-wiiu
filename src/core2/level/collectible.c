@@ -90,7 +90,7 @@ s32 __chLevelCollectible_dialogCallback(ActorMarker *marker, enum asset_e text_i
 
 
 void __chLevelCollectible_callDialog(enum asset_e text_id){
-    func_80311174(text_id, 0, NULL, NULL, NULL, NULL, __chLevelCollectible_dialogCallback);
+    func_80311174(text_id, 0, NULL, NULL, NULL, NULL, (s32(*)(ActorMarker*,s32,s32))__chLevelCollectible_dialogCallback); // [port] polymorphic callback
 }
 
 void __chLevelCollectible_collide(ActorMarker *marker, ActorMarker *other_marker) {

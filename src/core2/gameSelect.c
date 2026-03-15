@@ -240,7 +240,7 @@ void func_802C4768(s32 gamenum){
     sp20[0] = upperTextLine;\
     sp20[1] = lowerTextLine;
     func_8031877C(chGameSelectBottomZoombox);
-    gczoombox_setStrings(chGameSelectBottomZoombox, 2, sp20);
+    gczoombox_setStrings(chGameSelectBottomZoombox, 2, (char **)sp20); // [port]
     gczoombox_maximize(chGameSelectBottomZoombox);
     gczoombox_resolve_minimize(chGameSelectBottomZoombox);
 }

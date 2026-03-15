@@ -108,10 +108,6 @@ static char* LoadAndRetainResource(const std::string& path, uint32_t assetId) {
 }
 
 extern "C" char* ResourceMgr_LoadByAssetId(uint32_t assetId) {
-    if (assetId == 1) {
-        return nullptr;
-    }
-
     // Return cached resource if already loaded
     if (auto it = sResourceRefCache.find(assetId); it != sResourceRefCache.end()) {
         auto ptr = it->second->GetRawPointer();

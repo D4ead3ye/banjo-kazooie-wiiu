@@ -3,7 +3,7 @@
 #include "variables.h"
 
 /* extern functions */
-extern void MMM_func_8038B6D4(f32* arg0, s32 arg1);
+extern void MMM_func_8038B6D4(Struct5Fs *arg0, Struct68s *arg1); // [port] was (f32*, s32) — correct types
 extern void *func_803517B8(s32);
 
 /* internal definitions */
@@ -295,7 +295,7 @@ int func_80389CE8(s32 arg0, s32 arg1, s32 arg2){
             return 1;
         }//L80389D6C
         else{
-            func_8028F55C(0xD,  func_80351794(arg1));
+            func_8028F55C(0xD,  func_80351794((Struct68s *)(intptr_t)arg1)); // [port] s32 → Struct68s*
             return 2;
         }
     }
@@ -305,7 +305,7 @@ int func_80389CE8(s32 arg0, s32 arg1, s32 arg2){
 void func_80389D9C(s32 key_id){
     s32 sp24;
     sp24 = D_8038C198[key_id].unk1;
-    MMM_func_8038B6D4(func_803517B8(sp24), func_803517E8(sp24));
+    MMM_func_8038B6D4((Struct5Fs *)func_803517B8(sp24), func_803517E8(sp24)); // [port] void* to Struct5Fs* for local data reuse
     Me.unk0++;
 }
 

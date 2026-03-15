@@ -96,6 +96,12 @@ void Sprite::BuildSpriteStructure() {
             // Write texture data
             offset = Align8(offset);
             std::memcpy(framePtr + offset, chunkData.textureData.data(), chunkData.textureData.size());
+
+            // [port] RGBA16 texture data stays in N64 big-endian byte order.
+            // The fast3d interpreter reads RGBA5551 as BE when processing
+            // gDPLoadTextureBlock, so the data must remain as-is.
+            // Decomp code that reads this data directly as u16* (e.g. font
+            // system in print.c func_802F4A24) must do a BE byte-read instead.
             offset += chunkData.textureData.size();
         }
 

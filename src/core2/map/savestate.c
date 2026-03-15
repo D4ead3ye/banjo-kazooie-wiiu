@@ -81,6 +81,7 @@ void mapSavestate_save(enum map_e map)
   }
 
   D_8037E650[map] = (uintptr_t)actors_appendToSavestate((void *)D_8037E650[map], (uintptr_t)(((u32 *) D_8037E650[map]) + (4 * ((iBit + 0x7F) >> 7)))); // [port] cast u32* to uintptr_t
+
 }
 
 void mapSavestate_apply(enum map_e map_id) {

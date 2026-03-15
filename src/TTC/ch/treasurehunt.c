@@ -3,7 +3,7 @@
 #include "variables.h"
 
 extern f32 mapModel_getFloorY(f32[3]);
-extern void func_8028F45C(s32, f32[3]);
+// func_8028F45C declared in port_prototypes.h (returns bool)
 
 typedef struct {
     s32 unk0;

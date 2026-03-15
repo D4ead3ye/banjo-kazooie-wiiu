@@ -23,7 +23,7 @@ f32 func_80257204(f32, f32, f32, f32);
 extern Actor *spawnQueue_bundleWithYaw_f32(enum bundle_e bundle_id, s32 x, s32 y, s32 z, s32 yaw);
 f32 func_8033229C(ActorMarker *);
 f32 player_getYaw(void);
-extern void __bundle_spawnFromFirstActor(s32, Actor *);
+// extern void __bundle_spawnFromFirstActor(s32, Actor *); // [port] removed — prototype in port_prototypes.h (returns Actor*, bundle_e first param)
 extern void func_8032B3A0(Actor *, ActorMarker *);
 extern void func_8032EE0C(GenFunction_2, uintptr_t);
 extern void func_8032EE20(void);
@@ -298,7 +298,7 @@ Actor *func_80325AE0(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx) {
     }
     func_80344C38(&func_803257A4, marker);
     func_80335D30(gfx);
-    func_80344720(sp40, marker->propPtr->unk8_15, marker->propPtr->unk8_5, this->position, rotation, &scale, gfx, mtx);
+    func_80344720(sp40, marker->propPtr->unk8_15, marker->propPtr->unk8_5, this->position, rotation, scale, gfx, mtx);
     func_8033687C(gfx);
     if (this->unk104 != NULL) {
         this->position[0] = this->position[0] + D_8036E58C[0];
@@ -400,7 +400,7 @@ void func_80325FE8(Actor *this) {
        marker->actorFreeFunc(this);
        marker->actorFreeFunc = NULL;
     }
-    if ((intptr_t)marker->unk44 < 0) { // [port] 64-bit pointer
+    if ((uintptr_t)marker->unk44 > 1) { // [port] N64 used (s32)<0 which fails on 64-bit (heap ptrs are positive); unk44 is 0=NULL, 1=flag, or valid ptr
         func_8033E7CC(marker);
         func_8034A2A8(marker->unk44);
        marker->unk44 = 0;
@@ -930,7 +930,7 @@ Actor *actor_new(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags){
             sp44[0] = (f32)position[0];
             sp44[1] = (f32)position[1];
             sp44[2] = (f32)position[2];
-            suLastBaddie->unk10_18 = func_80307258(&sp44, suLastBaddie->unk10_25 - 1, 0) + 1;
+            suLastBaddie->unk10_18 = func_80307258(sp44, suLastBaddie->unk10_25 - 1, 0) + 1;
         }
     }//L80327D30
 
@@ -1461,8 +1461,8 @@ bool func_80329140(Actor *this, s32 arg1, s32 arg2){
 }
 
 int func_80329210(Actor * arg0, f32 (* arg1)[3]){
-    return arg0->unk10_25 < 1 
-        || func_80307258(arg1, arg0->unk10_25 - 1, arg0->unk10_18-1) != -1;
+    return arg0->unk10_25 < 1
+        || func_80307258(*arg1, arg0->unk10_25 - 1, arg0->unk10_18-1) != -1;
 }
 
 bool func_80329260(Actor *this, f32 p1[3]){
@@ -1950,7 +1950,7 @@ void func_8032A82C(Actor *arg0, s32 arg1) {
     if (sp24 != NULL) {
         sp1C->unkC = nodeprop_getYaw(sp24);
         nodeprop_getPosition(sp24, sp1C->unk0);
-        sp1C->unkE = func_80341EC4(sp1C);
+        sp1C->unkE = func_80341EC4(sp1C->unk0); // [port] Actorlocal_Core2_9E370* → f32[3]: pass position member
     }
 }
 
@@ -2128,7 +2128,7 @@ void actorArray_defrag(void) {
             }
             i_actor = &suBaddieActorArray->data[D_8036E5AC];
 
-            if ((intptr_t)i_actor->marker->unk44 < 0) { // [port] 64-bit pointer
+            if ((uintptr_t)i_actor->marker->unk44 > 1) { // [port] N64 used (s32)<0; unk44 is 0=NULL, 1=flag, or valid ptr
                 i_actor->marker->unk44 = func_8034A348(i_actor->marker->unk44);
             }
 
@@ -2179,7 +2179,7 @@ ActorMarker *func_8032B16C(enum jiggy_e jiggy_id) {
     if (suBaddieActorArray != NULL) {
         temp_s3 = &suBaddieActorArray->data[0];
         for(var_s0 = temp_s3; (var_s0 - temp_s3) < suBaddieActorArray->cnt; var_s0++){
-            if ((var_s0->marker->id == MARKER_52_JIGGY) && (chjiggy_getJiggyId(&(var_s0->marker)) == jiggy_id)) {
+            if ((var_s0->marker->id == MARKER_52_JIGGY) && (chjiggy_getJiggyId(var_s0) == jiggy_id)) { // [port] was &(var_s0->marker) — pass Actor*, not ActorMarker**
                 return var_s0->marker;
             }
         }
@@ -2194,10 +2194,10 @@ void func_8032B258(Actor *this, enum collision_e arg1) {
 
     if ((arg1 == COLLISION_2_DIE) && this->unk138_27 != 0) {
         sp44 = player_getYaw();
-        if ((uintptr_t)this->marker->unk44 < 0) {
+        if ((uintptr_t)this->marker->unk44 > 1) { // [port] N64 used (s32)<0; unk44 is 0=NULL, 1=flag, or valid ptr
             func_8034A174( this->marker->unk44, 0x20, sp38);
         }
-        if (((uintptr_t)this->marker->unk44 < 0) && ((sp38[0] != 0.0f) || (sp38[1] != 0.0f) || (sp38[2] != 0.0f))) {
+        if (((uintptr_t)this->marker->unk44 > 1) && ((sp38[0] != 0.0f) || (sp38[1] != 0.0f) || (sp38[2] != 0.0f))) { // [port] same fix
             __spawnQueue_add_5((GenFunction_5) spawnQueue_bundleWithYaw_f32, this->unk138_27 + BUNDLE_15__JIGGY, reinterpret_cast(s32, sp38[0]), reinterpret_cast(s32, sp38[1]), reinterpret_cast(s32, sp38[2]), reinterpret_cast(s32, sp44));
             return;
         }
@@ -2314,11 +2314,11 @@ void func_8032B5C0(ActorMarker *arg0, ActorMarker *arg1, struct5Cs *arg2) {
                     sp3C[0] = (s32) this->position[0];
                     sp3C[1] = (s32) this->position[1];
                     sp3C[2] = (s32) this->position[2];
-                    if ((intptr_t)arg0->unk44 < 0) { // [port] 64-bit pointer
+                    if ((uintptr_t)arg0->unk44 > 1) { // [port] N64 used (s32)<0; unk44 is 0=NULL, 1=flag, or valid ptr
                         func_8034A174(arg0->unk44, 0x20, sp50);
                     }
                     func_8032EE0C((GenFunction_2)func_8032B38C, (uintptr_t)this); // [port] cast to GenFunction_2; Actor* -> uintptr_t param
-                    if (((intptr_t)arg0->unk44 < 0) && ((sp50[0] != 0.0f) || (sp50[1] != 0.0f) || (sp50[2] != 0.0f))) { // [port] 64-bit pointer
+                    if (((uintptr_t)arg0->unk44 > 1) && ((sp50[0] != 0.0f) || (sp50[1] != 0.0f) || (sp50[2] != 0.0f))) { // [port] N64 used (s32)<0; unk44 is 0=NULL, 1=flag, or valid ptr
                         __spawnQueue_add_5((GenFunction_5)spawnQueue_bundleWithYaw_f32, sp70 + BUNDLE_15__JIGGY, reinterpret_cast(s32, sp50[0]), reinterpret_cast(s32, sp50[1]), reinterpret_cast(s32, sp50[2]), reinterpret_cast(s32, player_yaw));
                     } else if (this->unk16C_3 && func_803048E0(sp3C, &sp4C, &sp48, 3, (s32) (func_8033229C(arg0) * 4.0f))) {
                         sp50[0] = (f32) sp48->x;

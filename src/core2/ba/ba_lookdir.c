@@ -61,7 +61,7 @@ bool func_8028DFF0(s32 arg0, s32 position[3]) {
 
 bool func_8028E060(s32 arg0, s32 *arg1){
     if(arg0 >= 0x80){
-        *arg1 = func_802E4AD4();
+        *arg1 = func_802E4AD4(arg0); // [port] was func_802E4AD4() — decomp pattern, passes camera node index
         return true;
     }
     else{

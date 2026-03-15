@@ -3,7 +3,7 @@
 #include "functions.h"
 #include "variables.h"
 
-extern void func_802EFAB0(ParticleEmitter *, s32, f32);
+extern void func_802EFAB0(ParticleEmitter *, uintptr_t, f32); // [port] was s32 — carries Struct70s*
 
 ParticleEmitter *func_802F4274(f32 arg0[3]);
 
@@ -47,7 +47,7 @@ ParticleEmitter *func_802F4274(f32 arg0[3]) {
     sp2C[2] += sp44[2];
     temp_v0 = func_802F0EF0(D_80380AA0);
     if (sp20 != 0) {
-        func_802EFAB0(temp_v0, (s32)sp20, sp2C[1]); // [port] FIXME: truncation — func_802EFAB0/ParticleEmitter.unk100 chain stores Struct70s* in s32
+        func_802EFAB0(temp_v0, (uintptr_t)sp20, sp2C[1]); // [port] was (s32) — carries Struct70s*
     }
     particleEmitter_setSprite(temp_v0, ASSET_42A_UNKNOWN);
     particleEmitter_setAlpha(temp_v0, 0xFF);

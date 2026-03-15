@@ -50,7 +50,7 @@ static void __bsbwhirl_spawnSparkle(void){
 }
 
 enum bs_e func_802AA510(enum bs_e arg0){
-    if(bastick_getZone(arg0) > 0)
+    if(bastick_getZone() > 0) // [port] decomp passed arg0 but actual def is (void)
         arg0 = BS_1C_WONDERWING_WALK;
 
     if(bakey_released(BUTTON_Z))

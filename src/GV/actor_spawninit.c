@@ -272,7 +272,7 @@ void func_8038E648(Actor *this){
 }
 
 void func_8038E914(Actor *this){
-    func_80389F5C(this);
+    func_80389F5C(); // [port] decomp passed Actor* but actual def is (void)
     if(!this->initialized){
         func_802D3D74(this);
         this->initialized = true;

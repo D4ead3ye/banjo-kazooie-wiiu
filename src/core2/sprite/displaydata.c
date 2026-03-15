@@ -14,56 +14,57 @@ extern void func_8033FFB8(u8, s32); // [port] was (s32, s32)
 extern void projectile_getPosition(u8, f32[3]); // [port] was (s32, f32[3])
 extern void func_8032F64C(f32[3] , ActorMarker *);
 extern void func_8033FB64(u8); // [port] was s32
+extern void func_8033F7F0(u8 indx, Gfx **gfx, Mtx **mtx, Vtx **vtx);
 extern void func_803529DC(u8); // [port] was s32
 extern void func_80344D70(u8); // [port] was s32
 extern void func_80352B20(u8); // [port] was s32
 extern ActorMarker * func_8032FBE4(f32 *pos, MarkerDrawFunc arg1, int arg2, enum asset_e model_id);
 
-extern void (*func_80352614)(void);
-extern void (*func_8035261C)(void);
-extern void (*func_803526DC)(void);
-extern void (*func_80355D58)(void);
-extern void (*func_80355E80)(void);
-extern void (*func_80355D50)(void);
-extern void (*fxegg_head_spawn)(void);
-extern void (*fxegg_head_update)(void);
-extern void (*fxegg_head_destroy)(void);
-extern void (*func_803546E8)(void);
-extern void (*func_8035489C)(void);
-extern void (*func_80354990)(void);
-extern void (*fxegg_ass_spawn)(void);
-extern void (*fxegg_ass_update)(void);
-extern void (*fxegg_ass_destroy)(void);
-extern void (*func_8035611C)(void);
-extern void (*func_803562E8)(void);
-extern void (*func_80356364)(void);
-extern void (*func_80352DE4)(void);
-extern void (*func_80352F58)(void);
-extern void (*func_80352FF4)(void);
-extern void (*func_80354998)(void);
-extern void (*func_80354C18)(void);
-extern void (*func_80354DC8)(void);
-extern void (*func_80354DD0)(void);
-extern void (*func_80354EEC)(void);
-extern void (*func_80355004)(void);
-extern void (*func_8035500C)(void);
-extern void (*func_80355134)(void);
-extern void (*func_80355294)(void);
-extern void (*func_803540B4)(void);
-extern void (*func_803541D8)(void);
-extern void (*func_803540AC)(void);
-extern void (*func_8035529C)(void);
-extern void (*func_803553E8)(void);
-extern void (*func_80355548)(void);
-extern void (*func_80355550)(void);
-extern void (*func_8035570C)(void);
-extern void (*func_8035585C)(void);
-extern void (*func_803543FC)(void);
-extern void (*func_8035451C)(void);
-extern void (*func_803543F4)(void);
-extern void (*func_80355864)(void);
-extern void (*func_80355B00)(void);
-extern void (*func_80355C4C)(void);
+extern void func_80352614(void);
+extern void func_8035261C(void);
+extern void func_803526DC(void);
+extern void func_80355D58(void);
+extern void func_80355E80(void);
+extern void func_80355D50(void);
+extern void fxegg_head_spawn(void);
+extern void fxegg_head_update(void);
+extern void fxegg_head_destroy(void);
+extern void func_803546E8(void);
+extern void func_8035489C(void);
+extern void func_80354990(void);
+extern void fxegg_ass_spawn(void);
+extern void fxegg_ass_update(void);
+extern void fxegg_ass_destroy(void);
+extern void func_8035611C(void);
+extern void func_803562E8(void);
+extern void func_80356364(void);
+extern void func_80352DE4(void);
+extern void func_80352F58(void);
+extern void func_80352FF4(void);
+extern void func_80354998(void);
+extern void func_80354C18(void);
+extern void func_80354DC8(void);
+extern void func_80354DD0(void);
+extern void func_80354EEC(void);
+extern void func_80355004(void);
+extern void func_8035500C(void);
+extern void func_80355134(void);
+extern void func_80355294(void);
+extern void func_803540B4(void);
+extern void func_803541D8(void);
+extern void func_803540AC(void);
+extern void func_8035529C(void);
+extern void func_803553E8(void);
+extern void func_80355548(void);
+extern void func_80355550(void);
+extern void func_8035570C(void);
+extern void func_8035585C(void);
+extern void func_803543FC(void);
+extern void func_8035451C(void);
+extern void func_803543F4(void);
+extern void func_80355864(void);
+extern void func_80355B00(void);
+extern void func_80355C4C(void);
 
 typedef struct {
     u8 unk0;
@@ -101,9 +102,9 @@ s32 func_8033DE44(s32 arg0){
     return D_80371E30[arg0].unk1 & 1;
 }
 
-Actor *func_8033DE60(ActorMarker *marker){   
+Actor *func_8033DE60(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){ // [port] restored full MarkerDrawFunc signature
     int indx = marker->unk28;
-    func_8033F7F0(D_80384490[indx].unk45);
+    func_8033F7F0(D_80384490[indx].unk45, gfx, mtx, vtx);
     if(marker);
     return 0;
 }
@@ -114,21 +115,21 @@ void func_8033DEA0(void){
         D_80384490[i].unk44 = 0;
     }
     D_80384FD8.unk0 =  D_80384FD8.unk4 = 0;
-    commonParticleType_set(COMMON_PARTICLE_1_EGG_HEAD,  &fxegg_head_spawn, &fxegg_head_update, &fxegg_head_destroy, 0, 1); //bsbEggAss
-    commonParticleType_set(0x2,  &func_803546E8, &func_8035489C, &func_80354990, 0, 8); //bsbWhirl //aka wonderwing
-    commonParticleType_set(COMMON_PARTICLE_4_EGG_ASS,  &fxegg_ass_spawn, &fxegg_ass_update, &fxegg_ass_destroy, 0, 1);
-    commonParticleType_set(0x6,  &func_8035611C, &func_803562E8, &func_80356364, 0, 8);
-    commonParticleType_set(0x7,  &func_80352DE4, &func_80352F58, &func_80352FF4, 0, 8);
-    commonParticleType_set(0x8,  &func_80354998, &func_80354C18, &func_80354DC8, 0, 8);
-    commonParticleType_set(0x9,  &func_80354DD0, &func_80354EEC, &func_80355004, 0, 8); //orange_pad?
-    commonParticleType_set(0xa,  &func_8035500C, &func_80355134, &func_80355294, 0, 8);
-    commonParticleType_set(0xb,  &func_803540B4, &func_803541D8, &func_803540AC, 0, 8);
-    commonParticleType_set(0xc,  &func_8035529C, &func_803553E8, &func_80355548, 0, 8);
-    commonParticleType_set(0xd,  &func_80355550, &func_8035570C, &func_8035585C, 0, 8);
-    commonParticleType_set(0xe,  &func_803543FC, &func_8035451C, &func_803543F4, 0, 8);
-    commonParticleType_set(0xf,  &func_80355864, &func_80355B00, &func_80355C4C, 0, 8);
-    commonParticleType_set(0x10, &func_80355D58, &func_80355E80, &func_80355D50, 0, 8);
-    commonParticleType_set(0x11, &func_8035261C, &func_803526DC, &func_80352614, 0, 8); //mumbotoken sparkle
+    commonParticleType_set(COMMON_PARTICLE_1_EGG_HEAD,  fxegg_head_spawn, fxegg_head_update, fxegg_head_destroy, 0, 1); //bsbEggAss
+    commonParticleType_set(0x2,  func_803546E8, func_8035489C, func_80354990, 0, 8); //bsbWhirl //aka wonderwing
+    commonParticleType_set(COMMON_PARTICLE_4_EGG_ASS,  fxegg_ass_spawn, fxegg_ass_update, fxegg_ass_destroy, 0, 1);
+    commonParticleType_set(0x6,  func_8035611C, func_803562E8, func_80356364, 0, 8);
+    commonParticleType_set(0x7,  func_80352DE4, func_80352F58, func_80352FF4, 0, 8);
+    commonParticleType_set(0x8,  func_80354998, func_80354C18, func_80354DC8, 0, 8);
+    commonParticleType_set(0x9,  func_80354DD0, func_80354EEC, func_80355004, 0, 8); //orange_pad?
+    commonParticleType_set(0xa,  func_8035500C, func_80355134, func_80355294, 0, 8);
+    commonParticleType_set(0xb,  func_803540B4, func_803541D8, func_803540AC, 0, 8);
+    commonParticleType_set(0xc,  func_8035529C, func_803553E8, func_80355548, 0, 8);
+    commonParticleType_set(0xd,  func_80355550, func_8035570C, func_8035585C, 0, 8);
+    commonParticleType_set(0xe,  func_803543FC, func_8035451C, func_803543F4, 0, 8);
+    commonParticleType_set(0xf,  func_80355864, func_80355B00, func_80355C4C, 0, 8);
+    commonParticleType_set(0x10, func_80355D58, func_80355E80, func_80355D50, 0, 8);
+    commonParticleType_set(0x11, func_8035261C, func_803526DC, func_80352614, 0, 8); //mumbotoken sparkle
 }
 
 void func_8033E184(void){

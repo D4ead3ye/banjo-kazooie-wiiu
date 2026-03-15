@@ -7,7 +7,7 @@ typedef struct {
 }ActorLocal_Core2_3ECE0;
 
 void chBubble_update(Actor *this);
-extern void func_802F32C4(s32, f32[3], f32, ActorMarker *, s32(*)(f32[3], f32, ActorMarker *));
+extern void func_802F32C4(Struct64s *, f32[3], f32, ActorMarker *, s32(*)(f32[3], f32, ActorMarker *)); // [port] was s32 — first arg is Struct64s*
 
 /* .data */
 ActorInfo chBubble = { 

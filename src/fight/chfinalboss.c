@@ -1463,7 +1463,7 @@ void chfinalboss_phase4_setState(Actor *this, s32 arg1) {
         this->velocity[0] = sp3C[0] / 1.7;
         this->velocity[1] = sp3C[1] / 1.7 - -1190.0;
         this->velocity[2] = sp3C[2] / 1.7;
-        func_8028F94C(2, this->position, local);
+        func_8028F94C(2, this->position); // [port] removed spurious 3rd arg (local); actual def takes (s32, f32[3])
         if (local->mirror_phase5 == 0) {
             timed_setStaticCameraToNode(0.0f, 0xA);
             timed_exitStaticCamera(1.7f);

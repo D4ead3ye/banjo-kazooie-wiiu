@@ -107,7 +107,7 @@ Actor *func_80350E90(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx) {
     }
 
     if (temp_s0->unk8 != NULL) {
-        temp_s0->unk8(&temp_s0->local, temp_s0, temp_s0->position, temp_s0->unk20, temp_s0->unk2C, temp_v0, gfx, mtx, vtx);
+        temp_s0->unk8(&temp_s0->local, (struct struct_68_s *)temp_s0, temp_s0->position, temp_s0->unk20, temp_s0->unk2C, temp_v0, gfx, mtx, vtx); // [port]
     }
     else {
         modelRender_setDepthMode(MODEL_RENDER_DEPTH_FULL);
@@ -254,7 +254,7 @@ bool func_803515EC(NodeProp *arg0) {
                 sp48[0] = (s32) arg0->x;
                 sp48[1] = (s32) arg0->y;
                 sp48[2] = (s32) arg0->z;
-                if(func_803048E0(&sp48, &sp44, &sp40, 2, 0x1F4)){
+                if(func_803048E0(sp48, &sp44, &sp40, 2, 0x1F4)){
                     func_803513EC(sp40, phi_s0->unk2);
                     break;
                 }
@@ -265,18 +265,21 @@ bool func_803515EC(NodeProp *arg0) {
 }
 
 bool func_80351700(Prop * arg0){
-    if (((*(u16*)((uintptr_t)arg0 + 0xA) << 0x1E) >> 0x1F)) {
+    // [port] was *(u16*)(arg0 + 0xA) — hardcoded offset wrong on 64-bit (Prop grew by 4 bytes)
+    // N64 offset 0xA = flags u16; bit 1 = unk8_1. Use struct access instead.
+    if (arg0->unk8_1) {
         return true;
     }
     return true;
 }
 
 bool func_80351724(void * arg0){
-    ActorProp *a_prop;
-    if (((*(u16*)((uintptr_t)arg0 + 0xA) << 0x1E) >> 0x1F) && ((*(u16*)((uintptr_t)arg0 + 0xA) << 0x1A) >> 0x1F)) {
-        a_prop = (ActorProp *)arg0;
-        a_prop->unk8_5 = false;
-        a_prop->unk8_4 = true;
+    // [port] was *(u16*)(arg0 + 0xA) — hardcoded offset wrong on 64-bit (Prop grew by 4 bytes)
+    // N64 offset 0xA = flags u16; bit 1 = unk8_1, bit 5 = unk8_5. Use struct access instead.
+    Prop *prop = (Prop *)arg0;
+    if (prop->unk8_1 && prop->unk8_5) {
+        prop->actorProp.unk8_5 = false;
+        prop->actorProp.unk8_4 = true;
     }
     return true;
 }
@@ -321,7 +324,7 @@ s32 func_80351838(f32 position[3], s32 key_flag, s32 arg2) {
     rotation[0] = rotation[1] = rotation[2] = 0.0f;
     sp28 = func_8035126C(position, rotation, 1.0f, 4, key_flag + 0x884);
     func_80351538(sp28);
-    func_8038B5D8(&sp28->local, sp28, key_flag, arg2);
+    func_8038B5D8((Struct5Fs *)&sp28->local, sp28, key_flag, arg2); // [port]
     return sp28 - D_803861B0.unk4;
 }
 
@@ -378,7 +381,7 @@ void func_80351A1C(s32 arg0, s32 arg1) {
     Struct68s *phi_s0;
 
     if (arg0 == 2) {
-        func_80305290(NULL, func_80351724);
+        func_80305290(NULL, (bool (*)(Prop *))func_80351724); // [port]
         func_803518E8();
         func_80351998();
     }
@@ -441,7 +444,7 @@ void func_80351C48(void) {
     temp_f20 = time_getDelta();
     D_80386180.unk0 = NULL;
     if (D_80386180.unk2C != NULL) {
-        player_getPosition_s32(&sp38);
+        player_getPosition_s32(sp38);
         if ((sp38[0] == D_80386180.unk20[0]) && (sp38[1] == D_80386180.unk20[1]) && (sp38[2] == D_80386180.unk20[2])) {
             player_getPosition(sp4C);
             mlMtxIdent();

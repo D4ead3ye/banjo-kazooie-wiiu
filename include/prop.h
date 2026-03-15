@@ -344,7 +344,7 @@ typedef union prop_s
 #endif
         s16 unk4[3];
         // s16 unk6;
-        s16 pad8_15: 10;
+        u16 pad8_15: 10; // [port] was s16 — must match u16 type of adjacent bitfields to pack into same storage unit
         u16 unk8_5: 1;
         u16 unk8_4: 1;
         u16 unk8_3: 1;

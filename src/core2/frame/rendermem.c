@@ -106,7 +106,7 @@ void func_802E3524(s32 arg0) {
 }
 
 void func_802E3580(void) {
-    assetcache_release(D_8037E8C0.unkC);
+    assetcache_release((void *)(intptr_t)D_8037E8C0.unkC); // [port] s32 to void* — N64 stored pointer as s32
     func_802F1884(D_8037E8C0.unk10);
     func_802E5F68();
     comusicPlayer_free();

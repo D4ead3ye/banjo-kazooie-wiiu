@@ -2,7 +2,6 @@
 #include "rand.h"
 #include "variables.h"
 #include <ultra64.h>
-
 #include <bk_math.h>
 #include <math.h>
 #ifndef MIN
@@ -127,7 +126,7 @@ void func_80387168(ActorMarker *marker, ActorMarker *other_marker){
                 actorPtr->unk38_31++;
 
             actorPtr->unk10_12 = MIN(actorPtr->unk38_31, 0xA);
-            if( actorPtr->unk38_31 == 3 
+            if( actorPtr->unk38_31 == 3
                 && !jiggyscore_isCollected(JIGGY_A_MM_CONGA)
             ){
                 subaddie_set_state_with_direction(actorPtr, 8, 0 ,1);
@@ -215,7 +214,7 @@ void func_803876D0(Actor *this){
     NodeProp *node_prop;
     s32 sp3C;
 
-    this->marker->propPtr->unk8_3 = (timedFuncQueue_is_empty(this))?1:0;
+    this->marker->propPtr->unk8_3 = (timedFuncQueue_is_empty())?1:0; // [port] decomp passed Actor* but actual def is (void)
     if(!this->initialized){
         ((ActorLocal_Conga *)&this->local)->unkC = 1;
         this->unk16C_0 = 1;
@@ -372,7 +371,7 @@ void func_803876D0(Actor *this){
     if( (this->state == 4 && actor_animationIsAt(this, 0.56f))
         || (this->state == 7 && actor_animationIsAt(this, 0.468f))
     ){
-        func_8034A1B4(this->marker->unk44, 5, &this->local);
+        func_8034A1B4(this->marker->unk44, 5, (s32 *)this->local); // [port] &this->local is u8(*)[0x80], function expects s32*
         __spawnQueue_add_1((GenFunction_1)__chConga_sendOrangeProjectile, (uintptr_t)this->marker); //spawn orange
     }
 }

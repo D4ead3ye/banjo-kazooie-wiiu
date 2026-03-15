@@ -346,7 +346,7 @@ void func_8038F618(Actor *this){
     }//L8038F714
 
     player_getPosition(sp7C);
-    sp78 = func_80329210(this, sp7C);
+    sp78 = func_80329210(this, &sp7C);
     if(!local->unk38){
         local->unk38 = true;
         func_8038FB54();

@@ -67,24 +67,24 @@ void func_8029AB14(s32 arg0, s32 arg1){
     switch(player_getTransformation()){
         case TRANSFORM_3_PUMPKIN: //L8029AB9C
             if(arg1 == 7){
-                func_802F4900(arg0, arg1);
+                func_802F4900((Struct5Ds *)(intptr_t)arg0, arg1); // [port] s32 to Struct5Ds* — N64 stored pointer as s32
             }
             if(sp24 || sp20){
-                func_802F4900(arg0, 0xe);
+                func_802F4900((Struct5Ds *)(intptr_t)arg0, 0xe); // [port]
             }
             else{
-                func_802F4900(arg0, 0xd);
+                func_802F4900((Struct5Ds *)(intptr_t)arg0, 0xd); // [port]
             }
             break;
         case TRANSFORM_4_WALRUS://L8029ABEC
             if(sp24){
-                func_802F4900(arg0, 0x4);
+                func_802F4900((Struct5Ds *)(intptr_t)arg0, 0x4); // [port]
             }
             else if(sp20){
-                func_802F4900(arg0, 0xf);
+                func_802F4900((Struct5Ds *)(intptr_t)arg0, 0xf); // [port]
             }
             else{
-                func_802F4900(arg0, 0xd);
+                func_802F4900((Struct5Ds *)(intptr_t)arg0, 0xd); // [port]
             }
             break;
         default: //L8029AC28
@@ -142,8 +142,8 @@ void func_8029ADA8(void){
 
 void func_8029ADCC(void){
     D_8037D190 = func_802F47D0();
-    func_802F487C(D_8037D190, func_8029AC34);
-    func_802F48B4(D_8037D190, func_8029AB14);
+    func_802F487C(D_8037D190, (void (*)(Struct5Ds *, s32))func_8029AC34); // [port]
+    func_802F48B4(D_8037D190, (void (*)(Struct5Ds *, s32))func_8029AB14); // [port]
 }
 
 void func_8029AE1C(void){

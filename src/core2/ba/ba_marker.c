@@ -138,7 +138,7 @@ void __baMarker_8028B904(s32 arg0, s32 arg1, s32 arg2, s32 arg3){
     sp1C[1] = reinterpret_cast(s16, arg1);
     sp1C[2] = reinterpret_cast(s16, arg2);
 
-    func_80296CC0(&sp1C);
+    func_80296CC0(sp1C);
     func_80296CB4(arg3);
     if(baflag_isTrue(BA_FLAG_7_TOUCHING_JIGGY)){
         func_8029CDA0();
@@ -157,7 +157,7 @@ void __baMarker_8028B9A8(uintptr_t arg0){
     s32 ideal_yaw[3];
 
     tmp_v0 = cubeList_findNodePropByActorIdAndPosition_s32(0x1F6, NULL);
-    nodeprop_getPosition_s32(tmp_v0, &ideal_yaw);
+    nodeprop_getPosition_s32(tmp_v0, ideal_yaw);
     func_802CA1CC(arg0);
     actor_spawnWithYaw_s32(ACTOR_47_EMPTY_HONEYCOMB, &ideal_yaw, 0);
     func_8025A6EC(COMUSIC_2B_DING_B, 28000);
@@ -256,22 +256,15 @@ void __baMarker_resolveCollision(Prop *other_prop){
         plyr_collision_type = MARKER_COLLISION_FUNC_0;
         obj_collision_type = MARKER_COLLISION_FUNC_0;
         marker = other_prop->actorProp.marker;
-        // [port] diagnostic: log collision resolution
-        {
-            static s32 collisionLogCount = 0;
-            if(collisionLogCount < 10) {
-                BK_LOG_WARN("[port] baMarker collision: marker->id=0x%X", marker->id);
-                collisionLogCount++;
-            }
-        }
         actor = NULL;
         if(marker->unk3E_0){
             actor = marker_getActor(marker);
             if(actor->despawn_flag)
                 return;
 
-            if(actor->is_bundle && func_802C9C14(actor))
+            if(actor->is_bundle && func_802C9C14(actor)) {
                 return;
+            }
             
         }//L8028BD1C
         plyr_hitbox_type = player_getActiveHitbox(marker);
@@ -304,7 +297,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
             case MARKER_B5_RED_FEATHER_COLLECTIBLE: //L8028BEF4
                 if(__baMarker_8028BC20(marker) != HITBOX_0_NONE)
                     return;
-                if(chCollectible_collectRedFeather(other_prop)){
+                if(chCollectible_collectRedFeather((ActorProp *)other_prop)){ // [port] Prop* → ActorProp* (Prop is a union containing ActorProp)
                     marker_despawn(marker);
                 }
                 break;
@@ -312,8 +305,8 @@ void __baMarker_resolveCollision(Prop *other_prop){
             case MARKER_1E5_GOLD_FEATHER_COLLECTIBLE: //L8028BF24
                 if(__baMarker_8028BC20(marker))
                     return;
-                
-                if(chCollectible_collectGoldFeather(other_prop)){
+
+                if(chCollectible_collectGoldFeather((ActorProp *)other_prop)){ // [port]
                     marker_despawn(marker);
                 }
                 break;
@@ -554,6 +547,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
                         || (player_isStable() && !(3600.0f < ml_distanceSquared_vec3f(actor->position, spA0)))
                     ){
                         jiggyscore_setCollected(jiggy_id, true);
+                        BK_LOG_INFO("[port] Banjo collected jiggy index %d in %s!", jiggy_id, port_mapName(map_get()));
                         item_adjustByDiffWithoutHud(ITEM_26_JIGGY_TOTAL, 1);
                         if(jiggy_id == JIGGY_20_BGS_ELEVATED_WALKWAY || jiggy_id == JIGGY_25_BGS_MAZE){
                             func_802D6924();
@@ -702,7 +696,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
             case MARKER_60_BLUE_EGG_COLLECTIBLE: //L8028CCF0
                 if(__baMarker_8028BC20(marker))
                     return;
-                if(chCollectible_collectEgg(other_prop)){
+                if(chCollectible_collectEgg((ActorProp *)other_prop)){ // [port] Prop* → ActorProp*
                     marker_despawn(marker);
                 }
                 break;
@@ -857,19 +851,19 @@ void __baMarker_resolveCollision(Prop *other_prop){
         case 0x6D7: //L8028D16C
             if(!__baMarker_8028BC60()){
                 other_prop->spriteProp.unk8_4 = 0;
-                chCollectible_collectEgg(other_prop);
+                chCollectible_collectEgg((ActorProp *)other_prop); // [port] Prop* → ActorProp*
             }
             break;
         case 0x580: //L8028D194
             if(!__baMarker_8028BC60()){
                 other_prop->spriteProp.unk8_4 = 0;
-                chCollectible_collectRedFeather(other_prop);
+                chCollectible_collectRedFeather((ActorProp *)other_prop); // [port]
             }
             break;
         case 0x6D1: //L8028D1BC
             if(!__baMarker_8028BC60()){
                 other_prop->spriteProp.unk8_4 = 0;
-                chCollectible_collectGoldFeather(other_prop);
+                chCollectible_collectGoldFeather((ActorProp *)other_prop); // [port]
             }
             break;
         default:
@@ -885,7 +879,7 @@ void baMarker_init(void){
     playerMarker = func_8032FBE4(sp1C, baModel_80291AAC, 1, 0);
     playerMarker->unk2C_1 = 1;
     marker_setCollisionScripts(playerMarker, NULL, func_80291634, func_80291610);
-    func_803300B8(playerMarker, baMarker_8028D7B8);
+    func_803300B8(playerMarker, (MarkerCollisionFunc)baMarker_8028D7B8); // [port]
     baflag_clear(BA_FLAG_1_ON_FLIGHT_PAD);
     baflag_clear(BA_FLAG_2_ON_SPRING_PAD);
     baflag_clear(BA_FLAG_8);
@@ -950,6 +944,7 @@ void baMarker_update(void){
         for(j = 0; j < temp_s2; j++){//L8028D55C
             sp58[j]->unk8_2 = 0;
         }
+
     }
 }
 

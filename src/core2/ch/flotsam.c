@@ -125,7 +125,7 @@ void func_8035C080(Actor *this, s32 next_state){
                 local->unk1C[0] = sp64[0] *i + this->position_x; 
                 local->unk1C[1] = local->unk4;
                 local->unk1C[2] = sp64[2] *i + this->position_z; 
-                if(func_80329210(this, local->unk1C)){
+                if(func_80329210(this, &local->unk1C)){
                     next_state = 5;
                     break;
                 }
@@ -282,7 +282,7 @@ void func_8035C8F4(Actor *this){
 
     if(this->state == 1){
         if( sp3C < 800.0f 
-            && func_80329210(this, plyr_pos)
+            && func_80329210(this, &plyr_pos)
             && plyr_pos[1] < this->position_y + 100.0f
         ){
             func_8035C080(this, 3);

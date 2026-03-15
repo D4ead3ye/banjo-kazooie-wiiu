@@ -8,7 +8,7 @@ extern void func_80324CFC(f32, enum comusic_e, s32);
 extern void func_803289EC(Actor *, f32, s32);
 extern void func_80326310(Actor *);
 extern void actor_setOpacity(Actor *, s32);
-extern void __spawnQueue_add_2(void (*)(uintptr_t, uintptr_t), uintptr_t, uintptr_t);
+// [port] removed stale local extern; port_prototypes.h provides the canonical declaration
 extern void func_802BAFE4(s32 arg0);
 
 
@@ -75,7 +75,7 @@ void func_80387E00(uintptr_t arg0){
     Actor * this = marker_getActor(marker);
 
     func_803262E4(this);
-    __spawnQueue_add_2((GenFunction_2)func_80387D18, (uintptr_t)marker, 0x1E);
+    __spawnQueue_add_2((void (*)(void))func_80387D18, (uintptr_t)marker, 0x1E); // [port]
 }
 
 void func_80387E40(ActorMarker * arg0){
@@ -99,7 +99,7 @@ void func_80387E68(ActorMarker *caller, enum asset_e text_id, s32 arg2){
         timedFunc_set_1(1.1f, (GenFunction_1)func_80387E00, (uintptr_t)bgs_D_803907B8[this->unkF4_8]);
         timed_setStaticCameraToNode(0.8f, 9);
         func_80324DBC(3.4f, 0xC87, 0xE, NULL, NULL, func_80387E68, NULL);
-        __spawnQueue_add_2((GenFunction_2) func_80387D18, (uintptr_t)this->marker, 0x46);
+        __spawnQueue_add_2((void (*)(void))func_80387D18, (uintptr_t)this->marker, 0x46); // [port]
     }
     else{
         timed_exitStaticCamera(0.0f);
@@ -164,7 +164,7 @@ void func_80387FD4(Actor *this){
                 } else {
                     timedFunc_set_1(0.8f, (GenFunction_1)func_80387D90, (uintptr_t)this->marker);
                 }
-                __spawnQueue_add_2((GenFunction_2)func_80387D18, (uintptr_t)this->marker, 0x46);
+                __spawnQueue_add_2((void (*)(void))func_80387D18, (uintptr_t)this->marker, 0x46); // [port]
             }
         }
     }//L80388348

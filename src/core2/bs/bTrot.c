@@ -187,7 +187,7 @@ enum bs_e func_802A8D34(enum bs_e arg0){
 }
 
 enum bs_e func_802A8D84(enum bs_e arg0){
-    if( bastick_getZone(arg0) > 0)
+    if( bastick_getZone() > 0) // [port] decomp passed arg0 but actual def is (void)
         arg0 = BS_16_BTROT_WALK;
 
     if(bainput_should_look_first_person_camera())

@@ -427,7 +427,7 @@ char D_803830B0[0x30];
 
 void sfxsource_freeSfxsourceByIndex(u8);
 void func_80338338(s32, s32, s32);
-void func_803382FC(u8);
+void func_803382FC(s32);
 
 /* .code */
 void func_80315200(GcZoombox *this){
@@ -451,14 +451,14 @@ void func_80315200(GcZoombox *this){
 
 void func_803152C4(GcZoombox *this){
      if(this->unk100 != NULL){
-          func_8033BD20(&this->unk100);
+          func_8033BD20((void **)&this->unk100); // [port]
           this->unk100 = NULL;
      }
 }
 
 void func_80315300(GcZoombox *this){
      if(this->model != NULL){
-          func_8033BD20(&this->model);
+          func_8033BD20((void **)&this->model); // [port]
           this->model = NULL;
      }
      if(this->anim_ctrl != NULL){
@@ -466,7 +466,7 @@ void func_80315300(GcZoombox *this){
           this->anim_ctrl = NULL;
      }
      if(this->unkF8 != NULL){
-          func_8033BD20(&this->unkF8);
+          func_8033BD20((void **)&this->unkF8); // [port]
           this->unkF8 = NULL;
      }
      func_803152C4(this);

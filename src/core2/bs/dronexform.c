@@ -219,7 +219,7 @@ void func_802B0060(uintptr_t arg0, uintptr_t arg1){ // [port] was UNK_TYPE(s32) 
     for(i = 0; i < 3; i++){
         sp4C[i] = func_80257AD4(D_8037D470.unk20 + ((f32)i/3.0)*0.5, 0.5f)*(D_8037D470.unk24*D_8037D470.unk28) + D_8037D470.unk24;
     }
-    boneTransformList_setBoneScale(arg0, 3, sp4C);
+    boneTransformList_setBoneScale((BoneTransformList *)arg0, 3, sp4C); // [port] uintptr_t to BoneTransformList*
 }   
 
 

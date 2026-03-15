@@ -12,7 +12,7 @@ extern void func_802F9D38(s32);
 extern void func_802EE6CC(f32[3], f32[3], s32[4], s32, f32, f32, s32, s32, s32);
 extern void func_802EE2E8(Actor *arg0, s32 arg1, s32 cnt, s32 arg3, f32 arg4, f32 arg5, f32 arg6);
 extern void gcquiz_func_80319EA4(void);
-extern void fileProgressFlag_set(enum file_progress_e, bool);
+// extern void fileProgressFlag_set(enum file_progress_e, bool); // [port] removed — prototype in port_prototypes.h
 
 void func_802D3D54(Actor *this);
 void func_802D3DA4(Actor *this);
@@ -604,6 +604,7 @@ void func_802D4680(Actor *this){
 }
 
 void func_802D4794(Actor *this, enum sfx_e sfx_id, f32 arg2, s32 arg3, s32 arg4){
+    if(!this) return; // [port] NULL actor — N64 reads from addr 0 without crashing
     if(this->unk44_31 != 0)
         return;
 
@@ -1045,13 +1046,13 @@ void func_802D5628(void){
         func_802D5178(LEVEL_FLAG_3F_LAIR_UNKNOWN, 0xE2, 0x40, MAP_93_GL_DINGPOT,  0x10, 0xA, ACTOR_2E5_DOOR_OF_GRUNTY,   0x28);
         if(volatileFlag_get(VOLATILE_FLAG_18)){
             if(!fileProgressFlag_get(FILEPROG_99_PAST_50_NOTE_DOOR_TEXT)){
-                func_80311174(0xF75, 0xE, NULL, NULL, NULL, NULL, func_802D5140);
+                func_80311174(0xF75, 0xE, NULL, NULL, NULL, NULL, (s32(*)(ActorMarker*,s32,s32))func_802D5140); // [port] polymorphic callback
                 fileProgressFlag_set(FILEPROG_99_PAST_50_NOTE_DOOR_TEXT, true);
                 volatileFlag_set(VOLATILE_FLAG_18, 0);
             }
             else{//L802D5DD8
                 if(!volatileFlag_get(VOLATILE_FLAG_16)){
-                    func_80311174(0xF77, 0x4, NULL, NULL, NULL, NULL, func_802D5140);
+                    func_80311174(0xF77, 0x4, NULL, NULL, NULL, NULL, (s32(*)(ActorMarker*,s32,s32))func_802D5140); // [port] polymorphic callback
                     volatileFlag_set(VOLATILE_FLAG_18, 0);
                 }
             }

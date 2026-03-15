@@ -183,7 +183,7 @@ void pfsManager_update(void) {
         if ((D_802816E0 < 1.0) || (getGameMode() == GAME_MODE_9_BANJO_AND_KAZOOIE)) {
             s0 = 0;
         }
-        temp_t6 = demo_readInput(&pfsManagerContPadData, &sp5C) == 0;
+        temp_t6 = demo_readInput(pfsManagerContPadData, &sp5C) == 0; // [port] removed & — array decays to OSContPad*
         if ((D_802812D0.button & s0) || temp_t6) {
             if (D_802812D0.button & s0) {
                 volatileFlag_set(VOLATILE_FLAG_64, 1);

@@ -52,7 +52,7 @@ void func_80389B80(Actor *this, f32 arg1){
     func_802FA060(local->unk0, 0x4650, 0x4650, 0.0f);
 
     if (!levelSpecificFlags_get(LEVEL_FLAG_3_RBB_UNKNOWN) && !levelSpecificFlags_get(LEVEL_FLAG_4_RBB_UNKNOWN)) {
-        func_802F9EC4(local->unk0, &this->position, 0x1f4, 0x7d0);
+        func_802F9EC4(local->unk0, this->position, 0x1f4, 0x7d0);
         func_802FA0B0(local->unk0, 1);
     }
 }
@@ -73,7 +73,7 @@ void chPropellor_update(Actor *this){
         this->volatile_initialized = true;
         this->marker->propPtr->unk8_3 = 1;
         this->pitch = randf2(0.0f, 300.0f);
-        func_803300C0(this->marker, func_80389B44);
+        func_803300C0(this->marker, (s32 (*)(ActorMarker *, ActorMarker *))func_80389B44); // [port]
         marker_setFreeMethod(this->marker, __chPropellor_free);
         func_80389B80(this, 1.0f);
         if(this->unk78_13 == 0x1C){

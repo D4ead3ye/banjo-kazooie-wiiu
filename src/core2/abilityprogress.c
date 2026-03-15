@@ -17,15 +17,19 @@ void ability_use(s32 arg0){
 
     switch(arg0){
         case 0x0://L80295660 //jump
-            mapSpecificFlags_set(8, true);
+            // [port] guard with SM check — flags collide with map-specific usage in other worlds (e.g. BGS switches)
+            if (map_get() == MAP_1_SM_SPIRAL_MOUNTAIN)
+                mapSpecificFlags_set(8, true);
             sp28 = 1;
             break;
         case 0x1://L80295674 //flap
-            mapSpecificFlags_set(9, true);
+            if (map_get() == MAP_1_SM_SPIRAL_MOUNTAIN)
+                mapSpecificFlags_set(9, true);
             sp28 = 1;
             break;
         case 0x2://L80295688 //bust
-            mapSpecificFlags_set(0xa, true);
+            if (map_get() == MAP_1_SM_SPIRAL_MOUNTAIN)
+                mapSpecificFlags_set(0xa, true);
             sp28 = 1;
             break;
         case 0x3://L8029569C //

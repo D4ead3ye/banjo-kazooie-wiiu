@@ -41,11 +41,11 @@ bool func_802FD2D4(void);
 bool func_802FC3C4(void);
 extern void func_8025A2B0(void);
 extern void func_8025A430(s32, s32, s32);
-extern void func_802DC528(s32, s32);
+// extern void func_802DC528(s32, s32); // [port] removed — (NodeProp*, ActorMarker*) in port_prototypes.h
 extern void func_802F5060(enum asset_e);
 extern void func_802F5188(void);
 extern void func_802FACA4(enum item_e);
-extern void func_8033BD20(void *);
+// extern void func_8033BD20(void *); // [port] removed — (void**) in port_prototypes.h
 
 enum gcpausemenu_state_e {
     PAUSE_STATE_0_MENU_INIT,
@@ -94,11 +94,18 @@ struct1As D_8036C4E0[4] = {
     {0.2f, 0.0f, "SAVE AND QUIT",         125, ZOOMBOX_SPRITE_7_TOOTY_1, 0},
 };
 
+// [port] str fields are written to by gcpausemenu_printLevelTotals (strcpy/strcat).
+// String literals are read-only on modern compilers; use mutable char arrays instead.
+static u8 D_8036C520_str0[32] = "cc999 / 999cc";
+static u8 D_8036C520_str1[32] = "cc999 / 999cc";
+static u8 D_8036C520_str2[32] = "cc999 / 999cc";
+static u8 D_8036C520_str3[32] = "cc999 : 999cc";
+
 struct1As D_8036C520[4] = {
-    {0.0f, 0.0f, "cc999 / 999cc",  30, ZOOMBOX_SPRITE_8_MUSIC_NOTE_1,     0},
-    {0.1f, 0.0f, "cc999 / 999cc",  66, ZOOMBOX_SPRITE_9_JIGGY_2,          0},
-    {0.2f, 0.0f, "cc999 / 999cc", 102, ZOOMBOX_SPRITE_A_EXTRA_HEALTH_MAX, 0},
-    {0.3f, 0.0f, "cc999 : 999cc", 138, ZOOMBOX_SPRITE_B_CLOCK,            0},
+    {0.0f, 0.0f, D_8036C520_str0,  30, ZOOMBOX_SPRITE_8_MUSIC_NOTE_1,     0},
+    {0.1f, 0.0f, D_8036C520_str1,  66, ZOOMBOX_SPRITE_9_JIGGY_2,          0},
+    {0.2f, 0.0f, D_8036C520_str2, 102, ZOOMBOX_SPRITE_A_EXTRA_HEALTH_MAX, 0},
+    {0.3f, 0.0f, D_8036C520_str3, 138, ZOOMBOX_SPRITE_B_CLOCK,            0},
 };
 
 struct1Bs D_8036C560[] = {
@@ -643,8 +650,8 @@ void gcPauseMenu_setState(enum gcpausemenu_state_e next_state) {
 
         case PAUSE_STATE_12_SNS_DISPOSE: /* 8B978 80312908 3C128038 */
             D_80383010.selection = D_80383010.page;
-            func_8033BD20(&D_80383010.sns_egg_model); //free
-            func_8033BD20(&D_80383010.ice_key_model); //free
+            func_8033BD20((void **)&D_80383010.sns_egg_model); //free // [port]
+            func_8033BD20((void **)&D_80383010.ice_key_model); //free // [port]
             break;
 
         case PAUSE_STATE_13_EXIT_PAUSE: /* 8B9A8 80312938 3C128038 */
@@ -1373,30 +1380,33 @@ void gcpausemenu_draw(Gfx **gfx, Mtx **mtx, Vtx **vtx) {
 
     gcpausemenu_drawSprite(gfx, mtx, vtx, D_80383010.joystick_sprite, D_80383010.joystick_frame, 30.0f, 196.0f, 1, (s32) D_80383010.left_joystick_alpha);
     gcpausemenu_drawSprite(gfx, mtx, vtx, D_80383010.joystick_sprite, D_80383010.joystick_frame, (f32)(gFramebufferWidth - 0x1E), 196.0f, 0, (s32) D_80383010.right_joystick_alpha);
-    var_a0 = ((*((u32 * ) & D_80383010.state) << 0x1c) >> 0x1f); //left_joystick_visible
+    // [port] Original decomp used raw u32 bit extraction: ((*((u32*)&D_80383010.state) << N) >> 0x1f)
+    // This depends on big-endian byte order (byte 3 of the u32 is the bitfield byte on MIPS).
+    // On little-endian, byte 0 of the u32 is 'state', so the shifts extract wrong bits.
+    // Replace with direct struct member access.
+    var_a0 = D_80383010.left_joystick_visible;
     if (var_a0 != 0) {
         if (D_80383010.left_joystick_alpha < 0xFF) {
             D_80383010.left_joystick_alpha = (D_80383010.left_joystick_alpha + 0xC < 0xFF) ? D_80383010.left_joystick_alpha + 0xC : 0xFF;
         }
     }
-    var_a0 = ((*((u32 * ) & D_80383010.state) << 0x1c) >> 0x1f); //left_joystick_visible
     if (var_a0 == 0) {
         if (D_80383010.left_joystick_alpha > 0) {
             D_80383010.left_joystick_alpha = (D_80383010.left_joystick_alpha - 0xC > 0) ? D_80383010.left_joystick_alpha - 0xC : 0;
         }
     }
-    if (((*((u32 * ) & D_80383010.state) << 0x1d) >> 0x1f) != 0) { //right_joystick_visible
+    if (D_80383010.right_joystick_visible != 0) {
         if (D_80383010.right_joystick_alpha < 0xFF) {
             D_80383010.right_joystick_alpha = (D_80383010.right_joystick_alpha + 0xC < 0xFF) ? D_80383010.right_joystick_alpha + 0xC : 0xFF;
         }
     }
-    if (((*((u32 * ) & D_80383010.state) << 0x1d) >> 0x1f) == 0) {//right_joystick_visible
+    if (D_80383010.right_joystick_visible == 0) {
         if (D_80383010.right_joystick_alpha > 0) {
             D_80383010.right_joystick_alpha = (D_80383010.right_joystick_alpha - 0xC > 0) ? D_80383010.right_joystick_alpha - 0xC : 0;
         }
     }
     gcpausemenu_drawSprite(gfx, mtx, vtx, D_80383010.b_button_sprite, (s32) D_80383010.b_button_frame, gFramebufferWidth * 0.5, 196.0f, 0, (s32) D_80383010.b_button_alpha);
-    var_a0 = ((*((u32 * ) & D_80383010.state) << 0x1e) >> 0x1f);//b_button_visible
+    var_a0 = D_80383010.b_button_visible;
     if (var_a0 != 0) {
         if (D_80383010.b_button_alpha < 0xFF) {
             D_80383010.b_button_alpha = (D_80383010.b_button_alpha + 0xC < 0xFF) ? D_80383010.b_button_alpha + 0xC : 0xFF;
@@ -1404,7 +1414,7 @@ void gcpausemenu_draw(Gfx **gfx, Mtx **mtx, Vtx **vtx) {
         }
     }
 
-    if (var_a0 == 0) { //b_button_visible
+    if (var_a0 == 0) {
         if (D_80383010.b_button_alpha > 0) {
             D_80383010.b_button_alpha = (D_80383010.b_button_alpha - 0xC > 0) ? D_80383010.b_button_alpha - 0xC : 0;
         }

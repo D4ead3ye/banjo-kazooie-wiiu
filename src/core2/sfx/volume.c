@@ -15,7 +15,7 @@ extern f32 D_803792F0;
 
 void func_8034F6F0(Gfx **gdl, Mtx **mptr, s32 vptr){
     if(D_803720A0.unk0){
-        particleEmitter_draw(D_803720A0.unk0, gdl, mptr, vptr);
+        particleEmitter_draw(D_803720A0.unk0, gdl, mptr, (Vtx **)(intptr_t)vptr); // [port] s32 to Vtx** — N64 stored pointer as s32
     }
 }
 
@@ -45,7 +45,7 @@ void func_8034F774(void){
         particleEmitter_setSpawnIntervalRange(D_803720A0.unk0, 0.0f, 1.0f);
         particleEmitter_setParticleLifeTimeRange(D_803720A0.unk0, 216000.0f, 216000.0f);
         particleEmitter_setStartingScaleRange(D_803720A0.unk0, 1.8f, 2.2f);
-        particleEmitter_emitUniformLine(D_803720A0.unk0, &sp38, &sp2C, 10);
+        particleEmitter_emitUniformLine(D_803720A0.unk0, sp38, sp2C, 10);
         particleEmitter_setSpawnInterval(D_803720A0.unk0, 0.0f);
         D_803720A0.sfxsourceIdx = sfxsource_createSfxsourceAndReturnIndex();
 

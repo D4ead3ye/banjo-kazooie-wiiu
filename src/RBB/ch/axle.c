@@ -74,7 +74,7 @@ void func_80388EB8(Actor *this, s32 arg1){
     if(this->state == 2){
         sp30 = func_802F9AA8(SFX_94_COGS_ROTATING);
         func_802F9DB8(sp30, 1.0f, 1.0f, 0.0f);
-        func_802F9EC4(sp30, &local->unk0->unk18, 1700, 2500);
+        func_802F9EC4(sp30, local->unk0->unk18, 1700, 2500);
         func_802F9F80(sp30, 0.3f, 3.4f, 0.3f);
         func_802FA060(sp30, 25000, 25000, 0.0f);
         this->pitch += ( 360.0f <= this->pitch) ? -360 : 0;

@@ -2,7 +2,6 @@
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
-#include "port/ShipUtils.h" // [port] BK_LOG_*
 
 
 extern bool func_80245314(f32[3], f32[3], f32, f32, u32);
@@ -212,10 +211,6 @@ void func_802BCBD4(void) {
     func_802C0F4C();
     viewport_getRotation_vec3f(cameraRotation);
     viewport_getPosition_vec3f(cameraPosition);
-    // [port] diagnostic: log camera state at map transition
-    BK_LOG_INFO("[cam_reset] initial pos=(%.1f,%.1f,%.1f) rot=(%.1f,%.1f,%.1f)",
-        cameraPosition[0], cameraPosition[1], cameraPosition[2],
-        cameraRotation[0], cameraRotation[1], cameraRotation[2]);
     ml_vec3f_copy(D_8037D948, cameraPosition);
     ml_vec3f_clear(D_8037D9C8);
     ml_vec3f_clear(D_8037D9E0);

@@ -208,7 +208,7 @@ void func_803449DC(BKSpriteDisplayData *arg0){
 }
 
 void func_803449FC(BKSpriteDisplayData *arg0){
-    func_80255170(&arg0->sprite);
+    func_80255170((void **)&arg0->sprite); // [port]
 }
 
 BKSpriteDisplayData * func_80344A1C(BKSprite *arg0){

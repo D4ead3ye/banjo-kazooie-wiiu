@@ -57,7 +57,7 @@ void __bsDroneVanish_emitParticles(void) {
 }
 
 void __bsDroneVanish_particleEmitInit(ParticleEmitter *p_ctrl, enum asset_e sprite_id) {
-    particleEmitter_manualFree();
+    particleEmitter_manualFree(p_ctrl); // [port] decomp called with no args but actual def takes (ParticleEmitter*)
     particleEmitter_setSprite(p_ctrl, sprite_id);
     particleEmitter_setFade(p_ctrl, 0.3f, 0.8f);
     particleEmitter_setSpawnPositionRange(p_ctrl, -45.0f, 0.0f, -45.0f, 45.0f, 0.0f, 45.0f);

@@ -93,33 +93,33 @@ void __baanim_applyBottlesBonus(uintptr_t arg0, uintptr_t arg1) {
     }
     if ((D_8037BF4C & 1)) {//either big hands or big feet
         __baanim_oscillateScale(scale, sp28, 2.0f, 1.0f);
-        boneTransformList_setBoneScale(arg0, 6, scale);
-        boneTransformList_setBoneScale(arg0, 0x14, scale);
+        boneTransformList_setBoneScale((BoneTransformList *)arg0, 6, scale); // [port] uintptr_t to BoneTransformList*
+        boneTransformList_setBoneScale((BoneTransformList *)arg0, 0x14, scale); // [port]
     }
     if (D_8037BF4C & 2) {//either big hands or big feet
         __baanim_oscillateScale(scale, sp28, 2.0f, 1.0f);
-        boneTransformList_setBoneScale(arg0, 0x10, scale);
-        boneTransformList_setBoneScale(arg0, 0x1E, scale);
+        boneTransformList_setBoneScale((BoneTransformList *)arg0, 0x10, scale); // [port]
+        boneTransformList_setBoneScale((BoneTransformList *)arg0, 0x1E, scale); // [port]
     }
     if (D_8037BF4C & BAANIM_BIGHEAD) {
         __baanim_oscillateScale(scale, sp28, 2.0f, 1.0f);
-        boneTransformList_setBoneScale(arg0, 0x12, scale);
+        boneTransformList_setBoneScale((BoneTransformList *)arg0, 0x12, scale); // [port]
     }
     if (D_8037BF4C & BAANIM_SMALLHEAD) {
         __baanim_oscillateScale(scale, sp28, 0.2f, 0.5f);
-        boneTransformList_setBoneScale(arg0, 0x12, scale);
+        boneTransformList_setBoneScale((BoneTransformList *)arg0, 0x12, scale); // [port]
     }
     if (D_8037BF4C & BAANIM_LONGBODY) {
-        func_8033A968(arg0, 1, &D_803635E0);
+        func_8033A968((BoneTransformList *)arg0, 1, D_803635E0); // [port]
     }
     if (D_8037BF4C & BAANIM_BIGKAZOOIEHEAD) {
         __baanim_oscillateScale(scale, sp28, 2.0f, 1.0f);
-        boneTransformList_setBoneScale(arg0, 0x6C, scale);
+        boneTransformList_setBoneScale((BoneTransformList *)arg0, 0x6C, scale); // [port]
     }
     if (D_8037BF4C & BAANIM_BIGWINGS) {
         __baanim_oscillateScale(scale, sp28, 2.0f, 1.0f);
-        boneTransformList_setBoneScale(arg0, 0x64, scale);
-        boneTransformList_setBoneScale(arg0, 0x67, scale);
+        boneTransformList_setBoneScale((BoneTransformList *)arg0, 0x64, scale); // [port]
+        boneTransformList_setBoneScale((BoneTransformList *)arg0, 0x67, scale); // [port]
     }
     if (map_get() == MAP_A_TTC_SANDCASTLE) {
         if ((D_8037BF4C & BAANIM_WISHYWASHY) && (player_getTransformation() != TRANSFORM_7_WISHWASHY)) {

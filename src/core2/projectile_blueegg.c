@@ -1,7 +1,6 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
-
 #include "core2/sprite_displaydata.h"
 #include "core2/anim/sprite.h"
 
@@ -23,7 +22,7 @@ extern ActorMarker *func_8033E840(void);
 extern ActorProp *func_80320EB0(ActorMarker *, f32, s32);
 
 
-void fxegg_collide(s32 arg0, ActorMarker *arg1, s32 arg2);
+void fxegg_collide(ActorMarker *self, ActorMarker *marker, struct5Cs *arg2); // [port] was (s32, ActorMarker*, s32)
 
 /* .data */
 AnimSpriteStep D_803726A0[] = {
@@ -167,7 +166,7 @@ void fxegg_head_spawn(void){
 
     marker->unk2C_1 = 1;
     marker->collidable = true;
-    func_803300B8(marker, fxegg_collide);
+    func_803300B8(marker, (MarkerCollisionFunc)fxegg_collide); // [port]
     func_8033EA40(0, 20.0f);
     func_8033EA40(1, 0.0f);
     func_8033EA40(2, 0.0f);
@@ -275,7 +274,7 @@ void fxegg_ass_spawn(void) {
     sp57 = func_8033E93C();
     func_8033E840()->unk2C_1 = true;
     func_8033E840()->collidable = true;
-    func_803300B8(func_8033E840(), &fxegg_collide);
+    func_803300B8(func_8033E840(), (MarkerCollisionFunc)fxegg_collide); // [port]
     func_8033EA40(1, 0);
     func_8033EA40(0, 20.0f);
     func_8033EA40(2, 0);
@@ -366,7 +365,7 @@ void fxegg_ass_update(void) {
 
 void fxegg_ass_destroy(void){}
 
-void fxegg_collide(s32 arg0, ActorMarker *marker, s32 arg2) {
+void fxegg_collide(ActorMarker *self, ActorMarker *marker, struct5Cs *arg2) { // [port] was (s32, ActorMarker*, s32) — pointer truncation
     Actor *actor;
 
     actor = marker_getActor(marker);

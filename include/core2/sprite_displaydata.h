@@ -6,7 +6,10 @@
 #include "variables.h"
 #include "core2/anim/sprite.h"
 
+#ifndef FUNCUNK40_DEFINED
+#define FUNCUNK40_DEFINED
 typedef s32 (*FuncUnk40)(ActorMarker *, s32, f32[3]);
+#endif
 
 typedef struct particle_struct_0_s{
     f32 unk0;

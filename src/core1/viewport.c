@@ -38,7 +38,7 @@ void viewport_moveAlongZAxis(f32 offset) {
 }
 
 f32 viewport_getDistance(f32 arg0[3]) {
-    ml_vec3f_distance(arg0, sViewportPosition);
+    return ml_vec3f_distance(arg0, sViewportPosition); // [port] implicit MIPS $f0 return
 }
 
 void viewport_getLookbk_vector(f32 arg0[3]) {

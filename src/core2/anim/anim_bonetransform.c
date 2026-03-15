@@ -551,7 +551,7 @@ s32 assetCache_getDependencyCount(enum asset_e arg0){
     return 0;
 }
 
-void func_8033BD20(BKModelBin **arg0){
+void func_8033BD20(void **arg0){ // [port] void** — callers pass BKModelBin**, BKSprite**, void**
     func_8033B020(*arg0);
     *arg0 = NULL;
 }

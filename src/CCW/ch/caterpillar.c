@@ -117,7 +117,7 @@ void chcaterpillar_update(Actor *this){
                 local->unk0[0] = randf2(-300.0f, 300.0f) + this->position_x;
                 local->unk0[1] = this->position_y;
                 local->unk0[2] = randf2(-300.0f, 300.0f) + this->position_z;
-                if( !(ml_vec3f_distance(local->unk0, this->position) < 50.0f) && func_80329210(this, local->unk0))
+                if( !(ml_vec3f_distance(local->unk0, this->position) < 50.0f) && func_80329210(this, &local->unk0))
                     break;
             }//L8038A544
             if(i == 10){

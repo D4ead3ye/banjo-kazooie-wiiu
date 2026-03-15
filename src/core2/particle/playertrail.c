@@ -323,9 +323,13 @@ void func_8029B73C(f32 arg0[3], f32 arg1, f32 arg2, f32 arg3, f32 arg4) {
 
     if (!((arg3 * arg3) < temp_f20)) {
         temp_f20 = gu_sqrtf(temp_f20);
-        ml_vec3f_set_length_copy(sp30, sp30, ml_min_f(time_getDelta() * arg4, arg3 - temp_f20));
-        ml_vec3f_add(sp3C, sp3C, sp30);
-        func_8028FAB0(sp3C);
+        // [port] when player is at the exact XZ of the attraction point, sp30 is a zero
+        // vector and ml_vec3f_set_length_copy divides by zero magnitude, producing NaN.
+        if (temp_f20 > 0.001f) {
+            ml_vec3f_set_length_copy(sp30, sp30, ml_min_f(time_getDelta() * arg4, arg3 - temp_f20));
+            ml_vec3f_add(sp3C, sp3C, sp30);
+            func_8028FAB0(sp3C);
+        }
     }
 
 }
@@ -640,7 +644,7 @@ void func_8029C304(s32 arg0) {
 
     _player_getPosition(sp1C);
     sp1C[1] = func_80294500();
-    fxRipple_802F3584(arg0, sp1C, func_802946CC());
+    fxRipple_802F3584(arg0, sp1C, (uintptr_t)func_802946CC()); // [port] BKCollisionTri* to uintptr_t
 }
 
 void func_8029C348(void) {
@@ -766,7 +770,7 @@ enum bs_e bs_getTypeOfJump(void){
     return BS_5_JUMP;
 }
 
-void func_8029C7F4(enum baanim_update_type_e arg0, enum yaw_state_e yaw_state, s32 arg2, BaPhysicsType arg3){
+void func_8029C7F4(s32 arg0, s32 yaw_state, s32 arg2, s32 arg3){ // [port] enum args → s32 to match port_prototypes.h
     baanim_setUpdateType(arg0);
     yaw_setUpdateState(yaw_state);
     func_8029957C(arg2);

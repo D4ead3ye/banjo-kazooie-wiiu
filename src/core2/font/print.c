@@ -233,32 +233,43 @@ enum asset_e func_802F49C0(void){
     return 0x708;
 }
 
-// this function reassigns the referenced font mask pixel 
+// this function reassigns the referenced font mask pixel
 // using the texture @ pixel (x,y)
 void func_802F4A24(BKSpriteTextureBlock *texture, u32 *font, s32 x, s32 y) {
-    u16 *var_v0;
     s32 r5;
     s32 g5;
     s32 b5;
     s32 a8;
     s32 i8;
+    u16 pixel;
     x = MIN(MAX(0, x), texture->w - 1);
     y = MIN(MAX(0, y), texture->h - 1);
-    
-    var_v0 = ((u16*)(texture + 1)) + x + y * texture->w;
 
-    r5 = ((*var_v0 >> 11) & 0x1F);
-    g5 = ((*var_v0 >> 6) & 0x1F);
-    b5 = ((*var_v0 >> 1) & 0x1F);
-    
-    a8 = (*font >> 0) & 0xff;
-    i8 = (*font >> 8) & 0xff;
+    {
+        // [port] Sprite RGBA16 data is stored in N64 big-endian byte order
+        // (the fast3d interpreter also reads it as BE). Read bytes explicitly
+        // to decode RGBA5551 correctly on little-endian platforms.
+        u8 *bytes = (u8*)(texture + 1) + (x + y * texture->w) * 2;
+        pixel = (bytes[0] << 8) | bytes[1];
+    }
+    r5 = ((pixel >> 11) & 0x1F);
+    g5 = ((pixel >> 6) & 0x1F);
+    b5 = ((pixel >> 1) & 0x1F);
 
-    r5*=(i8/ 0x1F);
-    g5*=(i8/ 0x1F);
-    b5*=(i8/ 0x1F);
+    {
+        u8 *fontBytes = (u8*)font;
+        a8 = fontBytes[3]; // A
+        i8 = fontBytes[2]; // B (intensity)
 
-    *font = (r5 << 0x18) | (g5 << 0x10) | (b5 << 8) | (a8 << 0);
+        r5*=(i8/ 0x1F);
+        g5*=(i8/ 0x1F);
+        b5*=(i8/ 0x1F);
+
+        fontBytes[0] = (u8)r5; // R
+        fontBytes[1] = (u8)g5; // G
+        fontBytes[2] = (u8)b5; // B
+        fontBytes[3] = (u8)a8; // A
+    }
 }
 
 //this function applies the texture to the font alpha mask.
@@ -272,13 +283,14 @@ void func_802F4B58(BKSpriteTextureBlock *alphaMask, BKSpriteTextureBlock *textur
     pxl = (u32*)(alphaMask + 1);
     x_min = (texture->w - alphaMask->w) >> 1;
     y_min = (texture->h - alphaMask->h) >> 1;
-    
+
     for(y = y_min; y < alphaMask->h + y_min; y++){
         for(x = x_min; x < alphaMask->w + x_min; x++){
             func_802F4A24(texture, pxl, x, y);
             pxl++;
         }
     }
+
 }
 
 //This functions seperates the fonts into letters
@@ -320,9 +332,18 @@ FontLetter *func_802F4C3C(BKSprite *alphaMask, BKSprite *textureSprite){
             {
                 chunkPtr = (BKSpriteTextureBlock *)(font + 1);
                 for( i = 0; i < font->chunkCnt; i++){
-                    func_802F4B58(chunkPtr, (BKSpriteTextureBlock *)(sprite_getFramePtr(textureSprite, 0) + 1));
-                    sp2C[i].unk0 = chunkPtr;
+                    // [port] On N64, assetcache_get returned a fresh DMA copy from ROM.
+                    // On PC, the resource cache returns the same buffer, so the overlay
+                    // would corrupt the mask if called again (e.g. map texture change).
+                    // Copy each chunk (header + pixels) so the original stays pristine.
                     chunkSize = chunkPtr->w*chunkPtr->h;
+                    {
+                        s32 copySize = sizeof(BKSpriteTextureBlock) + chunkSize*4;
+                        BKSpriteTextureBlock *copy = bk_malloc(copySize);
+                        memcpy(copy, chunkPtr, copySize);
+                        func_802F4B58(copy, (BKSpriteTextureBlock *)(sprite_getFramePtr(textureSprite, 0) + 1));
+                        sp2C[i].unk0 = copy;
+                    }
                     chunkDataPtr = (u8*)(chunkPtr + 1);
                     while((uintptr_t)chunkDataPtr % 8)
                         chunkDataPtr++;
@@ -552,16 +573,16 @@ void _printbuffer_draw_letter(char letter, f32* xPtr, f32* yPtr, f32 arg3, Gfx *
             }
             break;
         case 1: //L802F56A0
-            if(letter < '\x80' && D_80380F20[letter] >= 0){
+            if((u8)letter < 0x80 && D_80380F20[(u8)letter] >= 0){ // [port] char is signed on MSVC; MIPS char is unsigned
                 for(i = 0; D_80369000[i].unk0 != 0; i++){
                     if(letter == D_80369000[i].unk1 && D_80380AB0 == D_80369000[i].unk0){
                         t1 = D_80369000[i].unk3;
                         break;
                     }
                 }//L802F5710
-                sp20C = D_80380F20[letter];
+                sp20C = D_80380F20[(u8)letter];
                 t0 = 1;
-                D_80380AB0 = letter;
+                D_80380AB0 = (u8)letter;
                 f28 += (f32)t1*arg3;
             }//L802F5738
             break;

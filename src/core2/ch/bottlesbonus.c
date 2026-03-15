@@ -237,7 +237,7 @@ f32 *chBottlesBonus_func_802DD584(s32 arg0){
 f32 *chBottlesBonus_func_802DD60C(s32 arg0) {
     s32 temp_v0;
 
-    temp_v0 = chBottlesBonusCursor_func_802E0538();
+    temp_v0 = chBottlesBonusCursor_func_802E0538(arg0); // [port] decomp called with no args but actual def takes (s32 indx)
     if ((temp_v0 != 0) && (temp_v0 != 3)) {
         D_8037DF80[0] = chBottlesBonusCursor_func_802E05AC(arg0)[0] * 0.01;
         D_8037DF80[1] = chBottlesBonusCursor_func_802E05AC(arg0)[1] * 0.01;
@@ -358,7 +358,7 @@ void chBottlesBonus_func_802DD8AC(BoneTransformList *arg0, s32 arg1) {
                     D_8037DEC0[i].unk1C[1] = D_8037DEBC[i].unk1C[1];
                     D_8037DEC0[i].unk1C[2] = D_8037DEBC[i].unk1C[2];
                     vec4f_clone(D_8037DEC0[i].unkC, D_8037DEBC[i].unkC);
-                    chBottlesBonusCursor_func_802DF460(40 + i, chBottlesBonusMarker, D_803681A0);
+                    chBottlesBonusCursor_func_802DF460(40 + i, chBottlesBonusMarker, (f32 *)D_803681A0); // [port] Struct_core2_560F0_0[] → f32*
                     break;
 
                 case 3://L802DDF48

@@ -63,7 +63,7 @@ bool func_80386564(Actor *this){
 
     player_getPosition(plyrPos);
     func_80258A4C(this->position, this->yaw - 90.0f, plyrPos, &sp48, &sp44, &sp40);
-    if(func_80329210(this, plyrPos)){
+    if(func_80329210(this, &plyrPos)){
         if((-0.7 <= sp40) && (sp40 <= 0.7)){
             sp3C[0] = plyrPos[0] - this->position_x;
             sp3C[1] = plyrPos[1] - this->position_y;
@@ -72,7 +72,7 @@ bool func_80386564(Actor *this){
             sp30[0] = sp3C[0] + this->position_x;
             sp30[1] = sp3C[1] + this->position_y;
             sp30[2] = sp3C[2] + this->position_z;
-            if(func_80329210(this, sp30))
+            if(func_80329210(this, &sp30))
                 return BGS_func_803863F0(this, sp30, 1);
         }
     }
@@ -108,7 +108,7 @@ s32 func_803866A4(Actor *this) {
             sp3C[1] = (f32) local->unkE[1];
             sp3C[2] = (f32) local->unkE[2];
         }
-        if (func_80329210(this, sp3C) != 0) {
+        if (func_80329210(this, &sp3C) != 0) {
             return BGS_func_803863F0(this, sp3C, 0);
         }
     }
@@ -142,7 +142,7 @@ bool func_8038686C(Actor *this) {
         sp68[0] += this->position[0];
         sp68[1] += this->position[1];
         sp68[2] += this->position[2];
-        if (func_80329210(this, sp68)) {
+        if (func_80329210(this, &sp68)) {
             return BGS_func_803863F0(this, sp68, 0);
         }
     }
@@ -158,7 +158,7 @@ bool func_80386A34(Actor * this){
         return 0;
     
     player_getPosition(plyrPos);
-    if(func_80329210(this, plyrPos)){
+    if(func_80329210(this, &plyrPos)){
         if(!(out = func_80386564(this)) && (0.5 < randf ())){
             return 0;
         }
@@ -353,7 +353,7 @@ void chflibbit_update(Actor *this){
     local->unk1C[1] = (0.2 < local->unk1C[1]) ? randf2(-3.0f, -1.0f) : local->unk1C[1];
 
     if(this->state == 1){
-        if(func_80329210(this, player_position)){
+        if(func_80329210(this, &player_position)){
             func_80386AEC(this, 2);
             return;
         }

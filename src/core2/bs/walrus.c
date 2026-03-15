@@ -569,9 +569,9 @@ void bswalrus_sled_update(void){
 
     if(50.0f < baphysics_get_horizontal_velocity()){
         if(globalTimer_getTimeMasked(1)){
-            baModel_80292554(&sp20);
+            baModel_80292554(sp20);
         }else{
-            baModel_80292578(&sp20);
+            baModel_80292578(sp20);
         }
         particleEmitter_emitN(func_802F1EC8(sp20), 1);
     }//L802B927C

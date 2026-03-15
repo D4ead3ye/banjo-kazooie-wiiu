@@ -185,7 +185,7 @@ void func_8038A82C(Struct_MMM_3D50_0 * arg0){
     if(arg0->unk2 == 'X'){
         MMM_func_8038A54C(arg0, 1);
         player_getPosition(sp44);
-        chTumblar_copyPosition(MMM_D_8038C510.unkC, MMM_D_8038C510.unk10, sp38);
+        chTumblar_copyPosition((s32)(intptr_t)MMM_D_8038C510.unkC, (Struct68s *)(intptr_t)MMM_D_8038C510.unk10, sp38); // [port] BKModel* to s32, s32 to Struct68s*
         sp38[1] = sp44[1];
         func_8028F620(sp38, 300.0f, -1500.0f);
         return;
@@ -240,7 +240,7 @@ void func_8038A9B4(void){
 
 void func_8038AA30(void *arg0, void *arg1){ // [port] was BKModel*, s32 — polymorphic: also called with Struct_MMM_47D0_0*, Struct68s*
     MMM_D_8038C510.unkC = arg0;
-    MMM_D_8038C510.unk10 = arg1;
+    MMM_D_8038C510.unk10 = (s32)(intptr_t)arg1; // [port] void* to s32 — N64 stored pointer as s32
 }
 
 void func_8038AA44(void){
@@ -253,7 +253,7 @@ void func_8038AA44(void){
     func_8038A750();
     if( MMM_D_8038C510.unk8 == 1
         && MMM_D_8038C510.unkC != NULL
-        && chTumblar_isBanjoAbove(MMM_D_8038C510.unkC, MMM_D_8038C510.unk10)
+        && chTumblar_isBanjoAbove(MMM_D_8038C510.unkC, (Struct68s *)(intptr_t)MMM_D_8038C510.unk10) // [port] s32 to Struct68s*
     ){
         if (!levelSpecificFlags_get(LEVEL_FLAG_2F_MMM_UNKNOWN)) {
             levelSpecificFlags_set(LEVEL_FLAG_2F_MMM_UNKNOWN, true);
@@ -269,9 +269,9 @@ void func_8038AA44(void){
             func_8038A140(4);
         }
         else if( MMM_D_8038C510.unkC != NULL
-            && chTumblar_isBanjoAbove(MMM_D_8038C510.unkC, MMM_D_8038C510.unk10)
+            && chTumblar_isBanjoAbove(MMM_D_8038C510.unkC, (Struct68s *)(intptr_t)MMM_D_8038C510.unk10) // [port] s32 to Struct68s*
         ){
-            chTumblar_copyPosition(MMM_D_8038C510.unkC, MMM_D_8038C510.unk10, sp28);
+            chTumblar_copyPosition((s32)(intptr_t)MMM_D_8038C510.unkC, (Struct68s *)(intptr_t)MMM_D_8038C510.unk10, sp28); // [port] BKModel* to s32, s32 to Struct68s*
             tmp_v0 = func_8033F3C0(MMM_D_8038C510.unk0, sp28);
             if(tmp_v0){
                 sp24 = func_8038A26C(tmp_v0);

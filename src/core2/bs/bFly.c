@@ -380,7 +380,7 @@ void func_802A411C(void) {
         if (anctrl_isAt(sp58, 0.6905f)) {
             baphysics_set_type(BA_PHYSICS_UNK8);
             func_802914CC(5);
-            ncDynamicCam5_func_802BF590(&D_8037D338);
+            ncDynamicCam5_func_802BF590(D_8037D338);
             anctrl_setDuration(sp58, 0.05f);
             basfx_80299CF4(SFX_50_KAZOOIE_RRRUH, 1.3f, 0x7FFF);
             D_8037D345 = 1;
