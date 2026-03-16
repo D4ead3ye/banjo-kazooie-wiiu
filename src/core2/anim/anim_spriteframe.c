@@ -53,7 +53,7 @@ bool func_8035D608(Actor *this) {
     if (LOCAL_D6600(this)->unk4 == 8) {
         return true;
     }
-    return func_80309D58(&sp1C, this->unk10_18);
+    return func_80309D58(sp1C, this->unk10_18);
 }
 
 

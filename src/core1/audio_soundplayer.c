@@ -18,7 +18,7 @@ void  func_80243F84(N_AL_Struct81s *arg0);
 void  func_80243FE4(N_AL_Struct81s *arg0);
 s32   func_80244110(u16 *arg0, u16 *arg1);
 void  func_80244190(N_AL_Struct81s *arg0);
-void *func_80244608(ALBank *bank, s16 arg1, struct46s *arg2);
+void *func_80244608(void *bank_, s16 arg1, struct46s *arg2);
 void  func_80244978(s32 arg0, s16 type, s32 arg2);
 // extern ALEventUnknown;
 /* .bss */
@@ -560,13 +560,15 @@ void func_80244594(N_AL_Struct81s *arg0, u8 arg1){
         arg0->unk36 = arg1;
 }
 
-s32 func_802445AC(N_AL_Struct81s *arg0){
+s32 func_802445AC(void *arg0_){ // [port] void* for prototype compatibility
+    N_AL_Struct81s *arg0 = (N_AL_Struct81s *)arg0_;
     if(arg0 != NULL)
         return arg0->unk40;
     return 0;
 }
 
-bool func_802445C4(ALBank *bank, s16 arg1){
+bool func_802445C4(void *bank_, s16 arg1){ // [port] void* for prototype compatibility
+    ALBank *bank = (ALBank *)bank_;
     ALSound *snd = bank->instArray[0]->soundArray[arg1-1];
     if (snd->envelope->decayTime == -1)
         return true;
@@ -574,7 +576,8 @@ bool func_802445C4(ALBank *bank, s16 arg1){
         return false;
 }
 
-void *func_80244608(ALBank *bank, s16 arg1, struct46s *arg2) {
+void *func_80244608(void *bank_, s16 arg1, struct46s *arg2) { // [port] void* for prototype compatibility
+    ALBank *bank = (ALBank *)bank_;
     ALKeyMap *temp_v0_2;
     ALSound *temp_s2;
     N_AL_Struct81s *temp_v0;
@@ -635,7 +638,8 @@ void *func_80244608(ALBank *bank, s16 arg1, struct46s *arg2) {
     return var_fp;
 }
 
-void func_80244814(N_AL_Struct81s *arg0){
+void func_80244814(void *arg0_){ // [port] void* for prototype compatibility
+    N_AL_Struct81s *arg0 = (N_AL_Struct81s *)arg0_;
     ALEvent evt;
 
     evt.type = 0x400;
@@ -675,7 +679,7 @@ void func_80244958(void){
     func_80244860(3);
 }
 
-void func_80244978(intptr_t arg0, s16 type, s32 arg2){ // [port] was s32 arg0 — receives pointer from func_80244608
+void func_80244978(s32 arg0, s16 type, s32 arg2){
     ALEvent sp18;
     if(arg0){
         sp18.type = type;

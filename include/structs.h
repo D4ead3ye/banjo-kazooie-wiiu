@@ -7,6 +7,12 @@
 #include "enums.h"
 #include "bool.h"
 
+// [port] Forward-declare struct tags used in function pointers inside structs below.
+// Without these, clang treats the struct tag as file-local to each struct definition.
+struct actor_s;
+struct actorMarker_s;
+struct struct_68_s;
+
 #define MERGE(a, b) a ## b
 
 #define UNK_TYPE(t) t
@@ -298,7 +304,7 @@ typedef struct struct_14_s{
     s32 unk14;
     void (*unk18)(struct actorMarker_s *, s32, s32);
     void (*unk1C)(struct actorMarker_s *, s32, s32);
-    s32 unk20;
+    s32 (*unk20)(struct actorMarker_s *, s32, s32); // [port] was s32 — holds a function pointer
 }struct14s;
 
 typedef struct struct_15_s{
@@ -383,7 +389,7 @@ typedef struct particle_emitter{
         }spherical;
     } particleVelocityRange_E4;
     f32 unkFC;
-    s32 unk100;
+    uintptr_t unk100; // [port] was s32 — stores Struct70s* pointer
     s16 unk104;
     u8 pad106[0x2];
     f32 unk108;
@@ -522,13 +528,26 @@ typedef struct {
     f32 (*unk4)[3];
 }struct5Bs;
 
+// [port] Bitfield packed as (aaaa bbcc cdde eeff) from MSB to LSB.
+// N64 MIPS (BE) allocates the first declared field at the MSB;
+// x86/ARM (LE) allocates it at the LSB.  Reverse the declaration
+// order on LE so each named field maps to the same bit positions.
 typedef struct{
-    u16 unk0_15 : 4;
-    u16 unk0_11 : 2;
-    u16 unk0_9  : 3;
-    u16 unk0_6  : 2;
-    u16 unk0_4  : 3;
-    u16 unk0_1  : 2;
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+    u16 unk0_15 : 4; // bits 15-12 (aaaa)
+    u16 unk0_11 : 2; // bits 11-10 (bb)
+    u16 unk0_9  : 3; // bits  9-7  (ccc)
+    u16 unk0_6  : 2; // bits  6-5  (dd)
+    u16 unk0_4  : 3; // bits  4-2  (eee)
+    u16 unk0_1  : 2; // bits  1-0  (ff)
+#else
+    u16 unk0_1  : 2; // bits  1-0  (ff)
+    u16 unk0_4  : 3; // bits  4-2  (eee)
+    u16 unk0_6  : 2; // bits  6-5  (dd)
+    u16 unk0_9  : 3; // bits  9-7  (ccc)
+    u16 unk0_11 : 2; // bits 11-10 (bb)
+    u16 unk0_15 : 4; // bits 15-12 (aaaa)
+#endif
 }struct5Cs;
 
 typedef struct struct_5d_s{

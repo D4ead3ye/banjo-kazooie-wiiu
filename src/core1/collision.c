@@ -223,7 +223,7 @@ BKCollisionTri *func_8024549C(f32 arg0[3], f32 arg1){ // [port] was int — retu
 }
 
 bool func_80245524(f32 arg0[3], void *arg1, intptr_t *arg2, f32 *arg3){ // [port] arg2 was s32* — stores Struct70s* from func_8034C630
-    Struct70s *result = func_8034C630((intptr_t)arg1); // [port] arg1 is void* (BKCollisionTri*), func takes s32 on N64
+    Struct70s *result = func_8034C630(arg1); // [port] arg1 is void* (BKCollisionTri*), func now takes void* on 64-bit
     *arg2 = (intptr_t)result; // [port] was s32 — widen to hold pointer
     if(result == NULL){ // [port] was *arg2 == NULL
         *arg3 = arg0[1];

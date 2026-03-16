@@ -78,7 +78,7 @@ typedef struct actor_prop_s{
     };
 } ActorProp;
 
-typedef void(*MarkerCollisionFunc)(struct actorMarker_s *this, struct actorMarker_s *other);
+typedef void(*MarkerCollisionFunc)(struct actorMarker_s *self, struct actorMarker_s *other);
 typedef struct actor_s *(*MarkerDrawFunc)(struct actorMarker_s *, Gfx **, Mtx **, Vtx **);
 typedef void (*ActorUpdateFunc)(struct actor_s *);
 typedef void (*ActorFreeFunc)(struct actor_s *);
@@ -344,7 +344,7 @@ typedef union prop_s
 #endif
         s16 unk4[3];
         // s16 unk6;
-        s16 pad8_15: 10;
+        u16 pad8_15: 10; // [port] was s16 — must match u16 type of adjacent bitfields to pack into same storage unit
         u16 unk8_5: 1;
         u16 unk8_4: 1;
         u16 unk8_3: 1;

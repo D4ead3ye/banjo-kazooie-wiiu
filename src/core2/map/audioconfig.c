@@ -89,9 +89,9 @@ s32 func_80324624(enum map_e map_id, s32 arg1){
 
 s32 func_803246B4(enum map_e map_id, s32 arg1){
     if(arg1 & 0x80000000){
-        func_803245D0(map_id, arg1);
+        return func_803245D0(map_id, arg1); // [port] implicit MIPS $v0 return
     }
     else{
-        func_80324624(map_id, arg1);
+        return func_80324624(map_id, arg1); // [port] implicit MIPS $v0 return
     }
 }

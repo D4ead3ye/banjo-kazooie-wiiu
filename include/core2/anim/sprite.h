@@ -31,21 +31,21 @@ typedef struct{
 
 void animsprite_init(void);
 AnimSprite * animsprite_new(void);
-void animsprite_free(AnimSprite *this);
+void animsprite_free(AnimSprite *self);
 void animsprite_terminate(void);
-void animsprite_update(AnimSprite *this);
-void animsprite_default(AnimSprite *this);
-void animsprite_loop(AnimSprite *this);
-void animsprite_set_steps(AnimSprite *this, AnimSpriteStep *step_list, s32 size);
-void animsprite_set_state(AnimSprite *this, AnimSpriteState step);
-void animsprite_set_unknown(AnimSprite *this, s32 value);
-void animsprite_set_frame(AnimSprite *this, s32 frame_index);
-void animsprite_set_speed(AnimSprite *this, f32 speed);
-void animsprite_set_start_step(AnimSprite *this, s32 step);
-s32 animsprite_get_frame(AnimSprite *this);
-AnimSpriteState animsprite_get_current_state(AnimSprite *this);
-s32 animsprite_get_unknown(AnimSprite *this);
-f32 animsprite_get_speed(AnimSprite *this);
-int animsprite_is_stopped(AnimSprite *this);
-int animsprite_is_at_step(AnimSprite *this, s32 frame);
+void animsprite_update(AnimSprite *self);
+void animsprite_default(AnimSprite *self);
+void animsprite_loop(AnimSprite *self);
+void animsprite_set_steps(AnimSprite *self, AnimSpriteStep *step_list, s32 size);
+void animsprite_set_state(AnimSprite *self, AnimSpriteState step);
+void animsprite_set_unknown(AnimSprite *self, s32 value);
+void animsprite_set_frame(AnimSprite *self, s32 frame_index);
+void animsprite_set_speed(AnimSprite *self, f32 speed);
+void animsprite_set_start_step(AnimSprite *self, s32 step);
+s32 animsprite_get_frame(AnimSprite *self);
+AnimSpriteState animsprite_get_current_state(AnimSprite *self);
+s32 animsprite_get_unknown(AnimSprite *self);
+f32 animsprite_get_speed(AnimSprite *self);
+int animsprite_is_stopped(AnimSprite *self);
+int animsprite_is_at_step(AnimSprite *self, s32 frame);
 #endif

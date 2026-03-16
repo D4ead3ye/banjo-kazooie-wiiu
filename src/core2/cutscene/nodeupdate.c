@@ -1,7 +1,6 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
-
 //these funtions include references to overlay functions
 extern void func_802DC528(NodeProp*, ActorMarker*);
 extern void func_802DC560(NodeProp*, ActorMarker*);
@@ -9,7 +8,7 @@ extern void func_802DC748(NodeProp*, ActorMarker*);
 extern void func_802DC780(NodeProp*, ActorMarker*);
 extern void chOverlayPressStart_spawn(NodeProp*, ActorMarker*);
 extern void chOverlayPressStart_func_802DCDC0(NodeProp*, ActorMarker*);
-extern void func_8031D06C(NodeProp*, ActorMarker*);
+// extern void func_8031D06C(NodeProp*, ActorMarker*); // [port] removed — in port_prototypes.h as (s32, s32)
 extern void func_8031D09C(NodeProp*, ActorMarker*);
 extern void warp_mmEnterMumbosHut(NodeProp*, ActorMarker*);
 extern void warp_mmExitMumbosHut(NodeProp*, ActorMarker*);
@@ -321,7 +320,7 @@ CodeAD110Callback sWarpFunctions[] = {
     warp_mmmEnterLevel, warp_rbbEnterLevel, warp_ccwEnterSpringWhipcrackRoom, warp_ccwEnterSummerWhipcrackRoom,
     warp_ccwEnterAutumnWhipcrackRoom, warp_ccwEnterWinterWhipcrackRoom, warp_mmEnterMumbosHut, warp_mmExitMumbosHut,
     warp_mmEnterTickersTowerLower, warp_mmExitTickersTowerLower, warp_mmEnterTickersTowerUpper, warp_mmExitTickersTowerUpper,
-    warp_csNintendoLogo, func_8031D09C, func_8031D06C, func_80334430,
+    warp_csNintendoLogo, (CodeAD110Callback)func_8031D09C, (CodeAD110Callback)func_8031D06C, func_80334430, // [port]
     func_80334430, func_80334430, warp_lairEnterCCWPuzzleFromPointingGruntyStatueRoom, warp_lairEnterPointingGruntyStatueFromCCWPuzzleRoom,
     warp_lairEnterCCLobbyFromCCLevel, warp_lairEnterCCLobbyFromCCWPuzzleRoom, warp_lairEnterCCWPuzzleRoomFromCCLobby, warp_lairEnterCCWPuzzleRoomFromTTCLobby,
     warp_lairEnterTTCLobbyFromCCWPuzzleRoom, warp_ccwEnterWinterAcornStorage, warp_ccwEnterAutumnFloodedAttic, warp_ccwEnterWinterFloodedAttic,

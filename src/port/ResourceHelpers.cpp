@@ -31,9 +31,9 @@ const std::unordered_map<uint32_t, std::string>& GetAssetSymbolMap() {
 
     std::call_once(mapOnce, [] {
         // [port] Load the asset ID → o2r path manifest from the archive.
-        // Torch writes this as a Blob at "asset_table/aBKAssetTable".
+        // Torch writes this as a Blob at "assets/aBKAssetTable".
         // Format: u32 count, then for each entry: u32 assetId, s32 pathLen, char path[pathLen]
-        auto res = Ship::Context::GetInstance()->GetResourceManager()->LoadResource("asset_table/aBKAssetTable");
+        auto res = Ship::Context::GetInstance()->GetResourceManager()->LoadResource("assets/aBKAssetTable");
         if (!res) {
             SPDLOG_ERROR("Failed to load asset manifest from o2r");
             return;
@@ -108,10 +108,6 @@ static char* LoadAndRetainResource(const std::string& path, uint32_t assetId) {
 }
 
 extern "C" char* ResourceMgr_LoadByAssetId(uint32_t assetId) {
-    if (assetId == 1) {
-        return nullptr;
-    }
-
     // Return cached resource if already loaded
     if (auto it = sResourceRefCache.find(assetId); it != sResourceRefCache.end()) {
         auto ptr = it->second->GetRawPointer();
@@ -123,7 +119,7 @@ extern "C" char* ResourceMgr_LoadByAssetId(uint32_t assetId) {
 
     const auto& symbolMap = GetAssetSymbolMap();
     if (const auto entry = symbolMap.find(assetId); entry != symbolMap.end()) {
-        auto mappedPath = std::string("asset_table/") + entry->second;
+        auto mappedPath = entry->second;
         std::replace(mappedPath.begin(), mappedPath.end(), '\\', '/');
 
         if (auto result = LoadAndRetainResource(mappedPath, assetId); result != nullptr) {
@@ -132,26 +128,13 @@ extern "C" char* ResourceMgr_LoadByAssetId(uint32_t assetId) {
         } else {
             SPDLOG_WARN("[port] ResourceMgr_LoadByAssetId({}) symbol '{}' found but resource data is NULL", assetId,
                         mappedPath);
+            return nullptr;
         }
-    }
-
-    std::string fallbackPath = "asset_table/D_";
-    if ((assetId >= ASSET_6D9_SPRITE_PROPELLOR_TIMER && assetId <= ASSET_71B_SPRITE_SPARKLE_ORANGE_2) ||
-        (assetId == ASSET_580_SPRITE_RED_FEATHER)) {
-        fallbackPath += "SPRITE_";
-    } else if (assetId <= ASSET_2AB_ANIM_TEEHEE_DIE) {
-        fallbackPath += "ANIM_";
     } else {
-        fallbackPath += "MODEL_";
+        SPDLOG_WARN("[port] ResourceMgr_LoadByAssetId({}) not found in symbol map", assetId);
+        return nullptr;
     }
 
-    fallbackPath += std::to_string(assetId);
-    if (auto result = LoadAndRetainResource(fallbackPath, assetId); result != nullptr) {
-        return result;
-    }
-
-    SPDLOG_WARN("[port] ResourceMgr_LoadByAssetId({}) FAILED - not in symbol map, fallback '{}' also not found",
-                assetId, fallbackPath);
     return nullptr;
 }
 

@@ -228,7 +228,15 @@ void jiggylist_draw(Gfx **gfx, Mtx **mtx, Vtx **vtx) {
 void func_8033301C(void) {
     for(s_jiggylist_current_index = s_jiggyList_level_start_index; s_jiggylist_current_index < s_jiggyList_level_end_index; s_jiggylist_current_index++) {
         if (jiggylist_list[s_jiggylist_current_index].unk10.marker != NULL) {
-            jiggy_free(marker_getActor(jiggylist_list[s_jiggylist_current_index].unk10.marker));
+            // [port] Marker may be dangling (e.g. witch switch jiggy spawned in lair cutscene,
+            // then freed during map unload). On N64 stale heap data is still readable; on PC
+            // it's freed. We already know the index so call bk_free directly, skipping the
+            // actor lookup that jiggy_free() would do via the dangling marker.
+            Struct81s *sp18 = &jiggylist_list[s_jiggylist_current_index].unk10;
+            if (jiggylist_list[s_jiggylist_current_index].bk_free) {
+                jiggylist_list[s_jiggylist_current_index].bk_free(sp18);
+            }
+            sp18->marker = NULL;
         }
     }
 }
@@ -268,7 +276,7 @@ void func_80333270(enum jiggy_e jiggy_id, f32 position[3], void (*method)(Actor 
 
     ptr = &jiggylist_list[jiggy_id - 1];
     jiggy_spawn(jiggy_id, position);
-    ptr->unk10.unk14 = method;
+    ptr->unk10.unk14 = (void (*)(struct actor_s *, struct actorMarker_s *))method; // [port]
     ptr->unk10.unk18 = other_marker;
 }
 
@@ -312,7 +320,7 @@ void func_803333DC(Struct81s *arg0, Actor *arg1) {
         arg0->unk14(arg1, arg0->unk18);
     }
     marker_setFreeMethod(arg1->marker, jiggy_free);
-    jiggy_id = ((ptrdiff_t)((uintptr_t)arg0 - (uintptr_t)&jiggylist_list) / 0x2C) + 1;
+    jiggy_id = ((ptrdiff_t)((uintptr_t)arg0 - (uintptr_t)&jiggylist_list) / sizeof(Struct_core2_ABC00_0)) + 1; // [port] was 0x2C; struct size differs on 64-bit
     chjiggy_setJiggyId(arg1, jiggy_id);
     if ((jiggy_id == JIGGY_49_CCW_EYRIE) || (jiggy_id == JIGGY_39_LAIR_MMM_WITCH_SWITCH) || (jiggy_id == JIGGY_3C_LAIR_CCW_WITCH_SWITCH)) {
         arg1->marker->unk40_21 = true;

@@ -13,7 +13,7 @@
 extern bool func_802ED420(BKModelUnk20List *arg0, u8 *arg1, u32 arg2);
 extern void func_802ED52C(BKModelUnk20List *, f32[3], f32);
 extern void mlMtxRotatePYR(f32, f32, f32);
-extern void assetCache_free(BKModelBin *);
+extern void assetCache_free(void *);
 extern s32 func_8024DB50(f32[3], f32);
 extern AnimMtxList *animMtxList_new();
 extern AnimMtxList *animMtxList_defrag(AnimMtxList *);
@@ -731,10 +731,6 @@ void func_803385BC(Gfx **gfx, Mtx **mtx, void *arg2){
     f32 f14;
     s32 tmp_v0;
 
-    // [port] safety: reject obviously bad child offsets (stale o2r with BE layout mismatch)
-    if (cmd->unk22 < 0 || cmd->unk22 > 0x8000) { cmd->unk22 = 0; }
-    if (cmd->unk24 < 0 || cmd->unk24 > 0x8000) { cmd->unk24 = 0; }
-
     mlMtx_apply_vec3f(D_80383C78, cmd->unk8);
     mlMtx_apply_vec3f(D_80383C88, cmd->unk14);
 
@@ -897,7 +893,7 @@ void func_80338CD0(Gfx **gfx, Mtx **mtx, void *arg2){
     s32 s2;
     s32 s1;
     s32 *s0;
-    
+
     indx = D_80383658[cmd->unkA];
 
     if (cmd->unkA == 0)
@@ -994,7 +990,7 @@ void func_8033909C(Gfx ** gfx, Mtx ** mtx, void *arg2){
     GeoCmdF *cmd = (GeoCmdF *)arg2;
     int tmp_v0 = func_802ED420(D_8038372C, cmd->unkC, cmd->unkA);
     if( (!tmp_v0 && (cmd->unkB & 1))
-        || (tmp_v0 && (cmd->unkB & 2)) 
+        || (tmp_v0 && (cmd->unkB & 2))
     ){
         if(cmd->unk8 != 0)
             func_80339124(gfx, mtx, (BKGeoList*)((u8*)cmd + cmd->unk8));
@@ -1149,9 +1145,10 @@ BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation
     }
 
     // Set up segments 1 and 2 to point to vertices and textures respectively
-    gSPSegment((*gfx)++, 0x01, osVirtualToPhysical((uintptr_t)&modelRendervertexList->vtx_18));
+    gSPSegment((*gfx)++, 0x01, osVirtualToPhysical((void *)&modelRendervertexList->vtx_18)); // [port] uintptr_t -> void*
     uintptr_t base_tex = (uintptr_t)&modelRenderTextureList->tex_8[modelRenderTextureList->cnt_4];
-    gSPSegment((*gfx)++, 0x02, osVirtualToPhysical(base_tex));  
+    gSPSegment((*gfx)++, 0x02, osVirtualToPhysical((void *)base_tex)); // [port] uintptr_t -> void*
+
 
     //segments 11 to 15 contain animated textures
     if(modelRenderAnimatedTexturesCacheId){
@@ -1161,7 +1158,7 @@ BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation
         for(i_segment = 0; i_segment < 4; i_segment++){
             if(AnimTextureListCache_tryGetTextureOffset(modelRenderAnimatedTexturesCacheId, i_segment, &texture_offset)){
                 uintptr_t base = (uintptr_t)&modelRenderTextureList->tex_8[modelRenderTextureList->cnt_4];
-                gSPSegment((*gfx)++, 15 - i_segment, osVirtualToPhysical(base + (uintptr_t)texture_offset));
+                gSPSegment((*gfx)++, 15 - i_segment, osVirtualToPhysical((void *)(base + (uintptr_t)texture_offset))); // [port] uintptr_t -> void*
             }
 }
     }
@@ -1263,7 +1260,7 @@ BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation
     }
 
     if(model_bin->unk28 != 0 && D_8038371C != NULL){
-        func_802E6BD0((uintptr_t)modelRenderModelBin + (uintptr_t)(u32)modelRenderModelBin->unk28, modelRendervertexList, D_8038371C);
+        func_802E6BD0((BKModelUnk28List *)((uintptr_t)modelRenderModelBin + (uintptr_t)(u32)modelRenderModelBin->unk28), modelRendervertexList, D_8038371C); // [port] uintptr_t -> BKModelUnk28List*
     }
 
     mlMtxIdent();
@@ -1291,6 +1288,7 @@ BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation
     else{
         modelRenderRotation[0] = modelRenderRotation[1] = modelRenderRotation[2] = 0.0f;
     }
+
 
 
     func_80339124(gfx, mtx, (BKGeoList *)((u8 *)model_bin + model_bin->geo_list_offset_4));

@@ -174,7 +174,7 @@ void func_80361D7C(VLA **arg0, f32 arg1, struct ActorMarker *arg2, s32 arg3, u32
 
 void func_80361DC4(Actor *this){
     if(this->unk134){
-        anSeq_free(this->unk134);
+        anSeq_free((void **)this->unk134); // [port]
     }
     this->unk134 = NULL;
 
@@ -228,6 +228,6 @@ void func_80361EE0(Actor *this) {
                 }
             }
         }
-        anSeq_update(this->unk134, this->anctrl);
+        anSeq_update((void **)this->unk134, this->anctrl); // [port]
     }
 }

@@ -1,7 +1,6 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
-
 extern void func_8028F3D8(f32[3], f32, void(*)(ActorMarker *), ActorMarker *);
 extern void func_80324CFC(f32, enum comusic_e, s32);
 extern void rand_seed(s32);
@@ -154,7 +153,7 @@ void func_8038EDBC(Actor *this) {
     ActorLocal_lair_86F0 *local;
     s32 sp38;
     f32 sp34;
-    f32 sp28[3];
+    f32 sp28[4]; // [port] was [3] — MIPS stack alias: sp28[3] overlaps sp34, func_8034DF30 reads [3] as alpha
 
     local = (ActorLocal_lair_86F0*)&this->local;
     sp38 = (this->modelCacheIndex == 0x3B7)? 0x190 : 0x192;
@@ -166,13 +165,15 @@ void func_8038EDBC(Actor *this) {
         sp28[2] = 1.0f;
         if (func_8038ECA8(this->marker) && local->unk8 < 0xFF) {
             local->unk8 = (local->unk8 + 8 < 0xFF) ? local->unk8 + 8 : 0xFF;
-        } 
+        }
         else if (!func_8038ECA8(this->marker) && (local->unk8 > 0)) {
             local->unk8 = (local->unk8 - 8 > 0) ? local->unk8 - 8 : 0;
         }
         sp34 = (0xFF - local->unk8) / 255.0;
+        sp28[3] = sp34; // [port] explicit — was implicit via MIPS stack alias
         func_8034DF30(sp44, sp28, sp28, 0);
         sp34 = 1.0 - sp34;
+        sp28[3] = sp34; // [port] explicit — was implicit via MIPS stack alias
         func_8034DF30(sp40, sp28, sp28, 0);
         if(sp34);
     }
@@ -379,7 +380,7 @@ void lair_func_8038F800(Actor *this) {
     for(phi_s0 = 0; phi_s0 < func_8038EB24(this); phi_s0++){
         temp_v0 = func_8034C528(func_8038ED10(this, phi_s0));
         if (temp_v0 != 0) {
-            func_8034E0FC(temp_v0, func_8038ECFC(this, phi_s0) ? 0xff : 0);
+            func_8034E0FC((Struct6Ds *)temp_v0, func_8038ECFC(this, phi_s0) ? 0xff : 0); // [port] Struct70s* layout-compatible with Struct6Ds* here
         }
     }
 }

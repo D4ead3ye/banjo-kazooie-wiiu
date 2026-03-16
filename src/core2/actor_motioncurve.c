@@ -5,7 +5,7 @@
 #include "core2/ba/physics.h"
 
 extern f32 player_getYaw(void);
-extern void chJigsawDance_setState(Actor *, s32);
+// chJigsawDance_setState declared in port_prototypes.h (u32 arg1)
 extern void bsjig_setJiggyMarkerPtr(ActorMarker *);
 
 typedef struct{
@@ -129,7 +129,7 @@ void func_802961B4(s32 arg0){
     s32 sp2C[3];
     f32 sp20[3];
     
-    func_80330FCC(func_80291660(), sp2C);
+    func_80330FCC((ActorMarker *)(intptr_t)func_80291660(), sp2C); // [port] s32 to ActorMarker* — N64 stored pointer as s32
     sp20[0] = sp2C[0];
     sp20[1] = sp2C[1];
     sp20[2] = sp2C[2];

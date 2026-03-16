@@ -27,7 +27,7 @@ struct {
 
 /* .public */
 BKCollisionTri *func_80320B98(f32 arg0[3], f32 arg1[3], f32 arg2[3], u32 arg3);
-void func_80320B44(Method_Core2_999A0_0 arg0, Method_Core2_999A0_1 arg1, Method_Core2_999A0_2 arg2, Method_Core2_999A0_3 arg3);
+void func_80320B44(void *arg0, void *arg1, void *arg2, void *arg3); // [port] Method_Core2_999A0_* → void*
 
 /* .code */
 f32 func_80320930(f32 arg0[3], f32 arg1, f32 arg2, u32 arg3) {
@@ -85,11 +85,11 @@ bool func_803209F8(f32 arg0[3], f32 arg1[3], f32 *arg2, f32 arg3[3]) {
     return 1;
 }
 
-void func_80320B24(Method_Core2_999A0_0 arg0, Method_Core2_999A0_1 arg1, Method_Core2_999A0_2 arg2){
+void func_80320B24(void *arg0, void *arg1, void *arg2){ // [port] Method_Core2_999A0_* → void*
     func_80320B44(arg0, arg1, arg2, NULL);
 }
 
-void func_80320B44(Method_Core2_999A0_0 arg0, Method_Core2_999A0_1 arg1, Method_Core2_999A0_2 arg2, Method_Core2_999A0_3 arg3){
+void func_80320B44(void *arg0, void *arg1, void *arg2, void *arg3){ // [port] Method_Core2_999A0_* → void*
     D_80383230.unk80->unk0 = arg0;
     D_80383230.unk80->unk4 = arg1;
     D_80383230.unk80->unk8 = arg2;

@@ -58,7 +58,7 @@ void func_8029DBF0(void){
 
 
 void func_8029DD6C(void) {
-    bool temp_s0;
+    s32 temp_s0; // [port] must hold values > 1 for geo selector branches
 
     func_8033A1FC();
     switch (baModel_getModelId()) {

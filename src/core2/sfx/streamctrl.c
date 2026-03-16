@@ -79,7 +79,7 @@ void func_802F8214(struct3s * this){
     if(this->unk0)
         func_802F9D38(this->unk0);
     bk_vector_free(this->unk20);
-    func_8033BD20(&this->unk2C);
+    func_8033BD20((void **)&this->unk2C); // [port] void** → BKModelBin**
     bk_free(this);
 
 }

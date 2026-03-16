@@ -360,7 +360,7 @@ void func_8025A55C(s32 arg0, s32 arg1, s32 arg2){
     func_8025A4C4(arg0, arg1, &D_80276E30->unk1C[arg2]);
 }
 
-void func_8025A58C(s32 arg0, s32 arg1){
+void func_8025A58C(u32 arg0, u32 arg1){
     func_8025A55C(arg0, arg1, 0);
 }
 

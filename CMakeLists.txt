@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 # Set the project version and language
 project(Lighthouse VERSION 0.0.1 LANGUAGES C CXX ASM)
 include(FetchContent)

@@ -167,7 +167,7 @@ void func_802CC640(Actor *this, s32 next_state) {
             sp54[0] += randf2(-300.0f, 300.0f);
             sp54[1] += randf2(100.0f, 300.0f);
             sp54[2] += randf2(-300.0f, 300.0f);
-            if(func_80329210(this, sp54)){
+            if(func_80329210(this, &sp54)){
                 break;
             }
         }
@@ -397,7 +397,7 @@ void func_802CCC5C(Actor *this) {
             if (local->unk3A == 1) {
                 sp30 = 1 * spB8;
                 if ( !func_802CC2A0(this) 
-                     || ((this->state == 3) && !func_80329210(this, this->position))) {
+                     || ((this->state == 3) && !func_80329210(this, &this->position))) {
                     local->unk18[0] = this->position[0];
                     local->unk18[1] = this->position[1];
                     local->unk18[2] = this->position[2];
@@ -440,7 +440,7 @@ void func_802CCC5C(Actor *this) {
                 sp5C[2] = this->position[2] - sp80[2];
                 sp58 = sp74[0] * sp5C[0] + sp74[1] * sp5C[1] + sp74[2] * sp5C[2];
                 sp8C[1] += 90.0f;
-                if( func_80329210(this, sp8C) 
+                if( func_80329210(this, &sp8C)
                     && (sp8C[1] < (local->unk30[1] + 0x12C)) 
                     && !func_8028F25C()
                     && (sp58 > 800.0f) 

@@ -12,6 +12,8 @@ extern ParticleEmitter *func_802F4094(f32 pos[3], f32 arg1);
 
 void func_8029AE74(s32 arg0);
 void func_8029AEE4(s32 arg0);
+void func_8029AB14(Struct5Ds *arg0, s32 arg1);
+void func_8029AC34(Struct5Ds *arg0, s32 arg1);
 
 /* .bss */
 Struct5Ds *D_8037D190;
@@ -57,7 +59,7 @@ void func_8029AA3C(void){
     particleEmitter_emitN(pCtrl, 5);
 }
 
-void func_8029AB14(s32 arg0, s32 arg1){
+void func_8029AB14(Struct5Ds *arg0, s32 arg1){ // [port] was (s32 arg0, s32 arg1) — pointer truncation
     int sp24 = (arg1 == 4) || (arg1 == 0xb);
     int sp20 = player_inWater();
     if(sp24){
@@ -92,7 +94,7 @@ void func_8029AB14(s32 arg0, s32 arg1){
     }
 }
 
-void func_8029AC34(s32 arg0, s32 arg1){
+void func_8029AC34(Struct5Ds *arg0, s32 arg1){ // [port] was (s32 arg0, s32 arg1) — pointer truncation
     int sp1C;
     sp1C = (arg1 == 4) || (arg1 == 0xb || player_inWater());
     if(sp1C){

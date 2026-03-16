@@ -123,6 +123,13 @@ void func_80340200(Struct83s *self, f32 position[3], f32 arg2[3], f32 arg3, f32 
     sp7C[2] = spA0[temp_hi_2];
 
     temp_f0_3 = (sp88[1] * sp7C[2]) - (sp7C[1]*sp88[2]);
+    // [port] reject degenerate 2D projection — near-zero determinant produces Inf/NaN
+    // barycentric coords. On MIPS, Inf→(s32) clamps to INT_MAX which fails downstream
+    // bounds checks. On x86, (s32)Inf is UB.
+    if (ABS(temp_f0_3) < 0.001f) {
+        self->unk1A = 0;
+        return;
+    }
     self->unk0 = ((sp88[0] * sp7C[2]) - (sp7C[0] * sp88[2])) / temp_f0_3;
     self->unk4 = ((sp88[1] * sp7C[0]) - (sp7C[1] * sp88[0])) / temp_f0_3;
     self->unk1A = 1;

@@ -6,6 +6,7 @@
 #include "prop.h"
 #include "functions.h"
 #include "core2/ch/snacker.h"
+#include "port/ShipUtils.h" // [port] spawn queue overflow logging
 
 void spawnQueue_unlock(void);
 void spawnQueue_lock(void);
@@ -177,8 +178,17 @@ u8 spawnQueueLength = 0;
 FunctionQueue *spawnQueue = NULL;
 
 /* .code */
+// [port] N64 used 15 entries. If this overflows, find the root cause —
+// something is adding entries faster than they're being flushed.
+#define SPAWN_QUEUE_DEFAULT_SIZE 15
+#define SPAWN_QUEUE_GL_SIZE 50
+
+static u32 __spawnQueue_getMax(void) {
+    return (map_get() == MAP_90_GL_BATTLEMENTS) ? SPAWN_QUEUE_GL_SIZE : SPAWN_QUEUE_DEFAULT_SIZE;
+}
+
 void spawnQueue_malloc(void){
-    u32 tmp = (map_get() == MAP_90_GL_BATTLEMENTS)? 50: 15;
+    u32 tmp = __spawnQueue_getMax();
     spawnQueue = (FunctionQueue *) bk_malloc(tmp * sizeof(FunctionQueue));
 }
 
@@ -417,7 +427,7 @@ void spawnQueue_free(void){
 void spawnQueue_func_802C39D4(void){
     func_803268B4();
     if(!levelSpecificFlags_validateCRC2()){
-        eeprom_writeBlocks(0, 0, 0x80749530, EEPROM_MAXBLOCKS);
+        eeprom_writeBlocks(0, 0, (void *)(uintptr_t)0x80749530, EEPROM_MAXBLOCKS); // [port] MIPS virtual address as void*
     }
 }
 
@@ -466,37 +476,43 @@ void spawnQueue_lock(void){
 }
 
 void __spawnQueue_add_0(void (* arg0)(void)){
-    u32 tmp = (map_get() == MAP_90_GL_BATTLEMENTS)? 0x32: 0xF;
+    u32 tmp = __spawnQueue_getMax(); // [port] was hardcoded 15/50
     if(tmp != spawnQueueLength){
         spawnQueue[spawnQueueLength].func0 = arg0;
         spawnQueue[spawnQueueLength].arg_cnt = 0;
         spawnQueueLength++;
+    } else {
+        BK_LOG_WARN("[port] spawnQueue FULL (%d entries) — dropped add_0 entry", tmp); // [port]
     }
 }
 
 void __spawnQueue_add_1(GenFunction_1 arg0, uintptr_t arg1){
-    u32 tmp = (map_get() == MAP_90_GL_BATTLEMENTS)? 0x32: 0xF;
+    u32 tmp = __spawnQueue_getMax(); // [port] was hardcoded 15/50
     if(tmp != spawnQueueLength){
         spawnQueue[spawnQueueLength].func0 = (void (*)(void))arg0;
         spawnQueue[spawnQueueLength].arg[0] = arg1;
         spawnQueue[spawnQueueLength].arg_cnt = 1;
         spawnQueueLength++;
+    } else {
+        BK_LOG_WARN("[port] spawnQueue FULL (%d entries) — dropped add_1 entry", tmp); // [port]
     }
 }
 
 void __spawnQueue_add_2(void (* arg0)(void), uintptr_t arg1, uintptr_t arg2){
-    u32 tmp = (map_get() == MAP_90_GL_BATTLEMENTS)? 0x32: 0xF;
+    u32 tmp = __spawnQueue_getMax(); // [port] was hardcoded 15/50
     if(tmp != spawnQueueLength){
         spawnQueue[spawnQueueLength].func0 = arg0;
         spawnQueue[spawnQueueLength].arg[0] = arg1;
         spawnQueue[spawnQueueLength].arg[1] = arg2;
         spawnQueue[spawnQueueLength].arg_cnt = 2;
         spawnQueueLength++;
+    } else {
+        BK_LOG_WARN("[port] spawnQueue FULL (%d entries) — dropped add_2 entry", tmp); // [port]
     }
 }
 
 void __spawnQueue_add_3(void (* arg0)(void), uintptr_t arg1, uintptr_t arg2, uintptr_t arg3){
-    u32 tmp = (map_get() == MAP_90_GL_BATTLEMENTS)? 0x32: 0xF;
+    u32 tmp = __spawnQueue_getMax(); // [port] was hardcoded 15/50
     if(tmp != spawnQueueLength){
         spawnQueue[spawnQueueLength].func0 = arg0;
         spawnQueue[spawnQueueLength].arg[0] = arg1;
@@ -504,11 +520,13 @@ void __spawnQueue_add_3(void (* arg0)(void), uintptr_t arg1, uintptr_t arg2, uin
         spawnQueue[spawnQueueLength].arg[2] = arg3;
         spawnQueue[spawnQueueLength].arg_cnt = 3;
         spawnQueueLength++;
+    } else {
+        BK_LOG_WARN("[port] spawnQueue FULL (%d entries) — dropped add_3 entry", tmp); // [port]
     }
 }
 
 void __spawnQueue_add_4(GenFunction_4 arg0, uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr_t arg4){
-    u32 tmp = (map_get() == MAP_90_GL_BATTLEMENTS)? 0x32: 0xF;
+    u32 tmp = __spawnQueue_getMax(); // [port] was hardcoded 15/50
     if(tmp != spawnQueueLength){
         spawnQueue[spawnQueueLength].func0 = (void (*)(void))arg0;
         spawnQueue[spawnQueueLength].arg[0] = arg1;
@@ -517,11 +535,13 @@ void __spawnQueue_add_4(GenFunction_4 arg0, uintptr_t arg1, uintptr_t arg2, uint
         spawnQueue[spawnQueueLength].arg[3] = arg4;
         spawnQueue[spawnQueueLength].arg_cnt = 4;
         spawnQueueLength++;
+    } else {
+        BK_LOG_WARN("[port] spawnQueue FULL (%d entries) — dropped add_4 entry", tmp); // [port]
     }
 }
 
 void __spawnQueue_add_5(void (* arg0)(void), uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr_t arg4, uintptr_t arg5){
-    u32 tmp = (map_get() == MAP_90_GL_BATTLEMENTS)? 0x32: 0xF;
+    u32 tmp = __spawnQueue_getMax(); // [port] was hardcoded 15/50
     if(tmp != spawnQueueLength){
         spawnQueue[spawnQueueLength].func0 = arg0;
         spawnQueue[spawnQueueLength].arg[0] = arg1;
@@ -531,6 +551,8 @@ void __spawnQueue_add_5(void (* arg0)(void), uintptr_t arg1, uintptr_t arg2, uin
         spawnQueue[spawnQueueLength].arg[4] = arg5;
         spawnQueue[spawnQueueLength].arg_cnt = 5;
         spawnQueueLength++;
+    } else {
+        BK_LOG_WARN("[port] spawnQueue FULL (%d entries) — dropped add_5 entry", tmp); // [port]
     }
 }
 
@@ -591,7 +613,8 @@ Actor *spawnQueue_bundle_s32_2(uintptr_t bundle_id, uintptr_t x, uintptr_t y, ui
     return bundle_spawn_s32(bundle_id, position);
 }
 
-void spawnQueue_defrag(FunctionQueue *arg0) {
+void spawnQueue_defrag(void *arg0_) { // [port] void* for prototype compatibility
+    FunctionQueue *arg0 = (FunctionQueue *)arg0_;
     if ((arg0 = spawnQueue) != NULL) {
         spawnQueue = (FunctionQueue *) defrag(spawnQueue);
     }

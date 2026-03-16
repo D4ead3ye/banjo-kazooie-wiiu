@@ -107,10 +107,10 @@ void func_803870F8(Actor *this){
     }//L803872A0
 
     if(local->unk0 == 1){
-        func_80388B78(&sp5C, &sp50);
+        func_80388B78(sp5C, sp50);
     }
     else{
-        func_80388BBC(&sp5C, &sp50);
+        func_80388BBC(sp5C, sp50);
     }//L803872D4
     TUPLE_COPY(this->position, sp5C);
 

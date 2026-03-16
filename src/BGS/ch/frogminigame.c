@@ -172,7 +172,7 @@ void chfrogminigame_update(Actor *this){
         D_80391240[3] = 0;
     }
     player_getPosition(player_position);
-    sp28 = (player_position[1] < 500.0f) && (func_80329210(this, player_position) != 0);
+    sp28 = (player_position[1] < 500.0f) && (func_80329210(this, &player_position) != 0);
     if(this->state == 1){
         if(sp28 && ((local->unk8 > 0) || (local->unkC > 0)) && !func_8028FB48(0xe000)){
             chFrogMinigame_setState(this,2);

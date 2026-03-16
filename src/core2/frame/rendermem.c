@@ -89,6 +89,7 @@ void func_802E3460(s32 arg0) {
 }
 
 extern void Graphics_PushFrame(Gfx* data);
+extern void Framebuffer_ReadbackGPU(int bufferIndex);
 
 void func_802E3524(s32 arg0) {
     Gfx *gfx_begin;
@@ -100,13 +101,14 @@ void func_802E3524(s32 arg0) {
     // but that thread is #if 0'd on PC. Submit directly to LUS renderer instead,
     // which also enforces SetTargetFps(30) frame limiting.
     Graphics_PushFrame(gfx_begin);
+    Framebuffer_ReadbackGPU(getOtherFramebuffer()); // [port] GPU→CPU readback
     func_80253EA4(gfx_begin, gfx_end);
     func_80254008();
     viMgr_func_8024C1B4();
 }
 
 void func_802E3580(void) {
-    assetcache_release(D_8037E8C0.unkC);
+    assetcache_release((void *)(intptr_t)D_8037E8C0.unkC); // [port] s32 to void* — N64 stored pointer as s32
     func_802F1884(D_8037E8C0.unk10);
     func_802E5F68();
     comusicPlayer_free();

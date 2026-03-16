@@ -15,7 +15,7 @@ extern void func_80324CFC(f32, enum comusic_e, s32);
 extern int  actor_animationIsAt(Actor *, f32);
 extern void subaddie_set_state_with_direction(Actor *, s32, f32, s32);
 extern void func_8033A45C(s32, s32);
-extern void func_8034E0FC(void *, s32);
+// extern void func_8034E0FC(void *, s32); // [port] removed — prototype in port_prototypes.h (Struct6Ds* first param)
 
 
 

@@ -55,7 +55,7 @@ void CC_func_80386920(Actor *this, s32 next_state){
         func_8025A6EC(COMUSIC_2B_DING_B, 0x7fff);
         player_getPosition(sp28);
         TUPLE_COPY(sp20, sp28);
-        fxSparkle_giantGoldFeather(&sp20);
+        fxSparkle_giantGoldFeather(sp20);
     }
 
     if(next_state == 4){

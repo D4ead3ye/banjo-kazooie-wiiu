@@ -3,6 +3,7 @@
 #include "variables.h"
 
 #include "animation.h"
+#include "port/ShipUtils.h" // [port] DEBUG: animation t-pose logging
 
 //function declarations
 void anim_setIndex(Animation *this, enum asset_e arg1);
@@ -12,10 +13,10 @@ void boneTransformList_interpolate(BoneTransformList *, BoneTransformList *, Bon
 
 //function definitions
 static void __anim_resetTransform(Animation *this, s32 arg1){
-    s32 *tmp;
+    BoneTransformList *tmp; // [port] was s32* — truncates pointer on 64-bit
     if(animCache_getBoneTransformList(this->animcache_index[arg1], &tmp) == 0){
         boneTransformList_reset(tmp);
-    }; 
+    };
 }
 
 void __anim_resetCurrentTransform(Animation *this){
@@ -77,6 +78,8 @@ void __anim_update_tripleBuffer(Animation *this){
         if(__anim_currentTransformInUse(this)){
             this->unk8 = (this->unk8)? 0 : 1;//swap current transform and start transfrom
             __anim_resetTargetTransform(this);
+        } else {
+            ; // [port] SMOOTH SKIP: currentTransform not in use
         }
     }
     else{
@@ -86,11 +89,19 @@ void __anim_update_tripleBuffer(Animation *this){
     }
     this->reset = 0;
     if( this->duration < 1.0f && __anim_startTransformInUse(this) && !this->unk1E){
-        animationFile_getBoneTransformList(animBinCache_get(this->index), this->timer, anim_getTargetTransform(this));
+        AnimationFile *animFile = animBinCache_get(this->index);
+        if(animFile == NULL){
+            BK_LOG_WARN("[anim] BLEND: animBinCache_get(0x%X) returned NULL!", this->index);
+        }
+        animationFile_getBoneTransformList(animFile, this->timer, anim_getTargetTransform(this));
         boneTransformList_interpolate(animcache_getCurrentTransform(this), anim_getStartTransform(this), anim_getTargetTransform(this), this->duration);
     }
     else{
-        animationFile_getBoneTransformList(animBinCache_get(this->index), this->timer, animcache_getCurrentTransform(this));
+        AnimationFile *animFile = animBinCache_get(this->index);
+        if(animFile == NULL && this->index != 0){
+            BK_LOG_WARN("[anim] DIRECT: animBinCache_get(0x%X) returned NULL!", this->index);
+        }
+        animationFile_getBoneTransformList(animFile, this->timer, animcache_getCurrentTransform(this));
         if(this->unk1E && this->index)
             this->unk1E = 0;
     }

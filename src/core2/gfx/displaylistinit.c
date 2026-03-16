@@ -2,6 +2,7 @@
 #include "functions.h"
 #include "variables.h"
 #include <ultra64.h>
+#include <string.h>
 
 #include <libultra/convert.h>
 
@@ -39,7 +40,15 @@ void func_80314BB0(Gfx **gfx, Mtx **mtx, Vtx **vtx, void * frame_buffer_1, void 
     s32 x;
     s32 y;
 
+    // [port] On N64, the RDP copies frame_buffer_2 → frame_buffer_1 via gDPSetColorImage
+    // redirect. On PC, gDPSetColorImage doesn't redirect GPU output to CPU buffers,
+    // so do the copy via CPU. The DL commands below still draw the texture to the
+    // visible screen for display.
+    memcpy(frame_buffer_1, frame_buffer_2, gFramebufferWidth * gFramebufferHeight * sizeof(u16));
+
     gSPDisplayList((*gfx)++, D_8036C630);
+    // [port] Invalidate texture cache so LUS re-uploads from the updated CPU buffer.
+    __gSPInvalidateTexCache((*gfx)++, 0);
     gDPSetColorImage((*gfx)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, gFramebufferWidth, OS_PHYSICAL_TO_K0(frame_buffer_1));
     for(y = 0;  y < gFramebufferHeight / 32 + 1; y++){
         for(x = 0; x < gFramebufferWidth / 32 + 1; x++){
@@ -47,7 +56,7 @@ void func_80314BB0(Gfx **gfx, Mtx **mtx, Vtx **vtx, void * frame_buffer_1, void 
                 0x20*x, 0x20*y, 0x20*(x + 1) - 1, 0x20*(y + 1) - 1,
                 0, G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, 0, 0 // [port] NULL→0 for pal
             );
-            gSPScisTextureRectangle((*gfx)++, (0x20*x)*4, (0x20*y)*4, 0x20*(x + 1)*4, (0x20*(y + 1)*4), 
+            gSPScisTextureRectangle((*gfx)++, (0x20*x)*4, (0x20*y)*4, 0x20*(x + 1)*4, (0x20*(y + 1)*4),
                 G_TX_RENDERTILE, (0x20*x)<<5, (0x20*y)<<5, 0x400, 0x400
             );
         }

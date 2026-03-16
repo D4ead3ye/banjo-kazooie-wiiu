@@ -53,13 +53,13 @@ void sfxInstruments_init(void){
 
 int func_8033531C(enum sfx_e uid, struct46s *arg1){
     if (sfx_sound_bank == NULL) return 0; // [port] audio not initialized
-    return func_80244608(sfx_sound_bank, (s16) (uid + 1), arg1);
+    return (int)(intptr_t)func_80244608(sfx_sound_bank, (s16) (uid + 1), arg1); // [port] void* return to int
 }
 
 int func_80335354(int uid, struct46s *arg1){
     ALBank *bank = music_get_sound_bank();
     if (bank == NULL) return 0; // [port] audio not initialized
-    return func_80244608(bank, (s16) (uid + 1), arg1);
+    return (int)(intptr_t)func_80244608(bank, (s16) (uid + 1), arg1); // [port] void* return to int
 }
 
 void func_80335394(s32 arg0, f32 arg1){

@@ -72,25 +72,43 @@ void WriteNodeProp(std::vector<uint8_t>& out, const BKMapNodeProp& node) {
     AppendValue<int16_t>(out, node.position[1]);
     AppendValue<int16_t>(out, node.position[2]);
 
-    // [port] Pack bitfields in native (little-endian) order to match the compiler's
-    // bitfield layout in NodeProp. The struct declares `u16 radius:9; bit6:6; bit0:1;`
-    // which on LE places radius at bits 0-8, bit6 at bits 9-14, bit0 at bit 15.
+    // [port] Pack bitfields in native order to match compiler's layout in NodeProp.
+    // NodeProp declares `u16 radius:9; bit6:6; bit0:1;`
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+    // BE: first field at MSB → radius at bits 15-7, bit6 at bits 6-1, bit0 at bit 0
+    const uint16_t f1 =
+        static_cast<uint16_t>(((node.radius & 0x1FF) << 7) | ((node.bit6 & 0x3F) << 1) | (node.bit0 & 0x01));
+#else
+    // LE: first field at LSB → radius at bits 0-8, bit6 at bits 9-14, bit0 at bit 15
     const uint16_t f1 =
         static_cast<uint16_t>((node.radius & 0x1FF) | ((node.bit6 & 0x3F) << 9) | ((node.bit0 & 0x01) << 15));
+#endif
     AppendValue<uint16_t>(out, f1);
     AppendValue<uint16_t>(out, node.unk8);
     AppendValue<uint8_t>(out, node.unkA);
     AppendValue<uint8_t>(out, node.padB);
 
-    // `u32 yaw:9; scale:23;` → LE: yaw at bits 0-8, scale at bits 9-31
+    // `u32 yaw:9; scale:23;`
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+    // BE: yaw at bits 31-23, scale at bits 22-0
+    const uint32_t f2 = ((node.yaw & 0x1FF) << 23) | (node.scale & 0x7FFFFF);
+#else
+    // LE: yaw at bits 0-8, scale at bits 9-31
     const uint32_t f2 = (node.yaw & 0x1FF) | ((node.scale & 0x7FFFFF) << 9);
+#endif
     AppendValue<uint32_t>(out, f2);
 
     // `u32 unk10_31:12; unk10_19:12; pad10_7:1; unk10_6:1; pad10_5:4; unk10_0:2;`
-    // LE: first declared field at LSB → unk10_31 at bits 0-11, unk10_19 at bits 12-23,
-    //     pad10_7 at bit 24, unk10_6 at bit 25, pad10_5 at bits 26-29, unk10_0 at bits 30-31
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+    // BE: first field at MSB → unk10_31 at bits 31-20, unk10_19 at bits 19-8, etc.
+    const uint32_t f3 = ((node.unk10_31 & 0xFFF) << 20) | ((node.unk10_19 & 0xFFF) << 8) |
+                        ((node.pad10_7 & 0x01) << 7) | ((node.unk10_6 & 0x01) << 6) | ((node.pad10_5 & 0x0F) << 2) |
+                        (node.unk10_0 & 0x03);
+#else
+    // LE: first field at LSB → unk10_31 at bits 0-11, unk10_19 at bits 12-23, etc.
     const uint32_t f3 = (node.unk10_31 & 0xFFF) | ((node.unk10_19 & 0xFFF) << 12) | ((node.pad10_7 & 0x01) << 24) |
                         ((node.unk10_6 & 0x01) << 25) | ((node.pad10_5 & 0x0F) << 26) | ((node.unk10_0 & 0x03) << 30);
+#endif
     AppendValue<uint32_t>(out, f3);
 }
 
@@ -214,7 +232,11 @@ void SerializeLegacyMapData(std::vector<uint8_t>& out, const std::vector<BKMapCu
                 break;
         }
 
-        out.push_back(0x00);
+        // [port] Type 0 cameras have NO inner data and NO inner 0x00 terminator.
+        // Types 1-4 each have a while(!isNextByte(0)) loop that consumes this terminator.
+        if (cam.type != 0) {
+            out.push_back(0x00);
+        }
     }
     out.push_back(0x00);
 

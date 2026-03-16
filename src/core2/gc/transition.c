@@ -6,6 +6,9 @@
 
 void anctrl_setAnimTimer(AnimCtrl*, f32);
 void func_8025AC20(s32, s32, s32, f32, char*, s32);
+extern void port_setViBlack(int active);     // [port] display blanking (black screen after readback)
+extern void port_freezeReadback(int freeze); // [port] freeze gFramebuffers for transition capture
+extern void port_requestReadback(void);      // [port] request GPU→CPU readback for next frame
 
 typedef enum {
     TRANSITION_ID_1_BLACK_IN = 1,
@@ -165,7 +168,7 @@ MapTransitionInfo *_gctranstion_get_map_transition_info(s32 map_indx){
 
 void _gctranstion_changeState(s32 state, TransitionInfo *desc){
     if(s_current_transition.model_ptr != NULL){
-        func_8033BD20(&s_current_transition.model_ptr);
+        func_8033BD20((void **)&s_current_transition.model_ptr); // [port]
     }
 
     if(s_current_transition.anctrl != NULL){
@@ -200,6 +203,8 @@ void _gctranstion_changeState(s32 state, TransitionInfo *desc){
         }
         else{
             osViBlack(1);
+            port_setViBlack(1); // [port] hide screen (readback still runs so gFramebuffers gets the world)
+            port_requestReadback(); // [port] need readback active for transition capture
             anctrl_setAnimTimer(s_current_transition.anctrl, 0.25f); //set animation timer
         }
         anctrl_start(s_current_transition.anctrl, "gctransition.c", 0x125); 
@@ -436,17 +441,21 @@ void gctransition_update(void){
                 case 0:
                     break;
                 case 1:
+                    port_requestReadback(); // [port] ensure readback has valid data before freeze
                     func_8028F7C8(1);
                     func_80335110(0);
                     break;
                 case 2:
                     func_80335128(0);
+                    port_freezeReadback(1); // [port] next draw is black — freeze so gFramebuffers keeps world for substate 3 capture
                     break;
                 case 3:
                     func_802FEF48(s_current_transition.model_ptr); //framebuffer to model texture list
                     break;
                 case 4:
                     osViBlack(0);
+                    port_setViBlack(0);     // [port] show screen again
+                    port_freezeReadback(0); // [port] resume readback
                     break;
                 default:
                    s_current_transition.timer += dt;
@@ -459,10 +468,12 @@ void gctransition_update(void){
                     s_current_transition.timer += dt;
                     break;
                 case 0:
+                    break;
                 case 1:
+                    port_requestReadback(); // [port] ensure readback has valid data for substate 2 capture
                     break;
                 case 2:
-                    func_80335128(0); 
+                    func_80335128(0);
                     func_802FEF48(s_current_transition.model_ptr); //framebuffer to model texture list
                     break;
                 

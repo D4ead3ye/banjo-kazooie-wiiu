@@ -9,7 +9,7 @@ u8 D_8038BFC2;
 
 
 #if VERSION == US_1_0
-int func_8038AAB0(void){return 0;}
+int func_8038AAB0(s32 arg0, s32 arg1){return 0;} // [port] PAL takes 2 args, US stub ignores them
 
 #elif VERSION == PAL
 // void func_8038AAB0(s32 arg0, s32 arg1){

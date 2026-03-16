@@ -12,13 +12,17 @@ void func_8034CE90(s32 arg0, BKVtxRef *arg1, Vtx *arg2, void *arg3){
     }
 }
 
-void func_8034CF6C(Struct72s *arg0){}
+void func_8034CF6C(void *arg0_){ // [port] void* for prototype compatibility
+    Struct72s *arg0 = (Struct72s *)arg0_; (void)arg0;
+}
 
-void func_8034CF74(Struct72s *arg0, s32 arg1, BKModel *arg2, s32 arg3){
+void func_8034CF74(void *arg0_, s32 arg1, BKModel *arg2, s32 arg3){ // [port] void* for prototype compatibility
+    Struct72s *arg0 = (Struct72s *)arg0_;
     arg0->unk0 = 1.0f;
 }
 
-void func_8034CF90(Struct72s *arg0, BKModel *arg1, s32 arg2) {
+void func_8034CF90(void *arg0_, BKModel *arg1, s32 arg2) { // [port] void* for prototype compatibility
+    Struct72s *arg0 = (Struct72s *)arg0_;
     arg0->unk0 += randf2(-0.04f, 0.04f);
     arg0->unk0 = (arg0->unk0 > 1.0f) ? 1.0f : arg0->unk0;
     arg0->unk0 = (arg0->unk0 < 0.8) ? 0.8 : arg0->unk0;

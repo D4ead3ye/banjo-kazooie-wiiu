@@ -98,7 +98,7 @@ void boneTransformList_interpolate(BoneTransformList *this, BoneTransformList *s
 
 
 void func_8033A8F0(BoneTransformList *this, s32 bone_id, f32 arg2[4]){
-    vec4f_clone(&this->ptr[bone_id], arg2);
+    vec4f_clone((f32 *)&this->ptr[bone_id], arg2); // [port] BoneTransform* → f32*: first member is f32[4]
 }
 
 void boneTransformList_setBoneScale(BoneTransformList *this, s32 bone_id, f32 scale[3]) {

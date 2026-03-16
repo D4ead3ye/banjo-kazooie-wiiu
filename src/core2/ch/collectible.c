@@ -4,7 +4,7 @@
 
 
 extern void actor_setOpacity(Actor*,s32);
-extern void func_8035644C(u32);
+// extern void func_8035644C(u32); // [port] removed — prototype in port_prototypes.h (enum file_progress_e param)
 
 bool chCollectible_collectItem(Actor*, enum file_progress_e, enum asset_e, enum comusic_e, enum item_e, f32);
 Actor *chCollectible_draw(ActorMarker *this, Gfx **gdl, Mtx **mptr, Vtx **arg3);

@@ -59,7 +59,7 @@ u8 partEmitMgrEnable;
 void func_802EE930(ParticleEmitter *this){
     func_8033B388(&this->sprite_1C, &this->unk34);
     if(this->model_20)
-        func_8033BD20(&this->model_20);
+        func_8033BD20((void **)&this->model_20); // [port]
 }
 
 int func_802EE974(ParticleEmitter *this, f32 (*arg1)[3], f32 (*arg2)[3], f32 (*arg3)[3], s32 arg4){
@@ -421,7 +421,7 @@ void particleEmitter_setParticleFramerateRange(ParticleEmitter *this, f32 arg1, 
     this->particleFramerateRange_8C_max = arg2;
 }
 
-void func_802EFAB0(ParticleEmitter *this, s32 arg1, f32 arg2){
+void func_802EFAB0(ParticleEmitter *this, uintptr_t arg1, f32 arg2){ // [port] was s32 — carries Struct70s*
     this->unk100 = arg1;
     this->unk104 = (s16) arg2;
 }
@@ -649,7 +649,7 @@ void particleEmitter_update(ParticleEmitter *this){
                 particle->velocity_50[2] = particle->velocity_50[2] + particle->acceleration[2]*tick;
 
                 if(this->unk100){
-                    particle->position[1] = func_8034E698(this->unk100) + this->unk104;
+                    particle->position[1] = func_8034E698((Struct73s*)this->unk100) + this->unk104; // [port] unk100 is uintptr_t
                 }//L802F0254
 
                 if( 0.0f != this->unkFC

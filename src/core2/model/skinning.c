@@ -1,7 +1,6 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
-
 extern void mlMtx_apply_f3(f32[3], f32, f32, f32);
 extern  s32 func_802EBAE0(BKModelUnk14List *arg0, f32 position[3], f32 rotation[3], f32 scale, f32 arg4[3], AnimMtxList* arg5, f32 arg6[3], f32 arg7, f32 arg8[3]);
 extern MtxF *animMtxList_get(AnimMtxList *this, s32 arg1);

@@ -3,8 +3,8 @@
 #include "variables.h"
 #include "core2/particle.h"
 
-extern bool func_8024549C(f32[3], f32);
-extern void func_802EFAB0(ParticleEmitter *, s32, f32);
+extern BKCollisionTri *func_8024549C(f32[3], f32); // [port] was bool — returns BKCollisionTri*
+extern void func_802EFAB0(ParticleEmitter *, uintptr_t, f32); // [port] was s32 — carries Struct70s*
 extern void func_802F0EAC(ParticleEmitter *, f32);
 extern ParticleEmitter *func_802F0EF0(u8);
 
@@ -38,27 +38,27 @@ Struct_Core2_6C3E0 D_80368B30[] = {
 u8 D_80380A60;
 
 /* .code */
-bool __fxRipple_802F3370(f32 position[3], s32 *arg1, bool arg2){
+bool __fxRipple_802F3370(f32 position[3], intptr_t *arg1, uintptr_t arg2){ // [port] arg1 was s32* — carries Struct70s* from func_80245524
     f32 sp1C;
 
     *arg1 = 0;
     if(arg2){
         position[1] += 1.0f;
     } else {
-        arg2 = func_8024549C(position, 20.0f);
+        arg2 = (uintptr_t)func_8024549C(position, 20.0f);
         if(!arg2){
             return false;
         }
     }
-    
-    if(func_80245524(position, arg2, arg1, &sp1C)){
+
+    if(func_80245524(position, (void*)arg2, arg1, &sp1C)){
         position[1] = sp1C;
     }
     return true;
 }
 
-ParticleEmitter *__fxRipple_create(s32 arg0, f32 position[3], bool arg2){
-    s32 sp44;
+ParticleEmitter *__fxRipple_create(s32 arg0, f32 position[3], uintptr_t arg2){ // [port] was bool — carries BKCollisionTri*
+    intptr_t sp44; // [port] was s32 — stores Struct70s* from func_80245524
     f32 spawn_position[3];
     ParticleEmitter *p_emitter;
     s32 rgb[3];
@@ -99,7 +99,7 @@ void fxRipple_802F3554(s32 arg0, f32 position[3]){
     }
 }
 
-void fxRipple_802F3584(s32 arg0, f32 position[3], s32 arg2){
+void fxRipple_802F3584(s32 arg0, f32 position[3], uintptr_t arg2){ // [port] was s32 — carries BKCollisionTri*
     ParticleEmitter *p_emitter = __fxRipple_create(arg0, position, arg2);
     if(p_emitter != NULL){
         particleEmitter_emitN(p_emitter, 1);
@@ -118,7 +118,7 @@ ParticleEmitter *fxRipple_802F35FC(s32 arg0, f32 position[3]){
     return __fxRipple_create(arg0, position, 0);
 }
 
-ParticleEmitter *fxRipple_802F361C(s32 arg0, f32 position[3], s32 arg2){
+ParticleEmitter *fxRipple_802F361C(s32 arg0, f32 position[3], uintptr_t arg2){ // [port] was s32 — carries BKCollisionTri*
     return __fxRipple_create(arg0, position, arg2);
 }
 

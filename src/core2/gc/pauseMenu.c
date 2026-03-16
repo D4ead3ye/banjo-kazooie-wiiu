@@ -5,6 +5,8 @@
 
 #include "core2/gc/zoombox.h"
 
+extern void port_requestReadback(void); // [port]
+
 #ifndef MIN
 #define MIN(s, t) (((s) < t)?(s):(t))
 #endif
@@ -41,11 +43,11 @@ bool func_802FD2D4(void);
 bool func_802FC3C4(void);
 extern void func_8025A2B0(void);
 extern void func_8025A430(s32, s32, s32);
-extern void func_802DC528(s32, s32);
+// extern void func_802DC528(s32, s32); // [port] removed — (NodeProp*, ActorMarker*) in port_prototypes.h
 extern void func_802F5060(enum asset_e);
 extern void func_802F5188(void);
 extern void func_802FACA4(enum item_e);
-extern void func_8033BD20(void *);
+// extern void func_8033BD20(void *); // [port] removed — (void**) in port_prototypes.h
 
 enum gcpausemenu_state_e {
     PAUSE_STATE_0_MENU_INIT,
@@ -89,16 +91,23 @@ enum gcpausemenu_menu_e {
 /* .data */
 struct1As D_8036C4E0[4] = {
     {0.0f, 0.0f, "RETURN TO GAME",         55, ZOOMBOX_SPRITE_4_BANJO_1, 0},
-    {0.3f, 0.0f, "EXIT TO WITCH'S LAIR", -100, ZOOMBOX_SPRITE_4_BANJO_1, 0},
+    {0.3f, 0.0f, "EXIT TO LAIR",          -100, ZOOMBOX_SPRITE_5_GRUNTILDA_2, 0},
     {0.1f, 0.0f, "VIEW TOTALS",            90, ZOOMBOX_SPRITE_6_JIGGY_1, 0},
     {0.2f, 0.0f, "SAVE AND QUIT",         125, ZOOMBOX_SPRITE_7_TOOTY_1, 0},
 };
 
+// [port] str fields are written to by gcpausemenu_printLevelTotals (strcpy/strcat).
+// String literals are read-only on modern compilers; use mutable char arrays instead.
+static u8 D_8036C520_str0[32] = "cc999 / 999cc";
+static u8 D_8036C520_str1[32] = "cc999 / 999cc";
+static u8 D_8036C520_str2[32] = "cc999 / 999cc";
+static u8 D_8036C520_str3[32] = "cc999 : 999cc";
+
 struct1As D_8036C520[4] = {
-    {0.0f, 0.0f, "cc999 / 999cc",  30, ZOOMBOX_SPRITE_8_MUSIC_NOTE_1,     0},
-    {0.1f, 0.0f, "cc999 / 999cc",  66, ZOOMBOX_SPRITE_9_JIGGY_2,          0},
-    {0.2f, 0.0f, "cc999 / 999cc", 102, ZOOMBOX_SPRITE_A_EXTRA_HEALTH_MAX, 0},
-    {0.3f, 0.0f, "cc999 : 999cc", 138, ZOOMBOX_SPRITE_B_CLOCK,            0},
+    {0.0f, 0.0f, D_8036C520_str0,  30, ZOOMBOX_SPRITE_8_MUSIC_NOTE_1,     0},
+    {0.1f, 0.0f, D_8036C520_str1,  66, ZOOMBOX_SPRITE_9_JIGGY_2,          0},
+    {0.2f, 0.0f, D_8036C520_str2, 102, ZOOMBOX_SPRITE_A_EXTRA_HEALTH_MAX, 0},
+    {0.3f, 0.0f, D_8036C520_str3, 138, ZOOMBOX_SPRITE_B_CLOCK,            0},
 };
 
 struct1Bs D_8036C560[] = {
@@ -237,8 +246,23 @@ void gcpausemenu_free(void) {
 
 void gcpausemenu_zoomboxes_initMainMenu(void) {
     s32 i;
+    // [port] When exit-to-lair is enabled, use evenly spaced y positions
+    // and a smaller Gruntilda portrait. Original layout has y=-100 (off-screen)
+    // for the disabled exit-to-lair slot.
+    s32 y_pos[4];
+    GcZoomboxSprite portraits[4];
     for (i = 0; i < 4; i++) {
-        D_80383010.zoombox[i] = gczoombox_new(D_8036C4E0[i].y, D_8036C4E0[i].portrait, 2, 0, gcpausemenu_zoombox_callback);
+        y_pos[i] = D_8036C4E0[i].y;
+        portraits[i] = D_8036C4E0[i].portrait;
+    }
+    if (!D_80383010.return_to_lair_disabled) {
+        y_pos[0] = 50;
+        y_pos[1] = 80;
+        y_pos[2] = 110;
+        y_pos[3] = 140;
+    }
+    for (i = 0; i < 4; i++) {
+        D_80383010.zoombox[i] = gczoombox_new(y_pos[i], portraits[i], 2, 0, gcpausemenu_zoombox_callback);
         gczoombox_func_803184C8(D_80383010.zoombox[i], 60.0f, 5, 2, 0.3f, 0, 0);
         func_80318640(D_80383010.zoombox[i], 0x1C, 0.75f, 0.9f, 0);
         func_80318760(D_80383010.zoombox[i], 8000);
@@ -643,8 +667,8 @@ void gcPauseMenu_setState(enum gcpausemenu_state_e next_state) {
 
         case PAUSE_STATE_12_SNS_DISPOSE: /* 8B978 80312908 3C128038 */
             D_80383010.selection = D_80383010.page;
-            func_8033BD20(&D_80383010.sns_egg_model); //free
-            func_8033BD20(&D_80383010.ice_key_model); //free
+            func_8033BD20((void **)&D_80383010.sns_egg_model); //free // [port]
+            func_8033BD20((void **)&D_80383010.ice_key_model); //free // [port]
             break;
 
         case PAUSE_STATE_13_EXIT_PAUSE: /* 8B9A8 80312938 3C128038 */
@@ -707,9 +731,16 @@ void gcpausemenu_zoombox_callback(s32 portrait_id, s32 zoombox_state) {
     }
 
     if ((zoombox_state == 2) &&
-        (D_80383010.menu == PAUSE_MENU_0_MAIN) &&
-        (portrait_id - 4 != D_80383010.selection)) {
-        gczoombox_highlight(D_80383010.zoombox[portrait_id - 4], 0);
+        (D_80383010.menu == PAUSE_MENU_0_MAIN)) {
+        // [port] Find zoombox index by portrait_id instead of hardcoded portrait_id - 4.
+        s32 idx;
+        for (idx = 0; idx < 4; idx++) {
+            if (D_80383010.zoombox[idx] != NULL && D_80383010.zoombox[idx]->portrait_id == portrait_id)
+                break;
+        }
+        if (idx < 4 && idx != D_80383010.selection) {
+            gczoombox_highlight(D_80383010.zoombox[idx], 0);
+        }
     }
 }
 
@@ -732,7 +763,12 @@ s32 gcpausemenu_initLargestPageIndex(void) {
 }
 
 bool gcpausemenu_initReturnToLair(void) {
+#ifdef ENHANCEMENT
+    s32 level = level_get();
+    return !(level > 0 && level < LEVEL_C_BOSS && D_8036C560[level - 1].map != -1);
+#else
     return true;
+#endif
 }
 
 void gcpausemenu_init(void) {
@@ -1358,45 +1394,56 @@ void gcpausemenu_draw(Gfx **gfx, Mtx **mtx, Vtx **vtx) {
         return;
     }
 
-    if (D_8036C620) {
+    if (D_8036C620 == 1) {
+        port_requestReadback(); // [port] request readback so snapshot has valid data next frame
         func_8033B61C();
+        D_8036C620 = 2;
+    }
+    else if (D_8036C620 == 2) {
+        // [port] gFramebuffers now has valid data, take snapshot
         func_80315084(gfx, mtx, vtx);
-        D_8036C620 = false;
+        D_8036C620 = 0;
     }
     else {
         func_80315110(gfx, mtx, vtx);
     }
 
+    // [port] Draw selected zoombox last so it renders on top of neighbors
     for (i = 0; i < 4; i++) {
-        gczoombox_draw(D_80383010.zoombox[i], gfx, mtx, vtx);
+        if (i != D_80383010.selection)
+            gczoombox_draw(D_80383010.zoombox[i], gfx, mtx, vtx);
     }
+    gczoombox_draw(D_80383010.zoombox[D_80383010.selection], gfx, mtx, vtx);
 
     gcpausemenu_drawSprite(gfx, mtx, vtx, D_80383010.joystick_sprite, D_80383010.joystick_frame, 30.0f, 196.0f, 1, (s32) D_80383010.left_joystick_alpha);
     gcpausemenu_drawSprite(gfx, mtx, vtx, D_80383010.joystick_sprite, D_80383010.joystick_frame, (f32)(gFramebufferWidth - 0x1E), 196.0f, 0, (s32) D_80383010.right_joystick_alpha);
-    var_a0 = ((*((u32 * ) & D_80383010.state) << 0x1c) >> 0x1f); //left_joystick_visible
+    // [port] Original decomp used raw u32 bit extraction: ((*((u32*)&D_80383010.state) << N) >> 0x1f)
+    // This depends on big-endian byte order (byte 3 of the u32 is the bitfield byte on MIPS).
+    // On little-endian, byte 0 of the u32 is 'state', so the shifts extract wrong bits.
+    // Replace with direct struct member access.
+    var_a0 = D_80383010.left_joystick_visible;
     if (var_a0 != 0) {
         if (D_80383010.left_joystick_alpha < 0xFF) {
             D_80383010.left_joystick_alpha = (D_80383010.left_joystick_alpha + 0xC < 0xFF) ? D_80383010.left_joystick_alpha + 0xC : 0xFF;
         }
     }
-    var_a0 = ((*((u32 * ) & D_80383010.state) << 0x1c) >> 0x1f); //left_joystick_visible
     if (var_a0 == 0) {
         if (D_80383010.left_joystick_alpha > 0) {
             D_80383010.left_joystick_alpha = (D_80383010.left_joystick_alpha - 0xC > 0) ? D_80383010.left_joystick_alpha - 0xC : 0;
         }
     }
-    if (((*((u32 * ) & D_80383010.state) << 0x1d) >> 0x1f) != 0) { //right_joystick_visible
+    if (D_80383010.right_joystick_visible != 0) {
         if (D_80383010.right_joystick_alpha < 0xFF) {
             D_80383010.right_joystick_alpha = (D_80383010.right_joystick_alpha + 0xC < 0xFF) ? D_80383010.right_joystick_alpha + 0xC : 0xFF;
         }
     }
-    if (((*((u32 * ) & D_80383010.state) << 0x1d) >> 0x1f) == 0) {//right_joystick_visible
+    if (D_80383010.right_joystick_visible == 0) {
         if (D_80383010.right_joystick_alpha > 0) {
             D_80383010.right_joystick_alpha = (D_80383010.right_joystick_alpha - 0xC > 0) ? D_80383010.right_joystick_alpha - 0xC : 0;
         }
     }
     gcpausemenu_drawSprite(gfx, mtx, vtx, D_80383010.b_button_sprite, (s32) D_80383010.b_button_frame, gFramebufferWidth * 0.5, 196.0f, 0, (s32) D_80383010.b_button_alpha);
-    var_a0 = ((*((u32 * ) & D_80383010.state) << 0x1e) >> 0x1f);//b_button_visible
+    var_a0 = D_80383010.b_button_visible;
     if (var_a0 != 0) {
         if (D_80383010.b_button_alpha < 0xFF) {
             D_80383010.b_button_alpha = (D_80383010.b_button_alpha + 0xC < 0xFF) ? D_80383010.b_button_alpha + 0xC : 0xFF;
@@ -1404,7 +1451,7 @@ void gcpausemenu_draw(Gfx **gfx, Mtx **mtx, Vtx **vtx) {
         }
     }
 
-    if (var_a0 == 0) { //b_button_visible
+    if (var_a0 == 0) {
         if (D_80383010.b_button_alpha > 0) {
             D_80383010.b_button_alpha = (D_80383010.b_button_alpha - 0xC > 0) ? D_80383010.b_button_alpha - 0xC : 0;
         }

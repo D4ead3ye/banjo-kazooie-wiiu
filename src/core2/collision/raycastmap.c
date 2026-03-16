@@ -132,7 +132,7 @@ void func_80357F0C(Actor *this, s32 next_state) {
             sp54[0] += randf2(-300.0f, 300.0f);
             sp54[1] += randf2(-100.0f, 100.0f);
             sp54[2] += randf2(-300.0f, 300.0f);
-            if (func_80329210(this, sp54))
+            if (func_80329210(this, &sp54))
                 break;
         }
         if (var_s0 == 0xA) {
@@ -378,7 +378,7 @@ void func_80358684(Actor *this) {
             }
         }
         if (local->unk39 == 1) {
-            if ((func_80357C30(this) == 0) || ((this->state == 3) && (func_80329210(this, this->position) == 0))) {
+            if ((func_80357C30(this) == 0) || ((this->state == 3) && (func_80329210(this, &this->position) == 0))) {
                 local->unk18[0] = (f32) this->position[0];
                 local->unk18[1] = (f32) this->position[1];
                 local->unk18[2] = (f32) this->position[2];
@@ -410,7 +410,7 @@ void func_80358684(Actor *this) {
         if (this->state == 1) {
             player_getPosition(sp60);
             sp60[1] += 50.0f;
-            if (func_80329210(this, sp60) && (sp60[1] < (local->unk30[1] + 300)) && !func_8028F25C() && this->marker->unk14_21) {
+            if (func_80329210(this, &sp60) && (sp60[1] < (local->unk30[1] + 300)) && !func_8028F25C() && this->marker->unk14_21) {
                 sp60[0] = 0.0f;
                 sp54[0] = this->position[0];
                 sp54[1] = this->position[1];

@@ -61,8 +61,8 @@ Actor *func_8038846C(ActorMarker * marker, Gfx **gdl, Mtx **mptr, Vtx **vtx){
         sp40[0] = 0.0f;
         sp40[1] = local->unk0;
         sp40[2] = 0.0f;
-        func_80345C78(&sp4C, &sp40);
-        func_8033A8F0(sp5C, 1, &sp4C);
+        func_80345C78(sp4C, sp40);
+        func_8033A8F0(sp5C, 1, sp4C);
 
         sp34[0] = 0.0f;
         sp34[1] = 0.0f;

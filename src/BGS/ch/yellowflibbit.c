@@ -88,7 +88,7 @@ bool func_8038D468(Actor *this) {
             sp30[0] = this->position[0] + sp3C[0];
             sp30[1] = this->position[1] + sp3C[1];
             sp30[2] = this->position[2] + sp3C[2];
-            if (func_80329210(this, sp30)) {
+            if (func_80329210(this, &sp30)) {
                 return func_8038D2F4(this, sp30, 1);
             }
         }
@@ -124,7 +124,7 @@ bool func_8038D5A8(Actor *this) {
             sp3C[1] = (f32) local->unk10[1];
             sp3C[2] = (f32) local->unk10[2];
         }
-        if (func_80329210(this, sp3C) != 0) {
+        if (func_80329210(this, &sp3C) != 0) {
             return func_8038D2F4(this, sp3C, 0);
         }
     }
@@ -156,7 +156,7 @@ s32 func_8038D768(Actor *this) {
         sp68[0] = this->position[0] + sp68[0];
         sp68[1] = this->position[1] + sp68[1];
         sp68[2] = this->position[2] + sp68[2];
-        if (func_80329210(this, sp68)) {
+        if (func_80329210(this, &sp68)) {
             return func_8038D2F4(this, sp68, 0);
         }
     }
@@ -403,7 +403,7 @@ void BGS_func_8038E034(Actor *this) {
     }
 
     if(this->state == 3){
-         if (func_80329210(this, spB4)) {
+         if (func_80329210(this, &spB4)) {
                 func_8038D9D0(this, 5);
             } else {
                 func_8038D9D0(this, 1);

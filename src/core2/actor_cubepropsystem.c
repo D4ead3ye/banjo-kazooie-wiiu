@@ -25,7 +25,7 @@ extern Cube *func_80308224(void);
 extern Cube *func_8030364C(void);
 extern Cube *cube_atPosition_s32(s32 position[3]);
 
-extern f32 func_8030A590(void);
+extern f32 func_8030A590(Prop *); // [port] was (void) — takes Prop* arg (MIPS implicit $a0)
 extern void func_8030A5EC(Prop *, f32);
 
 Prop *func_80303F7C(s32, f32, s32, s32);
@@ -55,7 +55,7 @@ typedef union{
 
 typedef bool( *Method_Core2_A5BC0)(NodeProp *, s32);
 
-s32 func_80330974(ActorMarker *marker, s32 arg1, f32 arg2, s32 arg3);
+s32 func_80330974(ActorMarker *marker, f32 arg1[3], f32 arg2, f32 arg3[3], s32 arg4_unused);
 BKCollisionTri *func_80320DB0(f32[3], f32, f32[3], u32); // [port] was s32 — returns BKCollisionTri*
 BKModelBin *func_80330DE4(ActorMarker *this);
 
@@ -295,7 +295,7 @@ static void __marker_draw(ActorMarker *this, Gfx **gfx, Mtx **mtx, Vtx **vtx){
     if( actor->unk58_2 && !this->unk40_23 && !this->unk40_21 && !D_8036E7B0){
         func_8033A244(3700.0f);
     }
-    
+
     if(actor->unk124_7 && !actor->despawn_flag && actor->unk58_0){
         draw_dist = actor->actor_info->draw_distance;
         if(draw_dist != 0){
@@ -901,7 +901,6 @@ void code7AF80_initCubeFromFile(File *file_ptr, Cube *cube) {
         node_prop_ptr = (NodeProp*) bk_malloc(cube1_count * sizeof(NodeProp));
         file_getNBytes_ifExpected(file_ptr, 0xB, (u8*)node_prop_ptr, cube->prop1Cnt * sizeof(NodeProp)); // [port] NodeProp* to u8*
         __codeA5BC0_initPropPointerForCube(node_prop_ptr, cube, cube1_count);
-        
     } else if (file_getByte_ifExpected(file_ptr, 6, &cube1_count)) {
         __codeA5BC0_freeCube1Pointer(cube, cube1_count);
         cube->prop1Ptr = (NodeProp*) bk_malloc(cube1_count * sizeof(OtherNode)); // [port] OtherNode* to NodeProp* — OtherNode can substitute NodeProp in prop1Ptr
@@ -1525,7 +1524,7 @@ void func_803306C8(s32 arg0) {
                 if (!D_8036E7CC);
 
                 var_s0_2 = true;
-                func_8033B338(&var_a2->unk4, &var_a2->unk8);
+                func_8033B338((void **)&var_a2->unk4, &var_a2->unk8); // [port]
             }
             if ((arg0 != 1) && (var_s0_2 == 1) && (func_80254BC4(1))) {
                 return;
@@ -1595,7 +1594,7 @@ s32 func_80330974(ActorMarker *marker, f32 arg1[3], f32 arg2, f32 arg3[3], s32 a
 }
 
 Struct6Cs *func_80330B10(void){
-    static Struct6Cs D_8036E7D0 = {NULL, NULL, NULL, func_80330974};
+    static Struct6Cs D_8036E7D0 = {NULL, NULL, NULL, (s32 (*)(struct actorMarker_s *, f32[3], f32, f32[3], s32))func_80330974}; // [port]
     return &D_8036E7D0;
 }
 
@@ -1731,7 +1730,8 @@ s32 codeA5BC0_getNodePropUnk8(NodeProp *arg0){
     return arg0->unk8;
 }
 
-s32 codeA5BC0_getPositionAndReturnRadius(NodeProp *arg0, s32 arg1[3]){
+s32 codeA5BC0_getPositionAndReturnRadius(void *arg0_, s32 arg1[3]){ // [port] void* — callers pass NodeProp*, struct_core2_DB010*
+    NodeProp *arg0 = (NodeProp *)arg0_;
     arg1[0] = arg0->x;
     arg1[1] = arg0->y;
     arg1[2] = arg0->z;
@@ -2138,7 +2138,11 @@ f32 func_80331F1C(Prop *arg0){
     // [port] func_8030A428 can return NULL when asset is missing from o2r (N64 ROM always had it)
     BKModelBin *model = func_8030A428(arg0->modelProp.unk0_31);
     if (model == NULL) return 0.0f;
-    return vtxList_getGlobalNorm(model_getVtxList(model));
+    // [port] model_getVtxList offsets into the model blob; if vtx_list_offset is 0 it returns the header itself
+    if (model->vtx_list_offset_10 == 0) return 0.0f;
+    BKVertexList *vtx = model_getVtxList(model);
+    if (vtx == NULL) return 0.0f;
+    return vtxList_getGlobalNorm(vtx);
 }
 
 f32 func_80331F54(ActorMarker *marker) {
@@ -2148,13 +2152,16 @@ f32 func_80331F54(ActorMarker *marker) {
 
     model = marker_loadModelBin(marker);
     if (model == NULL) {
-        return 1.0f;
+        // [port] On N64, sprites and models were interchangeable raw blobs.
+        // marker_loadModelBin returns NULL for sprite assets on PC.
+        // Fall back to sprite-based radius so collectibles get a non-zero hitbox.
+        return func_80331E64(marker);
     }
     // [port] On N64, sprites and models were raw binary blobs that could be type-punned.
     // On PC, sprite assets produce BKSprite structs, not BKModelBin. Skip model-specific
     // vertex bounds for sprite assets to prevent reading invalid model fields.
     if (!ResourceMgr_IsModelAsset(marker->modelId)) {
-        return 1.0f;
+        return func_80331E64(marker);
     }
     vtxList_getCenterAndNorm(model_getVtxList(model), model_center, &sp34);
     if (marker->unk3E_0) {
@@ -2199,7 +2206,7 @@ f32 func_803320BC(ActorProp *prop, f32 (*arg1)(ActorMarker *)) {
 f32 func_80332220(Prop * prop, f32 (*arg1)(Prop *)) {
     f32 phi_f12;
 
-    phi_f12 = func_8030A590();
+    phi_f12 = func_8030A590(prop); // [port] was missing arg — MIPS $a0 implicit passthrough
     if (phi_f12 == 0.0f) {
         func_8030A5EC(prop, phi_f12 = arg1(prop) * 0.5);
     }
@@ -2242,7 +2249,7 @@ Prop *func_803322F0(Cube *cube, ActorMarker *marker, f32 arg2, s32 arg3, s32 *ar
                             && (func_803327A8(phi_s1->actorProp.marker->modelId) & arg3)
                         ) {
                             if( phi_s1->actorProp.unk8_1
-                                && (phi_s1->actorProp.marker->unk18 != NULL) 
+                                && (phi_s1->actorProp.marker->unk18 != NULL)
                                 && (phi_s1->actorProp.marker->unk18->unkC != NULL)
                             ) {
                                 func_803320BC((ActorProp *)phi_s1, &func_80331F54); // [port] Prop* to ActorProp* — union member cast

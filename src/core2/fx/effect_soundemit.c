@@ -80,8 +80,8 @@ void func_803591E8(Actor *this, s32 next_state){
         func_802F8CB0(func_802F7C38());
 
     if(next_state == 3){
-        sp20 = func_802F7C7C();
-        func_802F8338(sp20);
+        sp20 = (s32)(intptr_t)func_802F7C7C(); // [port] struct3s* to s32 — N64 stored pointer as s32
+        func_802F8338((struct3s *)(intptr_t)sp20); // [port] s32 to struct3s*
         if(local->unk0->unk4 == func_80359110)
             func_802F82F4(sp20, 5.0f, 30.0f, 5.0f, 30.0f);
     }

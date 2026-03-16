@@ -72,7 +72,7 @@ extern void func_8025A55C(s32, s32, s32);
 
 extern void func_80324CFC(f32, s16, s16);
 
-extern void *mapModel_getModel(s32);
+// extern void *mapModel_getModel(s32); // [port] removed — prototype in port_prototypes.h (BKModel* return type)
 extern void  player_setTransformation(s32); // set transformation
 
 //typedef migrated to "inlcude/core2/code_C9E70.h"
@@ -911,7 +911,7 @@ void func_8038D670(enum FF_Action next_state) {
             func_8028F918(2);
             if (D_8037DCB8->ffQuestionType != FFQT_4_MINIGAME) {
                 func_8038CE00();
-                gcquiz_func_8031A154(D_8037DCB8->ffQuestionType, D_8037DCB8->unkD, D_8037DCB8->unkE, __code5ED0_getQuizQuestionTime(D_8037DCB8->ffQuestionType, D_8037DCB8->unkC), 0, &func_8038D3F0);
+                gcquiz_func_8031A154(D_8037DCB8->ffQuestionType, D_8037DCB8->unkD, D_8037DCB8->unkE, __code5ED0_getQuizQuestionTime(D_8037DCB8->ffQuestionType, D_8037DCB8->unkC), 0, (void (*)(s32, s8))func_8038D3F0); // [port]
             } else {
                 func_8038D4BC();
             }
@@ -1140,8 +1140,8 @@ void func_8038DFBC(void)
 
 void func_8038E070(void)
 {
-    func_8028F85C(&D_8037DCB8->playerPosition);
-    player_setRotation(&D_8037DCB8->playerRotation);
+    func_8028F85C(D_8037DCB8->playerPosition);
+    player_setRotation(D_8037DCB8->playerRotation);
     func_8028F918(2);
 }
 

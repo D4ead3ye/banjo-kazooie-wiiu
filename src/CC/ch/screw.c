@@ -59,7 +59,7 @@ void func_803864D4(Actor *this){
         CC_func_803863F0(this, 1);
     }//L80386530
 
-    func_80388B4C(&sp4C);
+    func_80388B4C(sp4C);
     TUPLE_ASSIGN(sp40, 2640.0f, 5695.0f, -10.0f);
     local->unk8 += sp3C;
     if(ml_timer_update(&local->unk4, sp3C)){

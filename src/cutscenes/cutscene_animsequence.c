@@ -659,7 +659,7 @@ void func_803881CC(uintptr_t arg0) { // [port] was (s32) — receives pointer vi
 void func_803882D4(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
     anSeq_func_80288F78(arg0, 0.0952f, (SFX_AD_CATERPILLAR_SQUEAK << 0x10)      | (0x80 << 8) | 0x75);
     anSeq_func_80288F78(arg0, 0.5279f, (SFX_AD_CATERPILLAR_SQUEAK << 0x10)      | (0x8C << 8) | 0x94);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     anSeq_func_80288F78(arg0, 0.55f,   (SFX_C5_TWINKLY_POP << 0x10)             | (0x80 << 8 )| 0xFA);
     anSeq_func_80288F78(arg0, 0.8658f, (SFX_CC_PAUSEMENU_ENTER_SUBMENU << 0x10) | (0xD9 << 8) | 0xFA);
     anSeq_func_80288F78(arg0, 0.9485f, (SFX_2F_ORANGE_SPLAT << 0x10)            | (0x8C << 8) | 0xC3);
@@ -686,56 +686,56 @@ void func_80388490(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
 }
 
 void func_803884DC(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.001f, arg1, 3, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.001f, arg1, 4, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     anSeq_PushStep_0Arg(arg0, 0.01f, func_8038684C);
-    anSeq_setActivationFrameDelay(arg0, 7);
+    anSeq_setActivationFrameDelay((void **)arg0, 7); // [port]
     anSeq_func_80288EB0(arg0, 0.02f, 0, 35.0f, 0.8f);
-    anSeq_setActivationFrameDelay(arg0, 7);
+    anSeq_setActivationFrameDelay((void **)arg0, 7); // [port]
     anSeq_PushStep_1Arg(arg0, 0.02f, func_80386C34, (uintptr_t)arg1);
-    anSeq_setActivationFrameDelay(arg0, 0xB);
+    anSeq_setActivationFrameDelay((void **)arg0, 0xB); // [port]
     anSeq_PushStep_1Arg(arg0, 0.5f, func_80386AC8, (uintptr_t)arg1);
-    anSeq_setActivationFrameDelay(arg0, 0xB);
+    anSeq_setActivationFrameDelay((void **)arg0, 0xB); // [port]
     anSeq_PushStep_1Arg(arg0, 0.7f, func_80386DA0, (uintptr_t)arg1);
-    anSeq_setActivationFrameDelay(arg0, 5);
+    anSeq_setActivationFrameDelay((void **)arg0, 5); // [port]
     anSeq_func_80288F78(arg0, 0.149f, (SFX_17C_GRUNTY_FALLING_OFF_1 << 0x10) | (0x80 << 8) | 0xFA);
-    anSeq_setActivationFrameDelay(arg0, 0xB);
+    anSeq_setActivationFrameDelay((void **)arg0, 0xB); // [port]
     anSeq_func_80288F78(arg0, 0.2f,   (SFX_17D_GRUNTY_FALLING_OFF_2 << 0x10) | (0x80 << 8) | 0xFA);
 }
 
 void cutscenes_func_80388660(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.001f, arg1, 3, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.001f, arg1, 4, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     anSeq_PushStep_0Arg(arg0, 0.01f, func_803868B8);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     anSeq_func_80288F78(arg0, 0.149f, 0x017C80FAU);
     anSeq_func_80288F78(arg0, 0.79f, 0x280C3U);
 }
 
 void func_80388734(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.001f, arg1, 3, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.001f, arg1, 4, 0);
 }
 
 void func_803887A0(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.001f, arg1, 3, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.001f, arg1, 4, 1);
 }
 
 void func_80388814(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.001f, arg1, 4, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.001f, arg1, 5, 1);
     anSeq_func_80288F78(arg0, 0.016f, 0x87955U);
     anSeq_func_80288F78(arg0, 0.18f, 0x88C55U);
@@ -746,27 +746,27 @@ void func_80388814(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
 }
 
 void func_80388920(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.021f, arg1, 4, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.021f, arg1, 5, 1);
     anSeq_func_80288F78(arg0, 0.49f, 0x8D93EU);
     anSeq_func_80288F78(arg0, 0.99f, 0x8C03EU);
 }
 
 void func_803889CC(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.05f, arg1, 4, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.05f, arg1, 5, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     anSeq_PushStep_0Arg(arg0, 0.05f, func_80386504);
 }
 
 void func_80388A6C(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.02f, arg1, 4, 2);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.02f, arg1, 5, 2);
     func_80361D7C(arg0, 0.13f, arg1, 5, 0x4CA675U);
     func_80361D7C(arg0, 0.48f, arg1, 5, 0x4CA675U);
@@ -774,16 +774,16 @@ void func_80388A6C(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
 }
 
 void func_80388B58(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.021f, arg1, 4, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.021f, arg1, 5, 1);
 }
 
 void func_80388BCC(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.021f, arg1, 4, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.021f, arg1, 5, 1);
 }
 
@@ -818,18 +818,18 @@ void func_80388E30(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
     f32 sp2C;
 
     sp2C = 0.8f;
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 3, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 4, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     anSeq_PushStep_2Arg(arg0, 0.01f, func_80386A90, (uintptr_t)arg1, (uintptr_t)reinterpret_cast(u32, sp2C)); // [port] u32 intermediate avoids 8-byte read from 4-byte f32
 }
 
 void func_80388EE0(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 3, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 4, 0);
     anSeq_func_80288F78(arg0, 0.1667f, 0xC680FFU);
     anSeq_func_80288F78(arg0, 0.4114f, 0x2C80FFU);
@@ -837,9 +837,9 @@ void func_80388EE0(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
 }
 
 void func_80388F9C(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 3, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 4, 0);
     func_80361D7C(arg0, 0.2452f, arg1, 5, 0x6F804EU);
     func_80361D7C(arg0, 0.2858f, arg1, 5, 0x6F804EU);
@@ -850,9 +850,9 @@ void func_80388F9C(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
 }
 
 void func_803890CC(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 3, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 4, 1);
     func_80361D7C(arg0, 0.08f, arg1, 5, 0x6DB375U);
     anSeq_PushStep_1Arg(arg0, 0.08f, cutscenes_func_80387560, (uintptr_t)arg1);
@@ -863,9 +863,9 @@ void func_803890CC(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
 }
 
 void cutscenes_func_80389204(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 3, 2);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 4, 1);
     func_80361D7C(arg0, 0.08f, arg1, 5, 0x6DB34EU);
     anSeq_PushStep_1Arg(arg0, 0.08f, func_80387680, (uintptr_t)arg1);
@@ -877,9 +877,9 @@ void cutscenes_func_80389204(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) 
 
 void func_8038933C(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
     anSeq_func_80288FD8(arg0, 0.1f, 0xA60000U);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 2, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 3, 1);
     func_80361D7C(arg0, 0.3f, arg1, 5, 0xB4B3EAU);
     func_80361D7C(arg0, 0.6f, arg1, 5, 0x1F809CU);
@@ -942,17 +942,17 @@ void cutscenes_func_80389850(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) 
 }
 
 void cutscenes_func_803898C8(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.03f, arg1, 7, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.03f, arg1, 5, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.03f, arg1, 4, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.03f, arg1, 6, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.03f, arg1, 8, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.1f, arg1, 9, 1);
     anSeq_func_80288F78(arg0, 0.08f, 0x6080C3U);
     anSeq_func_80288F78(arg0, 0.35f, 0x280D2U);
@@ -995,7 +995,7 @@ void func_80389C30(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
 }
 
 void func_80389D34(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.02f, arg1, 1, 0);
 }
 
@@ -1015,11 +1015,11 @@ void func_80389DFC(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
 }
 
 void cutscenes_func_80389EA8(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.023f, arg1, 1, 1);
-    anSeq_setActivationFrameDelay(arg0, 2);
+    anSeq_setActivationFrameDelay((void **)arg0, 2); // [port]
     anSeq_func_80288EF8(arg0, 0.6f, 0, 0.1f);
-    anSeq_setActivationFrameDelay(arg0, 2);
+    anSeq_setActivationFrameDelay((void **)arg0, 2); // [port]
     anSeq_func_80288E68(arg0, 0.6f, 0, 8.0f, 8.0f);
     anSeq_func_80289090(arg0, 0.2f, 0xFF0000U, 0.4f);
     anSeq_func_80289090(arg0, 0.2f, 0x00FF00U, 0.4f);
@@ -1027,17 +1027,17 @@ void cutscenes_func_80389EA8(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) 
     anSeq_func_80289090(arg0, 0.2f, 0xFFFFFFU, 0.4f);
     anSeq_PushStep_1Arg(arg0, 0.4f, func_8038702C, (uintptr_t)arg1);
     anSeq_PushStep_1Arg(arg0, 0.4f, func_80387170, (uintptr_t)arg1);
-    anSeq_setActivationFrameDelay(arg0, 5);
+    anSeq_setActivationFrameDelay((void **)arg0, 5); // [port]
     anSeq_func_80288F38(arg0, 0.95f, 0, 0.8f);
 }
 
 void func_8038A018(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.023f, arg1, 1, 0);
 }
 
 void func_8038A05C(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.02f, arg1, 1, 0);
 }
 
@@ -1065,12 +1065,12 @@ void func_8038A254(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
     func_80361C64(arg0, 0.001f, arg1, 1, 1);
     anSeq_PushStep_1Arg(arg0, 0.4f, func_8038702C, (uintptr_t)arg1);
     anSeq_PushStep_1Arg(arg0, 0.4f, func_80387170, (uintptr_t)arg1);
-    anSeq_setActivationFrameDelay(arg0, 3);
+    anSeq_setActivationFrameDelay((void **)arg0, 3); // [port]
     anSeq_func_80288F78(arg0, 0.5f, 0x041B809CU);
 }
 
 void cutscenes_func_8038A2F0(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.023f, arg1, 1, 0);
 }
 
@@ -1106,22 +1106,22 @@ void cutscenes_func_8038A54C(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) 
 void func_8038A5C8(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
     anSeq_func_80288F78(arg0, 0.0511f, 0x6594EU);
     anSeq_func_80288F78(arg0, 0.53f, 0x6804EU);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     anSeq_func_80288F78(arg0, 0.6636f, 0xFA4C7DU);
-    anSeq_setActivationFrameDelay(arg0, 8);
+    anSeq_setActivationFrameDelay((void **)arg0, 8); // [port]
     anSeq_func_80288F78(arg0, 0.6636f, 0xFA4C7DU);
-    anSeq_setActivationFrameDelay(arg0, 0xF);
+    anSeq_setActivationFrameDelay((void **)arg0, 0xF); // [port]
     anSeq_func_80288F78(arg0, 0.6636f, 0xFA4C7DU);
-    anSeq_setActivationFrameDelay(arg0, 0x17);
+    anSeq_setActivationFrameDelay((void **)arg0, 0x17); // [port]
     anSeq_func_80288F78(arg0, 0.6636f, 0xFA4C7DU);
-    anSeq_setActivationFrameDelay(arg0, 0x1F);
+    anSeq_setActivationFrameDelay((void **)arg0, 0x1F); // [port]
     anSeq_func_80288F78(arg0, 0.6636f, 0xFA4C7DU);
 }
 
 void func_8038A6D0(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 3);
+    anSeq_setActivationFrameDelay((void **)arg0, 3); // [port]
     anSeq_func_80288F78(arg0, 0.05f, 0xFA4C7DU);
-    anSeq_setActivationFrameDelay(arg0, 0xA);
+    anSeq_setActivationFrameDelay((void **)arg0, 0xA); // [port]
     anSeq_func_80288F78(arg0, 0.05f, 0xFA467DU);
 }
 
@@ -1143,13 +1143,13 @@ void func_8038A7E8(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
 
 void cutscenes_func_8038A864(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
     func_80361CF4(arg0, 0.001f, arg1, 0.7f);
-    anSeq_setActivationFrameDelay(arg0, 2);
+    anSeq_setActivationFrameDelay((void **)arg0, 2); // [port]
     anSeq_PushStep_1Arg(arg0, 0.7f, func_80386578, (uintptr_t)arg1);
-    anSeq_setActivationFrameDelay(arg0, 2);
+    anSeq_setActivationFrameDelay((void **)arg0, 2); // [port]
     anSeq_func_80288F78(arg0, 0.7f, 0x0416736DU);
-    anSeq_setActivationFrameDelay(arg0, 3);
+    anSeq_setActivationFrameDelay((void **)arg0, 3); // [port]
     anSeq_func_80288F78(arg0, 0.6f, 0x0416736DU);
-    anSeq_setActivationFrameDelay(arg0, 4);
+    anSeq_setActivationFrameDelay((void **)arg0, 4); // [port]
     anSeq_func_80288F78(arg0, 0.6f, 0x0416736DU);
     func_80361CAC(arg0, 0.6f, arg1, 0.7f);
 }
@@ -1194,19 +1194,19 @@ void cutscenes_func_8038AB60(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) 
 }
 
 void func_8038AC54(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 3, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 4, 2);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 5, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 6, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 7, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 9, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 8, 1);
     func_80361D7C(arg0, 0.06f, arg1, 5, 0x03EA809CU);
     func_80361D7C(arg0, 0.12f, arg1, 5, 0x4E9E9CU);
@@ -1223,55 +1223,55 @@ void func_8038AC54(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
 }
 
 void func_8038AF5C(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 8, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 3, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 4, 2);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 5, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 6, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 7, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 9, 0);
 }
 
 void func_8038B098(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
     f32 sp34 = 0.8f;
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 3, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 4, 2);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 5, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 6, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 7, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 9, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 8, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     anSeq_PushStep_2Arg(arg0, 0.01f, func_80386A90, (uintptr_t)arg1, (uintptr_t)reinterpret_cast(u32, sp34)); // [port] u32 intermediate avoids 8-byte read from 4-byte f32
 }
 
 void func_8038B214(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
     anSeq_func_80288FD8(arg0, 0.03f, 0xA40000U);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 3, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 4, 2);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 5, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 6, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 7, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 9, 1);
     anSeq_func_80288F78(arg0, 0.21f, 0x3780C3U);
     anSeq_func_80288F78(arg0, 0.04f, 0x018F80FAU);
@@ -1284,17 +1284,17 @@ void func_8038B214(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
 
 void func_8038B404(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
     anSeq_func_80288FD8(arg0, 0.03f, 0xA70000U);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 3, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 4, 2);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 5, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 6, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 7, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.01f, arg1, 9, 1);
     func_80361D7C(arg0, 0.4f, arg1, 5, 0x218CFAU);
     func_80361D7C(arg0, 0.49f, arg1, 5, 0x2193FAU);
@@ -1305,19 +1305,19 @@ void func_8038B404(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
 }
 
 void func_8038B5FC(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.0f, arg1, 3, 0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.0f, arg1, 4, 2);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.0f, arg1, 5, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.0f, arg1, 6, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.0f, arg1, 7, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.0f, arg1, 9, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     func_80361C64(arg0, 0.0f, arg1, 8, 1);
 }
 
@@ -1418,7 +1418,7 @@ void func_8038BE30(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
 
 void func_8038BF5C(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
     func_80361C64(arg0, 0.01f, arg1, 4, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     anSeq_PushStep_0Arg(arg0, 0.05f, func_80386924);
     anSeq_PushStep_1Arg(arg0, 0.05f, func_80387B58, (uintptr_t)arg1);
     anSeq_PushStep_1Arg(arg0, 0.15f, func_80387B58, (uintptr_t)arg1);
@@ -1430,13 +1430,13 @@ void func_8038BF5C(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
     anSeq_PushStep_1Arg(arg0, 0.75f, func_80387B58, (uintptr_t)arg1);
     anSeq_PushStep_1Arg(arg0, 0.85f, func_80387B58, (uintptr_t)arg1);
     anSeq_PushStep_1Arg(arg0, 0.95f, func_80387B58, (uintptr_t)arg1);
-    anSeq_setActivationFrameDelay(arg0, 0x14);
+    anSeq_setActivationFrameDelay((void **)arg0, 0x14); // [port]
     anSeq_PushStep_0Arg(arg0, 0.05f, cutscenes_func_80386A00);
 }
 
 void cutscenes_func_8038C0DC(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
     func_80361C64(arg0, 0.01f, arg1, 4, 1);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     anSeq_PushStep_0Arg(arg0, 0.02f, func_80386990);
     anSeq_func_80288F78(arg0, 0.25f, 0x8C80C3U);
     anSeq_func_80288F78(arg0, 0.66f, 0x8C86C3U);
@@ -1448,16 +1448,16 @@ void cutscenes_func_8038C16C(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) 
 }
 
 void func_8038C19C(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     anSeq_PushStep_0Arg(arg0, 0.02f, cutscenes_func_803863F0);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     anSeq_PushStep_0Arg(arg0, 0.97f, func_80386410);
 }
 
 void func_8038C200(bk_vector(AnSeqElement) **arg0, ActorMarker *arg1) {
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     anSeq_PushStep_0Arg(arg0, 0.02f, func_8038645C);
-    anSeq_setActivationFrameDelay(arg0, 1);
+    anSeq_setActivationFrameDelay((void **)arg0, 1); // [port]
     anSeq_PushStep_0Arg(arg0, 0.97f, func_80386484);
 }
 

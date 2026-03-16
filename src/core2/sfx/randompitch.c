@@ -122,13 +122,13 @@ void func_802F9E44(s32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4){
     }
 }
 
-void func_802F9EC4(s32 arg0, s32 arg1, s32 arg2, s32 arg3){
+void func_802F9EC4(s32 arg0, f32 *arg1, s32 arg2, s32 arg3){ // [port] arg1 was s32, is f32* position
     struct4Es *iPtr;
 
     iPtr = bk_vector_at(D_803810A0, arg0);
     if(iPtr->unk0){
         sfxsource_set_fade_distances(iPtr->unk0, (f32)arg2, (f32)arg3);
-        sfxsource_set_position(iPtr->unk0, (f32 *)(intptr_t)arg1); // [port] s32 to f32* — N64 stored pointer as s32
+        sfxsource_set_position(iPtr->unk0, arg1);
     }
 }
 

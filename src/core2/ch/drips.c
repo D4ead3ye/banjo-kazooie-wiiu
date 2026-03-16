@@ -35,7 +35,8 @@ ParticleSettingsVelocityAccelerationPosition D_80372B00 = {
 
 
 /* .code */
-void func_80359A40(f32 position[3], struct_core2_D2AB0 *arg1, s32 cnt){
+void func_80359A40(f32 position[3], void *arg1_, s32 cnt){ // [port] void* for prototype compatibility
+    struct_core2_D2AB0 *arg1 = (struct_core2_D2AB0 *)arg1_;
     ParticleEmitter *pCtrl = partEmitMgr_newEmitter(cnt);
     particleEmitter_setSprite(pCtrl, ASSET_70C_SPRITE_RIPPLE);
     particleEmitter_setDrawMode(pCtrl, PART_EMIT_ROTATABLE);

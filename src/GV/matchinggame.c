@@ -166,8 +166,8 @@ void gv_matchingGame_update(void){
                 }
                 if(func_8034DC78(sp48) != 1){
                     sp44 = func_803901A0(sp4C);
-                    func_8034E254(sp48, func_803901F0);
-                    func_8034E25C(sp48, func_80390218);
+                    func_8034E254(sp48, (void (*)(Struct6Ds *))func_803901F0); // [port]
+                    func_8034E25C(sp48, (void (*)(Struct6Ds *))func_80390218); // [port]
                     func_8034E120(sp48, 0.0f, 180.0f, 0.7f, 1);
 
                     matchingGame.tile_b = matchingGame.tile_a;

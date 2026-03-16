@@ -47,7 +47,7 @@ MtxF *mlMtx_get_stack_pointer(void){
 }
 
 void mlMtxApply(Mtx *mPtr){
-    _guMtxF2L(s_mtx_stack, mPtr);
+    _guMtxF2L(s_mtx_stack->mf, mPtr); // [port] pass mf[4][4] member, not MtxF*
 }
 
 void func_802514BC(MtxF *arg0) {

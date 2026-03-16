@@ -1,6 +1,7 @@
 #include <ultra64.h>
 #include "core1/core1.h"
 
+extern void port_requestReadback(void); // [port]
 extern BKSpriteTextureBlock *func_8033EFB0(void *, s32); // [port] forward declare to avoid implicit int return
 
 #define IA8_I(ia) ((ia) >> 4)

@@ -43,9 +43,17 @@ ResourceFactoryBinaryBKAnimationV0::ReadResource(std::shared_ptr<Ship::File> fil
         const int16_t transformType = reader->ReadInt16();
         const uint32_t dataCount = reader->ReadUInt32();
 
-        // x86 little-endian bitfield layout: unk0_15:12 occupies bits 11:0, unk0_3:4 occupies bits 15:12
+        // [port] Pack bitfield to match native compiler layout.
+        // Struct declares unk0_15:12 first, unk0_3:4 second.
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+        // BE: first field at MSB → unk0_15 at bits 15:4, unk0_3 at bits 3:0
+        const uint16_t fileBitField =
+            (static_cast<uint16_t>(boneIndex & 0x0FFF) << 4) | static_cast<uint16_t>(transformType & 0x000F);
+#else
+        // LE: first field at LSB → unk0_15 at bits 11:0, unk0_3 at bits 15:12
         const uint16_t fileBitField =
             (static_cast<uint16_t>(transformType & 0x000F) << 12) | static_cast<uint16_t>(boneIndex & 0x0FFF);
+#endif
         AppendValue<uint16_t>(out, fileBitField);
         AppendValue<int16_t>(out, static_cast<int16_t>(dataCount));
 
@@ -55,9 +63,17 @@ ResourceFactoryBinaryBKAnimationV0::ReadResource(std::shared_ptr<Ship::File> fil
             const uint16_t unk13 = reader->ReadUInt16();
             const int16_t unk2 = reader->ReadInt16();
 
-            // x86 little-endian bitfield layout: unk0_15:1 at bit 0, unk0_14:1 at bit 1, unk0_13:14 at bits 15:2
+            // [port] Pack bitfield to match native compiler layout.
+            // Struct declares unk0_15:1 first, unk0_14:1 second, unk0_13:14 third.
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+            // BE: first field at MSB → unk0_15 at bit 15, unk0_14 at bit 14, unk0_13 at bits 13:0
+            const uint16_t dataBitField =
+                (static_cast<uint16_t>(bit15 & 1) << 15) | (static_cast<uint16_t>(bit14 & 1) << 14) | (unk13 & 0x3FFF);
+#else
+            // LE: first field at LSB → unk0_15 at bit 0, unk0_14 at bit 1, unk0_13 at bits 15:2
             const uint16_t dataBitField =
                 ((unk13 & 0x3FFF) << 2) | (static_cast<uint16_t>(bit14 & 1) << 1) | static_cast<uint16_t>(bit15 & 1);
+#endif
             AppendValue<uint16_t>(out, dataBitField);
             AppendValue<int16_t>(out, unk2);
         }

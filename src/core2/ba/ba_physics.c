@@ -33,7 +33,7 @@ struct {
     f32 start_position[3];
     f32 end_position[3];
     f32 duration;
-    f32 elapsed_time; 
+    f32 elapsed_time;
 } baphysics_goto;
 
 /* .code */
@@ -106,7 +106,7 @@ void __baphysics_update_normal(void){
     ml_vec3f_scale(s_delta_position, time_getDelta());
     s_next_position[0] += s_delta_position[0];\
     s_next_position[1] += s_delta_position[1];\
-    s_next_position[2] += s_delta_position[2]; 
+    s_next_position[2] += s_delta_position[2];
 }
 
 void __baphysics_update_no_gravity(void){
@@ -138,7 +138,7 @@ void func_802971DC(void){
     s_player_velocity[1] = s_player_velocity[1] + time_getDelta()*s_gravity;
     if(s_player_velocity[1] < s_terminal_velocity)
         s_player_velocity[1] = s_terminal_velocity;
-    
+
     s_delta_position[0] = s_player_velocity[0];\
     s_delta_position[1] = s_player_velocity[1];\
     s_delta_position[2] = s_player_velocity[2];
@@ -163,7 +163,7 @@ void __baphysics_update_climb(void){
     s_next_position[1] += sp34[1];\
     s_next_position[2] += sp34[2];
 
-    
+
     s_player_velocity[0] = baphysics_target_velocity[0] = baphysics_target_velocity[2] =  s_player_velocity[2];
     __baphysics_update_no_gravity();
 }
@@ -216,7 +216,7 @@ void __baphysics_update_goto(void){
             }
             break;
         case 3: //L80297628
-            break;    
+            break;
     }
 }
 
@@ -252,13 +252,13 @@ void baphysics_update(void){
         case BA_PHYSICS_TRANSFORM: //L80297790
             __baphysics_update_transform();
             break;
-        case BA_PHYSICS_UNK8: //L802977A0 
+        case BA_PHYSICS_UNK8: //L802977A0
             func_8029737C();
             break;
-        case BA_PHYSICS_UNK1: //L802977B0 
+        case BA_PHYSICS_UNK1: //L802977B0
             func_802971DC();
             break;
-        case BA_PHYSICS_NO_GRAVITY: //L802977C0 
+        case BA_PHYSICS_NO_GRAVITY: //L802977C0
             __baphysics_update_no_gravity();
             break;
         case BA_PHYSICS_NORMAL: //L802977D0 //bear
@@ -269,13 +269,13 @@ void baphysics_update(void){
             baphysics_set_target_yaw(mlNormalizeAngle(yaw_getIdeal() + 180.0f));
             __baphysics_update_normal();
             break;
-        case BA_PHYSICS_LOCKED_ROTATION: //L80297820  
+        case BA_PHYSICS_LOCKED_ROTATION: //L80297820
             __baphysics_update_normal();
             break;
-        case BA_PHYSICS_UNK4: //L80297830 
+        case BA_PHYSICS_UNK4: //L80297830
             func_8029740C();
             break;
-        case BA_PHYSICS_AIRBORN: //L80297840 
+        case BA_PHYSICS_AIRBORN: //L80297840
             if(0.0f < bastick_distance()){
                 baphysics_set_target_yaw(bastick_getAngleRelativeToBanjo());
             }
@@ -377,7 +377,7 @@ f32 baphysics_get_horizontal_velocity_percentage(void){
 
     horz_vel = baphysics_get_horizontal_velocity();
     target_vel = baphysics_get_target_horizontal_velocity();
-    
+
     if(horz_vel < target_vel){
         temp_f12 = horz_vel/target_vel;
     }

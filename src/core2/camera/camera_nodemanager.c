@@ -121,7 +121,7 @@ void func_802BBA84(void) {
     f32 min[3];
     f32 max[3];
 
-    mapModel_getBounds(min, max);
+    mapModel_getBounds((s32 *)min, (s32 *)max); // [port] f32[3] → s32* — decomp type-punning
     viewport_getPosition_vec3f(vp_position);
     viewport_getRotation_vec3f(vp_rotation);
     viewport_getLookbk_vector(sp48);

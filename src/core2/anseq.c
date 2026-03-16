@@ -196,7 +196,8 @@ void anSeq_func_80289090(bk_vector(AnSeqElement) **ppAnSeq, f32 duration, s32 ar
     anSeq_PushStep_2Arg(ppAnSeq, duration, __anSeq_func_802888C0, arg2, (uintptr_t)reinterpret_cast(u32, arg3)); // [port] u32 intermediate avoids 8-byte read from 4-byte f32
 }
 
-void anSeq_free(bk_vector(AnSeqElement)** ppAnSeq){
+void anSeq_free(void **ppAnSeq_){ // [port] void* for prototype compatibility
+    bk_vector(AnSeqElement)** ppAnSeq = (bk_vector(AnSeqElement)**)ppAnSeq_;
     bk_vector_free(*ppAnSeq);
     bk_free(ppAnSeq);
 }
@@ -209,11 +210,13 @@ bk_vector(AnSeqElement) **anSeq_new(void) {
 }
 
 
-void anSeq_setActivationFrameDelay(bk_vector(AnSeqElement) **ppAnSeq, s32 arg1){
+void anSeq_setActivationFrameDelay(void **ppAnSeq_, s32 arg1){ // [port] void* for prototype compatibility
+    bk_vector(AnSeqElement)** ppAnSeq = (bk_vector(AnSeqElement)**)ppAnSeq_; (void)ppAnSeq;
     s_activationFrameDelay = arg1;
 }
 
-void anSeq_update(bk_vector(AnSeqElement) **ppAnSeq, AnimCtrl *pAnCtl){
+void anSeq_update(void **ppAnSeq_, AnimCtrl *pAnCtl){ // [port] void* for prototype compatibility
+    bk_vector(AnSeqElement)** ppAnSeq = (bk_vector(AnSeqElement)**)ppAnSeq_;
     AnSeqElement *iPtr;
     for(iPtr = bk_vector_getBegin(*ppAnSeq); iPtr != (AnSeqElement*)bk_vector_getEnd(*ppAnSeq); iPtr++){
         if(anctrl_isAt(pAnCtl, iPtr->duration))

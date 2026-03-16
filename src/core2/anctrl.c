@@ -4,6 +4,7 @@
 
 #include "core2/anctrl.h"
 #include "animation.h"
+#include "port/ShipUtils.h" // [port] DEBUG: animation t-pose logging
 
 /* .code */
 void anctrl_80286F90(AnimCtrl *this){

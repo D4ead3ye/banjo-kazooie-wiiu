@@ -16,7 +16,7 @@ bool cutscene_skipGameOverCutsceneCheck(void);
 bool cutscene_skipIntroCutsceneCheck(void);
 bool cutscene_skipBeachCutsceneCheck(void);
 
-extern void func_802DC560(s32, s32);
+// extern void func_802DC560(s32, s32); // [port] removed — actual signature is (NodeProp*, ActorMarker*), in port_prototypes.h
 
 extern u8 D_8037DCCE[];
 
@@ -29,20 +29,32 @@ u8 D_80383190;
 /* .code */
 // func_8031C640
 bool cutscene_skipIntroCutsceneCheck(void) {
+    // [port] Always allow Start to skip intro cutscenes (original required a save file to exist)
+    if (func_8024E698(0) == 1) {
+        return true;
+    }
+#if 0
     if ((func_8024E698(0) == 1) && (gameFile_anyNonEmpty() != 0)) {
         return true;
     }
+#endif
     return false;
 }
 
 // func_8031C688
 bool cutscene_skipEnterLairCutsceneCheck(void) {
-    if ((func_8024E698(0) == 1) 
-        && ((D_8037DCCE[0] != 0) 
-            || (D_8037DCCE[1] != 0) 
+    // [port] Always allow Start to skip lair entrance cutscene (original required having visited a world)
+    if (func_8024E698(0) == 1) {
+        return true;
+    }
+#if 0
+    if ((func_8024E698(0) == 1)
+        && ((D_8037DCCE[0] != 0)
+            || (D_8037DCCE[1] != 0)
             || (D_8037DCCE[2] != 0))) {
         return true;
     }
+#endif
     return false;
 }
 
@@ -54,6 +66,18 @@ bool cutscene_skipGameOverCutsceneCheck(void) {
     if (mapSpecificFlags_get(0) != 0) {
         fileProgressFlag_set(FILEPROG_E1_UNKNOWN, 1);
     }
+    // [port] Allow Start to skip game over cutscene unconditionally
+    if (sp24 == 1) {
+        if (!mapSpecificFlags_get(0xC)) {
+            mapSpecificFlags_set(0xC, true);
+            func_802DC528(0, 0);
+            timedFunc_set_2(11.0f, (GenFunction_2)func_802DC560, 0, 0);
+            timedFunc_set_3(12.0f, (GenFunction_3)func_802E4078, MAP_1F_CS_START_RAREWARE, 0, 1);
+        } else {
+            timedFuncQueue_flush();
+        }
+    }
+#if 0
     if ((sp24 == 1) && fileProgressFlag_get(FILEPROG_E1_UNKNOWN) && !gctransition_8030BDC0()) {
         if (!mapSpecificFlags_get(0xC)) {
             mapSpecificFlags_set(0xC, true);
@@ -64,10 +88,15 @@ bool cutscene_skipGameOverCutsceneCheck(void) {
             timedFuncQueue_flush();
         }
     }
+#endif
     return false;
 }
 
 bool cutscene_skipBeachCutsceneCheck(void){
+    // [port] Allow Start to skip beach cutscene
+    if (func_8024E698(0) == 1) {
+        return true;
+    }
     func_803219F4(1);
     return false;
 }

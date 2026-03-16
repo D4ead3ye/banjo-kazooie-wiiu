@@ -34,6 +34,9 @@ static u64 sDebugVar_8027BEF0; // never used
 
 extern u8 core2_TEXT_START[];
 
+// Function prototype for enableDebugCheats
+void enableDebugCheats(void);
+
 void func_8023DA20(s32 arg0){
 #if 0
     bzero(&D_8027A130, core2_TEXT_START - (u8*)&D_8027A130);
@@ -88,7 +91,7 @@ enum map_e getSpecialBootMap(void){
 
 // [port] FEAT: Will need to change this dynamically to support conversion mods
 enum map_e getDefaultBootMap(void){
-    return MAP_1E_CS_START_NINTENDO;
+    return MAP_91_FILE_SELECT;
 }
 
 void func_8023DBAC(void){
@@ -129,12 +132,8 @@ void core1_init(void) {
     gGlobalTimer = 0;
     func_8023DA9C(3);
 
-    // [port] DEBUG: unlock all abilities so Banjo can use all moves
-    {
-        int i;
-        for (i = 0; i <= 0x13; i++)
-            ability_setLearned(i, 1);
-    }
+    // [port] DEBUG: enable cheats
+    //enableDebugCheats();
 }
 
 void globalTimer_incTimer(void){
@@ -250,4 +249,21 @@ OSThread *mainThread_get(void) {
 
 void disableInput_set(void){
     sDisableInput = true;
+}
+
+void enableDebugCheats(void) {
+    // [port] Unlock all moves
+    {
+        int i;
+        for (i = 0; i <= 0x13; i++)
+            ability_setLearned(i, 1);
+    }
+
+    // [port] Give max eggs, feathers, and tokens
+    {
+        item_setMaxCount(ITEM_D_EGGS);
+        item_setMaxCount(ITEM_F_RED_FEATHER);
+        item_setMaxCount(ITEM_10_GOLD_FEATHER);
+        item_set(ITEM_1C_MUMBO_TOKEN, 25);
+    }
 }

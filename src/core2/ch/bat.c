@@ -160,7 +160,7 @@ bool chbat_nearPlayer(Actor *this) {
             return false;
         }
     } else{
-        if(!func_80329210(this, sp24)){
+        if(!func_80329210(this, &sp24)){
             return false;
         }
     }

@@ -111,7 +111,16 @@ struct7s *fxjinjoscore_new(enum item_e arg0){
                     }
 
                 }
-                D_80381620[i][jinjo_id][j] = (((red << 0xB) | (green << 6)) | (blue << 1)) | alpha;
+                {
+                    // [port] Interpreter CI palette lookup reads u16 entries as big-endian bytes
+                    // (matching imported ROM palette format). Runtime-computed u16 values are in
+                    // host byte order (LE on x86/ARM), so byte-swap to match expected BE layout.
+                    u16 val = (((red << 0xB) | (green << 6)) | (blue << 1)) | alpha;
+#if !defined(__BYTE_ORDER__) || __BYTE_ORDER__ != __ORDER_BIG_ENDIAN__
+                    val = ((val >> 8) & 0xFF) | ((val & 0xFF) << 8);
+#endif
+                    D_80381620[i][jinjo_id][j] = val;
+                }
             }
 
         }
@@ -184,7 +193,7 @@ void fxjinjoscore_draw(s32 arg0, struct8s *arg1, Gfx **gfx, Mtx **mtx, Vtx **vtx
                     for(j = 0; j  < 2; j++){
                         (*vtx)->v.ob[0] = ((texture_width  * D_80381E54 * j) - (texture_width  * D_80381E54 / 2) + center_x) * 4;
                         (*vtx)->v.ob[1] = ((texture_height * D_80381E54 / 2) - (texture_height * D_80381E54 * i) + center_y) * 4;
-                        (*vtx)->v.ob[2] = -20;
+                        (*vtx)->v.ob[2] = -0xA; // [port] was -0x14; Z=-20 at guOrtho far clip plane, gets clipped on PC
                         (*vtx)->v.tc[0] = ((texture_width  - 1) * j) << 6;
                         (*vtx)->v.tc[1] = ((texture_height - 1) * i) << 6;
                         (*vtx)++;

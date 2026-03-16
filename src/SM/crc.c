@@ -136,6 +136,7 @@ static bool __codeF0_areRomCrcsCorrect(){
 }
 
 static bool __codeF0_areCrcsValid(){
+#if 0
     if( D_8038B320.unk0 == D_8038AAE0
         && D_8038B320.unk4 == D_8038AAE4 
         && D_8038B320.unkC == D_80275650 
@@ -144,6 +145,8 @@ static bool __codeF0_areCrcsValid(){
         return true;
     }
     return false;
+#endif
+    return true;
 }
 
 void SM_resetSpawnableActors()

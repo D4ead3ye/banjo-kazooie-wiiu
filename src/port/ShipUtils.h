@@ -15,6 +15,9 @@ void BK_LOG_INFO(const char* fmt, ...);
 void BK_LOG_WARN(const char* fmt, ...);
 void BK_LOG_ERROR(const char* fmt, ...);
 
+// [port] Map enum to human-readable name
+const char* port_mapName(int map_id);
+
 // [port] Update window title with current map ID for debugging
 void port_setMapDebugTitle(int map_id);
 
