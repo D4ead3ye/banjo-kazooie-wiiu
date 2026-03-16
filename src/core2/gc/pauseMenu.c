@@ -91,7 +91,7 @@ enum gcpausemenu_menu_e {
 /* .data */
 struct1As D_8036C4E0[4] = {
     {0.0f, 0.0f, "RETURN TO GAME",         55, ZOOMBOX_SPRITE_4_BANJO_1, 0},
-    {0.3f, 0.0f, "EXIT TO WITCH'S LAIR", -100, ZOOMBOX_SPRITE_4_BANJO_1, 0},
+    {0.3f, 0.0f, "EXIT TO LAIR",          -100, ZOOMBOX_SPRITE_5_GRUNTILDA_2, 0},
     {0.1f, 0.0f, "VIEW TOTALS",            90, ZOOMBOX_SPRITE_6_JIGGY_1, 0},
     {0.2f, 0.0f, "SAVE AND QUIT",         125, ZOOMBOX_SPRITE_7_TOOTY_1, 0},
 };
@@ -246,8 +246,23 @@ void gcpausemenu_free(void) {
 
 void gcpausemenu_zoomboxes_initMainMenu(void) {
     s32 i;
+    // [port] When exit-to-lair is enabled, use evenly spaced y positions
+    // and a smaller Gruntilda portrait. Original layout has y=-100 (off-screen)
+    // for the disabled exit-to-lair slot.
+    s32 y_pos[4];
+    GcZoomboxSprite portraits[4];
     for (i = 0; i < 4; i++) {
-        D_80383010.zoombox[i] = gczoombox_new(D_8036C4E0[i].y, D_8036C4E0[i].portrait, 2, 0, gcpausemenu_zoombox_callback);
+        y_pos[i] = D_8036C4E0[i].y;
+        portraits[i] = D_8036C4E0[i].portrait;
+    }
+    if (!D_80383010.return_to_lair_disabled) {
+        y_pos[0] = 50;
+        y_pos[1] = 80;
+        y_pos[2] = 110;
+        y_pos[3] = 140;
+    }
+    for (i = 0; i < 4; i++) {
+        D_80383010.zoombox[i] = gczoombox_new(y_pos[i], portraits[i], 2, 0, gcpausemenu_zoombox_callback);
         gczoombox_func_803184C8(D_80383010.zoombox[i], 60.0f, 5, 2, 0.3f, 0, 0);
         func_80318640(D_80383010.zoombox[i], 0x1C, 0.75f, 0.9f, 0);
         func_80318760(D_80383010.zoombox[i], 8000);
@@ -716,9 +731,16 @@ void gcpausemenu_zoombox_callback(s32 portrait_id, s32 zoombox_state) {
     }
 
     if ((zoombox_state == 2) &&
-        (D_80383010.menu == PAUSE_MENU_0_MAIN) &&
-        (portrait_id - 4 != D_80383010.selection)) {
-        gczoombox_highlight(D_80383010.zoombox[portrait_id - 4], 0);
+        (D_80383010.menu == PAUSE_MENU_0_MAIN)) {
+        // [port] Find zoombox index by portrait_id instead of hardcoded portrait_id - 4.
+        s32 idx;
+        for (idx = 0; idx < 4; idx++) {
+            if (D_80383010.zoombox[idx] != NULL && D_80383010.zoombox[idx]->portrait_id == portrait_id)
+                break;
+        }
+        if (idx < 4 && idx != D_80383010.selection) {
+            gczoombox_highlight(D_80383010.zoombox[idx], 0);
+        }
     }
 }
 
@@ -741,7 +763,12 @@ s32 gcpausemenu_initLargestPageIndex(void) {
 }
 
 bool gcpausemenu_initReturnToLair(void) {
+#ifdef ENHANCEMENT
+    s32 level = level_get();
+    return !(level > 0 && level < LEVEL_C_BOSS && D_8036C560[level - 1].map != -1);
+#else
     return true;
+#endif
 }
 
 void gcpausemenu_init(void) {
@@ -1381,9 +1408,12 @@ void gcpausemenu_draw(Gfx **gfx, Mtx **mtx, Vtx **vtx) {
         func_80315110(gfx, mtx, vtx);
     }
 
+    // [port] Draw selected zoombox last so it renders on top of neighbors
     for (i = 0; i < 4; i++) {
-        gczoombox_draw(D_80383010.zoombox[i], gfx, mtx, vtx);
+        if (i != D_80383010.selection)
+            gczoombox_draw(D_80383010.zoombox[i], gfx, mtx, vtx);
     }
+    gczoombox_draw(D_80383010.zoombox[D_80383010.selection], gfx, mtx, vtx);
 
     gcpausemenu_drawSprite(gfx, mtx, vtx, D_80383010.joystick_sprite, D_80383010.joystick_frame, 30.0f, 196.0f, 1, (s32) D_80383010.left_joystick_alpha);
     gcpausemenu_drawSprite(gfx, mtx, vtx, D_80383010.joystick_sprite, D_80383010.joystick_frame, (f32)(gFramebufferWidth - 0x1E), 196.0f, 0, (s32) D_80383010.right_joystick_alpha);
