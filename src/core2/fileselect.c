@@ -112,9 +112,15 @@ void gameFile_clear(s32 gamenum){
     savedata_clear(&gameFile_saveData[filenum]);
 }
 
+extern int port_getSavedLives(int eepromSlot);
+
 void gameFile_load(s32 gamenum){
     s32 filenum = gameFile_GameIdToFileIdMap[gamenum];
     saveData_load(&gameFile_saveData[filenum]);
+    // [port] Restore lives from PC save — N64 resets to 3 each session
+#ifdef ENHANCEMENT
+    item_set(ITEM_16_LIFE, port_getSavedLives(filenum));
+#endif
 }
 
 void gameFile_save(s32 gamenum){

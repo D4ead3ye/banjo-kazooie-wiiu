@@ -532,6 +532,9 @@ SaveManager& SaveManager::Instance() {
 
 SaveManager::SaveManager() : mLoaded(false) {
     memset(mEeprom, 0, sizeof(mEeprom));
+    for (int i = 0; i < SAVE_SLOT_COUNT; i++) {
+        mSavedLives[i] = 3; // default
+    }
 }
 
 // ─── EEPROM Interface ───────────────────────────────────────────────────────
@@ -998,6 +1001,16 @@ void SaveManager::LoadFromDisk() {
 
             JsonToSlot(j, mEeprom + base);
 
+            // [port] Load saved lives count
+#ifdef ENHANCEMENT
+            if (j.contains("savedItems")) {
+                const auto& si = j["savedItems"];
+                if (si.contains("lives")) {
+                    mSavedLives[eepromSlot] = si["lives"].get<int>();
+                }
+            }
+#endif
+
             SPDLOG_INFO("[save] Loaded {} (slotIndex={}) into eeprom slot {}", path, slotIndex, eepromSlot);
         } catch (const std::exception& e) {
             SPDLOG_ERROR("[save] Failed to load {}: {}", path, e.what());
@@ -1082,6 +1095,18 @@ void SaveManager::FlushSlotToDisk(int slotIndex) {
 
     json j = SlotToJson(mEeprom + base);
 
+    // [port] Save lives count — N64 resets to 3 each session, PC port persists them
+#ifdef ENHANCEMENT
+    {
+        extern "C" int item_getCount(int item);
+        int lives = item_getCount(0x16); // ITEM_16_LIFE
+        if (lives > 0) {
+            j["savedItems"]["lives"] = lives;
+            mSavedLives[eepromSlot] = lives;
+        }
+    }
+#endif
+
     std::string filename = "file" + std::to_string(SlotToVisualGame(slotIndex)) + ".json";
     std::string path = GetSavePath(filename);
     std::string tmpPath = path + ".tmp";
@@ -1156,4 +1181,18 @@ int32_t eeprom_writeBlocks(int32_t file, int32_t offset, void* buffer, int32_t c
     return SaveManager::Instance().WriteBlocks(file, offset, buffer, count);
 }
 
+// [port] Lives persistence — returns saved lives for an EEPROM slot (0-3), default 3
+#ifdef ENHANCEMENT
+int port_getSavedLives(int eepromSlot) {
+    return SaveManager::GetSavedLives(eepromSlot);
+}
+#endif
+
 } // extern "C"
+
+#ifdef ENHANCEMENT
+int SaveManager::GetSavedLives(int eepromSlot) {
+    if (eepromSlot < 0 || eepromSlot >= SAVE_SLOT_COUNT) return 3;
+    return Instance().mSavedLives[eepromSlot];
+}
+#endif

@@ -31,6 +31,9 @@ public:
     int ReadBlocks(int file, int offset, void* buffer, int count);
     int WriteBlocks(int file, int offset, void* buffer, int count);
 
+    // [port] Lives persistence — N64 resets to 3 each session, PC port saves them
+    static int GetSavedLives(int eepromSlot);
+
 private:
     SaveManager();
 
@@ -45,5 +48,6 @@ private:
     std::string GetSavePath(const std::string& filename);
 
     uint8_t mEeprom[EEPROM_TOTAL_SIZE];
+    int mSavedLives[SAVE_SLOT_COUNT]; // [port] Per-slot lives count
     bool mLoaded;
 };
