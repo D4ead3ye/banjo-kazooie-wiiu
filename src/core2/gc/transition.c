@@ -441,6 +441,7 @@ void gctransition_update(void){
                 case 0:
                     break;
                 case 1:
+                    port_requestReadback(); // [port] ensure readback has valid data before freeze
                     func_8028F7C8(1);
                     func_80335110(0);
                     break;
@@ -467,10 +468,12 @@ void gctransition_update(void){
                     s_current_transition.timer += dt;
                     break;
                 case 0:
+                    break;
                 case 1:
+                    port_requestReadback(); // [port] ensure readback has valid data for substate 2 capture
                     break;
                 case 2:
-                    func_80335128(0); 
+                    func_80335128(0);
                     func_802FEF48(s_current_transition.model_ptr); //framebuffer to model texture list
                     break;
                 

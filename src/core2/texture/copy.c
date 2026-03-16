@@ -8,9 +8,7 @@ extern u16 port_sampleHiresReadback(int x, int y); // [port]
 
 u8 *func_802EA620(BKTextureList *texture_list);
 
-// [port] These functions capture the GPU-rendered framebuffer into model textures
-// for transition wipe effects. On PC, we sample from the full-resolution GPU readback
-// instead of the downsampled 292x216 gFramebuffers, giving sharper transition tiles.
+// [port] Samples from full-res GPU readback instead of 292x216 gFramebuffers.
 void func_802FEDE0(BKTextureList *texture_list, s32 indx, s32 x_offset, s32 y_offset){
     u16 *sp24;
     // u16 *frame_buffer_ptr; // [port] replaced by high-res readback sampling
@@ -21,9 +19,8 @@ void func_802FEDE0(BKTextureList *texture_list, s32 indx, s32 x_offset, s32 y_of
     // frame_buffer_ptr = gFramebuffers[getActiveFramebuffer()]; // [port] replaced
     for(y = 0; y < 32; y++){
         for(x = 0; x < 32; x++){
-            // [port] Sample from full-res GPU readback instead of 292x216 gFramebuffers
-            // Original: sp24[32*(31 - y) + x] = frame_buffer_ptr[(y_offset + y)*gFramebufferWidth + (x_offset + x)] | 1;
-            sp24[32*(31 - y) + x] = port_sampleHiresReadback(x_offset + x, y_offset + y) | 1;
+            // [port] Alpha bit is at position 8 in byte-swapped RGBA16
+            sp24[32*(31 - y) + x] = port_sampleHiresReadback(x_offset + x, y_offset + y) | 0x100;
         };
     };
 }
