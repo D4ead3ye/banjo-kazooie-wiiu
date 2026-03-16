@@ -14,6 +14,6 @@ typedef struct bone_transform_list_s{
 }BoneTransformList;
 
 BoneTransformList *boneTransformList_new(void);
-BoneTransformList *boneTransformList_defrag(BoneTransformList *this);
-void boneTransformList_free(BoneTransformList *this);
+BoneTransformList *boneTransformList_defrag(BoneTransformList *self);
+void boneTransformList_free(BoneTransformList *self);
 #endif

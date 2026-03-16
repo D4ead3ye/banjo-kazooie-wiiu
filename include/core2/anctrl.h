@@ -5,9 +5,9 @@
 #include "generic.h"
 
 #ifndef NONMATCHING
-#define anctrl_start(this, file, line) _anctrl_start(this, file, line)
+#define anctrl_start(ctrl, file, line) _anctrl_start(ctrl, file, line)
 #else
-#define anctrl_start(this, file, line) _anctrl_start(this, __FILE__, __LINE__)
+#define anctrl_start(ctrl, file, line) _anctrl_start(ctrl, __FILE__, __LINE__)
 #endif
 
 enum anctrl_playback_e{
@@ -63,38 +63,38 @@ typedef struct actorAnimCtrl_s{
 } ActorAnimCtrl;
 
 AnimCtrl *anctrl_new(s32 arg0);
-void anctrl_free(AnimCtrl * this);
-void anctrl_update(AnimCtrl *this);
-AnimCtrl *anctrl_defrag(AnimCtrl *this);
-void anctrl_setIndex(AnimCtrl *this, enum asset_e index);
-Animation *anctrl_getAnimPtr(AnimCtrl *this);
-void func_8028746C(AnimCtrl *this, GenFunction_2 arg1);
-void func_8028748C(AnimCtrl *this, s32 arg1);
-void anctrl_reset(AnimCtrl *this);
-void __anctrl_gotoStart(AnimCtrl *this);
-void _anctrl_start(AnimCtrl * this, char *file, s32 line);
-void anctrl_setAnimTimer(AnimCtrl *this, f32 timer);
-void anctrl_setPlaybackType(AnimCtrl *this, enum anctrl_playback_e arg1);
-void anctrl_setDirection(AnimCtrl *this, s32 arg1);
-void anctrl_setSmoothTransition(AnimCtrl *this, s32 arg1);
-void anctrl_setDuration(AnimCtrl *this, f32 arg1);
-void anctrl_setTransitionDuration(AnimCtrl *this, f32 arg1);
-void anctrl_setSubRange(AnimCtrl *this, f32 start, f32 end);
-void anctrl_getSubRange(AnimCtrl *this, f32 *startPtr, f32 *endPtr);
-void anctrl_setStart(AnimCtrl *this, f32 arg1);
-void func_80287784(AnimCtrl *this, s32 arg1);
-enum asset_e anctrl_getIndex(AnimCtrl *this);
-enum anctrl_playback_e anctrl_getPlaybackType(AnimCtrl *this);
-s32 anctrl_isPlayedForwards(AnimCtrl *this);
-s32 anctrl_isSmoothTransistion(AnimCtrl *this);
-f32 anctrl_getDuration(AnimCtrl *this);
-f32 anctrl_getTransistionDuration(AnimCtrl *this);
-f32 anctrl_getAnimTimer(AnimCtrl *this);
-f32 anctrl_getTimer(AnimCtrl *this);
-void  anctrl_setTimer(AnimCtrl *this, f32 arg1);
+void anctrl_free(AnimCtrl * ctrl);
+void anctrl_update(AnimCtrl *ctrl);
+AnimCtrl *anctrl_defrag(AnimCtrl *ctrl);
+void anctrl_setIndex(AnimCtrl *ctrl, enum asset_e index);
+Animation *anctrl_getAnimPtr(AnimCtrl *ctrl);
+void func_8028746C(AnimCtrl *ctrl, GenFunction_2 arg1);
+void func_8028748C(AnimCtrl *ctrl, s32 arg1);
+void anctrl_reset(AnimCtrl *ctrl);
+void __anctrl_gotoStart(AnimCtrl *ctrl);
+void _anctrl_start(AnimCtrl * ctrl, char *file, s32 line);
+void anctrl_setAnimTimer(AnimCtrl *ctrl, f32 timer);
+void anctrl_setPlaybackType(AnimCtrl *ctrl, enum anctrl_playback_e arg1);
+void anctrl_setDirection(AnimCtrl *ctrl, s32 arg1);
+void anctrl_setSmoothTransition(AnimCtrl *ctrl, s32 arg1);
+void anctrl_setDuration(AnimCtrl *ctrl, f32 arg1);
+void anctrl_setTransitionDuration(AnimCtrl *ctrl, f32 arg1);
+void anctrl_setSubRange(AnimCtrl *ctrl, f32 start, f32 end);
+void anctrl_getSubRange(AnimCtrl *ctrl, f32 *startPtr, f32 *endPtr);
+void anctrl_setStart(AnimCtrl *ctrl, f32 arg1);
+void func_80287784(AnimCtrl *ctrl, s32 arg1);
+enum asset_e anctrl_getIndex(AnimCtrl *ctrl);
+enum anctrl_playback_e anctrl_getPlaybackType(AnimCtrl *ctrl);
+s32 anctrl_isPlayedForwards(AnimCtrl *ctrl);
+s32 anctrl_isSmoothTransistion(AnimCtrl *ctrl);
+f32 anctrl_getDuration(AnimCtrl *ctrl);
+f32 anctrl_getTransistionDuration(AnimCtrl *ctrl);
+f32 anctrl_getAnimTimer(AnimCtrl *ctrl);
+f32 anctrl_getTimer(AnimCtrl *ctrl);
+void  anctrl_setTimer(AnimCtrl *ctrl, f32 arg1);
 s32  anctrl_8028780C(f32 position[3], s32 arg1);
-void anctrl_drawSetup(AnimCtrl *this, f32 *arg1, s32 arg2);
-s32 anctrl_isStopped(AnimCtrl *this);
-int anctrl_isAt(AnimCtrl *this, f32 arg1);
-s32 anctrl_isContiguous(AnimCtrl *this);
+void anctrl_drawSetup(AnimCtrl *ctrl, f32 *arg1, s32 arg2);
+s32 anctrl_isStopped(AnimCtrl *ctrl);
+int anctrl_isAt(AnimCtrl *ctrl, f32 arg1);
+s32 anctrl_isContiguous(AnimCtrl *ctrl);
 #endif

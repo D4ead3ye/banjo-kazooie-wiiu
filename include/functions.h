@@ -97,20 +97,20 @@ void func_8029A86C(s32 arg0);
 enum bs_interrupt_e bs_getInterruptType(void);
 
 /* vla - variable length array*/
-void    bk_vector_clear(VLA *this);
-void *  bk_vector_getBegin(VLA *this);
-void *  bk_vector_at(VLA *this, u32 n);
-s32     bk_vector_getIndex(VLA *this, void *element);
-s32     bk_vector_size(VLA *this);
-void *  bk_vector_getEnd(VLA *this);
-void *  bk_vector_pushBackNew(VLA **thisPtr);
-void *  bk_vector_insertNew(VLA **thisPtr, s32 indx);
-void    bk_vector_free(VLA *this);
+void    bk_vector_clear(VLA *vla);
+void *  bk_vector_getBegin(VLA *vla);
+void *  bk_vector_at(VLA *vla, u32 n);
+s32     bk_vector_getIndex(VLA *vla, void *element);
+s32     bk_vector_size(VLA *vla);
+void *  bk_vector_getEnd(VLA *vla);
+void *  bk_vector_pushBackNew(VLA **vlaPtr);
+void *  bk_vector_insertNew(VLA **vlaPtr, s32 indx);
+void    bk_vector_free(VLA *vla);
 VLA *   bk_vector_new(u32 elemSize, u32 cnt);
-void    bk_vector_remove(VLA *this, u32 indx);
-void    bk_vector_popBack_n(VLA *this, u32 n);
-void    bk_vector_assign(VLA *this, s32 indx, void* value);
-VLA *   bk_vector_defrag(VLA *this);
+void    bk_vector_remove(VLA *vla, u32 indx);
+void    bk_vector_popBack_n(VLA *vla, u32 n);
+void    bk_vector_assign(VLA *vla, s32 indx, void* value);
+VLA *   bk_vector_defrag(VLA *vla);
 
 
 void actor_collisionOff(Actor *);
@@ -200,20 +200,20 @@ void particleEmitter_func_802EF9F8(ParticleEmitter *, f32);
 void particleEmitter_func_802EFA18(ParticleEmitter *, s32);
 void particleEmitter_setFade(ParticleEmitter *, f32, f32);
 void particleEmitter_setDrawMode(ParticleEmitter *, s32);
-void particleEmitter_setStartingFrameRange(ParticleEmitter *this, s32 arg1, s32 arg2);
+void particleEmitter_setStartingFrameRange(ParticleEmitter *emitter, s32 arg1, s32 arg2);
 void particleEmitter_setParticleFramerateRange(ParticleEmitter *, f32, f32);
 void particleEmitter_setSpawnPositionRange(ParticleEmitter *, f32, f32, f32, f32, f32, f32);
 void particleEmitter_setStartingScaleRange(ParticleEmitter *, f32, f32);
 void particleEmitter_setFinalScaleRange(ParticleEmitter *, f32, f32);
 void particleEmitter_setScaleAndLifetimeRanges(ParticleEmitter *, ParticleScaleAndLifetimeRanges *);
 void particleEmitter_setVelocityAndAccelerationRanges(ParticleEmitter *, ParticleSettingsVelocityAcceleration *);
-void particleEmitter_setPositionAndVelocityRanges(ParticleEmitter *this, ParticleSettingsVelocityPosition *arg1);
+void particleEmitter_setPositionAndVelocityRanges(ParticleEmitter *emitter, ParticleSettingsVelocityPosition *arg1);
 void particleEmitter_setAngularVelocityRange(ParticleEmitter *, f32, f32, f32, f32, f32, f32);
 void particleEmitter_setSpawnIntervalRange(ParticleEmitter *, f32, f32);
 void particleEmitter_setParticleLifeTimeRange(ParticleEmitter *, f32, f32);
 void particleEmitter_setParticleVelocityRange(ParticleEmitter *, f32, f32, f32, f32, f32, f32);
 void func_802EFF50(ParticleEmitter *, f32);
-void particleEmitter_setRGB(ParticleEmitter *this, s32 arg1[3]);
+void particleEmitter_setRGB(ParticleEmitter *emitter, s32 arg1[3]);
 void particleEmitter_setSpawnInterval(ParticleEmitter *, f32);
 OSContPad *func_8024F3F4(void);
 OSMesgQueue *pfsManager_getFrameReplyQ(void);
@@ -381,7 +381,7 @@ int  func_80328A2C(Actor *, f32, s32, f32);
 void subaddie_set_state(Actor *, u32);
 ActorMarker *func_8032B16C(enum jiggy_e jiggy_id);
 int  subaddie_maybe_set_state(Actor *, s32, f32);
-void subaddie_set_state_with_direction(Actor * this, s32 myAnimId, f32 anim_start_position, s32 direction);
+void subaddie_set_state_with_direction(Actor * actor, s32 myAnimId, f32 anim_start_position, s32 direction);
 bool subaddie_maybe_set_state_position_direction(Actor *, s32, f32, s32, f32 );
 void func_80328CEC(Actor *, s32, s32, s32);
 void func_80328FB0(Actor *, f32);
@@ -396,7 +396,7 @@ Prop *func_8032F528(void);
 ActorMarker *func_8032FBE4(f32 *pos, MarkerDrawFunc arg1, int arg2, enum asset_e model_id);
 
 void marker_setFreeMethod(ActorMarker *, void (*)(Actor *));
-void marker_setCollisionScripts(ActorMarker *this, MarkerCollisionFunc ow_func, MarkerCollisionFunc arg2, MarkerCollisionFunc die_func);
+void marker_setCollisionScripts(ActorMarker *marker, MarkerCollisionFunc ow_func, MarkerCollisionFunc arg2, MarkerCollisionFunc die_func);
 BKModelBin *  func_80330B1C(ActorMarker *marker);
 BKVertexList *func_80330C74(Actor *actor);
 BKModelBin *  func_80330DE4(ActorMarker *marker);
@@ -405,7 +405,7 @@ void func_8033A280(f32);
 
 void func_80346C10(enum bs_e *retVal, enum bs_e fail_state, enum bs_e success_state, enum item_e item_id, int use_item);
 void func_80347A14(s32);
-void func_8034A174(struct5Bs *this, s32 indx,f32 dst[3]);
+void func_8034A174(struct5Bs *s5b, s32 indx,f32 dst[3]);
 Struct70s *func_8034C528(s32);
 Struct70s *func_8034C5AC(s32);
 BKModel *func_8034C4F0(Struct70s *arg0);
@@ -471,7 +471,7 @@ void actor_playAnimationOnce(Actor *);
 void actor_loopAnimation(Actor *);
 
 /* used in fight */
-void actor_update_func_80326224(Actor *this);
+void actor_update_func_80326224(Actor *actor);
 
 void func_802F9FD0(s32, f32, f32, f32);
 void func_80324D54(f32, enum sfx_e, f32, s32, f32 [3], f32, f32);
@@ -495,9 +495,9 @@ extern void fxSparkle_chTreasure(s16[3]);
 extern void actor_collisionOn(Actor *);
 extern void subaddie_set_state_forward(Actor *, s32);
 
-extern BKModelBin *marker_loadModelBin(ActorMarker *this);
+extern BKModelBin *marker_loadModelBin(ActorMarker *marker);
 extern Struct70s *func_8034C2C4(ActorMarker *marker, s32 arg1);
-extern void func_80326310(Actor *this); // actor_setBlendStateFadeOut ??
+extern void func_80326310(Actor *actor); // actor_setBlendStateFadeOut ??
 extern ActorMarker *marker_init(s32 *pos, MarkerDrawFunc draw_func, int arg2, int marker_id, int arg4);
 extern s32 asset_getFlag(enum asset_e arg0);
 extern void spawnableActorList_add(ActorInfo *arg0, Actor *(*arg1)(s32[3], s32, ActorInfo *, u32), u32 arg2);

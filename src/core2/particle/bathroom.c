@@ -12,6 +12,8 @@ extern ParticleEmitter *func_802F4094(f32 pos[3], f32 arg1);
 
 void func_8029AE74(s32 arg0);
 void func_8029AEE4(s32 arg0);
+void func_8029AB14(Struct5Ds *arg0, s32 arg1);
+void func_8029AC34(Struct5Ds *arg0, s32 arg1);
 
 /* .bss */
 Struct5Ds *D_8037D190;
@@ -57,7 +59,7 @@ void func_8029AA3C(void){
     particleEmitter_emitN(pCtrl, 5);
 }
 
-void func_8029AB14(s32 arg0, s32 arg1){
+void func_8029AB14(Struct5Ds *arg0, s32 arg1){ // [port] was (s32 arg0, s32 arg1) — pointer truncation
     int sp24 = (arg1 == 4) || (arg1 == 0xb);
     int sp20 = player_inWater();
     if(sp24){
@@ -67,24 +69,24 @@ void func_8029AB14(s32 arg0, s32 arg1){
     switch(player_getTransformation()){
         case TRANSFORM_3_PUMPKIN: //L8029AB9C
             if(arg1 == 7){
-                func_802F4900((Struct5Ds *)(intptr_t)arg0, arg1); // [port] s32 to Struct5Ds* — N64 stored pointer as s32
+                func_802F4900(arg0, arg1);
             }
             if(sp24 || sp20){
-                func_802F4900((Struct5Ds *)(intptr_t)arg0, 0xe); // [port]
+                func_802F4900(arg0, 0xe);
             }
             else{
-                func_802F4900((Struct5Ds *)(intptr_t)arg0, 0xd); // [port]
+                func_802F4900(arg0, 0xd);
             }
             break;
         case TRANSFORM_4_WALRUS://L8029ABEC
             if(sp24){
-                func_802F4900((Struct5Ds *)(intptr_t)arg0, 0x4); // [port]
+                func_802F4900(arg0, 0x4);
             }
             else if(sp20){
-                func_802F4900((Struct5Ds *)(intptr_t)arg0, 0xf); // [port]
+                func_802F4900(arg0, 0xf);
             }
             else{
-                func_802F4900((Struct5Ds *)(intptr_t)arg0, 0xd); // [port]
+                func_802F4900(arg0, 0xd);
             }
             break;
         default: //L8029AC28
@@ -92,7 +94,7 @@ void func_8029AB14(s32 arg0, s32 arg1){
     }
 }
 
-void func_8029AC34(s32 arg0, s32 arg1){
+void func_8029AC34(Struct5Ds *arg0, s32 arg1){ // [port] was (s32 arg0, s32 arg1) — pointer truncation
     int sp1C;
     sp1C = (arg1 == 4) || (arg1 == 0xb || player_inWater());
     if(sp1C){
@@ -142,8 +144,8 @@ void func_8029ADA8(void){
 
 void func_8029ADCC(void){
     D_8037D190 = func_802F47D0();
-    func_802F487C(D_8037D190, (void (*)(Struct5Ds *, s32))func_8029AC34); // [port]
-    func_802F48B4(D_8037D190, (void (*)(Struct5Ds *, s32))func_8029AB14); // [port]
+    func_802F487C(D_8037D190, func_8029AC34);
+    func_802F48B4(D_8037D190, func_8029AB14);
 }
 
 void func_8029AE1C(void){

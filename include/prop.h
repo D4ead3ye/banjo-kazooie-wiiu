@@ -78,7 +78,7 @@ typedef struct actor_prop_s{
     };
 } ActorProp;
 
-typedef void(*MarkerCollisionFunc)(struct actorMarker_s *this, struct actorMarker_s *other);
+typedef void(*MarkerCollisionFunc)(struct actorMarker_s *self, struct actorMarker_s *other);
 typedef struct actor_s *(*MarkerDrawFunc)(struct actorMarker_s *, Gfx **, Mtx **, Vtx **);
 typedef void (*ActorUpdateFunc)(struct actor_s *);
 typedef void (*ActorFreeFunc)(struct actor_s *);

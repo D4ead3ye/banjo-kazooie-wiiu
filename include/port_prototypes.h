@@ -26,8 +26,8 @@ BKSprite *func_8030A55C(s32 arg0);
 
 // --- core2/actor_cubepropsystem.c ---
 ActorMarker *func_8032DCAC(void);
-BKVertexList *func_80330CFC(Actor *this, s32 arg1);
-BKModelBin *func_80330E28(Actor *this);
+BKVertexList *func_80330CFC(Actor *self, s32 arg1);
+BKModelBin *func_80330E28(Actor *self);
 BKSpriteDisplayData *func_80330E54(ActorMarker *marker, BKSprite **sprite_ptr);
 BKSpriteDisplayData *func_80330F30(ActorMarker *marker);
 BKSprite *func_80330F50(ActorMarker *marker);
@@ -58,10 +58,10 @@ BKCollisionTri *func_802946CC(void);
 
 // --- core2/collision/raycast.c ---
 BKCollisionTri *func_8031BABC(f32 *arg0, f32 arg1, f32 arg2, u32 arg3, struct86s *arg4);
-BKCollisionTri *func_8031BBA0(f32 *this, f32 arg1, f32 arg2, u32 arg3, struct86s *arg4);
-BKCollisionTri *func_8031C5EC(struct0 *this);
-BKCollisionTri *func_8031C5F4(struct0 *this);
-BKModelBin *func_8031C5DC(struct0 *this);
+BKCollisionTri *func_8031BBA0(f32 *self, f32 arg1, f32 arg2, u32 arg3, struct86s *arg4);
+BKCollisionTri *func_8031C5EC(struct0 *self);
+BKCollisionTri *func_8031C5F4(struct0 *self);
+BKModelBin *func_8031C5DC(struct0 *self);
 
 // --- core2/collision/funcs.c ---
 BKCollisionTri *func_80320B98(f32 arg0[3], f32 arg1[3], f32 arg2[3], u32 arg3);
@@ -94,14 +94,14 @@ BKVertexList *vtxList_clone(BKVertexList *vtxList);
 
 // --- core2/spline_bezier.c ---
 struct5Bs *func_8034A2C8(void);
-struct5Bs *func_8034A348(struct5Bs *this);
+struct5Bs *func_8034A348(struct5Bs *self);
 
 // --- core2/mapModel.c ---
 struct5Bs *func_803097A0(void);
 BKCollisionList *model_getCollisionList(BKModelBin *arg0);
 
 // --- core2/modelRender.c ---
-BKModelUnk14List *func_8033A12C(BKModelBin *this);
+BKModelUnk14List *func_8033A12C(BKModelBin *self);
 
 // --- core2/vtx/colorapply.c ---
 Struct70s *func_8034C344(s32 arg0);
@@ -110,7 +110,7 @@ Struct70s *func_8034C630(void *arg0); // [port] was s32 — receives pointer on 
 
 // --- core2/particle/samplerate.c ---
 Struct5Ds *func_802F47D0(void);
-Struct5Ds *func_802F499C(Struct5Ds *this);
+Struct5Ds *func_802F499C(Struct5Ds *self);
 
 // --- core2/font/render.c ---
 BKSpriteTextureBlock *func_802E4D5C(s32 arg0, char arg1);
@@ -139,10 +139,10 @@ typedef struct animation_file_s AnimationFile;
 AnimationFile *animBinCache_get(enum asset_e asset_id);
 
 // --- core2/anim/anim_buffer.c ---
-BoneTransformList *anim_getTransform(Animation *this, s32 index);
-BoneTransformList *animcache_getCurrentTransform(Animation *this);
-BoneTransformList *anim_getStartTransform(Animation *this);
-BoneTransformList *anim_getTargetTransform(Animation *this);
+BoneTransformList *anim_getTransform(Animation *self, s32 index);
+BoneTransformList *animcache_getCurrentTransform(Animation *self);
+BoneTransformList *anim_getStartTransform(Animation *self);
+BoneTransformList *anim_getTargetTransform(Animation *self);
 
 // --- core1/audio_manager.c ---
 void *func_802403B8(void *state);
@@ -157,13 +157,13 @@ u8 *func_8032479C(void);
 #ifndef _BONE_TRANSFORMATION_H_
 typedef struct bone_transform_list_s BoneTransformList;
 #endif
-MtxF *animMtxList_get(AnimMtxList *this, s32 arg1);
+MtxF *animMtxList_get(AnimMtxList *self, s32 arg1);
 AnimMtxList *animMtxList_new(void);
-void animMtxList_free(AnimMtxList *this);
-s32 animMtxList_len(AnimMtxList *this);
+void animMtxList_free(AnimMtxList *self);
+s32 animMtxList_len(AnimMtxList *self);
 void animMtxList_setBoneless(AnimMtxList **this_ptr, BKAnimationList *anim_list);
 void animMtxList_setBoned(AnimMtxList **this_ptr, BKAnimationList *anim_list, BoneTransformList *arg2);
-AnimMtxList *animMtxList_defrag(AnimMtxList *this);
+AnimMtxList *animMtxList_defrag(AnimMtxList *self);
 
 // ============================================================
 // FLOAT-RETURNING FUNCTIONS
@@ -206,7 +206,7 @@ f32 func_802A8984(void);
 f32 func_802A716C(void);
 f32 func_802B051C(s32 arg0, f32 arg1, f32 arg2, f32 arg3);
 f32 __bscroc_getMaxVelocity(void);
-f32 func_802D7038(Actor *this);
+f32 func_802D7038(Actor *self);
 f32 player_getYaw(void);
 
 // ============================================================
@@ -268,11 +268,11 @@ void volatileFlag_setAndTriggerDialog_0(enum volatile_flags_e arg0);
 s32 globalTimer_getTime(void);
 
 // --- core2/actor_array.c ---
-bool func_80329530(Actor *this, s32 dist);
+bool func_80329530(Actor *self, s32 dist);
 s32 func_803297C8(Actor *arg0, f32 arg1[3]);
 s32 func_80329054(Actor *arg0, s32 arg1); // decomp has s32 arg0 but callers pass Actor*
-void subaddie_set_ideal_yaw(Actor *this, int arg1);
-bool subaddie_playerIsWithinSphere(Actor *this, s32 dist);
+void subaddie_set_ideal_yaw(Actor *self, int arg1);
+bool subaddie_playerIsWithinSphere(Actor *self, s32 dist);
 Actor *actor_spawnWithYaw_s32(enum actor_e id, s32 (*pos)[3], s32 rot);
 
 // --- core2/actor_cubebounds.c ---
@@ -381,7 +381,7 @@ void func_80320B44(void *arg0, void *arg1, void *arg2, void *arg3); // [port] sa
 s32 func_8029453C(void);
 
 // --- core2/spline_bezier.c ---
-void func_8034A2A8(struct5Bs *this);
+void func_8034A2A8(struct5Bs *self);
 
 // --- core2/vtxlist.c ---
 void vtxList_free(BKVertexList *vtxList);
@@ -390,7 +390,7 @@ void vtxList_free(BKVertexList *vtxList);
 void assetcache_release(void *);
 
 // --- core2/glspline.c ---
-void func_80343DEC(Actor *this);
+void func_80343DEC(Actor *self);
 
 // --- core2/model/render.c ---
 s32 func_8033A0F0(s32 arg0);
@@ -404,16 +404,16 @@ void func_8033E73C(ActorMarker *arg0, s32 arg1, FuncUnk40 arg2); // [port] fixed
 int func_8033E3F0(enum common_particle_e particle_id, int arg1);
 
 // --- core2/particle/particle.c ---
-void particleEmitter_setModel(ParticleEmitter *this, enum asset_e model_id);
-void particleEmitter_setSfx(ParticleEmitter *this, enum sfx_e sfx_id, s32 arg2);
-void particleEmitter_setAlpha(ParticleEmitter *this, s32 arg1);
-void particleEmitter_setVelocityAccelerationAndPositionRanges(ParticleEmitter *this, ParticleSettingsVelocityAccelerationPosition *settings);
-void func_802EFC28(ParticleEmitter *this, ParticleSettingsScaleAndLifetimeDrawModeEmitCount *settings);
+void particleEmitter_setModel(ParticleEmitter *self, enum asset_e model_id);
+void particleEmitter_setSfx(ParticleEmitter *self, enum sfx_e sfx_id, s32 arg2);
+void particleEmitter_setAlpha(ParticleEmitter *self, s32 arg1);
+void particleEmitter_setVelocityAccelerationAndPositionRanges(ParticleEmitter *self, ParticleSettingsVelocityAccelerationPosition *settings);
+void func_802EFC28(ParticleEmitter *self, ParticleSettingsScaleAndLifetimeDrawModeEmitCount *settings);
 
 // --- core2/quiz/game.c ---
 void func_802D68F0(s32 seconds);
-void func_802D4A9C(Actor *this, s32 arg1);
-void func_802D4AC0(Actor *this, s32 arg1, enum file_progress_e arg2);
+void func_802D4A9C(Actor *self, s32 arg1);
+void func_802D4AC0(Actor *self, s32 arg1, enum file_progress_e arg2);
 
 // --- core2/projectile_blueegg.c ---
 void func_80353580(ActorMarker *marker);
@@ -478,12 +478,12 @@ void func_8038EA90(void);
 // --- src/BGS/ch/tanktup.c ---
 // [port] func_8038F570 removed: defined with (s16*) but cutscene/lair.c calls with no args (decomp pattern)
 // [port] func_8028F94C removed: polymorphic calls (chfinalboss.c passes 3 args, definition takes 2)
-void func_8038F51C(Actor *this);
+void func_8038F51C(Actor *self);
 
 // --- src/BGS/ch/tiptup.c ---
-s32 func_80388E70(ActorMarker *this);
-void chTiptup_choirHitReaction(ActorMarker *this, s32 arg1);
-void func_80388FFC(ActorMarker *this, s32 *arg1, f32* arg2);
+s32 func_80388E70(ActorMarker *self);
+void chTiptup_choirHitReaction(ActorMarker *self, s32 arg1);
+void func_80388FFC(ActorMarker *self, s32 *arg1, f32* arg2);
 
 // --- src/BGS/ch/yumblie.c ---
 bool chyumblie_is_edible(ActorMarker * arg0);
@@ -662,7 +662,7 @@ void __chjuju_updateCount(ActorMarker **ptr);
 void func_803892A8(ActorMarker **ptr);
 
 // --- src/MM/ch/jujuhitbox.c ---
-void chjujuhitbox_setJuju(Actor *this, s32 slave_id, Actor *slavePtr);
+void chjujuhitbox_setJuju(Actor *self, s32 slave_id, Actor *slavePtr);
 
 // --- src/MMM/actor_spawninit.c ---
 void MMM_func_803890E0(void);
@@ -719,7 +719,7 @@ void RBB_func_80386C48(void);
 void func_8038685C(ActorMarker *marker);
 
 // --- src/RBB/ch/whistlectrl.c ---
-s32 chWhistleCtrl_newEvent(Actor *this, s32 whistle_id, Actor *other);
+s32 chWhistleCtrl_newEvent(Actor *self, s32 whistle_id, Actor *other);
 
 // --- src/RBB/life_balloontrigger.c ---
 void func_8038FB54(void);
@@ -906,35 +906,35 @@ void ability_use(s32 arg0);
 
 // --- src/core2/actor_array.c ---
 Struct64s* func_8032994C(void);
-bool func_80329140(Actor *this, s32 arg1, s32 arg2);
-bool func_80329260(Actor *this, f32 p1[3]);
-bool func_803292E0(Actor *this);
-bool func_8032944C(Actor *this);
-bool func_803294B4(Actor *this, s32 arg1);
-bool func_803294F0(Actor *this, s32 arg1, s32 arg2);
-bool func_803296D8(Actor *this, s32 dist);
+bool func_80329140(Actor *self, s32 arg1, s32 arg2);
+bool func_80329260(Actor *self, f32 p1[3]);
+bool func_803292E0(Actor *self);
+bool func_8032944C(Actor *self);
+bool func_803294B4(Actor *self, s32 arg1);
+bool func_803294F0(Actor *self, s32 arg1, s32 arg2);
+bool func_803296D8(Actor *self, s32 dist);
 bool func_8032A9E4(s32 arg0, s32 arg1, s32 arg2);
-bool func_8032BBE8(Actor *this);
-bool subaddie_playerIsWithinAsymmetricCylinder(Actor *this, s32 radius, s32 d_upper, s32 d_lower);
-bool subaddie_playerIsWithinCylinder(Actor *this, s32 radius, s32 d_y);
+bool func_8032BBE8(Actor *self);
+bool subaddie_playerIsWithinAsymmetricCylinder(Actor *self, s32 radius, s32 d_upper, s32 d_lower);
+bool subaddie_playerIsWithinCylinder(Actor *self, s32 radius, s32 d_y);
 int func_80329210(Actor * arg0, f32 (* arg1)[3]); // [port] fixed truncated function pointer param
 s32 actorArray_actorCount(enum actor_e actor_id);
 s32 func_80326218(void);
-s32 func_8032627C(Actor *this);
-s32 func_8032970C(Actor *this);
+s32 func_8032627C(Actor *self);
+s32 func_8032970C(Actor *self);
 void actorArray_defrag(void);
 void actorArray_free(void);
-void actor_setOpacity(Actor *this, s32 alpha);
-void func_803255FC(Actor *this);
+void actor_setOpacity(Actor *self, s32 alpha);
+void func_803255FC(Actor *self);
 void func_80325F8C(void);
-void func_803262B8(Actor *this);
-void func_803262E4(Actor *this);
-void func_80326894(Actor *this);
+void func_803262B8(Actor *self);
+void func_803262E4(Actor *self);
+void func_80326894(Actor *self);
 void func_803268B4(void);
 void func_80326C24(s32 arg0);
 void func_803283BC(void);
 void func_803283D4(void);
-void func_80328CA8(Actor *this, s32 angle);
+void func_80328CA8(Actor *self, s32 angle);
 void func_803297FC(Actor *arg0, f32 *o1, f32 *o2);
 s32 func_80329904(ActorMarker *arg0, s32 arg1, f32 *arg2); // [port] was void — definition returns s32
 void func_8032A09C(s32 arg0, ActorListSaveState *arg1);
@@ -947,12 +947,12 @@ void func_8032AB84(Actor *arg0);
 void func_8032ACA8(Actor *arg0);
 void func_8032AD7C(s32 arg0);
 void func_8032AEB4(void);
-void func_8032B258(Actor *this, enum collision_e arg1);
-void func_8032B4DC(Actor *this, ActorMarker *arg1, s32 arg2);
-void func_8032BB88(Actor *this, s32 arg1, s32 arg2);
-void func_8032BC18(Actor *this);
-void func_8032BC60(Actor *this, s32 arg1, f32 arg2[3]);
-void subaddie_set_state_looped(Actor * this, u32 arg1);
+void func_8032B258(Actor *self, enum collision_e arg1);
+void func_8032B4DC(Actor *self, ActorMarker *arg1, s32 arg2);
+void func_8032BB88(Actor *self, s32 arg1, s32 arg2);
+void func_8032BC18(Actor *self);
+void func_8032BC60(Actor *self, s32 arg1, f32 arg2[3]);
+void subaddie_set_state_looped(Actor * self, u32 arg1);
 
 // --- src/core2/actor_cubebounds.c ---
 bool func_80305248(f32 arg0[3], s32 arg1, f32 *arg2);
@@ -1022,7 +1022,7 @@ void func_8032EE80(Cube *cube);
 void func_8032F464(bool arg0);
 void func_8032F64C(f32 *pos, ActorMarker * marker);
 void func_8032F6A4(s32 *pos, ActorMarker * marker, s32 *rot);
-void func_8032FFD4(ActorMarker *this, s32 arg1);
+void func_8032FFD4(ActorMarker *self, s32 arg1);
 void func_80330078(ActorMarker *marker, ActorMarker *other_marker, s16 *arg2);
 void func_803300B8(ActorMarker *marker, MarkerCollisionFunc method);
 void func_803300C0(ActorMarker *marker, s32 (*method)(ActorMarker *, ActorMarker *)); // [port] fixed truncated function pointer param
@@ -1038,8 +1038,8 @@ void func_80332894(void);
 void func_8033297C(void);
 void func_803329AC(void);
 void func_80332A38(void);
-void marker_free(ActorMarker *this);
-void marker_setModelId(ActorMarker *this, enum asset_e modelIndex);
+void marker_free(ActorMarker *self);
+void marker_setModelId(ActorMarker *self, enum asset_e modelIndex);
 
 // --- src/core2/actor_motioncurve.c ---
 s32 func_80296560(void);
@@ -1076,12 +1076,12 @@ bool func_8033BD8C(void* arg0); // [port] MIPS implicit return — wraps func_80
 
 // --- src/core2/anim/anim_buffer.c ---
 void anim_802897D4(AnimMtxList **this_ptr, BKAnimationList *arg0, Animation *dst); // [port] takes AnimMtxList** — caller passes &marker->unk20
-void anim_drawSetup(Animation *this);
-void anim_release(Animation *this);
-void anim_resetNow(Animation *this);
-void anim_resetSmooth(Animation *this);
-void anim_setIndex(Animation *this, enum asset_e arg1);
-void anim_update(Animation *this);
+void anim_drawSetup(Animation *self);
+void anim_release(Animation *self);
+void anim_resetNow(Animation *self);
+void anim_resetSmooth(Animation *self);
+void anim_setIndex(Animation *self, enum asset_e arg1);
+void anim_update(Animation *self);
 
 // --- src/core2/anim/anim_cache.c ---
 bool animCache_inUse(s16 index);
@@ -1095,10 +1095,10 @@ void animCache_release(s16 index);
 void animCache_update(void);
 
 // --- src/core2/anim/anim_sequencehandler.c ---
-void func_80361DC4(Actor *this);
-void func_80361E10(Actor *this);
-void func_80361E9C(Actor *this);
-void func_80361EE0(Actor *this);
+void func_80361DC4(Actor *self);
+void func_80361E10(Actor *self);
+void func_80361E9C(Actor *self);
+void func_80361EE0(Actor *self);
 
 // --- src/core2/anim/anim_texturecache.c ---
 bool AnimTextureListCache_tryGetTextureOffset(s32 list_index, s32 texture_index, s32 *current_frame);
@@ -1110,13 +1110,13 @@ void AnimTextureListCache_init(void);
 void AnimTextureListCache_update(void);
 
 // --- src/core2/anim_bonetransformlist.c ---
-void boneTransformList_getBoneScale(BoneTransformList *this, s32 bone_id, f32 scale[3]);
+void boneTransformList_getBoneScale(BoneTransformList *self, s32 bone_id, f32 scale[3]);
 // [port] removed: boneTransformList_reset — polymorphic callers pass BoneTransformList*, s32*
-void boneTransformList_setBoneScale(BoneTransformList *this, s32 bone_id, f32 scale[3]);
-void func_8033A57C(BoneTransformList *this, s32 bone_id, f32 arg2[4]);
-void func_8033A6B0(BoneTransformList *this, s32 bone_id, f32 arg2[3]);
-void func_8033A8F0(BoneTransformList *this, s32 bone_id, f32 arg2[4]);
-void func_8033A968(BoneTransformList *this, s32 bone_id, f32 arg2[3]);
+void boneTransformList_setBoneScale(BoneTransformList *self, s32 bone_id, f32 scale[3]);
+void func_8033A57C(BoneTransformList *self, s32 bone_id, f32 arg2[4]);
+void func_8033A6B0(BoneTransformList *self, s32 bone_id, f32 arg2[3]);
+void func_8033A8F0(BoneTransformList *self, s32 bone_id, f32 arg2[4]);
+void func_8033A968(BoneTransformList *self, s32 bone_id, f32 arg2[3]);
 
 // --- src/core2/anseq.c ---
 void anSeq_free(void **ppAnSeq); // [port] was bk_vector(AnSeqElement)** — internal type, use void*
@@ -1636,17 +1636,17 @@ void func_802BE940(void);
 void func_803525A0(f32 arg0[3]);
 
 // --- src/core2/camera/cameranode_type1.c ---
-bool code336F0_func_802BA87C(CameraNodeType1 *this);
-bool code336F0_func_802BA89C(CameraNodeType1 *this);
-bool code336F0_func_802BA8BC(CameraNodeType1 *this);
-void code336F0_func_802BA7D8(CameraNodeType1 *this, f32 arg1[3]);
+bool code336F0_func_802BA87C(CameraNodeType1 *self);
+bool code336F0_func_802BA89C(CameraNodeType1 *self);
+bool code336F0_func_802BA8BC(CameraNodeType1 *self);
+void code336F0_func_802BA7D8(CameraNodeType1 *self, f32 arg1[3]);
 
 // --- src/core2/camera/cameranode_type3.c ---
-bool code33310_func_802BA4D0(CameraNodeType3 *this);
-bool code33310_func_802BA4F0(CameraNodeType3 *this);
+bool code33310_func_802BA4D0(CameraNodeType3 *self);
+bool code33310_func_802BA4F0(CameraNodeType3 *self);
 
 // --- src/core2/camera/cameranode_type4.c ---
-s32 code33250_func_802BA234(CameraNodeType4 *this);
+s32 code33250_func_802BA234(CameraNodeType4 *self);
 
 // --- src/core2/camera/cameranodelist.c ---
 s32 ncCameraNodeList_getNodeType(int camera_node_index);
@@ -1790,7 +1790,7 @@ void ncStaticCamera_setToNode(s32);
 void ncStaticCamera_update(void);
 
 // --- src/core2/ch/beeswarm.c ---
-void func_802CEB60(Actor *this);
+void func_802CEB60(Actor *self);
 
 // --- src/core2/ch/bottlesbonus.c ---
 f32 * chBottlesBonus_get_piece_distance_vec4f(s32 arg0);
@@ -1828,16 +1828,16 @@ void func_80359A40(f32 position[3], void *arg1, s32 cnt); // [port] struct_core2
 void func_802D8BE4(bool gold_feather);
 
 // --- src/core2/ch/honeycomb.c ---
-enum honeycomb_e func_802CA1C4(Actor *this);
+enum honeycomb_e func_802CA1C4(Actor *self);
 void func_802CA1CC(enum honeycomb_e id);
 
 // --- src/core2/ch/jiggy.c ---
-enum jiggy_e chjiggy_getJiggyId(Actor *this);
-void chjiggy_hide(Actor * this);
-void chjiggy_setJiggyId(Actor *this, u32 id);
+enum jiggy_e chjiggy_getJiggyId(Actor *self);
+void chjiggy_hide(Actor * self);
+void chjiggy_setJiggyId(Actor *self, u32 id);
 
 // --- src/core2/ch/jigsawdance.c ---
-void chJigsawDance_setState(Actor * this, u32 arg1);
+void chJigsawDance_setState(Actor * self, u32 arg1);
 
 // --- src/core2/ch/mmm_veggies.c ---
 void func_802CDAC4(Actor *);
@@ -1860,15 +1860,15 @@ void chOverlayPressStart_func_802DCDC0(NodeProp *arg0, ActorMarker *arg1);
 void chOverlayPressStart_spawn(NodeProp *arg0, ActorMarker *arg1);
 
 // --- src/core2/ch/soundsource.c ---
-void func_802D09B8(Actor *this, s32 arg1);
+void func_802D09B8(Actor *self, s32 arg1);
 
 // --- src/core2/ch/trainers.c ---
-bool chtrainers_canUse(Actor *this);
-void chtrainers_pickup(Actor *this);
+bool chtrainers_canUse(Actor *self);
+void chtrainers_pickup(Actor *self);
 
 // --- src/core2/ch/wadingboots.c ---
-bool chwadingboots_802D6E0C(Actor *this);
-void chwadingboots_802D6E54(Actor *this);
+bool chwadingboots_802D6E0C(Actor *self);
+void chwadingboots_802D6E54(Actor *self);
 
 // --- src/core2/climb.c ---
 u8 func_8029825C(void);
@@ -1885,7 +1885,7 @@ void bundle_update(Actor *actor);
 
 // --- src/core2/collectible/printdraw.c ---
 // [port] removed: func_802FB0D4 — polymorphic callers pass struct8s*, struct7s*, Struct_core2_79830_0*
-void func_802FB020(struct8s *this, s32 arg1);
+void func_802FB020(struct8s *self, s32 arg1);
 void func_802FB104(s32, struct8s *);
 void func_802FB15C(s32 arg0, struct8s * arg1);
 void func_802FB194(s32 arg0, struct8s * arg1);
@@ -1973,15 +1973,15 @@ void func_8031B790(void);
 void func_8031B990(s32 red, s32 blue, s32 green);
 
 // --- src/core2/collision/raycast.c ---
-s32 func_8031C59C(struct0 *this);
-s32 func_8031C5A4(struct0 *this);
-u8 func_8031C594(struct0 *this);
-void func_8031BA7C(struct0 *this);
-void func_8031BA9C(struct0 *this);
+s32 func_8031C59C(struct0 *self);
+s32 func_8031C5A4(struct0 *self);
+u8 func_8031C594(struct0 *self);
+void func_8031BA7C(struct0 *self);
+void func_8031BA9C(struct0 *self);
 void func_8031C44C(struct0 *arg0);
-void func_8031C608(struct0 *this);
-void func_8031C618(struct0 *this, f32 *arg1);
-void func_8031C638(struct0 *this, s32 arg1);
+void func_8031C608(struct0 *self);
+void func_8031C618(struct0 *self, f32 *arg1);
+void func_8031C638(struct0 *self, s32 arg1);
 
 // --- src/core2/collision/spherecast.c ---
 s32 func_8032CA80(Actor *actor, s32 arg1);
@@ -2151,11 +2151,11 @@ Actor * func_802DF160(Gfx **gfx, Mtx **mtx, Vtx **vtx);
 void func_802DF270(void);
 
 // --- src/core2/fx/effect_modelparticle.c ---
-void func_802DAC84(ParticleEmitter *pCtrl, Actor *this, enum asset_e model_id);
-void func_802DAD08(ParticleEmitter *pCtrl, Actor *this, enum asset_e model_id);
-void func_802DAD8C(ParticleEmitter *pCtrl, Actor *this, enum asset_e model_id);
+void func_802DAC84(ParticleEmitter *pCtrl, Actor *self, enum asset_e model_id);
+void func_802DAD08(ParticleEmitter *pCtrl, Actor *self, enum asset_e model_id);
+void func_802DAD8C(ParticleEmitter *pCtrl, Actor *self, enum asset_e model_id);
 void func_802DB4E0(ActorMarker *marker, s32 arg1);
-void func_802DB5A0(Actor *this);
+void func_802DB5A0(Actor *self);
 
 // --- src/core2/fx/effect_particle.c ---
 void func_802DF090(s32 arg0, s32 arg1);
@@ -2316,13 +2316,13 @@ void func_80315110(Gfx **gfx, Mtx **mtx, Vtx **vtx);
 void func_803151D0(Gfx **gfx, Mtx **mtx, Vtx **vtx);
 
 // --- src/core2/glspline.c ---
-bool func_80344040(Actor *this);
-int func_80343D50(Actor *this, s32 arg1, s32 arg2, s32 arg3);
+bool func_80344040(Actor *self);
+int func_80343D50(Actor *self, s32 arg1, s32 arg2, s32 arg3);
 s32 func_80341C78(s32 arg0[3]);
 s32 func_80341D5C(s32 arg0[3], s32 arg1[3]);
 // [port] removed: func_80341EC4 — polymorphic callers pass f32[3], Actorlocal_Core2_9E370*
 s32 func_80341F2C(s32 arg0);
-s32 func_80343654(Actor *this);
+s32 func_80343654(Actor *self);
 void func_803411B0(void);
 void func_80341A54(void);
 void glspline_defrag(void);
@@ -2460,7 +2460,7 @@ void func_8029AF1C(void);
 // --- src/core2/particle/colordefault.c ---
 bool func_802EE5F0(s32 arg0);
 s32 func_802EE5E0(s32 arg0);
-void func_802EE5E8(void *this); // [port] ParticleEmitter* in definition, void* for sparkleemit.c compat
+void func_802EE5E8(void *self); // [port] ParticleEmitter* in definition, void* for sparkleemit.c compat
 void func_802EE63C(void);
 void func_802EE684(void);
 
@@ -2484,25 +2484,25 @@ void func_802F1884(void *arg0); // [port] arg0 is Struct_Core2_6A4B0_2* (local t
 void func_802F1934(void *arg0, s32 arg1); // [port] arg0 is Struct_Core2_6A4B0_2* (local to .c)
 
 // --- src/core2/particle/particle.c ---
-int particleEmitter_isDone(ParticleEmitter *this);
-void func_802F053C(ParticleEmitter *this, f32 arg1[3]);
-void func_802F066C(ParticleEmitter *this, f32 position[3]);
+int particleEmitter_isDone(ParticleEmitter *self);
+void func_802F053C(ParticleEmitter *self, f32 arg1[3]);
+void func_802F066C(ParticleEmitter *self, f32 position[3]);
 void func_802F0E80(void* arg0, s32 arg1);
 void partEmitMgr_defrag(void);
 void partEmitMgr_draw(Gfx **gdl, Mtx **mptr, Vtx **vptr);
 void partEmitMgr_drawPass0(Gfx **gdl, Mtx **mptr, Vtx **vptr);
 void partEmitMgr_drawPass1(Gfx **gdl, Mtx **mptr, Vtx **vptr);
 void partEmitMgr_free(void);
-void partEmitMgr_freeEmitter(ParticleEmitter *this);
+void partEmitMgr_freeEmitter(ParticleEmitter *self);
 void partEmitMgr_init(void);
 void partEmitMgr_update(void);
-void particleEmitter_draw(ParticleEmitter *this, Gfx **gdl, Mtx **mPtr, Vtx **vPtr);
-void particleEmitter_emitUniformLine(ParticleEmitter *this, f32 start[3], f32 end[3], s32 count);
-void particleEmitter_free(ParticleEmitter *this);
-void particleEmitter_func_802EFA78(ParticleEmitter *this, s32 arg1);
+void particleEmitter_draw(ParticleEmitter *self, Gfx **gdl, Mtx **mPtr, Vtx **vPtr);
+void particleEmitter_emitUniformLine(ParticleEmitter *self, f32 start[3], f32 end[3], s32 count);
+void particleEmitter_free(ParticleEmitter *self);
+void particleEmitter_func_802EFA78(ParticleEmitter *self, s32 arg1);
 // [port] particleEmitter_manualFree removed: defined with (ParticleEmitter*) but dronevanish.c calls with no args (decomp pattern)
-void particleEmitter_setParticleCallback(ParticleEmitter *this, void (*arg1)(ParticleEmitter *this, f32 pos[3])); // [port] fixed truncated function pointer param
-void particleEmitter_update(ParticleEmitter *this);
+void particleEmitter_setParticleCallback(ParticleEmitter *self, void (*arg1)(ParticleEmitter *self, f32 pos[3])); // [port] fixed truncated function pointer param
+void particleEmitter_update(ParticleEmitter *self);
 
 // --- src/core2/particle/playertrail.c ---
 bool func_8029BDE8(void);
@@ -2550,15 +2550,15 @@ void func_803541C0(s32 arg0);
 void func_803541CC(s32 arg0);
 
 // --- src/core2/particle/samplerate.c ---
-void func_802F4798(Struct5Ds *this);
-void func_802F487C(Struct5Ds *this, void (*arg1)(Struct5Ds *, s32)); // [port] fixed truncated function pointer param
-void func_802F4894(Struct5Ds *this, f32 arg1[3]);
-void func_802F48B4(Struct5Ds *this, void (*arg1)(Struct5Ds *, s32)); // [port] fixed truncated function pointer param
-void func_802F48BC(Struct5Ds *this);
-void func_802F48E0(Struct5Ds *this);
-void func_802F4900(Struct5Ds *this, s32 arg1);
-void func_802F4924(Struct5Ds *this);
-void func_802F4978(Struct5Ds *this);
+void func_802F4798(Struct5Ds *self);
+void func_802F487C(Struct5Ds *self, void (*arg1)(Struct5Ds *, s32)); // [port] fixed truncated function pointer param
+void func_802F4894(Struct5Ds *self, f32 arg1[3]);
+void func_802F48B4(Struct5Ds *self, void (*arg1)(Struct5Ds *, s32)); // [port] fixed truncated function pointer param
+void func_802F48BC(Struct5Ds *self);
+void func_802F48E0(Struct5Ds *self);
+void func_802F4900(Struct5Ds *self, s32 arg1);
+void func_802F4924(Struct5Ds *self);
+void func_802F4978(Struct5Ds *self);
 
 // --- src/core2/particle/scale1.c ---
 void func_802EDD20(void);
@@ -2656,11 +2656,11 @@ int func_802D6A38(enum map_e map_id);
 s32 func_802D67AC(s32 arg0);
 s32 func_802D680C(s32 arg0);
 s32 func_802D683C(s32 arg0);
-void func_802D3CE8(Actor *this);
-void func_802D3D74(Actor *this);
-void func_802D48B8(Actor *this);
+void func_802D3CE8(Actor *self);
+void func_802D3D74(Actor *self);
+void func_802D48B8(Actor *self);
 void func_802D48F0(void);
-void func_802D4928(Actor *this, s32 arg1, s32 arg2, s32 arg3);
+void func_802D4928(Actor *self, s32 arg1, s32 arg2, s32 arg3);
 void func_802D5058(enum map_e map_id, s32 arg1, bool arg2);
 void func_802D520C(Gfx **gfx, Mtx **mtx, Vtx **vtx);
 void func_802D5628(void);
@@ -2729,12 +2729,12 @@ void func_802F7DE4(void);
 void func_802F7E54(void);
 
 // --- src/core2/sfx/playstate.c ---
-void func_802F8A70(struct6s *this);
-void func_802F8A90(struct6s *this, Gfx **gdl, Mtx **mptr, Vtx **vptr);
-void func_802F8B8C(struct6s *this);
-void func_802F8C90(struct6s *this);
-void func_802F8CB0(struct6s *this);
-void func_802F8CD0(struct6s * this);
+void func_802F8A70(struct6s *self);
+void func_802F8A90(struct6s *self, Gfx **gdl, Mtx **mptr, Vtx **vptr);
+void func_802F8B8C(struct6s *self);
+void func_802F8C90(struct6s *self);
+void func_802F8CB0(struct6s *self);
+void func_802F8CD0(struct6s * self);
 
 // --- src/core2/sfx/randompitch.c ---
 int func_802F9C0C(s32 arg0);
@@ -2763,11 +2763,11 @@ void func_8030DD54(u8 indx, void (*arg1)(u8)); // [port] fixed truncated functio
 void func_8030DFB4(u8 indx, s32 arg1);
 
 // --- src/core2/sfx/streamctrl.c ---
-void func_802F80F0(struct3s *this);
-void func_802F8110(struct3s *this, Gfx **gdl, Mtx **mptr, u32 arg3);
-void func_802F8214(struct3s * this);
-void func_802F8338(struct3s *this);
-void func_802F8358(struct3s *this);
+void func_802F80F0(struct3s *self);
+void func_802F8110(struct3s *self, Gfx **gdl, Mtx **mptr, u32 arg3);
+void func_802F8214(struct3s * self);
+void func_802F8338(struct3s *self);
+void func_802F8358(struct3s *self);
 void func_802F83AC(struct3s *arg0);
 
 // --- src/core2/sfx/volume.c ---
@@ -2795,9 +2795,9 @@ void spawnQueue_reset(void);
 void spawnQueue_unlock(void);
 
 // --- src/core2/spline_bezier.c ---
-void func_8034A130(struct5Bs *this);
-void func_8034A1B4(struct5Bs *this, s32 indx, s32 dst[3]);
-void func_8034A308(struct5Bs *this, s32 indx, f32 arg2[3]);
+void func_8034A130(struct5Bs *self);
+void func_8034A1B4(struct5Bs *self, s32 indx, s32 dst[3]);
+void func_8034A308(struct5Bs *self, s32 indx, f32 arg2[3]);
 
 // --- src/core2/sprite/displaydata.c ---
 s32 func_8033E8AC(void);
@@ -2924,9 +2924,9 @@ void func_8034C97C(void);
 void func_8034C9B0(int arg0);
 
 // --- src/core2/vtxlist.c ---
-s32 vtxList_getVtxCount(BKVertexList *this);
-void vtxList_getCenterAndNorm(BKVertexList *this, f32 center[3], f32 *norm);
-void vtxList_getVtxRange(BKVertexList *this, Vtx **vtx, Vtx **vtx_end);
+s32 vtxList_getVtxCount(BKVertexList *self);
+void vtxList_getCenterAndNorm(BKVertexList *self, f32 center[3], f32 *norm);
+void vtxList_getVtxRange(BKVertexList *self, Vtx **vtx, Vtx **vtx_end);
 void vtxList_recolor(BKVertexList *self, s32 arg1[3]);
 
 // --- src/core2/yaw.c ---
@@ -2984,10 +2984,10 @@ s32 bastick_getZone(void);
 void func_8028F94C(s32 arg0, f32 arg1[3]);
 
 // --- src/core2/collectible/printdraw.c ---
-s32 func_802FB0D4(void *this); // [port] void* — callers pass struct7s*, struct8s*, Struct_core2_79830_0*
+s32 func_802FB0D4(void *self); // [port] void* — callers pass struct7s*, struct8s*, Struct_core2_79830_0*
 
 // --- src/core2/particle/particle.c ---
-void particleEmitter_manualFree(ParticleEmitter *this);
+void particleEmitter_manualFree(ParticleEmitter *self);
 
 // --- src/core2/anim/anim_bonetransform.c ---
 void func_8033BD20(void **arg0); // [port] callers pass BKModelBin**, BKSprite**, void** — use void**
@@ -3047,7 +3047,7 @@ void mapModel_getBounds(s32 min[3], s32 max[3]);
 int animCache_getBoneTransformList(s16 index, BoneTransformList **arg1);
 
 // --- src/core2/anim_bonetransformlist.c ---
-void boneTransformList_reset(BoneTransformList *this);
+void boneTransformList_reset(BoneTransformList *self);
 
 // --- src/core2/ch/bottlesbonuscursor.c ---
 void chBottlesBonusCursor_func_802DF460(s32 indx, ActorMarker *caller, f32 arg2[3]);
