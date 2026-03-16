@@ -119,7 +119,7 @@ extern "C" char* ResourceMgr_LoadByAssetId(uint32_t assetId) {
 
     const auto& symbolMap = GetAssetSymbolMap();
     if (const auto entry = symbolMap.find(assetId); entry != symbolMap.end()) {
-        auto mappedPath = std::string("assets/") + entry->second;
+        auto mappedPath = entry->second;
         std::replace(mappedPath.begin(), mappedPath.end(), '\\', '/');
 
         if (auto result = LoadAndRetainResource(mappedPath, assetId); result != nullptr) {
