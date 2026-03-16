@@ -28,6 +28,7 @@
 #include <libultraship/bridge/gfxbridge.h>
 #include <filesystem>
 #include <fstream>
+#include "FrameInterpolation.h"
 #include <libultraship/libultraship.h>
 
 #ifdef __SWITCH__
@@ -449,6 +450,7 @@ void GameEngine::AudioExit() {
 void Framebuffer_ReadbackGPU_FromBackbuffer(Fast::Interpreter* interpreter);
 extern "C" int port_isViBlack(void);
 
+
 void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map<Mtx*, MtxF>>& mtx_replacements) {
     auto wnd = std::dynamic_pointer_cast<Fast::Fast3dWindow>(Ship::Context::GetInstance()->GetWindow());
 
@@ -467,15 +469,22 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
     // Run() (frame rendered) and EndFrame() (buffer swap). On N64, CPU/RDP shared
     // physical memory so gFramebuffers always had valid pixel data after rendering.
     auto wndBase = Ship::Context::GetInstance()->GetWindow();
+    size_t frameIdx = 0;
+    size_t frameCount = mtx_replacements.size();
     for (const auto& m : mtx_replacements) {
-        if (wndBase->IsFrameReady()) {
+        bool isFinalFrame = (frameIdx == frameCount - 1);
+        // [port] Bypass IsFrameReady() when interpolation is active — render all
+        // frames per tick and let vsync pace them.
+        if (frameCount > 1 || wndBase->IsFrameReady()) {
             auto gui = wndBase->GetGui();
             wndBase->GetMouseStateManager()->StartFrame();
             gui->StartDraw();
             interpreter->StartFrame();
             interpreter->Run(Commands, m);
-            // Read backbuffer into gFramebuffers before the swap destroys it
-            Framebuffer_ReadbackGPU_FromBackbuffer(interpreter);
+            // [port] Only readback on the final (real) frame, not interpolated ones.
+            if (isFinalFrame) {
+                Framebuffer_ReadbackGPU_FromBackbuffer(interpreter);
+            }
             // [port] Emulate N64 osViBlack: after readback captured the world,
             // clear the game framebuffer to black so the player sees nothing.
             // On N64, osViBlack blanked TV output but the RDP still rendered.
@@ -488,6 +497,7 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
             interpreter->EndFrame();
         }
         interpreter->mInterpolationIndex++;
+        frameIdx++;
     }
 
     bool curAltAssets = CVarGetInteger("gEnhancements.Mods.AlternateAssets", 0);
@@ -529,10 +539,13 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
     // time_base = fps * original_fps (one second)
     int next_original_frame = fps;
 
+    // [port] Scan the display list for matrices and record for interpolation
+    FrameInterpolation_RecordFrame(commands);
+
     while (time + original_fps <= next_original_frame) {
         time += original_fps;
         if (time != next_original_frame) {
-            // mtx_replacements.push_back(FrameInterpolation_Interpolate((float) time / next_original_frame));
+            mtx_replacements.push_back(FrameInterpolation_Interpolate((float) time / next_original_frame));
         } else {
             mtx_replacements.emplace_back();
         }

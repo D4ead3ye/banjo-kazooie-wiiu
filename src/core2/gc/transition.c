@@ -8,6 +8,7 @@ void anctrl_setAnimTimer(AnimCtrl*, f32);
 void func_8025AC20(s32, s32, s32, f32, char*, s32);
 extern void port_setViBlack(int active);     // [port] display blanking (black screen after readback)
 extern void port_freezeReadback(int freeze); // [port] freeze gFramebuffers for transition capture
+extern void port_requestReadback(void);      // [port] request GPU→CPU readback for next frame
 
 typedef enum {
     TRANSITION_ID_1_BLACK_IN = 1,
@@ -203,6 +204,7 @@ void _gctranstion_changeState(s32 state, TransitionInfo *desc){
         else{
             osViBlack(1);
             port_setViBlack(1); // [port] hide screen (readback still runs so gFramebuffers gets the world)
+            port_requestReadback(); // [port] need readback active for transition capture
             anctrl_setAnimTimer(s_current_transition.anctrl, 0.25f); //set animation timer
         }
         anctrl_start(s_current_transition.anctrl, "gctransition.c", 0x125); 

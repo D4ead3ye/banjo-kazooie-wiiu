@@ -5,6 +5,8 @@
 
 #include "core2/gc/zoombox.h"
 
+extern void port_requestReadback(void); // [port]
+
 #ifndef MIN
 #define MIN(s, t) (((s) < t)?(s):(t))
 #endif
@@ -1365,10 +1367,15 @@ void gcpausemenu_draw(Gfx **gfx, Mtx **mtx, Vtx **vtx) {
         return;
     }
 
-    if (D_8036C620) {
+    if (D_8036C620 == 1) {
+        port_requestReadback(); // [port] request readback so snapshot has valid data next frame
         func_8033B61C();
+        D_8036C620 = 2;
+    }
+    else if (D_8036C620 == 2) {
+        // [port] gFramebuffers now has valid data, take snapshot
         func_80315084(gfx, mtx, vtx);
-        D_8036C620 = false;
+        D_8036C620 = 0;
     }
     else {
         func_80315110(gfx, mtx, vtx);

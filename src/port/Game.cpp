@@ -4,6 +4,14 @@
 #include <fast/interpreter.h>
 #include "Engine.h"
 
+// [port] timeBeginPeriod(1) improves SDL_Delay precision for no-vsync path.
+// With vsync, sleep is unused since vsync paces the frame budget.
+#ifdef _WIN32
+#include <windows.h>
+#include <timeapi.h>
+#pragma comment(lib, "winmm.lib")
+#endif
+
 extern "C" {
 #include "enums.h"
 #include "core1/core1.h"
@@ -28,6 +36,7 @@ extern "C" void Graphics_PushFrame(Gfx* data) {
 //    port_freezeReadback().
 static bool s_viBlack = false;
 static bool s_freezeReadback = false;
+static int s_readbackRequestFrames = 0; // on-demand readback: counts down each frame
 
 extern "C" void port_setViBlack(int active) {
     s_viBlack = (active != 0);
@@ -39,6 +48,12 @@ extern "C" int port_isViBlack(void) {
 
 extern "C" void port_freezeReadback(int freeze) {
     s_freezeReadback = (freeze != 0);
+}
+
+// [port] On-demand readback — GPU→CPU costs ~25ms on DX11, so only run when requested.
+// Counter persists for 2 frames to handle pipeline delay.
+extern "C" void port_requestReadback(void) {
+    s_readbackRequestFrames = 2;
 }
 
 // [port] GPU readback state — shared between regular readback and high-res tile sampling.
@@ -60,6 +75,8 @@ static bool s_gpuReadbackFlipY = false;
 // OpenGL returns bottom-up rows; DX11 returns top-down.
 void Framebuffer_ReadbackGPU_FromBackbuffer(Fast::Interpreter* interpreter) {
     if (s_freezeReadback) return; // [port] preserve gFramebuffers for transition capture
+    if (s_readbackRequestFrames <= 0) return; // [port] on-demand: skip unless a consumer needs data
+    s_readbackRequestFrames--;
     if (!interpreter || !interpreter->mRapi) return;
 
     uint32_t dstW = (uint32_t)gFramebufferWidth;
@@ -155,36 +172,47 @@ void push_frame() {
 #define SDL_main main
 #endif
 
+// [port] Precise sleep: SDL_Delay for the bulk, then spin-wait the remainder.
+static void preciseSleep(double seconds) {
+    if (seconds <= 0) return;
+    double freq = (double)SDL_GetPerformanceFrequency();
+    uint64_t target = SDL_GetPerformanceCounter() + (uint64_t)(seconds * freq);
+
+    // Sleep the bulk (leave 1.5ms margin for spin)
+    double sleepMs = (seconds * 1000.0) - 1.5;
+    if (sleepMs > 0.5) {
+        SDL_Delay((uint32_t)sleepMs);
+    }
+
+    // Spin-wait the remainder for precise timing
+    while (SDL_GetPerformanceCounter() < target) {
+        // busy-wait
+    }
+}
+
 int SDL_main(int argc, char* argv[]) {
+#ifdef _WIN32
+    timeBeginPeriod(1); // [port] Improve Sleep precision from ~15.6ms to ~1ms
+#endif
     GameEngine::Create();
     core1_init();
 
-    uint64_t prev = SDL_GetPerformanceCounter();
-    double accumulator = 0.0;
+    double freq = (double)SDL_GetPerformanceFrequency();
 
     while (WindowIsRunning()) {
-        uint64_t now = SDL_GetPerformanceCounter();
-        double elapsed = (double)(now - prev) / (double)SDL_GetPerformanceFrequency();
-        prev = now;
+        uint64_t frameStart = SDL_GetPerformanceCounter();
+        push_frame();
+        uint64_t frameEnd = SDL_GetPerformanceCounter();
+        double frameDuration = (double)(frameEnd - frameStart) / freq;
 
-        // Cap accumulated time to prevent spiral-of-death after long stalls
-        if (elapsed > 0.25) {
-            elapsed = 0.25;
-        }
-        accumulator += elapsed;
-
-        // Tick game logic at fixed 30fps
-        if (accumulator >= GAME_LOGIC_FRAME_TIME) {
-            push_frame();
-            accumulator -= GAME_LOGIC_FRAME_TIME;
-        } else {
-            // Yield CPU while waiting for next tick
-            double remaining = GAME_LOGIC_FRAME_TIME - accumulator;
-            if (remaining > 0.002) {
-                SDL_Delay((uint32_t)((remaining - 0.001) * 1000.0));
-            }
+        // [port] Sleep remainder of 30fps budget if frame finished early.
+        if (frameDuration < GAME_LOGIC_FRAME_TIME) {
+            preciseSleep(GAME_LOGIC_FRAME_TIME - frameDuration);
         }
     }
+#ifdef _WIN32
+    timeEndPeriod(1);
+#endif
     GameEngine::Instance->Destroy();
     return 0;
 }

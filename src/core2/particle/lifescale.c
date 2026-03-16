@@ -3,6 +3,8 @@
 #include "functions.h"
 #include "variables.h"
 
+extern void port_requestReadback(void); // [port]
+
 
 
 typedef struct Struct_Core2_6A4B0_2{
@@ -136,6 +138,7 @@ void func_802F1934(void *arg0_, s32 arg1){ // [port] void* for prototype compati
     while(((uintptr_t)arg0->tmem_ptr & 0x10) == 0){
         arg0->tmem_ptr = (u16*)((uintptr_t)arg0->tmem_ptr + 1);
     }
+    port_requestReadback(); // [port] particle copies framebuffer pixels
     func_80253010(arg0->tmem_ptr, gFramebuffers[arg1], gFramebufferWidth*gFramebufferHeight*sizeof(u16));
     osWritebackDCacheAll();
 }
