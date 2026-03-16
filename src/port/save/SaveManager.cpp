@@ -1118,7 +1118,7 @@ void SaveManager::FlushSlotToDisk(int slotIndex) {
     {
         json bbArr = json::array();
         for (int k = 0; k < 7; k++) {
-            bbArr.push_back(mSavedBottleBonus[eepromSlot][k] ? true : false);
+            bbArr.push_back(mSavedBottleBonus[eepromSlot][k] ? 1 : 0);
         }
         j["progress"]["bottleBonusCompleted"] = bbArr;
     }
