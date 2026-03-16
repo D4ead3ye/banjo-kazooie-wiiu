@@ -532,6 +532,7 @@ SaveManager& SaveManager::Instance() {
 
 SaveManager::SaveManager() : mLoaded(false) {
     memset(mEeprom, 0, sizeof(mEeprom));
+    memset(mSavedBottleBonus, 0, sizeof(mSavedBottleBonus));
     for (int i = 0; i < SAVE_SLOT_COUNT; i++) {
         mSavedLives[i] = 3; // default
     }
@@ -1001,12 +1002,21 @@ void SaveManager::LoadFromDisk() {
 
             JsonToSlot(j, mEeprom + base);
 
-            // [port] Load saved lives count
+            // [port] Load saved lives count and Bottles Bonus completions
 #ifdef ENHANCEMENT
             if (j.contains("savedItems")) {
                 const auto& si = j["savedItems"];
                 if (si.contains("lives")) {
                     mSavedLives[eepromSlot] = si["lives"].get<int>();
+                }
+            }
+            if (j.contains("progress")) {
+                const auto& prog = j["progress"];
+                if (prog.contains("bottleBonusCompleted")) {
+                    const auto& bb = prog["bottleBonusCompleted"];
+                    for (int k = 0; k < 7 && k < (int)bb.size(); k++) {
+                        mSavedBottleBonus[eepromSlot][k] = bb[k].get<int>() ? 1 : 0;
+                    }
                 }
             }
 #endif
@@ -1095,7 +1105,7 @@ void SaveManager::FlushSlotToDisk(int slotIndex) {
 
     json j = SlotToJson(mEeprom + base);
 
-    // [port] Save lives count — N64 resets to 3 each session, PC port persists them
+    // [port] Save lives count and Bottles Bonus completions
 #ifdef ENHANCEMENT
     {
         extern "C" int item_getCount(int item);
@@ -1104,6 +1114,13 @@ void SaveManager::FlushSlotToDisk(int slotIndex) {
             j["savedItems"]["lives"] = lives;
             mSavedLives[eepromSlot] = lives;
         }
+    }
+    {
+        json bbArr = json::array();
+        for (int k = 0; k < 7; k++) {
+            bbArr.push_back(mSavedBottleBonus[eepromSlot][k] ? true : false);
+        }
+        j["progress"]["bottleBonusCompleted"] = bbArr;
     }
 #endif
 
@@ -1186,6 +1203,14 @@ int32_t eeprom_writeBlocks(int32_t file, int32_t offset, void* buffer, int32_t c
 int port_getSavedLives(int eepromSlot) {
     return SaveManager::GetSavedLives(eepromSlot);
 }
+
+void port_getSavedBottleBonus(int eepromSlot, uint8_t out[7]) {
+    SaveManager::GetSavedBottleBonusGames(eepromSlot, out);
+}
+
+void port_setSavedBottleBonus(int eepromSlot, const uint8_t in[7]) {
+    SaveManager::SetSavedBottleBonusGames(eepromSlot, in);
+}
 #endif
 
 } // extern "C"
@@ -1194,5 +1219,18 @@ int port_getSavedLives(int eepromSlot) {
 int SaveManager::GetSavedLives(int eepromSlot) {
     if (eepromSlot < 0 || eepromSlot >= SAVE_SLOT_COUNT) return 3;
     return Instance().mSavedLives[eepromSlot];
+}
+
+void SaveManager::GetSavedBottleBonusGames(int eepromSlot, uint8_t out[7]) {
+    if (eepromSlot < 0 || eepromSlot >= SAVE_SLOT_COUNT) {
+        memset(out, 0, 7);
+        return;
+    }
+    memcpy(out, Instance().mSavedBottleBonus[eepromSlot], 7);
+}
+
+void SaveManager::SetSavedBottleBonusGames(int eepromSlot, const uint8_t in[7]) {
+    if (eepromSlot < 0 || eepromSlot >= SAVE_SLOT_COUNT) return;
+    memcpy(Instance().mSavedBottleBonus[eepromSlot], in, 7);
 }
 #endif
