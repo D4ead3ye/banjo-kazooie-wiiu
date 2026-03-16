@@ -5,6 +5,8 @@
 #include "version.h"
 #include "libultraship/libultra/rcp.h"
 
+extern void port_setViBlack(int active); // [port]
+
 #define VIMANAGER_THREAD_STACK_SIZE 0x400
 
 // Used in US 1.0 NTSC 
@@ -247,6 +249,7 @@ void viMgr_entry(void *arg0){
 
 void viMgr_setScreenBlack(s32 active) {
     osViBlack(active);
+    port_setViBlack(active); // [port]
 }
 
 void viMgr_clearFramebuffers(void) {

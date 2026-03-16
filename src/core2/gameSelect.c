@@ -7,6 +7,8 @@
 #include "core2/gc/zoombox.h"
 #include "core2/quiz_storage.h"
 
+extern void port_setViBlack(int active); // [port]
+
 #ifndef ABS
 #define	ABS(d)		((d) >= 0) ? (d) : -(d)
 #endif
@@ -542,8 +544,10 @@ void func_802C4C14(Actor *this){
             func_802C44EC(D_80365DD0[D_8037DCE8], D_80365DD0[D_80365E00], D_8037DD30), 
             func_802C44EC(D_80365E04[D_8037DCE8], D_80365E04[D_80365E00], D_8037DD30)
         );
-        if(this->marker->unk14_21)
+        if(this->marker->unk14_21) {
             osViBlack(0);
+            port_setViBlack(0); // [port]
+        }
     }//L802C5734
 }
 

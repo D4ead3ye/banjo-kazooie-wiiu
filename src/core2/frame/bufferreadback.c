@@ -280,6 +280,7 @@ s32 func_802E3F80(void){
 }
 
 extern void Graphics_PushFrame(Gfx* data);
+extern void Framebuffer_ReadbackGPU(int bufferIndex);
 
 void game_draw(s32 arg0){
     Gfx *gfx;
@@ -304,6 +305,10 @@ void game_draw(s32 arg0){
 
     // Lighthouse [Port] not sure if this should be here or after the following block
     Graphics_PushFrame(gfx_start);
+
+    // [port] Read GPU framebuffer back to CPU memory so systems that read gFramebuffers
+    // (particles, bottles bonus, screen captures) see actual rendered content.
+    Framebuffer_ReadbackGPU(getActiveFramebuffer());
 
     if(D_8037E8E0.unkC == 0){
         sp2C = gfx;

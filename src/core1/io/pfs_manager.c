@@ -167,6 +167,26 @@ void pfsManager_update(void) {
     // Poll LUS input directly here each frame instead.
     osContGetReadData(pfsManagerContPadData);
 
+    // [port] Right-stick dominant-axis filter: on N64, C buttons were discrete
+    // physical buttons — diagonal simultaneous presses were rare. With a modern
+    // right stick mapped to C buttons, any diagonal tilt sets two C bits at once,
+    // causing e.g. camera rotation while firing eggs. Suppress the weaker axis
+    // so only the dominant direction's C button(s) remain.
+    {
+        s32 rx = pfsManagerContPadData[0].right_stick_x;
+        s32 ry = pfsManagerContPadData[0].right_stick_y;
+        s32 arx = (rx < 0) ? -rx : rx;
+        s32 ary = (ry < 0) ? -ry : ry;
+        // 0x000C = CUp|CDown (vertical), 0x0003 = CLeft|CRight (horizontal)
+        if (arx > 16 && ary > 16) {
+            if (arx >= ary) {
+                pfsManagerContPadData[0].button &= ~0x000C; // suppress vertical C
+            } else {
+                pfsManagerContPadData[0].button &= ~0x0003; // suppress horizontal C
+            }
+        }
+    }
+
     D_802812D0.stick_x = pfsManagerContPadData[0].stick_x;
     D_802812D0.stick_y = pfsManagerContPadData[0].stick_y;
     D_802812D0.button = pfsManagerContPadData[0].button;

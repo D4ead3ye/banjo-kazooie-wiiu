@@ -89,6 +89,7 @@ void func_802E3460(s32 arg0) {
 }
 
 extern void Graphics_PushFrame(Gfx* data);
+extern void Framebuffer_ReadbackGPU(int bufferIndex);
 
 void func_802E3524(s32 arg0) {
     Gfx *gfx_begin;
@@ -100,6 +101,7 @@ void func_802E3524(s32 arg0) {
     // but that thread is #if 0'd on PC. Submit directly to LUS renderer instead,
     // which also enforces SetTargetFps(30) frame limiting.
     Graphics_PushFrame(gfx_begin);
+    Framebuffer_ReadbackGPU(getOtherFramebuffer()); // [port] GPU→CPU readback
     func_80253EA4(gfx_begin, gfx_end);
     func_80254008();
     viMgr_func_8024C1B4();

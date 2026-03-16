@@ -285,7 +285,7 @@ bool GameEngine::GenAssetFile(bool exitOnFail) {
         }
     }
 
-    ShowMessage(("Starship - Extraction - Found " + game.value()).c_str(),
+    ShowMessage(("Lighthouse - Extraction - Found " + game.value()).c_str(),
                 "The extraction process will now begin.\n\nThis may take a few minutes.", SDL_MESSAGEBOX_INFORMATION);
 
     return extractor->GenerateOTR();
@@ -445,6 +445,10 @@ void GameEngine::AudioExit() {
     audio.thread.join();
 }
 
+// [port] GPU→CPU framebuffer readback — defined in Game.cpp
+void Framebuffer_ReadbackGPU_FromBackbuffer(Fast::Interpreter* interpreter);
+extern "C" int port_isViBlack(void);
+
 void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map<Mtx*, MtxF>>& mtx_replacements) {
     auto wnd = std::dynamic_pointer_cast<Fast::Fast3dWindow>(Ship::Context::GetInstance()->GetWindow());
 
@@ -459,8 +463,30 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
 
     interpreter->mInterpolationIndex = 0;
 
+    // [port] Expand DrawAndRunGraphicsCommands so we can read the backbuffer between
+    // Run() (frame rendered) and EndFrame() (buffer swap). On N64, CPU/RDP shared
+    // physical memory so gFramebuffers always had valid pixel data after rendering.
+    auto wndBase = Ship::Context::GetInstance()->GetWindow();
     for (const auto& m : mtx_replacements) {
-        wnd->DrawAndRunGraphicsCommands(Commands, m);
+        if (wndBase->IsFrameReady()) {
+            auto gui = wndBase->GetGui();
+            wndBase->GetMouseStateManager()->StartFrame();
+            gui->StartDraw();
+            interpreter->StartFrame();
+            interpreter->Run(Commands, m);
+            // Read backbuffer into gFramebuffers before the swap destroys it
+            Framebuffer_ReadbackGPU_FromBackbuffer(interpreter);
+            // [port] Emulate N64 osViBlack: after readback captured the world,
+            // clear the game framebuffer to black so the player sees nothing.
+            // On N64, osViBlack blanked TV output but the RDP still rendered.
+            if (port_isViBlack()) {
+                int gameFb = interpreter->mRendersToFb ? interpreter->mGameFb : 0;
+                interpreter->mRapi->StartDrawToFramebuffer(gameFb, 1);
+                interpreter->mRapi->ClearFramebuffer(true, false);
+            }
+            gui->EndDraw();
+            interpreter->EndFrame();
+        }
         interpreter->mInterpolationIndex++;
     }
 
