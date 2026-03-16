@@ -847,7 +847,7 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                 extracting = true;
                 file = extract.GetRomPath();
                 threadPool->submit_task([&]() -> void {
-                    extract.Parse(totalExtract, "bk");
+                    // extract.Parse(totalExtract, "bk");
                     extract.GenerateOTR(extractCount, "bk");
                     extracting = false;
                     extractStep = ES_VERIFY;

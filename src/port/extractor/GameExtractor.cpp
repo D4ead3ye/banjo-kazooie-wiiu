@@ -229,9 +229,8 @@ bool GameExtractor::Parse(std::atomic<size_t>& totalAssets, std::string appShort
     const std::string game_path = Ship::Context::GetAppDirectoryPath(appShortName);
 
     Companion::Instance = new Companion(this->mGameData, ArchiveType::O2R, false, assets_path, game_path);
-    Companion::Instance->SetProcess(false);
     try {
-        Companion::Instance->Init(ExportType::Binary, totalAssets);
+        Companion::Instance->Init(ExportType::Binary, totalAssets, false);
     } catch (const std::exception& e) {
         SPDLOG_INFO("Failed to process O2R {}", e.what());
         return false;
@@ -242,17 +241,17 @@ bool GameExtractor::Parse(std::atomic<size_t>& totalAssets, std::string appShort
 
 bool GameExtractor::GenerateOTR(std::string appShortName) {
     std::atomic<size_t> assetCount{ 0 };
-    return GenerateOTR(assetCount);
+    return GenerateOTR(assetCount, appShortName);
 }
 
 bool GameExtractor::GenerateOTR(std::atomic<size_t>& assetCount, std::string appShortName) {
-    const std::string assets_path = Ship::Context::GetAppBundlePath();
+    const std::string assets_path = fs::path(Ship::Context::LocateFileAcrossAppDirs("assets", appShortName)).parent_path().generic_string();
     const std::string game_path = Ship::Context::GetAppDirectoryPath(appShortName);
 
     Companion::Instance = new Companion(this->mGameData, ArchiveType::O2R, false, assets_path, game_path);
     this->WritePortVersion();
     try {
-        Companion::Instance->Init(ExportType::Binary, assetCount);
+        Companion::Instance->Init(ExportType::Binary, assetCount, true);
     } catch (const std::exception& e) {
         SPDLOG_INFO("Failed to process O2R {}", e.what());
         return false;
