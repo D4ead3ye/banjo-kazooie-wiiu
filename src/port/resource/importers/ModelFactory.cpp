@@ -128,16 +128,9 @@ ResourceFactoryBinaryModelV0::ReadResource(std::shared_ptr<Ship::File> file,
                      tm.type, tm.width, tm.height, tm.tlutColors, tm.textureDataOffset);
     }
 
-    // [port] Raw texture data blob — full contiguous texture data area from ROM.
-    // This preserves data between listed textures that DL commands may reference.
+    // [port] Texture data size (for segment 2 allocation). Individual textures
+    // are loaded as separate OTEX resources and placed at their original offsets.
     uint32_t rawTexDataSize = reader->ReadUInt32();
-    std::vector<uint8_t> rawTexData;
-    if (rawTexDataSize > 0) {
-        rawTexData.resize(rawTexDataSize);
-        for (uint32_t i = 0; i < rawTexDataSize; i++) {
-            rawTexData[i] = reader->ReadUByte();
-        }
-    }
 
     // Animation
     float animScale = 0.0f;
@@ -417,10 +410,41 @@ ResourceFactoryBinaryModelV0::ReadResource(std::shared_ptr<Ship::File> file,
         PadTo8(out);
         hdr()->texture_list_offset_8 = static_cast<int16_t>(out.size());
 
-        // [port] Use the raw texture blob from o2r — full contiguous data from ROM decompression.
-        // Preserves data between listed textures that DL commands may reference.
+        // [port] Load individual OTEX resources and place them at original ROM offsets.
         uint32_t totalPixSize = rawTexDataSize;
-        std::vector<uint8_t> pixelArea = std::move(rawTexData);
+        std::vector<uint8_t> pixelArea(rawTexDataSize, 0);
+        for (uint16_t ti = 0; ti < texCount; ti++) {
+            const auto& tm = texMetas[ti];
+            uint32_t dstOffset = tm.textureDataOffset;
+
+            // CI textures have TLUT palette data preceding the pixel data.
+            if (tm.tlutColors > 0) {
+                std::string tlutPath = initData->Path + "_tex_" + std::to_string(ti) + "_TLUT";
+                auto tlutRes = std::static_pointer_cast<Fast::Texture>(resourceMgr->LoadResourceProcess(tlutPath));
+                if (tlutRes && tlutRes->ImageData) {
+                    uint32_t tlutSize = tm.tlutColors * 2;
+                    if (dstOffset + tlutSize <= rawTexDataSize) {
+                        std::memcpy(pixelArea.data() + dstOffset, tlutRes->ImageData, tlutSize);
+                    }
+                    dstOffset += tlutSize;
+                } else {
+                    SPDLOG_WARN("[BKModel] '{}' TLUT not found: {}", initData->Path, tlutPath);
+                    dstOffset += tm.tlutColors * 2;
+                }
+            }
+
+            // Pixel data
+            std::string texPath = initData->Path + "_tex_" + std::to_string(ti);
+            auto texRes = std::static_pointer_cast<Fast::Texture>(resourceMgr->LoadResourceProcess(texPath));
+            if (texRes && texRes->ImageData) {
+                uint32_t pixSize = texRes->ImageDataSize;
+                if (dstOffset + pixSize <= rawTexDataSize) {
+                    std::memcpy(pixelArea.data() + dstOffset, texRes->ImageData, pixSize);
+                }
+            } else {
+                SPDLOG_WARN("[BKModel] '{}' texture not found: {}", initData->Path, texPath);
+            }
+        }
 
         // BKTextureList: s32 size_0, s16 cnt_4, u8 pad[2]
         AppendValue<int32_t>(out, static_cast<int32_t>(totalPixSize));

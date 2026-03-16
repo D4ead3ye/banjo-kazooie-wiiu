@@ -4,7 +4,7 @@ This document explains how Banjo-Kazooie asset data flows from ROM to runtime, t
 
 ## Asset Symbol Map
 
-All assets are mapped by numeric ID in `asset_table.yml`. The decomp references assets by ID; ResourceHelpers resolves IDs to o2r paths via a manifest blob (`aBKAssetTable`) loaded at startup.
+All assets are mapped by numeric ID in `assets.yml`. The decomp references assets by ID; ResourceHelpers resolves IDs to o2r paths via a manifest blob (`aBKAssetTable`) loaded at startup.
 
 Key ID ranges:
 - Animation assets: IDs up to 0x2AB
