@@ -128,10 +128,14 @@ extern "C" char* ResourceMgr_LoadByAssetId(uint32_t assetId) {
         } else {
             SPDLOG_WARN("[port] ResourceMgr_LoadByAssetId({}) symbol '{}' found but resource data is NULL", assetId,
                         mappedPath);
+            return nullptr;
         }
     } else {
         SPDLOG_WARN("[port] ResourceMgr_LoadByAssetId({}) not found in symbol map", assetId);
+        return nullptr;
     }
+
+    return nullptr;
 }
 
 // [port] Returns the data size of a previously loaded resource (from the ref cache).
