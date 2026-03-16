@@ -1375,8 +1375,14 @@ void gcpausemenu_drawSprite(Gfx **gdl, Mtx **mptr, Vtx **vptr, BKSprite *sprite,
     __gcpausemenu_drawSprite(gdl, mptr, vptr, sprite, frame, (x - w * 0.5), (y - h * 0.5), w, h, a);
 }
 
+// [port] Returns true on the frame(s) where the pause menu is capturing
+// the background snapshot, so the caller can skip HUD drawing.
+static int D_8036C620 = 1;
+bool gcpausemenu_isCapturing(void) {
+    return (getGameMode() == GAME_MODE_4_PAUSED && D_8036C620 != 0);
+}
+
 void gcpausemenu_draw(Gfx **gfx, Mtx **mtx, Vtx **vtx) {
-    static int D_8036C620 = 1;
     s32 var_a0;
 
     f32 sp98[3];
