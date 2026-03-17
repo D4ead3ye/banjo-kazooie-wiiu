@@ -1154,13 +1154,13 @@ BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation
     if(modelRenderAnimatedTexturesCacheId){
         int i_segment;
         s32 texture_offset;
-        
+
         for(i_segment = 0; i_segment < 4; i_segment++){
             if(AnimTextureListCache_tryGetTextureOffset(modelRenderAnimatedTexturesCacheId, i_segment, &texture_offset)){
                 uintptr_t base = (uintptr_t)&modelRenderTextureList->tex_8[modelRenderTextureList->cnt_4];
                 gSPSegment((*gfx)++, 15 - i_segment, osVirtualToPhysical((void *)(base + (uintptr_t)texture_offset))); // [port] uintptr_t -> void*
             }
-}
+        }
     }
 
     if(modelRenderDepthMode != MODEL_RENDER_DEPTH_NONE){
