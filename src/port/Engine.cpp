@@ -482,54 +482,49 @@ void GameEngine::FinishInit() {
 
     auto loader = context->GetResourceManager()->GetResourceLoader();
     auto blobFactory = std::make_shared<Ship::ResourceFactoryBinaryBlobV0>();
-
-    //loader->RegisterResourceFactory(std::make_shared<SM64::AnimationFactoryV0>(), RESOURCE_FORMAT_BINARY, "Animation",
-    //    static_cast<uint32_t>(SM64::ResourceType::Anim), 0);
-    //loader->RegisterResourceFactory(std::make_shared<SM64::AudioBankFactoryV0>(), RESOURCE_FORMAT_BINARY, "AudioBank",
-    //    static_cast<uint32_t>(SM64::ResourceType::Bank), 0);
-    //loader->RegisterResourceFactory(std::make_shared<SM64::AudioSampleFactoryV0>(), RESOURCE_FORMAT_BINARY,
-    //    "AudioSample", static_cast<uint32_t>(SM64::ResourceType::Sample), 0);
-    //loader->RegisterResourceFactory(std::make_shared<SM64::AudioSequenceFactoryV0>(), RESOURCE_FORMAT_BINARY,
-    //    "AudioSequence", static_cast<uint32_t>(SM64::ResourceType::Sequence), 0);
-    //loader->RegisterResourceFactory(std::make_shared<SM64::DialogFactoryV0>(), RESOURCE_FORMAT_BINARY, "Dialog",
-    //    static_cast<uint32_t>(SM64::ResourceType::SDialog), 0);
-    //loader->RegisterResourceFactory(std::make_shared<SM64::DictionaryFactoryV0>(), RESOURCE_FORMAT_BINARY, "Dictionary",
-    //    static_cast<uint32_t>(SM64::ResourceType::Dictionary), 0);
-    //loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryTextureV0>(), RESOURCE_FORMAT_BINARY,
-    //    "Texture", static_cast<uint32_t>(Fast::ResourceType::Texture), 0);
-    //loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryTextureV1>(), RESOURCE_FORMAT_BINARY,
-    //    "Texture", static_cast<uint32_t>(Fast::ResourceType::Texture), 1);
-    //loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryVertexV0>(), RESOURCE_FORMAT_BINARY,
-    //    "Vertex", static_cast<uint32_t>(Fast::ResourceType::Vertex), 0);
-    //loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryDisplayListV0>(),
-    //    RESOURCE_FORMAT_BINARY, "DisplayList",
-    //    static_cast<uint32_t>(Fast::ResourceType::DisplayList), 0);
-    //loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryMatrixV0>(), RESOURCE_FORMAT_BINARY,
-    //    "Matrix", static_cast<uint32_t>(Fast::ResourceType::Matrix), 0);
-    //loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryLightV0>(), RESOURCE_FORMAT_BINARY,
-    //    "Light", static_cast<uint32_t>(Fast::ResourceType::Light), 0);
-    //loader->RegisterResourceFactory(std::make_shared<SM64::ResourceFactoryBinaryAssetArrayV0>(), RESOURCE_FORMAT_BINARY,
-    //    "AssetArray", static_cast<uint32_t>(SM64::ResourceType::AssetArray), 0);
-    //loader->RegisterResourceFactory(std::make_shared<SM64::TrajectoryFactoryV0>(), RESOURCE_FORMAT_BINARY, "Trajectory",
-    //    static_cast<uint32_t>(SM64::ResourceType::Trajectory), 0);
-    //loader->RegisterResourceFactory(std::make_shared<SM64::MovtexFactoryV0>(), RESOURCE_FORMAT_BINARY, "Movtex",
-    //    static_cast<uint32_t>(SM64::ResourceType::Movtex), 0);
-    //// TODO: This shit needs to change, i mean why i have 5 factories doing the same thing xD
-    //loader->RegisterResourceFactory(std::make_shared<SF64::ResourceFactoryBinaryGenericArrayV0>(),
-    //    RESOURCE_FORMAT_BINARY, "GenericArray",
-    //    static_cast<uint32_t>(SM64::ResourceType::GenericArray), 0);
-    //loader->RegisterResourceFactory(std::make_shared<SM64::MovtexFactoryV0>(), RESOURCE_FORMAT_BINARY, "Collision",
-    //    static_cast<uint32_t>(SM64::ResourceType::Collision), 0);
-    //loader->RegisterResourceFactory(std::make_shared<SM64::MovtexFactoryV0>(), RESOURCE_FORMAT_BINARY, "PaintingData",
-    //    static_cast<uint32_t>(SM64::ResourceType::PaintingData), 0);
-    //loader->RegisterResourceFactory(std::make_shared<SM64::MovtexFactoryV0>(), RESOURCE_FORMAT_BINARY, "MacroObject",
-    //    static_cast<uint32_t>(SM64::ResourceType::MacroObject), 0);
-
-    //loader->RegisterResourceFactory(std::make_shared<SM64::MovtexQuadFactoryV0>(), RESOURCE_FORMAT_BINARY, "MovtexQuad",
-    //    static_cast<uint32_t>(SM64::ResourceType::MovtexQuad), 0);
-    //loader->RegisterResourceFactory(std::make_shared<SM64::PaintingFactoryV0>(), RESOURCE_FORMAT_BINARY, "Painting",
-    //    static_cast<uint32_t>(SM64::ResourceType::Painting), 0);
-
+    loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinarySpriteV0>(),
+                                    RESOURCE_FORMAT_BINARY, "Sprite",
+                                    static_cast<uint32_t>(Torch::ResourceType::BKSprite), 0);
+    loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinaryModelV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Model", static_cast<uint32_t>(Torch::ResourceType::BKModel), 0);
+    loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinaryBKAnimationV0>(),
+                                    RESOURCE_FORMAT_BINARY, "BKAnimation",
+                                    static_cast<uint32_t>(Torch::ResourceType::BKAnimation), 0);
+    loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinaryBKDialogV0>(),
+                                    RESOURCE_FORMAT_BINARY, "BKDialog",
+                                    static_cast<uint32_t>(Torch::ResourceType::BKDialog), 0);
+    loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinaryBKQuizQuestionV0>(),
+                                    RESOURCE_FORMAT_BINARY, "BKQuizQuestion",
+                                    static_cast<uint32_t>(Torch::ResourceType::BKQuizQuestion), 0);
+    loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinaryBKGruntyQuestionV0>(),
+                                    RESOURCE_FORMAT_BINARY, "BKGruntyQuestion",
+                                    static_cast<uint32_t>(Torch::ResourceType::BKGruntyQuestion), 0);
+    loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinaryBKDemoInputV0>(),
+                                    RESOURCE_FORMAT_BINARY, "BKDemoInput",
+                                    static_cast<uint32_t>(Torch::ResourceType::BKDemoInput), 0);
+    loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinaryBKMapV0>(), RESOURCE_FORMAT_BINARY,
+                                    "BKMap", static_cast<uint32_t>(Torch::ResourceType::BKMap), 0);
+    loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryTextureV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Texture", static_cast<uint32_t>(Fast::ResourceType::Texture), 0);
+    loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryTextureV1>(), RESOURCE_FORMAT_BINARY,
+                                    "Texture", static_cast<uint32_t>(Fast::ResourceType::Texture), 1);
+    
+    loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryVertexV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Vertex", static_cast<uint32_t>(Fast::ResourceType::Vertex), 0);
+    loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryXMLVertexV0>(), RESOURCE_FORMAT_XML, "Vertex",
+                                    static_cast<uint32_t>(Fast::ResourceType::Vertex), 0);
+    
+    loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryDisplayListV0>(),
+                                    RESOURCE_FORMAT_BINARY, "DisplayList",
+                                    static_cast<uint32_t>(Fast::ResourceType::DisplayList), 0);
+    loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryXMLDisplayListV0>(), RESOURCE_FORMAT_XML,
+                                    "DisplayList", static_cast<uint32_t>(Fast::ResourceType::DisplayList), 0);
+    
+    loader->RegisterResourceFactory(std::make_shared<Fast::ResourceFactoryBinaryMatrixV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Matrix", static_cast<uint32_t>(Fast::ResourceType::Matrix), 0);
+    
+    loader->RegisterResourceFactory(std::make_shared<Ship::ResourceFactoryBinaryBlobV0>(), RESOURCE_FORMAT_BINARY,
+                                    "Blob", static_cast<uint32_t>(Ship::ResourceType::Blob), 0);
     loader->RegisterResourceFactory(blobFactory, RESOURCE_FORMAT_BINARY, "Blob",
         static_cast<uint32_t>(Ship::ResourceType::Blob), 0);
     prevAltAssets = CVarGetInteger("gEnhancements.Mods.AlternateAssets", 1);
@@ -1005,8 +1000,8 @@ void GameEngine::Create(int argc, char* argv[]) {
     // [port] BK renders at 292x216, not the standard 320x240.
     GfxSetNativeDimensions(292, 216);
     instance->RunExtract(argc, argv);
-//    instance->FinishInit();
-//    LighthouseGui::SetupGuiElements();
+    instance->FinishInit();
+    LighthouseGui::SetupGuiElements();
 //#if defined(__SWITCH__) || defined(__WIIU__)
 //    CVarRegisterInteger("gControlNav", 1); // always enable controller nav on switch/wii u
 //    osSetTime(0);
