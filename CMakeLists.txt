@@ -443,7 +443,7 @@ option(BUILD_SM64 "Build with Super Mario 64 support" OFF)
 option(BUILD_MK64 "Build with Mario Kart 64 support" OFF)
 option(BUILD_SF64 "Build with Star Fox 64 support" OFF)
 option(BUILD_FZERO "Build with F-Zero X support" OFF)
-add_subdirectory(tools/Torch)
+add_subdirectory(Torch)
 target_link_libraries(${PROJECT_NAME} PRIVATE torch "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
 
 if(CMAKE_SYSTEM_NAME MATCHES "NintendoSwitch")
@@ -669,7 +669,7 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "NintendoSwitch")
 include(ExternalProject)
 ExternalProject_Add(TorchExternal
 	PREFIX TorchExternal
-    SOURCE_DIR ${CMAKE_SOURCE_DIR}/tools/Torch
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/Torch
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/Torch
 )
 ExternalProject_Get_Property(TorchExternal install_dir)
