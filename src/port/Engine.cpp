@@ -791,12 +791,21 @@ void GameEngine::Create(int argc, char* argv[]) {
     // PortEnhancements_Init();
 }
 
+extern void ResourceHelpers_ClearRefCache();
+
 void GameEngine::Destroy() {
     LighthouseGui::Destroy();
     gsFast3dWindow = nullptr;
+
+    // Flush all resource refs so destructors run while spdlog is still active.
+    // sResourceRefCache holds shared_ptrs that outlive the LUS cache otherwise.
+    ResourceHelpers_ClearRefCache();
+    if (Instance->context && Instance->context->GetResourceManager()) {
+        Instance->context->GetResourceManager()->UnloadResources("*");
+    }
     Instance->context = nullptr;
     // PortEnhancements_Exit();
-    // AudioExit();
+    AudioExit();
     for (auto ptr : MemoryPool) {
         free(ptr);
     }

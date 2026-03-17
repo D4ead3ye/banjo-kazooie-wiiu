@@ -890,6 +890,12 @@ void gcpausemenu_setNextPage(s32 increment) {
     D_80383010.page = D_80383010.selection;
     do {
         D_80383010.page += increment;
+        // [port] Clamp to valid range — on N64 this never overflowed because
+        // multiple levels always had scores. Direct-boot can leave only one.
+        if (D_80383010.page < 0 || D_80383010.page > 12) {
+            D_80383010.page = D_80383010.selection;
+            return;
+        }
         if ((D_80383010.sns_items != 0) && (D_80383010.page == 12)) {
             break;
         }
@@ -1414,12 +1420,20 @@ void gcpausemenu_draw(Gfx **gfx, Mtx **mtx, Vtx **vtx) {
         func_80315110(gfx, mtx, vtx);
     }
 
-    // [port] Draw selected zoombox last so it renders on top of neighbors
-    for (i = 0; i < 4; i++) {
-        if (i != D_80383010.selection)
+    // [port] Draw selected zoombox last so it renders on top of neighbors.
+    // Only applies to main menu — in totals, selection is a page index (0-12),
+    // not a zoombox index (0-3).
+    if (D_80383010.menu == PAUSE_MENU_0_MAIN) {
+        for (i = 0; i < 4; i++) {
+            if (i != D_80383010.selection)
+                gczoombox_draw(D_80383010.zoombox[i], gfx, mtx, vtx);
+        }
+        gczoombox_draw(D_80383010.zoombox[D_80383010.selection], gfx, mtx, vtx);
+    } else {
+        for (i = 0; i < 4; i++) {
             gczoombox_draw(D_80383010.zoombox[i], gfx, mtx, vtx);
+        }
     }
-    gczoombox_draw(D_80383010.zoombox[D_80383010.selection], gfx, mtx, vtx);
 
     gcpausemenu_drawSprite(gfx, mtx, vtx, D_80383010.joystick_sprite, D_80383010.joystick_frame, 30.0f, 196.0f, 1, (s32) D_80383010.left_joystick_alpha);
     gcpausemenu_drawSprite(gfx, mtx, vtx, D_80383010.joystick_sprite, D_80383010.joystick_frame, (f32)(gFramebufferWidth - 0x1E), 196.0f, 0, (s32) D_80383010.right_joystick_alpha);

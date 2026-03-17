@@ -62,10 +62,11 @@ void RBB_func_80387960(f32 arg0){
 }
 
 void func_803879F0(void){
-    Struct6Ds *temp_v0 = &func_8034C528(0x19b)->type_6D;
+    Struct70s *tmp_s70 = func_8034C528(0x19b); // [port] split UB
     f32 sp30[3];
     f32 sp24[3];
-    if(temp_v0){
+    if(tmp_s70){
+        Struct6Ds *temp_v0 = &tmp_s70->type_6D;
         TUPLE_ASSIGN(sp30, 0.0f, 0.0f, 0.0f);
         TUPLE_ASSIGN(sp24, 0.0f, -1000.0f, 0.0f);
         func_8034DC08(temp_v0, sp30, sp24, 1.5f, 1);
@@ -73,10 +74,11 @@ void func_803879F0(void){
 }
 
 void func_80387A54(void){
-    Struct6Ds *temp_v0 = &func_8034C528(0x19b)->type_6D;
+    Struct70s *tmp_s70 = func_8034C528(0x19b); // [port] split UB
     f32 sp30[3];
     f32 sp24[3];
-    if(temp_v0){
+    if(tmp_s70){
+        Struct6Ds *temp_v0 = &tmp_s70->type_6D;
         TUPLE_ASSIGN(sp30, 0.0f, -1000.0f, 0.0f);
         TUPLE_ASSIGN(sp24, 0.0f, -2000.0f, 0.0f);
         func_8034DDF0(temp_v0, sp30, sp24, 1.0f, 1);
@@ -84,10 +86,11 @@ void func_80387A54(void){
 }
 
 void func_80387AC0(void){
-    Struct6Ds *temp_v0 = &func_8034C528(0x19b)->type_6D;
+    Struct70s *tmp_s70 = func_8034C528(0x19b); // [port] split UB
     f32 sp30[3];
     f32 sp24[3];
-    if(temp_v0){
+    if(tmp_s70){
+        Struct6Ds *temp_v0 = &tmp_s70->type_6D;
         TUPLE_ASSIGN(sp30, 0.0f, 0.0f, 0.0f);
         TUPLE_ASSIGN(sp24, 0.0f, -2000.0f, 0.0f);
         func_8034DDF0(temp_v0, sp30, sp24, 0.0f, 1);
@@ -95,10 +98,11 @@ void func_80387AC0(void){
 }
 
 void func_80387B24(void){
-    Struct6Ds *temp_v0 = &func_8034C528(0x1a0)->type_6D;
+    Struct70s *tmp_s70 = func_8034C528(0x1a0); // [port] split UB
     f32 sp30[3];
     f32 sp24[3];
-    if(temp_v0){
+    if(tmp_s70){
+        Struct6Ds *temp_v0 = &tmp_s70->type_6D;
         TUPLE_ASSIGN(sp30, 0.0f, 0.0f, 0.0f);
         TUPLE_ASSIGN(sp24, 0.0f, -500.0f, 0.0f);
         func_8034DDF0(temp_v0, sp30, sp24, 0.1f, 1);
@@ -106,16 +110,19 @@ void func_80387B24(void){
 }
 
 void func_80387B8C(s32 arg0, s32 arg1){
-    Struct6Ds *v0 = &func_8034C528(arg0)->type_6D;
-    if(v0){
+    Struct70s *tmp_s70 = func_8034C528(arg0); // [port] split UB
+    if(tmp_s70){
+        Struct6Ds *v0 = &tmp_s70->type_6D;
         func_8034DFB0(v0, D_80390294, D_803902A4, (f64)arg1/1000.0);
     }
 }
 
 void func_80387BEC(s32 arg0, s32 arg1){
-    Struct6Ds *v0;
+    Struct70s *tmp_s70; // [port] split UB
     func_8030E6D4(SFX_90_SWITCH_PRESS);
-    if(v0 = &func_8034C528(arg0)->type_6D){
+    tmp_s70 = func_8034C528(arg0);
+    if(tmp_s70){
+        Struct6Ds *v0 = &tmp_s70->type_6D;
         func_8034DFB0(v0, D_803902B4, D_803902C4, (f64)arg1/1000.0);
     }
 }

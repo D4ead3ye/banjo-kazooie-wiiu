@@ -190,3 +190,8 @@ extern "C" Vtx* ResourceMgr_LoadVtxByName(char* path) {
 extern "C" Mtx* ResourceMgr_LoadMtxByName(char* path) {
     return (Mtx*)ResourceGetDataByName(path);
 }
+
+// Release all retained resource refs so destructors fire before spdlog shutdown
+void ResourceHelpers_ClearRefCache() {
+    sResourceRefCache.clear();
+}

@@ -67,13 +67,13 @@ void func_8031A678(Actor *this){
     Struct6Ds *sp2C;
     f32 sp20[3];
 
-    sp2C = &func_8034C528(0x190)->type_6D; // [port] func_8034C528 returns Struct70s*; access Struct6Ds member
+    { Struct70s *tmp_s70 = func_8034C528(0x190); sp2C = tmp_s70 ? &tmp_s70->type_6D : NULL; } // [port] split UB
     switch (this->unk10_12) {
         case MINIGAME_0_BOSS_BOOM_BOX:
             sp20[0] = -2000.0f;
             sp20[1] = 0.0f;
             sp20[2] = 0.0f;
-            func_8034DDF0(sp2C, sp20, sp20, 0.0f, 1);
+            if(sp2C) func_8034DDF0(sp2C, sp20, sp20, 0.0f, 1);
             return;
 
         case MINIGAME_3_ZUBBAS:
@@ -81,18 +81,18 @@ void func_8031A678(Actor *this){
                 sp20[0] = 0.0f;
                 sp20[1] = 0.0f;
                 sp20[2] = -1000.0f;
-                func_8034DDF0(sp2C, sp20, sp20, 0.0f, 1);
+                if(sp2C) func_8034DDF0(sp2C, sp20, sp20, 0.0f, 1);
             }
             break;
 
         case MINIGAME_5_SANDCASTLE:
-            sp2C = &func_8034C528(0x191)->type_6D; // [port] func_8034C528 returns Struct70s*; access Struct6Ds member
-            func_8034DEB4(sp2C, -1000.0f);
+            { Struct70s *tmp_s70 = func_8034C528(0x191); sp2C = tmp_s70 ? &tmp_s70->type_6D : NULL; } // [port] split UB
+            if(sp2C) func_8034DEB4(sp2C, -1000.0f);
             break;
 
         case MINIGAME_2_GV_MATCHING:
-            sp2C = &func_8034C528(0x1E7)->type_6D; // [port] func_8034C528 returns Struct70s*; access Struct6Ds member
-            func_8034DEB4(sp2C, -1000.0f);
+            { Struct70s *tmp_s70 = func_8034C528(0x1E7); sp2C = tmp_s70 ? &tmp_s70->type_6D : NULL; } // [port] split UB
+            if(sp2C) func_8034DEB4(sp2C, -1000.0f);
             break;
 
         case MINIGAME_1_VILE:

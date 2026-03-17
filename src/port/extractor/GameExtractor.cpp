@@ -225,18 +225,38 @@ std::string GameExtractor::GetRomPath() {
 }
 
 bool GameExtractor::Parse(std::atomic<size_t>& totalAssets, std::string appShortName) {
+    // Lightweight asset counting: just load the YAML and count entries.
+    // Avoids running the full Torch pipeline twice.
     const std::string assets_path = fs::path(Ship::Context::LocateFileAcrossAppDirs("assets", appShortName)).parent_path().generic_string();
-    const std::string game_path = Ship::Context::GetAppDirectoryPath(appShortName);
 
-    Companion::Instance = new Companion(this->mGameData, ArchiveType::O2R, false, assets_path, game_path);
-    try {
-        Companion::Instance->Init(ExportType::Binary, totalAssets, false);
-    } catch (const std::exception& e) {
-        SPDLOG_INFO("Failed to process O2R {}", e.what());
-        return false;
+    totalAssets = 0;
+    for (const auto& entry : std::filesystem::recursive_directory_iterator(assets_path)) {
+        if (entry.is_directory()) {
+            continue;
+        }
+
+        const auto path = entry.path().generic_string();
+        if (path.find(".yaml") == std::string::npos && path.find(".yml") == std::string::npos) {
+            continue;
+        }
+        if (path.find("config.yml") != std::string::npos) {
+            continue;
+        }
+
+        try {
+            YAML::Node root = YAML::LoadFile(path);
+            for (auto asset = root.begin(); asset != root.end(); ++asset) {
+                auto key = asset->first.as<std::string>();
+                if (key.find(":config") == std::string::npos) {
+                    totalAssets++;
+                }
+            }
+        } catch (const std::exception& e) {
+            SPDLOG_WARN("Failed to count assets in {}: {}", path, e.what());
+        }
     }
 
-    return true;
+    return totalAssets > 0;
 }
 
 bool GameExtractor::GenerateOTR(std::string appShortName) {
@@ -248,6 +268,7 @@ bool GameExtractor::GenerateOTR(std::atomic<size_t>& assetCount, std::string app
     const std::string assets_path = fs::path(Ship::Context::LocateFileAcrossAppDirs("assets", appShortName)).parent_path().generic_string();
     const std::string game_path = Ship::Context::GetAppDirectoryPath(appShortName);
 
+    delete Companion::Instance;
     Companion::Instance = new Companion(this->mGameData, ArchiveType::O2R, false, assets_path, game_path);
     this->WritePortVersion();
     try {
@@ -257,6 +278,8 @@ bool GameExtractor::GenerateOTR(std::atomic<size_t>& assetCount, std::string app
         return false;
     }
 
+    delete Companion::Instance;
+    Companion::Instance = nullptr;
     return true;
 }
 #else

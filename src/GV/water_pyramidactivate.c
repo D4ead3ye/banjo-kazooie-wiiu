@@ -9,6 +9,7 @@ u8 GV_D_80391AD0;
 void func_80390000(s32 arg0){
     Struct73s *tmp_v0;
     Struct6Ds *tmp_v0_2;
+    Struct70s *tmp_s70; // [port]
 
     GV_D_80391AD0 = arg0;
     if(GV_D_80391AD0 == 1){
@@ -16,15 +17,18 @@ void func_80390000(s32 arg0){
         func_80324E38(0.0f, 3);
         timed_setStaticCameraToNode(4.0f, 0x15);
         func_80324E38(8.0f, 0);
-        
-        tmp_v0 = &func_8034C5AC(0x130)->type_73;
-        if(tmp_v0){
+
+        // [port] Split dereference from null check — &NULL->member is UB
+        tmp_s70 = func_8034C5AC(0x130);
+        if(tmp_s70){
+            tmp_v0 = &tmp_s70->type_73;
             func_8034E71C(tmp_v0, -1000, 0.0f);
             func_8034E71C(tmp_v0, 0, 10.0f);
         }
-        
-        tmp_v0_2 = &func_8034C528(0x190)->type_6D;
-        if(tmp_v0_2){
+
+        tmp_s70 = func_8034C528(0x190);
+        if(tmp_s70){
+            tmp_v0_2 = &tmp_s70->type_6D;
             func_8034DE60(tmp_v0_2, 0.0f, 270.0f, 0.0f, 1);
         }
     }//L803900AC

@@ -4,9 +4,13 @@
 
 /* .code */
 void func_80388CF0(void){
+    Struct70s *tmp_s70; // [port]
     if(getGameMode() != GAME_MODE_7_ATTRACT_DEMO){
-        func_8034DEB4(&func_8034C528(0x1F2)->type_6D, 0.0f); // [port] Struct70s union → Struct6Ds member
-        func_8034DEB4(&func_8034C528(0x1F3)->type_6D, -5000.0f); // [port] Struct70s union → Struct6Ds member
+        // [port] Split dereference from null check — &NULL->member is UB
+        tmp_s70 = func_8034C528(0x1F2);
+        if(tmp_s70) func_8034DEB4(&tmp_s70->type_6D, 0.0f);
+        tmp_s70 = func_8034C528(0x1F3);
+        if(tmp_s70) func_8034DEB4(&tmp_s70->type_6D, -5000.0f);
     }
 }
 
