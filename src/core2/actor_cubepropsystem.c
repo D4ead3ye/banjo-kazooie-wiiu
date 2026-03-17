@@ -2136,7 +2136,10 @@ f32 func_80331E64(ActorMarker *marker) {
 
 f32 func_80331F1C(Prop *arg0){
     // [port] func_8030A428 can return NULL when asset is missing from o2r (N64 ROM always had it)
-    BKModelBin *model = func_8030A428(arg0->modelProp.unk0_31);
+    // D_80382390 array is 0x2A2 elements; out-of-range index → crash after defrag moves the array
+    s32 idx = arg0->modelProp.unk0_31;
+    if (idx < 0 || idx >= 0x2A2) return 0.0f;
+    BKModelBin *model = func_8030A428(idx);
     if (model == NULL) return 0.0f;
     // [port] model_getVtxList offsets into the model blob; if vtx_list_offset is 0 it returns the header itself
     if (model->vtx_list_offset_10 == 0) return 0.0f;

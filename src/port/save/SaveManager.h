@@ -34,6 +34,10 @@ public:
     // [port] Lives persistence — N64 resets to 3 each session, PC port saves them
     static int GetSavedLives(int eepromSlot);
 
+    // [port] Bottles Bonus completion persistence
+    static void GetSavedBottleBonusGames(int eepromSlot, uint8_t out[7]);
+    static void SetSavedBottleBonusGames(int eepromSlot, const uint8_t in[7]);
+
 private:
     SaveManager();
 
@@ -49,5 +53,6 @@ private:
 
     uint8_t mEeprom[EEPROM_TOTAL_SIZE];
     int mSavedLives[SAVE_SLOT_COUNT]; // [port] Per-slot lives count
+    uint8_t mSavedBottleBonus[SAVE_SLOT_COUNT][7]; // [port] Per-slot Bottles Bonus completions
     bool mLoaded;
 };

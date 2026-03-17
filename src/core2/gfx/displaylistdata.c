@@ -3,6 +3,9 @@
 #include "functions.h"
 #include "variables.h"
 
+extern void port_registerAuxColorImage(void* cpuAddr, unsigned int width, unsigned int height); // [port]
+extern void port_unregisterAuxColorImage(void* cpuAddr); // [port]
+
 
 #define TILE_SIZE 32
 #define TILE_COUNT_X 5
@@ -57,11 +60,15 @@ void func_8030C1A0(void){
         while((uintptr_t)D_80382450 & 0x3F){
             D_80382450++;
         }
+        // [port] Register this buffer as an auxiliary render target so the interpreter
+        // redirects scene rendering into a dedicated FBO and reads it back to CPU.
+        port_registerAuxColorImage(D_80382450, IMAGE_WIDTH, IMAGE_HEIGHT);
     }
 }
 
 void func_8030C204(void){
     if(D_80382454){
+        port_unregisterAuxColorImage(D_80382450); // [port]
         bk_free(D_80382454);
         D_80382454 = NULL;
     }

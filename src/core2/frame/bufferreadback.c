@@ -8,6 +8,7 @@
 
 extern void func_802F5374(void);
 extern void func_802FA0F8(void);
+extern void port_requestReadback(void); // [port]
 extern void timedFuncQueue_update(void);
 extern void func_80335128(s32);
 extern void func_8025A2B0(void);
@@ -138,21 +139,30 @@ void func_802E39D0(Gfx **gdl, Mtx **mptr, Vtx **vptr, s32 framebuffer_idx, s32 a
         func_8030C2D4(gdl, mptr, vptr);
     }
 
-    if(!game_is_frozen() && func_80335134()){
+    // [port] Skip all HUD/overlay draws while pause menu is capturing the
+    // background snapshot, otherwise they get baked into the pause background.
+    extern bool gcpausemenu_isCapturing(void);
+    bool capturing = gcpausemenu_isCapturing();
+
+    if(!game_is_frozen() && func_80335134() && !capturing){
         func_8032D474(gdl, mptr, vptr);
     }
 
     gcpausemenu_draw(gdl, mptr, vptr);
-    if(!game_is_frozen()){
+    if(!game_is_frozen() && !capturing){
         dummy_func_8025AFC0(gdl, mptr, vptr);
     }
 
-    gcdialog_draw(gdl, mptr, vptr);
-    if(!game_is_frozen()){
+    if (!capturing) {
+        gcdialog_draw(gdl, mptr, vptr);
+    }
+    if(!game_is_frozen() && !capturing){
         itemPrint_draw(gdl, mptr, vptr);
     }
 
-    printbuffer_draw(gdl, mptr, vptr);
+    if (!capturing) {
+        printbuffer_draw(gdl, mptr, vptr);
+    }
 
     if( D_8037E8E0.game_mode != GAME_MODE_A_SNS_PICTURE
         || D_8037E8E0.unk19 == 6
@@ -539,6 +549,8 @@ bool func_802E4424(void) {
             func_8030C27C();
             /* fallthrough */
         case GAME_MODE_7_ATTRACT_DEMO:
+            port_requestReadback(); // [port] keep gFramebuffers updated for Bottles Bonus/SnS capture
+            /* fallthrough */
         case GAME_MODE_9_BANJO_AND_KAZOOIE:
             func_8034BB90();
             if ((controller_getStartButton(0) == 1) && (D_8037E8E0.unk0 != 0)) {

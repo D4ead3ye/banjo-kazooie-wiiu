@@ -6,6 +6,7 @@
     sort: OFFSET
     logging: ERROR
     textures: ADDITIONAL_DEFINES
+    include_autogen: true
     output:
       binary: bk.o2r
       code: src/assets
@@ -20,6 +21,7 @@ ded6ee166e740ad1bc810fd678a84b48e245ab80:
     sort: OFFSET
     logging: ERROR
     textures: ADDITIONAL_DEFINES
+    include_autogen: true
     output:
       binary: bk.o2r
       code: src/assets
