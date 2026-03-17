@@ -158,7 +158,7 @@ aBKAssetTable:
     172: anim/TeeHeeChase
     173: anim/NibblyTakeoff
     174: anim/NibblyIdle
-    176: anim/BanjoFalling
+    176: anim/BanjoJumpFall
     177: anim/BanjoClimb2
     178: anim/BanjoClimbIdle
     179: anim/ChompaIdle
@@ -169,30 +169,30 @@ aBKAssetTable:
     184: anim/BanjoDrown
     185: anim/BanjoDrowning
     187: anim/LockupIdle
-    188: anim/NipperVulnerable
-    189: anim/NipperHurt
-    190: anim/NipperAttack
-    191: anim/NipperIdle
-    192: anim/LittleBounce
-    193: anim/WobblyBounce
-    194: anim/ClankerIdle
-    195: anim/ClankerMouthOpen
-    196: anim/GrabbaAppear
-    197: anim/GrabbaHide
-    198: anim/GrabbaIdle
-    199: anim/RubeesPot
+    188: anim/Lockup
+    189: anim/NipperVulnerable
+    190: anim/NipperHurt
+    191: anim/NipperAttack
+    192: anim/NipperIdle
+    193: anim/LittleBounce
+    194: anim/WobblyBounce
+    195: anim/ClankerIdle
+    196: anim/ClankerMouthOpen
+    197: anim/GrabbaAppear
+    198: anim/GrabbaHide
+    199: anim/GrabbaIdle
     200: anim/GrabbaDefeated
     201: anim/FlyingCarpet
     202: anim/GloopSwim
     203: anim/GloopBubble
     204: anim/BanjoBeakBombEnd
-    205: anim/LairGreenGrate
-    206: anim/RubeeIdle
+    205: anim/SarcophagusOpen
+    206: anim/RubeeStopPlaying
     207: anim/HistupRaised
     208: anim/HistupRising
-    209: anim/RubeesPot
+    209: anim/HistupHide
     210: anim/BanjoGettingUp
-    211: anim/BanjoHurt
+    211: anim/BanjoBeakBombRebound
     212: anim/SwitchDown
     213: anim/SwitchUp
     214: anim/TurboTrainers
@@ -1032,7 +1032,7 @@ aBKAssetTable:
     1144: model/Unk_1144
     1145: model/BikiniGirl
     1146: model/Unk_1146
-    1147: model/GreenRock
+    1147: model/Rock
     1148: sprite/SnoringZ
     1151: model/FPBluePresent_02
     1152: model/FPGreenPresent
@@ -2200,7 +2200,7 @@ aBKAssetTable:
     3172: dialog/Speaker8B_MrVile_PlayGame_Accept
     3173: dialog/Speaker8B_MrVile_PlayGame_Deny
     3174: dialog/Speaker8B_MrVile_LostGame
-    3175: dialog/Speaker8B_MrVile_WonGame2
+    3175: dialog/Speaker8B_MrVile_WonGame
     3176: dialog/Speaker8B_MrVile_LostGame2
     3177: dialog/Speaker8B_MrVile_WonGame2
     3178: dialog/Speaker8B_MrVile_LostGame3
@@ -3244,7 +3244,7 @@ aBKAssetTable:
     5486: midi/BoggysIglooSad
     5487: midi/BoggysIglooHappy
     5488: midi/BetaGameOver
-    5489: midi/GruntysLair
+    5489: midi/GruntysLair_02
     5490: midi/GruntysLairMMM
     5491: midi/CCW_Spring
     5492: midi/NabnutsAttic2
@@ -3271,7 +3271,7 @@ aBKAssetTable:
     5513: midi/RedFeatherPillow
     5514: midi/GoldFeatherPillow
     5515: midi/BlueEggPillow
-    5516: midi/OpenNoteDoor
+    5516: midi/OpenNoteDoor_02
     5517: midi/Cheato
     5518: midi/Brentilda
     5519: midi/FFSkullSquare
