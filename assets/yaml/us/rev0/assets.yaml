@@ -223,7 +223,7 @@ aBKAssetTable:
     240: anim/MiniJinxyEating
     241: anim/Carpet
     244: anim/GobiRelaxing_01
-    245: anim/Unk_245
+    245: anim/GV/GobiRopeAnim
     246: anim/BanjoPunishingKazooie
     247: anim/GobiHappy
     248: anim/GobiRunning
@@ -244,7 +244,7 @@ aBKAssetTable:
     263: anim/TanktupSpawningJiggy
     264: anim/SirSlush_01
     265: anim/SirSlushAttacking
-    267: anim/Unk_267
+    267: anim/BGS/PinkEggAnim
     268: anim/BanjoDuckingAndTurning
     269: anim/BanjoHit
     270: anim/BuzzbombPrepareCharge
@@ -280,9 +280,9 @@ aBKAssetTable:
     305: anim/JinjoCircling_02
     306: anim/FloatsamBouncing
     307: anim/NipperDying
-    308: anim/Unk_308
-    309: anim/Unk_309
-    310: anim/Unk_310
+    308: anim/RBB/WhistleAnim_01
+    309: anim/RBB/WhistleAnim_02
+    310: anim/RBB/WhistleAnim_03
     311: anim/GrimletAttacking
     312: anim/TextShadowAnimation
     313: anim/BottlesDisappearing
@@ -292,7 +292,7 @@ aBKAssetTable:
     317: anim/BottlesMolehill_02
     318: anim/SnorkelSwimming
     319: anim/SnorkelStuck
-    320: anim/Unk_320
+    320: anim/RBB/RarewareFlagAnim
     321: anim/AnchorOnSnorkel
     322: anim/AnchorRising
     323: anim/Button
@@ -325,16 +325,16 @@ aBKAssetTable:
     350: anim/RareLogoAppearing
     351: anim/ConcertBanjoBeforeStart
     352: anim/ConcertBugCrawling
-    353: anim/Unk_353
+    353: anim/FP/BoatingAnim
     354: anim/Toots
     355: anim/CutsceneBuzzbombSmack
     356: anim/TootySinging
     357: anim/Beehive
     358: anim/GoldChestBouncing
     359: anim/BanjoMoveVeryLittle
-    360: anim/Unk_360
-    361: anim/Unk_361
-    362: anim/Unk_362
+    360: anim/CCW/SeasonalSwitchAnim_OPA
+    361: anim/CCW/SeasonalSwitchAnim_XLU
+    362: anim/CCW/SeasonalSwitchAnim_02
     363: anim/SnareBearSnapping
     364: anim/SnareBear_01
     365: anim/TwinklyPresentOpening
@@ -351,7 +351,7 @@ aBKAssetTable:
     376: anim/TwinklySpawning
     377: anim/BoggySignaling
     378: anim/BoggyLookingback
-    379: anim/Unk_379
+    379: anim/FP/Boggy2Anim
     380: anim/TwinklyTwinkling
     381: anim/SpawnOfBoggyHappy
     382: anim/SpawnOfBoggySad
@@ -363,11 +363,11 @@ aBKAssetTable:
     388: anim/BigCluckerAttacking_01
     389: anim/BigCluckerAttacking_02
     390: anim/BigCluckerDying
-    391: anim/Unk_391
+    391: anim/CCW/EyrieEggAnim
     392: anim/PumpkinBanjoDying
     393: anim/FloatsamDying
     394: anim/Present
-    397: anim/Unk_397
+    397: anim/CCW/CaterpillarAnim
     398: anim/CaterpillarIdle
     399: anim/SpringEyrieYawnSleep
     400: anim/SpringEyrieBabySleeping
@@ -411,31 +411,31 @@ aBKAssetTable:
     439: anim/GreenMist
     440: anim/DoorOpening
     441: anim/Grunty_01
-    442: anim/Unk_442
+    442: anim/CCW/ToadAnim
     443: anim/GruntyPickingNose
-    444: anim/Unk_444
+    444: anim/CCW/SeasonalCollectAnim
     445: anim/GruntyAngryAtDingpot
     446: anim/GruntyThrowingBooger
     447: anim/GruntyShockedConfused
     448: anim/GruntyWalking_01
-    449: anim/Unk_449
+    449: anim/SoundEmitAnim
     450: anim/DoorClosing
-    451: anim/Unk_451
+    451: anim/CCW/CrackingActorAnim
     452: anim/GruntysBroomstickFlying
     453: anim/GruntyFlying
-    454: anim/Unk_454
+    454: anim/CCW/SeasonalVariantAnim
     455: anim/BanjoSleeping
     456: anim/BanjoWakingUp
     457: anim/BedsheetsBanjoSleeping
     458: anim/BedsheetsBanjoAwake
     459: anim/KazooieAppearing
-    460: anim/Unk_460
+    460: anim/CCW/DemoInputAnim
     461: anim/KazooieInsideBackpack
     462: anim/Curtain
     463: anim/KazooieUneasy
     464: anim/TootyHopping
-    465: anim/Unk_465
-    466: anim/Unk_466
+    465: anim/MMM/PortraitChompaAnim
+    466: anim/RBB/SirenAnim
     467: anim/KazooieWakingBanjo
     468: anim/KazooieFalling
     469: anim/TootyChatteringTeeth
@@ -461,17 +461,17 @@ aBKAssetTable:
     489: anim/MumMum
     490: anim/MumMumCurling
     491: anim/MumMumUncurling
-    492: anim/Unk_492
+    492: anim/LAIR/FlyingSpawnerAnim
     493: anim/RipperDamaged
     494: anim/RipperDying
-    495: anim/Unk_495
+    495: anim/FP/XmasTreeSwitchAnim
     496: anim/Web_01
     497: anim/WebDying_01
     498: anim/Web_02
     499: anim/WebDying_02
     500: anim/Shrapnel
     501: anim/JiggyTransition
-    502: anim/Unk_502
+    502: anim/CS/SmokeActorAnim
     503: anim/KazooieFeathersPoof
     504: anim/BottlesPointAtGrunty
     505: anim/TootyConfused
@@ -492,23 +492,23 @@ aBKAssetTable:
     521: anim/CuckooClock
     522: anim/CuckooClockChiming
     523: anim/GruntyFalling_02
-    524: anim/Unk_524
+    524: anim/CS/CutsceneAnim_20C
     525: anim/KlungoLeverDown
     526: anim/MachineLeverDown
     527: anim/KlungoLaughing
     528: anim/Machine
-    529: anim/Unk_529
+    529: anim/BottlesBonusAnim_01
     530: anim/CauldronActivating
     531: anim/CauldronSleeping
     532: anim/CauldronActivated
     533: anim/CauldronTeleporting
     534: anim/CauldronRejected
     535: anim/TransformPad
-    536: anim/Unk_536
-    537: anim/Unk_537
+    536: anim/LAIR/LairActorAnim_218
+    537: anim/CCW/AutumnFlowerAnim
     538: anim/EyrieEating_01
     539: anim/EyrieEating_02
-    540: anim/Unk_540
+    540: anim/CCW/CrackingActorBreakAnim
     541: anim/EyrieFlying
     542: anim/EyriePoopingJiggy
     544: anim/SirSlush_02
@@ -543,15 +543,15 @@ aBKAssetTable:
     574: anim/PortraitChompa
     575: anim/Portrait
     576: anim/LoggoFlush
-    577: anim/Unk_577
+    577: anim/GV/Gobi1Anim
     578: anim/GobiRelaxing_02
     579: anim/GrublinHood
     580: anim/GrublinHoodAlerted
     581: anim/GrublinHoodChasing
     582: anim/GrublinHoodDying
-    583: anim/Unk_583
-    584: anim/Unk_584
-    585: anim/Unk_585
+    583: anim/FP/SwitchFlightPadAnim
+    584: anim/FP/FPActorAnim_248
+    585: anim/FP/FPActorAnim_249
     586: anim/BanjoCookCooking
     587: anim/BanjoCookActivated
     588: anim/BanjoCookFlip
@@ -581,7 +581,7 @@ aBKAssetTable:
     612: anim/JinjoStatueActivating
     613: anim/JinjoStatue
     614: anim/GruntyFallingDownTower
-    615: anim/Unk_615
+    615: anim/RBB/FinalBossAnim
     616: anim/BigBlueEgg
     617: anim/BigRedFeather
     618: anim/BigGoldFeather
@@ -597,7 +597,7 @@ aBKAssetTable:
     628: anim/SnackerDying
     629: anim/JinjonatorActivating
     630: anim/JinjonatorCharging_01
-    631: anim/Unk_631
+    631: anim/JinjonatorAnim
     632: anim/JinjonatorRecoil
     633: anim/GruntyJawDropShiver
     634: anim/GruntyHurtByJinjonator
@@ -630,7 +630,7 @@ aBKAssetTable:
     661: anim/BanjosChairBreaking
     662: anim/BottlesEatingCorn
     663: anim/MumboSkiddingGivingFlower
-    664: anim/Unk_664
+    664: anim/CCW/SplashItemAnim
     665: anim/BottlesFallingOffChair
     666: anim/BanjoDrunk
     667: anim/KazooieHitsBanjo
@@ -667,19 +667,19 @@ aBKAssetTable:
     698: anim/KazooieTalking
     699: anim/MumboRunningAfterMelonBabe
     700: anim/MumboTalking
-    701: anim/Unk_701
-    702: anim/Unk_702
+    701: anim/BottlesBonusAnim_02
+    702: anim/BottlesBonusAnim_03
     703: anim/Unk_703
     704: anim/PiranhaDying
-    705: anim/Unk_705
-    706: anim/Unk_706
-    707: anim/Unk_707
-    708: anim/Unk_708
+    705: anim/BottlesBonusAnim_04
+    706: anim/BottlesBonusAnim_05
+    707: anim/BottlesBonusAnim_06
+    708: anim/BottlesBonusAnim_07
     709: anim/GruntyPreparingCharge
     710: anim/MumbosHand
     711: anim/MumbosHandAppearing
     712: anim/MumbosHandLeaving
-    713: anim/Unk_713
+    713: anim/BottlesBonusAnim_08
     721: model/GreyHouseBrick
     722: model/MM/ChimpysOrange
     723: model/MM/CongaTree
@@ -696,9 +696,9 @@ aBKAssetTable:
     737: model/TTC/LightAndDarkCrate
     739: model/RBB/LightPipeOpening
     740: model/RBB/DarkPipeOpening
-    741: model/Unk_741
+    741: model/LAIR/DoorOfGrunty
     742: model/JuJu
-    743: model/Unk_743
+    743: model/DebrisParticle_02
     744: model/FlightPad_01
     745: model/MM/OrangeSplat
     747: model/MM/OrangePad
@@ -720,12 +720,12 @@ aBKAssetTable:
     771: model/Mumbo15TokensSign
     772: model/Mumbo20TokensSign
     773: model/Mumbo25TokensSign
-    774: model/Unk_774
+    774: model/CS/CutsceneActorModel
     776: model/ClankersBlueRing
     777: model/ClankerTokenToothExterior
     778: model/ClankerJiggyToothExterior
     781: model/BGS/LeafPad
-    782: model/Unk_782
+    782: model/CCW/EyrieDebris
     785: model/CornOnTheCob
     786: model/Hamper
     792: model/Melon
@@ -736,7 +736,7 @@ aBKAssetTable:
     806: model/FP/IcicleSmall
     809: model/FP/StackOfPresents1
     813: model/Unk_813
-    814: model/Unk_814
+    814: model/MM/PumpkinBanjoTransformation
     815: model/CornerCobweb
     816: model/BanjosArmChair
     817: model/BanjosTowelHolder
@@ -758,8 +758,8 @@ aBKAssetTable:
     833: model/LAIR/BeautyStealingMachineConsole
     834: model/GV/ShortPlatform
     835: model/TootyPictureFrame
-    836: model/Unk_836
-    837: model/Unk_837
+    836: model/DirtParticle
+    837: model/DebrisChunk
     838: model/Unk_838
     839: model/LAIR/MachineRoomDoor
     840: model/Unk_840
@@ -839,14 +839,14 @@ aBKAssetTable:
     920: model/ConcertAnt
     934: model/NintendoCube
     935: model/RarewareLogo
-    936: model/Unk_936
+    936: model/DebrisParticle_14
     937: model/PalmTree_03
     941: model/FireSparkle
     942: model/MMM/GraveFlowerPot
     943: model/GreenPlank
     944: model/Snacker
     945: model/ConcertMumbo
-    946: model/Unk_946
+    946: model/LAIR/LairActor_946
     947: model/MumbosHut
     950: model/TTC/Stairs1
     951: model/TTC/Stairs2
@@ -966,7 +966,7 @@ aBKAssetTable:
     1078: model/TealGrate
     1079: model/GrateGuardingJiggy
     1080: model/GV/HoneycombSwitch
-    1081: model/Unk_1081
+    1081: model/CS/SparkleActor
     1082: model/Sawblade
     1083: model/RBB/BellBuoy
     1084: model/RBB/RowBoat
@@ -974,11 +974,11 @@ aBKAssetTable:
     1086: model/MMM/LockedGate2
     1087: model/Unk_1087
     1088: model/CCW/Snarebear
-    1089: model/Unk_1089
+    1089: model/RippleParticle
     1090: model/FP/TwinkliesBox
     1091: model/CCW/ZubbaHoneyLump
-    1092: model/Unk_1092
-    1093: model/Unk_1093
+    1092: model/CCW/SplashItem_01
+    1093: model/CCW/SplashItem_02
     1094: model/CCW/Zubba
     1095: model/CCW/Beanstalk
     1096: model/FP/BlueTwinkly
@@ -1002,9 +1002,9 @@ aBKAssetTable:
     1114: sprite/GreenGlow_01
     1115: model/KazooieInBackpackStand
     1116: model/BanjosHouseCurtains
-    1117: model/Unk_1117
+    1117: model/CS/GlowSparkle
     1118: model/BanjosHouseDoor
-    1119: model/Unk_1119
+    1119: model/CS/SmokeActor
     1120: model/KazooieWing
     1121: model/Unk_1121
     1122: model/NabnutsGirlfriend
@@ -1029,9 +1029,9 @@ aBKAssetTable:
     1141: sprite/Heart
     1142: sprite/BlueGlow
     1143: sprite/YellowGlow
-    1144: model/Unk_1144
+    1144: model/CutsceneParticle_01
     1145: model/BikiniGirl
-    1146: model/Unk_1146
+    1146: model/CutsceneParticle_02
     1147: model/Rock
     1148: sprite/SnoringZ
     1151: model/FP/BluePresent_02
@@ -1063,7 +1063,7 @@ aBKAssetTable:
     1177: model/FP/TwinklieGreenShard
     1178: model/FP/TwinklieOrangeShard
     1179: model/FP/TwinklieRedShard
-    1180: model/Unk_1180
+    1180: model/FP/TriggerActor
     1181: model/RBB/SeamanGrublin
     1182: model/BeeSwarm
     1183: model/GlowingBee
@@ -1082,7 +1082,7 @@ aBKAssetTable:
     1196: model/IronBarsUnderGruntildaStatue
     1197: model/GruntildaStatueHatTop
     1198: model/BubblegloopSwampEntranceDoor
-    1199: model/Unk_1199
+    1199: model/LAIR/BreakableFloorCobweb
     1200: model/Level3WaterSwitch
     1201: model/GrateToLevel3WaterSwitch
     1202: model/Level2WaterSwitch
@@ -1176,15 +1176,15 @@ aBKAssetTable:
     1291: model/MMM/SecretXBarrelLid
     1292: model/SecretSNSIceKey
     1293: model/SecretSNSEgg
-    1294: model/Unk_1294
-    1295: model/Unk_1295
-    1296: model/Unk_1296
+    1294: model/DebrisParticle_01
+    1295: model/DebrisParticle_04
+    1296: model/DebrisParticle_05
     1297: model/LAIR/WoodenCoffinLid
-    1298: model/Unk_1298
-    1299: model/Unk_1299
+    1298: model/FP/FPActor_1298
+    1299: model/FP/FPActor_1299
     1300: model/GV/SNSChamberDoor
     1301: model/GV/SNSSwitch
-    1302: model/Unk_1302
+    1302: model/DebrisParticle_07
     1303: model/IronGate
     1304: model/CCW/WoodenDoor
     1305: model/MMM/Loggo
@@ -1237,7 +1237,7 @@ aBKAssetTable:
     1352: model/LAIR/RedFeatherRefillPillow
     1353: model/LAIR/GoldFeatherRefillPillow
     1354: model/Gruntling_01
-    1355: model/Unk_1355
+    1355: model/LAIR/GreenPresentParticle
     1356: model/GameOverSign
     1357: model/BanjoKazooieSign
     1358: model/CopyrightInfo
@@ -1337,7 +1337,7 @@ aBKAssetTable:
     1766: sprite/PurpleTexture
     1767: sprite/PinkTexture
     1768: model/LinesAndSquare
-    1769: sprite/Unk_1769
+    1769: sprite/FontSprite
     1771: sprite/CharacterFontAlphaMask
     1772: sprite/BoldFontLettersAlphaMask
     1773: sprite/BoldFontNumbersAlphaMask
@@ -1362,7 +1362,7 @@ aBKAssetTable:
     1794: sprite/Unk_1794
     1795: sprite/Unk_1795
     1796: sprite/GloopBubble
-    1797: sprite/Unk_1797
+    1797: sprite/SubaddieSprite
     1800: sprite/BlueEggForFontAndShooting
     1801: sprite/Unk_1801
     1802: sprite/Bubble_01
@@ -1370,12 +1370,12 @@ aBKAssetTable:
     1804: sprite/Ripple
     1805: sprite/Smoke_01
     1806: sprite/Smoke_02
-    1807: sprite/Unk_1807
+    1807: sprite/ProjectileSprite
     1808: sprite/SparklePurple
     1809: sprite/SparkleDarkBlue
     1810: sprite/SparkleGreen
     1811: sprite/SparkleYellow
-    1812: sprite/Unk_1812
+    1812: sprite/LAIR/ParticleSprite
     1813: sprite/SparkleRed
     1814: sprite/SparkleWhite
     1815: sprite/SparkleYellow_02
@@ -1532,7 +1532,7 @@ aBKAssetTable:
     1995: model/SkyGruntysLairMMMEntranceClouds
     1996: model/SkyWitchFallingTowardsGround
     1997: model/SkyBeachEnding
-    1999: model/Unk_1999
+    1999: model/SceneTransitionUnknown
     2000: model/SceneTransitionJiggy
     2002: model/BlackWall
     2003: model/WhiteWall
