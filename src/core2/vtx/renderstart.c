@@ -52,7 +52,8 @@ void func_8034D634(s32 mesh_id, BKVtxRef *src, Vtx *dst, void *arg3){
 
 void func_8034D700(s32 mesh_id, BKVtxRef *src, Vtx *dst, void *arg3){
     Struct6Ds *data = (Struct6Ds *)arg3;
-    dst->v.ob[1] = src->v.v.ob[1] + (u16)(s32)(data->unk4 + ((data->unk44 / data->unk48) * (data->unk8 - data->unk4)));
+    s16 disp = (s16)(s32)(data->unk4 + ((data->unk44 / data->unk48) * (data->unk8 - data->unk4))); // [port] u16→s16: ob[1] is s16, u16 wraps negative displacements
+    dst->v.ob[1] = src->v.v.ob[1] + disp;
 }
 
 void func_8034D740(s32 mesh_id, BKVtxRef *src, Vtx *dst, void *arg3){

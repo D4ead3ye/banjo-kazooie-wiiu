@@ -107,6 +107,26 @@ static char* LoadAndRetainResource(const std::string& path, uint32_t assetId) {
     return nullptr;
 }
 
+// [port] Reload an asset, evicting any cached version first.
+// Used for map models whose vertex data gets modified at runtime.
+extern "C" char* ResourceMgr_ReloadByAssetId(uint32_t assetId) {
+    sResourceRefCache.erase(assetId);
+
+    const auto& symbolMap = GetAssetSymbolMap();
+    if (const auto entry = symbolMap.find(assetId); entry != symbolMap.end()) {
+        auto mappedPath = entry->second;
+        std::replace(mappedPath.begin(), mappedPath.end(), '\\', '/');
+
+        // Unload from LUS cache so it re-reads from the o2r
+        Ship::Context::GetInstance()->GetResourceManager()->UnloadResource(mappedPath);
+
+        if (auto result = LoadAndRetainResource(mappedPath, assetId); result != nullptr) {
+            return result;
+        }
+    }
+    return nullptr;
+}
+
 extern "C" char* ResourceMgr_LoadByAssetId(uint32_t assetId) {
     // Return cached resource if already loaded
     if (auto it = sResourceRefCache.find(assetId); it != sResourceRefCache.end()) {

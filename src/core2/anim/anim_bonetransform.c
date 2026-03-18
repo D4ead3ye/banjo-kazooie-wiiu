@@ -431,6 +431,19 @@ void *assetcache_get(enum asset_e assetId) {
         assetCacheCurrentSize = (s32)ResourceMgr_GetResourceSize(assetId);
     }
     return result;
+}
+
+// [port] Reload an asset from disk, bypassing the cache.
+// On N64, assets were always loaded fresh from ROM. In the port, the resource
+// cache preserves modified data (e.g. displaced vertices in map models).
+// Use this for assets whose data gets mutated at runtime.
+void *assetcache_reload(enum asset_e assetId) {
+    extern char* ResourceMgr_ReloadByAssetId(uint32_t);
+    void *result = ResourceMgr_ReloadByAssetId(assetId);
+    if (result) {
+        assetCacheCurrentSize = (s32)ResourceMgr_GetResourceSize(assetId);
+    }
+    return result;
 #if 0
     s32 comp_size;//sp_44
     s32 i;

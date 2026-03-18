@@ -594,11 +594,14 @@ void func_8030A078(void) {
     description = _mapModel_mapIdToDescription(map_get());;
     mapModel.description = description;
     mapModel.scale = (f32) description->scale;
-    mapModel.model_bin_opa = (BKModelBin *)assetcache_get(mapModel.description->opa_model_id);
+    // [port] Reload map models fresh — on N64 these were always loaded from ROM.
+    // The resource cache preserves vertex data modified by mesh transforms,
+    // causing displacements to stack across map loads.
+    mapModel.model_bin_opa = (BKModelBin *)assetcache_reload(mapModel.description->opa_model_id);
     mapModel.collision_opa = model_getCollisionList(mapModel.model_bin_opa);
     mapModel.unk20 = 0;
     if (mapModel.description->xlu_model_id != 0) {
-        mapModel.model_bin_xlu = (BKModelBin *)assetcache_get(mapModel.description->xlu_model_id);
+        mapModel.model_bin_xlu = (BKModelBin *)assetcache_reload(mapModel.description->xlu_model_id);
         mapModel.collision_xlu = model_getCollisionList(mapModel.model_bin_xlu);
     } else {
         mapModel.model_bin_xlu = NULL;

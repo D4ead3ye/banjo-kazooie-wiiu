@@ -116,6 +116,7 @@ VLA *   bk_vector_defrag(VLA *vla);
 void actor_collisionOff(Actor *);
 
 void *assetcache_get(enum asset_e assetId);
+void *assetcache_reload(enum asset_e assetId);
 
 
 Actor *actor_new(s32 position[3], s32 yaw, ActorInfo *actorInfo, u32 flags);
