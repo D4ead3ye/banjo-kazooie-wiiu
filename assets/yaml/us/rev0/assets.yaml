@@ -681,39 +681,39 @@ aBKAssetTable:
     712: anim/MumbosHandLeaving
     713: anim/Unk_713
     721: model/GreyHouseBrick
-    722: model/MMChimpysOrange
-    723: model/MMCongaTree
+    722: model/MM/ChimpysOrange
+    723: model/MM/CongaTree
     724: model/Unk_724
-    725: model/FPBluePresent_01
-    726: model/FPTartanPresent
-    727: model/FPGreenWhitePresent
+    725: model/FP/BluePresent_01
+    726: model/FP/TartanPresent
+    727: model/FP/GreenWhitePresent
     730: model/PalmTree_01
-    731: model/RBBGreyToxicBarrel
-    732: model/RBBYellowToxicBarrel
+    731: model/RBB/GreyToxicBarrel
+    732: model/RBB/YellowToxicBarrel
     733: model/ShockJumpPad
-    735: model/TTCLightCrate
-    736: model/TTCDarkCrate
-    737: model/TTCLightAndDarkCrate
-    739: model/RBBLightPipeOpening
-    740: model/RBBDarkPipeOpening
+    735: model/TTC/LightCrate
+    736: model/TTC/DarkCrate
+    737: model/TTC/LightAndDarkCrate
+    739: model/RBB/LightPipeOpening
+    740: model/RBB/DarkPipeOpening
     741: model/Unk_741
     742: model/JuJu
     743: model/Unk_743
     744: model/FlightPad_01
-    745: model/MMOrangeSplat
-    747: model/MMOrangePad
+    745: model/MM/OrangeSplat
+    747: model/MM/OrangePad
     749: model/BanjosHouseDustbin
     750: model/MumbosOnVacationSign
-    753: model/MMMGlassTumblar
-    756: model/CCWAutumnLeaf
+    753: model/MMM/GlassTumblar
+    756: model/CCW/AutumnLeaf
     757: model/GreenBKFlagPole
     758: model/BlueBKFlagPole
-    759: model/CCWSpringLeaf
-    760: model/MMMRIPTombstone
+    759: model/CCW/SpringLeaf
+    760: model/MMM/RIPTombstone
     761: model/RedBKFlagPole
-    763: model/CCWSummerLeaf
-    764: model/MMMGravePlot
-    767: model/MMTree
+    763: model/CCW/SummerLeaf
+    764: model/MMM/GravePlot
+    767: model/MM/Tree
     768: model/JinxyHead
     769: model/Mumbo5TokensSign
     770: model/Mumbo10TokensSign
@@ -724,44 +724,44 @@ aBKAssetTable:
     776: model/ClankersBlueRing
     777: model/ClankerTokenToothExterior
     778: model/ClankerJiggyToothExterior
-    781: model/BGSLeafPad
+    781: model/BGS/LeafPad
     782: model/Unk_782
     785: model/CornOnTheCob
     786: model/Hamper
     792: model/Melon
-    802: model/FPPresentStandLarge
-    803: model/FPPresentStandSmall
-    804: model/FPPresentRamp
-    805: model/FPIcicleLarge
-    806: model/FPIcicleSmall
-    809: model/FPStackOfPresents1
+    802: model/FP/PresentStandLarge
+    803: model/FP/PresentStandSmall
+    804: model/FP/PresentRamp
+    805: model/FP/IcicleLarge
+    806: model/FP/IcicleSmall
+    809: model/FP/StackOfPresents1
     813: model/Unk_813
     814: model/Unk_814
     815: model/CornerCobweb
     816: model/BanjosArmChair
     817: model/BanjosTowelHolder
-    818: model/BGSFloatingLogWalkway
+    818: model/BGS/FloatingLogWalkway
     819: model/BanjosFlowerPot
     820: model/PalmTree_02
-    821: model/BGSCattail
+    821: model/BGS/Cattail
     822: model/BanjosDrawers
     823: model/BanjosKitchen
     824: model/TableAndRadio
     825: model/WinterTree
     826: model/WallTorch
     827: model/Parasol
-    828: model/GVMazePot
-    829: model/GVSarcophagus
-    830: model/GVRock1
-    831: model/GVRock2
-    832: model/GLBeautyStealingMachine
-    833: model/GLBeautyStealingMachineConsole
-    834: model/GVShortPlatform
+    828: model/GV/MazePot
+    829: model/GV/Sarcophagus
+    830: model/GV/Rock1
+    831: model/GV/Rock2
+    832: model/LAIR/BeautyStealingMachine
+    833: model/LAIR/BeautyStealingMachineConsole
+    834: model/GV/ShortPlatform
     835: model/TootyPictureFrame
     836: model/Unk_836
     837: model/Unk_837
     838: model/Unk_838
-    839: model/GLMachineRoomDoor
+    839: model/LAIR/MachineRoomDoor
     840: model/Unk_840
     841: model/Unk_841
     842: model/FloorCobweb
@@ -770,10 +770,10 @@ aBKAssetTable:
     845: model/BanjoKazooieLowPolyModel
     846: model/BanjoKazooieHighPolyModel
     847: model/TermiteBanjo
-    848: model/MMTicker
-    849: model/TTCYumYum
-    850: model/FPSled
-    851: model/MMBigbutt
+    848: model/MM/Ticker
+    849: model/TTC/YumYum
+    850: model/FP/Sled
+    851: model/MM/Bigbutt
     852: model/ConcertLilbutt
     853: model/ConcertBanjoAndKazooie
     854: model/WishywashyBanjo
@@ -781,8 +781,8 @@ aBKAssetTable:
     857: model/WalrusBanjo
     858: model/ConcertTooty
     859: model/CreditsTooty
-    860: model/MMConga
-    861: model/MMChimpy
+    860: model/MM/Conga
+    861: model/MM/Chimpy
     862: model/JiggyJigJiggy
     863: model/Jiggy
     864: model/BlueEggFragment
@@ -797,13 +797,13 @@ aBKAssetTable:
     877: sprite/CollectibleBlueEgg
     878: sprite/CollectibleExtraLife
     879: model/PumpkinBanjo
-    880: model/TTCCaptainBlubber
-    881: model/GVGrabba
+    880: model/TTC/CaptainBlubber
+    881: model/GV/Grabba
     882: model/Gloop
-    883: model/BGSMrVile
+    883: model/BGS/MrVile
     884: model/CrocodileBanjo
-    885: model/BGSRedFlibbit
-    886: model/GVSlappa
+    885: model/BGS/RedFlibbit
+    886: model/GV/Slappa
     887: model/SirSlush
     888: model/Snowball
     889: model/SirSlushsHat
@@ -813,17 +813,17 @@ aBKAssetTable:
     893: model/YumYumEye
     894: model/YumYumSmallShellFragment
     895: model/Unk_895
-    896: model/BGSCCWLargestPinkEgg
-    897: model/BGSLargePinkEgg
-    898: model/BGSMediumOrangeEgg
-    899: model/BGSSmallOrangeEgg
-    900: model/BGSSmallestOrangeEgg
-    901: model/BGSYellowFlibbit
+    896: model/BGS/CCWLargestPinkEgg
+    897: model/BGS/LargePinkEgg
+    898: model/BGS/MediumOrangeEgg
+    899: model/BGS/SmallOrangeEgg
+    900: model/BGS/SmallestOrangeEgg
+    901: model/BGS/YellowFlibbit
     903: model/Bottles
     904: model/BottlessMolehill
     905: model/SlappaPart
-    906: model/FPBoggyWithSled
-    907: model/FPBoggyRaceRedFlag
+    906: model/FP/BoggyWithSled
+    907: model/FP/BoggyRaceRedFlag
     908: model/SnippetClaw
     909: model/SnippetLeg
     910: model/SnippetHead
@@ -835,166 +835,166 @@ aBKAssetTable:
     916: model/TickerHeadNoEyes
     917: model/TickerBody
     918: model/TickerEye
-    919: model/BGSLargeAlligatorHead
+    919: model/BGS/LargeAlligatorHead
     920: model/ConcertAnt
     934: model/NintendoCube
     935: model/RarewareLogo
     936: model/Unk_936
     937: model/PalmTree_03
     941: model/FireSparkle
-    942: model/MMMGraveFlowerPot
+    942: model/MMM/GraveFlowerPot
     943: model/GreenPlank
     944: model/Snacker
     945: model/ConcertMumbo
     946: model/Unk_946
     947: model/MumbosHut
-    950: model/TTCStairs1
-    951: model/TTCStairs2
+    950: model/TTC/Stairs1
+    951: model/TTC/Stairs2
     955: model/YellowJinjo
     956: model/OrangeJinjo
-    957: model/TTCLighthouseA
-    958: model/TTCLighthouseB
+    957: model/TTC/LighthouseA
+    958: model/TTC/LighthouseB
     959: model/PlayerShadow
     960: model/BlueJinjo
     961: model/PinkJinjo
     962: model/GreenJinjo
-    965: model/MMGrublin
+    965: model/MM/Grublin
     966: model/Mumbo
     967: model/BlubbersGold
     968: model/ChimpysTreeStump
-    969: model/MMMRipper
-    970: model/MMMNibbly
-    971: model/MMMTeeHee
-    972: model/MMMBarrelLid
-    973: model/MMMTumblarShedDoor
-    974: model/MMMMansionFrontDoor
-    975: model/MMMCellarHatch
-    976: model/MMMLockedGate
-    977: model/MMMLockedGate1
-    978: model/TTCBlubbersShipTopHatch
-    979: model/MMMChurchDoor
-    980: model/TTCLockup
-    981: model/TTCNipper
-    982: model/TTCLighthouseDoor
-    983: model/GVStarSwitch
-    984: model/GVBanjoDoor
-    985: model/GVKazooieDoor
-    986: model/GVSunDoor_01
-    987: model/GVStarHatch
-    988: model/GVMagicCarpet
-    989: model/GVRubee
-    990: model/GVHistup
-    991: model/GVTrunker
+    969: model/MMM/Ripper
+    970: model/MMM/Nibbly
+    971: model/MMM/TeeHee
+    972: model/MMM/BarrelLid
+    973: model/MMM/TumblarShedDoor
+    974: model/MMM/MansionFrontDoor
+    975: model/MMM/CellarHatch
+    976: model/MMM/LockedGate
+    977: model/MMM/LockedGate1
+    978: model/TTC/BlubbersShipTopHatch
+    979: model/MMM/ChurchDoor
+    980: model/TTC/Lockup
+    981: model/TTC/Nipper
+    982: model/TTC/LighthouseDoor
+    983: model/GV/StarSwitch
+    984: model/GV/BanjoDoor
+    985: model/GV/KazooieDoor
+    986: model/GV/SunDoor_01
+    987: model/GV/StarHatch
+    988: model/GV/MagicCarpet
+    989: model/GV/Rubee
+    990: model/GV/Histup
+    991: model/GV/Trunker
     992: model/Gobi
-    993: model/GVRubeesEggPot
-    994: model/GVKazooieTarget
-    995: model/GVGobisRope
-    996: model/GVGobisRock
-    997: model/GVHandShadow
-    998: model/GVJinxyHead2
-    999: model/GVMagicCarpetShadow
-    1000: model/GVAncientOne
-    1001: model/TTCRedArrow
-    1002: model/TTCRedCross
-    1003: model/TTCRedQuestionMark
+    993: model/GV/RubeesEggPot
+    994: model/GV/KazooieTarget
+    995: model/GV/GobisRope
+    996: model/GV/GobisRock
+    997: model/GV/HandShadow
+    998: model/GV/JinxyHead2
+    999: model/GV/MagicCarpetShadow
+    1000: model/GV/AncientOne
+    1001: model/TTC/RedArrow
+    1002: model/TTC/RedCross
+    1003: model/TTC/RedQuestionMark
     1004: model/Shrapnel
     1005: model/Buzzbomb
-    1006: model/BGSTanktupHeadAndShell
-    1007: model/BGSTanktupFrontLeftLeg
-    1008: model/BGSTanktupBackLeftLeg
-    1009: model/BGSTanktupFrontRightLeg
-    1010: model/BGSTanktupBackRightLeg
+    1006: model/BGS/TanktupHeadAndShell
+    1007: model/BGS/TanktupFrontLeftLeg
+    1008: model/BGS/TanktupBackLeftLeg
+    1009: model/BGS/TanktupFrontRightLeg
+    1010: model/BGS/TanktupBackRightLeg
     1011: model/GobiSpit
-    1013: model/BGSGreenJiggySwitch
+    1013: model/BGS/GreenJiggySwitch
     1014: model/MrVileMinigameYumblie
     1015: model/MrVileMinigameGrumblie
-    1016: model/BGSTipTup
-    1017: model/BGSChoirTurtle
-    1023: model/GVSunDoor_02
-    1024: model/GVSunSwitch
+    1016: model/BGS/TipTup
+    1017: model/BGS/ChoirTurtle
+    1023: model/GV/SunDoor_02
+    1024: model/GV/SunSwitch
     1025: model/Flotsam
-    1026: model/RBBEggToll
-    1027: model/RBBRearShipPropeller
-    1028: model/RBBGreenPropellerSwitch
-    1029: model/RBBGreyPropellerSwitch_01
-    1030: model/RBBThinShaft
-    1031: model/RBBDoubleShaft1
-    1032: model/RBBDoubleShaft2
-    1033: model/RBBSmallCog
-    1034: model/RBBMediumCog
-    1035: model/RBBLargeCog
-    1036: model/RBBSpinningPlatform1
-    1037: model/RBBSpinningPlatform2
-    1038: model/RBBSpinningPlatform3
-    1039: model/RBBEngineRoomPropeller1
-    1040: model/RBBEngineRoomPropeller2
-    1041: model/RBBEngineRoomPropeller3
-    1042: model/RBBGreyPropellerSwitch_02
+    1026: model/RBB/EggToll
+    1027: model/RBB/RearShipPropeller
+    1028: model/RBB/GreenPropellerSwitch
+    1029: model/RBB/GreyPropellerSwitch_01
+    1030: model/RBB/ThinShaft
+    1031: model/RBB/DoubleShaft1
+    1032: model/RBB/DoubleShaft2
+    1033: model/RBB/SmallCog
+    1034: model/RBB/MediumCog
+    1035: model/RBB/LargeCog
+    1036: model/RBB/SpinningPlatform1
+    1037: model/RBB/SpinningPlatform2
+    1038: model/RBB/SpinningPlatform3
+    1039: model/RBB/EngineRoomPropeller1
+    1040: model/RBB/EngineRoomPropeller2
+    1041: model/RBB/EngineRoomPropeller3
+    1042: model/RBB/GreyPropellerSwitch_02
     1043: model/RBB1Button
     1044: model/RBB2Button
     1045: model/RBB3Button
-    1046: model/RBBWhistle1
-    1047: model/RBBWhistle2
-    1048: model/RBBWhistle3
+    1046: model/RBB/Whistle1
+    1047: model/RBB/Whistle2
+    1048: model/RBB/Whistle3
     1049: model/Grimlet
     1050: sprite/MumboTokenSprite
-    1051: model/RBBAnchorButton
-    1052: model/RBBSnorkel
-    1053: model/RBBAnchorAndChain
-    1054: model/RBBRarewareFlag
+    1051: model/RBB/AnchorButton
+    1052: model/RBB/Snorkel
+    1053: model/RBB/AnchorAndChain
+    1054: model/RBB/RarewareFlag
     1055: model/Unk_1055
     1056: sprite/Explosion_01
-    1057: model/FPSnowmanButton
-    1058: model/GVJinxy
-    1060: model/GVCactus
-    1061: model/BGSCroctus
-    1062: model/FPChristmasTreeStar
+    1057: model/FP/SnowmanButton
+    1058: model/GV/Jinxy
+    1060: model/GV/Cactus
+    1061: model/BGS/Croctus
+    1062: model/FP/ChristmasTreeStar
     1063: model/WoodenPlank
     1064: model/BossBoomBox
     1065: model/Key
     1066: sprite/Smoke
     1067: model/Unk_1067
-    1068: model/TTCLittleLockup
-    1069: model/SMQuarrie
-    1070: model/SMQuarrieFragment
-    1071: model/RBBEmptyHoneycombButton
+    1068: model/TTC/LittleLockup
+    1069: model/SM/Quarrie
+    1070: model/SM/QuarrieFragment
+    1071: model/RBB/EmptyHoneycombButton
     1072: model/GrilleChompa
     1073: model/BetaVent
     1074: model/ClankersWhiplash
-    1076: model/GVToots
+    1076: model/GV/Toots
     1077: model/GreenGrate
     1078: model/TealGrate
     1079: model/GrateGuardingJiggy
-    1080: model/GVHoneycombSwitch
+    1080: model/GV/HoneycombSwitch
     1081: model/Unk_1081
     1082: model/Sawblade
-    1083: model/RBBBellBuoy
-    1084: model/RBBRowBoat
-    1085: model/MMMChurchClockSwitch
-    1086: model/MMMLockedGate2
+    1083: model/RBB/BellBuoy
+    1084: model/RBB/RowBoat
+    1085: model/MMM/ChurchClockSwitch
+    1086: model/MMM/LockedGate2
     1087: model/Unk_1087
-    1088: model/CCWSnarebear
+    1088: model/CCW/Snarebear
     1089: model/Unk_1089
-    1090: model/FPTwinkliesBox
-    1091: model/CCWZubbaHoneyLump
+    1090: model/FP/TwinkliesBox
+    1091: model/CCW/ZubbaHoneyLump
     1092: model/Unk_1092
     1093: model/Unk_1093
-    1094: model/CCWZubba
-    1095: model/CCWBeanstalk
-    1096: model/FPBlueTwinkly
-    1097: model/FPGreenTwinkly
-    1098: model/FPOrangeTwinkly
-    1099: model/FPRedTwinkly
-    1100: model/FPMoggy
-    1101: model/FPSoggy
-    1102: model/FPGroggy
+    1094: model/CCW/Zubba
+    1095: model/CCW/Beanstalk
+    1096: model/FP/BlueTwinkly
+    1097: model/FP/GreenTwinkly
+    1098: model/FP/OrangeTwinkly
+    1099: model/FP/RedTwinkly
+    1100: model/FP/Moggy
+    1101: model/FP/Soggy
+    1102: model/FP/Groggy
     1103: model/GreenMist
     1104: model/Dingpot
     1105: model/GruntyGruntilda
     1106: model/GruntildasArms
     1107: model/DingpotTop
     1108: model/TootyImageInDingpot
-    1109: model/MMMLimbo
+    1109: model/MMM/Limbo
     1110: model/GruntildasBroomstick
     1111: model/GruntildaRidingBroomstick
     1112: model/BanjoTopHalf
@@ -1034,43 +1034,43 @@ aBKAssetTable:
     1146: model/Unk_1146
     1147: model/Rock
     1148: sprite/SnoringZ
-    1151: model/FPBluePresent_02
-    1152: model/FPGreenPresent
-    1153: model/FPRedPresent
-    1154: model/CCWClucker
-    1155: model/CCWEyriesEgg
-    1156: model/CCWBabyEyrie
-    1157: model/CCWCaterpillar
-    1158: model/FPChristmasTreeSwitch
-    1159: model/CCWGrownEyrie
-    1160: model/FPChristmasTree
+    1151: model/FP/BluePresent_02
+    1152: model/FP/GreenPresent
+    1153: model/FP/RedPresent
+    1154: model/CCW/Clucker
+    1155: model/CCW/EyriesEgg
+    1156: model/CCW/BabyEyrie
+    1157: model/CCW/Caterpillar
+    1158: model/FP/ChristmasTreeSwitch
+    1159: model/CCW/GrownEyrie
+    1160: model/FP/ChristmasTree
     1161: model/ShockSpringPad
     1162: model/FlightPad_02
     1163: model/JiggyPicture
-    1164: model/RBBBoomBox
-    1165: model/CCWNabnutEatingAcorns
-    1166: model/CCWAcorn
-    1167: model/CCWGnawty
-    1168: model/CCWGnawtysBoulder
+    1164: model/RBB/BoomBox
+    1165: model/CCW/NabnutEatingAcorns
+    1166: model/CCW/Acorn
+    1167: model/CCW/Gnawty
+    1168: model/CCW/GnawtysBoulder
     1169: model/NoteDoor
-    1170: model/RBBCaptainsRoomWoodenDoor
-    1171: model/RBBEngineRoomDoor
-    1172: model/FPWozza
-    1173: model/FPWozzasJiggy
-    1174: model/FPTwinklyMuncher
-    1175: model/FPTwinklieBlueShard
-    1176: model/FPTwinklieYellowShard
-    1177: model/FPTwinklieGreenShard
-    1178: model/FPTwinklieOrangeShard
-    1179: model/FPTwinklieRedShard
+    1170: model/RBB/CaptainsRoomWoodenDoor
+    1171: model/RBB/EngineRoomDoor
+    1172: model/FP/Wozza
+    1173: model/FP/WozzasJiggy
+    1174: model/FP/TwinklyMuncher
+    1175: model/FP/TwinklieBlueShard
+    1176: model/FP/TwinklieYellowShard
+    1177: model/FP/TwinklieGreenShard
+    1178: model/FP/TwinklieOrangeShard
+    1179: model/FP/TwinklieRedShard
     1180: model/Unk_1180
-    1181: model/RBBSeamanGrublin
+    1181: model/RBB/SeamanGrublin
     1182: model/BeeSwarm
     1183: model/GlowingBee
     1184: sprite/Explosion_02
     1185: model/BrickWallNearGVEntrance
     1186: model/MumbosMountainDoorEntrance
-    1187: model/TTCEntranceChestLid
+    1187: model/TTC/EntranceChestLid
     1188: model/ClankersEntranceLongPipe_01
     1189: model/ClankersEntranceLongPipe_02
     1190: model/ClankersEntranceShortPipe
@@ -1091,21 +1091,21 @@ aBKAssetTable:
     1205: model/Level1WaterSwitch
     1206: model/GrateBetweenMMMAndRBBPuzzles
     1207: model/GrateToRBBPuzzle
-    1208: model/CCWPuzzleSwitch
+    1208: model/CCW/PuzzleSwitch
     1209: model/Unk_1209
-    1210: model/RBBWindow1
-    1211: model/RBBWindow2
-    1212: model/GVEntranceDoor
-    1213: model/GLGruntildaHeadEyeball
-    1214: model/MMMEntranceDoor
-    1215: model/GLYellowFloorCobweb
-    1216: model/MMMWindow
-    1217: model/MMMShortWindow
-    1218: model/MMMTallWindow
-    1219: model/FPHouse
-    1220: model/FPFrozenMumboHut
-    1221: model/FPStackOfPresents2
-    1222: model/FPSnowyBridge
+    1210: model/RBB/Window1
+    1211: model/RBB/Window2
+    1212: model/GV/EntranceDoor
+    1213: model/LAIR/GruntildaHeadEyeball
+    1214: model/MMM/EntranceDoor
+    1215: model/LAIR/YellowFloorCobweb
+    1216: model/MMM/Window
+    1217: model/MMM/ShortWindow
+    1218: model/MMM/TallWindow
+    1219: model/FP/House
+    1220: model/FP/FrozenMumboHut
+    1221: model/FP/StackOfPresents2
+    1222: model/FP/SnowyBridge
     1223: model/MumMum
     1224: model/MumMumArm
     1225: model/MumMumLeg
@@ -1116,86 +1116,86 @@ aBKAssetTable:
     1230: model/LimboLeg
     1231: model/LimboHead
     1232: model/LimboBody
-    1234: model/FPIceTree
-    1235: model/FPChristmasTreeGlassContainerFragment
-    1236: model/FPTwinklieBoxPaperShard
-    1237: model/GLYellowWallCobweb
+    1234: model/FP/IceTree
+    1235: model/FP/ChristmasTreeGlassContainerFragment
+    1236: model/FP/TwinklieBoxPaperShard
+    1237: model/LAIR/YellowWallCobweb
     1238: model/ClickClockWoodEntranceDoor
     1239: model/FreezeezyPeakEntranceLeftDoor
     1240: model/FreezeezyPeakEntranceRightDoor
     1241: model/FreezeezyPeakEntranceHatchDoor
-    1242: model/MMMDiningRoomExitDoor
-    1243: model/RBBSafetyBoat1
+    1242: model/MMM/DiningRoomExitDoor
+    1243: model/RBB/SafetyBoat1
     1244: model/WitchSwitch
     1245: model/MumboSkullSwitch
-    1246: model/RBBSafetyBoat2
+    1246: model/RBB/SafetyBoat2
     1247: model/Cauldron
-    1248: model/CCWSeasonDoor1
-    1249: model/GLWoodenCoffin
-    1250: model/RBBSkylights
-    1251: model/CCWDeadBeanstalk
+    1248: model/CCW/SeasonDoor1
+    1249: model/LAIR/WoodenCoffin
+    1250: model/RBB/Skylights
+    1251: model/CCW/DeadBeanstalk
     1252: model/SnoreZ
-    1253: model/FPThreePurpleIceCrystals
-    1254: model/FPThreeBlueIceCrystals
-    1255: model/FPThreeGreenIceCrystals
-    1256: model/FPOneBlueIceCrystals_01
-    1257: model/FPOneBlueIceCrystals_02
-    1258: model/FPFinishBanner
-    1259: model/FPStartBanner
-    1260: model/FPRaceRostrum
-    1261: model/SMTopper
-    1262: model/SMColliwobble
-    1263: model/SMBawl
+    1253: model/FP/ThreePurpleIceCrystals
+    1254: model/FP/ThreeBlueIceCrystals
+    1255: model/FP/ThreeGreenIceCrystals
+    1256: model/FP/OneBlueIceCrystals_01
+    1257: model/FP/OneBlueIceCrystals_02
+    1258: model/FP/FinishBanner
+    1259: model/FP/StartBanner
+    1260: model/FP/RaceRostrum
+    1261: model/SM/Topper
+    1262: model/SM/Colliwobble
+    1263: model/SM/Bawl
     1264: model/ColliwobbleLargeStem
     1265: model/ColliwobbleSmallStem
     1266: model/ColliwobbleLargeLeaf
     1267: model/ColliwobbleSmallLeaf
     1268: model/ColliwobbleStem
-    1269: model/CCWSpringSwitch
-    1270: model/CCWSummerSwitch
-    1271: model/CCWAutumnSwitch
-    1272: model/CCWWinterSwitch
-    1273: model/CCWNabnutsWindow_01
-    1274: model/CCWNabnutsWindow_02
-    1275: model/CCWNabnutsWindow_03
-    1276: model/CCWNabnutsWindow_04
+    1269: model/CCW/SpringSwitch
+    1270: model/CCW/SummerSwitch
+    1271: model/CCW/AutumnSwitch
+    1272: model/CCW/WinterSwitch
+    1273: model/CCW/NabnutsWindow_01
+    1274: model/CCW/NabnutsWindow_02
+    1275: model/CCW/NabnutsWindow_03
+    1276: model/CCW/NabnutsWindow_04
     1277: model/Whipcrack
     1278: model/WhipcrackPart1
     1279: model/WhipcrackPart2
     1280: model/WhipcrackPart3
-    1281: model/CCWMoundOfAcorns
+    1281: model/CCW/MoundOfAcorns
     1282: model/Nabnut_01
     1283: model/Nabnut_02
     1284: model/Chinker
     1285: model/ChinkerChunk
-    1286: model/CCWDeadSnarebear
-    1287: model/GLGruntyFloorPictureEye1
-    1288: model/GLGruntyFloorPictureEye2
-    1289: model/GLJinxySarcophagus
-    1290: model/TTCSharkfoodIsland
-    1291: model/MMMSecretXBarrelLid
+    1286: model/CCW/DeadSnarebear
+    1287: model/LAIR/GruntyFloorPictureEye1
+    1288: model/LAIR/GruntyFloorPictureEye2
+    1289: model/LAIR/JinxySarcophagus
+    1290: model/TTC/SharkfoodIsland
+    1291: model/MMM/SecretXBarrelLid
     1292: model/SecretSNSIceKey
     1293: model/SecretSNSEgg
     1294: model/Unk_1294
     1295: model/Unk_1295
     1296: model/Unk_1296
-    1297: model/GLWoodenCoffinLid
+    1297: model/LAIR/WoodenCoffinLid
     1298: model/Unk_1298
     1299: model/Unk_1299
-    1300: model/GVSNSChamberDoor
-    1301: model/GVSNSSwitch
+    1300: model/GV/SNSChamberDoor
+    1301: model/GV/SNSSwitch
     1302: model/Unk_1302
     1303: model/IronGate
-    1304: model/CCWWoodenDoor
-    1305: model/MMMLoggo
-    1306: model/TTCLeaky
-    1307: model/GVScabby
+    1304: model/CCW/WoodenDoor
+    1305: model/MMM/Loggo
+    1306: model/TTC/Leaky
+    1307: model/GV/Scabby
     1308: model/ScabbyHead
     1309: model/ScabbyWing
     1310: model/ScabbyElytron
     1311: model/ScabbyBody
     1312: model/ScabbyLeg
-    1313: model/MMMPortraitChompa
+    1313: model/MMM/PortraitChompa
     1314: model/PortraitOfGruntilda
     1315: model/PortraitChompaTeeth
     1316: model/PortraitChompaHead
@@ -1206,15 +1206,15 @@ aBKAssetTable:
     1321: model/PortraitOfTreeAndMoon
     1322: model/PortraitOfTeeHee
     1323: model/PortraitOfSeamanGrublinMumMumLimbo
-    1324: model/CCWGrublinHood
+    1324: model/CCW/GrublinHood
     1325: model/GrublinHoodHat
-    1326: model/CCWSeasonDoor2
+    1326: model/CCW/SeasonDoor2
     1327: model/BanjosChair
     1328: model/BanjosBed_03
     1329: model/GnawtysDen
     1330: model/BanjoAndKazooie
-    1331: model/CCWNabnutsDoor
-    1332: model/GLFlightPadSwitch
+    1331: model/CCW/NabnutsDoor
+    1332: model/LAIR/FlightPadSwitch
     1333: model/FlightPadBlueFragment
     1334: model/FlightPadRedFragment
     1335: model/FlightPadYellowFragment
@@ -1226,16 +1226,16 @@ aBKAssetTable:
     1341: model/GruntildaOnBroomstick
     1342: model/GnawtysBed
     1343: model/GnawtysShelves
-    1344: model/GLShockJumpPadSwitch
+    1344: model/LAIR/ShockJumpPadSwitch
     1345: model/FireballSpellAttack
     1346: model/Unk_1346
     1347: model/FinalBattleJinjoStand
     1348: model/FinalBattleJinjonatorStand
     1349: model/FinalBattleStoneJinjo
     1350: model/GruntysBarrierSpell
-    1351: model/GLBlueEggRefillPillow
-    1352: model/GLRedFeatherRefillPillow
-    1353: model/GLGoldFeatherRefillPillow
+    1351: model/LAIR/BlueEggRefillPillow
+    1352: model/LAIR/RedFeatherRefillPillow
+    1353: model/LAIR/GoldFeatherRefillPillow
     1354: model/Gruntling_01
     1355: model/Unk_1355
     1356: model/GameOverSign
@@ -1253,22 +1253,22 @@ aBKAssetTable:
     1368: model/BlastWhenGreenJinjoHitsGruntilda
     1369: model/BlastWhenPinkJinjoHitsGruntilda
     1370: model/BKWorldEntryExitPad
-    1371: model/FPBoggysIgloo
+    1371: model/FP/BoggysIgloo
     1372: model/PressStartSign
     1373: model/NoControllerSign
-    1374: model/MMMNapper
+    1374: model/MMM/Napper
     1375: model/FurnaceFunWashingMachineCauldronPrize
     1376: model/FurnaceFunGruntyDollPrize
     1377: model/Gruntling_02
     1378: model/Gruntling_03
     1379: model/LevelEntrySigns
-    1380: model/MMMPurpleTeeHee
+    1380: model/MMM/PurpleTeeHee
     1381: model/BottlesGameBanjosHand
     1382: model/BlackSnippet
     1383: model/BlackSnippetBody
     1384: model/BlackSnippetLeg
     1385: model/BlackSnippetPincer
-    1386: model/FPChimney
+    1386: model/FP/Chimney
     1387: model/KingSandybuttsPyramid
     1388: model/TheEndSign
     1389: model/MumbosHandWithPicture
@@ -1383,135 +1383,135 @@ aBKAssetTable:
     1817: sprite/SparkleGreen_02
     1818: sprite/SparklePink_02
     1819: sprite/SparkleOrange_02
-    1821: setup/SM_SpiralMountain
-    1822: setup/MM_MumbosMountain
-    1825: setup/TTC_BlubbersShip
-    1826: setup/TTC_NippersShell
-    1827: setup/TTC_TreasureTroveCove
-    1830: setup/TTC_SandCastle
-    1831: setup/CC_ClankersCavern
-    1832: setup/MM_TickersTower
-    1833: setup/BGS_BubblegloopSwamp
-    1834: setup/MM_MumbosSkull
-    1836: setup/BGS_MrVile
-    1837: setup/BGS_TipTupChoir
-    1838: setup/GV_GobisValley
-    1839: setup/GV_MatchingGame
-    1840: setup/GV_KingSandybuttsTomb
-    1841: setup/GV_WaterRoom
-    1842: setup/GV_Rubee
-    1846: setup/GV_InsideJinxy
-    1847: setup/MMM_MadMonsterMansion
-    1848: setup/MMM_Church
-    1849: setup/MMM_Cellar
-    1850: setup/CS_Intro
-    1851: setup/CS_NCube
-    1852: setup/CS_BeachUnder100
-    1853: setup/CC_ClankerWitchSwitch
-    1854: setup/CC_InsideClanker
-    1855: setup/CC_ClankerGoldFeathers
-    1856: setup/MMM_TumblarsShed
-    1857: setup/MMM_Well
-    1858: setup/MMM_DiningRoom
-    1859: setup/FP_FreezeezyPeak
-    1860: setup/MMM_EggRoom
-    1861: setup/MMM_NoteRoom
-    1862: setup/MMM_FeatherRoom
-    1863: setup/MMM_ChurchWindow
-    1864: setup/MMM_Bathroom
-    1865: setup/MMM_Bedroom
-    1866: setup/MMM_GoldFeatherRoom
-    1867: setup/MMM_Drainpipe
-    1868: setup/MMM_MumbosSkull
-    1869: setup/RBB_RustyBucketBay
-    1872: setup/RBB_EngineRoom
-    1873: setup/RBB_BigFishWarehouse
-    1874: setup/RBB_BoatRoom
-    1875: setup/RB_BlueContainer1
-    1876: setup/RBB_BlueContainer3
-    1877: setup/RBB_Cabin
-    1878: setup/RBB_BigBoomBox
-    1879: setup/RBB_MiniBoomBox
-    1880: setup/RBB_Kitchen
-    1881: setup/RBB_Navigation
-    1882: setup/RB_BlueContainer2
-    1883: setup/RBB_CaptainsRoom
-    1884: setup/CCW_ClickClockWoodHub
-    1885: setup/FP_BoggysIgloo
-    1887: setup/CCW_Spring
-    1888: setup/CCW_Summer
-    1889: setup/CCW_Fall
-    1890: setup/CCW_Winter
-    1891: setup/BGS_MumbosSkull
-    1892: setup/FP_MumbosSkull
-    1894: setup/CCW_MumbosSkull_Spring
-    1895: setup/CCW_MumbosSkull_Summer
-    1896: setup/CCW_MumbosSkull_Fall
-    1897: setup/CCW_MumbosSkull_Winter
-    1903: setup/FP_ChristmasTree
-    1910: setup/CCW_ZubbaNestSummer
-    1911: setup/CCW_ZubbaNestSpring
-    1912: setup/CCW_ZubbaNestFall
-    1914: setup/CCW_NabnutsHouseSpring
-    1915: setup/CCW_NabnutsHouseSummer
-    1916: setup/CCW_NabnutsHouseFall
-    1917: setup/CCW_NabnutsHouseWinter
-    1918: setup/CCW_NabnutsAtticWinter
-    1919: setup/CCW_NabnutsAtticFall
-    1920: setup/CCW_NabnutsAttic2Winter
-    1921: setup/CCW_WhipcrackRoomSpring
-    1922: setup/CCW_WhipcrackRoomSummer
-    1923: setup/CCW_WhipcrackRoomFall
-    1924: setup/CCW_WhipcrackRoomWinter
-    1925: setup/LAIR_Floor1
-    1926: setup/LAIR_Floor2
-    1927: setup/LAIR_Floor3
-    1928: setup/LAIR_PipeRoom
-    1929: setup/LAIR_TTCEntrance
-    1930: setup/LAIR_Floor5
-    1931: setup/LAIR_Floor6
-    1932: setup/LAIR_CCEntrance
-    1933: setup/LAIR_Floor4
-    1934: setup/LAIR_BGSEntrance
+    1821: setup/SM/SpiralMountain
+    1822: setup/MM/MumbosMountain
+    1825: setup/TTC/BlubbersShip
+    1826: setup/TTC/NippersShell
+    1827: setup/TTC/TreasureTroveCove
+    1830: setup/TTC/SandCastle
+    1831: setup/CC/ClankersCavern
+    1832: setup/MM/TickersTower
+    1833: setup/BGS/BubblegloopSwamp
+    1834: setup/MumbosSkull
+    1836: setup/BGS/MrVile
+    1837: setup/BGS/TipTupChoir
+    1838: setup/GV/GobisValley
+    1839: setup/GV/MatchingGame
+    1840: setup/GV/KingSandybuttsTomb
+    1841: setup/GV/WaterPyramid
+    1842: setup/GV/RubeePyramid
+    1846: setup/GV/InsideJinxy
+    1847: setup/MMM/MadMonsterMansion
+    1848: setup/MMM/Church
+    1849: setup/MMM/Cellar
+    1850: setup/CS/Intro
+    1851: setup/CS/NCube
+    1852: setup/CS/BeachUnder100
+    1853: setup/CC/ClankerWitchSwitch
+    1854: setup/CC/InsideClanker
+    1855: setup/CC/ClankerGoldFeathers
+    1856: setup/MMM/TumblarsShed
+    1857: setup/MMM/Well
+    1858: setup/MMM/DiningRoom
+    1859: setup/FP/FreezeezyPeak
+    1860: setup/MMM/EggRoom
+    1861: setup/MMM/NoteRoom
+    1862: setup/MMM/FeatherRoom
+    1863: setup/MMM/ChurchWindow
+    1864: setup/MMM/Bathroom
+    1865: setup/MMM/Bedroom
+    1866: setup/MMM/GoldFeatherRoom
+    1867: setup/MMM/Drainpipe
+    1868: setup/MMM/MumbosSkull
+    1869: setup/RBB/RustyBucketBay
+    1872: setup/RBB/EngineRoom
+    1873: setup/RBB/BigFishWarehouse
+    1874: setup/RBB/BoatRoom
+    1875: setup/RBB/BlueContainer1
+    1876: setup/RBB/BlueContainer3
+    1877: setup/RBB/Cabin
+    1878: setup/RBB/BigBoomBox
+    1879: setup/RBB/MiniBoomBox
+    1880: setup/RBB/Kitchen
+    1881: setup/RBB/Navigation
+    1882: setup/RBB/BlueContainer2
+    1883: setup/RBB/CaptainsRoom
+    1884: setup/CCW/ClickClockWoodHub
+    1885: setup/FP/BoggysIgloo
+    1887: setup/CCW/Spring
+    1888: setup/CCW/Summer
+    1889: setup/CCW/Fall
+    1890: setup/CCW/Winter
+    1891: setup/BGS/MumbosSkull
+    1892: setup/FP/MumbosSkull
+    1894: setup/CCW/MumbosSkull_Spring
+    1895: setup/CCW/MumbosSkull_Summer
+    1896: setup/CCW/MumbosSkull_Fall
+    1897: setup/CCW/MumbosSkull_Winter
+    1903: setup/FP/ChristmasTree
+    1910: setup/CCW/ZubbaNestSummer
+    1911: setup/CCW/ZubbaNestSpring
+    1912: setup/CCW/ZubbaNestFall
+    1914: setup/CCW/NabnutsHouseSpring
+    1915: setup/CCW/NabnutsHouseSummer
+    1916: setup/CCW/NabnutsHouseFall
+    1917: setup/CCW/NabnutsHouseWinter
+    1918: setup/CCW/NabnutsAtticWinter
+    1919: setup/CCW/NabnutsAtticFall
+    1920: setup/CCW/NabnutsAttic2Winter
+    1921: setup/CCW/WhipcrackRoomSpring
+    1922: setup/CCW/WhipcrackRoomSummer
+    1923: setup/CCW/WhipcrackRoomFall
+    1924: setup/CCW/WhipcrackRoomWinter
+    1925: setup/LAIR/Floor1
+    1926: setup/LAIR/Floor2
+    1927: setup/LAIR/Floor3
+    1928: setup/LAIR/PipeRoom
+    1929: setup/LAIR/TTCEntrance
+    1930: setup/LAIR/Floor5
+    1931: setup/LAIR/Floor6
+    1932: setup/LAIR/CCEntrance
+    1933: setup/LAIR/Floor4
+    1934: setup/LAIR/BGSEntrance
     1935: setup/UNK_Unknown1
-    1936: setup/LAIR_LavaRoom
-    1937: setup/LAIR_MMMEntrance
-    1938: setup/LAIR_WaterSwitchRoom
-    1939: setup/LAIR_RBBEntrance
-    1940: setup/LAIR_MMMPuzzleRoom
-    1941: setup/LAIR_Floor7
-    1942: setup/LAIR_CoffinRoom
-    1943: setup/CS_GruntyIntro
-    1944: setup/CS_BanjoSleeping
-    1945: setup/CS_TootyIntro
+    1936: setup/LAIR/LavaRoom
+    1937: setup/LAIR/MMMEntrance
+    1938: setup/LAIR/WaterSwitchRoom
+    1939: setup/LAIR/RBBEntrance
+    1940: setup/LAIR/MMMPuzzleRoom
+    1941: setup/LAIR/Floor7
+    1942: setup/LAIR/CoffinRoom
+    1943: setup/CS/GruntyIntro
+    1944: setup/CS/BanjoSleeping
+    1945: setup/CS/TootyIntro
     1946: setup/UNK_Unknown2
-    1947: setup/FP_WozzasCave
-    1948: setup/LAIR_FurnaceFunEntry
-    1949: setup/CS_GruntyExitLair
-    1950: setup/CS_GameOverMachines
-    1951: setup/CS_YouLose
+    1947: setup/FP/WozzasCave
+    1948: setup/LAIR/FurnaceFunEntry
+    1949: setup/CS/GruntyExitLair
+    1950: setup/CS/GameOverMachines
+    1951: setup/CS/YouLose
     1952: setup/UNK_Unknown3
-    1953: setup/CS_OutsideTower
-    1954: setup/CS_GruntyFlying
-    1955: setup/CS_GruntyFalling
-    1956: setup/CS_GruntySplat
-    1957: setup/CS_TootyCapture
+    1953: setup/CS/OutsideTower
+    1954: setup/CS/GruntyFlying
+    1955: setup/CS/GruntyFalling
+    1956: setup/CS/GruntySplat
+    1957: setup/CS/TootyCapture
     1958: setup/UNK_TestHouse
-    1959: setup/RBB_AnchorRoom
-    1960: setup/SM_BanjosHouse
-    1961: setup/MMM_SepticTank
-    1962: setup/LAIR_FurnaceFun
-    1963: setup/TTC_SharkfoodIsland
-    1964: setup/LAIR_Rooftop
-    1965: setup/CS_FileSelect
-    1966: setup/GV_AncientTomb
-    1967: setup/LAIR_Floor8
-    1968: setup/CS_MumbosBBQ
-    1969: setup/CS_EndingHave100
-    1970: setup/CS_EndingCastList
-    1971: setup/CS_EndingAfterPics
-    1972: setup/CS_KlungoBoulderUnder100
-    1973: setup/CS_KlungoBoulderHave100
+    1959: setup/RBB/AnchorRoom
+    1960: setup/SM/BanjosHouse
+    1961: setup/MMM/SepticTank
+    1962: setup/LAIR/FurnaceFun
+    1963: setup/TTC/SharkfoodIsland
+    1964: setup/LAIR/Rooftop
+    1965: setup/CS/FileSelect
+    1966: setup/GV/AncientTomb
+    1967: setup/LAIR/Floor8
+    1968: setup/CS/MumbosBBQ
+    1969: setup/CS/EndingHave100
+    1970: setup/CS/EndingCastList
+    1971: setup/CS/EndingAfterPics
+    1972: setup/CS/KlungoBoulderUnder100
+    1973: setup/CS/KlungoBoulderHave100
     1978: model/SmallDiamond
     1979: model/SmallTriangle
     1980: model/GreenBall
@@ -1537,8 +1537,8 @@ aBKAssetTable:
     2002: model/BlackWall
     2003: model/WhiteWall
     2004: model/SceneTransitionWitch
-    2007: model/MMHut
-    2008: model/MMTopOfHut
+    2007: model/MM/Hut
+    2008: model/MM/TopOfHut
     2009: sprite/HUD_Note
     2010: sprite/HUD_RedFeather_Unused
     2011: sprite/HUD_GoldFeather_Unused
@@ -1938,16 +1938,16 @@ aBKAssetTable:
     2465: sprite/Unk_2465
     2466: sprite/Unk_2466
     2467: demo/Unk_2467
-    2468: demo/MumbosMountainDemoInputs
-    2469: demo/TreasureTroveCoveDemoInputs
-    2470: demo/ClankersCavernDemoInputs
-    2471: demo/BubblegloopSwampDemoInputs
+    2468: demo/MM_DemoInputs
+    2469: demo/TTC_DemoInputs
+    2470: demo/CC_DemoInputs
+    2471: demo/BGS_DemoInputs
     2472: demo/Unk_2472
     2473: demo/Unk_2473
-    2474: demo/GobisValleyDemoInputs
-    2475: demo/ClickClockWoodDemoInputs
-    2476: demo/RustyBucketBayDemoInputs
-    2477: demo/MadMonsterMansionDemoInputs
+    2474: demo/GV_DemoInputs
+    2475: demo/CCW_dDemoInputs
+    2476: demo/RBB_DemoInputs
+    2477: demo/MMM_DemoInputs
     2478: demo/Unk_2478
     2479: demo/Unk_2479
     2480: demo/Unk_2480
@@ -1991,15 +1991,15 @@ aBKAssetTable:
     2518: demo/Unk_2518
     2519: demo/Unk_2519
     2520: demo/Unk_2520
-    2521: demo/TTCSnsRevealPictureInputs
+    2521: demo/TTC_SnsRevealPictureInputs
     2522: demo/Unk_2522
     2523: demo/Unk_2523
     2524: demo/IceKeyRevealPictureInputs
     2525: demo/Unk_2525
-    2526: demo/GVSnsRevealPictureInputs
+    2526: demo/GV_nsRevealPictureInputs
     2527: demo/Unk_2527
-    2528: demo/RBBSnsRevealPictureInputs
-    2529: demo/MMMSnsRevealPictureInputs
+    2528: demo/RBB_SnsRevealPictureInputs
+    2529: demo/MMM_SnsRevealPictureInputs
     2530: demo/Unk_2530
     2531: demo/Unk_2531
     2532: demo/Unk_2532
@@ -2989,170 +2989,170 @@ aBKAssetTable:
     5154: gruntyq/Speaker80_FurnaceFunGruntyQ_28
     5155: gruntyq/Speaker80_FurnaceFunGruntyQ_29
     5156: gruntyq/Speaker80_FurnaceFunGruntyQ_30
-    5227: level/TTC_TreasureTroveCove
-    5228: level/TTC_TreasureTroveCoveB
-    5229: level/TTC_CrabShellA
-    5230: level/TTC_CrabShellB
-    5231: level/TTC_PirateShipA
-    5232: level/TTC_PirateShipB
-    5233: level/TTC_SandCastleA
-    5234: level/TTC_SandCastleB
-    5235: level/TTC_SharkfoodIslandA
-    5236: level/GV_GobisValleyA
-    5237: level/GV_GobisValleyB
-    5238: level/GV_MatchGame
-    5240: level/GV_MazeA
-    5241: level/GV_MazeB
-    5242: level/GV_WaterPyramidA
-    5243: level/GV_WaterPyramidB
-    5244: level/GV_RupeesHouse
-    5245: level/GV_InsideTheSphinx
-    5246: level/GV_BlueEggChamberA
-    5247: level/MMM_MadMonsterMansionA
-    5248: level/MMM_MadMonsterMansionB
-    5249: level/MMM_DrainpipeA
-    5250: level/MMM_CellarA
-    5251: level/MMM_SecretChurchRoomA
-    5252: level/MMM_SecretChurchRoomB
-    5253: level/MMM_DiningRoomA
-    5254: level/MMM_ChurchA
-    5255: level/MMM_ChurchB
-    5256: level/MMM_TumblersShed
-    5257: level/MMM_EggRoomA
-    5258: level/MMM_EggRoomB
-    5259: level/MMM_NoteRoomA
-    5260: level/MMM_NoteRoomB
-    5261: level/MMM_FeatherRoomA
-    5262: level/MMM_FeatherRoomB
-    5263: level/MMM_BathroomA
-    5264: level/MMM_BathroomB
-    5265: level/MMM_BedroomA
-    5266: level/MMM_BedroomB
-    5267: level/MMM_GoldFeatherRoomA
-    5268: level/MMM_GoldFeatherRoomB
-    5269: level/MMM_WellA
-    5270: level/MMM_WellB
-    5271: level/MMM_DrainpipeB
-    5272: level/MMM_SepticTankA
-    5273: level/MMM_SepticTankB
-    5274: level/MMM_DiningRoomB
-    5275: level/MMM_CellarB
+    5227: level/TTC/TreasureTroveCove_OPA
+    5228: level/TTC/TreasureTroveCove_XLU
+    5229: level/TTC/CrabShell_OPA
+    5230: level/TTC/CrabShell_XLU
+    5231: level/TTC/PirateShip_OPA
+    5232: level/TTC/PirateShip_XLU
+    5233: level/TTC/SandCastle_OPA
+    5234: level/TTC/SandCastle_XLU
+    5235: level/TTC/SharkfoodIsland_OPA
+    5236: level/GV/GobisValley_OPA
+    5237: level/GV/GobisValley_XLU
+    5238: level/GV/MatchGame
+    5240: level/GV/Maze_OPA
+    5241: level/GV/Maze_XLU
+    5242: level/GV/WaterPyramid_OPA
+    5243: level/GV/WaterPyramid_XLU
+    5244: level/GV/RupeesHouse
+    5245: level/GV/InsideTheSphinx
+    5246: level/GV/BlueEggChamber_OPA
+    5247: level/MMM/MadMonsterMansion_OPA
+    5248: level/MMM/MadMonsterMansion_XLU
+    5249: level/MMM/Drainpipe_OPA
+    5250: level/MMM/Cellar_OPA
+    5251: level/MMM/SecretChurchRoom_OPA
+    5252: level/MMM/SecretChurchRoom_XLU
+    5253: level/MMM/DiningRoom_OPA
+    5254: level/MMM/Church_OPA
+    5255: level/MMM/Church_XLU
+    5256: level/MMM/TumblersShed
+    5257: level/MMM/EggRoom_OPA
+    5258: level/MMM/EggRoom_XLU
+    5259: level/MMM/NoteRoom_OPA
+    5260: level/MMM/NoteRoom_XLU
+    5261: level/MMM/FeatherRoom_OPA
+    5262: level/MMM/FeatherRoom_XLU
+    5263: level/MMM/Bathroom_OPA
+    5264: level/MMM/Bathroom_XLU
+    5265: level/MMM/Bedroom_OPA
+    5266: level/MMM/Bedroom_XLU
+    5267: level/MMM/GoldFeatherRoom_OPA
+    5268: level/MMM/GoldFeatherRoom_XLU
+    5269: level/MMM/Well_OPA
+    5270: level/MMM/Well_XLU
+    5271: level/MMM/Drainpipe_XLU
+    5272: level/MMM/SepticTank_OPA
+    5273: level/MMM/SepticTank_XLU
+    5274: level/MMM/DiningRoom_XLU
+    5275: level/MMM/Cellar_XLU
     5276: level/TestLevel01
-    5277: level/CS_IntroA
-    5278: level/CS_NcubeA
-    5279: level/CS_GruntysFinalWordsA
-    5280: level/CS_NcubeB
-    5281: level/CS_IntroB
-    5282: level/CS_BanjosHouseA
-    5283: level/CS_GruntysFinalWordsB
-    5284: level/CS_BanjosHouseB
-    5285: level/CS_BeachEndingB
-    5286: level/CS_WithFallingTwordsGroundA
-    5288: level/CS_Floor5B
-    5289: level/CS_BeachEndingA
-    5290: level/MM_MumbosMountainA
-    5291: level/MM_MumbosMountainB
-    5292: level/MM_TermiteHillA
-    5293: level/MM_TermiteHillB
+    5277: level/CS/Intro_OPA
+    5278: level/CS/Ncube_OPA
+    5279: level/CS/GruntysFinalWords_OPA
+    5280: level/CS/Ncube_XLU
+    5281: level/CS/Intro_XLU
+    5282: level/CS/BanjosHouse_OPA
+    5283: level/CS/GruntysFinalWords_XLU
+    5284: level/CS/BanjosHouse_XLU
+    5285: level/CS/BeachEnding_XLU
+    5286: level/CS/WithFallingTwordsGround_OPA
+    5288: level/CS/Floor5_XLU
+    5289: level/CS/BeachEnding_OPA
+    5290: level/MM/MumbosMountain_OPA
+    5291: level/MM/MumbosMountain_XLU
+    5292: level/MM/TermiteHill_OPA
+    5293: level/MM/TermiteHill_XLU
     5294: level/MumbosSkull
-    5296: level/RBB_RustyBucketBayA
-    5297: level/RBB_RustyBucketBayB
-    5298: level/RBB_MachineRoomA
-    5299: level/RBB_MachineRoomB
-    5300: level/RBB_BigFishWarehouseA
-    5301: level/RBB_BigFishWarehouseB
-    5302: level/RBB_BoatRoomA
-    5303: level/RBB_BoatRoomB
-    5304: level/RBB_Container1A
-    5305: level/RBB_Container2A
-    5306: level/RBB_Container3A
-    5307: level/RBB_CaptainsCabinA
-    5308: level/RBB_CaptainsCabinB
-    5309: level/RBB_SeaGrublinsCabinA
-    5310: level/RBB_BossBoomBoxRoomA
-    5311: level/RBB_BossBoomBoxRoomB
-    5312: level/RBB_NavigationRoomA
-    5313: level/RBB_BoomBoxRoomA
-    5314: level/RBB_BoomBoxRoomB
-    5315: level/RBB_KitchenA
-    5316: level/RBB_KitchenB
-    5317: level/RBB_AnchorRoomA
-    5318: level/RBB_AnchorRoomB
-    5319: level/RBB_NavigationRoomB
-    5320: level/FP_FreezeezyPeakA
-    5321: level/FP_FreezeezyPeakB
-    5322: level/FP_IglooA
-    5323: level/FP_ChristmasTreeA
-    5324: level/FP_WozzasCaveA
-    5325: level/FP_WozzasCaveB
-    5326: level/FP_IglooB
-    5327: level/SM_SpiralMountainA
-    5328: level/SM_SpiralMountainB
-    5329: level/BGS_BubblegloopSwampA
-    5330: level/BGS_BubblegloopSwampB
-    5331: level/BGS_MrVileA
-    5332: level/BGS_TitttupQuiorA
-    5333: level/BGS_TitttupQuiorB
+    5296: level/RBB/RustyBucketBay_OPA
+    5297: level/RBB/RustyBucketBay_XLU
+    5298: level/RBB/MachineRoom_OPA
+    5299: level/RBB/MachineRoom_XLU
+    5300: level/RBB/BigFishWarehouse_OPA
+    5301: level/RBB/BigFishWarehouse_XLU
+    5302: level/RBB/BoatRoom_OPA
+    5303: level/RBB/BoatRoom_XLU
+    5304: level/RBB/Container1_OPA
+    5305: level/RBB/Container2_OPA
+    5306: level/RBB/Container3_OPA
+    5307: level/RBB/CaptainsCabin_OPA
+    5308: level/RBB/CaptainsCabin_XLU
+    5309: level/RBB/SeaGrublinsCabin_OPA
+    5310: level/RBB/BossBoomBoxRoom_OPA
+    5311: level/RBB/BossBoomBoxRoom_XLU
+    5312: level/RBB/NavigationRoom_OPA
+    5313: level/RBB/BoomBoxRoom_OPA
+    5314: level/RBB/BoomBoxRoom_XLU
+    5315: level/RBB/Kitchen_OPA
+    5316: level/RBB/Kitchen_XLU
+    5317: level/RBB/AnchorRoom_OPA
+    5318: level/RBB/AnchorRoom_XLU
+    5319: level/RBB/NavigationRoom_XLU
+    5320: level/FP/FreezeezyPeak_OPA
+    5321: level/FP/FreezeezyPeak_XLU
+    5322: level/FP/Igloo_OPA
+    5323: level/FP/ChristmasTree_OPA
+    5324: level/FP/WozzasCave_OPA
+    5325: level/FP/WozzasCave_XLU
+    5326: level/FP/Igloo_XLU
+    5327: level/SM/SpiralMountain_OPA
+    5328: level/SM/SpiralMountain_XLU
+    5329: level/BGS/BubblegloopSwamp_OPA
+    5330: level/BGS/BubblegloopSwamp_XLU
+    5331: level/BGS/MrVile_OPA
+    5332: level/BGS/TitttupQuior_OPA
+    5333: level/BGS/TitttupQuior_XLU
     5334: level/TestMap_01
     5335: level/TestMap_02
-    5336: level/CCW_ClickClockWoodsA
-    5337: level/CCW_SpringA
-    5338: level/CCW_SummerA
-    5339: level/CCW_AutumnA
-    5340: level/CCW_WinterA
-    5341: level/CCW_WaspHiveA
-    5342: level/CCW_NabnutsHouseA
-    5343: level/CCW_WhiplashRoomA
-    5344: level/CCW_NabnutsAttic1
-    5345: level/CCW_NabnutsAttic2A
-    5346: level/CCW_NabnutsAttic2B
-    5347: level/CCW_ClickClockWoodsB
-    5348: level/CCW_SpringB
-    5349: level/CCW_SummerB
-    5350: level/CCW_AutumnB
-    5351: level/CCW_WinterB
-    5352: level/GL_QuizRoom
-    5357: level/ClankersCavernA
-    5358: level/ClankersCavernB
-    5359: level/InsideClankerWitchSwitchA
-    5360: level/InsideClankerA
-    5361: level/InsideClankerB
-    5362: level/InsideClankerGoldFeathersA
-    5363: level/GL_Floor1A
-    5364: level/GL_Floor2A
-    5365: level/GL_Floor3A
-    5366: level/GL_Floor3PipeRoomA
-    5367: level/GL_Floor3TTCEntranceA
-    5368: level/GL_Floor5A
-    5369: level/GL_Floor6A
-    5370: level/GL_Floor6B
-    5371: level/GL_Floor3CCEntranceA
-    5372: level/GL_BossA
-    5373: level/GL_LavaRoom
-    5374: level/GL_Floor6MMMEntranceA
-    5375: level/GL_Floor6CoffinRoomA
-    5376: level/GL_Floor4A
-    5377: level/GL_Floor4BGSEntranceA
-    5378: level/GL_Floor7A
-    5379: level/GL_Floor7RBBEntranceA
-    5380: level/GL_Floor7MMMPuzzleA
-    5381: level/GL_Floor9A
-    5382: level/GL_Floor8PathToQuizA
-    5383: level/GL_Floor3CCEntranceB
-    5384: level/GL_Floor7B
-    5385: level/GL_Floor7RBBEntranceB
-    5386: level/GL_Floor7MMMPuzzleB
-    5387: level/GL_Floor1B
-    5388: level/GL_Floor2B
-    5389: level/GL_Floor3PipeRoomB
-    5390: level/GL_Floor4B
-    5391: level/GL_FirstCutsceneInside
-    5392: level/GL_Floor3BGSEntranceB
-    5393: level/GL_Floor4TTCEntranceB
-    5394: level/GL_Floor3B
-    5395: level/GL_Floor9B
-    5396: level/GL_Floor8PathToQuizB
-    5397: level/GL_BossB
+    5336: level/CCW/ClickClockWoods_OPA
+    5337: level/CCW/Spring_OPA
+    5338: level/CCW/Summer_OPA
+    5339: level/CCW/Autumn_OPA
+    5340: level/CCW/Winter_OPA
+    5341: level/CCW/WaspHive_OPA
+    5342: level/CCW/NabnutsHouse_OPA
+    5343: level/CCW/WhiplashRoom_OPA
+    5344: level/CCW/NabnutsAttic1
+    5345: level/CCW/NabnutsAttic2_OPA
+    5346: level/CCW/NabnutsAttic2_XLU
+    5347: level/CCW/ClickClockWoods_XLU
+    5348: level/CCW/Spring_XLU
+    5349: level/CCW/Summer_XLU
+    5350: level/CCW/Autumn_XLU
+    5351: level/CCW/Winter_XLU
+    5352: level/LAIR/QuizRoom
+    5357: level/CC/ClankersCavern_OPA
+    5358: level/CC/ClankersCavern_XLU
+    5359: level/CC/InsideClankerWitchSwitch_OPA
+    5360: level/CC/InsideClanker_OPA
+    5361: level/CC/InsideClanker_XLU
+    5362: level/CC/InsideClankerGoldFeathers_OPA
+    5363: level/LAIR/Floor1_OPA
+    5364: level/LAIR/Floor2_OPA
+    5365: level/LAIR/Floor3_OPA
+    5366: level/LAIR/Floor3_PipeRoom_OPA
+    5367: level/LAIR/Floor3_TTCEntrance_OPA
+    5368: level/LAIR/Floor5_OPA
+    5369: level/LAIR/Floor6_OPA
+    5370: level/LAIR/Floor6_XLU
+    5371: level/LAIR/Floor3_CCEntrance_OPA
+    5372: level/LAIR/Boss_OPA
+    5373: level/LAIR/Floor6_LavaRoom
+    5374: level/LAIR/Floor6_MMMEntrance_OPA
+    5375: level/LAIR/Floor6_CoffinRoom_OPA
+    5376: level/LAIR/Floor4_OPA
+    5377: level/LAIR/Floor4_BGSEntrance_OPA
+    5378: level/LAIR/Floor7_OPA
+    5379: level/LAIR/Floor7_RBBEntrance_OPA
+    5380: level/LAIR/Floor7_MMMPuzzle_OPA
+    5381: level/LAIR/Floor9_OPA
+    5382: level/LAIR/Floor8_PathToQuiz_OPA
+    5383: level/LAIR/Floor3_CCEntrance_XLU
+    5384: level/LAIR/Floor7_XLU
+    5385: level/LAIR/Floor7_RBBEntrance_XLU
+    5386: level/LAIR/Floor7_MMMPuzzle_XLU
+    5387: level/LAIR/Floor1_XLU
+    5388: level/LAIR/Floor2_XLU
+    5389: level/LAIR/Floor3_PipeRoom_XLU
+    5390: level/LAIR/Floor4_XLU
+    5391: level/LAIR/FirstCutsceneInside
+    5392: level/LAIR/Floor3_BGSEntrance_XLU
+    5393: level/LAIR/Floor4_TTCEntrance_XLU
+    5394: level/LAIR/Floor3_XLU
+    5395: level/LAIR/Floor9_XLU
+    5396: level/LAIR/Floor8_PathToQuiz_XLU
+    5397: level/LAIR/Boss_XLU
     5398: midi/Empty01
     5399: midi/FinalBattle
     5400: midi/MumbosMountain
