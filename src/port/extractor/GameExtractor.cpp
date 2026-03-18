@@ -28,6 +28,9 @@
 #include "portable-file-dialogs.h"
 #endif
 
+std::string GameExtractor::sStatusText;
+std::atomic<int> GameExtractor::sPhase{ 0 };
+
 std::unordered_map<std::string, std::string> mGameList = {
     { "1fe1632098865f639e22c11b9a81ee8f29c75d7a", "Banjo Kazooie (U) (V1.0)" },
     { "ded6ee166e740ad1bc810fd678a84b48e245ab80", "Banjo Kazooie (U) (V1.1)" },
@@ -157,9 +160,7 @@ void GameExtractor::GetRoms(std::vector<std::string>& roms) {
                 roms.push_back(ffd.cFileName);
         }
     } while (FindNextFileA(h, &ffd) != 0);
-    // if (h != nullptr) {
-    //    CloseHandle(h);
-    //}
+    FindClose(h);
 #elif unix
     // Open the directory of the app.
     DIR* d = opendir(mSearchPath.c_str());
@@ -198,7 +199,7 @@ void GameExtractor::GetRoms(std::vector<std::string>& roms) {
 }
 
 std::optional<std::string> GameExtractor::ValidateChecksum() const {
-    const auto rom = new N64::Cartridge(this->mGameData);
+    auto rom = std::make_unique<N64::Cartridge>(this->mGameData);
     rom->Initialize();
     auto hash = rom->GetHash();
 
@@ -224,62 +225,76 @@ std::string GameExtractor::GetRomPath() {
     return mGamePath.generic_string();
 }
 
-bool GameExtractor::Parse(std::atomic<size_t>& totalAssets, std::string appShortName) {
-    // Lightweight asset counting: just load the YAML and count entries.
-    // Avoids running the full Torch pipeline twice.
-    const std::string assets_path = fs::path(Ship::Context::LocateFileAcrossAppDirs("assets", appShortName)).parent_path().generic_string();
-
-    totalAssets = 0;
-    for (const auto& entry : std::filesystem::recursive_directory_iterator(assets_path)) {
-        if (entry.is_directory()) {
-            continue;
-        }
-
-        const auto path = entry.path().generic_string();
-        if (path.find(".yaml") == std::string::npos && path.find(".yml") == std::string::npos) {
-            continue;
-        }
-        if (path.find("config.yml") != std::string::npos) {
-            continue;
-        }
-
-        try {
-            YAML::Node root = YAML::LoadFile(path);
-            for (auto asset = root.begin(); asset != root.end(); ++asset) {
-                auto key = asset->first.as<std::string>();
-                if (key.find(":config") == std::string::npos) {
-                    totalAssets++;
-                }
-            }
-        } catch (const std::exception& e) {
-            SPDLOG_WARN("Failed to count assets in {}: {}", path, e.what());
-        }
-    }
-
-    return totalAssets > 0;
-}
-
 bool GameExtractor::GenerateOTR(std::string appShortName) {
     std::atomic<size_t> assetCount{ 0 };
     return GenerateOTR(assetCount, appShortName);
 }
 
 bool GameExtractor::GenerateOTR(std::atomic<size_t>& assetCount, std::string appShortName) {
+    std::atomic<size_t> unused{ 0 };
+    return GenerateOTR(assetCount, unused, appShortName);
+}
+
+bool GameExtractor::GenerateOTR(std::atomic<size_t>& assetCount, std::atomic<size_t>& totalAssets, std::string appShortName) {
     const std::string assets_path = fs::path(Ship::Context::LocateFileAcrossAppDirs("assets", appShortName)).parent_path().generic_string();
     const std::string game_path = Ship::Context::GetAppDirectoryPath(appShortName);
 
+    // Count symbol_map entries for parse-phase total
+    totalAssets = 0;
+    try {
+        auto configPath = fs::path(assets_path) / "config.yml";
+        if (fs::exists(configPath)) {
+            YAML::Node config = YAML::LoadFile(configPath.generic_string());
+            std::string hash = Companion::CalculateHash(this->mGameData);
+            auto rom = config[hash];
+            if (rom && rom["path"]) {
+                auto assetDir = (fs::path(assets_path) / rom["path"].as<std::string>()).generic_string();
+                for (const auto& entry : std::filesystem::recursive_directory_iterator(assetDir)) {
+                    if (entry.is_directory()) continue;
+                    const auto path = entry.path().generic_string();
+                    if (path.find(".yaml") == std::string::npos && path.find(".yml") == std::string::npos) continue;
+                    if (path.find("config.yml") != std::string::npos) continue;
+                    YAML::Node root = YAML::LoadFile(path);
+                    for (auto asset = root.begin(); asset != root.end(); ++asset) {
+                        auto key = asset->first.as<std::string>();
+                        if (key.find(":config") != std::string::npos) continue;
+                        auto node = asset->second;
+                        if (node["type"] && node["type"].as<std::string>() == "BK64:ASSET_TABLE" && node["symbol_map"]) {
+                            totalAssets += node["symbol_map"].size();
+                        } else {
+                            totalAssets++;
+                        }
+                    }
+                }
+            }
+        }
+    } catch (const std::exception& e) {
+        SPDLOG_WARN("Failed to count assets: {}", e.what());
+    }
+
+    sPhase = 1; // Parsing phase
     delete Companion::Instance;
     Companion::Instance = new Companion(this->mGameData, ArchiveType::O2R, false, assets_path, game_path);
+    Companion::Instance->SetAssetTotal(&totalAssets);
+    Companion::Instance->SetPhaseCallback([](int phase) { sPhase = phase; });
     this->WritePortVersion();
     try {
         Companion::Instance->Init(ExportType::Binary, assetCount, true);
     } catch (const std::exception& e) {
         SPDLOG_INFO("Failed to process O2R {}", e.what());
+        sStatusText.clear();
+        sPhase = 0;
+        delete Companion::Instance;
+        Companion::Instance = nullptr;
         return false;
     }
 
+    sPhase = 3;
+    sStatusText = "Cleaning up...";
     delete Companion::Instance;
     Companion::Instance = nullptr;
+    sStatusText.clear();
+    sPhase = 0;
     return true;
 }
 #else

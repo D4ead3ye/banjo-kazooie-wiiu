@@ -551,8 +551,7 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                     LighthouseGui::RegisterPopup("Confirm Re-extract", msg.c_str(), "Yes", "No", [&]() {
                         extracting = true;
                         threadPool->submit_task([&]() -> void {
-                            extract.Parse(totalExtract, "bk");
-                            extract.GenerateOTR(extractCount, "bk");
+                            extract.GenerateOTR(extractCount, totalExtract, "bk");
                             extracting = false;
                             extractCount = totalExtract = 0;
                             });
@@ -560,8 +559,7 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                 } else {
                     extracting = true;
                     threadPool->submit_task([&]() -> void {
-                        extract.Parse(totalExtract, "bk");
-                        extract.GenerateOTR(extractCount, "bk");
+                        extract.GenerateOTR(extractCount, totalExtract, "bk");
                         extracting = false;
                         extractCount = totalExtract = 0;
                         });
@@ -625,8 +623,7 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                 extracting = true;
                 file = extract.GetRomPath();
                 threadPool->submit_task([&]() -> void {
-                    // extract.Parse(totalExtract, "bk");
-                    extract.GenerateOTR(extractCount, "bk");
+                    extract.GenerateOTR(extractCount, totalExtract, "bk");
                     extracting = false;
                     extractStep = ES_VERIFY;
                     extractCount = 0;
@@ -695,11 +692,49 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                 ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize |
                 ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar |
                 ImGuiWindowFlags_NoSavedSettings)) {
-                float progress = (totalExtract > 0.0f ? (float)extractCount / (float)totalExtract : 0) * 100.0f;
+                int phase = GameExtractor::sPhase;
+                float progress;
+                if (phase == 3) {
+                    progress = 100.0f;
+                } else {
+                    progress = (totalExtract > 0 ? (float)extractCount / (float)totalExtract : 0) * 100.0f;
+                    if (progress > 100.0f) progress = 100.0f;
+                }
+
+                // Status text
                 auto filename = std::filesystem::path(file).filename().string();
-                ImGui::Text("Extracting %s...%s", filename.c_str(),
-                    roundf(progress) == 100.0f ? " Done. Finishing up." : "");
-                std::string overlay = extractCount > 0 ? fmt::format("{:.0f}%", progress) : "Starting Up";
+                if (phase == 3) {
+                    ImGui::Text("Done!");
+                } else if (phase >= 1) {
+                    ImGui::Text("Processing %s... (Step %d/2)", filename.c_str(), phase);
+                    if (Companion::Instance != nullptr && !Companion::Instance->GetCurrentAssetName().empty()) {
+                        auto assetName = Companion::Instance->GetCurrentAssetName();
+                        float maxWidth = 600.0f - ImGui::GetStyle().WindowPadding.x * 2;
+                        ImVec2 textSize = ImGui::CalcTextSize(assetName.c_str());
+                        if (textSize.x > maxWidth) {
+                            // Truncate with ellipsis
+                            std::string ellipsis = "...";
+                            float ellipsisWidth = ImGui::CalcTextSize(ellipsis.c_str()).x;
+                            while (assetName.size() > 3 && ImGui::CalcTextSize(assetName.c_str()).x > maxWidth - ellipsisWidth) {
+                                assetName.pop_back();
+                            }
+                            assetName += ellipsis;
+                        }
+                        ImGui::Text("%s", assetName.c_str());
+                    }
+                } else {
+                    ImGui::Text("Starting up...");
+                }
+
+                // Progress bar
+                std::string overlay;
+                if (totalExtract > 0 && extractCount > 0) {
+                    overlay = fmt::format("{:.0f}%", progress);
+                } else if (phase >= 1) {
+                    overlay = "Reading ROM, please wait...";
+                } else {
+                    overlay = "Starting up...";
+                }
                 ImGui::ProgressBar(progress / 100.0f, ImVec2(600.0f, 50.0f), overlay.c_str());
                 ImGui::EndPopup();
             }
