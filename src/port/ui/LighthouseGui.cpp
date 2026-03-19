@@ -21,7 +21,7 @@
 
 #include "Notification.h"
 #include "LighthouseMenu.h"
-#include "LighthouseMenuBar.h"
+#include "LighthouseInputEditorWindow.h"
 // #include "DeveloperTools/HookDebugger.h"
 // #include "DeveloperTools/SaveEditor.h"
 // #include "DeveloperTools/ActorViewer.h"
@@ -33,12 +33,10 @@
 namespace LighthouseGui {
 // MARK: - Delegates
 
-std::shared_ptr<LighthouseMenuBar> mLighthouseMenuBar;
-
 std::shared_ptr<Ship::GuiWindow> mConsoleWindow;
 std::shared_ptr<Ship::GuiWindow> mStatsWindow;
 std::shared_ptr<Ship::GuiWindow> mGfxDebuggerWindow;
-std::shared_ptr<Ship::GuiWindow> mInputEditorWindow;
+std::shared_ptr<LighthouseInputEditorWindow> mInputEditorWindow;
 
 // std::shared_ptr<HookDebuggerWindow> mHookDebuggerWindow;
 // std::shared_ptr<SaveEditorWindow> mSaveEditorWindow;
@@ -100,10 +98,9 @@ void SetupGuiElements() {
         SPDLOG_ERROR("Could not find input GfxDebuggerWindow");
     }
 
-    mInputEditorWindow = gui->GetGuiWindow("Lighthouse Input Editor");
-    if (mInputEditorWindow == nullptr) {
-        SPDLOG_ERROR("Could not find input editor window");
-    }
+    mInputEditorWindow =
+        std::make_shared<LighthouseInputEditorWindow>(CVAR_WINDOW("ControllerConfiguration"), "Configure Controller");
+    gui->AddGuiWindow(mInputEditorWindow);
 
     // mHookDebuggerWindow =
     //     std::make_shared<HookDebuggerWindow>("gWindows.HookDebugger", "Hook Debugger", ImVec2(480, 600));
@@ -180,7 +177,6 @@ void Destroy() {
     auto gui = Ship::Context::GetInstance()->GetWindow()->GetGui();
 
     gui->RemoveAllGuiWindows();
-    mLighthouseMenuBar = nullptr;
     mLighthouseMenu = nullptr;
     mModalWindow = nullptr;
     mStatsWindow = nullptr;

@@ -8,6 +8,8 @@
 #include <ship/controller/controldevice/controller/mapping/sdl/SDLAxisDirectionToButtonMapping.h>
 #endif
 
+#include "LighthouseGui.hpp"
+
 #define SCALE_IMGUI_SIZE(value) ((value / 13.0f) * ImGui::GetFontSize())
 
 LighthouseInputEditorWindow::~LighthouseInputEditorWindow() {
@@ -1336,16 +1338,22 @@ void LighthouseInputEditorWindow::DrawClearAllButton(uint8_t portIndex) {
 }
 
 void LighthouseInputEditorWindow::DrawPortTab(uint8_t portIndex) {
+    UIWidgets::PushStyleTabs(THEME_COLOR);
     if (ImGui::BeginTabItem(StringHelper::Sprintf("Port %d###port%d", portIndex + 1, portIndex).c_str())) {
+        UIWidgets::PopStyleTabs();
         DrawPortTabContents(portIndex);
         ImGui::EndTabItem();
+    } else {
+        UIWidgets::PopStyleTabs();
     }
 }
 
 void LighthouseInputEditorWindow::DrawPortTabContents(uint8_t portIndex) {
+    UIWidgets::PushStyleButton(THEME_COLOR);
     DrawClearAllButton(portIndex);
     DrawSetDefaultsButton(portIndex);
     DrawDeviceToggles(portIndex);
+    UIWidgets::PopStyleButton();
 
     UpdateBitmaskToMappingIds(portIndex);
     UpdateStickDirectionToMappingIds(portIndex);
