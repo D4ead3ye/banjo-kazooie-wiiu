@@ -100,7 +100,7 @@ const std::unordered_map<uint32_t, std::string>& GetAssetSymbolMap() {
                 remapTable = &sV10toJPRemap;
                 versionName = "JP";
             } else {
-                remapTable = &sV10toV11Remap;  // PAL layout is close enough to v1.1
+                remapTable = &sV10toPALRemap;
                 versionName = "PAL";
             }
         }
