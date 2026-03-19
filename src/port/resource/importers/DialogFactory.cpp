@@ -44,6 +44,12 @@ ResourceFactoryBinaryBKDialogV0::ReadResource(std::shared_ptr<Ship::File> file,
     auto reader = std::get<std::shared_ptr<Ship::BinaryReader>>(file->Reader);
     auto out = std::vector<uint8_t>();
 
+    // [port] Read language count — 1 for US/JP, 3 for PAL (EN/FR/DE)
+    const uint32_t langCount = reader->ReadUInt32();
+
+    // Reconstruct US-format dialog (01 03 00) from the primary (English) language block.
+    // TODO: When multi-language support is plumbed, use langCount and the selected
+    // language index to pick the correct block instead of always using the first one.
     out.push_back(0x01);
     out.push_back(0x03);
     out.push_back(0x00);
@@ -70,6 +76,22 @@ ResourceFactoryBinaryBKDialogV0::ReadResource(std::shared_ptr<Ship::File> file,
         out.push_back(cmd);
         out.push_back(static_cast<uint8_t>(len));
         AppendBytes(out, str.data(), str.size());
+    }
+
+    // Skip extra language blocks (French, German) — they're in the o2r for future use
+    for (uint32_t lang = 1; lang < langCount; lang++) {
+        const uint32_t bc = reader->ReadUInt32();
+        for (uint32_t i = 0; i < bc; i++) {
+            reader->ReadUByte(); // cmd
+            const uint32_t len = reader->ReadUInt32();
+            reader->Seek(reader->GetBaseAddress() + len, Ship::SeekOffsetType::Start);
+        }
+        const uint32_t tc = reader->ReadUInt32();
+        for (uint32_t i = 0; i < tc; i++) {
+            reader->ReadUByte(); // cmd
+            const uint32_t len = reader->ReadUInt32();
+            reader->Seek(reader->GetBaseAddress() + len, Ship::SeekOffsetType::Start);
+        }
     }
 
     return MakeBlob(initData, std::move(out));

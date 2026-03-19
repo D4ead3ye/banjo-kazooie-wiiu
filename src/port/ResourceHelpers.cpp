@@ -16,6 +16,8 @@
 #include <crtdbg.h>
 #endif
 
+#include "AssetVersionRemap.h"
+
 extern "C" {
 #include "enums.h"
 }
@@ -79,6 +81,43 @@ const std::unordered_map<uint32_t, std::string>& GetAssetSymbolMap() {
         }
 
         SPDLOG_INFO("Loaded asset manifest from o2r with {} entries", symbolMap.size());
+
+        // [port] If this o2r was built from a non-v1.0 ROM, inject v1.0 ID aliases
+        // so the decomp's hardcoded IDs resolve transparently.
+        // Detection: v1.0 has 3314 assets, v1.1/PAL/JP have 3044-3065.
+        // This is done once at boot — no per-lookup cost after this point.
+        const std::unordered_map<uint32_t, uint32_t>* remapTable = nullptr;
+        const char* versionName = nullptr;
+
+        if (symbolMap.size() >= 3040 && symbolMap.size() <= 3050) {
+            remapTable = &sV10toV11Remap;
+            versionName = "v1.1";
+        } else if (symbolMap.size() >= 3055 && symbolMap.size() <= 3070) {
+            // PAL (3059) and JP (3065) both fall here.
+            // Try JP first — if JP-specific IDs exist in manifest, use JP table.
+            // JP has mode 7 entries at IDs 3628+; PAL does not.
+            if (symbolMap.find(3628) != symbolMap.end()) {
+                remapTable = &sV10toJPRemap;
+                versionName = "JP";
+            } else {
+                remapTable = &sV10toV11Remap;  // PAL layout is close enough to v1.1
+                versionName = "PAL";
+            }
+        }
+
+        if (remapTable) {
+            uint32_t remapCount = 0;
+            for (const auto& [v10Id, targetId] : *remapTable) {
+                if (symbolMap.find(v10Id) != symbolMap.end()) {
+                    continue;  // v1.0 ID already exists in manifest — no conflict
+                }
+                if (auto targetEntry = symbolMap.find(targetId); targetEntry != symbolMap.end()) {
+                    symbolMap[v10Id] = targetEntry->second;
+                    remapCount++;
+                }
+            }
+            SPDLOG_INFO("[port] Detected {} o2r — injected {} v1.0 ID aliases into symbol map", versionName, remapCount);
+        }
     });
 
     return symbolMap;
@@ -124,6 +163,7 @@ extern "C" char* ResourceMgr_ReloadByAssetId(uint32_t assetId) {
             return result;
         }
     }
+
     return nullptr;
 }
 

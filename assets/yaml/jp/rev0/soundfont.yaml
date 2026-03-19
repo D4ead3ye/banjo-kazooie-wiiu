@@ -1,0 +1,29 @@
+:config:
+  header:
+    code:
+      - '#include "structs.h"'
+
+soundfont1ctl:
+  type: BLOB
+  offset: 0xDA80A0
+  size: 0x10DF0
+  symbol: soundfont1ctl
+
+soundfont1tbl:
+  type: BLOB
+  offset: 0xDB8E90
+  size: 0x10EA00
+  symbol: soundfont1tbl
+
+soundfont2ctl:
+  type: BLOB
+  offset: 0xEC7890
+  size: 0x9FB0
+  symbol: soundfont2ctl
+
+soundfont2tbl:
+  type: BLOB
+  offset: 0xED1840
+  size: 0x6B3F0
+  symbol: soundfont2tbl
+

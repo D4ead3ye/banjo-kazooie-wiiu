@@ -16,7 +16,7 @@ build/
 build-cmake
 
 #binaries ripped from the ROMs
-assets/bko2r
+assets/bko2r*
 assets/log.txt
 bin/
 bin/*
@@ -86,6 +86,4 @@ logs/
 /src/port/build.c
 /clang-format.exe
 CLAUDE.md
-assets/rom_map.md
-/assets/asset_table
 /saves

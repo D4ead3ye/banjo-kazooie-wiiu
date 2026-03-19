@@ -8,8 +8,8 @@
 #include "core2/ch/snacker.h"
 
 // ToDo: move to assets_e
-#define SNACKER_BB_DIALOG_0 VER_SELECT(0xe26, 0xa68, 0, 0)
-#define SNACKER_BB_DIALOG_1 VER_SELECT(0xe33, 0xa75, 0, 0)
+#define SNACKER_BB_DIALOG_0 VER_SELECT(0xe26, 0xa68, 0xa68, 0xa68)
+#define SNACKER_BB_DIALOG_1 VER_SELECT(0xe33, 0xa75, 0xa75, 0xa75)
 
 void ncFirstPersonCamera_getZoomedInRotation(f32 *);
 

@@ -32,8 +32,10 @@ std::string GameExtractor::sStatusText;
 std::atomic<int> GameExtractor::sPhase{ 0 };
 
 std::unordered_map<std::string, std::string> mGameList = {
-    { "1fe1632098865f639e22c11b9a81ee8f29c75d7a", "Banjo Kazooie (U) (V1.0)" },
-    { "ded6ee166e740ad1bc810fd678a84b48e245ab80", "Banjo Kazooie (U) (V1.1)" },
+    { "1fe1632098865f639e22c11b9a81ee8f29c75d7a", "Banjo-Kazooie (U) (V1.0)" },
+    { "ded6ee166e740ad1bc810fd678a84b48e245ab80", "Banjo-Kazooie (U) (V1.1)" },
+    { "bb359a75941df74bf7290212c89fbc6e2c5601fe", "Banjo-Kazooie (PAL)" },
+    { "90726d7e7cd5bf6cdfd38f45c9acbf4d45bd9fd8", "Banjo-Kazooie (Japan)" },
 };
 
 bool GameExtractor::RunStandalone(std::string rom) {

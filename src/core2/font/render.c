@@ -134,8 +134,11 @@ BKSpriteTextureBlock **func_802E4D8C(BKSprite *sprite) {
     return chunkPtrArray;
 }
 
-/* get index  from font_id */
+/* get index from font_id */
+// [port] debug font loading stubbed — FontSprite 0x6E9 is a debug asset
+// removed in v1.1 and unused in v1.0 gameplay
 s32 func_802E4E54(u8 font_id) {
+#if 0
     s32 sp24;
 
     sp24 = func_802E4CF8(font_id);
@@ -152,6 +155,8 @@ s32 func_802E4E54(u8 font_id) {
     }
     func_802E6820(5);
     return sp24;
+#endif
+    return 0;
 }
 
 s32 func_802E4F98(char *arg0) {
