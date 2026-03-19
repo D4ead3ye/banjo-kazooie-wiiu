@@ -241,8 +241,16 @@ static void __chClam_playerDropsItem(enum bundle_e bundle_id, enum item_e item_i
     item_dec(item_id);
 }
 
+#ifdef PORT_FIX
+// [port] JP fix: track total items dropped on ground to prevent spawn overflow crash.
+// Resets on map reload (static in overlay code). Conservative — if player picks up
+// dropped items the counter doesn't decrement, but that just means fewer future drops.
+static s32 s_droppedEggs = 0;
+static s32 s_droppedFeathers = 0;
+#endif
+
 static void __chClam_attackOther(ActorMarker *this_marker, ActorMarker *other_marker){
-    
+
     if(func_80297C6C() == 3) return;
 
     if( !mapSpecificFlags_get(TTC_SPECIFIC_FLAG_5_CLAM_FIRST_MEET_TEXT_SHOWN) && gcdialog_showText(ASSET_A14_DIALOG_CLAM_TAUNT, 0, NULL, NULL, NULL, NULL)){
@@ -250,11 +258,25 @@ static void __chClam_attackOther(ActorMarker *this_marker, ActorMarker *other_ma
     }
 
     if (item_getCount(ITEM_D_EGGS) != 0) {
+#ifdef PORT_FIX
+        if (s_droppedEggs < 8) {
+            __chClam_playerDropsItem(BUNDLE_E_YUMYUM_BLUE_EGG, ITEM_D_EGGS);
+            s_droppedEggs++;
+        }
+#else
         __chClam_playerDropsItem(BUNDLE_E_YUMYUM_BLUE_EGG, ITEM_D_EGGS);
+#endif
     }
 
     if (item_getCount(ITEM_F_RED_FEATHER) != 0) {
+#ifdef PORT_FIX
+        if (s_droppedFeathers < 5) {
+            __chClam_playerDropsItem(BUNDLE_F_YUMYUM_RED_FEATHER, ITEM_F_RED_FEATHER);
+            s_droppedFeathers++;
+        }
+#else
         __chClam_playerDropsItem(BUNDLE_F_YUMYUM_RED_FEATHER, ITEM_F_RED_FEATHER);
+#endif
     }
 }
 

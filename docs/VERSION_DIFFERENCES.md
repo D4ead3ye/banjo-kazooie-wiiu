@@ -78,6 +78,47 @@ Six additional Cheato dialog variants were removed, along with unused dialog bra
 
 One new Gruntilda line was added: "YOU JOGGED MY ARM, I'M IN A HUFF" for the final battle sequence.
 
+### Speed Shoes Texture
+
+The speed shoes (Turbo Trainers) had a star design on the side in v1.0/PAL. In v1.1 and JP, this was changed to a thunderbolt — matching how they appear in Banjo-Tooie. This is part of the texture data in the TurboTalonTrainers model (ID 871).
+
+### Gameplay Bug Fixes (Code Changes)
+
+These changes are in the game code, not the asset data. Since the decomp is based on v1.0, the port currently has v1.0 behavior. Fixes marked with `PORT_FIX` have been applied and are compiled in by default. Others are pending investigation.
+
+Code fixes applied via `#ifdef PORT_FIX`:
+- **Claw swipe before learning** — `src/core2/particle/playertrail.c`: slide check moved before claw check
+- **Grunty defeated flag timing** — `src/fight/chjinjonatorbase.c` + `src/fight/chfinalboss.c`: flag moved from egg-hit to fireball cutscene
+- **Boggy race game over** — `src/core2/particle/playertrail.c`: skip game over when `maSlalom_isActive()`, reload map instead
+- **CCW Spring rock** — `src/CCW/ch/destruct_rock.c`: rock ignores collision callback in Spring
+- **CCW flower softlock** — `src/CCW/ch/seasonal_npc.c`: egg hitbox disabled after `FILEPROG_E3_CCW_FLOWER_SPRING` is set
+- **Pushing/bouncing Grunty** — `src/fight/chfinalboss.c`: collision passive handler returns early in phase 5+
+- **Grunty fight Jinjo sound** — `src/fight/chbossjinjo.c`: powerup sound stopped immediately when Jinjo enters hit state
+- **Termite Mound slopes** — `src/core2/ba/ba_recoil.c`: slope timer fills instantly in termite mound (v1.0 doubled the rate, v1.1 makes it immediate)
+- **Yum-Yum crash** — `src/TTC/ch/clam.c`: cap dropped eggs at 8 and feathers at 5 per map visit to prevent spawn overflow crash
+
+| Bug | v1.0 | v1.1 Fix | Versions Fixed |
+|-----|------|----------|----------------|
+| **Conga's name typo** | "THIS CONGO'S TREE" | "THIS CONGA'S TREE" | v1.1, PAL, JP (asset fix — dialog text) |
+| **CCW Spring rock destructible** | Rock blocking Gnawty's house can be destroyed in Spring via egg sniping | Made indestructible in Spring | v1.1, JP (PAL still has the bug) |
+| **CCW flower softlock** | Planting the flower multiple times in Spring causes a permanent softlock | Egg hitbox removed after first use | v1.1, JP |
+| **Termite Mound slopes** | Banjo can stand on steep slopes briefly, allowing climbing without termite transformation | Instant slide-off on all termite mound slopes | v1.1, JP |
+| **MMM Well OOB** | Player can escape through the top of the well | Collision added to well top | v1.1, PAL, JP |
+| **RBB Engine Room pipe** | Loading zone allows seeing out-of-bounds in first-person | Black ceiling blocks OOB view | v1.1, PAL, JP |
+| **Claw swipe before learning** | Can trigger claw swipe via slide+B in basic training before learning the move | Glitch patched | v1.1, JP |
+| **GV Lobby floor gap** | Beak barge through floor collision gap in Gobi's Valley lobby | Gap sealed | v1.1, PAL, JP |
+| **Boggy race game over** | Losing Boggy's race with 0 lives triggers game over | Teleports back to race start instead | v1.1, JP |
+| **Game Over text formatting** | "YOU........." on a separate line from the rest of the sentence | Text reformatted to fit on one line | v1.1, PAL |
+| **Grunty defeated flag timing** | Flag set when last egg hits Jinjonator — can die before cutscene | Flag set on first frame of fireball cutscene | v1.1, PAL, JP |
+| **Grunty fight Jinjo sound** | Hitting Grunty with Jinjo before charge animation ends loops the sound forever | Sound stops on hit | v1.1, PAL, JP |
+| **Pushing/bouncing Grunty** | Can push defeated Grunty off her platform with attack moves | Grunty made immovable after defeat | v1.1, PAL, JP |
+| **Yum-Yum crash** | Unlimited eggs/feathers on ground can crash the game | Capped at 8 eggs / 5 feathers on ground | JP only |
+| **Pause during death** | Pausing during death animation with 1 life causes premature game over | Can't pause during normal/pit death animations | JP only |
+
+### PAL Demo Paths Redone
+
+All attract mode demo input sequences were re-recorded for the PAL version to account for the 50Hz/25fps timing difference. The US demo data desyncs at PAL framerate. This matches our finding that PAL has different demo input data at the same IDs.
+
 ### Asset Table Reorganization
 
 Beyond the content changes, v1.1 compacted the entire asset ID space. Level geometry and MIDI tracks that occupied IDs 5000+ in v1.0 were moved down to the 3000+ range. This means the same numeric ID can refer to completely different asset types between versions — for example, ID 3500 is a dialog in v1.0 but a MIDI track in v1.1.

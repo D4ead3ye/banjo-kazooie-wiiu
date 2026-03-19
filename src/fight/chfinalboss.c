@@ -1796,6 +1796,12 @@ void chfinalboss_phase5_update(ActorMarker *marker) {
                 chjinjonator_finalAttack(jinjonator_marker);
                 func_8030E6D4(SFX_HEAVY_THUNDERSTORM_01);
                 func_8025A6EC(COMUSIC_A3_JINJONATOR_HITS_GRUNTY_J, 20000);
+#ifdef PORT_FIX
+                // [port] v1.1 fix: set defeated flag here (fireball cutscene)
+                // instead of when eggs hit the Jinjonator base, preventing
+                // the flag from being set if the player dies before the cutscene
+                chfinalboss_setBossDefeated();
+#endif
                 chfinalboss_phase5_setState(this, 0x2B);
                 timed_exitStaticCamera(0.0f);
                 timed_setStaticCameraToNode(0.0f, sp38 + 0xD);
@@ -2017,6 +2023,11 @@ void chfinalboss_collisionPassive(ActorMarker *marker, ActorMarker *other_marker
 
     this = marker_getActor(marker);
     local = (ActorLocal_FinalBoss *)&this->local;
+#ifdef PORT_FIX
+    // [port] v1.1 fix: don't process hits in phase 5+ (prevents pushing defeated Grunty)
+    // Collision still fires (player bounces off), but Grunty ignores the hit.
+    if (local->phase >= 5) return;
+#endif
     switch (local->phase) {
     case 1:
         if (local->hits == 0) {

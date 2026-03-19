@@ -92,7 +92,12 @@ void func_8038D6D8(Actor *this, s32 next_state) {
 
 void func_8038D81C(ActorMarker* marker, ActorMarker *other_marker) {
     Actor* actor = marker_getActor(marker);
+#ifdef PORT_FIX
+    // [port] v1.1 fix: rock is indestructible in Spring (prevents sequence break)
+    if (actor->state == 1 && map_get() != MAP_43_CCW_SPRING) {
+#else
     if (actor->state == 1) {
+#endif
         func_8038D6D8(actor, 2);
     }
 }

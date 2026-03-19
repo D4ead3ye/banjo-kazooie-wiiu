@@ -276,6 +276,13 @@ void func_8029B5EC(void){
 }
 
 void func_8029B62C(void){
+#ifdef PORT_FIX
+    // [port] v1.1 fix: don't trigger game over during Boggy's race — just reload the map
+    if(item_empty(ITEM_16_LIFE) && maSlalom_isActive()){
+        func_802E4048(gVoidOutReturnLocation[0], gVoidOutReturnLocation[1], 1);
+        return;
+    }
+#endif
     if(item_empty(ITEM_16_LIFE)){
         if(!fileProgressFlag_get(FILEPROG_BD_ENTER_LAIR_CUTSCENE) || fileProgressFlag_get(FILEPROG_A6_FURNACE_FUN_COMPLETE)){
             func_8025A430(-1, 0x7D0, 3);
@@ -837,17 +844,27 @@ s32 func_8029C9C0(s32 arg0){
     if(bakey_pressed(BUTTON_A))
         arg0 = bs_getTypeOfJump();
 
+#ifdef PORT_FIX
+    // [port] v1.1 fix: check sliding first so claw swipe can't trigger during a slide
+    if(player_isSliding())
+        arg0 = BS_SLIDE;
+    else if(bakey_pressed(BUTTON_B) && can_claw())
+        arg0 = BS_CLAW;
+#else
     if(bakey_pressed(BUTTON_B) && can_claw())
         arg0 = BS_CLAW;
+#endif
 
     if(bakey_held(BUTTON_Z) && bainput_should_beak_barge())
         arg0 = BS_BBARGE;
 
     if(bainput_should_look_first_person_camera())
         arg0 = badrone_look();
-    
+
+#ifndef PORT_FIX
     if(player_isSliding())
         arg0  = BS_SLIDE;
+#endif
 
     return arg0;
 }
