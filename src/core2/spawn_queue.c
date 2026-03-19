@@ -6,7 +6,6 @@
 #include "prop.h"
 #include "functions.h"
 #include "core2/ch/snacker.h"
-#include "port/ShipUtils.h" // [port] spawn queue overflow logging
 
 void spawnQueue_unlock(void);
 void spawnQueue_lock(void);

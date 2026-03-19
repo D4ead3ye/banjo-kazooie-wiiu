@@ -4,7 +4,6 @@
 #include "variables.h"
 #include "core2/modelRender.h"
 #include "animation.h"
-#include "port/ShipUtils.h"
 
 #include "libultraship/libultra/gbi.h"
 

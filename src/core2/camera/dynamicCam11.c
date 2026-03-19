@@ -1,7 +1,6 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
-#include "port/ShipUtils.h" // [port] BK_LOG_*
 
 // [port] removed incorrect local externs — correct prototypes in camera.h
 

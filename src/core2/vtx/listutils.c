@@ -3,7 +3,6 @@
 #include "variables.h"
 
 #include "model.h"
-#include "port/ShipUtils.h" // [port] BK_LOG_*
 
 extern f32  vtxList_getGlobalNorm(BKVertexList *);
 extern void points_to_boundingBoxWithMargin(f32 arg0[3], f32 arg1[3], f32 margin, f32 min[3], f32 max[3]);

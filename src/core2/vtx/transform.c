@@ -3,7 +3,6 @@
 #include "variables.h"
 #include "model.h"
 #include <stddef.h>
-#include "port/ShipUtils.h"
 
 extern void func_8034CF74(void *arg0, s32 arg1, BKModel *arg2, s32 arg3);
 extern void func_8034D170(void *arg0, s32 arg1, BKModel *arg2, s32 arg3);

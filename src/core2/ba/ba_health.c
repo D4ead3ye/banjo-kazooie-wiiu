@@ -1,7 +1,6 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
-#include "port/ShipUtils.h" // [port] BK_LOG_*
 
 /* .bss */
 s32 D_8037C010;

@@ -3,7 +3,6 @@
 #include "functions.h"
 #include "variables.h"
 #include "actor.h"
-#include "port/ShipUtils.h" // [port] BK_LOG_*
 
 #include "prop.h"
 

@@ -4,7 +4,6 @@
 #include "variables.h"
 
 #include "bk_time.h"
-#include "port/ShipUtils.h"
 
 f32 func_802FB0DC(struct8s *);
 f32 func_802FB0E4(struct8s *);

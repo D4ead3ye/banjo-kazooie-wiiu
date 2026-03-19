@@ -2,7 +2,6 @@
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
-#include "port/ShipUtils.h"
 
 #include "core2/anim/sprite.h"
 #include <core2/file.h>

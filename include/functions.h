@@ -13,6 +13,8 @@
 #include "core1/core1.h"
 #include "core2/core2.h"
 
+#include "port/ShipUtils.h"
+
 #include "math.h" // ToDo: sort out actual dependencies
 #include "bs_funcs.h"
 

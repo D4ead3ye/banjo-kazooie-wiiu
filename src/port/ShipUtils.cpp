@@ -3,6 +3,8 @@
 #include <cstdarg>
 #include <cstdio>
 #include <spdlog/spdlog.h>
+#include <libultraship/libultraship.h>
+#include "ui/cvar_prefixes.h"
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -219,6 +221,10 @@ extern "C" const char* port_mapName(int map_id) {
         default:
             return "Unknown";
     }
+}
+
+extern "C" int port_getBootSequence(void) {
+    return CVarGetInteger(CVAR_SETTING("BootSequence"), 0);
 }
 
 extern "C" void port_setMapDebugTitle(int map_id) {

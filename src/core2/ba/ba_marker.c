@@ -5,7 +5,6 @@
 #include "core2/ba/physics.h"
 #include "version.h"
 #include "prop.h"
-#include "port/ShipUtils.h" // [port] BK_LOG_*
 
 extern void func_803012F8(void);
 extern void __baMarker_8028BA00(s32);

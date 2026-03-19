@@ -3,7 +3,6 @@
 #include "variables.h"
 
 #include "animation.h"
-#include "port/ShipUtils.h" // [port] DEBUG: animation t-pose logging
 
 //function declarations
 void anim_setIndex(Animation *this, enum asset_e arg1);

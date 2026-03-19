@@ -2,7 +2,6 @@
 #include "functions.h"
 #include "variables.h"
 #include "animation.h"
-#include "port/ShipUtils.h"
 
 void *defrag(void *);
 

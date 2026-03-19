@@ -141,21 +141,29 @@ void LighthouseMenu::AddMenuSettings() {
                               "File Select: Skip to file select menu"));
 
     AddWidget(path, "Languages", WIDGET_SEPARATOR_TEXT);
-    AddWidget(path, "Translate Title Screen", WIDGET_CVAR_CHECKBOX)
-        .CVar(CVAR_SETTING("TitleScreenTranslation"))
-        .RaceDisable(false);
-    // AddWidget(path, "Language", WIDGET_CVAR_COMBOBOX)
-    //     .CVar(CVAR_SETTING("Languages"))
-    //     .RaceDisable(false)
-    //     .PreFunc([](WidgetInfo& info) {
-    //         auto options = std::static_pointer_cast<UIWidgets::ComboboxOptions>(info.options);
-    //         LighthouseMenu::UpdateLanguageMap(options->comboMap);
-    //     })
-    //     .Options(ComboboxOptions()
-    //                  .LabelPosition(LabelPositions::Far)
-    //                  .ComponentAlignment(ComponentAlignments::Right)
-    //                  .ComboMap(languages)
-    //                  .DefaultIndex(LANGUAGE_ENG));
+    {
+        static const std::unordered_map<int32_t, const char*> languageOptions = {
+            { LANGUAGE_ENG, "English" },
+            { LANGUAGE_FRE, "French" },
+            { LANGUAGE_GER, "German" },
+        };
+        AddWidget(path, "Dialog Language", WIDGET_CVAR_COMBOBOX)
+            .CVar(CVAR_SETTING("DialogLanguage"))
+            .RaceDisable(false)
+            .PreFunc([](WidgetInfo& info) {
+                info.isHidden = ResourceMgr_GetDialogLanguageCount() <= 1;
+            })
+            .Callback([](WidgetInfo& info) {
+                int lang = CVarGetInteger(CVAR_SETTING("DialogLanguage"), LANGUAGE_ENG);
+                ResourceMgr_SetDialogLanguage(lang);
+            })
+            .Options(ComboboxOptions()
+                         .Tooltip("Select dialog language (PAL o2r only).\nRequires map reload to take effect.")
+                         .LabelPosition(LabelPositions::Far)
+                         .ComponentAlignment(ComponentAlignments::Right)
+                         .ComboMap(languageOptions)
+                         .DefaultIndex(LANGUAGE_ENG));
+    }
     AddWidget(path, "Accessibility", WIDGET_SEPARATOR_TEXT);
 #if defined(_WIN32) || defined(__APPLE__) || defined(ESPEAK)
     AddWidget(path, "Text to Speech", WIDGET_CVAR_CHECKBOX)

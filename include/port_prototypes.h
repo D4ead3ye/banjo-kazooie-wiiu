@@ -2049,6 +2049,8 @@ void demo_load(enum map_e map, s32 demo_id);
 // --- src/core2/dialog/binload.c ---
 bool func_8031B604(u8 *arg0);
 s32 code94620_func_8031B5B0(void);
+s32 func_8031B5BC(void);          // dialog language count
+void func_8031B5C4(s32 arg0);     // set dialog language index
 void dialogBin_initialize(void);
 void dialogBin_release(s32 arg0);
 void dialogBin_terminate(void);

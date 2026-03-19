@@ -5,7 +5,6 @@
 #include "assets.h"
 #include "animation.h"
 #include "port/ResourceHelpers.h"
-#include "port/ShipUtils.h"
 
 extern f32 glspline_catmull_rom_interpolate(f32, s32, f32 *);
 extern BKSpriteDisplayData * func_80344A1C(BKSprite *arg0);

@@ -4,7 +4,9 @@
 #include "fast/resource/ResourceType.h"
 #include "fast/resource/type/DisplayList.h"
 #include "libultraship/bridge/resourcebridge.h"
+#include "libultraship/libultraship.h"
 #include "ship/Context.h"
+#include "ui/cvar_prefixes.h"
 #include <spdlog/spdlog.h>
 #include <algorithm>
 #include <cstring>
@@ -23,8 +25,12 @@ extern "C" {
 }
 
 extern "C" uint16_t ResourceMgr_LoadTexWidthByName(char* texPath);
-
 extern "C" uint16_t ResourceMgr_LoadTexHeightByName(char* texPath);
+extern "C" void func_8031B5C4(int32_t lang);  // decomp: set dialog language index
+
+// [port] Dialog language state — detected at boot from o2r version
+static int sDialogLanguageCount = 1;  // 1 for US/JP, 3 for PAL (EN/FR/DE)
+static int sDialogLanguage = 0;       // 0=English, 1=French, 2=German
 
 namespace {
 const std::unordered_map<uint32_t, std::string>& GetAssetSymbolMap() {
@@ -89,10 +95,10 @@ const std::unordered_map<uint32_t, std::string>& GetAssetSymbolMap() {
         const std::unordered_map<uint32_t, uint32_t>* remapTable = nullptr;
         const char* versionName = nullptr;
 
-        if (symbolMap.size() >= 3040 && symbolMap.size() <= 3050) {
+        if (symbolMap.size() >= 3030 && symbolMap.size() <= 3050) {
             remapTable = &sV10toV11Remap;
             versionName = "v1.1";
-        } else if (symbolMap.size() >= 3055 && symbolMap.size() <= 3070) {
+        } else if (symbolMap.size() >= 3051 && symbolMap.size() <= 3080) {
             // PAL (3059) and JP (3065) both fall here.
             // Try JP first — if JP-specific IDs exist in manifest, use JP table.
             // JP has mode 7 entries at IDs 3628+; PAL does not.
@@ -102,6 +108,10 @@ const std::unordered_map<uint32_t, std::string>& GetAssetSymbolMap() {
             } else {
                 remapTable = &sV10toPALRemap;
                 versionName = "PAL";
+                sDialogLanguageCount = 3;  // EN, FR, DE
+                sDialogLanguage = CVarGetInteger(CVAR_SETTING("DialogLanguage"), 0);
+                func_8031B5C4(sDialogLanguage);  // Initialize decomp language index
+                SPDLOG_INFO("[port] PAL detected, dialog language CVar = {}", sDialogLanguage);
             }
         }
 
@@ -123,6 +133,22 @@ const std::unordered_map<uint32_t, std::string>& GetAssetSymbolMap() {
     return symbolMap;
 }
 } // namespace
+
+extern "C" int ResourceMgr_GetDialogLanguageCount(void) {
+    return sDialogLanguageCount;
+}
+
+extern "C" int ResourceMgr_GetDialogLanguage(void) {
+    return sDialogLanguage;
+}
+
+extern "C" void ResourceMgr_SetDialogLanguage(int lang) {
+    if (lang >= 0 && lang < sDialogLanguageCount) {
+        sDialogLanguage = lang;
+        func_8031B5C4(lang);  // Set decomp's internal language index
+        SPDLOG_INFO("[port] Dialog language set to {}", lang);
+    }
+}
 
 std::shared_ptr<Ship::IResource> GetResourceByName(const char* path) {
     try {
@@ -183,15 +209,15 @@ extern "C" char* ResourceMgr_LoadByAssetId(uint32_t assetId) {
         std::replace(mappedPath.begin(), mappedPath.end(), '\\', '/');
 
         if (auto result = LoadAndRetainResource(mappedPath, assetId); result != nullptr) {
-            SPDLOG_INFO("Loading '{}'", mappedPath);
+            //SPDLOG_INFO("[ResourceManager] Loading '{}'", mappedPath);
             return result;
         } else {
-            SPDLOG_WARN("[port] ResourceMgr_LoadByAssetId({}) symbol '{}' found but resource data is NULL", assetId,
+            SPDLOG_WARN("[ResourceManager({})] symbol '{}' found but resource data is NULL", assetId,
                         mappedPath);
             return nullptr;
         }
     } else {
-        SPDLOG_WARN("[port] ResourceMgr_LoadByAssetId({}) not found in symbol map", assetId);
+        SPDLOG_WARN("[ResourceManager({})] not found in symbol map", assetId);
         return nullptr;
     }
 

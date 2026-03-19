@@ -3,7 +3,6 @@
 #include "functions.h"
 #include "variables.h"
 #include "bk_math.h"
-#include "port/ShipUtils.h" // [port] BK_LOG_*
 
 int collisionTri_isHitFromAbove_actor(f32 arg0[3], Actor *arg1, s32 arg2);
 extern BKCollisionTri *func_80320DB0(f32[3], f32, f32[3], u32); // [port] was bool — returns BKCollisionTri*

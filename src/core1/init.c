@@ -89,9 +89,12 @@ enum map_e getSpecialBootMap(void){
     return (DEBUG_use_special_bootmap())? MAP_80_GL_FF_ENTRANCE : MAP_91_FILE_SELECT;
 }
 
-// [port] FEAT: Will need to change this dynamically to support conversion mods
+// [port] Boot sequence: 0=Default (Rareware logo), 1=Authentic (same), 2=File Select
 enum map_e getDefaultBootMap(void){
-    return MAP_91_FILE_SELECT;
+    int seq = port_getBootSequence();
+    if (seq == 2) // BOOTSEQUENCE_FILESELECT
+        return MAP_91_FILE_SELECT;
+    return MAP_1F_CS_START_RAREWARE;
 }
 
 void func_8023DBAC(void){

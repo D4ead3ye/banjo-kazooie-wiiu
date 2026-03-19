@@ -1,7 +1,6 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
-#include "port/ShipUtils.h" // [port] BK_LOG_*
 
 BKCollisionTri *func_80309B48(f32 *, f32 *, f32 *, u32);
 void func_8031C608(struct0 *this);
