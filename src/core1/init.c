@@ -219,6 +219,8 @@ void mainLoop(void){
         }
     }//L8023DF70
 #endif
+
+    CALL_EVENT(GameFrameUpdate);
 }
 
 void mainThread_entry(void *arg) { 

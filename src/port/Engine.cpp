@@ -24,7 +24,7 @@
 #include "port/ui/cvar_prefixes.h"
 #include "ui/LighthouseGui.hpp"
 // #include "port/patches/DisplayListPatch.h"
-// #include "port/mods/PortEnhancements.h"
+#include "port/enhancements/events/PortEnhancements.h"
 
 #include <fast/interpreter.h>
 #include <libultraship/bridge/gfxbridge.h>
@@ -823,7 +823,7 @@ void GameEngine::Create(int argc, char* argv[]) {
 //    CVarRegisterInteger("gControlNav", 1); // always enable controller nav on switch/wii u
 //    osSetTime(0);
 //#endif
-    // PortEnhancements_Init();
+    PortEnhancements_Init();
 }
 
 extern void ResourceHelpers_ClearRefCache();

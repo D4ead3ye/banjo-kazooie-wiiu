@@ -26,6 +26,9 @@
 
 #include "core2/ba/timer.h"
 
+#include "port/enhancements/events/hooks/Events.h"
+#include <libultraship/bridge.h>
+
 extern f32 fabsf(f32);
 #pragma intrinsic (fabsf)
 
