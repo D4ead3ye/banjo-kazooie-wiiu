@@ -151,14 +151,15 @@ void LighthouseMenu::AddMenuSettings() {
             .CVar(CVAR_SETTING("DialogLanguage"))
             .RaceDisable(false)
             .PreFunc([](WidgetInfo& info) {
-                info.isHidden = ResourceMgr_GetDialogLanguageCount() <= 1;
+                if (mLighthouseMenu->disabledMap.at(DISABLE_FOR_NON_PAL_O2R).active)
+                    info.activeDisables.push_back(DISABLE_FOR_NON_PAL_O2R);
             })
             .Callback([](WidgetInfo& info) {
                 int lang = CVarGetInteger(CVAR_SETTING("DialogLanguage"), LANGUAGE_ENG);
                 ResourceMgr_SetDialogLanguage(lang);
             })
             .Options(ComboboxOptions()
-                         .Tooltip("Select dialog language (PAL o2r only).\nRequires map reload to take effect.")
+                         .Tooltip("Select dialog language.\nOnly available with PAL o2r (English, French, German).")
                          .LabelPosition(LabelPositions::Far)
                          .ComponentAlignment(ComponentAlignments::Right)
                          .ComboMap(languageOptions)

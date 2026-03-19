@@ -111,7 +111,7 @@ const std::unordered_map<uint32_t, std::string>& GetAssetSymbolMap() {
                 sDialogLanguageCount = 3;  // EN, FR, DE
                 sDialogLanguage = CVarGetInteger(CVAR_SETTING("DialogLanguage"), 0);
                 func_8031B5C4(sDialogLanguage);  // Initialize decomp language index
-                SPDLOG_INFO("[port] PAL detected, dialog language CVar = {}", sDialogLanguage);
+                SPDLOG_INFO("[ResourceHelpers] PAL detected, dialog language CVar = {}", sDialogLanguage);
             }
         }
 
@@ -126,7 +126,7 @@ const std::unordered_map<uint32_t, std::string>& GetAssetSymbolMap() {
                     remapCount++;
                 }
             }
-            SPDLOG_INFO("[port] Detected {} o2r — injected {} v1.0 ID aliases into symbol map", versionName, remapCount);
+            SPDLOG_INFO("[ResourceHelpers] Detected {} o2r — injected {} v1.0 ID aliases into symbol map", versionName, remapCount);
         }
     });
 
@@ -146,7 +146,7 @@ extern "C" void ResourceMgr_SetDialogLanguage(int lang) {
     if (lang >= 0 && lang < sDialogLanguageCount) {
         sDialogLanguage = lang;
         func_8031B5C4(lang);  // Set decomp's internal language index
-        SPDLOG_INFO("[port] Dialog language set to {}", lang);
+        SPDLOG_INFO("[ResourceHelpers] Dialog language set to {}", lang);
     }
 }
 
@@ -154,7 +154,7 @@ std::shared_ptr<Ship::IResource> GetResourceByName(const char* path) {
     try {
         return Ship::Context::GetInstance()->GetResourceManager()->LoadResource(path);
     } catch (const std::exception& e) {
-        SPDLOG_ERROR("[port] GetResourceByName('{}') exception: {}", path, e.what());
+        SPDLOG_ERROR("[ResourceHelpers] GetResourceByName('{}') exception: {}", path, e.what());
         return nullptr;
     }
 }
