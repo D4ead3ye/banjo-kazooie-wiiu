@@ -24,14 +24,14 @@ ListenerID EventSystem::RegisterListener(EventID id, EventCallback callback, Eve
     if (std::find_if(registry.listeners.begin(), registry.listeners.end(), [callback](const EventListener listener) {
             return listener.function == callback;
         }) != registry.listeners.end()) {
-        throw std::runtime_error("Listener already registered");
+        return registry.listeners.size() - 1;
+    } else {
+        registry.listeners.push_back({ priority, callback, { file, line, 0 } });
+
+        // Sort by priority
+        std::sort(registry.listeners.begin(), registry.listeners.end(),
+                  [](const EventListener a, const EventListener b) { return a.priority < b.priority; });
     }
-
-    registry.listeners.push_back({ priority, callback, { file, line, 0 } });
-
-    // Sort by priority
-    std::sort(registry.listeners.begin(), registry.listeners.end(),
-              [](const EventListener a, const EventListener b) { return a.priority < b.priority; });
 
     return registry.listeners.size() - 1;
 }
