@@ -7,7 +7,9 @@
 #include "core2/gc/zoombox.h"
 #include "core2/quiz_storage.h"
 
-extern void port_setViBlack(int active); // [port]
+#include "port/GameConfig.h"
+
+s32 gSelectedGameNum = -1;
 
 #ifndef ABS
 #define	ABS(d)		((d) >= 0) ? (d) : -(d)
@@ -30,6 +32,8 @@ extern void controller_getJoystick(s32, f32*);
 
 extern char *gcpausemenu_TimeToA(int);
 extern struct5Bs *func_803097A0(void);
+
+extern void port_setViBlack(int active);
 
 /* .data */
 f32 D_80365DD0[3][3] = {
@@ -83,7 +87,7 @@ s32 mm_hut_smash_count;
 u32 CH_TREASUREHUNT_PUZZLE_CURRENT_STEP;
 struct FF_StorageStruct* D_8037DCB8;
 s32 D_8037DCBC;
-u8 gCompletedBottleBonusGames[7]; // bottle bonus puzzle?
+u8 gCompletedBottlesBonusGames[7]; // bottle bonus puzzle?
 u8 D_8037DCC7;
 u8 D_8037DCC8;
 u8 D_8037DCC9;
@@ -308,6 +312,7 @@ void func_802C4C14(Actor *this){
     f32 sp34[3];
 
     sp84 = this->marker->id - 0xe4;
+    gSelectedGameNum = sp84;
     sp80 = (sp84 == D_80365E00);
     sp50 = time_getDelta();
     if(chGameSelectBottomZoombox == NULL)
@@ -405,8 +410,33 @@ void func_802C4C14(Actor *this){
                 case 4://L802C50C8
                     if(anctrl_isStopped(this->anctrl)){
                         chBottlesBonus_func_802DEB80();
+                        // [port] Restore bottles bonus after vanilla reset.
+                        // gameFile_load handles the slot lookup and restores both
+                        // lives and bottles bonus via port_restoreFileEnhancementData.
+                        {
+                            extern u8 gCompletedBottlesBonusGames[7];
+                            extern s32 chBottlesBonusPuzzleIndex;
+                            s32 _i;
+                            gameFile_load(gSelectedGameNum);
+                            for (_i = 0; _i < 7; _i++) {
+                                if (gCompletedBottlesBonusGames[_i]) {
+                                    chBottlesBonusPuzzleIndex = _i + 1;
+                                }
+                            }
+                        }
                         if(!gameFile_isNotEmpty(sp84)){
-                            timedFunc_set_3(0.0f, (GenFunction_3)func_802E4078, MAP_85_CS_SPIRAL_MOUNTAIN_3, 0, 1);
+                            // [port] BB romhacks can override the new-game boot map
+                            s32 newGameMap = port_getRomhackNewGameMap();
+                            if (newGameMap < 0) {
+                                newGameMap = MAP_85_CS_SPIRAL_MOUNTAIN_3;
+                            }
+                            timedFunc_set_3(0.0f, (GenFunction_3)func_802E4078, newGameMap, 0, 1);
+                            {
+                                s32 knowAll = port_getRomhackKnowAllMoves();
+                                if (knowAll >= 0) {
+                                    ability_setAllLearned(knowAll);
+                                }
+                            }
                         }
                         else{//L802C511C
                             sp44 = 0.0f;

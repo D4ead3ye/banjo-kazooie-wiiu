@@ -252,7 +252,7 @@ s32 mapSpecificFlags_get(s32 i);
 // --- core2/level/specificflags.c ---
 s32 levelSpecificFlags_get(s32 i);
 
-// --- core2/terrain_material.c (item system) ---
+// --- core2/gamestate.c (item system) ---
 s32 item_empty(enum item_e item);
 void item_set(s32 item, s32 val);
 
@@ -697,7 +697,7 @@ void func_80389D9C(s32 key_id);
 void maOrgan_update(void);
 void organMinigame_getKeyPosition(s32 key_indx, f32 position[3]);
 
-// --- src/MMM/minigame_organinput.c ---
+// --- src/MMM/minigame_shed.c ---
 void func_8038A994();
 void func_8038A9B4(void);
 void func_8038AA30(void *arg0, void *arg1); // [port] polymorphic: called with BKModel*/Struct_MMM_47D0_0* and s32/Struct68s*
@@ -2020,9 +2020,10 @@ void func_80335128(s32);
 
 // --- src/core2/cutscene/lair.c ---
 s32 cutscenetrigger_update(void);
+void func_8031CC8C(NodeProp *arg0, s32 arg1);
 void func_8031CC40(enum map_e map_id, s32 arg1);
 void func_8031D04C(enum map_e arg0, s32 exit_id);
-void func_8031D06C(s32 arg0, s32 arg1); // [port] s32 — definition is (enum map_e, s32), nodeupdate.c calls as (NodeProp*, ActorMarker*)
+void func_8031D06C(s32 arg0, s32 arg1);
 void func_8031D0C0(NodeProp *arg0, ActorMarker *arg1);
 void func_8031F9E0(void);
 void func_8031F9E8();
@@ -2838,7 +2839,7 @@ void func_80338370(void);
 void func_8033837C(s32 arg0);
 void spriteRender_draw(Gfx **gfx, Vtx **vtx, BKSprite *sp, u32 frame);
 
-// --- src/core2/terrain_material.c ---
+// --- src/core2/gamestate.c ---
 enum item_e carriedobj_actorId2ItemId(enum actor_e actor_id);
 s32 item_adjustByDiffWithHud(enum item_e item, s32 diff);
 s32 item_getCount(enum item_e item);
@@ -3066,7 +3067,7 @@ bool chNipper_isInState7(); // [port] definition takes s16[3] but lair.c calls w
 // --- src/core2/actor_cubepropsystem.c ---
 s32 codeA5BC0_getPositionAndReturnRadius(void *arg0, s32 arg1[3]); // [port] void* — callers pass NodeProp*, struct_core2_DB010*
 
-// --- src/core2/terrain_material.c ---
+// --- src/core2/gamestate.c ---
 void itemscore_timeScores_fromSaveData(u16 *savedata);
 
 // --- src/core2/savedata.c ---

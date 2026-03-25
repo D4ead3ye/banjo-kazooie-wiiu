@@ -1,6 +1,7 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include "port/GameConfig.h"
 extern void func_8028F3D8(f32[3], f32, void(*)(ActorMarker *), ActorMarker *);
 extern void func_80324CFC(f32, enum comusic_e, s32);
 extern void rand_seed(s32);
@@ -48,12 +49,21 @@ ParticleScaleAndLifetimeRanges D_80394830 = {
 };
 
 /* .code */
+static s32 _puzzleCost(s32 index) {
+    s32 override = port_getRomhackJiggyPuzzleCost(index);
+    return (override >= 0) ? override : D_803947F8[index].cost;
+}
+
 bool func_8038EAE0(s32 arg0) {
-    return fileProgressFlag_getN(D_803947F8[arg0 -1].progress_flag, D_803947F8[arg0 -1].size_bits) == D_803947F8[arg0 -1].cost;
+    s32 cost = _puzzleCost(arg0 - 1);
+    return fileProgressFlag_getN(D_803947F8[arg0 -1].progress_flag, D_803947F8[arg0 -1].size_bits) == cost;
 }
 
 s32 func_8038EB24(Actor *this){
-    return (this->unkF4_8 != 0 && this->unkF4_8 < 0xC) ? D_803947F8[this->unkF4_8 - 1].cost : 0;
+    if (this->unkF4_8 != 0 && this->unkF4_8 < 0xC) {
+        return _puzzleCost(this->unkF4_8 - 1);
+    }
+    return 0;
 }
 
 bool func_8038EB58(Actor *this){
@@ -170,12 +180,16 @@ void func_8038EDBC(Actor *this) {
             local->unk8 = (local->unk8 - 8 > 0) ? local->unk8 - 8 : 0;
         }
         sp34 = (0xFF - local->unk8) / 255.0;
-        sp28[3] = sp34; // [port] explicit — was implicit via MIPS stack alias
+        // [port] On N64, opaque render mode ignores vertex alpha — both meshes remain
+        // visible regardless of alpha. On PC, alpha=0 hides the mesh entirely, causing
+        // the golden podium platform (baked into the model) to disappear.
+        // Keep sp44 (base mesh) always at alpha=1.0. Let sp40 (glow overlay)
+        // crossfade normally.
+        sp28[3] = 1.0f;
         func_8034DF30(sp44, sp28, sp28, 0);
         sp34 = 1.0 - sp34;
-        sp28[3] = sp34; // [port] explicit — was implicit via MIPS stack alias
+        sp28[3] = sp34;
         func_8034DF30(sp40, sp28, sp28, 0);
-        if(sp34);
     }
 }
 

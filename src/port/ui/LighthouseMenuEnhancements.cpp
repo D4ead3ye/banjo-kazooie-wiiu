@@ -18,6 +18,11 @@ void LighthouseMenu::AddMenuEnhancements() {
     AddSidebarEntry("Enhancements", path.sidebarName, 1);
     path.column = SECTION_COLUMN_1;
 
+    AddWidget(path, "Skip Boot Logos", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cutscenes.SkipBootLogos"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Press Start to skip the Rareware and Nintendo logos on boot."));
+
     AddWidget(path, "Allow Start to Skip Intro Cutscenes", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Cutscenes.StartSkipIntro"))
         .RaceDisable(false)
@@ -41,6 +46,11 @@ void LighthouseMenu::AddMenuEnhancements() {
     AddWidget(path, "Restore Return to Lair", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Restorations.ReturnToLair"))
         .RaceDisable(false)
+        .PreFunc([](WidgetInfo& info) {
+            if (mLighthouseMenu->disabledMap.at(DISABLE_FOR_ROMHACK).active) {
+                info.activeDisables.push_back(DISABLE_FOR_ROMHACK);
+            }
+        })
         .Options(CheckboxOptions().Tooltip("Restores the unused Return to Lair option when in Worlds."));
 
     // Enhancements -> Saving
