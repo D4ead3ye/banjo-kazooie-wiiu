@@ -47,6 +47,7 @@ void RandoHelper_SpawnPosition() {
 
 void RandoHelper_ObjectSpawner() {
     player_getPosition_s32(playerPosition);
+    RandoHelper_SpawnPosition();
     
     ImGui::SeparatorText("Spawn Data");
     if (ImGui::BeginTable("SpawnInfoTable", 3)) {
