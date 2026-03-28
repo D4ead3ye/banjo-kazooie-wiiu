@@ -1,4 +1,5 @@
 #include "PortEnhancements.h"
+#include "port/rando/Rando.h"
 
 #define INIT_EVENT_IDS
 
@@ -12,6 +13,11 @@ void PortEnhancements_Register() {
     // Register engine events
     REGISTER_EVENT(GameFrameUpdate);
     REGISTER_EVENT(VanillaBehavior);
+
+    // Register rando events
+    REGISTER_EVENT(OnActorSpawn);
+
+    Rando::Init();
 }
 
 void PortEnhancements_Exit() {
