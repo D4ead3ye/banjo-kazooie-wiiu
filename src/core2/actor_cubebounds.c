@@ -1299,7 +1299,7 @@ Actor * func_803055E0(enum actor_e arg0, s32 position[3], s32 yaw, s32 arg3, s32
 Actor *__actor_spawnWithYaw_s32(enum actor_e arg0, s32 pos[3], s32 rot) {
   s32 i;
   // RANDO TODO: HERES WHERE WE HOOK
-  CALL_CANCELLABLE_EVENT(OnActorSpawn, arg0, pos[0], pos[1], pos[2]) {
+  CALL_CANCELLABLE_EVENT(OnActorSpawn, arg0, pos[0], pos[1], pos[2], rot) {
       arg0 = (!dummy_func_80320248()) ? (ACTOR_4_BIGBUTT) : (arg0);
       for (i = 0; i < sSpawnableActorSize; i++) {
           if (arg0 == sSpawnableActorList[i].infoPtr->actorId) {
