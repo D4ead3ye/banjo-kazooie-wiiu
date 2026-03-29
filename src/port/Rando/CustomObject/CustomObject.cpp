@@ -14,9 +14,17 @@ typedef struct chjiggy_s {
 s32 dummy_func_80320248(void);
 extern s32 sSpawnableActorSize;
 extern ActorSpawn* sSpawnableActorList;
+
+enum map_e map_get(void);
 }
 
-Actor* SpawnRandoActor(int32_t actorId, int32_t posX, int32_t posY, int32_t posZ, int32_t rot) {
+std::vector<actor_e> spawnedActorIdList;
+
+void CheckSpawnList() {
+    int hi = 0;
+}
+
+Actor* SpawnRandoActor(actor_e actorId, int32_t posX, int32_t posY, int32_t posZ, int32_t rot) {
     s32 pos[3];
     pos[0] = posX;
     pos[1] = posY;
@@ -33,10 +41,16 @@ Actor* SpawnRandoActor(int32_t actorId, int32_t posX, int32_t posY, int32_t posZ
     return NULL;
 }
 
-Actor* CustomObject::SpawnRandoObject(int32_t actorId, int32_t posX, int32_t posY, int32_t posZ, int32_t rot) {
+Actor* CustomObject::SpawnRandoObject(actor_e actorId, int32_t posX, int32_t posY, int32_t posZ, int32_t rot) {
     Actor* newActor = SpawnRandoActor(actorId, posX, posY, posZ, rot);
-    ActorLocal_Jiggy* actorLocal = (ActorLocal_Jiggy*)&newActor->local;
-    actorLocal->index = JIGGY_03_MM_MUMBOS_SKULL;
+    // ActorLocal_Jiggy* actorLocal = (ActorLocal_Jiggy*)&newActor->local;
+    // actorLocal->index = JIGGY_03_MM_MUMBOS_SKULL;
+
+    if (map_get() == MAP_2_MM_MUMBOS_MOUNTAIN) {
+        spawnedActorIdList.push_back(actorId);
+    }
+
+    CheckSpawnList();
 
     return newActor;
 }

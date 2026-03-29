@@ -22,9 +22,12 @@ void Rando::ObjectBehavior::Init() {
 
         LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
 
-        if (ev->actorId >= ACTOR_5E_JINJO_YELLOW && ev->actorId <= ACTOR_62_JINJO_GREEN) {
-            event->cancelled = true;
-            ev->spawnedActor = CustomObject::SpawnRandoObject(ACTOR_46_JIGGY, ev->posX, ev->posY, ev->posZ, ev->rot);
-        }
+        event->cancelled = true;
+        ev->spawnedActor = CustomObject::SpawnRandoObject(ev->actorId, ev->posX, ev->posY, ev->posZ, ev->rot);
+
+        // if (ev->actorId >= ACTOR_5E_JINJO_YELLOW && ev->actorId <= ACTOR_62_JINJO_GREEN) {
+        //     event->cancelled = true;
+        //     ev->spawnedActor = CustomObject::SpawnRandoObject(ACTOR_46_JIGGY, ev->posX, ev->posY, ev->posZ, ev->rot);
+        // }
     })
 }
