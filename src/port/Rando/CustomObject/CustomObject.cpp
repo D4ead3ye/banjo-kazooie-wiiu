@@ -33,9 +33,10 @@ Actor* SpawnRandoActor(int32_t actorId, int32_t posX, int32_t posY, int32_t posZ
     return NULL;
 }
 
-
-void CustomObject::SpawnObject(int32_t actorId, int32_t posX, int32_t posY, int32_t posZ, int32_t rot) {
+Actor* CustomObject::SpawnRandoObject(int32_t actorId, int32_t posX, int32_t posY, int32_t posZ, int32_t rot) {
     Actor* newActor = SpawnRandoActor(actorId, posX, posY, posZ, rot);
     ActorLocal_Jiggy* actorLocal = (ActorLocal_Jiggy*)&newActor->local;
     actorLocal->index = JIGGY_03_MM_MUMBOS_SKULL;
+
+    return newActor;
 }

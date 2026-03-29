@@ -1,7 +1,7 @@
 #ifndef RANDO_H
 #define RANDO_H
 
-#include "port/Rando/CustomObject/CustomObject.h"
+// #include "port/Rando/CustomObject/CustomObject.h"
 
 // #include "port/hooks/list/PlayerEvent.h"
 #include "port/enhancements/events/PortEnhancements.h"

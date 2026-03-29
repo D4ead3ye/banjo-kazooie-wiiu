@@ -2,6 +2,7 @@
 #include <libultraship/bridge/consolevariablebridge.h>
 // #include "port/Rando/Logic/Logic.h"
 #include "port/enhancements/events/hooks/Events.h"
+#include "port/Rando/CustomObject/CustomObject.h"
 
 #include "spdlog/spdlog.h"
 
@@ -21,9 +22,9 @@ void Rando::ObjectBehavior::Init() {
 
         LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
 
-        if (ev->actorId >= ACTOR_5E_JINJO_YELLOW && ev->actorId <= ACTOR_61_JINJO_PINK) {
+        if (ev->actorId >= ACTOR_5E_JINJO_YELLOW && ev->actorId <= ACTOR_62_JINJO_GREEN) {
             event->cancelled = true;
-            CustomObject::SpawnObject(ACTOR_46_JIGGY, ev->posX, ev->posY, ev->posZ, ev->rot);
+            ev->spawnedActor = CustomObject::SpawnRandoObject(ACTOR_46_JIGGY, ev->posX, ev->posY, ev->posZ, ev->rot);
         }
     })
 }

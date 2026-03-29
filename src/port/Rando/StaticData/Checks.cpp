@@ -1,6 +1,8 @@
 #include "StaticData.h"
 #include "port/ShipUtils.h"
 
+#include "prop.h"
+
 namespace Rando {
 
 namespace StaticData {

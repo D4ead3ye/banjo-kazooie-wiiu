@@ -6,8 +6,6 @@
 #include <string>
 #include "port/Rando/Types.h"
 
-#include "prop.h"
-
 namespace Rando {
 
 namespace StaticData {
@@ -23,8 +21,8 @@ struct RandoStaticCheck {
     RandoCheckId randoCheckId;
     const char* name;
     RandoCheckType randoCheckType;
-    level_e worldId;
-    actor_e actorId;
+    int32_t worldId;
+    int32_t actorId;
     int32_t posX;
     int32_t posY;
     int32_t posZ;

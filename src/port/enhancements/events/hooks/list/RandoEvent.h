@@ -12,4 +12,5 @@ DEFINE_EVENT(OnActorSpawn,
 	int32_t posY;
 	int32_t posZ;
 	int32_t rot;
+	Actor* spawnedActor;
 )
