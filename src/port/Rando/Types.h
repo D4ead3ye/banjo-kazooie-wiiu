@@ -2,6 +2,10 @@
 #define RANDO_TYPES_H
 
 typedef enum {
+    RP_MUSIC_NOTE = 0x164,
+} RandoPropId;
+
+typedef enum {
     RCTYPE_UNKNOWN,
     RCTYPE_JINJO,
     RCTYPE_MAX,
@@ -22,37 +26,37 @@ typedef enum {
     RE_MAX,
 } RandoEntranceId;
 
-typedef enum {
-    RITYPE_UNKNOWN,
-    RITYPE_MAX,
-} RandoItemType;
+// typedef enum {
+//     RITYPE_UNKNOWN,
+//     RITYPE_MAX,
+// } RandoItemType;
 
-typedef enum {
-    RI_UNKNOWN,
-    RI_MAX,
-} RandoItemId;
+// typedef enum {
+//     RI_UNKNOWN,
+//     RI_MAX,
+// } RandoItemId;
 
-typedef enum {
-    RR_MAX,
-} RandoRegionId;
+// typedef enum {
+//     RR_MAX,
+// } RandoRegionId;
 
-typedef enum {
-    RO_LOGIC,
-    RO_MAX,
-} RandoOptionId;
+// typedef enum {
+//     RO_LOGIC,
+//     RO_MAX,
+// } RandoOptionId;
 
-typedef enum {
-    RO_GENERIC_OFF,
-    RO_GENERIC_ON,
-} RandoOptionGenericOffOn;
+// typedef enum {
+//     RO_GENERIC_OFF,
+//     RO_GENERIC_ON,
+// } RandoOptionGenericOffOn;
 
-typedef enum {
-    RO_LOGIC_GLITCHLESS,
-    RO_LOGIC_NO_LOGIC,
-} RandoOptionLogic;
+// typedef enum {
+//     RO_LOGIC_GLITCHLESS,
+//     RO_LOGIC_NO_LOGIC,
+// } RandoOptionLogic;
 
-typedef enum {
-    RANDO_INF_MAX,
-} RandoInf;
+// typedef enum {
+//     RANDO_INF_MAX,
+// } RandoInf;
 
 #endif // RANDO_TYPES_H

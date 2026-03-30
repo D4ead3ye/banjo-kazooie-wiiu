@@ -118,6 +118,7 @@ extern s32 D_80385F30[];
 
 void gameFile_load(s32 gamenum){
     s32 filenum = gameFile_GameIdToFileIdMap[gamenum];
+    CALL_EVENT(OnGameFileLoad, filenum);
     saveData_load(&gameFile_saveData[filenum]);
     // [port] Override lives backup and item array with persisted value.
     // func_80347AA8 reads D_80386068 to restore lives after map transitions.
@@ -127,6 +128,7 @@ void gameFile_load(s32 gamenum){
 
 void gameFile_save(s32 gamenum){
     s32 filenum = gameFile_GameIdToFileIdMap[gamenum];
+    CALL_EVENT(OnGameFileSave, filenum);
     saveData_create(&gameFile_saveData[filenum]);
 }
 

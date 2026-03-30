@@ -18,7 +18,7 @@ extern ActorSpawn* sSpawnableActorList;
 enum map_e map_get(void);
 }
 
-std::vector<actor_e> spawnedActorIdList;
+std::vector<actor_e*> spawnedActorIdList;
 
 void CheckSpawnList() {
     int hi = 0;
@@ -47,7 +47,9 @@ Actor* CustomObject::SpawnRandoObject(actor_e actorId, int32_t posX, int32_t pos
     // actorLocal->index = JIGGY_03_MM_MUMBOS_SKULL;
 
     if (map_get() == MAP_2_MM_MUMBOS_MOUNTAIN) {
-        spawnedActorIdList.push_back(actorId);
+        spawnedActorIdList.push_back(&actorId);
+    } else {
+        spawnedActorIdList.clear();
     }
 
     CheckSpawnList();

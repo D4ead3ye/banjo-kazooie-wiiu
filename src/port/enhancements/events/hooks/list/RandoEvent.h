@@ -14,3 +14,7 @@ DEFINE_EVENT(OnActorSpawn,
 	int32_t rot;
 	Actor* spawnedActor;
 )
+
+DEFINE_EVENT(OnActorCollision,
+	Prop* propId;
+)

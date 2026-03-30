@@ -14,8 +14,12 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(GameFrameUpdate);
     REGISTER_EVENT(VanillaBehavior);
 
+    // Register game events
+    REGISTER_EVENT(OnGameFileLoad);
+
     // Register rando events
     REGISTER_EVENT(OnActorSpawn);
+    REGISTER_EVENT(OnActorCollision);
 
     Rando::Init();
 }
