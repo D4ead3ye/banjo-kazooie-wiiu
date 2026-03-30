@@ -12,7 +12,7 @@ extern SaveData gameFile_saveData[4];
 }
 
 
-#define IS_RANDO true
+#define IS_RANDO (gameFile_saveData[selectedFileNum].shipSaveData.randoSaveData.isRando)
 // #define IS_RANDO(fileNum) (gSaveBuffer.files[fileNum]->shipSaveData.features.rando)
 // #define RANDO_SAVE_CHECKS(fileNum) gSaveBuffer.files[fileNum]->shipSaveData.randoSaveData.randoSaveChecks
 // #define RANDO_SAVE_ENTRANCES(fileNum) gSaveBuffer.files[fileNum]->shipSaveData.randoSaveData.randoSaveEntrances
