@@ -20,9 +20,11 @@ void Rando::MiscBehavior::OnFileLoad() {
         }
 
         if (!IS_RANDO) {
-            if (CVarGetInteger("gRandoSettings.Enabled", 0)) {
+            if (!CVarGetInteger("gRandoSettings.Enabled", 0)) {
                 gameFile_saveData[selectedFileNum].shipSaveData.randoSaveData.isRando = true;
             }
         }
+
+        
     });
 }

@@ -801,6 +801,18 @@ json SaveManager::SlotToJson(const uint8_t* slotData) {
     }
     file["worlds"] = worlds;
 
+    // ── Ship Save Data ──
+    const int SHIP_DATA_OFFSET = 120;
+    const uint8_t* shipDataPtr = slotData + SHIP_DATA_OFFSET;
+
+    json ship = json::object();
+    json rando = json::object();
+
+    rando["isRando"] = static_cast<bool>(shipDataPtr[0]);
+    ship["randoSaveData"] = rando;
+
+    file["shipSaveData"] = ship;
+
     j["file"] = file;
     return j;
 }
@@ -1006,6 +1018,21 @@ void SaveManager::JsonToSlot(const json& j, uint8_t* slotData) {
         }
         memcpy(slotData + ABILITY_OFFSET, &learned, sizeof(uint32_t));
         memcpy(slotData + ABILITY_OFFSET + 4, &used, sizeof(uint32_t));
+    }
+
+    // ── Ship Save Data ──
+    if (f.contains("shipSaveData")) {
+        const int SHIP_DATA_OFFSET = 120;
+        uint8_t* shipDataPtr = slotData + SHIP_DATA_OFFSET;
+
+        const auto& ship = f["shipSaveData"];
+
+        if (ship.contains("randoSaveData")) {
+            const auto& rando = ship["randoSaveData"];
+            if (rando.contains("isRando")) {
+                shipDataPtr[0] = rando["isRando"].get<bool>() ? 1 : 0;
+            }
+        }
     }
 
     // Recompute checksum
