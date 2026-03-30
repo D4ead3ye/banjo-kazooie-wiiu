@@ -1,7 +1,7 @@
 #include "Rando.h"
 #include <ship/Context.h>
 #include "ObjectBehavior/ObjectBehavior.h"
-// #include "MiscBehavior/MiscBehavior.h"
+#include "MiscBehavior/MiscBehavior.h"
 // #include "port/Rando/CheckTracker/CheckTracker.h"
 // #include "port/Rando/EntranceTracker/EntranceTracker.h"
 // #include "port/Rando/Spoiler/Spoiler.h"
@@ -21,7 +21,7 @@ void Rando::Init() {
     }
 
     // Rando::Spoiler::RefreshSpoilerLogs();
-    // Rando::MiscBehavior::Init();
+    Rando::MiscBehavior::Init();
     Rando::ObjectBehavior::Init();
     // Rando::CheckTracker::Init();
     // Rando::EntranceTracker::Init();
