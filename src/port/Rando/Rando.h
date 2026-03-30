@@ -2,14 +2,15 @@
 #define RANDO_H
 
 // #include "port/Rando/CustomObject/CustomObject.h"
-
-// #include "port/hooks/list/PlayerEvent.h"
-#include "port/enhancements/events/PortEnhancements.h"
 // #include "include/types.h"
 
+#include <libultraship/libultra/gbi.h>
+#include "save.h"
+
 extern "C" {
-extern struct SaveBuffer gSaveBuffer;
+extern SaveData gameFile_saveData[4];
 }
+
 
 #define IS_RANDO true
 // #define IS_RANDO(fileNum) (gSaveBuffer.files[fileNum]->shipSaveData.features.rando)

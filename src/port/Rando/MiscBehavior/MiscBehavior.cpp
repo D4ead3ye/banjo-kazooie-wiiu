@@ -1,6 +1,7 @@
 #include "MiscBehavior.h"
-// #include "port/Rando/Logic/Logic.h"
 #include "port/enhancements/events/hooks/Events.h"
+
+// #include "port/Rando/Logic/Logic.h"
 
 // Entry point for the module, run once on game boot
 void Rando::MiscBehavior::Init() {
