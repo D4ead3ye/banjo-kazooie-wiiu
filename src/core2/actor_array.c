@@ -33,7 +33,7 @@ extern void __spawnQueue_add_5(GenFunction_5, uintptr_t, uintptr_t, uintptr_t, u
 
 void func_8032A6A8(Actor *arg0);
 void func_8032ACA8(Actor *arg0);
-void func_8032B5C0(ActorMarker *arg0, ActorMarker *arg1, struct5Cs *arg2);
+void func_8032B5C0(ActorMarker *arg0, ActorMarker *arg1, CollisionParams *arg2);
 void subaddie_set_state_with_direction(Actor * this, s32 arg1, f32 arg2, s32 arg3);
 void func_8032BB88(Actor *this, s32 arg1, s32 arg2);
 bool subaddie_playerIsWithinSphere(Actor *this, s32 dist);
@@ -809,7 +809,7 @@ Actor *actor_new(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags){
     suLastBaddie->position_x = (f32)pos_x;
     suLastBaddie->position_y = (f32)pos_y;
     suLastBaddie->position_z = (f32)pos_z;
-    suLastBaddie->unkF4_8 = 0;
+    suLastBaddie->actorTypeSpecificField = 0;
     suLastBaddie->yaw = (f32) yaw;
     suLastBaddie->yaw_ideal = (f32) yaw;
     suLastBaddie->pitch = 0.0f;
@@ -864,10 +864,10 @@ Actor *actor_new(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags){
     suLastBaddie->lifetime_value = 0.0f;
     suLastBaddie->is_bundle = false;
     suLastBaddie->unk104 = NULL;
-    suLastBaddie->unk100 = NULL;
+    suLastBaddie->partnerActor = NULL;
     suLastBaddie->unk158[0] = NULL;
     suLastBaddie->unk158[1] = NULL;
-    suLastBaddie->unk78_13 = 0;
+    suLastBaddie->secondaryId = 0;
     suLastBaddie->unk124_31 = 0;
     suLastBaddie->unkF4_20 = 0;
     suLastBaddie->sound_timer = 0.0f;
@@ -1422,7 +1422,7 @@ f32 func_80328DCC(Actor *this, f32 angle, f32 angle_ideal, s32 arg3) {
     return var_f2;
 }
 
-void func_80328FB0(Actor *this, f32 arg1){
+void subaddie_turnToYaw(Actor *this, f32 arg1){
     this->yaw = func_80328DCC(this, this->yaw, this->yaw_ideal, (s32)arg1);
 }
 
@@ -1610,7 +1610,7 @@ s32 func_8032970C(Actor *this){
     return (s32) DIST_SQ_VEC3F(this->position, sp24);
 }
 
-s32 func_80329784(Actor *this){
+s32 subaddie_getYawToPlayer(Actor *this){
     f32 sp1C[3];
 
     func_8028E964(sp1C);
@@ -1674,9 +1674,9 @@ Actor *marker_getActor(ActorMarker *this){
 }
 
 Actor *subaddie_getLinkedActor(Actor *this){
-    if(this->unk100 == NULL)
+    if(this->partnerActor == NULL)
         return NULL;
-    return marker_getActor(this->unk100);
+    return marker_getActor(this->partnerActor);
 }
 
 void func_803299B4(Actor *arg0) {
@@ -1772,7 +1772,7 @@ void *actors_appendToSavestate(void * begin, uintptr_t end){
                 s0->volatile_initialized = false;
                 s0->unk44_31 = 0;
                 s0->unk104 = NULL;
-                s0->unk100 = NULL;
+                s0->partnerActor = NULL;
                 s0->unk158[0] = NULL;
                 s0->unk158[1] = NULL;
                 s0->unk138_19 = s1->marker->id;
@@ -1815,7 +1815,7 @@ void func_8032A09C(s32 arg0, ActorListSaveState *arg1) {
     Actor *temp_v0_6;
     s32 var_s2;
     Actor **sp60;
-    Actor **sp5C;
+    Actor **sp5C = NULL;
     s32 sp50[3];
     s32 var_s3;
     
@@ -1825,14 +1825,14 @@ void func_8032A09C(s32 arg0, ActorListSaveState *arg1) {
         var_s3 = 0;
         var_s0 = arg1->actor_save_state;
         for(var_s2 = arg1->cnt; var_s2 != 0; var_s2--) {
-            if ((var_s0->unk78_13 != 0) && (var_s3 < var_s0->unk78_13)) {
-                var_s3 = var_s0->unk78_13;
+            if ((var_s0->secondaryId != 0) && (var_s3 < var_s0->secondaryId)) {
+                var_s3 = var_s0->secondaryId;
             }
             var_s0++;
         }
         for(var_s0 = &suBaddieActorArray->data[0]; var_s0 < &suBaddieActorArray->data[suBaddieActorArray->cnt]; var_s0++){
-            if ((var_s0->unk78_13 != 0) && (var_s3 < var_s0->unk78_13)) {
-                var_s3 = var_s0->unk78_13;
+            if ((var_s0->secondaryId != 0) && (var_s3 < var_s0->secondaryId)) {
+                var_s3 = var_s0->secondaryId;
             }
         }
 
@@ -1849,14 +1849,14 @@ void func_8032A09C(s32 arg0, ActorListSaveState *arg1) {
        
         var_s0 = arg1->actor_save_state;
         for(var_s2 = arg1->cnt; var_s2 != 0; var_s2--) {
-            if (var_s0->unk78_13 != 0) {
-                sp5C[var_s0->unk78_13] = var_s0;
+            if (var_s0->secondaryId != 0) {
+                sp5C[var_s0->secondaryId] = var_s0;
             }
             var_s0++;
         }
         for(var_s0 = &suBaddieActorArray->data[0]; var_s0 < &suBaddieActorArray->data[suBaddieActorArray->cnt]; var_s0++){
-            if ((var_s0->unk78_13 != 0)) {
-                sp60[var_s0->unk78_13] = var_s0;
+            if ((var_s0->secondaryId != 0)) {
+                sp60[var_s0->secondaryId] = var_s0;
             }
         }
 
@@ -1882,7 +1882,7 @@ void func_8032A09C(s32 arg0, ActorListSaveState *arg1) {
 
         var_s0 = arg1->actor_save_state;
         for(var_s2 = arg1->cnt; var_s2 != 0; var_s2--){
-            if (var_s0->unk78_13 == 0) {
+            if (var_s0->secondaryId == 0) {
                 sp50[0] = (s32) var_s0->position[0];
                 sp50[1] = (s32) var_s0->position[1];
                 sp50[2] = (s32) var_s0->position[2];
@@ -1928,8 +1928,8 @@ void func_8032A6A8(Actor *arg0) {
             if ((arg0->unk44_14 == var_v0->unk44_14) && (arg0 != var_v0)) {
                 var_f2 = var_v0->unk48;
                 if ((var_f2 <= var_f0) && (arg0->unk48 <= var_f2)) {
-                    if (var_v0->unk78_13 != 0) {
-                        arg0->unk124_31 = var_v0->unk78_13;
+                    if (var_v0->secondaryId != 0) {
+                        arg0->unk124_31 = var_v0->secondaryId;
                         var_f0 = var_f2;
                     }
                 }
@@ -1945,7 +1945,7 @@ Actor *func_8032A7AC(Actor *arg0) {
     if (arg0->unk124_31 != 0) {
         if (suBaddieActorArray != NULL) {
             for(var_a0 = &suBaddieActorArray->data[0]; var_a0 < &suBaddieActorArray->data[suBaddieActorArray->cnt]; var_a0++){
-                if (arg0->unk124_31 == var_a0->unk78_13) {
+                if (arg0->unk124_31 == var_a0->secondaryId) {
                     return var_a0;
                 }
             }
@@ -1972,7 +1972,7 @@ void func_8032A88C(Actor *arg0) {
 
     sp20 = (Actorlocal_Core2_9E370 *)arg0->local;
     arg0->yaw_ideal = (f32) func_803297C8(arg0, sp20->unk0);
-    func_80328FB0(arg0, 6.0f);
+    subaddie_turnToYaw(arg0, 6.0f);
     func_80329030(arg0, 0);
     if ((((arg0->position[0] - sp20->unk0[0]) * (arg0->position[0] - sp20->unk0[0])) + ((arg0->position[2] - sp20->unk0[2]) * (arg0->position[2] - sp20->unk0[2]))) <= 144.0f) {
         arg0->unk44_14 = sp20->unkE;
@@ -1999,7 +1999,7 @@ bool func_8032A9E4(s32 arg0, s32 arg1, s32 arg2) {
 }
 
 //actor_setScale
-void func_8032AA58(Actor *this, f32 scale){
+void suSetSpriteScale(Actor *this, f32 scale){
     this->scale = scale;
     this->marker->unk14_10 = 0;
 }
@@ -2259,7 +2259,7 @@ void func_8032B4DC(Actor *this, ActorMarker *arg1, s32 arg2) {
     }
 }
 
-void func_8032B5C0(ActorMarker *arg0, ActorMarker *arg1, struct5Cs *arg2) {
+void func_8032B5C0(ActorMarker *arg0, ActorMarker *arg1, CollisionParams *arg2) {
     Actor *this;
     s32 sp70;
     s32 sp6C;
@@ -2278,7 +2278,7 @@ void func_8032B5C0(ActorMarker *arg0, ActorMarker *arg1, struct5Cs *arg2) {
     sp70 = func_8033D5B4(arg2);
     sp6C = func_8033D584(arg2);
     sp68 = func_8033D5A4(arg2);
-    sp64 = func_8033D574(arg2);
+    sp64 = collision_getNextState(arg2);
     if (((func_80297C6C() != 3) && func_8028F1E0()) || (func_8033D594(arg2) == 0)) {
         if (sp64 == 0) {
             if ((sp68 != 0) || (arg1->id == 0)) {
@@ -2347,7 +2347,7 @@ void func_8032B5C0(ActorMarker *arg0, ActorMarker *arg1, struct5Cs *arg2) {
                 marker_callCollisionFunc(arg0, arg1, sp64);
             }
             if ((sp64 != 0) && (sp6C != 0)) {
-                FUNC_8030E8B4(SFX_1D_HITTING_AN_ENEMY_1, 1.0f, 25984, this->position, (s32)((500.0f + func_8033229C(arg0)) * 0.5), (s32)((500.0f + func_8033229C(arg0)) * 5));
+                sfx_playFadeShorthandDefault(SFX_1D_HITTING_AN_ENEMY_1, 1.0f, 25984, this->position, (s32)((500.0f + func_8033229C(arg0)) * 0.5), (s32)((500.0f + func_8033229C(arg0)) * 5));
             }
         }
     }

@@ -1,3 +1,4 @@
+// BanjoDecomp: lockup.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
@@ -59,21 +60,21 @@ static Actor *__chLockup_drawFunc(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx
     Actor * actor = marker_getActor(marker);
     func_8033A45C(3, actor->unk38_31);
     func_8033A45C(4, actor->unk38_31);
-    actor_draw(marker, gfx, mtx, vtx);
+    return actor_draw(marker, gfx, mtx, vtx);
 }
 
 static void __chLockup_close(Actor *this){
     subaddie_set_state_with_direction(this, CH_LOCKUP_STATE_CLOSED, 0.2f, 1);
     this->marker->collidable = false;
     this->unk38_31 = 0;
-    FUNC_8030E8B4(SFX_6C_LOCKUP_CLOSING, 1.0f, 32000, this->position, 1250, 2500);
+    sfx_playFadeShorthandDefault(SFX_6C_LOCKUP_CLOSING, 1.0f, 32000, this->position, 1250, 2500);
 }
 
 static void __chLockup_open(Actor *this){
     code3040_func_80389468();
     subaddie_set_state_with_direction(this, CH_LOCKUP_STATE_OPENING, 0.2f, 1);
     this->unk38_31 = 1;
-    FUNC_8030E8B4(SFX_6B_LOCKUP_OPENING, 1.0f, 32000, this->position, 1250, 2500);
+    sfx_playFadeShorthandDefault(SFX_6B_LOCKUP_OPENING, 1.0f, 32000, this->position, 1250, 2500);
 }
 
 static void __chLockup_updateFunc(Actor *this){
@@ -82,12 +83,12 @@ static void __chLockup_updateFunc(Actor *this){
     int i;
 
     if( !this->has_met_before
-        && this->unkF4_8 == 0xA
+        && this->actorTypeSpecificField == 0xA
         && !jiggyscore_isCollected(JIGGY_13_TTC_LOCKUP)
         && func_80329530(this, 320)
         && !func_80329530(this, 160)
         && !player_movementGroup()
-        && gcdialog_showText(ASSET_A15_DIALOG_TTC_LOCKUP_SPAWNED, 0, NULL, NULL, NULL, NULL)
+        && gcdialog_showText(ASSET_A15_DIALOG_LOCKUP_SPAWNED, 0, NULL, NULL, NULL, NULL)
     ){
         this->has_met_before = true;
     }

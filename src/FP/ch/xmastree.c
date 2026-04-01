@@ -1,3 +1,4 @@
+// BanjoDecomp: xmastree.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
@@ -40,10 +41,10 @@ void __chXmasTree_80386EF4(Actor *this, int arg1){
 }
 
 void __chXmasTree_80386F3C(void){
-    levelSpecificFlags_set(LEVEL_FLAG_29_FP_UNKNOWN, true);
-    func_803228D8();
+    levelSpecificFlags_set(LEVEL_FLAG_29_FP_XMAS_TREE_COMPLETE, true);
+    musicKeepsPlaying();
     volatileFlag_set(VOLATILE_FLAG_E, 1);
-    func_802E4078(MAP_53_FP_CHRISTMAS_TREE, 1, 0);
+    transitionToMap(MAP_53_FP_CHRISTMAS_TREE, 1, 0);
 }
 
 void __chXmasTree_80386F84(Actor * this){
@@ -67,7 +68,7 @@ void __chXmasTree_spawnStar(void *marker){
 
 void __chXmasTree_80387038(Actor *this){
     if(func_8030E3FC(this->unk44_31))
-        func_8030E394(this->unk44_31);
+        sfxSource_func_8030E2C4(this->unk44_31);
     sfxsource_playSfxAtVolume(this->unk44_31, randf2(0.9f, 1.1f));
     func_8030E2C4(this->unk44_31);
 }
@@ -94,8 +95,8 @@ void chXmasTree_update(Actor *this){
         marker_setFreeMethod(this->marker, __chXmasTree_free);
         if(this->unk44_31 == 0){
             this->unk44_31 = sfxsource_createSfxsourceAndReturnIndex();
-            sfxsource_setSfxId(this->unk44_31, SFX_415_UNKNOWN);
-            func_8030DD14(this->unk44_31, 3);
+            sfxsource_setSfxId(this->unk44_31, SFX_415_XMAS_LIGHTS_FLICKERING);
+            sfxSource_setunk43_7ByIndex(this->unk44_31, 3);
             sfxsource_setSampleRate(this->unk44_31, 28000);
         }
         __spawnQueue_add_0(__chXmasTree_spawnSwitch);
@@ -108,7 +109,7 @@ void chXmasTree_update(Actor *this){
 
     this->depth_mode = 1;
 
-    if (jiggyscore_isCollected(JIGGY_2F_FP_XMAS_TREE) || levelSpecificFlags_get(LEVEL_FLAG_29_FP_UNKNOWN)) {
+    if (jiggyscore_isCollected(JIGGY_2F_FP_XMAS_TREE) || levelSpecificFlags_get(LEVEL_FLAG_29_FP_XMAS_TREE_COMPLETE)) {
         __chXmasTree_80386EF4(this, 1);
         return;
     }
@@ -126,7 +127,7 @@ void chXmasTree_update(Actor *this){
 
             subaddie_set_state(this, 3);
             this->lifetime_value = 2.0f;
-            func_8025A6EC(COMUSIC_61_XMAS_TREE_LIGHTS_UP, 28000);
+            coMusicPlayer_playMusic(COMUSIC_61_XMAS_TREE_LIGHTS_UP, 28000);
             func_802BAFE4(0x1A);
             gcdialog_showText(0xC14, 0, NULL, NULL, NULL, NULL);
             break;
@@ -178,7 +179,7 @@ void chXmasTree_update(Actor *this){
                     this->lifetime_value = 0.1f;
                     if(!maSlalom_isActive()){
                         if(!mapSpecificFlags_get(9) || mapSpecificFlags_get(1)){
-                            func_8025A6EC(COMUSIC_3C_MINIGAME_LOSS, 28000);
+                            coMusicPlayer_playMusic(COMUSIC_3C_MINIGAME_LOSS, 28000);
                             func_802BAFE4(0x1a);
                             this->lifetime_value = 2.0f;
                         }

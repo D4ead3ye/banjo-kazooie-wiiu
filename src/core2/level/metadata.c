@@ -39,6 +39,7 @@ int func_80298760(s32 arg0){
             break;
         }
     }
+    return 0;
 }
 
 s32 func_802987B4(void){
@@ -53,6 +54,6 @@ f32 func_802987D4(void){
     return D_8037C5E0.unk0->unk4[2];
 }
 
-f32 func_802987E4(void){
+f32 barebound_get_vertical_velocity(void){
     return D_8037C5E0.unk0->unk4[1];
 }

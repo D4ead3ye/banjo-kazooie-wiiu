@@ -1,3 +1,4 @@
+// BanjoDecomp: code_43B0.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
@@ -55,11 +56,11 @@ void func_8038A8CC(ActorMarker *this_marker){
     Actor *shadow = spawn_child_actor(ACTOR_122_MAGIC_CARPET_SHADOW, &this);
     s32 pad;
 
-    this->unk100 = shadow->marker;
+    this->partnerActor = shadow->marker;
     shadow->position_y = mapModel_getFloorY(this->position);
     shadow->unk1C[0] = func_8038A860(shadow, this);
     shadow->yaw = this->yaw;
-    func_8032AA58(shadow, this->scale);
+    suSetSpriteScale(shadow, this->scale);
 }
 
 void func_8038A948(Actor *this){
@@ -90,7 +91,7 @@ void GV_func_8038A9C0(Actor *this){
         this->yaw = 90.0f;
     }
 
-    if(this->unk100)
+    if(this->partnerActor)
         sp24 = subaddie_getLinkedActor(this);
 
     if(this->velocity_y != 0.0f){
@@ -100,7 +101,7 @@ void GV_func_8038A9C0(Actor *this){
         }
         this->unk1C[2] = this->unk1C[1];
         this->unk1C[1] = this->unk48;
-        if(this->unk100 != NULL && sp24 != NULL && this->unk100->id == MARKER_AF_MAGIC_CARPET_SHADOW){
+        if(this->partnerActor != NULL && sp24 != NULL && this->partnerActor->id == MARKER_AF_MAGIC_CARPET_SHADOW){
             sp24->unk1C[0] = func_8038A860(sp24, this);
         }
     }

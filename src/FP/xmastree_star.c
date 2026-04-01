@@ -1,3 +1,4 @@
+// BanjoDecomp: ch/xmastreestar.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
@@ -42,7 +43,7 @@ void func_8038EC5C(Actor *this){
         this->unk38_31++;
         this->lifetime_value = 0.33f;
         if(this->unk38_31 < 4){
-            func_8025A6EC(COMUSIC_2B_DING_B, 28000);
+            coMusicPlayer_playMusic(COMUSIC_2B_DING_B, 28000);
         }
 
     }
@@ -51,7 +52,7 @@ void func_8038EC5C(Actor *this){
 void func_8038ECD8(Actor *this){
     ActorLocal_FP_87E0 *local = (ActorLocal_FP_87E0 *)&this->local;
     f32 sp68[3];
-    s32 sp64;
+    s32 sp64 = 0;
     f32 sp58[3];
     f32 sp4C[3];
     f32 sp40[3];

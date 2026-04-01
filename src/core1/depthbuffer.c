@@ -1,3 +1,4 @@
+// BanjoDecomp: depthbuffer.c
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
@@ -49,7 +50,7 @@ void func_80253428(int arg0) {
           var_v0 = (sDepthBuffer.data = var_v0 + 1);
         }
         
-        do { } while ((&D_8000E800 && 1) * 0); //remove this
+        (void)&D_8000E800; // decomp match
     }else{
         sDepthBuffer.data = NULL;
     }

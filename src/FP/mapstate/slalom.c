@@ -1,3 +1,4 @@
+// BanjoDecomp: ma/slalom.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
@@ -107,8 +108,8 @@ void __maSlalom_spawnGate(s32 indx, s32 arg1){
     a1->unk38_31 = 1;
     a2->unk38_31 = 1;
 
-    a1->unkF4_8 = indx + 1;
-    a2->unkF4_8 = indx + 1;
+    a1->actorTypeSpecificField = indx + 1;
+    a2->actorTypeSpecificField = indx + 1;
 
     meActiveFlags[indx].marker = a1->marker;
     meDummyFlags[indx].marker = a2->marker;
@@ -279,21 +280,21 @@ void maSlalom_win(void){
         player_stateTimer_set(STATE_TIMER_3_TURBO_TALON, 2.0f);
     }
     func_8028F918(1);
-    func_8025A6EC(COMUSIC_3B_MINIGAME_VICTORY, 28000);
+    coMusicPlayer_playMusic(COMUSIC_3B_MINIGAME_VICTORY, 28000);
     FP_func_8038AB60(0);
     func_8038ABDC();
     timed_setStaticCameraToNode(0.0f, 1);
 }
 
 void maSlalom_lose(void){
-    Actor *pntBoggy;
+    Actor *pntBoggy = NULL;
     
     func_8028F918(2);
     if(Me.boggyLink)
         pntBoggy = marker_getActor(Me.boggyLink);
     
     pntBoggy->unk38_31 = 1;
-    func_8025A6EC(COMUSIC_3C_MINIGAME_LOSS, 28000);
+    coMusicPlayer_playMusic(COMUSIC_3C_MINIGAME_LOSS, 28000);
     FP_func_8038AB60(0);
     func_8038ABDC();
     if(!jiggyscore_isCollected(JIGGY_30_FP_BOGGY_2)){
@@ -310,7 +311,7 @@ void maSlalom_lose(void){
 }
 
 void maSlalom_update(void){
-    Actor *pntBoggy;
+    Actor *pntBoggy = NULL;
     int i;
     f32 f2;
     f32 f0;
@@ -407,7 +408,7 @@ void maSlalom_linkActiveFlag(ActorMarker *marker){
     Actor *actor = marker_getActor(marker);
     s32 num;
     
-    num = actor->unkF4_8 - 1;
+    num = actor->actorTypeSpecificField - 1;
     if(num < NUM_GATES){
         meActiveFlags[num].marker = actor->marker;
         meActiveFlags[num].position[0] = actor->position[0];
@@ -421,7 +422,7 @@ void maSlalom_linkDummyFlag(ActorMarker *marker){
     Actor *actor = marker_getActor(marker);
     s32 num;
     
-    num = actor->unkF4_8 - 1;
+    num = actor->actorTypeSpecificField - 1;
     if(num < NUM_GATES){
         meDummyFlags[num].marker = actor->marker;
         meDummyFlags[num].position[0] = actor->position[0];

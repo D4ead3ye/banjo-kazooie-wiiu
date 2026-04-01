@@ -1,3 +1,4 @@
+// BanjoDecomp: ch/attacktutorial.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
@@ -33,8 +34,8 @@ static void __chAttackTutorial_spawnEnemyActorForMarker(ActorMarker* marker, enu
     s32 pad;
     Actor *other = spawn_child_actor(enemy_id, &actor);
 
-    actor->unk100 = other->marker;
-    other->unk100 = actor->marker;
+    actor->partnerActor = other->marker;
+    other->partnerActor = actor->marker;
     if (actor->unk10_12 == 3 && actor->unk38_31 == 1) {
         other->unk38_31 = 1;
     } else {
@@ -59,7 +60,8 @@ static s32 __chAttackTutorial_spawnEnemyActor(Actor *this, s32 already_killed_en
     }
     
     __spawnQueue_add_2((void (*)(void))__chAttackTutorial_spawnEnemyActorForMarker, (uintptr_t)this->marker, sp1C);
-    
+
+    return 0;
 }
 
 static void __chAttackTutorial_advanceMarkToState2(ActorMarker *marker, enum asset_e text_id, s32 arg2) {
@@ -207,7 +209,7 @@ static void __chAttackTutorial_handleDialog(ActorMarker *marker, enum asset_e te
 }
 
 static void __chAttackTutorial_showDialogText(ActorMarker* marker) {
-    s32 dialog_text;
+    s32 dialog_text = 0;
     bool has_killed_enemy;
     s32 dialog_flag = 0x4;
     

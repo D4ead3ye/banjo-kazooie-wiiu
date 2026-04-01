@@ -1,11 +1,13 @@
 #include "GameStatus.h"
 #include "ShipUtils.h"
 #include <cstdio>
+#include <cstring>
 #ifdef _WIN32
 #include <windows.h>
 #endif
 
 extern "C" {
+#include "enums.h"
 enum level_e map_getLevel(enum map_e map);
 s32 itemscore_noteScores_get(enum level_e lvl_id);
 s32 jiggyscore_leveltotal(s32 lvl);
@@ -76,10 +78,13 @@ extern "C" u16 port_getLevelTime(int map_id) {
 // Trim leading/trailing whitespace from a string into a static buffer.
 static const char* trimName(const char* name) {
     static char buf[128];
-    while (*name == ' ') name++;
+    while (*name == ' ')
+        name++;
     int len = (int)strlen(name);
-    while (len > 0 && name[len - 1] == ' ') len--;
-    if (len >= (int)sizeof(buf)) len = (int)sizeof(buf) - 1;
+    while (len > 0 && name[len - 1] == ' ')
+        len--;
+    if (len >= (int)sizeof(buf))
+        len = (int)sizeof(buf) - 1;
     memcpy(buf, name, len);
     buf[len] = '\0';
     return buf;

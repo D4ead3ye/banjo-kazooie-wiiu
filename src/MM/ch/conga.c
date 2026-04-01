@@ -1,3 +1,4 @@
+// BanjoDecomp: conga.c
 #include "functions.h"
 #include "rand.h"
 #include "variables.h"
@@ -12,7 +13,7 @@
 #define MAX(s,t) ((s)<(t)?(t):(s))
 #endif
 
-void func_80328FB0(Actor *, f32);
+void subaddie_turnToYaw(Actor *, f32);
 
 void subaddie_set_state_with_direction(Actor*, s32, f32, s32);
 void bundle_setYaw(f32);
@@ -80,8 +81,8 @@ bool __chConga_isPlayerNearCongaTree(Actor * this){
 }
 
 void func_80386FB0(Actor *this){
-    subaddie_set_ideal_yaw(this, func_80329784(this));
-    func_80328FB0(this, 3.0f);
+    subaddie_set_ideal_yaw(this, subaddie_getYawToPlayer(this));
+    subaddie_turnToYaw(this, 3.0f);
 }
 
 void __chConga_playRandomNoise(void){
@@ -99,7 +100,7 @@ void func_8038708C(Actor *this, s32 anim_id){
 }
 
 void func_803870D0(Actor *this, ActorMarker *arg1){
-    marker_getActor(arg1)->unk100 = this->marker;
+    marker_getActor(arg1)->partnerActor = this->marker;
 }
 
 void func_80387100(ActorMarker *this){

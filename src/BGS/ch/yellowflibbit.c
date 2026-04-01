@@ -1,3 +1,4 @@
+// BanjoDecomp: yellowflibbit.c
 #include "functions.h"
 #include "variables.h"
 #include <ultra64.h>
@@ -47,7 +48,7 @@ void func_8038D1E0(Actor *this) {
     particleEmitter_setParticleVelocityRange(temp_s0, -70.0f, 50.0f, -70.0f, 70.0f, 100.0f, 70.0f);
     particleEmitter_setParticleLifeTimeRange(temp_s0, 3.0f, 4.0f);
     particleEmitter_emitN(temp_s0, 4);
-    FUNC_8030E8B4(SFX_30_MAGIC_POOF, 1.0f, 25000, this->position, 500, 2500);
+    sfx_playFadeShorthandDefault(SFX_30_MAGIC_POOF, 1.0f, 25000, this->position, 500, 2500);
 }
 
 s32 func_8038D2F4(Actor *this, f32 *arg1, bool arg2) {
@@ -65,7 +66,7 @@ s32 func_8038D2F4(Actor *this, f32 *arg1, bool arg2) {
     local->unkA[1] = (s16) (s32) mapModel_getFloorY(arg1);
     skeletalAnim_set(this->unk148, ASSET_DB_ANIM_FLIBBIT_HOP, 0.2f, (arg2) ? randf2(0.7f, 0.8f) : randf2(0.7f, 0.8f));
     skeletalAnim_setBehavior(this->unk148, SKELETAL_ANIM_2_ONCE);
-    func_80324D54(0.2f, SFX_3F2_UNKNOWN, randf2(0.7f, 1.3f), randi2(25000, 27000), this->position, 500.0f, 2500.0f);
+    func_80324D54(0.2f, SFX_3F2_BOING, randf2(0.7f, 1.3f), randi2(25000, 27000), this->position, 500.0f, 2500.0f);
     return true;
 }
 
@@ -241,7 +242,7 @@ void func_8038D9D0(Actor *this, s32 next_state) {
         local->unk1C = 1.0f;
     }
     if (next_state == 8) {
-        FUNC_8030E8B4(SFX_8E_GRUNTLING_DAMAGE, 1.5f, 32200, this->position, 500, 2500);
+        sfx_playFadeShorthandDefault(SFX_8E_GRUNTLING_DAMAGE, 1.5f, 32200, this->position, 500, 2500);
         skeletalAnim_set(this->unk148, ASSET_288_ANIM_FLIBBIT_OW, 0.1f, 0.65f);
         skeletalAnim_setBehavior(this->unk148, SKELETAL_ANIM_2_ONCE);
         this->position[1] = mapModel_getFloorY(this->position);
@@ -249,7 +250,7 @@ void func_8038D9D0(Actor *this, s32 next_state) {
     }
     if (next_state == 9) {
         skeletalAnim_set(this->unk148, ASSET_112_ANIM_FLIBBIT_DIE, 0.2f, 0.4f);
-        FUNC_8030E8B4(SFX_115_BUZZBOMB_DEATH, 1.0f, 32200, this->position, 500, 2500);
+        sfx_playFadeShorthandDefault(SFX_115_BUZZBOMB_DEATH, 1.0f, 32200, this->position, 500, 2500);
         this->marker->collidable = false;
         this->unk10_1 = false;
         func_8038CEA0();
@@ -258,7 +259,7 @@ void func_8038D9D0(Actor *this, s32 next_state) {
     if (next_state == 0xA) {
         skeletalAnim_set(this->unk148, ASSET_113_ANIM_FLIBBIT_DEAD, 0.2f, 1.0f);
         skeletalAnim_setBehavior(this->unk148, SKELETAL_ANIM_2_ONCE);
-        FUNC_8030E8B4(SFX_2F_ORANGE_SPLAT, 0.8f, 32200, this->position, 500, 2500);
+        sfx_playFadeShorthandDefault(SFX_2F_ORANGE_SPLAT, 0.8f, 32200, this->position, 500, 2500);
     }
     if (next_state == 0xB) {
         func_80326310(this);

@@ -1,3 +1,4 @@
+// BanjoDecomp: viewport.c
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
@@ -38,7 +39,7 @@ void viewport_moveAlongZAxis(f32 offset) {
 }
 
 f32 viewport_getDistance(f32 arg0[3]) {
-    return ml_vec3f_distance(arg0, sViewportPosition); // [port] implicit MIPS $f0 return
+    return ml_vec3f_distance(arg0, sViewportPosition);
 }
 
 void viewport_getLookbk_vector(f32 arg0[3]) {
@@ -221,8 +222,17 @@ void viewport_unused_pushVpScaleAndTranslation(f32 scale_x, f32 scale_y, f32 tra
 }
 
 void viewport_update(void) {
-    func_80256E24(sViewportFrustumPlanes[0], sViewportRotation[0], sViewportRotation[1], -89.21774f, 0.0f, 45.168514251708984f);
-    func_80256E24(sViewportFrustumPlanes[1], sViewportRotation[0], sViewportRotation[1], 89.21774f, 0.0f, 45.168514251708984f);
+    // [port] Widen the left/right frustum planes for widescreen so objects
+    // at the horizontal edges aren't culled prematurely.
+    f32 frustumX = 89.21774f;
+    f32 frustumZ = 45.168514251708984f;
+    if (port_getViewportWidth() > 320) {
+        static const f32 vanillaAspect = 1.35185182f;
+        f32 aspectScale = sViewportAspect / vanillaAspect;
+        frustumX *= aspectScale * 1.1f;
+    }
+    func_80256E24(sViewportFrustumPlanes[0], sViewportRotation[0], sViewportRotation[1], -frustumX, 0.0f, frustumZ);
+    func_80256E24(sViewportFrustumPlanes[1], sViewportRotation[0], sViewportRotation[1], frustumX, 0.0f, frustumZ);
     func_80256E24(sViewportFrustumPlanes[2], sViewportRotation[0], sViewportRotation[1], 0.0f, 93.9692611694336f, 34.20201110839844f);
     func_80256E24(sViewportFrustumPlanes[3], sViewportRotation[0], sViewportRotation[1], 0.0f, -93.9692611694336f, 34.20201110839844f);
 
@@ -343,10 +353,18 @@ bool viewport_cube_isInFrustum2(Cube *cube) {
     rel_pos[1] = (f32) ((cube->y * 1000) + 500) - sViewportPosition[1];
     rel_pos[2] = (f32) ((cube->z * 1000) + 500) - sViewportPosition[2];
 
-    if (!CVarGetInteger(CVAR_ENHANCEMENT("Graphics.DrawDistance"), 0)
-        || getGameMode() == GAME_MODE_7_ATTRACT_DEMO) {
-        if (LENGTH_SQ_VEC3F(rel_pos) > 1.6e7f) {
-            return false;
+    {
+        // [port] Extended draw distance: scale distance threshold by CVar level.
+        // 0 = vanilla (1.6e7), 1-3 = graduated, 4 = no distance cull.
+        int drawDistLevel = CVarGetInteger(CVAR_ENHANCEMENT("Graphics.DrawDistance"), 0);
+        if (getGameMode() == GAME_MODE_7_ATTRACT_DEMO) {
+            drawDistLevel = 0;
+        }
+        static const f32 distSqThresholds[] = { 1.6e7f, 2.5e7f, 4.0e7f, 8.0e7f };
+        if (drawDistLevel < 4) {
+            if (LENGTH_SQ_VEC3F(rel_pos) > distSqThresholds[drawDistLevel]) {
+                return false;
+            }
         }
     }
 
@@ -363,12 +381,22 @@ bool viewport_cube_isInFrustum2(Cube *cube) {
 
 // viewport_distanceFromPlane ?
 bool viewport_func_8024DB50(f32 pos[3], f32 distance) {
-    if (CVarGetInteger(CVAR_ENHANCEMENT("Graphics.DrawDistance"), 0)
-        && getGameMode() != GAME_MODE_7_ATTRACT_DEMO) {
-        return true; // Extended draw distance: bypass frustum distance check
-    }
     f32 delta[3];
     s32 i;
+
+    // [port] Extended draw distance: scale bounding radius by CVar level.
+    // 0 = vanilla, 1-3 = graduated, 4 = bypass all plane checks.
+    {
+        int drawDistLevel = CVarGetInteger(CVAR_ENHANCEMENT("Graphics.DrawDistance"), 0);
+        if (getGameMode() == GAME_MODE_7_ATTRACT_DEMO) {
+            drawDistLevel = 0;
+        }
+        // 4 = no distance limit, keep frustum plane checks active
+        if (drawDistLevel > 0 && drawDistLevel < 4) {
+            static const f32 distanceScale[] = { 1.0f, 1.5f, 2.0f, 3.0f };
+            distance *= distanceScale[drawDistLevel];
+        }
+    }
 
     delta[0] = pos[0] - sViewportPosition[0];
     delta[1] = pos[1] - sViewportPosition[1];

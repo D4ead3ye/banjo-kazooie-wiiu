@@ -83,7 +83,7 @@ Struct62s D_803731E0[0x20] = {
 /* .code */
 void func_80361A30(f32 arg0[3], s32 arg1){
     if(viewport_isPointOutsideFrustum_vec3f(arg0)){
-        func_8030E6A4(arg1 >> 16, ((arg1 >> 8) & 0xff)*0.0078125, (arg1 & 0xff)*128.0);
+        gcsfx_playWithPitch(arg1 >> 16, ((arg1 >> 8) & 0xff)*0.0078125, (arg1 & 0xff)*128.0);
     }
 }
 
@@ -168,7 +168,7 @@ void func_80361D3C(VLA **arg0, f32 arg1, s32 arg2, s32 arg3){
     anSeq_PushStep_2Arg(arg0, arg1, func_80361AB0, (uintptr_t)arg2, (uintptr_t)arg3);
 }
 
-void func_80361D7C(VLA **arg0, f32 arg1, struct ActorMarker *arg2, s32 arg3, u32 arg4){
+void func_80361D7C(VLA **arg0, f32 arg1, ActorMarker *arg2, s32 arg3, u32 arg4){
     anSeq_PushStep_3Arg(arg0, arg1, func_80361AE0, (uintptr_t)arg2, arg3, arg4);
 }
 

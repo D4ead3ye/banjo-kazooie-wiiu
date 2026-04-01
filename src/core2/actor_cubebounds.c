@@ -439,9 +439,18 @@ void func_80302C94(Gfx **gfx, Mtx **mtx, Vtx **vtx) {
     for(i = 0; i < 3; i++){
         int width = 4;
 
-        if (CVarGetInteger(CVAR_ENHANCEMENT("Graphics.DrawDistance"), 0)
-            && getGameMode() != GAME_MODE_7_ATTRACT_DEMO) {
-            width = sCubeList.width[i]; // Extended draw distance: full map
+        // [port] Extended draw distance: scale cube iteration width by CVar level.
+        {
+            int drawDistLevel = CVarGetInteger(CVAR_ENHANCEMENT("Graphics.DrawDistance"), 0);
+            if (getGameMode() == GAME_MODE_7_ATTRACT_DEMO) {
+                drawDistLevel = 0;
+            }
+            if (drawDistLevel >= 4) {
+                width = sCubeList.width[i];
+            } else if (drawDistLevel > 0) {
+                int extended = 4 + (sCubeList.width[i] - 4) * drawDistLevel / 4;
+                width = (extended < sCubeList.width[i]) ? extended : sCubeList.width[i];
+            }
         }
 
         if(vp_cube_indices[i] - sp44[i] > width){
@@ -646,7 +655,7 @@ static BKCollisionTri *__code7AF80_func_80303960(f32 volume_p1[3], f32 volume_p2
 
     var_s5 = NULL;
     cube_volumeToIndices(min, max, volume_p1, volume_p2, radius + sCubeList.margin);
-    if(cube_indx);
+    (void)cube_indx;
     for(cube_indx[0] = min[0]; cube_indx[0] <= max[0]; cube_indx[0]++){
         for(cube_indx[1] = min[1]; cube_indx[1] <= max[1]; cube_indx[1]++){
             for(cube_indx[2] = min[2]; cube_indx[2] <= max[2]; cube_indx[2]++){

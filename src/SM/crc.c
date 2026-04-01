@@ -1,10 +1,9 @@
+// BanjoDecomp: code_F0.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
 #include "prop.h"
 #include "actor.h"
-
-int ability_hasLearned(s32);
 
 extern s32 D_80275650;
 

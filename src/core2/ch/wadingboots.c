@@ -35,7 +35,7 @@ Actor *chwadingboots_draw(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
 void chwadingboots_update(Actor *this){
     s32 sp2C = levelSpecificFlags_get(LEVEL_FLAG_1A_UNKNOWN);
 
-    if (sp2C && this->unkF4_8 != 1) {
+    if (sp2C && this->actorTypeSpecificField != 1) {
         return;
     }
 
@@ -59,10 +59,10 @@ void chwadingboots_update(Actor *this){
 
             if(actor_animationIsAt(this, 0.25f)){
                 if(sp2C){
-                    FUNC_8030E624(SFX_3F2_UNKNOWN,  1.4f, 23000);
+                    FUNC_8030E624(SFX_3F2_BOING,  1.4f, 23000);
                 }
                 else{
-                    FUNC_8030E8B4(SFX_3F2_UNKNOWN,  1.4f, 23000, this->position, 600, 1500);
+                    sfx_playFadeShorthandDefault(SFX_3F2_BOING,  1.4f, 23000, this->position, 600, 1500);
                 }
             }
 

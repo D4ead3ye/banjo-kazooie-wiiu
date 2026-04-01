@@ -1,3 +1,4 @@
+// BanjoDecomp: code_5ED0.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
@@ -62,11 +63,8 @@ extern int quizQuestionAskedBitfield_get(u32); // ff_isAsked_flag_get
 extern void BKModel_getMeshCenter(BKModel *model, s32 mesh_id, s16 [3]); //! $a2 type unk
 extern void ability_setAllLearned(s32);  // set unlocked moves bitfield
 extern s32  ability_getAllLearned(void); // get unlocked moves bitfield
-extern s32  item_getCount(s32); // item count get
-extern void item_adjustByDiffWithoutHud(s32, s32); // item count set
 extern void func_8025A55C(s32, s32, s32);
 extern void func_80324CFC(f32, s16, s16);
-extern void  player_setTransformation(s32); // set transformation
 extern struct FF_StorageStruct *D_8037DCB8; 
 
 /* .data */
@@ -526,7 +524,7 @@ void lair_func_8038CC9C(void)
     if (!D_8037DCB8->UNK_18)
         return;
 
-    func_8030E394(D_8037DCB8->UNK_18);
+    sfxSource_func_8030E2C4(D_8037DCB8->UNK_18);
     sfxsource_freeSfxsourceByIndex(D_8037DCB8->UNK_18);
     D_8037DCB8->UNK_18 = 0;
 }
@@ -700,7 +698,7 @@ void func_8038D0BC(s32 a0, s32 a1)
 
 void func_8038D16C(s32 a0, u16 a1)
 {
-    func_8025A6EC(a0, 0);
+    coMusicPlayer_playMusic(a0, 0);
     comusic_8025AB44(a0, 28000, 500);
     func_80250530(func_8025ADD4(a0), a1, 0);
 }
@@ -824,7 +822,7 @@ void func_8038D4BC(void)
 
     // trigger warp after a delay
     timedFunc_set_3(0.25f,
-        (GenFunction_3)func_802E4078,
+        (GenFunction_3)transitionToMap,
         D_803945B8[D_8037DCB8->unkC].map,
         D_803945B8[D_8037DCB8->unkC].exit,
         1
@@ -952,7 +950,7 @@ void func_8038D670(enum FF_Action next_state) {
                     volatileFlag_setAndTriggerDialog_4(VOLATILE_FLAG_A8_FF_GOT_JOKER);
                 }
                 if (D_8037DCB8->unk8 != 0x1EF) {
-                    func_8030E6A4(SFX_126_AUDIENCE_BOOING, 1.0f, 0x7FF8);
+                    gcsfx_playWithPitch(SFX_126_AUDIENCE_BOOING, 1.0f, 0x7FF8);
                     if (D_8037DCB8->unk4->unk8 == FFTT_5_GRUNTY) {
                         volatileFlag_setAndTriggerDialog_4(VOLATILE_FLAG_A2_FF_GRUNTY_ANSWER_RIGHT);
                     }
@@ -1227,7 +1225,8 @@ void lair_func_8038E0B0(void) {
                     if (!fileProgressFlag_get(sp28) && gcdialog_showText(sp38 + 0x101E, 0, NULL, NULL, NULL, NULL)) {
                         fileProgressFlag_set(sp28, true);
                     }
-                    if ((sp38 == FFTT_6_SKULL) && (item_getCount(ITEM_16_LIFE) == 1)) {
+                    if ((sp38 == FFTT_6_SKULL) && (item_getCount(ITEM_16_LIFE) ==
+                        (CVarGetInteger(CVAR_ENHANCEMENT("Fixes.FurnaceFunDialog"), 0) ? 0 : 1))) {
                         volatileFlag_setAndTriggerDialog_4(VOLATILE_FLAG_AB_LAST_LIFE_ON_SKULL);
                     } else if (item_getCount(ITEM_14_HEALTH) == 1) {
                         volatileFlag_setAndTriggerDialog_4(VOLATILE_FLAG_AA_FF_LOW_HEALTH);
@@ -1245,7 +1244,7 @@ void lair_func_8038E0B0(void) {
                             if ((item_getCount(ITEM_27_JOKER_CARD) > 0) && (sp28 < 0x5B)) {
                                 lair_func_8038C640(D_8037DCB8->unk8, D_8037DCB8->unk4);
                                 item_dec(ITEM_27_JOKER_CARD);
-                                func_8030E6D4(SFX_3EA_UNKNOWN);
+                                func_8030E6D4(SFX_3EA_BANJO_GUH_HUH);
                                 volatileFlag_setAndTriggerDialog_4(VOLATILE_FLAG_A9_FF_USED_JOKER);
                                 if (D_8037DCB8->unk8 == 0x1EF) {
                                     func_8038D670(8);

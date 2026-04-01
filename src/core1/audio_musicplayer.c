@@ -1,3 +1,4 @@
+// BanjoDecomp: musicplayer.c
 #include <ultra64.h>
 #include "core1/core1.h"
 #include "functions.h"
@@ -6,6 +7,7 @@
 #include "version.h"
 
 extern void func_8024FDDC(u8, s32);
+extern int lairAudio_hasPendingSeek(void); // [port]
 
 void func_8025AE50(s32, f32);
 
@@ -85,7 +87,7 @@ void comusicPlayer_init(void){
     D_80276E30 = (CoMusic *) bk_malloc(6*sizeof(CoMusic));
     for(iPtr = D_80276E30; iPtr < D_80276E30 + 6; iPtr++){
         iPtr->track_id = -1;
-        iPtr->unk8 = 0;
+        iPtr->volume = 0;
         iPtr->unk12 = 0;
         iPtr->unkC = 0;
         iPtr->unk4 = 0.0f;
@@ -151,31 +153,31 @@ void comusicPlayer_update(void) {
                     var_s0->unk0 -= time_getDelta();
                     D_80276E34 = true;
                 } else if (var_s0->unk12 < 0) {
-                    var_s0->unk8 += var_s0->unk12;
-                    if (var_s0->unk15 && (var_s0->unkC == 0) && (var_s0->unk8 <= 0)) {
+                    var_s0->volume += var_s0->unk12;
+                    if (var_s0->unk15 && (var_s0->unkC == 0) && (var_s0->volume <= 0)) {
                         func_802599B4(var_s0);
                         continue;
                     } else {
-                        if (var_s0->unkC >= var_s0->unk8) {
-                            var_s0->unk8 = var_s0->unkC;
+                        if (var_s0->unkC >= var_s0->volume) {
+                            var_s0->volume = var_s0->unkC;
                             var_s0->unk12 = 0;
                         } else {
                             D_80276E34 = true;
                         }
-                        func_8024FD28(temp_lo, (s16)var_s0->unk8);
+                        func_8024FD28(temp_lo, (s16)var_s0->volume);
                     }
-                } else if (var_s0->unk8 < var_s0->unkC) {
-                    if (var_s0->unk8 == 0) {
+                } else if (var_s0->volume < var_s0->unkC) {
+                    if (var_s0->volume == 0) {
                         var_s0->unk4 = 0.0f;
                     }
-                    var_s0->unk8 += var_s0->unk12;
-                    if (var_s0->unk8 >= var_s0->unkC) {
-                        var_s0->unk8 = var_s0->unkC;
+                    var_s0->volume += var_s0->unk12;
+                    if (var_s0->volume >= var_s0->unkC) {
+                        var_s0->volume = var_s0->unkC;
                         var_s0->unk12 = 0;
                     } else {
                         D_80276E34 = true;
                     }
-                    func_8024FD28(temp_lo, (s16)var_s0->unk8);
+                    func_8024FD28(temp_lo, (s16)var_s0->volume);
                 } else {
                     var_s0->unk12 = 0;
                 }
@@ -256,7 +258,7 @@ void func_8025A104(enum comusic_e arg0, s32 arg1){
     }
     func_8024FD28(0, (s16)arg1);
     D_80276E30[0].track_id = (s16) arg0;
-    D_80276E30[0].unk8 = arg1;
+    D_80276E30[0].volume = arg1;
     D_80276E30[0].unk0 = 0.0f;
     D_80276E30[0].unk12 = 0;
     D_80276E30[0].unk4 = 0.0f;
@@ -269,12 +271,12 @@ void func_8025A1A8(enum comusic_e  arg0){
     if (arg0 != D_80276E30[0].track_id){
         func_8024FC1C(0, arg0);
         D_80276E30[0].track_id = (s16) arg0;
-        D_80276E30[0].unk8 = func_80250034(arg0);
+        D_80276E30[0].volume = func_80250034(arg0);
         D_80276E30[0].unk0 = 0.0f;
         D_80276E30[0].unk12 = 0;
         D_80276E30[0].unk4 = 0.0f;
         D_80276E30[0].unk15 = 0;
-        func_80259994(&D_80276E30[0], D_80276E30[0].unk8);
+        func_80259994(&D_80276E30[0], D_80276E30[0].volume);
     }
 }
 
@@ -286,7 +288,7 @@ void func_8025A23C(s32 arg0){
         func_8024FC1C(5, arg0);
         music->track_id = (s16) arg0;
         temp_v0 = func_80250034(arg0);
-        music->unk8 = temp_v0;
+        music->volume = temp_v0;
         music->unk12 = 0;
         music->unk15 = 0;
         music->unk0 = 0.0f;
@@ -343,8 +345,8 @@ void func_8025A430(s32 arg0, s32 arg1, s32 arg2){
 void func_8025A4C4(s32 arg0, s32 arg1, s32 *arg2){
     if(D_80276E30[0].track_id >= 0){
         func_80259F7C(&D_80276E30[0], &arg0, &arg1, arg2);
-        if(arg0 != D_80276E30[0].unk8){
-            if(D_80276E30[0].unk8 < arg0){
+        if(arg0 != D_80276E30[0].volume){
+            if(D_80276E30[0].volume < arg0){
                 D_80276E30[0].unk12 = arg1;
             }
             else{
@@ -396,7 +398,7 @@ void func_8025A5AC(enum comusic_e comusic_id, s32 volume, s32 arg2){
         func_8024FC1C(sp20, comusic_id);
     }
     func_8024FD28(sp20, (s16) volume);
-    tmp_a2->unk8 = volume;
+    tmp_a2->volume = volume;
 
 }
 
@@ -404,7 +406,7 @@ void func_8025A6CC(enum comusic_e track_id, s32 volume){
     func_8025A5AC(track_id, volume, 0);
 }
 
-void func_8025A6EC(enum comusic_e track_id, s32 volume){
+void coMusicPlayer_playMusic(enum comusic_e track_id, s32 volume){
     func_8025A5AC(track_id, volume, 1);
 }
 
@@ -423,7 +425,7 @@ void comusic_playTrack(enum comusic_e track_id){
         trackPtr->unk12 = 0;
         trackPtr->unk4 = 0.0f;
         func_8024FC1C( indx, track_id);
-        func_80259994(trackPtr, trackPtr->unk8 = func_80250034(track_id));
+        func_80259994(trackPtr, trackPtr->volume = func_80250034(track_id));
     }
 
 }
@@ -443,7 +445,7 @@ void func_8025A7DC(enum comusic_e track_id){
 }
 
 s32 func_8025A818(void){
-    if (D_80276E30[0].unkC == 0 && D_80276E30[0].unk8 <= 0){
+    if (D_80276E30[0].unkC == 0 && D_80276E30[0].volume <= 0){
         func_802599B4(&D_80276E30[0]);
         return 1;
     }
@@ -454,7 +456,7 @@ s32 func_8025A864(enum comusic_e track_id){
     CoMusic *trackPtr;
 
     trackPtr = __find_track(track_id);
-    if (trackPtr != NULL && trackPtr->unkC == 0 && trackPtr->unk8 <= 0){
+    if (trackPtr != NULL && trackPtr->unkC == 0 && trackPtr->volume <= 0){
         func_802599B4(trackPtr);
         return 1;
     }
@@ -526,14 +528,14 @@ void func_8025AABC(enum comusic_e track_id){
     
     if(trackPtr = __find_track(track_id)){
         trackPtr->unk15 = 1;
-        if(!trackPtr->unk8)
+        if(!trackPtr->volume)
             func_802599B4(trackPtr);
     }
 }
 
 void func_8025AB00(void){
     D_80276E30[0].unk15 = 1;
-    if (!D_80276E30[0].unk8){
+    if (!D_80276E30[0].volume){
         func_802599B4(&D_80276E30[0]);
     }
 }
@@ -574,16 +576,30 @@ void func_8025AC7C(enum comusic_e comusic_id, s32 arg1, s32 arg2, f32 arg3, void
         slot_index = (trackPtr - D_80276E30);
         func_8024FC1C(slot_index, comusic_id);
         trackPtr->track_id = comusic_id;
-        trackPtr->unk8 = 0;
+        trackPtr->volume = 0;
         trackPtr->unk15 = 0;
         trackPtr->unk4 = 0.0f;
-        func_80259994(trackPtr, 0);
-        func_8024FD28(slot_index, 0);
+        // [port] Skip fade-in for lair continuity — start at target volume
+        if (lairAudio_hasPendingSeek()) {
+            s32 vol = func_80250034(comusic_id);
+            func_80259994(trackPtr, vol);
+            func_8024FD28(slot_index, (s16)vol);
+        } else {
+            func_80259994(trackPtr, 0);
+            func_8024FD28(slot_index, 0);
+        }
     }
     func_80259F7C(trackPtr,&arg1, &arg2, fadeSlot);
     trackPtr->unk0 = arg3;
-    trackPtr->unk12 = (trackPtr->unk8 < arg1)? arg2: -arg2;
-    trackPtr->unkC = arg1;
+    // [port] No fade needed for lair continuity — jump to target volume
+    if (lairAudio_hasPendingSeek()) {
+        trackPtr->unk12 = 0;
+        trackPtr->unkC = arg1;
+        trackPtr->volume = arg1;
+    } else {
+        trackPtr->unk12 = (trackPtr->volume < arg1)? arg2: -arg2;
+        trackPtr->unkC = arg1;
+    }
     D_80276E34 = 1;
 }
 

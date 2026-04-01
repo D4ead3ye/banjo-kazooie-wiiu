@@ -1,3 +1,4 @@
+// BanjoDecomp: clam.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
@@ -136,7 +137,7 @@ static void __chClam_particalEmitterInit(ParticleEmitter *pCtrl, f32 position[3]
     particleEmitter_setPosition(pCtrl, position);
     particleEmitter_func_802EF9F8(pCtrl, 0.7f);
     particleEmitter_func_802EFA18(pCtrl, 3);
-    func_802EFA20(pCtrl, 0.8f, 1.0f);
+    particleEmitter_func_802EFA20(pCtrl, 0.8f, 1.0f);
     particleEmitter_setSfx(pCtrl, SFX_1F_HITTING_AN_ENEMY_3, 10000);
     particleEmitter_setSpawnIntervalRange(pCtrl, 0.0f, 0.01f);
     particleEmitter_setParticleLifeTimeRange(pCtrl, 3.5f, 3.5f);
@@ -273,7 +274,7 @@ static void __chClam_attackOther(ActorMarker *this_marker, ActorMarker *other_ma
 static void __chClam_updateFunc(Actor *this){
     ActorProp *sp4C = func_80320EB0(this->marker, 30.0f, 1);
     f32 sp48;
-    s32 sp44;
+    s32 sp44 = 0;
     f32 sp38[3];
 
     if(!this->initialized){
@@ -311,7 +312,7 @@ static void __chClam_updateFunc(Actor *this){
                 subaddie_set_state_with_direction(this, 2, 0.01f, 1);
                 actor_playAnimationOnce(this);
                 anctrl_setDuration(this->anctrl, 1.0f);
-                __chClam_playSfx(SFX_3F2_UNKNOWN, randf2(1.0f, 1.1f), 22000, this->position, 1500.0f, 2000.0f);
+                __chClam_playSfx(SFX_3F2_BOING, randf2(1.0f, 1.1f), 22000, this->position, 1500.0f, 2000.0f);
             }
             else{
                 anctrl_setDuration(this->anctrl, 2.0f);
@@ -370,5 +371,5 @@ static void __chClam_updateFunc(Actor *this){
             }
             break;
     }
-    func_80328FB0(this, 5.0f);
+    subaddie_turnToYaw(this, 5.0f);
 }

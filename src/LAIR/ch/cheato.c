@@ -1,3 +1,4 @@
+// BanjoDecomp: code_9C40.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
@@ -18,7 +19,7 @@ ActorInfo D_803948B8 = { 0x16F, 0x1D7, 0x54F, 0x1, D_80394860, func_803902B8, ac
 Actor *func_80390030(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
     func_8033A45C(3, 1);
     func_8033A45C(4, 1);
-    actor_draw(marker, gfx, mtx, vtx);
+    return actor_draw(marker, gfx, mtx, vtx);
 }
 
 s32 func_80390084(void) {
@@ -44,7 +45,7 @@ void func_803900EC(ActorMarker *marker, enum asset_e text_id, s32 arg2){
     func_8028F918(0);
     if (!fileProgressFlag_get(sp1C + FILEPROG_AD_CHEATO_BLUEEGGS_UNLOCKED)) {
         fileProgressFlag_set(sp1C + FILEPROG_AD_CHEATO_BLUEEGGS_UNLOCKED, 1);
-        func_8025A6EC(COMUSIC_2B_DING_B, 28000);
+        coMusicPlayer_playMusic(COMUSIC_2B_DING_B, 28000);
     }
 }
 
@@ -97,7 +98,7 @@ void func_803902B8(Actor *this) {
     sp58 = ml_vec3f_within_distance(this->position, sp5C, 1750.0f) && !this->has_met_before;
     if (sp58 && !this->unk38_0) {
         func_8032BB88(this, 0, 0x1F4);
-        func_8025A6EC(COMUSIC_79_CHEATO, 0);
+        coMusicPlayer_playMusic(COMUSIC_79_CHEATO, 0);
         comusic_8025AB44(COMUSIC_79_CHEATO, -1, 0x1F4);
     }
     else if (!sp58 && this->unk38_0) {

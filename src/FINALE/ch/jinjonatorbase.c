@@ -1,3 +1,4 @@
+// BanjoDecomp: fight/chjinjonatorbase.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
@@ -17,9 +18,9 @@ void chjinjonatorbase_spawnStoneJinjo(ActorMarker *marker) {
     Actor *actor_jinjonatorbase = marker_getActor(marker);
     Actor *actor_stonejinjo = spawn_child_actor(ACTOR_3A1_STONE_JINJO, &actor_jinjonatorbase);
 
-    actor_stonejinjo->unkF4_8 = actor_jinjonatorbase->unkF4_8;
+    actor_stonejinjo->actorTypeSpecificField = actor_jinjonatorbase->actorTypeSpecificField;
     actor_stonejinjo->position_y = actor_stonejinjo->position_y + 155.0f;
-    actor_jinjonatorbase->unk100 = actor_stonejinjo->marker;
+    actor_jinjonatorbase->partnerActor = actor_stonejinjo->marker;
 }
 
 void chjinjonatorbase_createSmokeParticles(f32 position[3], s32 count) {
@@ -37,7 +38,7 @@ void chjinjonatorbase_func_8038E0D4(Actor *arg0, s32 arg1, f32 arg2, f32 arg3, f
     Struct70s *temp_v0 = func_8034C2C4(arg0->marker, arg1);
 
     if (temp_v0) {
-        func_8034DE60(&temp_v0->type_6D, arg2, arg3, arg4, 1);
+        subaddie_positionMoveVertical(&temp_v0->type_6D, arg2, arg3, arg4, 1);
     }
 }
 
@@ -64,7 +65,7 @@ void chjinjonatorbase_getHitByEgg(ActorMarker *this, ActorMarker *other) {
         if (remaining_hits <= 0) {
             chfinalboss_setBossDefeated();
             subaddie_set_state(actor_jinjonatorbase, CHBOSSJINJOBASE_STATE_3_SPAWNED_BOSS_JINJO);
-            chstonejinjo_breakOpen(actor_jinjonatorbase->unk100);
+            chstonejinjo_breakOpen(actor_jinjonatorbase->partnerActor);
         }
     }
 }
@@ -107,7 +108,7 @@ void chjinjonatorbase_update(Actor *this){
 
         this->unk44_31 = sfxsource_createSfxsourceAndReturnIndex();
         sfxsource_setSfxId(this->unk44_31, 0x3f9);
-        func_8030DD14(this->unk44_31, 3);
+        sfxSource_setunk43_7ByIndex(this->unk44_31, 3);
         sfxsource_playSfxAtVolume(this->unk44_31, 1.0f);
         sfxsource_setSampleRate(this->unk44_31, 26000);
         func_8030E2C4(this->unk44_31);
@@ -116,7 +117,7 @@ void chjinjonatorbase_update(Actor *this){
         func_802F9EC4(temp_s0, this->position, 5000, 15000);
         func_802F9FD0(temp_s0, 0.25f, this->lifetime_value - 1.0, 1);
         func_802FA060(temp_s0, 17000, 17000, 0.0f);
-        func_8025A6EC(JINGLE_MENACING_GRUNTILDA_A, 15000);
+        coMusicPlayer_playMusic(JINGLE_MENACING_GRUNTILDA_A, 15000);
         func_8032BB88(this, 0, 0x7fff);
         timedFunc_set_1(8.0f, (GenFunction_1)chjinjonatorbase_func_8038E2CC, (uintptr_t)this->marker);
         this->unk1C[0] = this->position_x;
@@ -139,7 +140,7 @@ void chjinjonatorbase_update(Actor *this){
     }
     else {
         if(this->state == CHBOSSJINJOBASE_STATE_1_RAISE) {
-            actor_jinjonator = marker_getActor(this->unk100);
+            actor_jinjonator = marker_getActor(this->partnerActor);
             y_delta = this->velocity_y * delta_time;
 
             if(this->position_y + y_delta < this->unk1C[1]) {
@@ -169,7 +170,7 @@ void chjinjonatorbase_update(Actor *this){
                 subaddie_set_state(this, CHBOSSJINJOBASE_STATE_2_DEFAULT);
 
                 FUNC_8030E624(SFX_7F_HEAVYDOOR_SLAM, 0.8f, 32000);
-                func_8030E394(this->unk44_31);
+                sfxSource_func_8030E2C4(this->unk44_31);
                 sfxsource_freeSfxsourceByIndex(this->unk44_31);
                 this->unk44_31 = 0;
 
