@@ -197,7 +197,13 @@ s32 osAiSetFrequency(u32 frequency) {
     return osViClock / (s32)dacRate;
 }
 
-// [port] eeprom_readBlocks / eeprom_writeBlocks — implemented in src/port/save/SaveManager.cpp
+s32 eeprom_writeBlocks(s32 file, s32 offset, void* buffer, s32 count) {
+    return 0;
+}
+
+s32 eeprom_readBlocks(s32 file, s32 offset, void* buffer, s32 count) {
+    return 0;
+}
 
 u32 func_8025C29C(u32* seed) {
     // Treat as two u32 values (lower and upper half of u64)
