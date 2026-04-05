@@ -6,6 +6,10 @@
 #include "enums.h"
 #include "prop.h"
 
+DEFINE_EVENT(OnSaveCreate,
+	void* saveData;
+)
+
 DEFINE_EVENT(OnActorSpawn,
 	enum actor_e actorId;
 	int32_t posX;
