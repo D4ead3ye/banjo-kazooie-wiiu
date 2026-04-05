@@ -30,18 +30,20 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        switch (ev->propId->spriteProp.unk0_31) {
-            case RP_MUSIC_NOTE:
-                if (!__baMarker_8028BC60()) {
-                    ev->propId->spriteProp.unk8_4 = 0;
-                    __baMarker_resolveMusicNoteCollision(ev->propId);
-                    event->cancelled = true;
-                    LogOutCollision(ev->propId->spriteProp.unk0_31, ev->propId->actorProp.x, ev->propId->actorProp.y,
-                                    ev->propId->actorProp.z);
-                }
-                break;
-            default:
-                break;
+        if (!ev->propId->markerFlag) {
+            switch (ev->propId->spriteProp.unk0_31) {
+                case RP_MUSIC_NOTE:
+                    if (!__baMarker_8028BC60()) {
+                        ev->propId->spriteProp.unk8_4 = 0;
+                        __baMarker_resolveMusicNoteCollision(ev->propId);
+                        event->cancelled = true;
+                        LogOutCollision(ev->propId->spriteProp.unk0_31, ev->propId->actorProp.x,
+                                        ev->propId->actorProp.y, ev->propId->actorProp.z);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
     })

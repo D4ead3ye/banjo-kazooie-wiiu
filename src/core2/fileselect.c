@@ -126,7 +126,7 @@ extern void sns_update_global_save_data_checksum(void);
 
 void gameFile_load(s32 gamenum){
     s32 filenum = gameFile_GameIdToFileIdMap[gamenum];
-    CALL_EVENT(OnGameLoad, gamenum);
+    CALL_EVENT(OnGameLoad, filenum);
     saveData_load(&gameFile_saveData[filenum]);
 
     // [port] Unlock Stop N' Swop items as a reward for 100% completion
