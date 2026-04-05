@@ -1,3 +1,4 @@
+// BanjoDecomp: mudhut.c
 #include "core2/statetimer.h"
 #include "functions.h"
 #include "variables.h"
@@ -73,8 +74,8 @@ void chMudHut_spawnExplosion(ActorMarker *this){
     Actor *thisActor;
 
     thisActor = marker_getActor(this);
-    thisActor = actor_spawnWithYaw_f32(ACTOR_D_WOOD_DEMOLISHED, thisActor->position, 0); // [port] was NULL, param is s32
-    thisActor = actor_spawnWithYaw_f32(ACTOR_4D_STEAM_2, thisActor->position, 0); // [port] was NULL, param is s32
+    thisActor = actor_spawnWithYaw_f32(ACTOR_D_WOOD_DEMOLISHED, thisActor->position, 0);
+    thisActor = actor_spawnWithYaw_f32(ACTOR_4D_STEAM_2, thisActor->position, 0);
     if(this);
 }
 
@@ -108,12 +109,12 @@ void chMudHut_update(Actor *this){
                     diffPos[2] = this->position_z;
                     diffPos[1] += 130.0;
 
-                    FUNC_8030E8B4(SFX_5B_HEAVY_STUFF_FALLING, 1.0f, 28000, this->position, 0x12C, 0xBB8);
+                    sfx_playFadeShorthandDefault(SFX_5B_HEAVY_STUFF_FALLING, 1.0f, 28000, this->position, 0x12C, 0xBB8);
                     subaddie_set_state(this, 2);
                     this->marker->propPtr->unk8_3 = 0;
                     actor_playAnimationOnce(this);
                     if(tmp == 5){
-                        func_8025A6EC(COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 28000);
+                        coMusicPlayer_playMusic(COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 28000);
                     }
                     __spawnQueue_add_1((GenFunction_1)chMudHut_spawnExplosion, (uintptr_t)this->marker);
 

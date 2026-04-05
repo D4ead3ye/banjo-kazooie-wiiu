@@ -11,7 +11,7 @@ typedef struct {
     s16 unk2; // enum file_progress_e
 }Struct_B5040;
 
-void savedata_clear(void *savedata); // [port] void* for polymorphic callers
+void savedata_clear(void *savedata);
 s32 savedata_verify(s32 arg0, SaveData *savedata);
 
 /* .data */
@@ -70,15 +70,19 @@ s32 endOffset;
 u8 D_80383D18[8];
 
 /* .code */
+// [port] CRC not needed — save data lives on a modern filesystem, not EEPROM.
 void savedata_update_crc(void *buffer, s32 size){
+#if 0
     u32 sp20[2];
     u32 sum;
     glcrc_calc_checksum(buffer, (u8*)buffer + size - 4, sp20);
     sum = sp20[0] ^ sp20[1];
     *(u32*)((u8*)buffer + size - 4) = sum;
+#endif
 }
 
 int _savedata_verify(SaveData *savedata, s32 size){
+#if 0
     u32 result[2]; //sp28
     u32 *crc_ptr;
     u32 expect_crc; //sp20
@@ -87,10 +91,17 @@ int _savedata_verify(SaveData *savedata, s32 size){
     expect_crc = *crc_ptr;
     glcrc_calc_checksum(savedata, crc_ptr, result);
     *crc_ptr = expect_crc;
-    if((result[0]^result[1]) != expect_crc) 
+    if((result[0]^result[1]) != expect_crc)
         return 0x6e382;
     return 0;
+#endif
+    return 0;
 }
+
+#if 0
+void savedata_update_crc(void *buffer, s32 size){ (void)buffer; (void)size; }
+int _savedata_verify(SaveData *savedata, s32 size){ (void)savedata; (void)size; return 0; }
+#endif
 
 void savedata_init(void){ //savedata_init
     s32 jiggy_size;
@@ -114,8 +125,8 @@ void savedata_init(void){ //savedata_init
     honeycombscore_getSizeAndPtr(&honeycomb_size, &honeycomb_addr);
     mumboscore_getSizeAndPtr(&mumbotoken_size, &mumbotoken_addr);
     fileProgressFlag_getSizeAndPtr(&progressflags_size, &progressflags_addr);
-    notescore_getSizeAndPtr(&notescores_size, (void **)&notescores_addr); // [port]
-    timeScores_getSizeAndPtr(&timescores_size, (void **)&timescores_addr); // [port]
+    notescore_getSizeAndPtr(&notescores_size, (void **)&notescores_addr);
+    timeScores_getSizeAndPtr(&timescores_size, (void **)&timescores_addr);
     saveditem_getSizeAndPtr(&saved_item_size, &saved_item_addr);
     ability_getSizeAndPtr(&abilities_size, &abilities_addr);
     baseOffset = 0;
@@ -171,7 +182,7 @@ void __savedata_load_highNoteScores(u8 *savedata){
     u8 *notescores_addr;
     int i;
     
-    notescore_getSizeAndPtr(&notescores_size, (void **)&notescores_addr); // [port]
+    notescore_getSizeAndPtr(&notescores_size, (void **)&notescores_addr);
     for(i = notescoresOffset; i < notescoresOffset + notescores_size; i++){
         notescores_addr[i - notescoresOffset] = savedata[i];
     }
@@ -183,11 +194,11 @@ void __savedata_load_timeScores(u8 *savedata){
     u8 *timescores_addr;
     int i;
     
-    timeScores_getSizeAndPtr(&timescores_size, (void **)&timescores_addr); // [port]
+    timeScores_getSizeAndPtr(&timescores_size, (void **)&timescores_addr);
     for(i = timescoresOffset; i < timescoresOffset + timescores_size; i++){
         timescores_addr[i - timescoresOffset] = savedata[i];
     }
-    itemscore_timeScores_fromSaveData((u16 *)timescores_addr); // [port] u8* → u16* — timeScores are stored as u16
+    itemscore_timeScores_fromSaveData((u16 *)timescores_addr);
 }
 
 void func_8033C460(u8 *savedata){ //global_progress
@@ -266,7 +277,7 @@ void __savedata_save_highNoteScores(u8 *savedata){
     u8 *notescores_addr;
     int i;
     
-    notescore_getSizeAndPtr(&notescores_size, (void **)&notescores_addr); // [port]
+    notescore_getSizeAndPtr(&notescores_size, (void **)&notescores_addr);
     for(i = notescoresOffset; i < notescoresOffset + notescores_size; i++){
         savedata[i] = notescores_addr[i - notescoresOffset];
     }
@@ -277,7 +288,7 @@ void __savedata_save_timeScores(u8 *savedata){
     u8 *timescores_addr;
     int i;
     
-    timeScores_getSizeAndPtr(&timescores_size, (void **)&timescores_addr); // [port]
+    timeScores_getSizeAndPtr(&timescores_size, (void **)&timescores_addr);
     for(i = timescoresOffset; i < timescoresOffset + timescores_size; i++){
         savedata[i] = timescores_addr[i - timescoresOffset];
     }
@@ -316,21 +327,27 @@ void __savedata_save_abilities(u8 *savedata){ //savedata_save_abilities
     }
 }
 
-s32 savedata_8033CA2C(s32 filenum, void *save_data_){ // [port] void* for prototype compatibility
-    SaveData *save_data = (SaveData *)save_data_;
+s32 savedata_8033CA2C(s32 filenum, void *save_data_){
+    CALL_EVENT(OnSaveFileLoad, filenum, save_data_, 0);
+#if 0
+{
+    SaveData* save_data = (SaveData*)save_data_;
     s32 sp1C;
 
     sp1C = eeprom_readBlocks(filenum, 0, save_data, 0xF);
-    if( sp1C 
-        || savedata_verify(0x78, save_data) 
+    if (sp1C
+        || savedata_verify(0x78, save_data)
         || ((u8*)save_data)[baseOffset] != 0x11
-    ){
+        ) {
         sp1C = 2;
     }
     return sp1C;
 }
+#endif
+return 0;
+}
 
-s32 savedata_8033CA9C(void *savedata_){ // [port] void* for prototype compatibility
+s32 savedata_8033CA9C(void *savedata_){
     SaveData *savedata = (SaveData *)savedata_;
     s32 sp1C;
 
@@ -344,18 +361,24 @@ s32 savedata_8033CA9C(void *savedata_){ // [port] void* for prototype compatibil
 }
 
 s32 savedata_verify(s32 size, SaveData *savedata){
+#if 0
+    // [port] CRC validation disabled — always passes.
     s32 v1;
 
     v1 = _savedata_verify(savedata, size);
     if(v1)
         v1 = 3;
     return v1;
+#else
+    (void)size; (void)savedata;
+    return 0;
+#endif
 }
 
-void saveData_load(void *savedata_){ // [port] void* for prototype compatibility
+void saveData_load(void *savedata_){
     SaveData *savedata = (SaveData *)savedata_;
     int i;
-    func_8033C460((u8*)savedata); // [port] SaveData* → u8* for 64-bit compatibility
+    func_8033C460((u8*)savedata);
     __savedata_load_jiggyScore((u8*)savedata);
     __savedata_load_honeycombScore((u8*)savedata);
     __savedata_load_mumboScore((u8*)savedata);
@@ -368,13 +391,13 @@ void saveData_load(void *savedata_){ // [port] void* for prototype compatibility
     }
 }
 
-void saveData_create(void *savedata_){ // [port] void* for prototype compatibility
+void saveData_create(void *savedata_){
     SaveData *savedata = (SaveData *)savedata_;
     int i;
     for(i = 0; D_80370A20[i].unk0 != -1; i++){
         fileProgressFlag_set(D_80370A20[i].unk2, volatileFlag_get(D_80370A20[i].unk0));
     }
-    savedata_clear((u8*)savedata); // [port] SaveData* → u8* for 64-bit compatibility
+    savedata_clear((u8*)savedata);
     __savedata_save_magic((u8*)savedata);
     __savedata_save_jiggyScore((u8*)savedata);
     __savedata_save_honeycombScore((u8*)savedata);
@@ -387,7 +410,7 @@ void saveData_create(void *savedata_){ // [port] void* for prototype compatibili
     savedata_update_crc(savedata, sizeof(SaveData));
 }
 
-int savedata_8033CC98(s32 filenum, void *buffer){ // [port] void* for polymorphic callers
+int savedata_8033CC98(s32 filenum, void *buffer){
     int out;
     out = eeprom_writeBlocks(filenum, 0, buffer, 0xF);
     if(out){
@@ -405,7 +428,7 @@ int savedata_8033CCD0(s32 filenum){
     return out;
 }
 
-int savedata_8033CE40(void *buffer){ // [port] void* for polymorphic callers
+int savedata_8033CE40(void *buffer){
     int out;
     savedata_update_crc(buffer, sizeof(GlobalData));
     out = eeprom_writeBlocks(0, 0x3C, buffer, 4);
@@ -415,7 +438,7 @@ int savedata_8033CE40(void *buffer){ // [port] void* for polymorphic callers
     return out;
 }
 
-void savedata_clear(void *savedata_){ // [port] void* for polymorphic callers
+void savedata_clear(void *savedata_){
     u8 *savedata = (u8 *)savedata_;
     int i;
     for(i = 0; i < sizeof(SaveData); i++){

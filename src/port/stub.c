@@ -1,3 +1,4 @@
+// BanjoDecomp: (port-specific, no decomp origin)
 #include "ResourceHelpers.h"
 #include "libultraship/libultra/gbi.h"
 #include "libultraship/libultra/interrupt.h"
@@ -96,23 +97,9 @@ void gSPInvalidateTexCache(Gfx* pkt, uintptr_t texAddr) {
 }
 
 void gSPSegment(void* value, int segNum, uintptr_t target) {
-    char* imgData = (char*)target;
-
-    int res = ResourceMgr_OTRSigCheck(imgData);
-
-    // OTRTODO: Disabled for now to fix an issue with HD Textures.
-    // With HD textures, we need to pass the path to F3D, not the raw texture data.
-    // Otherwise the needed metadata is not available for proper rendering...
-    // This should *not* cause any crashes, but some testing may be needed...
-    // UPDATE: To maintain compatability it will still do the old behavior if the resource is a display list.
-    // That should not affect HD textures.
-    if (res) {
-        uintptr_t desiredTarget = (uintptr_t)ResourceMgr_LoadIfDListByName(imgData);
-
-        if (desiredTarget != 0) // [port] was NULL — uintptr_t comparison
-            target = desiredTarget;
-    }
-
+    // [port] BK never passes OTR paths through gSPSegment — segment addresses are
+    // always raw data pointers (vertices, textures, render mode tables). Skipping
+    // the OTR signature check avoids reading from potentially-freed model blob memory.
     __gSPSegment(value, segNum, target);
 }
 
@@ -128,7 +115,6 @@ void gSPSegmentLoadRes(void* value, int segNum, uintptr_t target) {
     __gSPSegment(value, segNum, target);
 }
 
-// [port] Override gDPSetTextureImage to pass all texture addresses through safely.
 // The OtrSignatureCheck and gfx_check_image_signature in LUS have been patched to
 // handle raw heap pointers without crashing (byte-by-byte check, address filtering).
 // Raw sprite texture data embedded in BKSprite structures passes through as-is;
@@ -193,7 +179,6 @@ void func_80253010(void* dest, void* src, s32 size) {
     memcpy(dest, src, size);
 }
 
-// [port] Stub out native motor calls
 #if 0
 s32 osMotorStop(void* pfs) {
     return 0;
@@ -212,7 +197,13 @@ s32 osAiSetFrequency(u32 frequency) {
     return osViClock / (s32)dacRate;
 }
 
-// [port] eeprom_readBlocks / eeprom_writeBlocks — implemented in src/port/save/SaveManager.cpp
+s32 eeprom_writeBlocks(s32 file, s32 offset, void* buffer, s32 count) {
+    return 0;
+}
+
+s32 eeprom_readBlocks(s32 file, s32 offset, void* buffer, s32 count) {
+    return 0;
+}
 
 u32 func_8025C29C(u32* seed) {
     // Treat as two u32 values (lower and upper half of u64)

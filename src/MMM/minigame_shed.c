@@ -1,3 +1,4 @@
+// BanjoDecomp: code_3D50.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
@@ -70,14 +71,14 @@ struct {
 } MMM_D_8038C510;
 
 /* .code */
-void func_8038A140(s32 arg0) { // [port] was UNK_TYPE(s32)
+void func_8038A140(s32 arg0) {
     if (arg0 == 2) {
         func_80324E38(0.3f, 3);
         timed_setStaticCameraToNode(0.3f, 1);
-        timedFunc_set_2(0.3f, (GenFunction_2)mapSpecificFlags_set, MMM_SPECIFIC_FLAG_3_UNKNOWN, true); // [port]
+        timedFunc_set_2(0.3f, (GenFunction_2)mapSpecificFlags_set, MMM_SPECIFIC_FLAG_3_UNKNOWN, true);
         func_80324E38(3.0f, 0);
         timed_exitStaticCamera(3.0f);
-        timedFunc_set_1(3.0f, (GenFunction_1)func_8038A140, 3); // [port]
+        timedFunc_set_1(3.0f, (GenFunction_1)func_8038A140, 3);
     }
     if (arg0 == 3) {
         if (MMM_D_8038C510.unk8 == 1) {
@@ -142,7 +143,7 @@ void MMM_func_8038A54C(Struct_MMM_3D50_0 *arg0, s32 arg1){
     arg0->unk3 = arg1;
     arg0->unk4 = 0.0f;
     if(arg1 == 1 && v0 != arg1){
-        func_8025A6EC(COMUSIC_2C_BUZZER, 32000);
+        coMusicPlayer_playMusic(COMUSIC_2C_BUZZER, 32000);
     }
 }
 
@@ -185,7 +186,7 @@ void func_8038A82C(Struct_MMM_3D50_0 * arg0){
     if(arg0->unk2 == 'X'){
         MMM_func_8038A54C(arg0, 1);
         player_getPosition(sp44);
-        chTumblar_copyPosition((s32)(intptr_t)MMM_D_8038C510.unkC, (Struct68s *)(intptr_t)MMM_D_8038C510.unk10, sp38); // [port] BKModel* to s32, s32 to Struct68s*
+        chTumblar_copyPosition((s32)(intptr_t)MMM_D_8038C510.unkC, (Struct68s *)(intptr_t)MMM_D_8038C510.unk10, sp38);
         sp38[1] = sp44[1];
         func_8028F620(sp38, 300.0f, -1500.0f);
         return;
@@ -197,10 +198,10 @@ void func_8038A82C(Struct_MMM_3D50_0 * arg0){
             if( iPtr->unk0[iPtr->unk4] == 0){
                 func_8038A140(5);
                 chTumblar_congratulate(MMM_D_8038C510.unkC, (s32)(intptr_t)MMM_D_8038C510.unk10);
-                func_8025A6EC(COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 32000);
+                coMusicPlayer_playMusic(COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 32000);
             }
             else{
-                func_8025A6EC(COMUSIC_2B_DING_B, 28000);
+                coMusicPlayer_playMusic(COMUSIC_2B_DING_B, 28000);
             }
         }
     }
@@ -238,7 +239,7 @@ void func_8038A9B4(void){
     }
 }
 
-void func_8038AA30(void *arg0, void *arg1){ // [port] was BKModel*, s32 — polymorphic: also called with Struct_MMM_47D0_0*, Struct68s*
+void func_8038AA30(void *arg0, void *arg1){
     MMM_D_8038C510.unkC = arg0;
     MMM_D_8038C510.unk10 = (intptr_t)arg1;
 }
@@ -253,7 +254,7 @@ void func_8038AA44(void){
     func_8038A750();
     if( MMM_D_8038C510.unk8 == 1
         && MMM_D_8038C510.unkC != NULL
-        && chTumblar_isBanjoAbove(MMM_D_8038C510.unkC, (Struct68s *)(intptr_t)MMM_D_8038C510.unk10) // [port] s32 to Struct68s*
+        && chTumblar_isBanjoAbove(MMM_D_8038C510.unkC, (Struct68s *)(intptr_t)MMM_D_8038C510.unk10)
     ){
         if (!levelSpecificFlags_get(LEVEL_FLAG_2F_MMM_UNKNOWN)) {
             levelSpecificFlags_set(LEVEL_FLAG_2F_MMM_UNKNOWN, true);
@@ -269,9 +270,9 @@ void func_8038AA44(void){
             func_8038A140(4);
         }
         else if( MMM_D_8038C510.unkC != NULL
-            && chTumblar_isBanjoAbove(MMM_D_8038C510.unkC, (Struct68s *)(intptr_t)MMM_D_8038C510.unk10) // [port] s32 to Struct68s*
+            && chTumblar_isBanjoAbove(MMM_D_8038C510.unkC, (Struct68s *)(intptr_t)MMM_D_8038C510.unk10)
         ){
-            chTumblar_copyPosition((s32)(intptr_t)MMM_D_8038C510.unkC, (Struct68s *)(intptr_t)MMM_D_8038C510.unk10, sp28); // [port] BKModel* to s32, s32 to Struct68s*
+            chTumblar_copyPosition((s32)(intptr_t)MMM_D_8038C510.unkC, (Struct68s *)(intptr_t)MMM_D_8038C510.unk10, sp28);
             tmp_v0 = func_8033F3C0(MMM_D_8038C510.unk0, sp28);
             if(tmp_v0){
                 sp24 = func_8038A26C(tmp_v0);

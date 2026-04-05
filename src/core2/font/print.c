@@ -3,6 +3,11 @@
 #include "functions.h"
 #include "variables.h"
 
+extern int ResourceMgr_GetDialogLanguageCount(void);
+// [port] PAL font has 75 glyphs (0x21-0x6B), overlapping NTSC control codes b,d,e,f,h,j.
+// When PAL, fmtStrings use shifted codes above the glyph range.
+#define PRINT_PAL (ResourceMgr_GetDialogLanguageCount() > 1)
+
 
 
 typedef struct{
@@ -177,10 +182,11 @@ MapFontTextureMap D_8036907C[] ={
 };
 
 char D_80369200[] = {
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 
-    ':', 
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 
-    '@', '%', '?', '(', ')', '<', '>', '"', '.', ';', '-', '!', '/', '\''
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    ':',
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    '@', '%', '?', '(', ')', '<', '>', '"', '.', ';', '-', '!', '/', '\'',
+    '\0'
 };
 
 Gfx D_80369238[] = {
@@ -218,6 +224,7 @@ s32 D_80380B18;
 s32 D_80380B1C;
 s8 D_80380B20[0x400];
 s8 D_80380F20[0x80];
+s32 print_sDialogFontGlyphCount; // [port] actual glyph count from loaded font sprite
 
 
 void func_802F7A2C(s32 arg0);
@@ -463,6 +470,7 @@ void func_802F51B8(void){
     D_80380AB8[1] = assetcache_get(SPRITE_BOLD_FONT_NUMBERS_ALPHAMASK);
     D_80380AB8[4] = assetcache_get(func_802F49C0());
     print_sFonts[0] =  func_802F4C3C(D_80380AB8[0], D_80380AB8[4]);
+    print_sDialogFontGlyphCount = sprite_getFramePtr(D_80380AB8[0], 0)->chunkCnt;
     print_sFonts[1] =  func_802F4C3C(D_80380AB8[1], D_80380AB8[4]);
     print_sPrintBuffer = bk_malloc(0x20*sizeof(PrintBuffer));
     func_802F5010();
@@ -543,7 +551,7 @@ void _printbuffer_draw_letter(char letter, f32* xPtr, f32* yPtr, f32 arg3, Gfx *
     
     // u8 letter = arg0;
     BKSpriteTextureBlock *sp214;
-    uintptr_t sp210; // [port] was s32, holds pointer
+    uintptr_t sp210;
     s32 sp20C;
     s32 t0;
     s8 t1;
@@ -567,7 +575,7 @@ void _printbuffer_draw_letter(char letter, f32* xPtr, f32* yPtr, f32 arg3, Gfx *
 
     switch(D_80380AE8){
         case 0: //L802F5678
-            if(letter >= '\x21' && letter < '\x5f'){
+            if(letter >= '\x21' && letter < ('\x21' + print_sDialogFontGlyphCount)){
                 sp20C = letter - '\x21';
                 t0 = 1;
             }
@@ -608,11 +616,13 @@ void _printbuffer_draw_letter(char letter, f32* xPtr, f32* yPtr, f32 arg3, Gfx *
                 break;
 
             case 'b': //L802F5890
+            case '\x6D': // [port] PAL shifted b
                 //toggle background
                 D_80380B00  = D_80380B00 ^ 1;
                 break;
 
             case 'f': //L802F58A8
+            case '\x72': // [port] PAL shifted f
                 D_80380AEC = D_80380AE8 = D_80380AE8 ^ 1;
                 break;
 
@@ -621,10 +631,12 @@ void _printbuffer_draw_letter(char letter, f32* xPtr, f32* yPtr, f32 arg3, Gfx *
                 break;
 
             case 'h': //L802F58C8
+            case '\x73': // [port] PAL shifted h
                 D_80380B10 = 1;
                 break;
 
             case 'j': //L802F58D4
+            case '\x74': // [port] PAL shifted j
                 if(D_80380AFC == 0){
                     D_80380AFC = 1;
                     D_80380AEC = D_80380AE8;
@@ -634,6 +646,7 @@ void _printbuffer_draw_letter(char letter, f32* xPtr, f32* yPtr, f32 arg3, Gfx *
                 break;
 
             case 'e': //L802F58FC
+            case '\x6F': // [port] PAL shifted e
                 if(D_80380AFC){
                     D_80380AFC = 0;
                     D_80380AE8 = D_80380AEC;
@@ -654,7 +667,7 @@ void _printbuffer_draw_letter(char letter, f32* xPtr, f32* yPtr, f32 arg3, Gfx *
                 }
                 break;
 
-            case 'v': //L802F59A0 
+            case 'v': //L802F59A0
                 //toggle letter gradient
                 D_80380AF4 ^= 1;
                 if(D_80380AF4){
@@ -671,6 +684,7 @@ void _printbuffer_draw_letter(char letter, f32* xPtr, f32* yPtr, f32 arg3, Gfx *
                 break;
 
             case 'd': //L802F5A8C
+            case '\x6E': // [port] PAL shifted d
                 D_80380AF8 ^= 1;
                 if(D_80380AF8){
                     gDPPipeSync((*gfx)++);
@@ -719,12 +733,12 @@ void _printbuffer_draw_letter(char letter, f32* xPtr, f32* yPtr, f32 arg3, Gfx *
         
         sp200 += (D_80380FA0 + (sp1F8 - sp214->x) * 0.5);
         f28 -= sp214->h*0.5;
-        sp210 = (uintptr_t)(sp214 + 1); // [port] BKSpriteTextureBlock* -> uintptr_t
+        sp210 = (uintptr_t)(sp214 + 1);
         while(sp210 % 8){
             sp210++;
         }
         if (sp1F4 == SPRITE_TYPE_RGBA32) {
-            gDPLoadTextureTile((*gfx)++, sp210, G_IM_FMT_RGBA, G_IM_SIZ_32b, sp214->w, sp214->h, 0, 0, sp214->x-1, sp214->y - 1, 0, G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD); // [port] NULL→0 for pal (avoids void*→u32 truncation in _SHIFTL)
+            gDPLoadTextureTile((*gfx)++, sp210, G_IM_FMT_RGBA, G_IM_SIZ_32b, sp214->w, sp214->h, 0, 0, sp214->x-1, sp214->y - 1, 0, G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
         } else if (sp1F4 == SPRITE_TYPE_IA8) {
             gDPLoadTextureTile((*gfx)++, sp210, G_IM_FMT_IA, G_IM_SIZ_8b, sp214->w, sp214->h, 0, 0, sp214->x-1, sp214->y - 1, 0, G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
         } else if (sp1F4 == SPRITE_TYPE_I8) {
@@ -766,7 +780,7 @@ void _printbuffer_draw_letter(char letter, f32* xPtr, f32* yPtr, f32 arg3, Gfx *
             spD0 = sp214->y - 1.0;
             temp_f26 = (f64) sp200 - (f32) gFramebufferWidth * 0.5;
             spC0 = (f64)f28 - (f32)gFramebufferHeight*0.5 -0.5f;
-            gSPVertex((*gfx)++, (uintptr_t)*vtx, 4, 0); // [port] Vtx* -> uintptr_t
+            gSPVertex((*gfx)++, (uintptr_t)*vtx, 4, 0);
             for(iy = 0.0f; iy < 2.0; iy+= 1.0){
                 for(ix = 0.0f; ix < 2.0; ix += 1.0){
                     s32 s = (ix * temp_f24 * 64.0f);
@@ -774,7 +788,7 @@ void _printbuffer_draw_letter(char letter, f32* xPtr, f32* yPtr, f32 arg3, Gfx *
                     {
                         s32 t = (iy * spD0 * 64.0f);
                         (*vtx)->v.ob[1] = (s16) (s32) ((f64) (spC0 + (spD0 * arg3 * iy)) * -4.0);
-                        (*vtx)->v.ob[2] = -0xA; // [port] was -0x14; Z=-20 at guOrtho far clip plane, gets clipped on PC
+                        (*vtx)->v.ob[2] = -0xA;
                         (*vtx)->v.tc[0] = s;
                         (*vtx)->v.tc[1] = t;
                     }
@@ -933,7 +947,7 @@ void _printbuffer_push_new(s32 x, s32 y, u8 * string) {
 void print_bold_overlapping(s32 x, s32 y, f32 arg2, u8* string){
     _printbuffer_push_new(x, y, string);
     if(print_sCurrentPtr){
-        strcpy(print_sCurrentPtr->fmtString, "fl");
+        strcpy(print_sCurrentPtr->fmtString, PRINT_PAL ? "\x72l" : "fl");
         print_sCurrentPtr->unk10 = arg2;
     }
 }
@@ -941,21 +955,21 @@ void print_bold_overlapping(s32 x, s32 y, f32 arg2, u8* string){
 void print_bold_spaced(s32 x, s32 y, u8* string){
     _printbuffer_push_new(x, y, string);
     if(print_sCurrentPtr){
-        strcpy(print_sCurrentPtr->fmtString, "f");
+        strcpy(print_sCurrentPtr->fmtString, PRINT_PAL ? "\x72" : "f");
     }
 }
 
 void print_dialog(s32 x, s32 y, u8* string){
     _printbuffer_push_new(x, y, string);
     if(print_sCurrentPtr){
-        strcpy(print_sCurrentPtr->fmtString, "elq");
+        strcpy(print_sCurrentPtr->fmtString, PRINT_PAL ? "\x6Flq" : "elq");
     }
 }
 
 void print_dialog_w_bg(s32 x, s32 y, u8* string){
     _printbuffer_push_new(x, y, string);
     if(print_sCurrentPtr){
-        strcpy(print_sCurrentPtr->fmtString, "pb");
+        strcpy(print_sCurrentPtr->fmtString, PRINT_PAL ? "p\x6D" : "pb");
     }
 }
 
@@ -964,7 +978,7 @@ void print_dialog_gradient(s32 x, s32 y, u8* string, u8 arg3, u8 arg4){
     if(print_sCurrentPtr){
         print_sCurrentPtr->unk4 = arg3;
         print_sCurrentPtr->unk6 = arg4;
-        strcpy(print_sCurrentPtr->fmtString, "v");
+        strcpy(print_sCurrentPtr->fmtString, "v"); // v is above glyph range, no PAL shift needed
     }
 }
 
@@ -973,7 +987,7 @@ void func_802F79D0(s32 x, s32 y, u8* string, s32 arg3, s32 arg4){
     if(print_sCurrentPtr){
         print_sCurrentPtr->unk4 = arg3;
         print_sCurrentPtr->unk6 = arg4;
-        strcpy(print_sCurrentPtr->fmtString, "delq");
+        strcpy(print_sCurrentPtr->fmtString, PRINT_PAL ? "\x6E\x6Flq" : "delq");
 
     }
 }

@@ -1,0 +1,94 @@
+#include "core1/core1.h"
+#include "functions.h"
+#include "variables.h"
+#include <ultra64.h>
+#include <string.h>
+
+#include <libultra/convert.h>
+#include "port/Engine.h"
+
+Gfx D_8036C630[] =
+{
+    gsDPPipeSync(),
+    gsSPClearGeometryMode(G_ZBUFFER | G_SHADE | G_CULL_BOTH | G_FOG | G_LIGHTING | G_TEXTURE_GEN | G_TEXTURE_GEN_LINEAR | G_LOD | G_SHADING_SMOOTH),
+    gsSPSetGeometryMode(G_SHADE | G_TEXTURE_GEN_LINEAR | G_SHADING_SMOOTH),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
+    gsDPSetRenderMode(G_RM_OPA_SURF, G_RM_OPA_SURF2),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsDPSetCombineLERP(TEXEL0, 0, PRIMITIVE_ALPHA, 0, 0, 0, 0, TEXEL0, TEXEL0, 0, PRIMITIVE_ALPHA, 0, 0, 0, 0, TEXEL0),
+    gsDPSetTextureFilter(G_TF_POINT),
+    gsDPSetTexturePersp(G_TP_NONE),
+    gsDPSetPrimColor(0, 0, 0x00, 0x00, 0x00, 0xFF),
+    gsDPSetColorDither(G_CD_DISABLE),
+    gsSPEndDisplayList()
+};
+
+Gfx D_8036C690[] = 
+{
+    gsDPPipeSync(),
+    gsDPSetTextureFilter(G_TF_BILERP),
+    gsDPSetTexturePersp(G_TP_PERSP),
+    gsDPSetColorDither(G_CD_MAGICSQ),
+    gsSPEndDisplayList(),
+};
+
+/* .bss */
+s32 D_803830A0;
+
+
+/* .code */
+extern int port_getPauseFramebufferId(void);
+
+void func_80314BB0(Gfx **gfx, Mtx **mtx, Vtx **vtx, void * frame_buffer_1, void *frame_buffer_2) {
+    // [port] GPU-side pause snapshot
+    s32 pauseFb = port_getPauseFramebufferId();
+    bool isCapture = (frame_buffer_1 == zBuffer_get());
+
+    gSPDisplayList((*gfx)++, D_8036C630);
+
+    if (isCapture) {
+        // First frame: copy the current backbuffer → pause GPU FB
+        gDPCopyFB((*gfx)++, pauseFb, 0, 0, NULL);
+    }
+
+    // Draw the saved pause FB as a full-screen background, edge-to-edge in widescreen
+    s32 renderW = (s32)OTRGetGameRenderWidth();
+    s32 renderH = (s32)OTRGetGameRenderHeight();
+    s32 x0 = OTRGetRectDimensionFromLeftEdge(0);
+    s32 x1 = OTRGetRectDimensionFromRightEdge((f32)gFramebufferWidth);
+
+    gDPSetTextureImageFB((*gfx)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, gFramebufferWidth, pauseFb);
+    gDPImageRectangle((*gfx)++,
+        x0 << 2, 0,
+        0, 0,
+        x1 << 2, gFramebufferHeight << 2,
+        renderW, renderH,
+        G_TX_RENDERTILE,
+        renderW, renderH);
+
+    gSPDisplayList((*gfx)++, D_8036C690);
+    gDPSetColorImage((*gfx)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, gFramebufferWidth, OS_PHYSICAL_TO_K0(gFramebuffers[getActiveFramebuffer()]));
+}
+
+void func_80315084(Gfx **gfx, Mtx **mtx, Vtx **vtx){
+    func_80335128(0);
+    D_803830A0 = 2;
+    func_80314BB0(gfx, mtx, vtx, zBuffer_get(), gFramebuffers[getActiveFramebuffer()]);
+}
+
+void func_80315110(Gfx **gfx, Mtx **mtx, Vtx **vtx){
+    if(!D_803830A0){
+        if(map_get() != MAP_90_GL_BATTLEMENTS){
+            func_803306C8(2);
+            func_8032AD7C(2);
+        }
+    }
+    else{
+        D_803830A0--;
+    }
+    func_80314BB0(gfx, mtx, vtx, gFramebuffers[getActiveFramebuffer()], zBuffer_get());
+}
+
+void func_803151D0(Gfx **gfx, Mtx **mtx, Vtx **vtx){
+    func_80335128(1);
+}

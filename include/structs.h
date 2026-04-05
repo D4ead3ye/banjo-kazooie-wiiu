@@ -87,7 +87,6 @@ typedef struct bk_sprite_s{
         u32 bit22 : 2;
         u32 pad_bit20 : 21;
     }unkC;
-    // Lighthouse [port] changed to pointers, may revert, unsure - Proxy
     struct bk_sprite_frame_s* frames[];
 } BKSprite;
 
@@ -176,7 +175,7 @@ typedef struct struct_2_s{
     f32 duration;
     u8 argCount;
     u8 activationFrameDelay;
-    uintptr_t arg0; // [port] s32 -> uintptr_t for 64-bit pointer safety
+    uintptr_t arg0;
     uintptr_t arg1;
     uintptr_t arg2;
     void *funcPtr;
@@ -275,7 +274,7 @@ typedef struct struct_8_s{
 typedef struct struct_11_s{
     f32 unk0;
     f32 unk4;
-    s32 unk8;
+    s32 volume;
     s32 unkC;
     s16 track_id; //trackId
     s16 unk12;
@@ -291,10 +290,10 @@ typedef struct struct_12_s{
     s32 unk1;
 } struct12s;
 
-typedef struct struct_13_s{
+typedef struct dialog_s {
     s32 cmd;
     u8* str;
-}struct13s;
+} BKDialog;
 
 typedef struct struct_14_s{
     s16 unk0;
@@ -304,7 +303,7 @@ typedef struct struct_14_s{
     s32 unk14;
     void (*unk18)(struct actorMarker_s *, s32, s32);
     void (*unk1C)(struct actorMarker_s *, s32, s32);
-    s32 (*unk20)(struct actorMarker_s *, s32, s32); // [port] was s32 — holds a function pointer
+    s32 (*unk20)(struct actorMarker_s *, s32, s32);
 }struct14s;
 
 typedef struct struct_15_s{
@@ -389,7 +388,7 @@ typedef struct particle_emitter{
         }spherical;
     } particleVelocityRange_E4;
     f32 unkFC;
-    uintptr_t unk100; // [port] was s32 — stores Struct70s* pointer
+    uintptr_t unk100;
     s16 unk104;
     u8 pad106[0x2];
     f32 unk108;
@@ -534,21 +533,21 @@ typedef struct {
 // order on LE so each named field maps to the same bit positions.
 typedef struct{
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-    u16 unk0_15 : 4; // bits 15-12 (aaaa)
-    u16 unk0_11 : 2; // bits 11-10 (bb)
-    u16 unk0_9  : 3; // bits  9-7  (ccc)
-    u16 unk0_6  : 2; // bits  6-5  (dd)
-    u16 unk0_4  : 3; // bits  4-2  (eee)
-    u16 unk0_1  : 2; // bits  1-0  (ff)
+    u16 playerInteraction : 4; // bits 15-12 (aaaa)
+    u16 nextState : 2;         // bits 11-10 (bb)
+    u16 unkBit7 : 3;           // bits  9-7  (ccc)
+    u16 damageToPlayer : 2;    // bits  6-5  (dd)
+    u16 hitsToTrigger : 3;     // bits  4-2  (eee)
+    u16 dropBundleNum : 2;     // bits  1-0  (ff)
 #else
-    u16 unk0_1  : 2; // bits  1-0  (ff)
-    u16 unk0_4  : 3; // bits  4-2  (eee)
-    u16 unk0_6  : 2; // bits  6-5  (dd)
-    u16 unk0_9  : 3; // bits  9-7  (ccc)
-    u16 unk0_11 : 2; // bits 11-10 (bb)
-    u16 unk0_15 : 4; // bits 15-12 (aaaa)
+    u16 dropBundleNum : 2;     // bits  1-0  (ff)
+    u16 hitsToTrigger : 3;     // bits  4-2  (eee)
+    u16 damageToPlayer : 2;    // bits  6-5  (dd)
+    u16 unkBit7 : 3;           // bits  9-7  (ccc)
+    u16 nextState : 2;         // bits 11-10 (bb)
+    u16 playerInteraction : 4; // bits 15-12 (aaaa)
 #endif
-}struct5Cs;
+}CollisionParams;
 
 typedef struct struct_5d_s{
     s32 unk0;

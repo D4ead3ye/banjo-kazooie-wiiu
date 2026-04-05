@@ -1,3 +1,4 @@
+// BanjoDecomp: ch/code_2270.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
@@ -65,11 +66,11 @@ void chTiptup_activateTimer(ActorMarker *this){
 }
 
 void chTiptup_sfxCorrectHit(void){
-    func_8025A6EC(COMUSIC_2B_DING_B, 28000);
+    coMusicPlayer_playMusic(COMUSIC_2B_DING_B, 28000);
 }
 
 void chTiptup_sfxIncorrectHit(void){
-    func_8025A6EC(COMUSIC_2C_BUZZER, 28000);
+    coMusicPlayer_playMusic(COMUSIC_2C_BUZZER, 28000);
 }
 
 void chTiptup_textEvent(ActorMarker *this, enum asset_e text_id, s32 arg2){
@@ -147,10 +148,10 @@ void chTiptup_setState(Actor *this, s32 arg1){
             this->has_met_before = true;
 
             if (unqPtr->unkA == 0) {
-                gcdialog_showText(ASSET_C72_DIALOG_UNKNOWN, 0xe, this->position, this->marker, chTiptup_textEvent, 0);
+                gcdialog_showText(ASSET_C72_DIALOG_TIPTUP_MEET_1, 0xe, this->position, this->marker, chTiptup_textEvent, 0);
             }
             else {
-                gcdialog_showText(ASSET_C74_DIALOG_UNKNOWN, 0xf, this->position, this->marker, chTiptup_textEvent, 0);
+                gcdialog_showText(ASSET_C74_DIALOG_TIPTUP_MEET_3, 0xf, this->position, this->marker, chTiptup_textEvent, 0);
             }
         }
         else {
@@ -206,7 +207,7 @@ void chTiptup_setState(Actor *this, s32 arg1){
     }//L80388D8C
     if(this->state == 6){
         if(unqPtr->unkA == 3){
-            func_8025A6EC(COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 28000);
+            coMusicPlayer_playMusic(COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 28000);
         }
         func_80324E38(0.5f, 3);
         timed_setStaticCameraToNode(1.5f, 1);
@@ -235,7 +236,7 @@ void chTiptup_choirHitReaction(ActorMarker *this, s32 arg1){
     thisActor = marker_getActor(this);
     unqPtr = (ActorLocal_Tiptup *)&thisActor->local;
     if((s32)unqPtr->unk0 >= (s32) bk_vector_size(unqPtr->unk4)){
-        if(!mapSpecificFlags_get(0) && gcdialog_showText(ASSET_C76_DIALOG_UNKNOWN, 0, 0, 0, 0, 0))
+        if(!mapSpecificFlags_get(0) && gcdialog_showText(ASSET_C76_DIALOG_CHOIR_MEMBER_HIT_AFTER_JIGGY, 0, 0, 0, 0, 0))
             mapSpecificFlags_set(0,1);
     }else{
         tmp = (Struct_BGS_2270_0s *)bk_vector_at(unqPtr->unk4, unqPtr->unk0);

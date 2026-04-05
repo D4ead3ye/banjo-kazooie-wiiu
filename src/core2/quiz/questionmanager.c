@@ -4,7 +4,6 @@
 
 #include "core2/gc/zoombox.h"
 
-extern void item_set(enum item_e, s32);
 extern void func_8025A55C(s32, s32, s32);
 
 enum gcquiz_state {
@@ -38,7 +37,7 @@ typedef struct {
 } QuizQuestionBin;
 
 typedef struct{
-    s32 answer_options[4][4]; // first dimension = zoombox index, second dimension = value (0-3), third dimension = answer
+    uintptr_t answer_options[4][4]; // first dimension = zoombox index, second dimension = value (0-3), third dimension = answer
 } QuizQuestionStruct;
 
 typedef struct {
@@ -72,7 +71,7 @@ bool gcquiz_isNotInInitialState();
 #define SELECTABLE_PORTAIT_COUNT 0x2C
 
 static u8 sPortraits[SELECTABLE_PORTAIT_COUNT+1] = {
-    0, // [port] was NULL — u8 value, not pointer
+    0,
     ZOOMBOX_SPRITE_11_CHIMPY,
     ZOOMBOX_SPRITE_12_CONGA,
     ZOOMBOX_SPRITE_13_BLUBBER,
@@ -223,7 +222,10 @@ void gcquiz_init() {
     s32 i;
 
     sD_803830E0 = bk_malloc(sizeof(Struct_Core2_91E10));
-    sD_803830E0->unkC = bk_malloc(0x400);
+    // [port] On N64 this was a bk_malloc'd DMA buffer for code_B3A80_func_8033BDAC.
+    // That path is stubbed in the port; unkC is reassigned to a resource manager
+    // pointer by assetcache_get on the first question load.
+    sD_803830E0->unkC = NULL;
     sD_803830E0->unk16 = 0x14U;
     sD_803830E0->unk17 = 0x1E;
     sD_803830E0->portait_ids[0] = 0;
@@ -240,7 +242,8 @@ void gcquiz_free() {
     s32 i;
 
     if (sD_803830E0 != NULL) {
-        bk_free(sD_803830E0->unkC);
+        // [port] unkC points to resource manager memory after the first question,
+        // not bk_malloc'd memory. Don't bk_free it.
         sD_803830E0->unkC = NULL;
         for(i = 0; i < 4; i++){
             gczoombox_free(sD_803830E0->zoomboxes[i]);
@@ -263,7 +266,7 @@ void gcquiz_draw(Gfx **gfx, Mtx **mtx, Vtx **vtx) {
 
 // randomize quiz question?
 static bool __gcquiz_func_803192A4(enum ff_question_type_e q_type, s32 q_index, s32 arg2) {
-    u8 *char_iter; // [port] MIPS char is unsigned; must be u8 for 0x80+ cmd bytes
+    u8 *char_iter;
     enum asset_e quiz_question_index;
     s32 temp_s2;
     s32 str_cnt;
@@ -286,14 +289,18 @@ static bool __gcquiz_func_803192A4(enum ff_question_type_e q_type, s32 q_index, 
 
     // not in asset cache?
     if (code_B3A80_func_8033BDAC(quiz_question_index, sD_803830E0->unkC, 0x400) == 0) {
-        bk_free(sD_803830E0->unkC);
+        // [port] On N64, assetcache_get returned bk_malloc'd memory so bk_free was
+        // valid. In the port, assetcache_get returns a resource manager pointer that
+        // must not be bk_free'd. The initial bk_malloc(0x400) from gcquiz_init leaks
+        // once on the first question load; subsequent calls just reassign the pointer.
         sD_803830E0->unkC = (QuizQuestionBin *) assetcache_get(quiz_question_index);
     }
 
-    char_iter = (u8 *)sD_803830E0->unkC; // [port] QuizQuestionBin* to u8* for byte iteration
+    char_iter = (u8 *)sD_803830E0->unkC;
     quiz_question_bin_unk0 = *(char_iter++); // NEXT
     quiz_question_bin_unk1 = *(char_iter++); // NEXT
     quiz_question_bin_unk2 = *(char_iter++); // NEXT
+
     first_answer_cmd = ((quiz_question_bin_unk1 >= 2) ? __gcquiz_func_80318F60(q_type, q_index, arg2) : 0) + 1;
     // is sound question or quiz_question_bin_unk2 == 0
     if (((quiz_question_bin_unk2 == 0) || (__gcquiz_isSoundQuestion(q_type) != false)) != false) {
@@ -340,10 +347,11 @@ static bool __gcquiz_func_803192A4(enum ff_question_type_e q_type, s32 q_index, 
                 zoombox_text_index = zoombox_text_index;
             }
         
-            sD_803830E0->quiz_question.answer_options[zoombox_text_index][sD_803830E0->answer_str_counts[zoombox_text_index]++] = (intptr_t)char_iter; // [port] u8* to s32 — N64 stored pointer as s32
+            sD_803830E0->quiz_question.answer_options[zoombox_text_index][sD_803830E0->answer_str_counts[zoombox_text_index]++] = (uintptr_t)char_iter;
         }
         char_iter += option_text; // SKIP
     }
+
     return true;
 }
 
@@ -353,7 +361,7 @@ void __gcquiz_openZoomboxAndMaximizeWithStringsAt(s32 zoombox_index) {
     gczoombox_setStrings(
         sD_803830E0->zoomboxes[zoombox_index],
         sD_803830E0->answer_str_counts[sD_803830E0->answer_values[zoombox_index]],
-        (char **)sD_803830E0->quiz_question.answer_options[sD_803830E0->answer_values[zoombox_index]] // [port] s32* to char** — N64 stored pointers as s32
+        (char **)sD_803830E0->quiz_question.answer_options[sD_803830E0->answer_values[zoombox_index]]
     );
 }
 
@@ -381,7 +389,7 @@ static void __gcquiz_advanceStateTo(enum gcquiz_state state){
             for(i = 0; i < 4; i++){
                 sD_803830E0->answer_values[i] = -1;
                 for(j = 0; j < 4; j++){
-                    sD_803830E0->quiz_question.answer_options[i][j] = 0; // [port] was NULL — s32 value, not pointer
+                    sD_803830E0->quiz_question.answer_options[i][j] = 0;
                 }
             }
             break;
@@ -389,7 +397,7 @@ static void __gcquiz_advanceStateTo(enum gcquiz_state state){
         case GCQUIZ_STATE_1_SHOW_QUESTION_VIA_ZOOMBOX:
             gczoombox_open(sD_803830E0->zoomboxes[0]);
             gczoombox_maximize(sD_803830E0->zoomboxes[0]);
-            gczoombox_setStrings(sD_803830E0->zoomboxes[0], sD_803830E0->answer_str_counts[0], (char **)sD_803830E0->quiz_question.answer_options[0]); // [port] s32* to char**
+            gczoombox_setStrings(sD_803830E0->zoomboxes[0], sD_803830E0->answer_str_counts[0], (char **)sD_803830E0->quiz_question.answer_options[0]);
             break;
 
         case GCQUIZ_STATE_2_SHOW_PORTRAITS_FOR_QUESTION:
@@ -405,10 +413,10 @@ static void __gcquiz_advanceStateTo(enum gcquiz_state state){
                     gczoombox_func_803184C8(sD_803830E0->zoomboxes[i], (f32)sD_803830E0->unk17, 5, 2, __gcquiz_animation_duration(i), __gcquiz_isZero(i), 0);
                 }
             }
-            timedFunc_set_1(0.0f, (GenFunction_1)__gcquiz_advanceStateTo, GCQUIZ_STATE_3_UNKNOWN); // [port]
-            timedFunc_set_1(0.0f, (GenFunction_1)__gcquiz_openZoomboxAndMaximizeWithStringsAt, 1); // [port]
-            timedFunc_set_1(0.2f, (GenFunction_1)__gcquiz_openZoomboxAndMaximizeWithStringsAt, 2); // [port]
-            timedFunc_set_1(0.4f, (GenFunction_1)__gcquiz_openZoomboxAndMaximizeWithStringsAt, 3); // [port]
+            timedFunc_set_1(0.0f, (GenFunction_1)__gcquiz_advanceStateTo, GCQUIZ_STATE_3_UNKNOWN);
+            timedFunc_set_1(0.0f, (GenFunction_1)__gcquiz_openZoomboxAndMaximizeWithStringsAt, 1);
+            timedFunc_set_1(0.2f, (GenFunction_1)__gcquiz_openZoomboxAndMaximizeWithStringsAt, 2);
+            timedFunc_set_1(0.4f, (GenFunction_1)__gcquiz_openZoomboxAndMaximizeWithStringsAt, 3);
             break;
 
         case GCQUIZ_STATE_3_UNKNOWN: 
@@ -446,7 +454,7 @@ static void __gcquiz_advanceStateTo(enum gcquiz_state state){
                     }
                 }
             }
-            timedFunc_set_1(1.0f, (GenFunction_1)__gcquiz_advanceStateTo, GCQUIZ_STATE_8_UNKNOWN); // [port]
+            timedFunc_set_1(1.0f, (GenFunction_1)__gcquiz_advanceStateTo, GCQUIZ_STATE_8_UNKNOWN);
             item_set(ITEM_6_HOURGLASS, false);
             break;
 
@@ -456,7 +464,7 @@ static void __gcquiz_advanceStateTo(enum gcquiz_state state){
             } else {
                 comusic_playTrack(COMUSIC_2B_DING_B);
             }
-            timedFunc_set_1(1.0f, (GenFunction_1)__gcquiz_advanceStateTo, GCQUIZ_STATE_9_UNKNOWN); // [port]
+            timedFunc_set_1(1.0f, (GenFunction_1)__gcquiz_advanceStateTo, GCQUIZ_STATE_9_UNKNOWN);
             break;
 
         case GCQUIZ_STATE_9_UNKNOWN:
@@ -608,7 +616,7 @@ bool __gcquiz_unused(u8 *arg0, s8 *arg1, QuizQuestionStruct *arg2, s32 arg3, voi
         }
         sD_803830E0->answer_values[i] = i;
     }
-    if (sD_803830E0->portait_ids[0] != 0) { // [port] was NULL — s8 value, not pointer
+    if (sD_803830E0->portait_ids[0] != 0) {
         gczoombox_loadSprite(sD_803830E0->zoomboxes[0], sD_803830E0->portait_ids[0]);
     }
     sD_803830E0->question_type = -1;

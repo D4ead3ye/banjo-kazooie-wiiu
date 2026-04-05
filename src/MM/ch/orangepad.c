@@ -1,3 +1,4 @@
+// BanjoDecomp: orangepad.c
 #include "functions.h"
 #include "variables.h"
 #include <ultra64.h>
@@ -6,8 +7,7 @@
 
 /* extern functions */
 void actor_update_func_80326224(Actor *);
-// [port] removed: void func_80329904 — now provided by port_prototypes.h as s32 return
-extern void func_802EFA20(ParticleEmitter *, f32, f32);
+extern void particleEmitter_func_802EFA20(ParticleEmitter *, f32, f32);
 
 /* public functions */
 void chorangepad_update(Actor *);
@@ -44,17 +44,17 @@ void func_80386444(ActorMarker *marker) {
         closest_orange_pad->state = 1;
 
         if (actorArray_findClosestActorFromActorId(position, ACTOR_57_ORANGE_PAD, 1, &distance_to_orange_pad)) {
-            func_8025A6EC(COMUSIC_2B_DING_B, 22000);
+            coMusicPlayer_playMusic(COMUSIC_2B_DING_B, 22000);
         }
         else {
-            temp_a0 = (closest_orange_pad->unk78_13 == 0x106) ? 0x10
-                    : (closest_orange_pad->unk78_13 == 0x76)  ? 0xf
+            temp_a0 = (closest_orange_pad->secondaryId == 0x106) ? 0x10
+                    : (closest_orange_pad->secondaryId == 0x76)  ? 0xf
                     : 0xe;
 
             func_802BAFE4(temp_a0);
             position[1] += 50.0f;
             timedFunc_set_3(0.6f, (GenFunction_3) __chorangepad_spawnJiggy, (s32) position[0], (s32) position[1], (s32) position[2]);
-            func_8025A6EC(COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 0x7FFF);
+            coMusicPlayer_playMusic(COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 0x7FFF);
 
             if (!jiggyscore_isCollected(JIGGY_8_MM_ORANGE_PADS)) {
                 gcdialog_showText(0xB3B, 4, NULL, NULL, NULL, NULL);
@@ -74,7 +74,7 @@ void func_80386444(ActorMarker *marker) {
         particleEmitter_setParticleLifeTimeRange(p_ctrl, 4.0f, 4.0f);
         particleEmitter_func_802EF9F8(p_ctrl, 0.01f);
         particleEmitter_func_802EFA18(p_ctrl, 3);
-        func_802EFA20(p_ctrl, 1.0f, 1.3f);
+        particleEmitter_func_802EFA20(p_ctrl, 1.0f, 1.3f);
         particleEmitter_emitN(p_ctrl, 30);
     }
 }
@@ -95,21 +95,21 @@ void chorangepad_update(Actor *this) {
     }//L803867B0
 
     if (!this->volatile_initialized) {
-        this->unk100 = actorArray_findClosestActorFromActorId(this->position, 8, -1, &min_distance)->marker;
+        this->partnerActor = actorArray_findClosestActorFromActorId(this->position, 8, -1, &min_distance)->marker;
         this->volatile_initialized = true;
     }//L803867E0
 
-    if (this->unk100) {
-        closest_actor = marker_getActor(this->unk100);
+    if (this->partnerActor) {
+        closest_actor = marker_getActor(this->partnerActor);
     }
 
     if (func_80329530(this, 0x28) &&
         !player_movementGroup() &&
-        !mapSpecificFlags_get(MM_SPECIFIC_FLAG_6_UNKNOWN) &&
+        !mapSpecificFlags_get(MM_SPECIFIC_FLAG_CONGA_WARNED_BLOCKS) &&
         closest_actor->state != 3) {
 
         if (gcdialog_showText(0xb3d, 0, NULL, NULL, NULL, NULL)) {
-            mapSpecificFlags_set(MM_SPECIFIC_FLAG_6_UNKNOWN, true);
+            mapSpecificFlags_set(MM_SPECIFIC_FLAG_CONGA_WARNED_BLOCKS, true);
         }
     }
 

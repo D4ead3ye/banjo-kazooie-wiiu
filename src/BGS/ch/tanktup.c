@@ -1,3 +1,4 @@
+// BanjoDecomp: tanktup.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
@@ -124,7 +125,7 @@ void func_8038F6A4(Actor *this)
     {
       if (local->unk0[sp44] == 0)
       {
-        __spawnQueue_add_3((GenFunction_3)func_8038F470, (uintptr_t)this->marker, local->unk0[sp44], sp44); // [port] was *((s32*)(&this->marker)) — pointer truncation
+        __spawnQueue_add_3((GenFunction_3)func_8038F470, (uintptr_t)this->marker, local->unk0[sp44], sp44);
       }
     }
 
@@ -151,7 +152,7 @@ void func_8038F6A4(Actor *this)
       subaddie_set_state_with_direction(this, 2, 0.0f, -1);
       local->unk10 = 0;
       sp44 = 0;
-        if(&sp44);
+        (void)&sp44;
       local->unk14 = 1;
       for (; sp44 < 4; sp44++)
       {
@@ -175,7 +176,7 @@ void func_8038F6A4(Actor *this)
       func_8038F610(this);
       if (actor_animationIsAt(this, 0.6f) && local->unk14)
     {
-      func_8025A6EC(COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 28000);
+      coMusicPlayer_playMusic(COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 28000);
       func_8028F94C(2, local->unk18);
     }
       if (actor_animationIsAt(this, 0.99f))

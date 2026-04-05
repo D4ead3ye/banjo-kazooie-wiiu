@@ -6,7 +6,7 @@
 
 #include "prop.h"
 
-extern s32 D_80370990; // [port] original frustum result from modelRender_draw
+extern s32 D_80370990;
 extern s32 port_getViewportWidth(void);
 
 #define DIST_SQ_VEC3F(v1, v2) ((v1[0] - v2[0])*(v1[0] - v2[0]) + (v1[1] - v2[1])*(v1[1] - v2[1]) + (v1[2] - v2[2])*(v1[2] - v2[2]))
@@ -16,8 +16,8 @@ extern void func_802EE6CC(f32[3], s32[4], s32[4], s32, f32, f32, s32, s32, s32);
 
 
 extern void func_8033A244(f32);
-extern uintptr_t func_802F3364(uintptr_t); // [port] identity function, needs pointer-width types
-extern void *func_802F2AEC(void); // [port] must declare — implicit int return truncates 64-bit pointer
+extern uintptr_t func_802F3364(uintptr_t);
+extern void *func_802F2AEC(void);
 extern void func_802F2C78(Struct64s *);
 extern void func_802F2D8C(Struct64s *);
 
@@ -25,7 +25,6 @@ f32 func_80257204(f32, f32, f32, f32);
 extern Actor *spawnQueue_bundleWithYaw_f32(enum bundle_e bundle_id, s32 x, s32 y, s32 z, s32 yaw);
 f32 func_8033229C(ActorMarker *);
 f32 player_getYaw(void);
-// extern void __bundle_spawnFromFirstActor(s32, Actor *); // [port] removed — prototype in port_prototypes.h (returns Actor*, bundle_e first param)
 extern void func_8032B3A0(Actor *, ActorMarker *);
 extern void func_8032EE0C(GenFunction_2, uintptr_t);
 extern void func_8032EE20(void);
@@ -34,7 +33,7 @@ extern void __spawnQueue_add_5(GenFunction_5, uintptr_t, uintptr_t, uintptr_t, u
 
 void func_8032A6A8(Actor *arg0);
 void func_8032ACA8(Actor *arg0);
-void func_8032B5C0(ActorMarker *arg0, ActorMarker *arg1, struct5Cs *arg2);
+void func_8032B5C0(ActorMarker *arg0, ActorMarker *arg1, CollisionParams *arg2);
 void subaddie_set_state_with_direction(Actor * this, s32 arg1, f32 arg2, s32 arg3);
 void func_8032BB88(Actor *this, s32 arg1, s32 arg2);
 bool subaddie_playerIsWithinSphere(Actor *this, s32 dist);
@@ -58,7 +57,7 @@ typedef struct {
 ActorArray *suBaddieActorArray = NULL; //actorArrayPtr
 s32 D_8036E564 = 0;
 struct5Bs *D_8036E568 = NULL;
-void *D_8036E56C = NULL; // [port] was s32, stores opaque particle handle (pointer-width on 64-bit)
+void *D_8036E56C = NULL;
 Struct64s *D_8036E570 = NULL;
 u8 D_8036E574 = 0;
 u8 D_8036E578 = 0;
@@ -282,7 +281,7 @@ Actor *func_80325AE0(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx) {
     f32 scale[3];
     f32 rotation[3];
     Actor *this;
-    BKSpriteDisplayData *sp40; // [port] was s32, stores BKSpriteDisplayData* from func_80330F30
+    BKSpriteDisplayData *sp40;
 
     this = marker_getActor(marker);
     sp40 = func_80330F30(marker);
@@ -316,11 +315,11 @@ Actor *func_80325AE0(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx) {
     return this;
 }
 
-Actor *func_80325CAC(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx) { // [port] was Gfx **mtx — typo in decomp
+Actor *func_80325CAC(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx) {
     f32 scale[3];
     f32 rotation[3];
     Actor *this;
-    BKSpriteDisplayData *sp40; // [port] was s32, stores BKSpriteDisplayData* from func_80330F30
+    BKSpriteDisplayData *sp40;
 
     this = marker_getActor(marker);
     sp40 = func_80330F30(marker);
@@ -377,7 +376,7 @@ void func_80325F84(Actor *this){}
 void func_80325F8C(void) {
     suBaddieActorArray = NULL;
     D_8036E568 = func_8034A2C8();
-    D_8036E56C = (void *)(uintptr_t)func_802EE5E0(0x10); // [port] s32 return → void* handle
+    D_8036E56C = (void *)(uintptr_t)func_802EE5E0(0x10);
     D_8036E570 = func_802F2AEC();
     D_8036E574 = 0;
     D_8036E578 = 0;
@@ -617,7 +616,7 @@ void func_803268B4(void) {
         }
     }
     if (D_8036E56C != 0) {
-        func_802EE5F0((uintptr_t)D_8036E56C); // [port] void* → s32 param via uintptr_t
+        func_802EE5F0((uintptr_t)D_8036E56C);
     }
     if (D_8036E570 != 0) {
         func_802F2D8C(D_8036E570);
@@ -667,7 +666,7 @@ Actor *actorArray_findClosestActorFromActorId(f32 position[3], enum actor_e acto
     Actor *i_actor;
     f32 i_dist;
     f32 min_dist;
-    Actor *closest_actor; // [port] was s32*, should be Actor* to match return type
+    Actor *closest_actor;
 
     if (suBaddieActorArray != NULL) {
         begin = suBaddieActorArray->data;
@@ -782,13 +781,19 @@ Actor *actor_new(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags){
     ActorAnimationInfo * sp54;
     s32 i;
     f32 sp44[3];
-    
+
+    // Copy position before any realloc — callers often pass pointers into the
+    // actor array itself, which realloc can free.
+    s32 pos_x = position[0];
+    s32 pos_y = position[1];
+    s32 pos_z = position[2];
+
     if(suBaddieActorArray == NULL){
         suBaddieActorArray = (ActorArray *)bk_malloc(sizeof(ActorArray) + 20*sizeof(Actor));
         suBaddieActorArray->cnt = 0;
         suBaddieActorArray->max_cnt = 20;
     }
-    
+
     if(suBaddieActorArray->cnt + 1 > suBaddieActorArray->max_cnt){
         suBaddieActorArray->max_cnt = suBaddieActorArray->cnt + 5;
         suBaddieActorArray = (ActorArray *)bk_realloc(suBaddieActorArray, sizeof(ActorArray) + suBaddieActorArray->max_cnt*sizeof(Actor));
@@ -801,10 +806,10 @@ Actor *actor_new(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags){
     suLastBaddie->unk10_25 = 0;
     suLastBaddie->unk10_18 = 0;
     suLastBaddie->state = actorInfo->startAnimation;
-    suLastBaddie->position_x = (f32)position[0];
-    suLastBaddie->position_y = (f32)position[1];
-    suLastBaddie->position_z = (f32)position[2];
-    suLastBaddie->unkF4_8 = 0;
+    suLastBaddie->position_x = (f32)pos_x;
+    suLastBaddie->position_y = (f32)pos_y;
+    suLastBaddie->position_z = (f32)pos_z;
+    suLastBaddie->actorTypeSpecificField = 0;
     suLastBaddie->yaw = (f32) yaw;
     suLastBaddie->yaw_ideal = (f32) yaw;
     suLastBaddie->pitch = 0.0f;
@@ -859,10 +864,10 @@ Actor *actor_new(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags){
     suLastBaddie->lifetime_value = 0.0f;
     suLastBaddie->is_bundle = false;
     suLastBaddie->unk104 = NULL;
-    suLastBaddie->unk100 = NULL;
+    suLastBaddie->partnerActor = NULL;
     suLastBaddie->unk158[0] = NULL;
     suLastBaddie->unk158[1] = NULL;
-    suLastBaddie->unk78_13 = 0;
+    suLastBaddie->secondaryId = 0;
     suLastBaddie->unk124_31 = 0;
     suLastBaddie->unkF4_20 = 0;
     suLastBaddie->sound_timer = 0.0f;
@@ -962,7 +967,7 @@ Actor *actor_new(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags){
         func_8034BFF8(suLastBaddie->marker);
     }
 
-    suLastBaddie->unk148 = NULL; // [port] was = 0, use NULL for pointer type
+    suLastBaddie->unk148 = NULL;
     if(flags & ACTOR_FLAG_UNKNOWN_11){
         suLastBaddie->unk148 = skeletalAnim_new();
     }
@@ -1040,7 +1045,7 @@ Actor *actor_new(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags){
     }
 
     suLastBaddie->unk154 = 0x005e0000;
-    suLastBaddie->marker->unk54 = (void (*)(struct actorMarker_s*, struct actorMarker_s*, u16*))func_8032B5C0; // [port] cast - decomp signature uses struct5Cs*
+    suLastBaddie->marker->unk54 = (void (*)(struct actorMarker_s*, struct actorMarker_s*, u16*))func_8032B5C0;
 
     
     for(i = 0; i < 3; ++i){
@@ -1055,13 +1060,13 @@ Actor *actor_new(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags){
 }
 
 static void __actor_free(ActorMarker *arg0, Actor *arg1){
-    Actor *arrayEnd; // [port] was s32 — truncates pointer on 64-bit
+    Actor *arrayEnd;
 
     //copy last actor over actor to delete
     arrayEnd = &suBaddieActorArray->data[suBaddieActorArray->cnt - 1];
     func_80325FE8(arg1);
     if(arg1 != arrayEnd)
-        memcpy(arg1, arrayEnd, sizeof(Actor)); // [port] was 0x180 — wrong size on 64-bit due to pointer fields
+        memcpy(arg1, arrayEnd, sizeof(Actor));
     arg1->marker->actrArrayIdx = arg0->actrArrayIdx;
 
     //remove last actor from actor array
@@ -1077,7 +1082,7 @@ static void __actor_free(ActorMarker *arg0, Actor *arg1){
 }
 
 Actor *actor_spawnWithYaw_s32(enum actor_e id, s32 (* pos)[3], s32 rot){
-    return __actor_spawnWithYaw_s32(id, *pos, rot); // [port] dereference pointer-to-array to get s32*
+    return __actor_spawnWithYaw_s32(id, *pos, rot);
 }
 
 Actor *actor_spawnWithYaw_f32(enum actor_e id, f32 pos[3], s32 rot){
@@ -1124,7 +1129,7 @@ Actor *actor_spawnWithYaw_s16(enum actor_e id, s16 (* pos)[3], s32 yaw){
         sp24[i] = (*pos)[i];
     }
 
-    return __actor_spawnWithYaw_s32(id, sp24, yaw); // [port] pass array directly (decays to s32*)
+    return __actor_spawnWithYaw_s32(id, sp24, yaw);
 }
 
 void marker_despawn(ActorMarker *marker){
@@ -1417,7 +1422,7 @@ f32 func_80328DCC(Actor *this, f32 angle, f32 angle_ideal, s32 arg3) {
     return var_f2;
 }
 
-void func_80328FB0(Actor *this, f32 arg1){
+void subaddie_turnToYaw(Actor *this, f32 arg1){
     this->yaw = func_80328DCC(this, this->yaw, this->yaw_ideal, (s32)arg1);
 }
 
@@ -1429,7 +1434,7 @@ int func_80329030(Actor *arg0, s32 arg1) {
     return !func_8032CA80(arg0, arg1);
 }
 
-s32 func_80329054(Actor *arg0, s32 arg1) { // [port] was s32 arg0, but callers pass Actor* and func_8032CA80 takes Actor*
+s32 func_80329054(Actor *arg0, s32 arg1) {
     return !func_8032CA80(arg0, arg1 + 4);
 }
 
@@ -1605,7 +1610,7 @@ s32 func_8032970C(Actor *this){
     return (s32) DIST_SQ_VEC3F(this->position, sp24);
 }
 
-s32 func_80329784(Actor *this){
+s32 subaddie_getYawToPlayer(Actor *this){
     f32 sp1C[3];
 
     func_8028E964(sp1C);
@@ -1655,7 +1660,7 @@ struct5Bs *func_80329934(void){
     return D_8036E568;
 }
 
-void *func_80329940(void){ // [port] was s32, returns opaque particle handle (pointer-width on 64-bit)
+void *func_80329940(void){
     return D_8036E56C;
 }
 
@@ -1669,20 +1674,20 @@ Actor *marker_getActor(ActorMarker *this){
 }
 
 Actor *subaddie_getLinkedActor(Actor *this){
-    if(this->unk100 == NULL)
+    if(this->partnerActor == NULL)
         return NULL;
-    return marker_getActor(this->unk100);
+    return marker_getActor(this->partnerActor);
 }
 
 void func_803299B4(Actor *arg0) {
     s32 position[3];
     s32 rotation[3];
 
-    arg0->marker->collisionFunc = (MarkerCollisionFunc)arg0->unk108; // [port] cast — save/restore repurposes Struct62s* field to hold MarkerCollisionFunc
+    arg0->marker->collisionFunc = (MarkerCollisionFunc)arg0->unk108;
     arg0->marker->collision2Func = arg0->unk10C;
-    arg0->marker->dieFunc = (MarkerCollisionFunc)arg0->unk134; // [port] cast — save/restore repurposes bk_vector** field to hold MarkerCollisionFunc
+    arg0->marker->dieFunc = (MarkerCollisionFunc)arg0->unk134;
     arg0->marker->unk54 = arg0->unk160;
-    arg0->marker->unk58 = (s32 (*)(struct actorMarker_s *, struct actorMarker_s *))arg0->unk168; // [port] cast — save/restore repurposes uintptr_t field to hold function pointer
+    arg0->marker->unk58 = (s32 (*)(struct actorMarker_s *, struct actorMarker_s *))arg0->unk168;
     arg0->marker->actorFreeFunc = arg0->backupFreeFunc;
     arg0->marker->unk5C = arg0->unk16C_31;
     arg0->marker->propPtr->unk8_3 = arg0->unkF4_28;
@@ -1728,7 +1733,7 @@ void actor_copy(Actor *dst, Actor *src){
     memcpy(src, dst, sizeof(Actor));
 }
 
-void *actors_appendToSavestate(void * begin, uintptr_t end){ // [port] u32 -> uintptr_t for 64-bit pointer safety
+void *actors_appendToSavestate(void * begin, uintptr_t end){
     void *sp3C = begin;
     Actor* s0;
     Actor* s1;
@@ -1767,15 +1772,15 @@ void *actors_appendToSavestate(void * begin, uintptr_t end){ // [port] u32 -> ui
                 s0->volatile_initialized = false;
                 s0->unk44_31 = 0;
                 s0->unk104 = NULL;
-                s0->unk100 = NULL;
+                s0->partnerActor = NULL;
                 s0->unk158[0] = NULL;
                 s0->unk158[1] = NULL;
                 s0->unk138_19 = s1->marker->id;
                 s0->unk108 = (Struct62s *)s1->marker->collisionFunc; // [port] cast — save/restore repurposes Struct62s* field to hold MarkerCollisionFunc
                 s0->unk10C = s1->marker->collision2Func;
                 s0->unk134 = (bk_vector(AnSeqElement) **)s1->marker->dieFunc; // [port] cast — save/restore repurposes bk_vector** field to hold MarkerCollisionFunc
-                s0->unk160 = (void *)s1->marker->unk54; // [port] cast — function pointer to void*
-                s0->unk168 = (uintptr_t)s1->marker->unk58; // [port] cast — function pointer to uintptr_t
+                s0->unk160 = (void *)s1->marker->unk54;
+                s0->unk168 = (uintptr_t)s1->marker->unk58;
                 s0->backupFreeFunc = s1->marker->actorFreeFunc;
                 s0->unk16C_31 = s1->marker->unk5C;
                 s0->unkF4_26 = s1->marker->unk2C_1;
@@ -1805,12 +1810,12 @@ void *actors_appendToSavestate(void * begin, uintptr_t end){ // [port] u32 -> ui
 
 void func_8032A09C(s32 arg0, ActorListSaveState *arg1) {
     Actor **temp_v1;
-    intptr_t pad = 0; // [port] was s32, multi-use scratch (holds Actor** and s32 yaw at different points)
+    intptr_t pad = 0;
     Actor *var_s0;
     Actor *temp_v0_6;
     s32 var_s2;
     Actor **sp60;
-    Actor **sp5C;
+    Actor **sp5C = NULL;
     s32 sp50[3];
     s32 var_s3;
     
@@ -1820,43 +1825,43 @@ void func_8032A09C(s32 arg0, ActorListSaveState *arg1) {
         var_s3 = 0;
         var_s0 = arg1->actor_save_state;
         for(var_s2 = arg1->cnt; var_s2 != 0; var_s2--) {
-            if ((var_s0->unk78_13 != 0) && (var_s3 < var_s0->unk78_13)) {
-                var_s3 = var_s0->unk78_13;
+            if ((var_s0->secondaryId != 0) && (var_s3 < var_s0->secondaryId)) {
+                var_s3 = var_s0->secondaryId;
             }
             var_s0++;
         }
         for(var_s0 = &suBaddieActorArray->data[0]; var_s0 < &suBaddieActorArray->data[suBaddieActorArray->cnt]; var_s0++){
-            if ((var_s0->unk78_13 != 0) && (var_s3 < var_s0->unk78_13)) {
-                var_s3 = var_s0->unk78_13;
+            if ((var_s0->secondaryId != 0) && (var_s3 < var_s0->secondaryId)) {
+                var_s3 = var_s0->secondaryId;
             }
         }
 
         var_s3++;
         
         sp60 = bk_malloc(var_s3*sizeof(Actor *));
-        pad = (intptr_t)(sp5C + var_s2); // [port] Actor** → intptr_t scratch
+        pad = (intptr_t)(sp5C + var_s2);
         sp5C = bk_malloc(var_s3*sizeof(Actor *));
         for (var_s2 = 0; var_s2 < var_s3; var_s2++) {
-            sp60[var_s2] = NULL; // [port] was *(u32*)&sp60 = 0 — only zeroed 4 bytes on 64-bit
-            sp5C[var_s2] = NULL; // [port] was *(u32*)&sp5C = 0 — only zeroed 4 bytes on 64-bit
+            sp60[var_s2] = NULL;
+            sp5C[var_s2] = NULL;
         }
 
        
         var_s0 = arg1->actor_save_state;
         for(var_s2 = arg1->cnt; var_s2 != 0; var_s2--) {
-            if (var_s0->unk78_13 != 0) {
-                sp5C[var_s0->unk78_13] = var_s0;
+            if (var_s0->secondaryId != 0) {
+                sp5C[var_s0->secondaryId] = var_s0;
             }
             var_s0++;
         }
         for(var_s0 = &suBaddieActorArray->data[0]; var_s0 < &suBaddieActorArray->data[suBaddieActorArray->cnt]; var_s0++){
-            if ((var_s0->unk78_13 != 0)) {
-                sp60[var_s0->unk78_13] = var_s0;
+            if ((var_s0->secondaryId != 0)) {
+                sp60[var_s0->secondaryId] = var_s0;
             }
         }
 
         for(var_s2 = 1; var_s2 < var_s3; var_s2++){
-            pad = (intptr_t)(sp5C + var_s2); // [port] Actor** → intptr_t scratch
+            pad = (intptr_t)(sp5C + var_s2);
             temp_v1 = sp60 + var_s2;
             if ((*temp_v1 != NULL) && (*(Actor **)pad != NULL) && !(*(Actor **)pad)->unkF4_22) {
                 var_s0 = *(Actor **)pad;
@@ -1867,7 +1872,7 @@ void func_8032A09C(s32 arg0, ActorListSaveState *arg1) {
             }
         }
         for(var_s2 = 1; var_s2 < var_s3; var_s2++){
-            pad = (intptr_t)(sp5C + var_s2); // [port] Actor** → intptr_t scratch
+            pad = (intptr_t)(sp5C + var_s2);
             temp_v1 = sp60 + var_s2;
             if ((*temp_v1 != NULL) && !(*temp_v1)->unk58_1 && (*(Actor **)pad == NULL)) {
                 marker_despawn((*temp_v1)->marker);
@@ -1877,12 +1882,12 @@ void func_8032A09C(s32 arg0, ActorListSaveState *arg1) {
 
         var_s0 = arg1->actor_save_state;
         for(var_s2 = arg1->cnt; var_s2 != 0; var_s2--){
-            if (var_s0->unk78_13 == 0) {
+            if (var_s0->secondaryId == 0) {
                 sp50[0] = (s32) var_s0->position[0];
                 sp50[1] = (s32) var_s0->position[1];
                 sp50[2] = (s32) var_s0->position[2];
                 pad = var_s0->yaw;
-                temp_v0_6 = actor_spawnWithYaw_s32(var_s0->modelCacheIndex, &sp50, pad); // [port] pass address of array for s32(*)[3] parameter
+                temp_v0_6 = actor_spawnWithYaw_s32(var_s0->modelCacheIndex, &sp50, pad);
                 actor_copy(var_s0, temp_v0_6);
                 func_80329B68(temp_v0_6);
                 func_803299B4(temp_v0_6);
@@ -1923,8 +1928,8 @@ void func_8032A6A8(Actor *arg0) {
             if ((arg0->unk44_14 == var_v0->unk44_14) && (arg0 != var_v0)) {
                 var_f2 = var_v0->unk48;
                 if ((var_f2 <= var_f0) && (arg0->unk48 <= var_f2)) {
-                    if (var_v0->unk78_13 != 0) {
-                        arg0->unk124_31 = var_v0->unk78_13;
+                    if (var_v0->secondaryId != 0) {
+                        arg0->unk124_31 = var_v0->secondaryId;
                         var_f0 = var_f2;
                     }
                 }
@@ -1940,7 +1945,7 @@ Actor *func_8032A7AC(Actor *arg0) {
     if (arg0->unk124_31 != 0) {
         if (suBaddieActorArray != NULL) {
             for(var_a0 = &suBaddieActorArray->data[0]; var_a0 < &suBaddieActorArray->data[suBaddieActorArray->cnt]; var_a0++){
-                if (arg0->unk124_31 == var_a0->unk78_13) {
+                if (arg0->unk124_31 == var_a0->secondaryId) {
                     return var_a0;
                 }
             }
@@ -1953,21 +1958,21 @@ void func_8032A82C(Actor *arg0, s32 arg1) {
     NodeProp *sp24;
     Actorlocal_Core2_9E370 *sp1C;
 
-    sp1C = (Actorlocal_Core2_9E370 *)arg0->local; // [port] cast u8[] → typed local struct
+    sp1C = (Actorlocal_Core2_9E370 *)arg0->local;
     sp24 = nodeprop_findByActorIdAndActorPosition(arg1, arg0);
     if (sp24 != NULL) {
         sp1C->unkC = nodeprop_getYaw(sp24);
         nodeprop_getPosition(sp24, sp1C->unk0);
-        sp1C->unkE = func_80341EC4(sp1C->unk0); // [port] Actorlocal_Core2_9E370* → f32[3]: pass position member
+        sp1C->unkE = func_80341EC4(sp1C->unk0);
     }
 }
 
 void func_8032A88C(Actor *arg0) {
     Actorlocal_Core2_9E370 *sp20;
 
-    sp20 = (Actorlocal_Core2_9E370 *)arg0->local; // [port] cast u8[] → typed local struct
+    sp20 = (Actorlocal_Core2_9E370 *)arg0->local;
     arg0->yaw_ideal = (f32) func_803297C8(arg0, sp20->unk0);
-    func_80328FB0(arg0, 6.0f);
+    subaddie_turnToYaw(arg0, 6.0f);
     func_80329030(arg0, 0);
     if ((((arg0->position[0] - sp20->unk0[0]) * (arg0->position[0] - sp20->unk0[0])) + ((arg0->position[2] - sp20->unk0[2]) * (arg0->position[2] - sp20->unk0[2]))) <= 144.0f) {
         arg0->unk44_14 = sp20->unkE;
@@ -1994,7 +1999,7 @@ bool func_8032A9E4(s32 arg0, s32 arg1, s32 arg2) {
 }
 
 //actor_setScale
-void func_8032AA58(Actor *this, f32 scale){
+void suSetSpriteScale(Actor *this, f32 scale){
     this->scale = scale;
     this->marker->unk14_10 = 0;
 }
@@ -2176,7 +2181,7 @@ void actorArray_defrag(void) {
     }
 
     if (D_8036E570 != 0) {
-        D_8036E570 = (Struct64s *)func_802F3364((uintptr_t)D_8036E570); // [port] cast Struct64s* ↔ uintptr_t
+        D_8036E570 = (Struct64s *)func_802F3364((uintptr_t)D_8036E570);
     }
 }
 
@@ -2187,7 +2192,7 @@ ActorMarker *func_8032B16C(enum jiggy_e jiggy_id) {
     if (suBaddieActorArray != NULL) {
         temp_s3 = &suBaddieActorArray->data[0];
         for(var_s0 = temp_s3; (var_s0 - temp_s3) < suBaddieActorArray->cnt; var_s0++){
-            if ((var_s0->marker->id == MARKER_52_JIGGY) && (chjiggy_getJiggyId(var_s0) == jiggy_id)) { // [port] was &(var_s0->marker) — pass Actor*, not ActorMarker**
+            if ((var_s0->marker->id == MARKER_52_JIGGY) && (chjiggy_getJiggyId(var_s0) == jiggy_id)) {
                 return var_s0->marker;
             }
         }
@@ -2205,7 +2210,7 @@ void func_8032B258(Actor *this, enum collision_e arg1) {
         if ((uintptr_t)this->marker->unk44 > 1) { // [port] N64 used (s32)<0; unk44 is 0=NULL, 1=flag, or valid ptr
             func_8034A174( this->marker->unk44, 0x20, sp38);
         }
-        if (((uintptr_t)this->marker->unk44 > 1) && ((sp38[0] != 0.0f) || (sp38[1] != 0.0f) || (sp38[2] != 0.0f))) { // [port] same fix
+        if (((uintptr_t)this->marker->unk44 > 1) && ((sp38[0] != 0.0f) || (sp38[1] != 0.0f) || (sp38[2] != 0.0f))) {
             __spawnQueue_add_5((GenFunction_5) spawnQueue_bundleWithYaw_f32, this->unk138_27 + BUNDLE_15__JIGGY, reinterpret_cast(s32, sp38[0]), reinterpret_cast(s32, sp38[1]), reinterpret_cast(s32, sp38[2]), reinterpret_cast(s32, sp44));
             return;
         }
@@ -2244,7 +2249,7 @@ void func_8032B4DC(Actor *this, ActorMarker *arg1, s32 arg2) {
     static s32 D_8036E5C0[4] = {0xFF, 0xFF, 0xFF, 0xC8};
 
     if (arg1 != NULL) {
-        func_8034A174(this->marker->unk44, arg2, sp3C); // [port] pass array directly (decays to f32*)
+        func_8034A174(this->marker->unk44, arg2, sp3C);
         func_802EE6CC(sp3C, NULL, D_8036E5C0, !this->unk16C_0, 0.75f, 0.0f, 125, 250, 0);
         func_802F3CF8(sp3C, !this->unk16C_0, 
             (arg1->id == 1) ? 1 
@@ -2254,7 +2259,7 @@ void func_8032B4DC(Actor *this, ActorMarker *arg1, s32 arg2) {
     }
 }
 
-void func_8032B5C0(ActorMarker *arg0, ActorMarker *arg1, struct5Cs *arg2) {
+void func_8032B5C0(ActorMarker *arg0, ActorMarker *arg1, CollisionParams *arg2) {
     Actor *this;
     s32 sp70;
     s32 sp6C;
@@ -2263,7 +2268,7 @@ void func_8032B5C0(ActorMarker *arg0, ActorMarker *arg1, struct5Cs *arg2) {
     s32 var_v0;
     f32 player_yaw;
     f32 sp50[3];
-    Cube *sp4C; // [port] was s32; func_8032F170 writes a Cube* here
+    Cube *sp4C;
     NodeProp *sp48;
     s32 sp3C[3];
     f32 sp38;
@@ -2273,7 +2278,7 @@ void func_8032B5C0(ActorMarker *arg0, ActorMarker *arg1, struct5Cs *arg2) {
     sp70 = func_8033D5B4(arg2);
     sp6C = func_8033D584(arg2);
     sp68 = func_8033D5A4(arg2);
-    sp64 = func_8033D574(arg2);
+    sp64 = collision_getNextState(arg2);
     if (((func_80297C6C() != 3) && func_8028F1E0()) || (func_8033D594(arg2) == 0)) {
         if (sp64 == 0) {
             if ((sp68 != 0) || (arg1->id == 0)) {
@@ -2325,7 +2330,7 @@ void func_8032B5C0(ActorMarker *arg0, ActorMarker *arg1, struct5Cs *arg2) {
                     if ((uintptr_t)arg0->unk44 > 1) { // [port] N64 used (s32)<0; unk44 is 0=NULL, 1=flag, or valid ptr
                         func_8034A174(arg0->unk44, 0x20, sp50);
                     }
-                    func_8032EE0C((GenFunction_2)func_8032B38C, (uintptr_t)this); // [port] cast to GenFunction_2; Actor* -> uintptr_t param
+                    func_8032EE0C((GenFunction_2)func_8032B38C, (uintptr_t)this);
                     if (((uintptr_t)arg0->unk44 > 1) && ((sp50[0] != 0.0f) || (sp50[1] != 0.0f) || (sp50[2] != 0.0f))) { // [port] N64 used (s32)<0; unk44 is 0=NULL, 1=flag, or valid ptr
                         __spawnQueue_add_5((GenFunction_5)spawnQueue_bundleWithYaw_f32, sp70 + BUNDLE_15__JIGGY, reinterpret_cast(s32, sp50[0]), reinterpret_cast(s32, sp50[1]), reinterpret_cast(s32, sp50[2]), reinterpret_cast(s32, player_yaw));
                     } else if (this->unk16C_3 && func_803048E0(sp3C, &sp4C, &sp48, 3, (s32) (func_8033229C(arg0) * 4.0f))) {
@@ -2342,7 +2347,7 @@ void func_8032B5C0(ActorMarker *arg0, ActorMarker *arg1, struct5Cs *arg2) {
                 marker_callCollisionFunc(arg0, arg1, sp64);
             }
             if ((sp64 != 0) && (sp6C != 0)) {
-                FUNC_8030E8B4(SFX_1D_HITTING_AN_ENEMY_1, 1.0f, 25984, this->position, (s32)((500.0f + func_8033229C(arg0)) * 0.5), (s32)((500.0f + func_8033229C(arg0)) * 5));
+                sfx_playFadeShorthandDefault(SFX_1D_HITTING_AN_ENEMY_1, 1.0f, 25984, this->position, (s32)((500.0f + func_8033229C(arg0)) * 0.5), (s32)((500.0f + func_8033229C(arg0)) * 5));
             }
         }
     }

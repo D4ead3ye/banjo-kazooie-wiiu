@@ -6,7 +6,6 @@
 
 extern void func_8030DBFC(u32, f32, f32, f32);
 extern bool func_80309DBC(f32[3], f32[3], f32, f32 sp54[3], s32, s32);
-// extern void fileProgressFlag_set(enum file_progress_e, bool); // [port] removed — prototype in port_prototypes.h
 extern void sfxsource_set_fade_distances(u8, f32, f32);
 extern void sfxsource_set_position(u8, f32[3]);
 extern void func_8030E2C4(u8);
@@ -64,7 +63,7 @@ void chBeeSwarm_802CEBA8(Actor *this){
     ActorLocal_core2_47BD0 *local;
 
     local = (ActorLocal_core2_47BD0 *)&this->local;
-    this->unk100 = NULL;
+    this->partnerActor = NULL;
     
     bk_free(local->unk8);
     local->unk8 = NULL;
@@ -231,11 +230,11 @@ void chBeeSwarm_802CF434(Actor *this) {
     s32 phi_s2;
     f32 *temp_s1;
     s32 temp_s2;
-    f32 sp58;
+    f32 sp58[3];
 
     local = (ActorLocal_core2_47BD0 *) &this->local;
     for(phi_s2 = 0, phi_s0 = local->unk8; phi_s2 < local->unk0; phi_s2++){
-        chBeeSwarm_802CF1C8(phi_s0->unk18, phi_s0->unk0, phi_s0->unkC, phi_s0->unk24[2], 150.0f, phi_s0->unk24, &sp58);
+        chBeeSwarm_802CF1C8(phi_s0->unk18, phi_s0->unk0, phi_s0->unkC, phi_s0->unk24[2], 150.0f, phi_s0->unk24, sp58);
         if (ml_vec3f_distance(phi_s0->unk0, phi_s0->unk18) < 50.0f) {
             func_802CEEA4(this, phi_s0);
         }
@@ -269,18 +268,18 @@ bool chBeeSwarm_802CF5E4(Actor *this){
     bool out = 1;
 
     local = (ActorLocal_core2_47BD0 *) &this->local;
-    out = (this->unk100 != NULL) ? out = local->unk24 != this->unk100->unk5C
+    out = (this->partnerActor != NULL) ? (local->unk24 != this->partnerActor->unk5C)
         : 1;
     return out;
 }
 
 void chBeeSwarm_802CF610(Actor *this, ParticleEmitter *p_ctrl, f32 position[3]) {
-    func_8030E6A4(SFX_66_BIRD_AUUGHH, randf2(1.75f, 1.85f), 15000);
+    gcsfx_playWithPitch(SFX_66_BIRD_AUUGHH, randf2(1.75f, 1.85f), 15000);
     particleEmitter_setPosition(p_ctrl, position);
     particleEmitter_setDrawMode(p_ctrl, 2);
     particleEmitter_func_802EF9F8(p_ctrl, 0.5f);
     particleEmitter_func_802EFA18(p_ctrl, 3);
-    func_802EFA20(p_ctrl, 0.8f, 1.0f);
+    particleEmitter_func_802EFA20(p_ctrl, 0.8f, 1.0f);
     particleEmitter_setSfx(p_ctrl, SFX_1F_HITTING_AN_ENEMY_3, 10000);
     particleEmitter_setSpawnIntervalRange(p_ctrl, 0.0f, 0.01f);
     particleEmitter_setParticleLifeTimeRange(p_ctrl, 2.0f, 2.5f);
@@ -297,7 +296,7 @@ void chBeeSwarm_802CF7CC(Actor *this) {
     if (D_8037DCBC == 0) {
         this->unk44_31 = sfxsource_createSfxsourceAndReturnIndex();
         sfxsource_setSfxId(this->unk44_31, SFX_3FA_HONEYCOMB_TALKING);
-        func_8030DD14(this->unk44_31, 2);
+        sfxSource_setunk43_7ByIndex(this->unk44_31, 2);
         func_8030DD90(this->unk44_31, 2);
         D_8037DCBC = 1;
     }
@@ -322,19 +321,19 @@ void chBeeSwarm_update(Actor *this) {
     if (!this->initialized) {
         this->initialized = true;
         beehive = actorArray_findClosestActorFromActorId(this->position, ACTOR_12_BEEHIVE, -1, &distance_to_home);
-        this->unk100 = (beehive != NULL) ? beehive->marker : NULL;
+        this->partnerActor = (beehive != NULL) ? beehive->marker : NULL;
         if(500.0f < distance_to_home){
-            this->unk100 = NULL;
+            this->partnerActor = NULL;
         }
         sp78 = 1;
         local->unk18 = (f32) this->position[1];
         
-        local->unkC[0] = ((this->unk100) ? beehive->position : this->position)[0];
-        local->unkC[1] = ((this->unk100) ? beehive->position : this->position)[1];
-        local->unkC[2] = ((this->unk100) ? beehive->position : this->position)[2];
+        local->unkC[0] = ((this->partnerActor) ? beehive->position : this->position)[0];
+        local->unkC[1] = ((this->partnerActor) ? beehive->position : this->position)[1];
+        local->unkC[2] = ((this->partnerActor) ? beehive->position : this->position)[2];
 
         local->unkC[1] += 250.0f;
-        local->unk0 = this->unkF4_8;
+        local->unk0 = this->actorTypeSpecificField;
         this->position[0] = local->unkC[0];
         this->position[1] = local->unkC[1];
         this->position[2] = local->unkC[2];
@@ -361,20 +360,20 @@ void chBeeSwarm_update(Actor *this) {
         if (sp78 == 0) {
             beehive = actorArray_findClosestActorFromActorId(this->position, ACTOR_12_BEEHIVE, -1, &distance_to_home);
             if (beehive != NULL) {
-                this->unk100 = beehive->marker;
+                this->partnerActor = beehive->marker;
             } else {
-                this->unk100 = NULL;
+                this->partnerActor = NULL;
             }
             if (distance_to_home > 500.0f) {
-                this->unk100 = NULL;
+                this->partnerActor = NULL;
             }
         }
-         local->unk24 = (this->unk100 != NULL) ? this->unk100->unk5C : 0;
+         local->unk24 = (this->partnerActor != NULL) ? this->partnerActor->unk5C : 0;
         local->unk5 = 1;
-        if (this->unk100 != NULL) {
+        if (this->partnerActor != NULL) {
             fileProgressFlag_set(FILEPROG_D_BEEHIVE_TEXT, true);
         }
-        subaddie_set_state(this, (this->unk100 != NULL) ? 1 : 2);
+        subaddie_set_state(this, (this->partnerActor != NULL) ? 1 : 2);
         this->lifetime_value = 0.0f;
         chBeeSwarm_802CF040(this);
         this->unk38_0 = volatileFlag_get(VOLATILE_FLAG_1) | volatileFlag_get(VOLATILE_FLAG_1F_IN_CHARACTER_PARADE);
@@ -417,7 +416,7 @@ void chBeeSwarm_update(Actor *this) {
                 subaddie_set_state(this, 6);
             }
         }
-        chBeeSwarm_802CF1C8(this->unk1C, this->position, this->velocity, this->actor_specific_1_f, 100.0f, 0, spA0); // [port] &spA0 -> spA0: f32[3] decays to f32*
+        chBeeSwarm_802CF1C8(this->unk1C, this->position, this->velocity, this->actor_specific_1_f, 100.0f, 0, spA0);
     }
     if (map_get() == MAP_78_GL_RBB_AND_MMM_PUZZLE) {
         if (this->unk38_31++ == 0x1E) {

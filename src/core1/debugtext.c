@@ -1,3 +1,4 @@
+// BanjoDecomp: debugtext.c
 #include <ultra64.h>
 #include "core1/core1.h"
 #include "functions.h"
@@ -434,7 +435,6 @@ s32 func_802485BC(void){
     return D_80275BD0;
 }
 
-void func_802485C8(s32 arg0){ // [port] was UNK_TYPE(s32) — empty stub
-
+void func_802485C8(s32 arg0){
 }
 #endif

@@ -73,7 +73,7 @@ typedef struct EventListener {
     eventType eventType##_ = { { false }, __VA_ARGS__ };                                    \
     EventSystem_CallEvent(eventType##ID, &eventType##_, __FILE__, __LINE__, FILE_AND_LINE); \
     if (eventType##_.event.cancelled) {                                                     \
-        return;                                                                             \
+        return eventType##_.result;                                                         \
     }
 
 #define CALL_CANCELLABLE_ACTORSPAWN_EVENT(eventType, ...)                                   \

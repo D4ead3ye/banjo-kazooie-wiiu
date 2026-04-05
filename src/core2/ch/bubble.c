@@ -7,7 +7,7 @@ typedef struct {
 }ActorLocal_Core2_3ECE0;
 
 void chBubble_update(Actor *this);
-extern void func_802F32C4(Struct64s *, f32[3], f32, ActorMarker *, s32(*)(f32[3], f32, ActorMarker *)); // [port] was s32 — first arg is Struct64s*
+extern void func_802F32C4(Struct64s *, f32[3], f32, ActorMarker *, s32(*)(f32[3], f32, ActorMarker *));
 
 /* .data */
 ActorInfo chBubble = { 
@@ -28,7 +28,7 @@ s32 __chBubble_func_802C5C70(f32 arg0[3], f32 arg1, ActorMarker *marker){
     this->position_x = arg0[0];
     this->position_y = arg0[1] - arg1/2;
     this->position_z = arg0[2];
-    func_8032AA58(this, arg1/200.0);
+    suSetSpriteScale(this, arg1/200.0);
     this->lifetime_value -= time_getDelta();
     if(this->lifetime_value < 0.0f){
         sp1C = 1;

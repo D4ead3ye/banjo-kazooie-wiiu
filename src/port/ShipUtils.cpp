@@ -15,8 +15,14 @@
 #include <crtdbg.h>
 #endif
 
-// [port] Check if any C button has an axis-based mapping (stick mapped to button).
 #include <ship/controller/controldevice/controller/mapping/sdl/SDLAxisDirectionToButtonMapping.h>
+
+#include <fstream>
+#include <filesystem>
+namespace fs = std::filesystem;
+
+// Furnace Fun active flag
+extern "C" s32 volatileFlag_get(s32);
 
 extern "C" uint64_t GetUnixTimestamp() {
     auto time = std::chrono::system_clock::now();
@@ -101,6 +107,13 @@ extern "C" const char* port_mapName(int map_id) {
         case 0x11:
         case 0x47:
             return "Bubblegloop Swamp";
+        // Freezeezy Peak
+        case 0x27:
+        case 0x41:
+        case 0x48:
+        case 0x53:
+        case 0x7F:
+            return "Freezeezy Peak";
         // Gobi's Valley
         case 0x12:
         case 0x13:
@@ -128,13 +141,6 @@ extern "C" const char* port_mapName(int map_id) {
         case 0x30:
         case 0x8D:
             return "Mad Monster Mansion";
-        // Freezeezy Peak
-        case 0x27:
-        case 0x41:
-        case 0x48:
-        case 0x53:
-        case 0x7F:
-            return "Freezeezy Peak";
         // Rusty Bucket Bay
         case 0x31:
         case 0x34:
@@ -261,20 +267,7 @@ extern "C" int port_getViewportWidth(void) {
     return 320;
 }
 
-extern "C" void port_setMapDebugTitle(int map_id) {
-    char title[128];
-    snprintf(title, sizeof(title), "Lighthouse - %s (0x%02X)", port_mapName(map_id), map_id);
-    SPDLOG_INFO("[port] {}", title);
-#ifdef _WIN32
-    // [port] Update the DXGI/SDL window title for quick visual debugging
-    HWND hwnd = GetActiveWindow();
-    if (hwnd) {
-        SetWindowTextA(hwnd, title);
-    }
-#endif
-}
-
-// [port] Returns 0.0–1.0 rumble intensity scale from the ImGui controller config.
+// Returns 0.0–1.0 rumble intensity scale from the ImGui controller config.
 // Uses the average of low/high frequency percentages for the given controller port.
 extern "C" float port_getRumbleScale(void) {
     auto ctx = Ship::Context::GetInstance();
@@ -321,4 +314,20 @@ extern "C" bool port_CButtonIsAxis(void) {
         }
     }
     return false;
+}
+
+json Ship_RetrieveSaveFile(int32_t filenum) {
+    std::string fileName = "file" + std::to_string(filenum) + ".json";
+    std::string filePath = Ship::Context::GetPathRelativeToAppDirectory("saves/" + fileName);
+
+    if (!std::filesystem::exists(filePath)) {
+        return json::object();
+    }
+
+    std::ifstream file(filePath);
+    json jsonSave;
+
+    file >> jsonSave;
+
+    return jsonSave;
 }

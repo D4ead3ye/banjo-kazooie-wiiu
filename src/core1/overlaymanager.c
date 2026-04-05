@@ -1,3 +1,4 @@
+// BanjoDecomp: overlaymanager.c
 #include <ultra64.h>
 #include "core1/core1.h"
 #include "functions.h"
@@ -122,6 +123,7 @@ s32 __overlayManager80251178(void){
 
     return ((sp1C + (u8 *)gFramebuffers) - largest_overlay->ram_end) + sp18;
 #endif
+    return 0;
 }
 
 void __overlayManager802511C4(void){
@@ -150,7 +152,7 @@ int overlayManagergetLoadedId(void){
 }
 
 bool overlayManagerisOverlayLoaded(int overlay_id){
-    return overlayMgrLoadedId_port == overlay_id; // [port]
+    return overlayMgrLoadedId_port == overlay_id;
 }
 
 bool overlayManagerload(enum overlay_e overlay_id){
@@ -164,7 +166,8 @@ bool overlayManagerload(enum overlay_e overlay_id){
 }
 
 s32 overlayManagerclearLoadedId(void){
-    overlayMgrLoadedId_port = 0; // [port]
+    overlayMgrLoadedId_port = 0;
+    return 0;
 }
 
 void overlayManagerloadCore2(void){

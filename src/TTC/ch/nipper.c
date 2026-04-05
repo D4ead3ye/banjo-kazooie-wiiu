@@ -1,3 +1,4 @@
+// BanjoDecomp: nipper.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
@@ -17,14 +18,14 @@ enum ch_nipper_states_e {
 
 /* .data */
 ActorAnimationInfo gChNipperAnimations[8] = {
-    {0, 0.0}, // [port] was NULL — u32 field
+    {0, 0.0},
     {ASSET_C0_ANIM_NIPPER_IDLE, 2.0f},
     {ASSET_BD_ANIM_NIPPER_VULNERABLE, 1.5f},
     {ASSET_BF_ANIM_NIPPER_ATTACK, 1.2f},
     {ASSET_BE_ANIM_NIPPER_OW, 1.3f},
     {ASSET_C0_ANIM_NIPPER_IDLE, 2.0f},
     {ASSET_133_ANIM_NIPPER_DIE, 3.0f},
-    {0, 0.0} // [port] was NULL — u32 field
+    {0, 0.0}
 };
 
 ActorInfo gChNipper = { 
@@ -104,7 +105,7 @@ static void __chNipper_playDeathAnimation(Actor *this) {
     subaddie_set_state_with_direction(this, CH_NIPPER_STATE_4_DIEING, 0.01f, 1);
     actor_playAnimationOnce(this);
     for(i = 0; i < 3; i ++){
-        FUNC_8030E8B4(SFX_79_TICKER_DEATH, 0.5f, 17000, this->position, 1500, 3000);
+        sfx_playFadeShorthandDefault(SFX_79_TICKER_DEATH, 0.5f, 17000, this->position, 1500, 3000);
     };
 }
 
@@ -115,7 +116,7 @@ static bool __func_80388088(Actor *this){
     f32 sp20[3];
     bool out;
 
-    sp2C = this->yaw - func_80329784(this);
+    sp2C = this->yaw - subaddie_getYawToPlayer(this);
     player_getPosition(sp20);
     if(sp20[0] < -5680.0f){
         return false;
@@ -139,7 +140,7 @@ static void __chNipper_dieFunc(ActorMarker *this_marker, ActorMarker *other_mark
         subaddie_set_state_with_direction(this, CH_NIPPER_STATE_6_DEAD, 0.01f, 1);
         actor_playAnimationOnce(this);
         for(i = 0; i < 3; i++){
-            FUNC_8030E8B4(SFX_78_EAGLECRY, 0.7f, 20000, this->position, 1500, 3000);
+            sfx_playFadeShorthandDefault(SFX_78_EAGLECRY, 0.7f, 20000, this->position, 1500, 3000);
         };
         comusic_8025AB44(COMUSIC_12_TTC_NIPPER, 0, 300);
         func_8025AABC(COMUSIC_12_TTC_NIPPER);
@@ -156,11 +157,11 @@ static void __chNipper_dieFunc(ActorMarker *this_marker, ActorMarker *other_mark
 
     __chNipper_playDeathAnimation(this);
     this->lifetime_value = 80.0f;
-    gcdialog_showText(ASSET_A10_DIALOG_TTC_NIPPER_HURT, 4, NULL, NULL, NULL, NULL);
+    gcdialog_showText(ASSET_A10_DIALOG_NIPPER_HURT, 4, NULL, NULL, NULL, NULL);
     return;
 }
 
-static s32 __chNipper_determineMarkerId(ActorMarker * this_marker, ActorMarker * other_marker){ // [port] was bool — callback passed to func_803300C0 expects s32 return
+static s32 __chNipper_determineMarkerId(ActorMarker * this_marker, ActorMarker * other_marker){
     if(this_marker->unk40_31 == 1){
         this_marker->id = MARKER_16C_NIPPER;
     }
@@ -260,7 +261,7 @@ static void __chNipper_updateFunc(Actor *this){
                 || actor_animationIsAt(this, 0.6f)
                 || actor_animationIsAt(this, 0.7f)
             ){
-                FUNC_8030E8B4(SFX_3D_TICKER_WALKING, 0.75f, 12000, this->position, 0x5dc, 0xbb8);
+                sfx_playFadeShorthandDefault(SFX_3D_TICKER_WALKING, 0.75f, 12000, this->position, 0x5dc, 0xbb8);
             }
             break;
 
@@ -301,7 +302,7 @@ static void __chNipper_updateFunc(Actor *this){
                 || actor_animationIsAt(this, 0.95f) 
             ){
                 for(sp48 = 0; sp48 < 3; sp48++){
-                    FUNC_8030E8B4(SFX_3D_TICKER_WALKING, 0.75f, 12000, this->position, 1500, 3000);
+                    sfx_playFadeShorthandDefault(SFX_3D_TICKER_WALKING, 0.75f, 12000, this->position, 1500, 3000);
                 }
             }
             break;
@@ -318,14 +319,14 @@ static void __chNipper_updateFunc(Actor *this){
                 || actor_animationIsAt(this, 0.6f)
                 || actor_animationIsAt(this, 0.7f)
             ){
-                FUNC_8030E8B4(SFX_3D_TICKER_WALKING, 0.75f, 12000, this->position, 0x5dc, 0xbb8);
+                sfx_playFadeShorthandDefault(SFX_3D_TICKER_WALKING, 0.75f, 12000, this->position, 0x5dc, 0xbb8);
             }
             break;
 
         case CH_NIPPER_STATE_6_DEAD:
             this->marker->collidable = false;
             if(actor_animationIsAt(this, 0.6f)){
-                FUNC_8030E8B4(SFX_7C_CHEBOOF, 0.9f, 20000, this->position, 1500, 3000);
+                sfx_playFadeShorthandDefault(SFX_7C_CHEBOOF, 0.9f, 20000, this->position, 1500, 3000);
                 break;
             }
 

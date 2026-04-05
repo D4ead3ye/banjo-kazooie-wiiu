@@ -1,3 +1,4 @@
+// BanjoDecomp: code_3630.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
@@ -29,14 +30,14 @@ void func_80389A20(ActorMarker *caller, enum asset_e text_id, s32 arg2){
 }
 
 void func_80389A60(Actor *this){
-    gcdialog_showText(ASSET_A70_DIALOG_CHARMER_HELPED, 4, NULL, this->marker, func_80389A20, NULL);
+    gcdialog_showText(ASSET_A70_DIALOG_RUBEE_HELPED, 4, NULL, this->marker, func_80389A20, NULL);
     this->has_met_before = true;
     subaddie_set_state(this, 5);
 }
 
 void func_80389ABC(Actor *this){
     if(this->unk138_23){
-        func_80389A20(this->marker, ASSET_A70_DIALOG_CHARMER_HELPED, -1);
+        func_80389A20(this->marker, ASSET_A70_DIALOG_RUBEE_HELPED, -1);
     }
     else{
         this->unk138_23 = true;
@@ -63,7 +64,7 @@ void func_80389B1C(Actor *this){
 
     if(this->state == 1 || this->state == 2){
         if(! this->has_met_before && func_80329530(this, 250) && !func_80329530(this, 0x50)){
-            gcdialog_showText(ASSET_A6F_DIALOG_CHARMER_MEET, 0xe, this->position, NULL, NULL, NULL);
+            gcdialog_showText(ASSET_A6F_DIALOG_RUBEE_MEET, 0xe, this->position, NULL, NULL, NULL);
             this->has_met_before = true;
             mapSpecificFlags_set(0, true);
         }
@@ -83,7 +84,7 @@ void func_80389B1C(Actor *this){
                 || actor_animationIsAt(this, 0.51f)
                 || actor_animationIsAt(this, 0.57f)
             ){
-                FUNC_8030E8B4(SFX_8_BANJO_LANDING_04, 3.802f, 8000, this->position, 1500, 4500);
+                sfx_playFadeShorthandDefault(SFX_8_BANJO_LANDING_04, 3.802f, 8000, this->position, 1500, 4500);
             }
 
             if( actor_animationIsAt(this, 0.4f)){
@@ -102,7 +103,7 @@ void func_80389B1C(Actor *this){
         case 3: //L80389E14
             if( actor_animationIsAt(this, 0.2f)){
                 func_8025A58C(500, 400);
-                func_8025A6EC(COMUSIC_27_GV_RUBEES_SONG, 28000);
+                coMusicPlayer_playMusic(COMUSIC_27_GV_RUBEES_SONG, 28000);
             }
 
             if( actor_animationIsAt(this, 0.99f)){

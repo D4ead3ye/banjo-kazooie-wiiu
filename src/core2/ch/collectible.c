@@ -4,7 +4,6 @@
 
 
 extern void actor_setOpacity(Actor*,s32);
-// extern void func_8035644C(u32); // [port] removed — prototype in port_prototypes.h (enum file_progress_e param)
 
 bool chCollectible_collectItem(Actor*, enum file_progress_e, enum asset_e, enum comusic_e, enum item_e, f32);
 Actor *chCollectible_draw(ActorMarker *this, Gfx **gdl, Mtx **mptr, Vtx **arg3);
@@ -26,7 +25,7 @@ extern ActorInfo D_80367D24 = {
 };
 
 extern ActorInfo D_80367D48 = {
-    MARKER_1E5_GOLD_FEATHER_COLLECTIBLE, ACTOR_370_GOLD_FEATHER, ASSET_6D1_SPRITE_GOLDFEATHTER,
+    MARKER_1E5_GOLD_FEATHER_COLLECTIBLE, ACTOR_370_GOLD_FEATHER, ASSET_6D1_SPRITE_GOLDFEATHER,
     0, NULL, 
     chCollectible_update, actor_update_func_80326224, chCollectible_draw, 
     0, 0, 0.5f, 0
@@ -77,7 +76,7 @@ void func_802D8C98(Actor *this, s32 arg1) {
 }
 
 bool chCollectible_collectItem(Actor* actor, enum file_progress_e arg1, enum asset_e dialogId, enum comusic_e sfxId, enum item_e itemId, f32 arg5){
-    func_8025A6EC(sfxId,32000);
+    coMusicPlayer_playMusic(sfxId,32000);
     timedFunc_set_1(0.75f, (GenFunction_1)func_8035644C, arg1);
     if(!func_802FADD4(0x1b)){
         item_inc(itemId);
@@ -100,10 +99,10 @@ s32 chCollectible_collectEgg(ActorProp *arg0){
         if(arg0->unk8_0)
             actPtr = marker_getActor(arg0->marker);
     }
-    return chCollectible_collectItem(actPtr, FILEPROG_5_BLUE_EGG_TEXT, 0xD9E, COMUSIC_C_EGG_COLLECTED, 0xD, 2.0f); // [port] MIPS implicit return
+    return chCollectible_collectItem(actPtr, FILEPROG_5_BLUE_EGG_TEXT, 0xD9E, COMUSIC_C_EGG_COLLECTED, 0xD, 2.0f);
 }
 
-bool chCollectible_collectRedFeather(ActorProp *arg0){ // [port] was void — MIPS implicit return from chCollectible_collectItem
+bool chCollectible_collectRedFeather(ActorProp *arg0){
     Actor *actPtr = NULL;
     fxSparkle_redFeather(&arg0->x);
     if(arg0->unk8_0)
@@ -111,7 +110,7 @@ bool chCollectible_collectRedFeather(ActorProp *arg0){ // [port] was void — MI
     return chCollectible_collectItem(actPtr, FILEPROG_6_RED_FEATHER_TEXT, 0xD9F, COMUSIC_B_RED_FEATHER_COLLECTED, 0xF, 4.0f);
 }
 
-bool chCollectible_collectGoldFeather(ActorProp *arg0){ // [port] was void — MIPS implicit return from chCollectible_collectItem
+bool chCollectible_collectGoldFeather(ActorProp *arg0){
     Actor *actPtr = NULL;
     fxSparkle_goldFeather(&arg0->x);
     if(arg0->unk8_0)
@@ -144,7 +143,7 @@ void chCollectible_update(Actor *this) {
 
     if (!this->initialized) {
         if (this->marker->id != 0x60) {
-            func_8032AA58(this, 0.56f);
+            suSetSpriteScale(this, 0.56f);
         }
         this->unk10_12 = -1;
         this->unk38_0 = (map_get() == MAP_90_GL_BATTLEMENTS);

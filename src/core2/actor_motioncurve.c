@@ -66,7 +66,7 @@ enum bs_e func_80295EE0(enum bs_e arg0){
         }
         else{
             ml_vec3f_to_vec3h(sp20, D_8037C3E0.unk8);
-            sp1C = actor_spawnWithYaw_s16(ACTOR_5A_JIGSAW_DANCE, &sp20, 0); // [port] pass pointer-to-array for s16(*)[3] param
+            sp1C = actor_spawnWithYaw_s16(ACTOR_5A_JIGSAW_DANCE, &sp20, 0);
             chJigsawDance_setState(sp1C, 3);
             bsjig_setJiggyMarkerPtr(sp1C->marker);
             sp1C->unk38_31 = D_8037C3E0.unk18;
@@ -129,7 +129,7 @@ void func_802961B4(s32 arg0){
     s32 sp2C[3];
     f32 sp20[3];
     
-    func_80330FCC((ActorMarker *)(intptr_t)func_80291660(), sp2C); // [port] s32 to ActorMarker* — N64 stored pointer as s32
+    func_80330FCC((ActorMarker *)(intptr_t)func_80291660(), sp2C);
     sp20[0] = sp2C[0];
     sp20[1] = sp2C[1];
     sp20[2] = sp2C[2];
@@ -174,7 +174,7 @@ enum bs_e func_802962BC(u32 arg0){
             if(sp1C)
                 return BS_CROC_OW;
             else
-                return BS_CROC_DIE; 
+                return BS_CROC_OW; 
         case TRANSFORM_4_WALRUS: //L8029635C
             if(sp1C)
                 return BS_WALRUS_OW;
@@ -279,7 +279,7 @@ void func_80296590(void){
             
             break;
     }
-    func_8029A86C(1);
+    bs_setInterruptResponse(1);
     bs_setState(0);
 }
 
@@ -523,14 +523,14 @@ void func_80296608(void){
             }
             break;
     }//L80296C0C
-    func_8029A86C(sp2C);
+    bs_setInterruptResponse(sp2C);
     bs_setState(next_state);
 }
 
 void func_80296C30(void){
     int i;
     D_8037C3E0.unk18 = 0;
-    D_8037C3E0.unk14 = NULL; // [port] was = 0
+    D_8037C3E0.unk14 = NULL;
     ml_vec3f_clear(D_8037C3E0.unk8);
     for(i = 0; i<5; i++)
         D_8037C400[i].unk1C = 0;

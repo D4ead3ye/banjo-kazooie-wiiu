@@ -21,7 +21,7 @@ s32 D_80385FE0;
 s32 D_80385FE4;
 s32 D_80385FE8;
 f32 D_80385FEC;
-u8  D_80385FF0[0xE]; // [port] was 0xB, but all access patterns use indices up to 0xD
+u8  D_80385FF0[0xE];
 f32 D_80386000[0xE]; //timescores
 s32 D_80386038;
 
@@ -77,6 +77,7 @@ s32 item_adjustByDiff(enum item_e item, s32 diff, s32 no_hud){
             || (item == ITEM_F_RED_FEATHER && volatileFlag_get(VOLATILE_FLAG_75_SANDCASTLE_INFINITE_RED_FEATHERS))
             || (item == ITEM_10_GOLD_FEATHER && volatileFlag_get(VOLATILE_FLAG_76_SANDCASTLE_INFINITE_GOLD_FEATHERS))
             || (item == ITEM_17_AIR && volatileFlag_get(VOLATILE_FLAG_96_SANDCASTLE_INFINITE_AIR))
+            || (item == ITEM_14_HEALTH && CVarGetInteger(CVAR_DEVELOPER_TOOLS("InfiniteHealth"), 0))
         ){
             diff = 0;
         }
@@ -86,13 +87,14 @@ s32 item_adjustByDiff(enum item_e item, s32 diff, s32 no_hud){
    // sp20;
 
     sp34 = ((fileProgressFlag_get(FILEPROG_B9_DOUBLE_HEALTH))? 2 : 1);
-    D_80385F30[ITEM_15_HEALTH_TOTAL] = MIN(sp34*8, D_80385F30[ITEM_15_HEALTH_TOTAL]);
+    D_80385F30[ITEM_15_HEALTH_TOTAL] = CVarGetInteger(CVAR_ENHANCEMENT("AllHoneycombExtensions"), 0)
+        ? MIN(sp34*9, D_80385F30[ITEM_15_HEALTH_TOTAL])
+        : MIN(sp34*8, D_80385F30[ITEM_15_HEALTH_TOTAL]);
     D_80385F30[ITEM_14_HEALTH]= MIN(D_80385F30[ITEM_15_HEALTH_TOTAL], D_80385F30[ITEM_14_HEALTH]);
     D_80385F30[ITEM_17_AIR] = MIN(3600, D_80385F30[ITEM_17_AIR]);
     D_80385F30[ITEM_25_MUMBO_TOKEN_TOTAL] = D_80385F30[ITEM_1C_MUMBO_TOKEN];
     D_80385F30[ITEM_16_LIFE] = MIN(0xFF, D_80385F30[ITEM_16_LIFE]);
 
-    // [port] BB romhacks can override all inventory max capacities
     switch(item){
         case ITEM_D_EGGS: {
             s32 cheato = port_getRomhackMaxEggsCheato();
@@ -152,7 +154,7 @@ s32 item_adjustByDiff(enum item_e item, s32 diff, s32 no_hud){
             }
             if(sp2C && sp30 != sp2C ){
                 if(sp2C < sp30){
-                    func_8025A6EC(SFX_AIR_METER_DROPPING, 28000);
+                    coMusicPlayer_playMusic(SFX_AIR_METER_DROPPING, 28000);
                 }
                 else{
                     func_8030E760(0x3e9, 1.2f, 28000);
@@ -163,7 +165,7 @@ s32 item_adjustByDiff(enum item_e item, s32 diff, s32 no_hud){
             sp28 = itemscore_noteScores_get(level_get());
             func_80346DB4(D_80385F30[item]);
             if(D_80385F30[item] == 100 && sp28 != 100){
-                func_8025A6EC(COMUSIC_36_100TH_NOTE_COLLECTED, 20000);
+                coMusicPlayer_playMusic(COMUSIC_36_100TH_NOTE_COLLECTED, 20000);
                 item_inc(ITEM_16_LIFE);
             }
             break;
@@ -360,7 +362,7 @@ void func_803465E4(void){
 void func_80346C10(enum bs_e *retVal, enum bs_e fail_state, enum bs_e success_state, enum item_e item_id, int use_item){
     if(item_empty(item_id)){
         item_adjustByDiffWithHud(item_id, 0);
-        func_8025A6EC(COMUSIC_2C_BUZZER, 22000);
+        coMusicPlayer_playMusic(COMUSIC_2C_BUZZER, 22000);
         if(fail_state != -1){
             *retVal = fail_state;
         }
@@ -559,9 +561,13 @@ void func_8034789C(void) {
     sp1C = honeycombscore_get_total();
     D_80385F30[ITEM_13_EMPTY_HONEYCOMB] = sp1C % 6;
     if (fileProgressFlag_get(FILEPROG_B9_DOUBLE_HEALTH)) {
-        D_80385F30[ITEM_15_HEALTH_TOTAL] = 16;
+        D_80385F30[ITEM_15_HEALTH_TOTAL] = CVarGetInteger(CVAR_ENHANCEMENT("AllHoneycombExtensions"), 0)
+            ? 18
+            : 16;
     } else {
-        D_80385F30[ITEM_15_HEALTH_TOTAL] =  5 + MIN(3, (sp1C / 6));
+        D_80385F30[ITEM_15_HEALTH_TOTAL] = CVarGetInteger(CVAR_ENHANCEMENT("AllHoneycombExtensions"), 0)
+            ? 5 + (sp1C / 6)
+            : 5 + MIN(3, (sp1C / 6));
     }
     if (volatileFlag_get(VOLATILE_FLAG_94_SANDCASTLE_INFINITE_HEALTH)) {
         temp_v0 = D_80385F30[ITEM_15_HEALTH_TOTAL];

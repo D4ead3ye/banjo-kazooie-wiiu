@@ -628,9 +628,9 @@ struct{
 
 struct{
     GenFunction_1 pre_method;
-    uintptr_t pre_arg; // [port] was s32, stores pointer (Actor*/Marker*)
+    uintptr_t pre_arg;
     GenFunction_1 post_method;
-    uintptr_t post_arg; // [port] was s32, stores pointer (Actor*/Marker*)
+    uintptr_t post_arg;
 } modelRenderCallback;
 
 s32 modelRenderDynEnvColor[4];
@@ -814,7 +814,7 @@ void func_80338904(Gfx **gfx, Mtx **mtx, void *arg2){
 
     if(D_80370990){
         vptr = &modelRenderDisplayList->list[cmd->unk8];
-        gSPDisplayList((*gfx)++, (Gfx *)osVirtualToPhysical(vptr)); // [port] uintptr_t -> Gfx*
+        gSPDisplayList((*gfx)++, (Gfx *)osVirtualToPhysical(vptr));
     }
 }
 
@@ -824,14 +824,14 @@ void func_80338970(Gfx **gfx, Mtx **mtx, void *arg2){
     int i;
 
     if(D_80370990){
-        gSPDisplayList((*gfx)++, (Gfx *)osVirtualToPhysical(modelRenderDisplayList->list + cmd->unk8[0])); // [port] uintptr_t -> Gfx*
+        gSPDisplayList((*gfx)++, (Gfx *)osVirtualToPhysical(modelRenderDisplayList->list + cmd->unk8[0]));
     }
 
     if(D_80370990){
         for(i = 1; cmd->unk8[i]; i++){
             mlMtxApply(*mtx);
             gSPMatrix((*gfx)++, (*mtx)++, G_MTX_PUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList((*gfx)++, (Gfx *)osVirtualToPhysical(modelRenderDisplayList->list + cmd->unk8[i])); // [port] uintptr_t -> Gfx*
+            gSPDisplayList((*gfx)++, (Gfx *)osVirtualToPhysical(modelRenderDisplayList->list + cmd->unk8[i]));
         }
     }
 }
@@ -845,7 +845,7 @@ void func_80338AC4(Gfx **gfx, Mtx **mtx, void *arg2){
 //Cmd7_LOAD_DL???
 void func_80338AE8(Gfx **gfx, Mtx **mtx, void *arg2){
     if(D_80370990){
-        gSPDisplayList((*gfx)++, (Gfx *)osVirtualToPhysical(modelRenderDisplayList->list + ((GeoCmd7*)arg2)->unkA)); // [port] uintptr_t -> Gfx*
+        gSPDisplayList((*gfx)++, (Gfx *)osVirtualToPhysical(modelRenderDisplayList->list + ((GeoCmd7*)arg2)->unkA));
     }
 }
 
@@ -925,7 +925,7 @@ void func_80338CD0(Gfx **gfx, Mtx **mtx, void *arg2){
 }
 
 //CmdD_DRAW_DISTANCE
-extern s32 port_getViewportWidth(void); // [port]
+extern f32 GameEngine_GetAspectRatio(void);
 void func_80338DCC(Gfx ** gfx, Mtx ** mtx, void *arg2){
     f32 sp2C[3];
     f32 sp20[3];
@@ -937,9 +937,10 @@ void func_80338DCC(Gfx ** gfx, Mtx ** mtx, void *arg2){
         sp20[0] = (f32)cmd->unkE[0] * modelRenderScale;
         sp20[1] = (f32)cmd->unkE[1] * modelRenderScale;
         sp20[2] = (f32)cmd->unkE[2] * modelRenderScale;
-        if(port_getViewportWidth() > 320 || viewport_isBoundingBoxInFrustum(sp2C, sp20)){
-            func_80339124(gfx, mtx, (BKGeoList*)((u8*)cmd + cmd->unk14));
-        }
+        // [port] The N64 bounding boxes in CmdD_DRAW_DISTANCE are too conservative
+        // for the port's viewport (292x216 -> 320x240 at 4:3). Extend to all aspect
+        //ratios since the port always renders at a higher effective resolution.
+        func_80339124(gfx, mtx, (BKGeoList*)((u8*)cmd + cmd->unk14));
     }
 }
 
@@ -1152,9 +1153,9 @@ BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation
     }
 
     // Set up segments 1 and 2 to point to vertices and textures respectively
-    gSPSegment((*gfx)++, 0x01, osVirtualToPhysical((void *)&modelRendervertexList->vtx_18)); // [port] uintptr_t -> void*
+    gSPSegment((*gfx)++, 0x01, osVirtualToPhysical((void *)&modelRendervertexList->vtx_18));
     uintptr_t base_tex = (uintptr_t)&modelRenderTextureList->tex_8[modelRenderTextureList->cnt_4];
-    gSPSegment((*gfx)++, 0x02, osVirtualToPhysical((void *)base_tex)); // [port] uintptr_t -> void*
+    gSPSegment((*gfx)++, 0x02, osVirtualToPhysical((void *)base_tex));
 
 
     //segments 11 to 15 contain animated textures
@@ -1165,7 +1166,7 @@ BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation
         for(i_segment = 0; i_segment < 4; i_segment++){
             if(AnimTextureListCache_tryGetTextureOffset(modelRenderAnimatedTexturesCacheId, i_segment, &texture_offset)){
                 uintptr_t base = (uintptr_t)&modelRenderTextureList->tex_8[modelRenderTextureList->cnt_4];
-                gSPSegment((*gfx)++, 15 - i_segment, osVirtualToPhysical((void *)(base + (uintptr_t)texture_offset))); // [port] uintptr_t -> void*
+                gSPSegment((*gfx)++, 15 - i_segment, osVirtualToPhysical((void *)(base + (uintptr_t)texture_offset)));
             }
         }
     }
@@ -1254,10 +1255,10 @@ BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation
     }
     else if(D_8038371C == 0 && modelRenderModelBin->animation_list_offset_18){
         if(modelRenderBoneTransformList == NULL){
-            animMtxList_setBoneless(&modelRenderAnimMtxList, (BKAnimationList*)((u8*)model_bin + (uintptr_t)(u32)model_bin->animation_list_offset_18)); // [port] u8* to BKAnimationList*
+            animMtxList_setBoneless(&modelRenderAnimMtxList, (BKAnimationList*)((u8*)model_bin + (uintptr_t)(u32)model_bin->animation_list_offset_18));
         }
         else{
-            animMtxList_setBoned(&modelRenderAnimMtxList, (BKAnimationList*)((u8*)model_bin + (uintptr_t)(u32)model_bin->animation_list_offset_18), modelRenderBoneTransformList); // [port] u8* to BKAnimationList*
+            animMtxList_setBoned(&modelRenderAnimMtxList, (BKAnimationList*)((u8*)model_bin + (uintptr_t)(u32)model_bin->animation_list_offset_18), modelRenderBoneTransformList);
         }
         D_8038371C = modelRenderAnimMtxList;
     }
@@ -1267,7 +1268,7 @@ BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation
     }
 
     if(model_bin->unk28 != 0 && D_8038371C != NULL){
-        func_802E6BD0((BKModelUnk28List *)((uintptr_t)modelRenderModelBin + (uintptr_t)(u32)modelRenderModelBin->unk28), modelRendervertexList, D_8038371C); // [port] uintptr_t -> BKModelUnk28List*
+        func_802E6BD0((BKModelUnk28List *)((uintptr_t)modelRenderModelBin + (uintptr_t)(u32)modelRenderModelBin->unk28), modelRendervertexList, D_8038371C);
     }
 
     mlMtxIdent();

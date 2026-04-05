@@ -67,7 +67,7 @@ void func_8031A678(Actor *this){
     Struct6Ds *sp2C;
     f32 sp20[3];
 
-    { Struct70s *tmp_s70 = func_8034C528(0x190); sp2C = tmp_s70 ? &tmp_s70->type_6D : NULL; } // [port] split UB
+    { Struct70s *tmp_s70 = func_8034C528(0x190); sp2C = tmp_s70 ? &tmp_s70->type_6D : NULL; }
     switch (this->unk10_12) {
         case MINIGAME_0_BOSS_BOOM_BOX:
             sp20[0] = -2000.0f;
@@ -86,12 +86,12 @@ void func_8031A678(Actor *this){
             break;
 
         case MINIGAME_5_SANDCASTLE:
-            { Struct70s *tmp_s70 = func_8034C528(0x191); sp2C = tmp_s70 ? &tmp_s70->type_6D : NULL; } // [port] split UB
+            { Struct70s *tmp_s70 = func_8034C528(0x191); sp2C = tmp_s70 ? &tmp_s70->type_6D : NULL; }
             if(sp2C) func_8034DEB4(sp2C, -1000.0f);
             break;
 
         case MINIGAME_2_GV_MATCHING:
-            { Struct70s *tmp_s70 = func_8034C528(0x1E7); sp2C = tmp_s70 ? &tmp_s70->type_6D : NULL; } // [port] split UB
+            { Struct70s *tmp_s70 = func_8034C528(0x1E7); sp2C = tmp_s70 ? &tmp_s70->type_6D : NULL; }
             if(sp2C) func_8034DEB4(sp2C, -1000.0f);
             break;
 
@@ -139,7 +139,7 @@ void __chMinigame_setState(Actor *this, u32 arg1) {
             comusic_playTrack((volatileFlag_get(VOLATILE_FLAG_5_FF_MINIGAME_WON)) ? COMUSIC_3B_MINIGAME_VICTORY : COMUSIC_3C_MINIGAME_LOSS);
             func_802E4A70();
             volatileFlag_set(VOLATILE_FLAG_21, true);
-            timedFunc_set_3(2.0f, (GenFunction_3)func_802E4078, MAP_8E_GL_FURNACE_FUN, 1, 1);
+            timedFunc_set_3(2.0f, (GenFunction_3)transitionToMap, MAP_8E_GL_FURNACE_FUN, 1, 1);
             break;
     }
     subaddie_set_state(this, arg1);

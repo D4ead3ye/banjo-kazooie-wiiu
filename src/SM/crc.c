@@ -1,10 +1,9 @@
+// BanjoDecomp: code_F0.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
 #include "prop.h"
 #include "actor.h"
-
-int ability_hasLearned(s32);
 
 extern s32 D_80275650;
 
@@ -52,7 +51,7 @@ static bool __codeF0_areCrcsValid();
 static u32 *__codeF0_getLearnedAbilitiesAddress(){
     s16 *addr;
     addr = (s16*)ability_hasLearned;
-    return (u32 *)(uintptr_t)((addr[1] << 0x10) + addr[3]); // [port] 64-bit cast
+    return (u32 *)(uintptr_t)((addr[1] << 0x10) + addr[3]);
 }
 
 static void __codeF0_learnAbility(enum ability_e ability){

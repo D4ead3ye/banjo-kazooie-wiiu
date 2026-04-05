@@ -1,3 +1,4 @@
+// BanjoDecomp: code_0.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
@@ -10,8 +11,8 @@ ActorInfo D_8038EB74 = { 0x1AC, 0x29A, 0x445, 0x0, NULL, func_803864B8, NULL, ac
 /* .code */
 void CCW_func_803863F0(Actor *this, s32 next_state){
     if(next_state == 2){
-        FUNC_8030E8B4(SFX_2F_ORANGE_SPLAT, 1.0f, 32000, this->position, 500, 3000);
-        levelSpecificFlags_set(LEVEL_FLAG_10_CCW_UNKNOWN, true);
+        sfx_playFadeShorthandDefault(SFX_2F_ORANGE_SPLAT, 1.0f, 32000, this->position, 500, 3000);
+        levelSpecificFlags_set(LEVEL_FLAG_10_CCW_BREAK_ZUBBA_DOOR, true);
         marker_despawn(this->marker);
     }
     this->state = next_state;
@@ -31,7 +32,7 @@ void func_803864B8(Actor *this){
         marker_setCollisionScripts(this->marker, NULL, NULL, func_80386468);
         CCW_func_803863F0(this, 1);
 
-        if (levelSpecificFlags_get(LEVEL_FLAG_10_CCW_UNKNOWN)) {
+        if (levelSpecificFlags_get(LEVEL_FLAG_10_CCW_BREAK_ZUBBA_DOOR)) {
             marker_despawn(this->marker);
         }
     }

@@ -1,3 +1,4 @@
+// BanjoDecomp: code_7FF0.c
 #include "actor.h"
 #include "core1/core1.h"
 #include "functions.h"
@@ -234,7 +235,7 @@ void func_8038E648(Actor *this){
                 subaddie_set_state(this, 6);
                 this->unk38_31 = 600;
                 core1_7090_initSfxSource(0, 0x6A, 0x7ff8, 0.3f);
-                func_802D68F0(25);
+                func_802D68F0(CVarGetInteger(CVAR_ENHANCEMENT("Gameplay.WaterPyramidTimer"), 0) ? 29 : 25);
                 item_set(ITEM_6_HOURGLASS, 1);
             }
             break;
@@ -244,7 +245,7 @@ void func_8038E648(Actor *this){
             if(90.0f <= this->pitch){
                 subaddie_set_state(this, 7);
                 this->pitch = 90.0f;
-                func_8030E540(SFX_7F_HEAVYDOOR_SLAM);
+                gcsfx_playAtSampleRate(SFX_7F_HEAVYDOOR_SLAM);
                 core1_7090_freeSfxSource(0);
             }
             break;
@@ -262,7 +263,7 @@ void func_8038E648(Actor *this){
             if(this->pitch <= 0.0f){
                 subaddie_set_state(this, 1);
                 this->pitch = 0.0f;
-                func_8030E540(SFX_7F_HEAVYDOOR_SLAM);
+                gcsfx_playAtSampleRate(SFX_7F_HEAVYDOOR_SLAM);
                 mapSpecificFlags_set(5, false);
                 core1_7090_freeSfxSource(0);
                 volatileFlag_setAndTriggerDialog_0(VOLATILE_FLAG_AC_GV_TRAPDOOR_MISSED);
@@ -272,7 +273,7 @@ void func_8038E648(Actor *this){
 }
 
 void func_8038E914(Actor *this){
-    func_80389F5C(); // [port] decomp passed Actor* but actual def is (void)
+    func_80389F5C();
     if(!this->initialized){
         func_802D3D74(this);
         this->initialized = true;
@@ -317,7 +318,7 @@ void func_8038E97C(Actor *this){
         if(this->unk38_31 == 0){
             subaddie_set_state(this, 1);
             core1_7090_freeSfxSource(1);
-            func_8030E540(SFX_7F_HEAVYDOOR_SLAM);
+            gcsfx_playAtSampleRate(SFX_7F_HEAVYDOOR_SLAM);
         }
 
     }
@@ -325,11 +326,11 @@ void func_8038E97C(Actor *this){
 
 void chKazooieDoor_update(Actor *this){
     func_802D3D74(this);
-    func_8032AA58(this, 1.3f);
+    suSetSpriteScale(this, 1.3f);
     switch(this->state){
         case 1: //L8038EB98
             if(mapSpecificFlags_get(6)){
-                func_8025A6EC(COMUSIC_2B_DING_B, -1);
+                coMusicPlayer_playMusic(COMUSIC_2B_DING_B, -1);
                 func_802BAFE4(3);
                 subaddie_set_state(this, 6);
                 core1_7090_initSfxSource(1, 0x6a, 0x7ff8, 0.3f);
@@ -343,7 +344,7 @@ void chKazooieDoor_update(Actor *this){
             this->position_z -= 1.3319999999999999;
             if(this->unk1C[1] <= this->position_y){
                 subaddie_set_state(this, 7);
-                func_8030E540(SFX_7F_HEAVYDOOR_SLAM);
+                gcsfx_playAtSampleRate(SFX_7F_HEAVYDOOR_SLAM);
                 core1_7090_freeSfxSource(1);
                 this->unk38_31 = 450;
             }
@@ -363,7 +364,7 @@ void chKazooieDoor_update(Actor *this){
             if(this->position_y <= this->unk1C[0]){
                 this->position_y = this->unk1C[0];
                 subaddie_set_state(this, 1);
-                func_8030E540(SFX_7F_HEAVYDOOR_SLAM);
+                gcsfx_playAtSampleRate(SFX_7F_HEAVYDOOR_SLAM);
                 core1_7090_freeSfxSource(1);
                 mapSpecificFlags_set(6, false);
             }
@@ -437,10 +438,10 @@ void chKazooieTarget_update(Actor *this){
 }
 
 void func_8038F004(void){
-    func_8025A6EC(SFX_2D_KABOING, 0x7fff);
+    coMusicPlayer_playMusic((enum comusic_e)SFX_2D_KABOING, 0x7fff);
 }
 
-void func_8038F028(NodeProp *arg0, ActorMarker *arg1, s32 arg2, s32 arg3){ // [port] was UNK_TYPE(s32)
+void func_8038F028(NodeProp *arg0, ActorMarker *arg1, s32 arg2, s32 arg3){
     f32 sp24[3];
     s16 *tmp_v1;
 
@@ -451,7 +452,7 @@ void func_8038F028(NodeProp *arg0, ActorMarker *arg1, s32 arg2, s32 arg3){ // [p
         sp24[1] = (f32)arg1->propPtr->y;
         sp24[2] = (f32)arg1->propPtr->z;
         __spawnQueue_add_4((GenFunction_4)spawnQueue_actor_f32, 0x4e, reinterpret_cast(s32, sp24[0]), reinterpret_cast(s32, sp24[1]), reinterpret_cast(s32, sp24[2]));
-        func_8025A6EC(COMUSIC_2B_DING_B, 22000);
+        coMusicPlayer_playMusic(COMUSIC_2B_DING_B, 22000);
         if(mapSpecificFlags_get(arg3)){
             timedFunc_set_0(2.0f, func_8038F004);
         }
@@ -459,11 +460,11 @@ void func_8038F028(NodeProp *arg0, ActorMarker *arg1, s32 arg2, s32 arg3){ // [p
     func_80353580(arg1);
 }
 
-void func_8038F10C(NodeProp *arg0, ActorMarker *arg1){ // [port] was UNK_TYPE(s32)
+void func_8038F10C(NodeProp *arg0, ActorMarker *arg1){
     func_8038F028(arg0, arg1, 0, 1); //JINXY egg flags?
 }
 
-void func_8038F130(NodeProp *arg0, ActorMarker *arg1){ // [port] was UNK_TYPE(s32)
+void func_8038F130(NodeProp *arg0, ActorMarker *arg1){
     func_8038F028(arg0, arg1, 1, 0); //JINXY egg flags?
 }
 
