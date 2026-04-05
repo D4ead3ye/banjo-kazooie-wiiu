@@ -6,8 +6,8 @@
 // #include "port/Rando/Spoiler/Spoiler.h"
 
 void Rando::MiscBehavior::OnFileSave() {
-    REGISTER_LISTENER(OnGameFileSave, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        OnGameFileSave* ev = (OnGameFileSave*)event;
+    REGISTER_LISTENER(OnGameSave, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnGameSave* ev = (OnGameSave*)event;
         if (!IS_RANDO) {
             return;
         }

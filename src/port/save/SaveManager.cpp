@@ -228,7 +228,7 @@ json Convert_SaveDataToJSON(SaveData* saveData, int32_t fileNum) {
     json ship = json::object();
     json shipRando = json::object();
 
-    ship["fileType"] = FILE_TYPE_SAVE_VANILLA;
+    ship["fileType"] = static_cast<int>(saveData->shipSaveData.fileType);
     ship["randoSaveData"] = shipRando;
 
     j["ship"] = ship;

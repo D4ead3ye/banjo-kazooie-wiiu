@@ -126,9 +126,8 @@ extern void sns_update_global_save_data_checksum(void);
 
 void gameFile_load(s32 gamenum){
     s32 filenum = gameFile_GameIdToFileIdMap[gamenum];
-    CALL_EVENT(OnGameFileLoad, filenum);
     saveData_load(&gameFile_saveData[filenum]);
-    CALL_EVENT(OnGameLoad, filenum);
+    CALL_EVENT(OnGameLoad, gamenum);
 
     // [port] Unlock Stop N' Swop items as a reward for 100% completion
     if (CVarGetInteger(CVAR_ENHANCEMENT("Gameplay.StopNSwop100"), 0)) {
@@ -144,7 +143,6 @@ void gameFile_load(s32 gamenum){
 
 void gameFile_save(s32 gamenum){
     s32 filenum = gameFile_GameIdToFileIdMap[gamenum];
-    CALL_EVENT(OnGameFileSave, filenum);
     saveData_create(&gameFile_saveData[filenum]);
 }
 

@@ -11,8 +11,8 @@ bool gameFile_isNotEmpty(s32 gamenum);
 }
 
 void Rando::MiscBehavior::OnFileLoad() {
-    REGISTER_LISTENER(OnGameFileLoad, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        OnGameFileLoad* ev = (OnGameFileLoad*)event;
+    REGISTER_LISTENER(OnGameLoad, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnGameLoad* ev = (OnGameLoad*)event;
         selectedFileNum = ev->fileNum;
 
         if (gameFile_isNotEmpty(selectedFileNum)) {
@@ -21,7 +21,7 @@ void Rando::MiscBehavior::OnFileLoad() {
 
         if (!IS_RANDO) {
             if (!CVarGetInteger("gRandoSettings.Enabled", 0)) {
-                gameFile_saveData[selectedFileNum].shipSaveData.randoSaveData.isRando = true;
+                gameFile_saveData[selectedFileNum].shipSaveData.fileType = FILE_TYPE_SAVE_RANDO;
             }
         }
 
