@@ -3,6 +3,7 @@
 #include "variables.h"
 
 #include "save.h"
+#include "core1/sns.h"
 
 /* .bss */
 SaveData gameFile_saveData[4]; //save_data
@@ -77,7 +78,6 @@ s32 gameFile_8033CFD4(s32 gamenum){
     s32 eeprom_error;
     SaveData *save_data;
 
-
     filenum = D_80383F04;
     next = gameFile_GameIdToFileIdMap[gamenum];
     gameFile_GameIdToFileIdMap[gamenum] = D_80383F04;
@@ -85,26 +85,32 @@ s32 gameFile_8033CFD4(s32 gamenum){
     save_data = gameFile_saveData + filenum;
     save_data->slotIndex = gamenum + 1;
     savedata_update_crc(save_data, sizeof(SaveData));
-    for(eeprom_error = 1; eeprom_error && i > 0; i--){//L8033D070
+    CALL_EVENT(OnSaveFileSave, save_data, gamenum);
+#if 0
+{
+    for (eeprom_error = 1; eeprom_error && i > 0; i--) {//L8033D070
         eeprom_error = savedata_8033CC98(filenum, save_data);
-        if(!eeprom_error){
+        if (!eeprom_error) {
             __gameFile_8033CE14(gamenum);
         }
     }
-    if(!eeprom_error){
-        for(i = 3; i > 0; i--){//L8033D070
+    if (!eeprom_error) {
+        for (i = 3; i > 0; i--) {//L8033D070
             eeprom_error = savedata_8033CCD0(next);
-            if(!eeprom_error)
+            if (!eeprom_error)
                 break;
         }
     }
-    if(eeprom_error){
+    if (eeprom_error) {
         gameFile_GameIdToFileIdMap[gamenum] = next;
     }
-    else{
+    else {
         D_80383F04 = next;
     }
     return eeprom_error;
+}
+#endif
+return 0;
 }
 
 void gameFile_clear(s32 gamenum){
@@ -112,23 +118,31 @@ void gameFile_clear(s32 gamenum){
     savedata_clear(&gameFile_saveData[filenum]);
 }
 
-extern void port_restoreFileEnhancementData(int eepromSlot);
+// extern void port_restoreFileEnhancementData(int eepromSlot);
 extern s32 D_80386068; // [port] lives backup — func_80347AA8 restores from this
 extern s32 D_80385F30[];
+extern void sns_set_item_state(s32 item, s32 set, bool value);
+extern void sns_update_global_save_data_checksum(void);
 
 void gameFile_load(s32 gamenum){
     s32 filenum = gameFile_GameIdToFileIdMap[gamenum];
-    CALL_EVENT(OnGameFileLoad, filenum);
     saveData_load(&gameFile_saveData[filenum]);
-    // [port] Override lives backup and item array with persisted value.
-    // func_80347AA8 reads D_80386068 to restore lives after map transitions.
-    port_restoreFileEnhancementData(filenum);
-    D_80386068 = D_80385F30[ITEM_16_LIFE];
+    CALL_EVENT(OnGameLoad, gamenum);
+
+    // [port] Unlock Stop N' Swop items as a reward for 100% completion
+    if (CVarGetInteger(CVAR_ENHANCEMENT("Gameplay.StopNSwop100"), 0)) {
+        if (jiggyscore_total() == 100 && fileProgressFlag_get(FILEPROG_FC_DEFEAT_GRUNTY)) {
+            s32 i;
+            for (i = 1; i < SNS_ITEM_length; i++) {
+                sns_set_item_state(i, SNS_UNLOCKED, true);
+            }
+            sns_update_global_save_data_checksum();
+        }
+    }
 }
 
 void gameFile_save(s32 gamenum){
     s32 filenum = gameFile_GameIdToFileIdMap[gamenum];
-    CALL_EVENT(OnGameFileSave, filenum);
     saveData_create(&gameFile_saveData[filenum]);
 }
 

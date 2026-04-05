@@ -145,7 +145,7 @@ Struct70s *func_8034C5AC(s32 arg0){
     return NULL;
 }
 
-Struct70s *func_8034C630(void *arg0){ // [port] was s32 — receives pointer (BKCollisionTri*) on 64-bit
+Struct70s *func_8034C630(void *arg0){
     struct1Ds *iPtr;
     struct1Ds *endPtr;
 
@@ -238,4 +238,5 @@ void * func_8034C9D4(void){
        D_80372030[iPtr->xform_id].unk4(&iPtr->unk8, iPtr->model, iPtr->unk4);
     }
 
+    return NULL;
 }

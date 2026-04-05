@@ -1,3 +1,4 @@
+// BanjoDecomp: code_47D0.c
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
@@ -58,12 +59,12 @@ void chTumblar_copyPosition(s32 arg0, Struct68s *arg1, f32 arg2[3]) {
     func_8035179C_copyPosition(arg1, arg2);
 }
 
-bool chTumblar_isDisappeared(void *arg0_, s32 arg1) { // [port] void* for prototype compatibility
+bool chTumblar_isDisappeared(void *arg0_, s32 arg1) {
     Struct_MMM_47D0_0 *arg0 = (Struct_MMM_47D0_0 *)arg0_;
     return arg0->state == TUMBLAR_STATE_3_DISAPPEARED;
 }
 
-bool chTumblar_isBanjoAbove(void *arg0_, Struct68s *arg1) { // [port] void* for prototype compatibility
+bool chTumblar_isBanjoAbove(void *arg0_, Struct68s *arg1) {
     Struct_MMM_47D0_0 *arg0 = (Struct_MMM_47D0_0 *)arg0_;
     f32 plyr_pos[3];
     f32 position[3];
@@ -95,7 +96,7 @@ void chTumblar_init(Struct_MMM_47D0_0 *arg0, Struct68s *arg1) {
 
     sfxsource_index = func_80351758_getSfxsourceIndex(arg1);
     sfxsource_setSfxId(sfxsource_index, SFX_3EC_CCW_DOOR_OPENING);
-    func_8030DD14(sfxsource_index, 3);
+    sfxSource_setunk43_7ByIndex(sfxsource_index, 3);
     sfxsource_playSfxAtVolume(sfxsource_index, 0.6f);
     sfxsource_setSampleRate(sfxsource_index, 0);
     func_8030E2C4(sfxsource_index);
@@ -125,9 +126,9 @@ void __chTumblar_congratulationTextCallback(ActorMarker *marker, enum asset_e te
     mapSpecificFlags_set(MMM_SPECIFIC_FLAG_TUMBLAR_BROKEN, true);
 }
 
-void chTumblar_congratulate(void *arg0_, s32 arg1) { // [port] void* for prototype compatibility
+void chTumblar_congratulate(void *arg0_, s32 arg1) {
     Struct_MMM_47D0_0 *arg0 = (Struct_MMM_47D0_0 *)arg0_;
-    gcdialog_showText(ASSET_ADB_DIALOG_UNKNOWN, 4, NULL, arg0->jiggy_marker, __chTumblar_congratulationTextCallback, NULL);
+    gcdialog_showText(ASSET_ADB_DIALOG_TUMBLAR_COMPLETE, 4, NULL, arg0->jiggy_marker, __chTumblar_congratulationTextCallback, NULL);
     arg0->state = TUMBLAR_STATE_1_CONGRATULATING;
 }
 
@@ -220,7 +221,7 @@ void chTumblar_update(Struct_MMM_47D0_0 *arg0, Struct68s *arg1, f32 tick) {
     func_8035179C_copyPosition(arg1, position);
 
     if (!mapSpecificFlags_get(MMM_SPECIFIC_FLAG_0_UNKNOWN) && arg0->state == TUMBLAR_STATE_0_IDLE && ml_vec3f_horizontal_distance_zero_likely(position, plyr_pos) < 250.0f) {
-        if (gcdialog_showText(ASSET_ADA_DIALOG_UNKNOWN, 0, NULL, NULL, NULL, NULL)) {
+        if (gcdialog_showText(ASSET_ADA_DIALOG_TUMBLAR_MEET, 0, NULL, NULL, NULL, NULL)) {
             mapSpecificFlags_set(0, true);
         }
     }
@@ -229,6 +230,6 @@ void chTumblar_update(Struct_MMM_47D0_0 *arg0, Struct68s *arg1, f32 tick) {
         arg0->state = TUMBLAR_STATE_2_BREAKING;
         arg0->timer = 0.0f;
         mapSpecificFlags_set(MMM_SPECIFIC_FLAG_TUMBLAR_BROKEN, false);
-        FUNC_8030E8B4(SFX_11B_TUMBLAR_DISAPPEARING_1, 1.0f, 30000, position, 500, 2500);
+        sfx_playFadeShorthandDefault(SFX_11B_TUMBLAR_DISAPPEARING_1, 1.0f, 30000, position, 500, 2500);
     }
 }

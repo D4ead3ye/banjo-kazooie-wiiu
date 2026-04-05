@@ -1,3 +1,4 @@
+// BanjoDecomp: pfsmanager.c
 #include <ultra64.h>
 #include "core1/core1.h"
 #include "functions.h"
@@ -57,7 +58,7 @@ OSThread sPfsManagerThread;
 u8 sPfsManagerThreadStack[PFSMANAGER_THREAD_STACK_SIZE];
 f32 D_802816E0;
 OSMesgQueue D_802816E8;
-OSMesg D_80281700[4];
+OSMesg D_80281700[5];
 u8 pad_D_80281710[1];
 
 f32 func_8024E420(s32 arg0, s32 arg1, s32 arg2) {
@@ -112,12 +113,14 @@ s32 func_8024E60C(s32 controller_index, s32 dst[3]){
     dst[SIDE_BUTTON(BUTTON_Z)]       = D_80281138[controller_index].side_button[SIDE_BUTTON(BUTTON_Z)];
     dst[SIDE_BUTTON(BUTTON_L)]       = D_80281138[controller_index].side_button[SIDE_BUTTON(BUTTON_L)];
     dst[SIDE_BUTTON(BUTTON_R)]       = D_80281138[controller_index].side_button[SIDE_BUTTON(BUTTON_R)];
+    return 0;
 }
 
 s32 func_8024E640(s32 controller_index, s32 dst[3]){
     dst[SIDE_BUTTON(BUTTON_Z)]       = D_80281218.side_button[SIDE_BUTTON(BUTTON_Z)];
     dst[SIDE_BUTTON(BUTTON_L)]       = D_80281218.side_button[SIDE_BUTTON(BUTTON_L)];
     dst[SIDE_BUTTON(BUTTON_R)]       = D_80281218.side_button[SIDE_BUTTON(BUTTON_R)];
+    return 0;
 }
 
 f32 func_8024E668(s32 controller_index){
@@ -174,33 +177,47 @@ void pfsManager_update(void) {
     // Poll LUS input directly here each frame instead.
     osContGetReadData(pfsManagerContPadData);
 
-    // [port] Stick C-button filter. When C buttons are mapped to a stick axis,
-    // diagonal tilts and thumbstick rebound cause ghost inputs. Filters to the
-    // dominant axis and latches the direction briefly to absorb rebound.
+    // [port] Right stick to C-button conversion. LUS's axis-to-button mapping causes
+    // flickback when the stick springs back through the opposite threshold. Strip the
+    // LUS C-button bits and generate our own from raw analog values with a circular
+    // deadzone, dominant-axis filter, and direction latch.
     if (port_CButtonIsAxis()) {
         static u16 sLatchDir = 0;
         static s32 sLatchTTL = 0;
-        s32 arx = pfsManagerContPadData[0].right_stick_x;
-        s32 ary = pfsManagerContPadData[0].right_stick_y;
-        if (arx < 0) { arx = -arx; }
-        if (ary < 0) { ary = -ary; }
 
-        if (arx > 16 || ary > 16) {
-            u16 dir = (arx * 3 >= ary * 2)
-                ? (pfsManagerContPadData[0].button & 0x0003)
-                : (pfsManagerContPadData[0].button & 0x000C);
-            if (dir && dir != sLatchDir) {
-                sLatchDir = dir;
-                sLatchTTL = 3;
+        s32 rx = pfsManagerContPadData[0].right_stick_x;
+        s32 ry = pfsManagerContPadData[0].right_stick_y;
+        s32 arx = (rx < 0) ? -rx : rx;
+        s32 ary = (ry < 0) ? -ry : ry;
+
+        // Strip LUS-generated C-button bits
+        pfsManagerContPadData[0].button &= ~0x000F;
+
+        // Circular deadzone (radius 24 out of 127)
+        if (arx * arx + ary * ary > 24 * 24) {
+            u16 dir;
+            if (arx >= ary) {
+                dir = (rx > 0) ? 0x0001 : 0x0002; // CRIGHT or CLEFT
+            } else {
+                dir = (ry > 0) ? 0x0008 : 0x0004; // CUP or CDOWN
             }
+
+            if (dir != sLatchDir) {
+                if (sLatchTTL <= 0) {
+                    sLatchDir = dir;
+                    sLatchTTL = 6;
+                }
+            } else {
+                sLatchTTL = 6;
+            }
+
+            pfsManagerContPadData[0].button |= sLatchDir;
+        } else {
             if (sLatchTTL > 0) {
                 sLatchTTL--;
-                dir = sLatchDir;
+            } else {
+                sLatchDir = 0;
             }
-            pfsManagerContPadData[0].button = (pfsManagerContPadData[0].button & ~0x000F) | dir;
-        } else {
-            sLatchDir = 0;
-            sLatchTTL = 0;
         }
     }
 
@@ -220,7 +237,7 @@ void pfsManager_update(void) {
         if ((D_802816E0 < 1.0) || (getGameMode() == GAME_MODE_9_BANJO_AND_KAZOOIE)) {
             s0 = 0;
         }
-        temp_t6 = demo_readInput(pfsManagerContPadData, &sp5C) == 0; // [port] removed & — array decays to OSContPad*
+        temp_t6 = demo_readInput(pfsManagerContPadData, &sp5C) == 0;
         if ((D_802812D0.button & s0) || temp_t6) {
             if (D_802812D0.button & s0) {
                 volatileFlag_set(VOLATILE_FLAG_64, 1);
@@ -229,9 +246,34 @@ void pfsManager_update(void) {
             }
         }
         time_setDeltaReal_frames(sp5C);
-        sDemoViCount = sp5C; // [port] expose to Game.cpp for frame pacing
+        // [port] On N64, some maps had rendering lag that naturally slowed the tick
+        // rate (e.g., 20fps instead of 30fps). The demo inputs record viCount=2 for
+        // each tick regardless — the lag was in rendering, not game logic. On PC these
+        // maps render at 30fps, so demos finish ~33% faster in real time, cutting off
+        // dialog. Override sDemoViCount (Game.cpp display pacing) to match the N64's
+        // actual frame time, WITHOUT changing the game logic delta.
+        {
+            s32 displayViCount = sp5C;
+            s32 game_mode = getGameMode();
+            if (game_mode == GAME_MODE_8_BOTTLES_BONUS) {
+                displayViCount = 3;
+            } else if (game_mode == GAME_MODE_A_SNS_PICTURE) {
+                switch (map_get()) {
+                    case MAP_7F_FP_WOZZAS_CAVE:
+                    case MAP_92_GV_SNS_CHAMBER:
+                        displayViCount = 3;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            sDemoViCount = displayViCount;
+        }
     } else {
-        sDemoViCount = 0;
+        // [port] Use the VI divisor from cutscene framerate actors so Game.cpp
+        // paces the display correctly for slower cutscenes.
+        s32 viDiv = viMgr_func_8024BFA0();
+        sDemoViCount = (viDiv > 2) ? viDiv : 0;
     }
     sp5C = time_getDeltaReal_frames();
     randf();
@@ -445,7 +487,7 @@ OSContPad *func_8024F3F4(void){
 /* initilizes D_802816E8 message queue */
 void func_8024F400(void) {
     D_80275D38 = true;
-    osCreateMesgQueue(&D_802816E8, D_80281700, 5); // [port] array decays to OSMesg*, not &array
+    osCreateMesgQueue(&D_802816E8, D_80281700, 5);
     osSendMesgPtr(&D_802816E8, NULL, OS_MESG_NOBLOCK);
 }
 

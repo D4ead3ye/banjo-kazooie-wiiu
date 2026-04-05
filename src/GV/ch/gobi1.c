@@ -1,8 +1,9 @@
+// BanjoDecomp: CH/gobi1.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
 
-extern bool func_802EBA98(BKModelUnk14List *, f32[3], f32[3], f32, f32[3], f32[3], f32, f32[3]); // [port] was s32 params, fixed pointer types
+extern bool func_802EBA98(BKModelUnk14List *, f32[3], f32[3], f32, f32[3], f32[3], f32, f32[3]);
 
 typedef struct {
     u8 unk0[2]; // array of sfxsource indexes
@@ -63,7 +64,7 @@ void chGobi1_setState(Actor *this, s32 next_state){
     }
 
     if(this->state == 6){
-        FUNC_8030E8B4(SFX_84_GOBI_CRYING, 0.9f, 20000, this->position, 1500, 2500);
+        sfx_playFadeShorthandDefault(SFX_84_GOBI_CRYING, 0.9f, 20000, this->position, 1500, 2500);
         skeletalAnim_set(this->unk148, 0x241, 0.2f, 0.5f);
     }
 }
@@ -108,7 +109,7 @@ void chGobi1_update(Actor *this){
     s32 sp6C = 0;
     f32 tick; //sp68;
     int i;
-    BKModelUnk14List *tmp_s1; // [port] was s32 — pointer truncation on 64-bit
+    BKModelUnk14List *tmp_s1;
     f32 sp54[3];
     f32 sp48[3];
 
@@ -140,12 +141,12 @@ void chGobi1_update(Actor *this){
         sp6C = 5;
 
     if(ml_timer_update(&local->unkC, tick))
-        FUNC_8030E8B4(SFX_84_GOBI_CRYING, 0.9f, 32000, this->position, 1500, 2500);
+        sfx_playFadeShorthandDefault(SFX_84_GOBI_CRYING, 0.9f, 32000, this->position, 1500, 2500);
 
     if(ml_timer_update(&local->unk10, tick)){
         for(i = 0; i < 2; i++){
             sfxsource_setSfxId(local->unk0[i], SFX_3F9_UNKNOWN);
-            func_8030DD14(local->unk0[i], 3);
+            sfxSource_setunk43_7ByIndex(local->unk0[i], 3);
             sfxsource_setSampleRate(local->unk0[i], 32000);
             func_8030E2C4(local->unk0[i]);
         }

@@ -1,3 +1,4 @@
+// BanjoDecomp: jujuhitbox.c
 /*!!!DONE!!!*/
 #include <ultra64.h>
 #include "functions.h"
@@ -5,7 +6,7 @@
 
 /* extern functions */
 void __chjujuhitbox_initialize_all(ActorMarker *, s32);
-s32 func_80329784(Actor *);
+s32 subaddie_getYawToPlayer(Actor *);
 void func_80353580(ActorMarker *);
 
 typedef struct juju_hitbox_s {
@@ -32,7 +33,7 @@ ActorInfo chjujuhitboxInfo = {
 bool func_80388B30(Actor *this, float arg1) {
     f32 yaw;
 
-    yaw = this->yaw - func_80329784(this);
+    yaw = this->yaw - subaddie_getYawToPlayer(this);
 
     if (180.0f <= yaw) {
         yaw -= 360.0f;
@@ -132,7 +133,7 @@ void chjujuhitbox_update(Actor *this) {
 
     if (!this->volatile_initialized) {
         this->volatile_initialized = true;
-        __spawnQueue_add_2((void (*)(void)) __chjujuhitbox_initialize_all, (uintptr_t)this->marker, jujuCtlPtr->unk4); // [port] explicit cast
+        __spawnQueue_add_2((void (*)(void)) __chjujuhitbox_initialize_all, (uintptr_t)this->marker, jujuCtlPtr->unk4);
         __chjujuhitbox_playRubbingSfx(this);
         return;
     }

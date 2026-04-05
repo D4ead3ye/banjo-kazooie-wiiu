@@ -4,7 +4,7 @@
 #include "core2/ba/physics.h"
 
 
-extern ActorMarker *func_80296554(void); // [port] added prototype — returns ActorMarker*, not implicit int
+extern ActorMarker *func_80296554(void);
 
 ActorMarker *bssled_gSledMarker;
 
@@ -53,7 +53,7 @@ void bssled_end(void){
 void bssled_interrupt(void){
     if(bs_getInterruptType() == BS_INTR_28){
         func_802B3F60();
-        func_8029A86C(2);
+        bs_setInterruptResponse(2);
     }
     else{
         func_80296608();

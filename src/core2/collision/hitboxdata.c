@@ -80,7 +80,7 @@ Struct_core2_B62B0_0 D_80370AC0[0xBB] = {
     {MARKER_1A2_BOSS_BOOM_BOX_LARGE,   0x0000, {0x8020, 0x8904, 0x8020, 0x8904, 0x9904, 0x9904, 0x0804, 0x0984, 0x0904, 0x0000, 0x4020}},
     {MARKER_1A3_BOSS_BOOM_BOX_MEDIUM,  0x0000, {0x9020, 0x9984, 0x9020, 0x9984, 0x9984, 0x9984, 0x0804, 0x0A04, 0x0984, 0x0000, 0x3020}},
     {MARKER_1A4_BOSS_BOOM_BOX_SMALL,   0x0000, {0x9020, 0x9A04, 0x9020, 0x9A04, 0x9A04, 0x9A04, 0x0804, 0x0A84, 0x0A04, 0x0000, 0x3020}},
-    {MARKER_185_MODEL_RUSTY_BUCKET_REAR_PROPELLER, 0x5060, {0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x5060}},
+    {MARKER_185_RBB_REAR_PROPELLER, 0x5060, {0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x5060}},
     {MARKER_191_ENGINE_ROOM_PROPELLOR_1, 0x0000, {0x2000, 0x2000, 0x2000, 0x2000, 0x2000, 0x2000, 0x2000, 0x0000, 0x8000, 0x0000, 0x2000}},
     {MARKER_192_ENGINE_ROOM_PROPELLOR_2, 0x0000, {0x2000, 0x2000, 0x2000, 0x2000, 0x2000, 0x2000, 0x2000, 0x0000, 0x8000, 0x0000, 0x2000}},
     {MARKER_193_ENGINE_ROOM_PROPELLOR_3, 0x0000, {0x2000, 0x2000, 0x2000, 0x2000, 0x2000, 0x2000, 0x2000, 0x0000, 0x8000, 0x0000, 0x2000}},
@@ -287,26 +287,26 @@ bool func_8033D410(ActorMarker *arg0, ActorMarker *arg1) {
     return true;
 }
 
-s32 func_8033D564(struct5Cs *arg0){
-    return arg0->unk0_15;
+s32 func_8033D564(CollisionParams *arg0){
+    return arg0->playerInteraction;
 }
 
-enum marker_collision_func_type_e func_8033D574(struct5Cs *arg0){
-    return arg0->unk0_11;
+enum marker_collision_func_type_e collision_getNextState(CollisionParams *arg0){
+    return arg0->nextState;
 }
 
-s32 func_8033D584(struct5Cs *arg0){
-    return arg0->unk0_9;
+s32 func_8033D584(CollisionParams *arg0){
+    return arg0->unkBit7;
 }
 
-s32 func_8033D594(struct5Cs *arg0){
-    return arg0->unk0_6;
+s32 func_8033D594(CollisionParams *arg0){
+    return arg0->damageToPlayer;
 }
 
-s32 func_8033D5A4(struct5Cs *arg0){
-    return arg0->unk0_4;
+s32 func_8033D5A4(CollisionParams *arg0){
+    return arg0->hitsToTrigger;
 }
 
-s32 func_8033D5B4(struct5Cs *arg0){
-    return arg0->unk0_1;
+s32 func_8033D5B4(CollisionParams *arg0){
+    return arg0->dropBundleNum;
 }

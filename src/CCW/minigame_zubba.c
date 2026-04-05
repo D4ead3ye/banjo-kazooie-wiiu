@@ -1,3 +1,4 @@
+// BanjoDecomp: code_160.c
 #include <ultra64.h>
 #include "core1/core1.h"
 #include "functions.h"
@@ -31,7 +32,7 @@ void CCW_func_80386550(ActorMarker *marker){
     if (local->unk0 != NULL) {
         actor_collisionOn(marker_getActor(local->unk0));
     }
-    func_8025A6EC(COMUSIC_3D_JIGGY_SPAWN, 28000);
+    coMusicPlayer_playMusic(COMUSIC_3D_JIGGY_SPAWN, 28000);
 }
 
 void func_803865C4(ActorMarker* marker, enum asset_e text_id, s32 arg2) {
@@ -56,7 +57,7 @@ void func_803865F4(Actor *this, s32 next_state) {
     if (next_state == 3) {
         local->unkC = 0.1f;
         func_8025A58C(0, 4000);
-        func_8025A6EC(COMUSIC_4B_CCW_ZUBBA_FIGHT, 30000);
+        coMusicPlayer_playMusic(COMUSIC_4B_CCW_ZUBBA_FIGHT, 30000);
     }
 
     if (next_state == 4) {
@@ -69,7 +70,7 @@ void func_803865F4(Actor *this, s32 next_state) {
             func_8025A58C(-1, 400);
             comusic_8025AB44(COMUSIC_4B_CCW_ZUBBA_FIGHT, 0, 400);
             func_8025AABC(COMUSIC_4B_CCW_ZUBBA_FIGHT);
-            func_8025A6EC(COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 28000);
+            coMusicPlayer_playMusic(COMUSIC_2D_PUZZLE_SOLVED_FANFARE, 28000);
             func_80324E38(0.0f, 3);
             timed_setStaticCameraToNode(2.0f, 4);
             timedFunc_set_1(2.0f, (GenFunction_1)CCW_func_80386550, (uintptr_t)this->marker);
@@ -142,7 +143,7 @@ void func_8038687C(Actor *this) {
         func_803865F4(this, 1);
         return;
     }
-    if ((uintptr_t)local->unk0 == 1) { // [port] was (s32), pointer truncation on 64-bit
+    if ((uintptr_t)local->unk0 == 1) {
         other = actorArray_findActorFromActorId(0x46);
         if(volatileFlag_get(VOLATILE_FLAG_2_FF_IN_MINIGAME)) {
             local->unk0 = NULL;

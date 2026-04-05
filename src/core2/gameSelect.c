@@ -41,9 +41,21 @@ f32 D_80365DD0[3][3] = {
     {110.0f, 340.0f, 110.0f},
     {-413.333313f, 353.333313f, -234.305511f}
 };
-u8 *D_80365DF4 = "USE THE CONTROL STICK TO SELECT A GAME.";   
-u8 *D_80365DF8 = "PRESS A TO PLAY THE GAME OR Z TO ERASE IT!";
-u8 *D_80365DFC = "ARE YOU SURE? PRESS A TO CONFIRM, OR B TO CANCEL";
+u8 *D_80365DF4[] = {
+    "USE THE CONTROL STICK TO SELECT A GAME.",
+    "S" "\x62" "LECTIONNEZ UN FICHIER _ L'AIDE DU STICK.",
+    "W[HLE MIT DEM 3D-STICK",
+};
+u8 *D_80365DF8[] = {
+    "PRESS A TO PLAY THE GAME OR Z TO ERASE IT!",
+    "APPUYEZ SUR A POUR JOUER OU SUR Z POUR EFFACER!",
+    "EIN SPIEL AUS. DR]CKE A, UM ZU SPIELEN, ODER DEN Z-TRIGGER, UM DEN SPIELSTAND ZU L\\SCHEN!",
+};
+u8 *D_80365DFC[] = {
+    "ARE YOU SURE? PRESS A TO CONFIRM, OR B TO CANCEL.",
+    "dTES-VOUS SiR? APPUYEZ SUR A POUR CONFIRMER OU SUR B POUR ANNULER.",
+    "SICHER? DR]CKE A, UM ZU BEST[TIGEN, ODER B, UM ZU WIDERRUFEN.",
+};
 s32 D_80365E00 = -1;
 f32 D_80365E04[3][3] = {
     {-435.0f,      278.0f,  -159.0f},
@@ -182,8 +194,15 @@ void *func_802C44EC(f32 arg0[3], f32 arg1[3], f32 arg2) {
 
 void func_802C4768(s32 gamenum){
     u8 * sp20[2];
-    static u8 upperTextLine[0x20];
-    static u8 lowerTextLine[0x20];
+    static u8 upperTextLine[0x40];
+    static u8 lowerTextLine[0x40];
+    static u8 *sGamePrefix[]  = { "GAME ",    "FICHIER ", "SPIEL " };
+    static u8 *sTimeLabel[]   = { ": TIME ",  ": TEMPS ", ": ZEIT " };
+    static u8 *sJigsawLabel[] = { " JIGSAW",  " PI" "\x63" "CE",  " PUZZLETEIL" };
+    static u8 *sJigsawPlural[] = { "S", "S", "E" };
+    static u8 *sNoteLabel[]   = { " NOTE",    " NOTE",    " NOTE" };
+    static u8 *sEmptyLabel[]  = { ": EMPTY",  ": VIDE",   ": LEER" };
+    s32 lang = code94620_func_8031B5B0();
 
     func_8031FBF8();
     D_80365E00 = gamenum;
@@ -191,9 +210,9 @@ void func_802C4768(s32 gamenum){
     if(gameFile_isNotEmpty(gamenum)){
         gameFile_load(gamenum);
         D_8037DCCE[gamenum] = (itemscore_timeScores_get(LEVEL_6_LAIR)) ? 1 : 0;
-    
+
         strcpy(upperTextLine, "");
-        strcat(upperTextLine, "GAME ");
+        strcat(upperTextLine, sGamePrefix[lang]);
         switch(gamenum){
             case 0: //L802C4820
                 strIToA(upperTextLine, 1);
@@ -205,20 +224,20 @@ void func_802C4768(s32 gamenum){
                 strIToA(upperTextLine, 2);
                 break;
         }//L802C4858
-        strcat(upperTextLine, ": TIME ");
+        strcat(upperTextLine, sTimeLabel[lang]);
         strcat(upperTextLine, gcpausemenu_TimeToA(itemscore_timeScores_getTotal()));
         strcat(upperTextLine, ",");
         strcat(upperTextLine, "");
 
         strcpy(lowerTextLine, "");
         strIToA(lowerTextLine, jiggyscore_total());
-        strcat(lowerTextLine, " JIGSAW");
+        strcat(lowerTextLine, sJigsawLabel[lang]);
         if(jiggyscore_total() != 1){
-            strcat(lowerTextLine, "S");
+            strcat(lowerTextLine, sJigsawPlural[lang]);
         }
         strcat(lowerTextLine, ", ");
         strIToA(lowerTextLine, itemscore_noteScores_getTotal());
-        strcat(lowerTextLine, " NOTE");
+        strcat(lowerTextLine, sNoteLabel[lang]);
         if(itemscore_noteScores_getTotal() != 1){
             strcat(lowerTextLine, "S");
         }
@@ -228,7 +247,7 @@ void func_802C4768(s32 gamenum){
     else{
         D_8037DCCE[gamenum] = 0;
         strcpy(upperTextLine, "");
-        strcat(upperTextLine, "GAME ");
+        strcat(upperTextLine, sGamePrefix[lang]);
         switch (gamenum){
             case 0:
                 strIToA(upperTextLine, 1);
@@ -240,13 +259,13 @@ void func_802C4768(s32 gamenum){
                 strIToA(upperTextLine, 2);
                 break;
         }//L802C4A40
-        strcat(upperTextLine, ": EMPTY");
+        strcat(upperTextLine, sEmptyLabel[lang]);
         strcpy(lowerTextLine, "");
     }//L802C4A68
     sp20[0] = upperTextLine;\
     sp20[1] = lowerTextLine;
     func_8031877C(chGameSelectBottomZoombox);
-    gczoombox_setStrings(chGameSelectBottomZoombox, 2, (char **)sp20); // [port]
+    gczoombox_setStrings(chGameSelectBottomZoombox, 2, (char **)sp20);
     gczoombox_maximize(chGameSelectBottomZoombox);
     gczoombox_resolve_minimize(chGameSelectBottomZoombox);
 }
@@ -270,12 +289,12 @@ void func_802C4AF0(Actor * this){
     }
 
     for(i = 0; i < 3; i++){
-        gameFile_8033CFD4(i);
+        // gameFile_8033CFD4(i); Not needed with new Save System
     }
 
     if(D_8037DD28){
         func_802F9D38(D_8037DD28);
-        D_8037DD28 = 0; // [port] was NULL, use 0 for s32
+        D_8037DD28 = 0;
     }
 
     comusic_8025AB44(COMUSIC_73_GAMEBOY, 0, 4000);
@@ -302,8 +321,8 @@ void func_802C4C14(Actor *this){
     s32 *tmp_a2; //pad70
     s32 pad_6C;
     s32 pad_68;
-    s32 sp5C[6]; // [port] was [3], but controller_copyFaceButtons writes 6 entries
-    f32 sp54[2]; // [port] was scalar, but controller_getJoystick writes f32[2]
+    s32 sp5C[6];
+    f32 sp54[2];
     f32 sp50;
     int i; //sp4C
     struct5Bs *sp48;
@@ -338,7 +357,7 @@ void func_802C4C14(Actor *this){
     else{//L802C4D24
         func_8024E60C(0, sp74);
         controller_copyFaceButtons(0, sp5C);
-        controller_getJoystick(0, sp54); // [port] was &sp54, array decays to f32*
+        controller_getJoystick(0, sp54);
         switch(this->state){
             case 2:
             case 5:
@@ -353,12 +372,12 @@ void func_802C4C14(Actor *this){
                 case 1://L802C4DD0
                     if(randf() < 0.1){
                     // if(randf() < D_80376118){
-                        func_8030E6A4(MIN(2.0f, randf() *3.0f) + 311.0f, 1.0f, 12000);
+                        gcsfx_playWithPitch(MIN(2.0f, randf() *3.0f) + 311.0f, 1.0f, 12000);
                     }
                     break;
                 case 2://L802C4E74
                     if(randf() < 0.03){
-                        func_8030E6A4(0x3ed, randf()*0.3 + 0.7, 15000);
+                        gcsfx_playWithPitch(0x3ed, randf()*0.3 + 0.7, 15000);
                     }
                     break;
             }//L802C4ED4
@@ -386,7 +405,7 @@ void func_802C4C14(Actor *this){
                     else{
                         if(D_8037DD28){
                             func_802F9D38(D_8037DD28);
-                            D_8037DD28 = 0; // [port] was NULL, use 0 for s32
+                            D_8037DD28 = 0;
                         }
                     }
                     func_802C4768(sp84);
@@ -398,7 +417,7 @@ void func_802C4C14(Actor *this){
                     ){
                         if(sp5C[FACE_BUTTON(BUTTON_A)] == 1){
                             func_802C4AC8(sp84);
-                            func_8025A6EC(COMUSIC_2B_DING_B, 22000);
+                            coMusicPlayer_playMusic(COMUSIC_2B_DING_B, 22000);
                         }
                         subaddie_set_state(this, 2);
                         func_8031877C(chGameSelectTopZoombox);
@@ -410,7 +429,6 @@ void func_802C4C14(Actor *this){
                 case 4://L802C50C8
                     if(anctrl_isStopped(this->anctrl)){
                         chBottlesBonus_func_802DEB80();
-                        // [port] Restore bottles bonus after vanilla reset.
                         // gameFile_load handles the slot lookup and restores both
                         // lives and bottles bonus via port_restoreFileEnhancementData.
                         {
@@ -430,7 +448,7 @@ void func_802C4C14(Actor *this){
                             if (newGameMap < 0) {
                                 newGameMap = MAP_85_CS_SPIRAL_MOUNTAIN_3;
                             }
-                            timedFunc_set_3(0.0f, (GenFunction_3)func_802E4078, newGameMap, 0, 1);
+                            timedFunc_set_3(0.0f, (GenFunction_3)transitionToMap, newGameMap, 0, 1);
                             {
                                 s32 knowAll = port_getRomhackKnowAllMoves();
                                 if (knowAll >= 0) {
@@ -457,12 +475,12 @@ void func_802C4C14(Actor *this){
                     if(sp74[0] == 1){
                         if(gameFile_isNotEmpty(sp84)){
                             func_8031877C(chGameSelectTopZoombox);
-                            func_803183A4(chGameSelectTopZoombox, (&D_80365DFC)[code94620_func_8031B5B0()]);
+                            func_803183A4(chGameSelectTopZoombox, D_80365DFC[code94620_func_8031B5B0()]);
                             D_8037DD2C = 1;
                             subaddie_set_state(this, 5);
                         }
                         else{//L802C5240
-                            func_8025A6EC(COMUSIC_2C_BUZZER, 22000);
+                            coMusicPlayer_playMusic(COMUSIC_2C_BUZZER, 22000);
                         }
                     }
                     else if(sp5C[FACE_BUTTON(BUTTON_A)] == 1){//L802C5250
@@ -471,7 +489,7 @@ void func_802C4C14(Actor *this){
                                 switch(sp84){
                                     case 0://L802C52B8
                                         sfxsource_play(SFX_31_BANJO_OHHWAAOOO, 28000);
-                                        func_8030E540(SFX_135_CARTOONY_SPRING);
+                                        gcsfx_playAtSampleRate(SFX_135_CARTOONY_SPRING);
                                         timedFunc_set_2(0.4f, (GenFunction_2)sfxsource_play, SFX_13A_GLASS_BREAKING_7, 0x7fff);
                                         timedFunc_set_2(0.9f, (GenFunction_2)sfxsource_play, SFX_150_PORCELAIN_CRASH, 0x7fff);
                                         timedFunc_set_2(1.0f, (GenFunction_2)sfxsource_play, SFX_151_CAT_MEOW, 0x7fff);
@@ -479,19 +497,19 @@ void func_802C4C14(Actor *this){
                                     case 1://L802C5320
                                         timedFunc_set_2(0.4f, (GenFunction_2)sfxsource_play, SFX_31_BANJO_OHHWAAOOO, 28000);
                                         timedFunc_set_2(0.2f, (GenFunction_2)sfxsource_play, SFX_E_SHOCKSPRING_BOING, 28000);
-                                        func_8030E540(SFX_2D_KABOING);
+                                        gcsfx_playAtSampleRate(SFX_2D_KABOING);
                                         break;
                                     case 2://L802C5364
                                         timedFunc_set_2(0.15f, (GenFunction_2)sfxsource_play, SFX_32_BANJO_EGHEE, 28000);
                                         sfxsource_play(SFX_3F6_RUBBING, 28000);
-                                        func_8030E540(SFX_8F_SNOWBALL_FLYING);
+                                        gcsfx_playAtSampleRate(SFX_8F_SNOWBALL_FLYING);
                                         break;
                                 }//L802C5394
                                 subaddie_set_state(this, 4);
                                 levelSpecificFlags_set(sp84 + 0x35, 1);
                             }
                             else{//L802C53B4
-                                sfxsource_playHighPriority(SFX_3EA_UNKNOWN);
+                                sfxsource_playHighPriority(SFX_3EA_BANJO_GUH_HUH);
                                 subaddie_set_state(this, 3);
                             }
                         }else{//L802C53D0
@@ -576,15 +594,15 @@ void func_802C4C14(Actor *this){
         );
         if(this->marker->unk14_21) {
             osViBlack(0);
-            port_setViBlack(0); // [port]
+            port_setViBlack(0);
         }
     }//L802C5734
 }
 
 void func_802C5740(Actor * this){
     int i = code94620_func_8031B5B0();
-    D_8037DCE0.unk0 = (&D_80365DF4)[i];
-    D_8037DCE0.unk4 = (&D_80365DF8)[i];
+    D_8037DCE0.unk0 = D_80365DF4[i];
+    D_8037DCE0.unk4 = D_80365DF8[i];
 
     if(!this->initialized){
         gameFile_8033CE40();
@@ -615,9 +633,9 @@ void func_802C5740(Actor * this){
         D_8037DCF8[0][1] = D_80365E04[0][1];
         D_8037DCF8[0][2] = D_80365E04[0][2];
         D_8037DD30 = 0.75f;
-        D_8037DD34 = func_8038AAB0(&D_80365E04[0], &D_8037DCE8) ? 20.0 : 0.0;
+        D_8037DD34 = func_8038AAB0() ? 20.0 : 0.0;
         actor_collisionOff(this);
-        func_8025A6EC(COMUSIC_73_GAMEBOY, 0);
+        coMusicPlayer_playMusic(COMUSIC_73_GAMEBOY, 0);
     }//L802C5940
     if(!func_8038AAB0()){
         if(chGameSelectBottomZoombox)

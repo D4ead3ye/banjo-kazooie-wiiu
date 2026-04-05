@@ -41,7 +41,7 @@ LocalStruct_1 D_80368DF0[] = {
     {0x9,  SFX_98_DEAF_THUD,        1.0f,  1.1f,  0.05f, 21000},
     {0xA,  SFX_99_METALLIC_THUD,    1.0f,  1.1f,  0.05f, 21000},
     {0xC,  SFX_123_BANJO_LANDING_10, 0.85f, 0.89f, 0.05f, 21000},
-    {0xD,  SFX_3F2_UNKNOWN,         0.96f, 1.04f, 0.02f, 10000},
+    {0xD,  SFX_3F2_BOING,         0.96f, 1.04f, 0.02f, 10000},
     {0xE,  SFX_10_BANJO_LANDING_07, 1.2f,  1.35f, 0.05f, 13000},
     {0xF,  SFX_DC_IDLE_PADDLING,    0.95f, 1.1f,  0.05f, 16000},
     {0}
@@ -166,11 +166,11 @@ Struct5Ds *func_802F47D0(void){
     this->unk1F = 1;
     
     this->unk1C = sfxsource_createSfxsourceAndReturnIndex();
-    func_8030DD14(this->unk1C, 3);
+    sfxSource_setunk43_7ByIndex(this->unk1C, 3);
     func_8030DD90(this->unk1C, 0);
     
     this->unk1D = sfxsource_createSfxsourceAndReturnIndex();
-    func_8030DD14(this->unk1D, 3);
+    sfxSource_setunk43_7ByIndex(this->unk1D, 3);
     func_8030DD90(this->unk1D, 0);
 
     ml_vec3f_clear(this->unk4);

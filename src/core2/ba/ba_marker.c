@@ -15,12 +15,11 @@ extern f32 chwadingboots_802D6E4C(Actor *);
 extern void set_turbo_duration(f32);
 extern f32 chtrainers_getDuration(Actor *);
 extern void func_802EE354(Actor *, s32, s32, s32, f32, f32, f32, f32 arg8[3], s32, f32 arg10[2]);
-extern void func_8035644C(s32);
 extern void func_8035646C(s32 arg0);
 extern void func_80291634(ActorMarker *, ActorMarker *);
 extern void func_80291610(ActorMarker *, ActorMarker *);
 extern Actor *baModel_80291AAC(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx);
-extern void baMarker_8028D7B8(s32 arg0, ActorMarker *arg1, struct5Cs *collision_flags);
+extern void baMarker_8028D7B8(s32 arg0, ActorMarker *arg1, CollisionParams *collision_flags);
 extern void func_802EE6CC(f32[3], s32, s32[4], s32, f32, f32, s32,s32,s32);
 extern void func_80320ED8(ActorMarker *, f32, s32);
 extern NodeProp *cubeList_findNodePropByActorIdAndPosition_s32(enum actor_e actor_id, s32 position[3]);
@@ -160,7 +159,7 @@ void __baMarker_8028B9A8(uintptr_t arg0){
     nodeprop_getPosition_s32(tmp_v0, ideal_yaw);
     func_802CA1CC(arg0);
     actor_spawnWithYaw_s32(ACTOR_47_EMPTY_HONEYCOMB, &ideal_yaw, 0);
-    func_8025A6EC(COMUSIC_2B_DING_B, 28000);
+    coMusicPlayer_playMusic(COMUSIC_2B_DING_B, 28000);
     
 }
 
@@ -179,7 +178,7 @@ void __baMarker_resolveMusicNoteCollision(Prop *arg0) {
         item_adjustByDiffWithoutHud(ITEM_C_NOTE, 1);
     }
     if (item_getCount(ITEM_C_NOTE) < notesMax) {
-        func_8025A6EC(COMUSIC_9_NOTE_COLLECTED, 16000);
+        coMusicPlayer_playMusic(COMUSIC_9_NOTE_COLLECTED, 16000);
         timedFunc_set_1(0.75f, (GenFunction_1)func_8035644C, FILEPROG_3_MUSIC_NOTE_TEXT);
     }
     fxSparkle_musicNote(arg0->unk4);
@@ -256,7 +255,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
     s32 tmp1;
 
     CALL_CANCELLABLE_EVENT(OnActorCollision, other_prop) {
-        if (other_prop->markerFlag) { // [port] was raw *(u32*)(prop+8) & 1 — offset wrong on 64-bit due to Prop union padding
+        if (other_prop->markerFlag) {
             plyr_collision_type = MARKER_COLLISION_FUNC_0;
             obj_collision_type = MARKER_COLLISION_FUNC_0;
             marker = other_prop->actorProp.marker;
@@ -301,7 +300,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
             case MARKER_B5_RED_FEATHER_COLLECTIBLE: //L8028BEF4
                 if (__baMarker_8028BC20(marker) != HITBOX_0_NONE)
                     return;
-                if (chCollectible_collectRedFeather((ActorProp*)other_prop)) { // [port] Prop* → ActorProp* (Prop is a union containing ActorProp)
+                if (chCollectible_collectRedFeather((ActorProp*)other_prop)) {
                     marker_despawn(marker);
                 }
                 break;
@@ -310,7 +309,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
                 if (__baMarker_8028BC20(marker))
                     return;
 
-                if (chCollectible_collectGoldFeather((ActorProp*)other_prop)) { // [port]
+                if (chCollectible_collectGoldFeather((ActorProp*)other_prop)) {
                     marker_despawn(marker);
                 }
                 break;
@@ -359,7 +358,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
                         mapSpecificFlags_set(0xD, 1);
                         func_8030E6D4(SFX_90_SWITCH_PRESS);
                         func_802BAFE4(0x14);
-                        timedFunc_set_1(1.5f, (GenFunction_1)__baMarker_8028BA00, 0xB); // [port]
+                        timedFunc_set_1(1.5f, (GenFunction_1)__baMarker_8028BA00, 0xB);
                     }
                 }
                 break;
@@ -370,7 +369,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
                         mapSpecificFlags_set(0, 1);
                         func_8030E6D4(SFX_90_SWITCH_PRESS);
                         func_802BAFE4(0x7E);
-                        timedFunc_set_1(1.5f, (GenFunction_1)__baMarker_8028BA00, 0xf); // [port]
+                        timedFunc_set_1(1.5f, (GenFunction_1)__baMarker_8028BA00, 0xf);
                     }
                 }
                 break;
@@ -409,7 +408,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
                  * FILEPROG_51_YELLOW_CAULDRON_1_ACTIVE
                  * FILEPROG_52_YELLOW_CAULDRON_2_ACTIVE
                  */
-                if (fileProgressFlag_get(((actor->unkF4_8 - 1) ^ 1) + 0x49)) {
+                if (fileProgressFlag_get(((actor->actorTypeSpecificField - 1) ^ 1) + 0x49)) {
                     actor->unk10_12 = 2;
                 }
                 else {
@@ -579,8 +578,8 @@ void __baMarker_resolveCollision(Prop *other_prop){
                 if (sp98 != HONEYCOMB_12_MMM_FLOORBOARD || player_getTransformation() == TRANSFORM_3_PUMPKIN)
                 {
                     honeycombscore_set(sp98, 1);
-                    func_8025A6EC(COMUSIC_17_EMPTY_HONEYCOMB_COLLECTED, 28000);
-                    timedFunc_set_1(2.0f, (GenFunction_1)func_8035644C, FILEPROG_B_EMPTY_HONEYCOMB_TEXT); // [port]
+                    coMusicPlayer_playMusic(COMUSIC_17_EMPTY_HONEYCOMB_COLLECTED, 28000);
+                    timedFunc_set_1(2.0f, (GenFunction_1)func_8035644C, FILEPROG_B_EMPTY_HONEYCOMB_TEXT);
                     item_inc(ITEM_13_EMPTY_HONEYCOMB);
                     if (!(item_getCount(ITEM_13_EMPTY_HONEYCOMB) < 6)) {
                         gcpausemenu_80314AC8(0);
@@ -592,7 +591,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
             break;
 
             case 0x54: //L8028C820
-                func_8025A6EC(COMUSIC_19_LOW_PITCH_FLUTES, 28000);
+                coMusicPlayer_playMusic(COMUSIC_19_LOW_PITCH_FLUTES, 28000);
                 func_803012F8();
                 __spawnQueue_add_4((GenFunction_4)spawnQueue_actor_s16, 0x4E, reinterpret_cast(u32, other_prop->actorProp.x), reinterpret_cast(u32, other_prop->actorProp.y), reinterpret_cast(u32, other_prop->actorProp.z));
                 marker_despawn(marker);
@@ -610,8 +609,8 @@ void __baMarker_resolveCollision(Prop *other_prop){
                     func_8030E6D4(SFX_126_AUDIENCE_BOOING);
                 }
 
-                func_8025A6EC(COMUSIC_16_HONEYCOMB_COLLECTED, 28000);
-                timedFunc_set_1(0.75f, (GenFunction_1)func_8035644C, FILEPROG_A_HONEYCOMB_TEXT); // [port]
+                coMusicPlayer_playMusic(COMUSIC_16_HONEYCOMB_COLLECTED, 28000);
+                timedFunc_set_1(0.75f, (GenFunction_1)func_8035644C, FILEPROG_A_HONEYCOMB_TEXT);
                 item_inc(ITEM_14_HEALTH);
                 fxSparkle_honeycomb(&other_prop->actorProp.x);
                 marker_despawn(marker);
@@ -642,7 +641,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
                 }
                 comusic_playTrack(COMUSIC_88_BIG_SNS_FANFARE);
                 FUNC_8030E624(SFX_114_BRICKWALL_BREAKING, 0.8f, 15000);
-                tmp_v0_2 = 3 * (actor->unkF4_8 - 1);
+                tmp_v0_2 = 3 * (actor->actorTypeSpecificField - 1);
 
                 tmp_f0 = 0.9f; \
                     sp64 = D_80363660;
@@ -655,12 +654,12 @@ void __baMarker_resolveCollision(Prop *other_prop){
                     for (i = 0; i < 3; i++) {
                         sp88[i] = D_8036366C[tmp_v0_2 + i];
                     }
-                    func_802EE354(actor, 0x3ED, 0x23, sp78, 0.2f, tmp_f0, 3.0f, (f32*)sp88, 0, (f32*)&sp64); // [port] s32[] → f32*, tmp_struct_type* → f32*
+                    func_802EE354(actor, 0x3ED, 0x23, sp78, 0.2f, tmp_f0, 3.0f, (f32*)sp88, 0, (f32*)&sp64);
 
                     for (i = 0; i < 3; i++) {
                         sp88[i] = 0xFF;
                     }
-                    func_802EE354(actor, 0x3ED, 0xe, sp78, 0.2f, tmp_f0, 3.0f, (f32*)sp88, 0, (f32*)&sp64); // [port] s32[] → f32*, tmp_struct_type* → f32*
+                    func_802EE354(actor, 0x3ED, 0xe, sp78, 0.2f, tmp_f0, 3.0f, (f32*)sp88, 0, (f32*)&sp64);
 
                     sp78 += 0x32;
                     tmp_f0 += -0.15;
@@ -700,7 +699,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
             case MARKER_60_BLUE_EGG_COLLECTIBLE: //L8028CCF0
                 if (__baMarker_8028BC20(marker))
                     return;
-                if (chCollectible_collectEgg((ActorProp*)other_prop)) { // [port] Prop* → ActorProp*
+                if (chCollectible_collectEgg((ActorProp*)other_prop)) {
                     marker_despawn(marker);
                 }
                 break;
@@ -721,8 +720,8 @@ void __baMarker_resolveCollision(Prop *other_prop){
                     volatileFlag_setAndTriggerDialog_4(VOLATILE_FLAG_A7_FF_FOUND_EXTRALIFE);
                     func_8030E6D4(SFX_127_AUDIENCE_MIXED);
                 }
-                func_8025A6EC(COMUSIC_15_EXTRA_LIFE_COLLECTED, 0x7FFF);
-                timedFunc_set_1(1.5f, (GenFunction_1)func_8035646C, FILEPROG_C_EXTRA_LIFE_TEXT); // [port]
+                coMusicPlayer_playMusic(COMUSIC_15_EXTRA_LIFE_COLLECTED, 0x7FFF);
+                timedFunc_set_1(1.5f, (GenFunction_1)func_8035646C, FILEPROG_C_EXTRA_LIFE_TEXT);
                 fxSparkle_extraLife(&other_prop->actorProp.x);
                 item_inc(ITEM_16_LIFE);
                 marker_despawn(marker);
@@ -824,7 +823,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
             marker_callCollisionFunc(playerMarker, marker, plyr_collision_type);
             marker_callCollisionFunc(marker, playerMarker, obj_collision_type);
             if (marker->unk3E_0) {
-                func_8032B258(actor, obj_collision_type);
+                func_8032B258(actor, (enum collision_e)obj_collision_type);
             }
         }
         else if (other_prop->unk8_1)//L8028D0B0 //ModelProp
@@ -856,19 +855,19 @@ void __baMarker_resolveCollision(Prop *other_prop){
             case 0x6D7: //L8028D16C
                 if (!__baMarker_8028BC60()) {
                     other_prop->spriteProp.unk8_4 = 0;
-                    chCollectible_collectEgg((ActorProp*)other_prop); // [port] Prop* → ActorProp*
+                    chCollectible_collectEgg((ActorProp*)other_prop);
                 }
                 break;
             case 0x580: //L8028D194
                 if (!__baMarker_8028BC60()) {
                     other_prop->spriteProp.unk8_4 = 0;
-                    chCollectible_collectRedFeather((ActorProp*)other_prop); // [port]
+                    chCollectible_collectRedFeather((ActorProp*)other_prop);
                 }
                 break;
             case 0x6D1: //L8028D1BC
                 if (!__baMarker_8028BC60()) {
                     other_prop->spriteProp.unk8_4 = 0;
-                    chCollectible_collectGoldFeather((ActorProp*)other_prop); // [port]
+                    chCollectible_collectGoldFeather((ActorProp*)other_prop);
                 }
                 break;
             default:
@@ -885,7 +884,7 @@ void baMarker_init(void){
     playerMarker = func_8032FBE4(sp1C, baModel_80291AAC, 1, 0);
     playerMarker->unk2C_1 = 1;
     marker_setCollisionScripts(playerMarker, NULL, func_80291634, func_80291610);
-    func_803300B8(playerMarker, (MarkerCollisionFunc)baMarker_8028D7B8); // [port]
+    func_803300B8(playerMarker, (MarkerCollisionFunc)baMarker_8028D7B8);
     baflag_clear(BA_FLAG_1_ON_FLIGHT_PAD);
     baflag_clear(BA_FLAG_2_ON_SPRING_PAD);
     baflag_clear(BA_FLAG_8);
@@ -1029,7 +1028,7 @@ void baMarker_8028D71C(void){
     func_802EE6CC(sp3C, 0, D_80363680, 1, 0.75f, 0.0f, 0x7d, 0xfa, 0);
 }
 
-void baMarker_8028D7B8(s32 arg0, ActorMarker *arg1, struct5Cs *collision_flags){
+void baMarker_8028D7B8(s32 arg0, ActorMarker *arg1, CollisionParams *collision_flags){
     s32 sp24;
     s32 sp20 = func_8033D594(collision_flags);
     s32 sp1C = 0;
@@ -1048,7 +1047,7 @@ void baMarker_8028D7B8(s32 arg0, ActorMarker *arg1, struct5Cs *collision_flags){
             }//L8028D884
 
             if(6 < sp24 && sp24 < 0xC){
-                if(!(1 < func_8033D5A4(collision_flags)) || (func_8033D574(collision_flags) != -1 && actor->unk164[func_8033D574(collision_flags)])){
+                if(!(1 < func_8033D5A4(collision_flags)) || (collision_getNextState(collision_flags) != -1 && actor->unk164[collision_getNextState(collision_flags)])){
                     sp1C = 1;
                 }//L8028D8E8
             }//L8028D8E8

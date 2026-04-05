@@ -1,3 +1,4 @@
+// BanjoDecomp: wozzasjig.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
@@ -47,8 +48,8 @@ void func_8038FF54(Actor *this){
 
     this->marker->propPtr->unk8_3 = false;
     actor_collisionOff(this);
-    if(this->unk100){
-        other = marker_getActor(this->unk100);
+    if(this->partnerActor){
+        other = marker_getActor(this->partnerActor);
         if(this->state != 9){
             if(other->state == 9){
                 subaddie_set_state_with_direction(this, 9, 0.01f, 1);
@@ -59,7 +60,7 @@ void func_8038FF54(Actor *this){
                 anctrl_setStart(this->anctrl, anctrl_getAnimTimer(other->anctrl));
                 anctrl_setDuration(this->anctrl, anctrl_getDuration(other->anctrl));
                 anctrl_setSmoothTransition(this->anctrl, false);
-                anctrl_start(this->anctrl, "chwozzasjig.c", 0x87);
+                anctrl_start(this->anctrl, "wozzasjig.c", 0x87);
                 this->position[0] = other->position[0];
                 this->position[1] = other->position[1];
                 this->position[2] = other->position[2];
@@ -76,7 +77,7 @@ void func_8038FF54(Actor *this){
             sp40[2] = (f32)(s32)sp40[2];
             bundle_setYaw(this->yaw + 90.0f);
             jiggy_spawn(JIGGY_32_FP_WOZZA, sp40);
-            levelSpecificFlags_set(LEVEL_FLAG_26_FP_UNKNOWN, true);
+            levelSpecificFlags_set(LEVEL_FLAG_26_FP_WALRUS_JIGGY_DROPPED, true);
             marker_despawn(this->marker);
        }
        else if(this->marker->unk14_21){//L8039016C

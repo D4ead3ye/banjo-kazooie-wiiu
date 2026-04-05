@@ -38,7 +38,6 @@ const std::unordered_map<uint32_t, std::string>& GetAssetSymbolMap() {
     static std::unordered_map<uint32_t, std::string> symbolMap;
 
     std::call_once(mapOnce, [] {
-        // [port] Load the asset ID → o2r path manifest from the archive.
         // Torch writes this as a Blob at "assets/aBKAssetTable".
         // Format: u32 count, then for each entry: u32 assetId, s32 pathLen, char path[pathLen]
         auto res = Ship::Context::GetInstance()->GetResourceManager()->LoadResource("assets/aBKAssetTable");
@@ -175,7 +174,11 @@ static char* LoadAndRetainResource(const std::string& path, uint32_t assetId) {
 // [port] Reload an asset, evicting any cached version first.
 // Used for map models whose vertex data gets modified at runtime.
 extern "C" char* ResourceMgr_ReloadByAssetId(uint32_t assetId) {
-    sResourceRefCache.erase(assetId);
+    std::shared_ptr<Ship::IResource> oldRef;
+    if (auto it = sResourceRefCache.find(assetId); it != sResourceRefCache.end()) {
+        oldRef = std::move(it->second);
+        sResourceRefCache.erase(it);
+    }
 
     const auto& symbolMap = GetAssetSymbolMap();
     if (const auto entry = symbolMap.find(assetId); entry != symbolMap.end()) {

@@ -25,8 +25,8 @@
 #include "port/ui/cvar_prefixes.h"
 #include "ui/LighthouseGui.hpp"
 #include "2.0L/PR/libaudio.h"
-// #include "port/patches/DisplayListPatch.h"
 #include "port/enhancements/events/PortEnhancements.h"
+#include "libultraship/libultra/AudioDmaRegistry.h"
 
 #include <fast/interpreter.h>
 #include <libultraship/bridge/gfxbridge.h>
@@ -883,17 +883,40 @@ void GameEngine::Create(int argc, char* argv[]) {
     //#endif
     PortEnhancements_Init();
     ShipInit::InitAll();
+
+    // Stop rumble on any exit path (including direct exit() calls)
+    atexit([]() {
+        if (Instance && Instance->context && Instance->context->GetControlDeck()) {
+            for (int i = 0; i < 4; i++) {
+                auto controller = Instance->context->GetControlDeck()->GetControllerByPort(i);
+                if (controller) {
+                    controller->GetRumble()->StopRumble();
+                }
+            }
+        }
+    });
 }
 
 extern void ResourceHelpers_ClearRefCache();
 
 void GameEngine::Destroy() {
+    // Stop rumble on all controllers before tearing down
+    if (Instance->context && Instance->context->GetControlDeck()) {
+        for (int i = 0; i < 4; i++) {
+            auto controller = Instance->context->GetControlDeck()->GetControllerByPort(i);
+            if (controller) {
+                controller->GetRumble()->StopRumble();
+            }
+        }
+    }
+
     LighthouseGui::Destroy();
     lhFast3dWindow = nullptr;
 
     // Flush all resource refs so destructors run while spdlog is still active.
     // sResourceRefCache holds shared_ptrs that outlive the LUS cache otherwise.
     ResourceHelpers_ClearRefCache();
+    AudioDma_Clear();
     if (Instance->context && Instance->context->GetResourceManager()) {
         Instance->context->GetResourceManager()->UnloadResources("*");
     }
@@ -1020,6 +1043,7 @@ static void LoadSoundfonts() {
         if (res) {
             start = (uint8_t*)res->GetRawPointer();
             end = start + res->GetPointerSize();
+            AudioDma_Register(start, res->GetPointerSize());
         } else {
             SPDLOG_ERROR("[Audio] Failed to load soundfont '{}'", path);
         }
@@ -1033,6 +1057,7 @@ static void LoadSoundfonts() {
         auto res = rm->LoadResource(path);
         if (res) {
             start = (uint8_t*)res->GetRawPointer();
+            AudioDma_Register(start, res->GetPointerSize());
         } else {
             SPDLOG_ERROR("[Audio] Failed to load soundfont '{}'", path);
         }
@@ -1065,8 +1090,6 @@ void GameEngine::AudioExit() {
     }
 }
 
-// [port] GPU→CPU framebuffer readback — defined in Game.cpp
-void Framebuffer_ReadbackGPU_FromBackbuffer(Fast::Interpreter* interpreter);
 extern "C" int port_isViBlack(void);
 
 void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map<Mtx*, MtxF>>& mtx_replacements) {
@@ -1099,20 +1122,14 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
             gui->StartDraw();
             interpreter->StartFrame();
             interpreter->Run(Commands, m);
-            // [port] Only readback on the final (real) frame, not interpolated ones.
-            if (isFinalFrame) {
-                Framebuffer_ReadbackGPU_FromBackbuffer(interpreter);
-            }
-            // [port] Emulate N64 osViBlack: after readback captured the world,
-            // clear the game framebuffer to black so the player sees nothing.
-            // On N64, osViBlack blanked TV output but the RDP still rendered.
-            if (port_isViBlack()) {
-                int gameFb = interpreter->mRendersToFb ? interpreter->mGameFb : 0;
-                interpreter->mRapi->StartDrawToFramebuffer(gameFb, 1);
-                interpreter->mRapi->ClearFramebuffer(true, false);
-            }
+            // [port] Emulate N64 osViBlack: skip presentation so the previous
+            // frame stays on screen (readback still runs so transitions can capture).
             gui->EndDraw();
-            interpreter->EndFrame();
+            if (port_isViBlack()) {
+                interpreter->Flush();
+            } else {
+                interpreter->EndFrame();
+            }
         }
         interpreter->mInterpolationIndex++;
         frameIdx++;

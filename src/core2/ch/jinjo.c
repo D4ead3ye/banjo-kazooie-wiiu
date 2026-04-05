@@ -4,7 +4,6 @@
 
 extern void subaddie_set_state_with_direction(Actor *, s32, f32 , s32);
 extern f32 func_80309B24(f32*);
-// [port] removed: extern void func_80329904 — now provided by port_prototypes.h as s32 return
 extern void func_8032BB88(Actor *, s32, s32);
 
 void chJinjo_update(Actor *this);
@@ -176,9 +175,9 @@ void chJinjo_update(Actor * this){
                 core1_ce60_incOrDecCounter(false);
                 func_8032BB88(this, 0, 4000);
                 if(local->unk4){
-                    func_8025A6EC(COMUSIC_30_5TH_JINJO_COLLECTED, 28000);
+                    coMusicPlayer_playMusic(COMUSIC_30_5TH_JINJO_COLLECTED, 28000);
                 }else{
-                    func_8025A6EC(COMUSIC_A_JINJO_COLLECTED, 28000);
+                    coMusicPlayer_playMusic(COMUSIC_A_JINJO_COLLECTED, 28000);
                 }
             }//L802CE114
             break;
@@ -222,7 +221,7 @@ void chJinjo_update(Actor * this){
                     func_802F9EC4(local->unkC, sp30, 500, 2000);
                     func_802F9F80(local->unkC, 0.0f, 9e+09, 0.0f);
                     func_802FA0B0(local->unkC, 0);
-                    func_8025A6EC(COMUSIC_43_ENTER_LEVEL_GLITTER, 0x7FFF);
+                    coMusicPlayer_playMusic(COMUSIC_43_ENTER_LEVEL_GLITTER, 0x7FFF);
                     func_8025AABC(COMUSIC_43_ENTER_LEVEL_GLITTER);
                     func_8030E9C4(SFX_C7_SHWOOP, 0.8f, 0x7FFF, sp30, 300.0f, 2000.0f);
                 }//L802CE3C4
@@ -286,7 +285,7 @@ void chJinjo_update(Actor * this){
                     if(local->unk8){
                         func_8030E988(SFX_8_BANJO_LANDING_04, 1.8f, 18000, sp30, 120.0f, 1200.0f);
                     }else{
-                        FUNC_8030E8B4(SFX_8_BANJO_LANDING_04, 1.8f, 18000, sp30, 120, 1200);
+                        sfx_playFadeShorthandDefault(SFX_8_BANJO_LANDING_04, 1.8f, 18000, sp30, 120, 1200);
                     }
                 }
                 break;
@@ -295,7 +294,7 @@ void chJinjo_update(Actor * this){
                     if(local->unk8){
                         func_8030E988(SFX_17_JINJO_WHISTLE, 1.0f, 22000, sp30, 120.0f, 1200.0f);
                     }else{
-                        FUNC_8030E8B4(SFX_17_JINJO_WHISTLE, 1.0f, 22000, sp30, 120, 1200);
+                        sfx_playFadeShorthandDefault(SFX_17_JINJO_WHISTLE, 1.0f, 22000, sp30, 120, 1200);
                     }
                 }
                 break;
@@ -304,7 +303,7 @@ void chJinjo_update(Actor * this){
                     if(local->unk8){
                         func_8030E988(SFX_27_JINJO_HI, 1.0f, 22000, sp30, 120.0f, 1200.0f);
                     }else{
-                        FUNC_8030E8B4(SFX_27_JINJO_HI, 1.0f, 22000, sp30, 120, 1200);
+                        sfx_playFadeShorthandDefault(SFX_27_JINJO_HI, 1.0f, 22000, sp30, 120, 1200);
                     }
                 }
                 break;

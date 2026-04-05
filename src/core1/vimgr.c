@@ -1,3 +1,4 @@
+// BanjoDecomp: vimgr.c
 #include <ultra64.h>
 #include "core1/core1.h"
 #include "functions.h"
@@ -5,7 +6,7 @@
 #include "version.h"
 #include "libultraship/libultra/rcp.h"
 
-extern void port_setViBlack(int active); // [port]
+extern void port_setViBlack(int active);
 
 #define VIMANAGER_THREAD_STACK_SIZE 0x400
 
@@ -167,7 +168,13 @@ void viMgr_func_8024BFAC(void){
 }
 
 void viMgr_func_8024BFD8(s32 arg0){
-    // Lighthouse TODO we might need this
+    // [port] Set D_80280724 to the actual VI count so time_func_8033DDB8() returns
+    // the correct delta for demo/playback zoomboxes. On N64 this was set from the
+    // VI wait loop counter which reflected real rendering time (including lag).
+    // During demo playback, sDemoViCount includes the N64's original rendering lag
+    // for maps that ran slow, which the zoombox dialog system needs to pace text.
+    s32 demoVi = port_getDemoViCount();
+    D_80280724 = (demoVi > 0) ? demoVi : time_getDeltaReal_frames();
 #if 0
     static s32 D_80280E90;
     
@@ -249,7 +256,7 @@ void viMgr_entry(void *arg0){
 
 void viMgr_setScreenBlack(s32 active) {
     osViBlack(active);
-    port_setViBlack(active); // [port]
+    port_setViBlack(active);
 }
 
 void viMgr_clearFramebuffers(void) {

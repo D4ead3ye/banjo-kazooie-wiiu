@@ -33,7 +33,7 @@ s32 func_802F9AA8(enum sfx_e arg0){
 
     iPtr->unk0 = sfxsource_createSfxsourceAndReturnIndex();
     sfxsource_setSfxId(iPtr->unk0, arg0);
-    func_8030DD14(iPtr->unk0, 3);
+    sfxSource_setunk43_7ByIndex(iPtr->unk0, 3);
     sfxsource_setSampleRate(iPtr->unk0, 0x64);
     func_8030E2C4(iPtr->unk0);
     startPtr = bk_vector_getBegin(D_803810A0);
@@ -85,7 +85,7 @@ void func_802F9D38(s32 arg0){
     struct4Es *ptr;
     ptr = bk_vector_at(D_803810A0, arg0);
     if(ptr->unk0){
-        func_8030E394(ptr->unk0);
+        sfxSource_func_8030E2C4(ptr->unk0);
         sfxsource_freeSfxsourceByIndex(ptr->unk0);
         ptr->unk0 = 0;
     }
@@ -122,7 +122,7 @@ void func_802F9E44(s32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4){
     }
 }
 
-void func_802F9EC4(s32 arg0, f32 *arg1, s32 arg2, s32 arg3){ // [port] arg1 was s32, is f32* position
+void func_802F9EC4(s32 arg0, f32 *arg1, s32 arg2, s32 arg3){
     struct4Es *iPtr;
 
     iPtr = bk_vector_at(D_803810A0, arg0);

@@ -53,7 +53,7 @@ void func_802ABE70(void){
     if(baflag_isTrue(BA_FLAG_10_TOUCHING_TURBO_TRAINERS) && bs_getState() != BS_17_BTROT_EXIT){
         baflag_clear(BA_FLAG_10_TOUCHING_TURBO_TRAINERS);
         stateTimer_set(STATE_TIMER_3_TURBO_TALON, get_turbo_duration());
-        func_8025A6EC(COMUSIC_8A_GETTING_TURBO_TRAINERS, -1);
+        coMusicPlayer_playMusic(COMUSIC_8A_GETTING_TURBO_TRAINERS, -1);
         func_8029E0DC(1);
     }
 
@@ -95,7 +95,7 @@ int bscroc_inSet(enum bs_e state){
         || state == BS_CROC_JUMP
         || state == BS_61_CROC_FALL
         || state == BS_CROC_OW
-        || state == BS_CROC_DIE
+        || state == BS_CROC_OW
         || state == BS_6E_CROC_BITE
         || state == BS_CROC_EAT_BAD
         || state == BS_70_CROC_EAT_GOOD
@@ -615,7 +615,7 @@ void func_802AD318(void){
 void bscroc_eat_good_init(void){
     baanim_playForDuration_loopSmooth(ASSET_122_ANIM_BSCROC_BITE, 0.25f);
     func_8029C7F4(1,1,1, BA_PHYSICS_NORMAL);
-    baModel_setPostDraw((void (*)(Gfx **, Mtx **, Vtx **))func_802AD2A8); // [port]
+    baModel_setPostDraw((void (*)(Gfx **, Mtx **, Vtx **))func_802AD2A8);
     D_8037D3E8 = assetcache_get(func_80294974());
     D_8037D3F0 = 1.0f;
     D_8037D3F5 = 0;
@@ -668,7 +668,7 @@ void bscroc_eat_good_end(void){
     func_802ABFBC();
 }
 
-void func_802AD56C(void){
+void bscroc_locked_enter(void){
     baanim_playForDuration_loopSmooth(ASSET_E1_ANIM_BSCROC_IDLE, 1.0f);
     func_8029C7F4(1,1,3, BA_PHYSICS_NORMAL);
     baphysics_set_target_horizontal_velocity(0.0f);
@@ -676,7 +676,7 @@ void func_802AD56C(void){
     func_802B3A50();
 }
 
-void func_802AD5C0(void){
+void bscroc_locked_update(void){
     enum bs_e next_state = 0;
     func_802ABE70();
     func_802B3A50();
@@ -689,7 +689,7 @@ void func_802AD5C0(void){
     bs_setState(next_state);
 }
 
-void func_802AD614(void){
+void bscroc_locked_end(void){
     pitch_setIdeal(0.0f);
     roll_setIdeal(0.0f);
     func_8029C748();

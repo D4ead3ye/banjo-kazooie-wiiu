@@ -1,10 +1,11 @@
+// BanjoDecomp: twinkly.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
 
-extern s32 func_802EBAE0(BKModelUnk14List *arg0, f32 position[3], f32 rotation[3], f32 scale, f32 arg4[3], AnimMtxList *arg5, f32 arg6[3], f32 arg7, f32 arg8[3]); // [port] was UNK_TYPE(s32) params — pointer truncation
+extern s32 func_802EBAE0(BKModelUnk14List *arg0, f32 position[3], f32 rotation[3], f32 scale, f32 arg4[3], AnimMtxList *arg5, f32 arg6[3], f32 arg7, f32 arg8[3]);
 
-Actor *func_8038C0B0(ActorMarker *marker, f32 arg1[3], f32 arg2, f32 arg3[3], s32 arg4_unused); // [port] matched to Struct6Cs.unkC signature
+Actor *func_8038C0B0(ActorMarker *marker, f32 arg1[3], f32 arg2, f32 arg3[3], s32 arg4_unused);
 Actor *func_8038C1F8(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx);
 void func_8038C9A0(Actor *this);
 
@@ -59,8 +60,8 @@ s32 D_803920B0[4] =  {0xFF, 0xFF, 0xFF, 0x00};
 
 
 /* .code */
-Actor *func_8038C0B0(ActorMarker *marker, f32 arg1[3], f32 arg2, f32 arg3[3], s32 arg4_unused){ // [port] matched to Struct6Cs.unkC
-    BKModelUnk14List *sp5C = func_8033A12C(marker_loadModelBin(marker)); // [port] was UNK_TYPE(s32) — pointer truncation
+Actor *func_8038C0B0(ActorMarker *marker, f32 arg1[3], f32 arg2, f32 arg3[3], s32 arg4_unused){
+    BKModelUnk14List *sp5C = func_8033A12C(marker_loadModelBin(marker));
     Actor *this = marker_getActor(marker);
     f32 sp4C[3];
     f32 sp40[3];
@@ -75,7 +76,7 @@ Actor *func_8038C0B0(ActorMarker *marker, f32 arg1[3], f32 arg2, f32 arg3[3], s3
     sp40[2] = (f32)marker->roll;
     sp3C = this->scale;
     if(animMtxList_len(marker->unk20)){
-        return (Actor *)(intptr_t)func_802EBAE0(sp5C, sp4C, sp40, sp3C, NULL, marker->unk20, arg1, arg2, arg3); // [port] s32 return → Actor *
+        return (Actor *)(intptr_t)func_802EBAE0(sp5C, sp4C, sp40, sp3C, NULL, marker->unk20, arg1, arg2, arg3);
     }
     else{
         return NULL;
@@ -106,7 +107,7 @@ void func_8038C260(f32 position[3], s32 count, enum asset_e model_id){
     particleEmitter_setFade(pCtrl, 0.0f, 0.3f);
     particleEmitter_func_802EF9F8(pCtrl, 0.6f);
     particleEmitter_func_802EFA18(pCtrl, 0);
-    func_802EFA20(pCtrl, 1.0f, 1.3f);
+    particleEmitter_func_802EFA20(pCtrl, 1.0f, 1.3f);
     particleEmitter_setSfx(pCtrl, SFX_7B_ICE_BREAKING_1, 8000);
     particleEmitter_emitN(pCtrl, count);
 }
@@ -123,7 +124,7 @@ void func_8038C398(f32 position[3], enum marker_e marker_id){
             break;
         
         case MARKER_202_TWINKLY_ORANGE:
-            sp1C = ASSET_49A_MODLE_TWINKLY_SHARD_ORANGE;
+            sp1C = ASSET_49A_MODEL_TWINKLY_SHARD_ORANGE;
             break;
 
         case MARKER_203_TWINKLY_RED:
@@ -189,7 +190,7 @@ void func_8038C428(Actor *arg0, f32 arg1[3], f32 arg2)
     arg0->velocity[0] = (f32) (var_f22 / temp_f0);
     arg0->velocity[2] = (f32) (var_f24 / temp_f0);
     if (sp7F) {
-        func_8030E878(SFX_3F2_UNKNOWN, randf2(1.2f, 1.3f), 0x7D00U, arg0->position, 1750.0f, 3500.0f);
+        func_8030E878(SFX_3F2_BOING, randf2(1.2f, 1.3f), 0x7D00U, arg0->position, 1750.0f, 3500.0f);
     }
     else {
         func_8030E878(SFX_53_BANJO_HUIII, randf2(1.4f, 1.5f), 0x7D00U, arg0->position, 1750.0f, 3500.0f);
@@ -229,13 +230,13 @@ void func_8038C8F0(ActorMarker *marker){
     Actor *this;
     Actor *muncher;
     Actor *other;
-    s32 pad;
+    s32 pad = 0;
 
     this = marker_getActor(reinterpret_cast(ActorMarker *, marker));
-    other = marker_getActor(this->unk100);
+    other = marker_getActor(this->partnerActor);
     muncher = actor_spawnWithYaw_f32(ACTOR_337_TWINKLY_MUNCHER, D_80392070, 170);
-    muncher->unk100 = other->marker;
-    muncher->unkF4_8 = 1;
+    muncher->partnerActor = other->marker;
+    muncher->actorTypeSpecificField = 1;
 
     if(pad);
 }
@@ -255,7 +256,7 @@ void func_8038C9A0(Actor *this){
     if(this->marker->id == 0x200){
         sp30 = func_8034C2C4(this->marker, 0x190);
     }
-    other = marker_getActor(this->unk100);
+    other = marker_getActor(this->partnerActor);
 
     if(!this->volatile_initialized){
         this->volatile_initialized = true;
@@ -279,7 +280,7 @@ void func_8038C9A0(Actor *this){
 
     if(1.0f == other->unk1C[1]){
         func_8038C398(this->position, this->marker->id);
-        FUNC_8030E8B4(SFX_7B_ICE_BREAKING_1, 1.0f, 32000, this->position, 0x6d6, 0xdac);\
+        sfx_playFadeShorthandDefault(SFX_7B_ICE_BREAKING_1, 1.0f, 32000, this->position, 0x6d6, 0xdac);\
         marker_despawn(this->marker);
         return;
     }
@@ -326,7 +327,7 @@ void func_8038C9A0(Actor *this){
                 if(other->unk38_31 != 0){
                     other->unk38_31--;
                 }
-                func_8025A6EC(COMUSIC_2B_DING_B, 28000);
+                coMusicPlayer_playMusic(COMUSIC_2B_DING_B, 28000);
                 marker_despawn(this->marker);
             }
             break;
@@ -348,8 +349,8 @@ void func_8038C9A0(Actor *this){
             break;
 
         case 5:// 8038CE14
-            this->yaw_ideal = (f32)func_80329784(this);
-            func_80328FB0(this, 8.0f);
+            this->yaw_ideal = (f32)subaddie_getYawToPlayer(this);
+            subaddie_turnToYaw(this, 8.0f);
             if(!func_8038C718(this, this->unk1C[1])){
                 this->velocity[1] = randf2(14.0f, 20.0f);
             }

@@ -48,10 +48,10 @@ typedef struct{
     u8 pad4[4];
 }Struct_core2_560F0_2;
 
-extern void item_set(enum item_e, s32);
 extern void actor_postdrawMethod(ActorMarker *);
 extern void viewport_setNearAndFar(f32, f32);
 extern s16 *func_8030C704(void);
+extern void port_patchPictureModel(BKModelBin *model_bin, s32 min_xy, s32 max_xy, s32 min_z, s32 max_z, u32 from);
 
 Actor *chBottlesBonus_draw(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx);
 void chBottlesBonus_update(Actor *this);
@@ -169,17 +169,21 @@ Actor *chBottlesBonus_draw(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx)
     modelRender_draw(gfx, mtx, sp60, NULL, 1.0f, sp54, chBottlesBonusBookselfModelBin);
     modelRender_draw(gfx, mtx, sp60, NULL, 1.0f, sp54, D_8037DEA8);
 
-    gDPSetTextureFilter((*gfx)++, G_TF_POINT);
+    gDPSetTextureFilter((*gfx)++, G_TF_BILERP);
     gDPSetColorDither((*gfx)++, G_CD_DISABLE);
     func_802DF160(gfx, mtx, vtx);
     func_80253190(gfx);
-    
-    gDPSetTextureFilter((*gfx)++, G_TF_POINT);
+
+    gDPSetTextureFilter((*gfx)++, G_TF_BILERP);
     gSPSegment((*gfx)++, 0x04, osVirtualToPhysical(sp50));
-    modelRender_preDraw((GenFunction_1)actor_predrawMethod, (uintptr_t)sp6C); // [port] was (s32) — truncates pointer on 64-bit
+    modelRender_preDraw((GenFunction_1)actor_predrawMethod, (uintptr_t)sp6C);
     modelRender_postDraw((GenFunction_1)actor_postdrawMethod, (uintptr_t)marker);
 
-    modelRender_draw(gfx, mtx, sp60, NULL, D_80368250, sp54, marker_loadModelBin(marker));
+    // [port] Patch vertex positions
+    BKModelBin *model_bin = marker_loadModelBin(marker);
+    port_patchPictureModel(model_bin, 260, 398, -273, -100, 1);
+    modelRender_draw(gfx, mtx, sp60, NULL, D_80368250, sp54, model_bin);
+
     gDPSetTextureFilter((*gfx)++, G_TF_BILERP);
     gDPSetColorDither((*gfx)++, G_CD_MAGICSQ);
     chBottlesBonusCursor_draw(gfx, mtx, vtx);
@@ -358,7 +362,7 @@ void chBottlesBonus_func_802DD8AC(BoneTransformList *arg0, s32 arg1) {
                     D_8037DEC0[i].unk1C[1] = D_8037DEBC[i].unk1C[1];
                     D_8037DEC0[i].unk1C[2] = D_8037DEBC[i].unk1C[2];
                     vec4f_clone(D_8037DEC0[i].unkC, D_8037DEBC[i].unkC);
-                    chBottlesBonusCursor_func_802DF460(40 + i, chBottlesBonusMarker, (f32 *)D_803681A0); // [port] Struct_core2_560F0_0[] → f32*
+                    chBottlesBonusCursor_func_802DF460(40 + i, chBottlesBonusMarker, (f32 *)D_803681A0);
                     break;
 
                 case 3://L802DDF48
@@ -409,12 +413,12 @@ void chBottlesBonus_lose(u8 *arg0, enum asset_e text_id) {
         func_80311714(1);
     }
     else{
-        timedFunc_set_1(1.25f, (GenFunction_1)func_8034BB08, 0); // [port]
+        timedFunc_set_1(1.25f, (GenFunction_1)func_8034BB08, 0);
     }
 }
 
 void chBottlesBonus_IncrementPuzzle(ActorMarker *caller, enum asset_e text_id, s32 arg2){
-    timedFunc_set_1(0.5f, (GenFunction_1)func_8034BB08, 1); // [port]
+    timedFunc_set_1(0.5f, (GenFunction_1)func_8034BB08, 1);
     chBottlesBonusPuzzleIndex++;
 }
 
@@ -508,7 +512,7 @@ void chBottlesBonus_update(Actor *this) {
         case 1:
             if ((this->lifetime_value > 2.0) && gctransition_done()) {
                 this->lifetime_value = 0.0f;
-                func_8025A6EC(COMUSIC_98_BBONUS_PIECES_SHUFFLE, -1);
+                coMusicPlayer_playMusic(COMUSIC_98_BBONUS_PIECES_SHUFFLE, -1);
                 comusic_8025AB44(COMUSIC_95_BBONUS_A, 0, 2000);
                 func_8025AABC(COMUSIC_95_BBONUS_A);
                 subaddie_set_state_with_direction(this, 2, 0.0f, 1);

@@ -38,9 +38,10 @@ void func_80344124(void){
 }
 
 void func_80344138(BKSpriteDisplayData *self, s32 frame, s32 mirrored, f32 position[3], f32 scale[3], Gfx **gfx, Mtx **mtx) {
-    if (CVarGetInteger(CVAR_ENHANCEMENT("Graphics.DrawDistance"), 0)
+    // [port] Extended draw distance: disable sprite distance cull at 100%.
+    if (CVarGetInteger(CVAR_ENHANCEMENT("Graphics.DrawDistance"), 0) >= 4
         && getGameMode() != GAME_MODE_7_ATTRACT_DEMO) {
-        D_803858B0 = true; // Extended draw distance: disable sprite distance cull
+        D_803858B0 = true;
     }
     f32 sp6C[3];
     f32 sp60[3];
@@ -212,7 +213,7 @@ void func_803449DC(BKSpriteDisplayData *arg0){
 }
 
 void func_803449FC(BKSpriteDisplayData *arg0){
-    func_80255170((void **)&arg0->sprite); // [port]
+    func_80255170((void **)&arg0->sprite);
 }
 
 BKSpriteDisplayData * func_80344A1C(BKSprite *arg0){
@@ -260,7 +261,7 @@ BKSpriteDisplayData * func_80344A1C(BKSprite *arg0){
     return s6;
 }
 
-s32 func_80344C14(s32 arg0){ // [port] was UNK_TYPE(s32) — stub function
+s32 func_80344C14(s32 arg0){
     return 0;
 }
 

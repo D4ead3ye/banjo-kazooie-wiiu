@@ -20,7 +20,7 @@ typedef struct timed_function_queue_s{
         GenFunction_5 func5;
         GenFunction_6 func6;
     };
-    uintptr_t  arg[25]; // [port] s32 -> uintptr_t for 64-bit pointer safety
+    uintptr_t  arg[25];
 
 }TimedFunction;
 
@@ -110,7 +110,7 @@ void __timedFunc_execute(TimedFunction *arg0){
 }
 
 void func_80324A28(s32 soundId, s32 volume){
-    func_8025A6EC(soundId, volume);
+    coMusicPlayer_playMusic(soundId, volume);
 }
 
 void func_80324A48(enum comusic_e arg0){
@@ -191,7 +191,7 @@ void func_80324D54(f32 time, enum sfx_e sfx_id, f32 arg2, s32 arg3, f32 position
     argStruct.unkC[1] = position[1];
     argStruct.unkC[2] = position[2];
     
-    timedFunc_set_6(time, (GenFunction_6) func_80324AA4, (void *) &argStruct);
+    timedFunc_set_6(time, (GenFunction_6) func_80324AA4, (void *) &argStruct, sizeof(argStruct));
 }
 
 void func_80324DBC(f32 time, enum asset_e text_id, s32 arg2, f32 position[3], ActorMarker *caller, void (*callback_method_1)(ActorMarker *, enum asset_e, s32), void (*callback_method_2)(ActorMarker *, enum asset_e, s32)) {
@@ -210,7 +210,7 @@ void func_80324DBC(f32 time, enum asset_e text_id, s32 arg2, f32 position[3], Ac
     } else {
         sp20.position[0] = sp20.position[1] = sp20.position[2] = 0.0f;
     }
-    timedFunc_set_6(time, (GenFunction_6) func_80324AEC, (void *) &sp20);
+    timedFunc_set_6(time, (GenFunction_6) func_80324AEC, (void *) &sp20, sizeof(sp20));
 }
 
 
@@ -250,9 +250,11 @@ void timedFunc_set_5(f32 time, GenFunction_5 funcPtr, uintptr_t arg0, uintptr_t 
     __timedFuncQueue_insert(time, 5, (void *) funcPtr, arg0, arg1, arg2, arg3, arg4);
 }
 
-void timedFunc_set_6(f32 time, GenFunction_6 funcPtr, void* argPtr ){
+void timedFunc_set_6(f32 time, GenFunction_6 funcPtr, void* argPtr, size_t argSize){
     TimedFunction *q = __timedFuncQueue_insert(time, 6, funcPtr, 0, 0, 0, 0, 0);
-    memcpy(&q->arg[5], argPtr, 0x50);
+    if (argPtr != NULL) {
+        memcpy(&q->arg[5], argPtr, argSize);
+    }
 }
 
 //timedJiggySpawn
@@ -263,7 +265,7 @@ void timedJiggySpawn(f32 time, s32 jiggyId, f32 *position){
     jiggyInfo.pos[1] = position[1];
     jiggyInfo.pos[2] = position[2];
 
-    timedFunc_set_6(time, (GenFunction_6) __spawnjiggy, (void*) &jiggyInfo);
+    timedFunc_set_6(time, (GenFunction_6) __spawnjiggy, (void*) &jiggyInfo, sizeof(jiggyInfo));
 }
 
 bool timedFuncQueue_is_empty(void){
@@ -291,7 +293,7 @@ void timedFuncQueue_free(void){
 }
 
 void timedFuncQueue_init(void){
-    D_80383380.ptr = bk_vector_new(sizeof(TimedFunction), 0x10); // [port] was 0x70, now sizeof for 64-bit
+    D_80383380.ptr = bk_vector_new(sizeof(TimedFunction), 0x10);
     D_80383380.time = 0.0f;
 }
 
@@ -327,5 +329,5 @@ void mapSpecificFlags_setTrue(s32 flag){
 }
 
 void timed_mapSpecificFlags_setTrue(f32 time, s32 flag){
-    timedFunc_set_1(time, (GenFunction_1)mapSpecificFlags_setTrue, flag); // [port]
+    timedFunc_set_1(time, (GenFunction_1)mapSpecificFlags_setTrue, flag);
 }

@@ -1,4 +1,5 @@
 #include "PortEnhancements.h"
+#include "port/save/SaveManager.h"
 #include "port/rando/Rando.h"
 
 #define INIT_EVENT_IDS
@@ -15,12 +16,16 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(VanillaBehavior);
 
     // Register game events
-    REGISTER_EVENT(OnGameFileLoad);
+    REGISTER_EVENT(OnGameLoad);
+    REGISTER_EVENT(OnGameSave);
+    REGISTER_EVENT(OnSaveFileLoad);
+    REGISTER_EVENT(OnSaveFileSave);
 
     // Register rando events
     REGISTER_EVENT(OnActorSpawn);
     REGISTER_EVENT(OnActorCollision);
 
+    SaveManager_Init();
     Rando::Init();
 }
 

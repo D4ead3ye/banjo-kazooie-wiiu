@@ -1,9 +1,9 @@
+// BanjoDecomp: blubber.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
 
 extern void func_8028E668(f32 arg0[3], f32 arg1, f32 arg2, f32 arg3);
-extern void func_8028FA34(s32, Actor*);
 extern  s32 func_802E0970(s32, f32, f32, f32, s32, s32, f32[3]);
 
 typedef struct {
@@ -29,7 +29,7 @@ enum ch_blubber_states_e {
 
 /* .data */
 ActorAnimationInfo gChBlubberAnimations[6] = {
-    {0, 0.0f}, // [port] was NULL — u32 field
+    {0, 0.0f},
     {ASSET_B5_ANIM_BLUBBER_WALK, 2.0f},
     {ASSET_B6_ANIM_BLUBBER_CRY, 2.0f},
     {ASSET_B6_ANIM_BLUBBER_CRY, 2.0f},
@@ -63,7 +63,7 @@ static void __chBlubber_showTextCallback(ActorMarker *caller, enum asset_e text_
     Actor *this = marker_getActor(caller);
     ActorLocal_Blubber *local =  (ActorLocal_Blubber*)&this->local;
 
-    if(text_id == ASSET_A0D_DIALOG_BLUBBER_COMPLETE || text_id == ASSET_A2A_BLUBBER_COMPLETE_JIGGY_COLLECTED){
+    if(text_id == ASSET_A0D_DIALOG_BLUBBER_COMPLETE || text_id == ASSET_A2A_DIALOG_BLUBBER_COMPLETE_JIGGY_COLLECTED){
         local->unk24 = 0;
     }
     else{
@@ -89,7 +89,7 @@ static void __chBlubber_showJiggySpawnedText(ActorMarker *marker){
     this->actor_specific_1_f = 0.0f;
 
     if(!mapSpecificFlags_get(TTC_SPECIFIC_FLAG_2_BLUBBER_JIGGY_SPAWNED_TEXT_SHOWN)) {
-        text_id = jiggyscore_isCollected(JIGGY_14_TTC_BLUBBER) ? ASSET_A2A_BLUBBER_COMPLETE_JIGGY_COLLECTED : ASSET_A0D_DIALOG_BLUBBER_COMPLETE;
+        text_id = jiggyscore_isCollected(JIGGY_14_TTC_BLUBBER) ? ASSET_A2A_DIALOG_BLUBBER_COMPLETE_JIGGY_COLLECTED : ASSET_A0D_DIALOG_BLUBBER_COMPLETE;
         gcdialog_showText(text_id, 0xf, this->position, this->marker, __chBlubber_showTextCallback, __chBlubber_showTextCallback2);
         mapSpecificFlags_set(TTC_SPECIFIC_FLAG_2_BLUBBER_JIGGY_SPAWNED_TEXT_SHOWN, true);
     }
@@ -99,7 +99,7 @@ static void __chBlubber_checkJiggySpawnedTextAndAdvanceState(Actor *this){
     if( !mapSpecificFlags_get(TTC_SPECIFIC_FLAG_1_UNKNOWN) ) return;
     if(  mapSpecificFlags_get(TTC_SPECIFIC_FLAG_3_BLUBBER_SHOW_JIGGY_SPAWNED_TEXT_FLAG) ) return;
 
-    this->yaw_ideal = (f32) func_80329784(this);
+    this->yaw_ideal = (f32) subaddie_getYawToPlayer(this);
     mapSpecificFlags_set(TTC_SPECIFIC_FLAG_3_BLUBBER_SHOW_JIGGY_SPAWNED_TEXT_FLAG, true);
     func_8028F918(2);
     timed_setStaticCameraToNode(0.0f, 4);
@@ -184,7 +184,7 @@ static void __chBlubber_updateFunc(Actor *this){
             if(subaddie_maybe_set_state_position_direction(this, CH_BLUBBER_STATE_2_UNKNOWN, 0.0f, 1, 0.007f))
                 break;
 
-            func_80328FB0(this, 3.0f);
+            subaddie_turnToYaw(this, 3.0f);
             __func_8038771C(this);
             __func_80387830(this, 0.14f, 0.68f);
             __chBlubber_checkJiggySpawnedTextAndAdvanceState(this);
@@ -200,15 +200,15 @@ static void __chBlubber_updateFunc(Actor *this){
             }
 
             if(actor_animationIsAt(this, 0.3f)){
-                FUNC_8030E8B4(SFX_83_BLUBBER_CRYING, 0.95f, 17000, this->position, 1250, 2500);
+                sfx_playFadeShorthandDefault(SFX_83_BLUBBER_CRYING, 0.95f, 17000, this->position, 1250, 2500);
             }
 
             if(actor_animationIsAt(this, 0.53f)){
-                FUNC_8030E8B4(SFX_83_BLUBBER_CRYING, 0.93f, 17000, this->position, 1250, 2500);
+                sfx_playFadeShorthandDefault(SFX_83_BLUBBER_CRYING, 0.93f, 17000, this->position, 1250, 2500);
             }
 
             if(actor_animationIsAt(this, 0.72f)){
-                FUNC_8030E8B4(SFX_83_BLUBBER_CRYING, 0.91f, 17000, this->position, 1250, 2500);
+                sfx_playFadeShorthandDefault(SFX_83_BLUBBER_CRYING, 0.91f, 17000, this->position, 1250, 2500);
             }
 
             __chBlubber_checkJiggySpawnedTextAndAdvanceState(this);
@@ -219,7 +219,7 @@ static void __chBlubber_updateFunc(Actor *this){
         
         case CH_BLUBBER_STATE_4_UNKNOWN:
             {                
-                func_80328FB0(this, 3.0f);
+                subaddie_turnToYaw(this, 3.0f);
                 local =  (ActorLocal_Blubber*)&this->local;
                 if(actor_animationIsAt(this, 0.99f) && !local->unk24){
                     subaddie_set_state(this, CH_BLUBBER_STATE_5_UNKNOWN);

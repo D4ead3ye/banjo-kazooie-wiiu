@@ -1,3 +1,4 @@
+// BanjoDecomp: sns.c
 #include <ultra64.h>
 #include "core1/core1.h"
 #include "functions.h"
@@ -49,7 +50,7 @@ void sns_update_global_save_data_checksum(void)
      * Running this multiple times seems to achieve nothing.
      * A debug leftover?
      */
-    for (i = 5; i != 0 && savedata_8033CE40((u8 *)&gSaveData); i--) // [port] GlobalSave* → u8*
+    for (i = 5; i != 0 && savedata_8033CE40((u8 *)&gSaveData); i--)
         ;
 }
 

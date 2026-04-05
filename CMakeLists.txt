@@ -72,8 +72,25 @@ set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum OS X deployment ve
 # Set the C++ standard and enable the MSVC parallel build option
 set(CMAKE_CXX_STANDARD 20 CACHE STRING "The C++ standard to use")
 set(CMAKE_C_STANDARD 11 CACHE STRING "The C standard to use")
-#add_compile_options(-fsanitize=address)
-#add_link_options(-fsanitize=address)
+option(ENABLE_ASAN "Enable AddressSanitizer (static)" OFF)
+if(ENABLE_ASAN)
+    if(MSVC AND NOT CMAKE_C_COMPILER_ID MATCHES "Clang")
+        add_compile_options(/fsanitize=address)
+        # /fsanitize=address is incompatible with /ZI (Edit and Continue), downgrade to /Zi globally.
+        string(REPLACE "/ZI" "/Zi" CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
+        string(REPLACE "/ZI" "/Zi" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+        string(REPLACE "/ZI" "/Zi" CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO}")
+        string(REPLACE "/ZI" "/Zi" CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
+        # Also disable /RTC which is incompatible with ASan
+        string(REGEX REPLACE "/RTC[1su]+" "" CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
+        string(REGEX REPLACE "/RTC[1su]+" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+        # Disable STL container annotations to avoid LNK2038 mismatches with pre-built vcpkg libs
+        add_compile_definitions(_DISABLE_STRING_ANNOTATION _DISABLE_VECTOR_ANNOTATION)
+    else()
+        add_compile_options(-fsanitize=address -fno-omit-frame-pointer)
+        add_link_options(-fsanitize=address -static-libsan)
+    endif()
+endif()
 
 # Add a custom module path to locate additional CMake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
@@ -327,6 +344,19 @@ add_subdirectory(libultraship ${CMAKE_CURRENT_SOURCE_DIR}/libultraship)
 add_dependencies(${PROJECT_NAME} libultraship)
 target_link_libraries(${PROJECT_NAME} PRIVATE libultraship)
 
+# /fsanitize=address is incompatible with /ZI (Edit and Continue), downgrade to /Zi.
+if(ENABLE_ASAN AND MSVC)
+    foreach(_asan_target prism torch)
+        if(TARGET ${_asan_target})
+            get_target_property(_opts ${_asan_target} COMPILE_OPTIONS)
+            if(_opts)
+                list(TRANSFORM _opts REPLACE "^/ZI$" "/Zi")
+                set_property(TARGET ${_asan_target} PROPERTY COMPILE_OPTIONS ${_opts})
+            endif()
+        endif()
+    endforeach()
+endif()
+
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         "$<$<CONFIG:Debug>:"
@@ -440,10 +470,13 @@ option(USE_STANDALONE "Build as a standalone executable" OFF)
 option(BUILD_STORMLIB "Build with StormLib support" OFF)
 
 option(BUILD_BK64 "Build with Banjo-Kazooie support" ON)
+option(BUILD_PM64 "Build with Paper Mario support" OFF)
 option(BUILD_SM64 "Build with Super Mario 64 support" OFF)
 option(BUILD_MK64 "Build with Mario Kart 64 support" OFF)
 option(BUILD_SF64 "Build with Star Fox 64 support" OFF)
 option(BUILD_FZERO "Build with F-Zero X support" OFF)
+option(BUILD_MARIO_ARTIST "Build with Mario Artist support" OFF)
+option(BUILD_NAUDIO "Build with NAudio support" OFF)
 add_subdirectory(Torch)
 target_link_libraries(${PROJECT_NAME} PRIVATE torch "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
 
@@ -489,7 +522,11 @@ if(MSVC)
           ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
           ${DEFAULT_CXX_EXCEPTION_HANDLING}
       )
-      target_compile_options(${PROJECT_NAME} PRIVATE  $<$<CONFIG:Debug>:/ZI;>)
+      if(ENABLE_ASAN)
+          target_compile_options(${PROJECT_NAME} PRIVATE  $<$<CONFIG:Debug>:/Zi;>)
+      else()
+          target_compile_options(${PROJECT_NAME} PRIVATE  $<$<CONFIG:Debug>:/ZI;>)
+      endif()
       target_compile_options(${PROJECT_NAME} PRIVATE  $<$<CONFIG:Release>:/Zi;>)
   elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
       target_compile_options(${PROJECT_NAME} PRIVATE
@@ -555,6 +592,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
     if (CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "iOS")
         target_compile_options(${PROJECT_NAME} PRIVATE
             -Wall -Wextra -Wno-error
+            -fno-strict-aliasing
             -Wno-return-type
             -Wno-unused-parameter
             -Wno-unused-function
@@ -583,6 +621,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
     elseif (CMAKE_SYSTEM_NAME STREQUAL "NintendoSwitch")
       target_compile_options(${PROJECT_NAME} PRIVATE
           -Wall -Wextra -Wno-error
+          -fno-strict-aliasing
           -Wno-return-type
           -Wno-unused-parameter
           -Wno-unused-function
@@ -637,6 +676,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
 
       target_compile_options(${PROJECT_NAME} PRIVATE
           -Wall -Wextra -Wno-error
+          -fno-strict-aliasing
           -Wno-unused-parameter
           -Wno-unused-function
           -Wno-unused-variable
@@ -671,7 +711,7 @@ include(ExternalProject)
 ExternalProject_Add(TorchExternal
 	PREFIX TorchExternal
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/Torch
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/Torch
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/Torch -DENABLE_ASAN=${ENABLE_ASAN}
 )
 ExternalProject_Get_Property(TorchExternal install_dir)
 if (MSVC)

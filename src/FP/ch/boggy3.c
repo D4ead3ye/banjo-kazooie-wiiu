@@ -1,3 +1,4 @@
+// BanjoDecomp: boggy3.c
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
@@ -31,7 +32,7 @@ Actor *func_80390290(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
     }
     func_8033A45C(1, 0);
     func_8033A45C(3, sp18);
-    actor_draw(marker, gfx, mtx, vtx);
+    return actor_draw(marker, gfx, mtx, vtx);
 }
 
 
@@ -77,14 +78,14 @@ void func_80390388(Actor *this){
         && (player_movementGroup() == BSGROUP_0_NONE || player_movementGroup() == BSGROUP_8_TROT)
     ){
         if(0.0f == this->unk1C[0] && func_80390334()){
-            if(gcdialog_showText(ASSET_C1F_DIALOG_UNKNOWN, 0xb, this->position, NULL, NULL, NULL)){
+            if(gcdialog_showText(ASSET_C1F_DIALOG_BOGGY_IGLOO_2, 0xb, this->position, NULL, NULL, NULL)){
                 this->has_met_before = true;
                 this->unk1C[0] = 1.0f;
             }
         }
         else{
             if( !this->has_met_before ){
-                if(gcdialog_showText(ASSET_C1E_DIALOG_UNKNOWN, 0x2b, this->position, NULL, NULL, NULL)){
+                if(gcdialog_showText(ASSET_C1E_DIALOG_BOGGY_IGLOO_1, 0x2b, this->position, NULL, NULL, NULL)){
                     this->has_met_before = true;
                 }
             }

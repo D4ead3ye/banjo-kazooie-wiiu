@@ -6,7 +6,6 @@
 extern void func_802BE720(void);
 extern f32 func_8033A244(f32);
 extern void func_8033A280(f32);
-// [port] removed: extern void func_80329904 — now provided by port_prototypes.h as s32 return
 
 typedef struct chjiggy_s{
     u32 unk0;
@@ -57,7 +56,7 @@ enum jiggy_e func_802C7A30(Actor *this){
 
 void func_802C7AB0(ActorMarker * arg0, u32 arg1){
     func_8030E6D4(SFX_30_MAGIC_POOF);
-    func_8025A6EC(COMUSIC_3C_MINIGAME_LOSS, 0x7FF8);
+    coMusicPlayer_playMusic(COMUSIC_3C_MINIGAME_LOSS, 0x7FF8);
     mapSpecificFlags_set(arg1, 1);
     marker_despawn(arg0);
 }
@@ -181,7 +180,7 @@ void chjiggy_update(Actor *this){
                     func_802C7B8C(this, 0xd, 0xc, 0x1e, 9, 0xb, VOLATILE_FLAG_AF_BGS_MAZE_JIGGY_MISSED);
                     break;
                 case JIGGY_2F_FP_XMAS_TREE://L802C8048
-                    if (levelSpecificFlags_get(LEVEL_FLAG_29_FP_UNKNOWN)) {
+                    if (levelSpecificFlags_get(LEVEL_FLAG_29_FP_XMAS_TREE_COMPLETE)) {
                         actor_collisionOn(this);
                     }
                     else {
