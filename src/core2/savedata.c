@@ -407,6 +407,7 @@ void saveData_create(void *savedata_){
     __savedata_8033C8A0((u8*)savedata);
     __savedata_8033CA2C((u8*)savedata);
     __savedata_save_abilities((u8*)savedata);
+    CALL_EVENT(OnSaveCreate, savedata);
     savedata_update_crc(savedata, sizeof(SaveData));
 }
 
