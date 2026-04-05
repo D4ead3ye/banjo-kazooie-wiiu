@@ -115,6 +115,18 @@ void LighthouseMenu::AddMenuEnhancements() {
         .Options(CheckboxOptions().Tooltip("Delays the Grunty Defeated flag until after the Jinjonator attacks, "
                                            "preventing a false win if the player dies before the hit lands."));
 
+    AddWidget(path, "Fix Cutscene Audio Sync", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fix.CutsceneSync"))
+        .RaceDisable(false)
+        .Options(
+            CheckboxOptions().Tooltip("Compensates for N64 frame stutters during cutscenes so audio stays in sync."));
+
+    AddWidget(path, "Fix Widescreen Camera", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fix.WidescreenCamera"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Adjusts static camera angles in widescreen to prevent skybox "
+                                           "exposure at the edges of the screen."));
+
     // Enhancements -> Restorations
     path = { "Enhancements", "Restorations", SECTION_COLUMN_1 };
     AddSidebarEntry("Enhancements", path.sidebarName, 1);
@@ -140,6 +152,8 @@ void LighthouseMenu::AddMenuEnhancements() {
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip("Unlocks all Stop N' Swop items when loading a 100% save file."));
 
+    // TODO: All Honeycomb Extensions allows 9 honeycomb health bars instead of the 8 cap,
+    // but in 4:3 mode they overlap with the notes sprite in HUD
     AddWidget(path, "All Honeycomb Extensions", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("AllHoneycombExtensions"))
         .RaceDisable(false)
