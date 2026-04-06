@@ -32,20 +32,28 @@ typedef enum {
     RC_MAX,
 } RandoCheckId;
 
+// typedef enum {
+//     RE_UNKNOWN,
+//     RE_MAX,
+// } RandoEntranceId;
+
 typedef enum {
-    RE_UNKNOWN,
-    RE_MAX,
-} RandoEntranceId;
+    RITYPE_UNKNOWN,
+    RITYPE_JIGGY,
+    RITYPE_JINJO,
+    RITYPE_MAX,
+} RandoItemType;
 
-// typedef enum {
-//     RITYPE_UNKNOWN,
-//     RITYPE_MAX,
-// } RandoItemType;
-
-// typedef enum {
-//     RI_UNKNOWN,
-//     RI_MAX,
-// } RandoItemId;
+typedef enum {
+    RI_UNKNOWN,
+    RI_JIGGY,
+    RI_JINJO_BLUE,
+    RI_JINJO_GREEN,
+    RI_JINJO_ORANGE,
+    RI_JINJO_PINK,
+    RI_JINJO_YELLOW,
+    RI_MAX,
+} RandoItemId;
 
 // typedef enum {
 //     RR_MAX,
