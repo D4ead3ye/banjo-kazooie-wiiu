@@ -2,7 +2,6 @@
 #define RANDO_H
 
 // #include "port/Rando/CustomObject/CustomObject.h"
-// #include "include/types.h"
 
 #include <libultraship/libultra/gbi.h>
 #include "save.h"

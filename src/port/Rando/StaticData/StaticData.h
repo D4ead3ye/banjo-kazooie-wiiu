@@ -31,19 +31,19 @@ struct RandoStaticCheck {
 extern std::map<RandoCheckId, RandoStaticCheck> Checks;
 // extern RandoStaticCheck GetShuffledRandoStaticCheck(s16 x, s16 y, s16 z);
 
-// struct RandoStaticItem {
-//     RandoItemId randoItemId;
-//     const char* spoilerName;
-//     const char* article;
-//     const char* name;
-//     RandoItemType randoItemType;
-//     int16_t modelId;
-// };
+struct RandoStaticItem {
+    RandoItemId randoItemId;
+    const char* spoilerName;
+    const char* article;
+    const char* name;
+    RandoItemType randoItemType;
+    int16_t actorId;
+};
 
 // RandoCheckId GetCheckByLocation(int16_t posX, int16_t posY, int16_t posZ);
 // RandoCheckId GetCheckByLevelAct(int16_t levelId, int16_t randoAct);
 
-// extern std::map<RandoItemId, RandoStaticItem> Items;
+extern std::map<RandoItemId, RandoStaticItem> Items;
 
 // int16_t GetModelByRandoItem(RandoItemId randoItem);
 // const BehaviorScript *GetBehaviorByModel(int16_t modelId);
