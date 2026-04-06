@@ -29,6 +29,8 @@ void Rando::ObjectBehavior::Init() {
         if (!IS_RANDO) {
             return;
         }
+        LogOutCollision(ACTOR_2D_MUMBO_TOKEN, ev->propId->actorProp.x, ev->propId->actorProp.y,
+                        ev->propId->actorProp.z);
 
         if (!ev->propId->markerFlag) {
             switch (ev->propId->spriteProp.unk0_31) {
