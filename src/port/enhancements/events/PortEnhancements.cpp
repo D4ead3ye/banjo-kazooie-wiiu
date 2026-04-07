@@ -24,6 +24,7 @@ void PortEnhancements_Register() {
     // Register rando events
     REGISTER_EVENT(OnSaveCreate);
     REGISTER_EVENT(OnActorSpawn);
+    REGISTER_EVENT(OnPropSpawn);
     REGISTER_EVENT(OnActorCollision);
 
     SaveManager_Init();
