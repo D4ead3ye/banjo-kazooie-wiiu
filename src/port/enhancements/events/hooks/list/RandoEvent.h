@@ -20,6 +20,7 @@ DEFINE_EVENT(OnActorSpawn,
 )
 
 DEFINE_EVENT(OnPropSpawn,
+	int32_t propId;
 	int32_t posX;
 	int32_t posY;
 	int32_t posZ;

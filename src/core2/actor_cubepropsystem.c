@@ -955,7 +955,7 @@ void code7AF80_initCubeFromFile(File *file_ptr, Cube *cube) {
                 memcpy(&pos[1], raw + 6, 2);
                 memcpy(&pos[2], raw + 8, 2);
                 memcpy(&flags, raw + 10, 2);
-                CALL_CANCELLABLE_EVENT(OnPropSpawn, pos[0], pos[1], pos[2]) {
+                CALL_CANCELLABLE_EVENT(OnPropSpawn, (word0 >> 20) & 0xFFF, pos[0], pos[1], pos[2]) {
                     // Extract flag bits using N64 BE bit positions within the u16
                     {
                         bool mf = flags & 1;            // markerFlag (BE bit 0)

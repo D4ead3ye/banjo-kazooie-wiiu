@@ -11,6 +11,12 @@ typedef struct chjiggy_s {
     u32 index;
 } ActorLocal_Jiggy;
 
+typedef struct map_info {
+    s16 map_id;
+    s16 level_id;
+    char* name;
+} MapInfo;
+
 // Custom Actor
 s32 dummy_func_80320248(void);
 extern s32 sSpawnableActorSize;
@@ -21,13 +27,22 @@ extern void spawnableActorList_add(ActorInfo* arg0, Actor* (*arg1)(s32[3], s32, 
 extern Actor* actor_spawnWithYaw_s32(enum actor_e id, s32 (*pos)[3], s32 rot);
 
 enum map_e map_get(void);
+enum level_e map_getLevel(enum map_e map);
+MapInfo* func_8030AD00(enum map_e map_id);
 }
 
 std::map<actor_e, std::array<int32_t, 3>> actorSpawnQueue;
 static bool canSpawn = true;
+MapInfo* currentMap = func_8030AD00(MAP_91_FILE_SELECT);
 
 void CustomObject::InitializeSpawnQueue() {
+    level_e currentLocation = map_getLevel(map_get());
+    if (currentMap->level_id == currentLocation) {
+        return;
+    }
+
     if (!actorSpawnQueue.empty() && canSpawn) {
+        currentMap = func_8030AD00(map_get());
         canSpawn = false;
         for (auto& [id, position] : actorSpawnQueue) {
             int32_t spawnPos[3] = { position[0], position[1], position[2] };

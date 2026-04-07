@@ -67,6 +67,10 @@ void Rando::ObjectBehavior::Init() {
     REGISTER_LISTENER(OnPropSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnPropSpawn* ev = (OnPropSpawn*)event;
 
+        if (ev->propId == RP_MUSIC_NOTE) {
+            LogOutSpawns(ev->propId, ev->posX, ev->posY, ev->posZ);
+        }
+
         if (ev->posX == 2585 && ev->posY == -20 && ev->posZ == 3800) {
             SPDLOG_INFO("Note Found");
             event->cancelled = true;
