@@ -6,6 +6,7 @@
 #include "enums.h"
 #include "prop.h"
 
+// clang-format off
 DEFINE_EVENT(OnSaveCreate,
 	void* saveData;
 )
@@ -15,10 +16,16 @@ DEFINE_EVENT(OnActorSpawn,
 	int32_t posX;
 	int32_t posY;
 	int32_t posZ;
-	int32_t rot;
 	Actor* result;
+)
+
+DEFINE_EVENT(OnPropSpawn,
+	int32_t posX;
+	int32_t posY;
+	int32_t posZ;
 )
 
 DEFINE_EVENT(OnActorCollision,
 	Prop* propId;
 )
+// clang-format on
