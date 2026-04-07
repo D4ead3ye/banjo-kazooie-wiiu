@@ -23,6 +23,7 @@ struct RandoStaticCheck {
     RandoCheckType randoCheckType;
     int32_t worldId;
     int32_t actorId;
+    int32_t collectionId;
     int32_t posX;
     int32_t posY;
     int32_t posZ;

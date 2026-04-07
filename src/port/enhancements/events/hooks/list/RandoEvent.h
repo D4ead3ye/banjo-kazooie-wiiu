@@ -12,7 +12,6 @@ DEFINE_EVENT(OnSaveCreate,
 )
 
 DEFINE_EVENT(OnActorSpawn,
-	enum actor_e actorId;
 	int32_t posX;
 	int32_t posY;
 	int32_t posZ;

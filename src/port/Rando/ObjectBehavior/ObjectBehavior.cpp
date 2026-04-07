@@ -9,7 +9,6 @@
 extern "C" {
 int __baMarker_8028BC60(void);
 void __baMarker_resolveMusicNoteCollision(Prop* arg0);
-enum map_e map_get(void);
 }
 
 void LogOutSpawns(int32_t actorId, int16_t posX, int16_t posY, int16_t posZ) {
@@ -30,8 +29,6 @@ void Rando::ObjectBehavior::Init() {
         if (!IS_RANDO) {
             return;
         }
-        //LogOutCollision(ACTOR_2D_MUMBO_TOKEN, ev->propId->actorProp.x, ev->propId->actorProp.y,
-        //                ev->propId->actorProp.z);
 
         if (!ev->propId->markerFlag) {
             switch (ev->propId->spriteProp.unk0_31) {
@@ -58,23 +55,21 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
         CustomObject::InitializeSpawnQueue();
-        //LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
-
-        //event->cancelled = true;
-        //ev->result = CustomObject::SpawnRandoObject(ev->actorId, ev->posX, ev->posY, ev->posZ, ev->rot);
+        
+        if (ev->posX == 5876 && ev->posY == 299 && ev->posZ == 2369) {
+            CustomObject::AddToSpawnQueue(ACTOR_46_JIGGY, JIGGY_02_MM_TICKERS_TOWER, RITYPE_JIGGY, ev->posX, ev->posY, ev->posZ);
+            event->cancelled = true;
+            ev->result = NULL;
+        }
     })
 
     REGISTER_LISTENER(OnPropSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnPropSpawn* ev = (OnPropSpawn*)event;
 
-        if (ev->propId == RP_MUSIC_NOTE) {
-            LogOutSpawns(ev->propId, ev->posX, ev->posY, ev->posZ);
-        }
-
         if (ev->posX == 2585 && ev->posY == -20 && ev->posZ == 3800) {
-            SPDLOG_INFO("Note Found");
+            CustomObject::AddToSpawnQueue(ACTOR_46_JIGGY, JIGGY_02_MM_TICKERS_TOWER, RITYPE_JIGGY, ev->posX, ev->posY,
+                                            ev->posZ);
             event->cancelled = true;
-            CustomObject::AddToSpawnQueue(ACTOR_46_JIGGY, ev->posX, ev->posY, ev->posZ);
         }
     })
 }

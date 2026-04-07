@@ -11,61 +11,28 @@ typedef struct chjiggy_s {
     u32 index;
 } ActorLocal_Jiggy;
 
-typedef struct map_info {
-    s16 map_id;
-    s16 level_id;
-    char* name;
-} MapInfo;
-
 // Custom Actor
 s32 dummy_func_80320248(void);
 extern s32 sSpawnableActorSize;
 extern ActorSpawn* sSpawnableActorList;
-extern ActorInfo D_803662A8;
-
-extern void spawnableActorList_add(ActorInfo* arg0, Actor* (*arg1)(s32[3], s32, ActorInfo*, u32), u32 arg2);
-extern Actor* actor_spawnWithYaw_s32(enum actor_e id, s32 (*pos)[3], s32 rot);
-
-enum map_e map_get(void);
-enum level_e map_getLevel(enum map_e map);
-MapInfo* func_8030AD00(enum map_e map_id);
 }
 
-std::map<actor_e, std::array<int32_t, 3>> actorSpawnQueue;
-static bool canSpawn = true;
-MapInfo* currentMap = func_8030AD00(MAP_91_FILE_SELECT);
+typedef struct {
+    actor_e actorId;
+    int32_t collectionId;
+    RandoItemType itemType;
+    std::array<int32_t, 3> location;
+    bool isSpawned;
+} QueuedActor;
 
-void CustomObject::InitializeSpawnQueue() {
-    level_e currentLocation = map_getLevel(map_get());
-    if (currentMap->level_id == currentLocation) {
-        return;
-    }
+std::vector<QueuedActor> actorSpawnQueueEX;
 
-    if (!actorSpawnQueue.empty() && canSpawn) {
-        currentMap = func_8030AD00(map_get());
-        canSpawn = false;
-        for (auto& [id, position] : actorSpawnQueue) {
-            int32_t spawnPos[3] = { position[0], position[1], position[2] };
-
-            Actor* newActor = actor_spawnWithYaw_s32(id, &spawnPos, 0);
-            ActorLocal_Jiggy* actorLocal = (ActorLocal_Jiggy*)&newActor->local;
-            actorLocal->index = JIGGY_03_MM_MUMBOS_SKULL;
-        }
-        actorSpawnQueue.clear();
-        canSpawn = true;
-    }
-}
-
-Actor* SpawnRandoActor(actor_e actorId, int32_t posX, int32_t posY, int32_t posZ) {
-    s32 pos[3];
-    pos[0] = posX;
-    pos[1] = posY;
-    pos[2] = posZ;
+Actor* SpawnRandoActor(actor_e actorId, int32_t position[3]) {
     s32 i;
     actorId = (!dummy_func_80320248()) ? (ACTOR_4_BIGBUTT) : (actorId);
     for (i = 0; i < sSpawnableActorSize; i++) {
         if (actorId == sSpawnableActorList[i].infoPtr->actorId) {
-            return sSpawnableActorList[i].spawnFunc(pos, 0, ((0, sSpawnableActorList[i])).infoPtr,
+            return sSpawnableActorList[i].spawnFunc(position, 0, ((0, sSpawnableActorList[i])).infoPtr,
                                                     sSpawnableActorList[i].unk8);
         }
     }
@@ -73,16 +40,39 @@ Actor* SpawnRandoActor(actor_e actorId, int32_t posX, int32_t posY, int32_t posZ
     return NULL;
 }
 
-void CustomObject::AddToSpawnQueue(actor_e id, int32_t posX, int32_t posY, int32_t posZ) {
-    std::array<int32_t, 3> position = { posX, posY, posZ };
+void CustomObject::InitializeSpawnQueue() {
+    if (!actorSpawnQueueEX.empty()) {
+        for (auto& spawn : actorSpawnQueueEX) {
+            if (spawn.isSpawned) {
+                continue;
+            }
 
-    actorSpawnQueue.emplace(id, position);
+            int32_t spawnPos[3] = { spawn.location[0], spawn.location[1], spawn.location[2] };
+            Actor* newActor = SpawnRandoActor(spawn.actorId, spawnPos);
+
+            if (spawn.itemType == RITYPE_JIGGY) {
+                ActorLocal_Jiggy* actorLocal = (ActorLocal_Jiggy*)&newActor->local;
+                actorLocal->index = spawn.collectionId;
+            }
+            spawn.isSpawned = true;
+        }
+    }
 }
 
-Actor* CustomObject::SpawnRandoObject(actor_e actorId, int32_t posX, int32_t posY, int32_t posZ) {
-    Actor* newActor = SpawnRandoActor(actorId, posX, posY, posZ);
-    //ActorLocal_Jiggy* actorLocal = (ActorLocal_Jiggy*)&newActor->local;
-    //actorLocal->index = JIGGY_03_MM_MUMBOS_SKULL;
+void CustomObject::AddToSpawnQueue(actor_e id, int32_t collection, RandoItemType type, int32_t posX, int32_t posY, int32_t posZ) {
+    for (auto& queue : actorSpawnQueueEX) {
+        std::array<int32_t, 3> position = { posX, posY, posZ };
+        if (queue.location == position) {
+            return;
+        }
+    }
 
-    return newActor;
+    QueuedActor queuedActor;
+    queuedActor.actorId = id;
+    queuedActor.collectionId = collection;
+    queuedActor.itemType = type;
+    queuedActor.location = { posX, posY, posZ };
+    queuedActor.isSpawned = false;
+
+    actorSpawnQueueEX.push_back(queuedActor);
 }
