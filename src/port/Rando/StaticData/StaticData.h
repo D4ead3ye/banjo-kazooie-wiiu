@@ -10,12 +10,14 @@ namespace Rando {
 
 namespace StaticData {
 
-// struct RandoCustomData {
-//     RandoCheckId randoCheckId;
-//     RandoItemId randoItemId;
-//     RandoAct randoActNum;
-//     bool isShuffled;
-// };
+struct RandoShuffledPool {
+    RandoCheckId randoCheckId;
+    RandoItemId randoItemId;
+    int32_t randoCollectionId;
+    bool isShuffled;
+    bool obtained;
+    bool skipped;
+};
 
 struct RandoStaticCheck {
     RandoCheckId randoCheckId;
@@ -41,6 +43,7 @@ struct RandoStaticItem {
     int16_t actorId;
 };
 
+RandoItemId GetRandoItemByActorId(actor_e actorId);
 // RandoCheckId GetCheckByLocation(int16_t posX, int16_t posY, int16_t posZ);
 // RandoCheckId GetCheckByLevelAct(int16_t levelId, int16_t randoAct);
 

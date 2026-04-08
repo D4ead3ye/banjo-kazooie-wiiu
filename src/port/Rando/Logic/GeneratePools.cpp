@@ -1,0 +1,73 @@
+#include "Logic.h"
+// #include "port/Rando/Spoiler/Spoiler.h"
+#include "port/ui/Notification.h"
+#include <libultraship/bridge/consolevariablebridge.h>
+#include <sstream>
+#include <random>
+
+#include "enums.h"
+
+namespace Rando {
+
+namespace Logic {
+std::vector<RandoCheckId> checkPool;
+std::vector<int32_t> collectionPool;
+
+uint32_t GetRandoSeed(const std::string& input) {
+    // if (finalSeed > 0) {
+    //     return finalSeed;
+    // }
+
+    std::random_device rd;
+
+    // if (CVarGetInteger("gRandoSettings.ManualSeedEntry", 0)) {
+    //     if (input.empty()) {
+    //         return rd();
+    //     } else {
+    //         return Ship_Hash(input);
+    //     }
+    // }
+
+    return rd();
+}
+
+void ShuffleRandoItems(const std::string& input) {
+    uint32_t seed = GetRandoSeed(input);
+
+    std::mt19937 g(seed);
+    std::shuffle(collectionPool.begin(), collectionPool.end(), g);
+
+    // finalSeed = seed;
+}
+
+
+void GenerateShufflePool() {
+    for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
+        if (randoCheckId == RC_UNKNOWN) {
+            continue;
+        }
+
+        checkPool.push_back(randoCheckId);
+        collectionPool.push_back(randoStaticCheck.collectionId);
+    }
+
+    ShuffleRandoItems("");
+
+    for (int i = 0; i < checkPool.size(); i++) {
+        Rando::StaticData::RandoShuffledPool randoShuffleEntry = {
+            .randoCheckId = checkPool[i],
+            //.randoItemId = TODO
+            .randoCollectionId = collectionPool[i],
+            .isShuffled = true,
+            .obtained = false,
+            .skipped = false,
+        };
+
+        shuffledPool.push_back(randoShuffleEntry);
+    }
+}
+
+
+} // namespace Logic
+
+} // namespace Rando

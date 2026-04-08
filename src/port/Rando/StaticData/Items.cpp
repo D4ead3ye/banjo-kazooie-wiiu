@@ -29,6 +29,10 @@ std::map<RandoItemId, RandoStaticItem> Items = {
 };
 // clang-format on
 
+RandoItemId GetRandoItemByActorId(actor_e actorId) {
+    
+}
+
 // RandoItemId GetShuffledRandoItem(RandoCheckId randoCheckId) {
 //     for (auto& entry : Rando::Logic::shuffledPool) {
 //         if (entry.randoCheckId == randoCheckId) {

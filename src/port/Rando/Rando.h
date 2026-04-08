@@ -3,6 +3,7 @@
 
 // #include "port/Rando/CustomObject/CustomObject.h"
 
+#include "StaticData/StaticData.h"
 #include <libultraship/libultra/gbi.h>
 #include "save.h"
 
