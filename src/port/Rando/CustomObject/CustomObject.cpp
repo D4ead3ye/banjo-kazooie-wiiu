@@ -5,16 +5,15 @@
 #include "port/enhancements/events/hooks/Events.h"
 
 extern "C" {
-#include "actor.h"
-typedef struct chjiggy_s {
-    u32 unk0;
-    u32 index;
-} ActorLocal_Jiggy;
+void chjiggy_setJiggyId(Actor* thisx, u32 id);
 
 // Custom Actor
 s32 dummy_func_80320248(void);
 extern s32 sSpawnableActorSize;
 extern ActorSpawn* sSpawnableActorList;
+
+enum map_e map_get(void);
+enum level_e map_getLevel(enum map_e map);
 }
 
 typedef struct {
@@ -25,7 +24,8 @@ typedef struct {
     bool isSpawned;
 } QueuedActor;
 
-std::vector<QueuedActor> actorSpawnQueueEX;
+std::vector<QueuedActor> actorSpawnQueue;
+int32_t currentLevel = -1;
 
 Actor* SpawnRandoActor(actor_e actorId, int32_t position[3]) {
     s32 i;
@@ -40,9 +40,28 @@ Actor* SpawnRandoActor(actor_e actorId, int32_t position[3]) {
     return NULL;
 }
 
+bool CustomObject::CheckSpawnQueue(std::array<int32_t, 3> position) {
+    bool foundQueuedActor = false;
+    for (auto& spawn : actorSpawnQueue) {
+        if (spawn.location == position) {
+            foundQueuedActor = true;
+            break;
+        }
+    }
+    return foundQueuedActor;
+}
+
+void ClearSpawnQueue() {
+    if (currentLevel != map_getLevel(map_get())) {
+        currentLevel = map_getLevel(map_get());
+        actorSpawnQueue.clear();
+    }
+}
+
 void CustomObject::InitializeSpawnQueue() {
-    if (!actorSpawnQueueEX.empty()) {
-        for (auto& spawn : actorSpawnQueueEX) {
+    ClearSpawnQueue();
+    if (!actorSpawnQueue.empty()) {
+        for (auto& spawn : actorSpawnQueue) {
             if (spawn.isSpawned) {
                 continue;
             }
@@ -51,8 +70,7 @@ void CustomObject::InitializeSpawnQueue() {
             Actor* newActor = SpawnRandoActor(spawn.actorId, spawnPos);
 
             if (spawn.itemType == RITYPE_JIGGY) {
-                ActorLocal_Jiggy* actorLocal = (ActorLocal_Jiggy*)&newActor->local;
-                actorLocal->index = spawn.collectionId;
+                chjiggy_setJiggyId(newActor, spawn.collectionId);
             }
             spawn.isSpawned = true;
         }
@@ -60,7 +78,8 @@ void CustomObject::InitializeSpawnQueue() {
 }
 
 void CustomObject::AddToSpawnQueue(actor_e id, int32_t collection, RandoItemType type, int32_t posX, int32_t posY, int32_t posZ) {
-    for (auto& queue : actorSpawnQueueEX) {
+    ClearSpawnQueue();
+    for (auto& queue : actorSpawnQueue) {
         std::array<int32_t, 3> position = { posX, posY, posZ };
         if (queue.location == position) {
             return;
@@ -74,5 +93,5 @@ void CustomObject::AddToSpawnQueue(actor_e id, int32_t collection, RandoItemType
     queuedActor.location = { posX, posY, posZ };
     queuedActor.isSpawned = false;
 
-    actorSpawnQueueEX.push_back(queuedActor);
+    actorSpawnQueue.push_back(queuedActor);
 }

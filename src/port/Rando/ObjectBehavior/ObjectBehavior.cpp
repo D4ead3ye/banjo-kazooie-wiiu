@@ -23,6 +23,34 @@ void LogOutCollision(int32_t actorId, int16_t posX, int16_t posY, int16_t posZ) 
 
 // Entry point for the module, run once on game boot
 void Rando::ObjectBehavior::Init() {
+    REGISTER_LISTENER(OnActorSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnActorSpawn* ev = (OnActorSpawn*)event;
+
+        if (!IS_RANDO) {
+            return;
+        }
+        CustomObject::InitializeSpawnQueue();
+        
+        if (CustomObject::CheckSpawnQueue({ ev->posX, ev->posY, ev->posZ })) {
+            return;
+        }
+
+        if (ev->posX == 5876 && ev->posY == 299 && ev->posZ == 2369) {
+            CustomObject::AddToSpawnQueue(ACTOR_46_JIGGY, JIGGY_02_MM_TICKERS_TOWER, RITYPE_JIGGY, ev->posX, ev->posY, ev->posZ);
+            event->cancelled = true;
+            ev->result = NULL;
+        }
+    })
+
+    REGISTER_LISTENER(OnPropSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnPropSpawn* ev = (OnPropSpawn*)event;
+
+        if (ev->posX == 2585 && ev->posY == -20 && ev->posZ == 3800) {
+            CustomObject::AddToSpawnQueue(ACTOR_46_JIGGY, JIGGY_02_MM_TICKERS_TOWER, RITYPE_JIGGY, ev->posX, ev->posY, ev->posZ);
+            event->cancelled = true;
+        }
+    })
+
     REGISTER_LISTENER(OnActorCollision, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorCollision* ev = (OnActorCollision*)event;
 
@@ -44,32 +72,6 @@ void Rando::ObjectBehavior::Init() {
                 default:
                     break;
             }
-        }
-
-    })
-
-    REGISTER_LISTENER(OnActorSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        OnActorSpawn* ev = (OnActorSpawn*)event;
-
-        if (!IS_RANDO) {
-            return;
-        }
-        CustomObject::InitializeSpawnQueue();
-        
-        if (ev->posX == 5876 && ev->posY == 299 && ev->posZ == 2369) {
-            CustomObject::AddToSpawnQueue(ACTOR_46_JIGGY, JIGGY_02_MM_TICKERS_TOWER, RITYPE_JIGGY, ev->posX, ev->posY, ev->posZ);
-            event->cancelled = true;
-            ev->result = NULL;
-        }
-    })
-
-    REGISTER_LISTENER(OnPropSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        OnPropSpawn* ev = (OnPropSpawn*)event;
-
-        if (ev->posX == 2585 && ev->posY == -20 && ev->posZ == 3800) {
-            CustomObject::AddToSpawnQueue(ACTOR_46_JIGGY, JIGGY_02_MM_TICKERS_TOWER, RITYPE_JIGGY, ev->posX, ev->posY,
-                                            ev->posZ);
-            event->cancelled = true;
         }
     })
 }

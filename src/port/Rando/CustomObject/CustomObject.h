@@ -4,6 +4,7 @@
 #include "prop.h"
 
 namespace CustomObject {
+bool CheckSpawnQueue(std::array<int32_t, 3> position);
 void InitializeSpawnQueue();
 void AddToSpawnQueue(actor_e id, int32_t collection, RandoItemType type, int32_t posX, int32_t posY, int32_t posZ);
 } // namespace CustomObject
