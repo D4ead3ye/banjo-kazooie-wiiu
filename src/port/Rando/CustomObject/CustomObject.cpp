@@ -7,6 +7,10 @@
 extern "C" {
 void chjiggy_setJiggyId(Actor* thisx, u32 id);
 
+typedef struct {
+    enum mumbotoken_e uid;
+} ActorLocal_MumboToken;
+
 // Custom Actor
 s32 dummy_func_80320248(void);
 extern s32 sSpawnableActorSize;
@@ -92,9 +96,18 @@ void CustomObject::InitializeSpawnQueue() {
             int32_t spawnPos[3] = { spawn.location[0], spawn.location[1], spawn.location[2] };
             Actor* newActor = SpawnRandoActor(spawn.actorId, spawnPos);
 
-            if (spawn.itemType == RITYPE_JIGGY) {
-                chjiggy_setJiggyId(newActor, spawn.collectionId);
+            switch (spawn.itemType) {
+                case RITYPE_JIGGY:
+                    chjiggy_setJiggyId(newActor, spawn.collectionId);
+                    break;
+                case RITYPE_MUMBO_TOKEN:
+                    ActorLocal_MumboToken* local = (ActorLocal_MumboToken*)&newActor->local;
+                    local->uid = (mumbotoken_e)spawn.collectionId;
+                    break;
+                default:
+                    break;
             }
+
             spawn.isSpawned = true;
         }
     }
