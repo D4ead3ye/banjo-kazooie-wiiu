@@ -76,7 +76,7 @@ struct RandoStaticOption {
     RandoOptionId randoOptionId;
     const char* name;
     const char* cvar;
-    s32 defaultValue;
+    int32_t defaultValue;
 };
 
 extern std::map<RandoOptionId, RandoStaticOption> Options;
