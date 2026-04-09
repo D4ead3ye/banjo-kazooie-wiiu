@@ -7,7 +7,7 @@
 #include "prop.h"
 
 // clang-format off
-DEFINE_EVENT(OnSaveCreate,
+DEFINE_EVENT(OnSaveLoad,
 	void* saveData;
 )
 

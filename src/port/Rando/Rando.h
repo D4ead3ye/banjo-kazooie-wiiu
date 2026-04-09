@@ -9,11 +9,11 @@
 
 extern "C" {
 extern SaveData gameFile_saveData[4];
+enum map_e map_get();
 }
 
 
 #define IS_RANDO (gameFile_saveData[selectedFileNum].shipSaveData.fileType == FILE_TYPE_SAVE_RANDO)
-// #define IS_RANDO(fileNum) (gSaveBuffer.files[fileNum]->shipSaveData.features.rando)
 // #define RANDO_SAVE_CHECKS(fileNum) gSaveBuffer.files[fileNum]->shipSaveData.randoSaveData.randoSaveChecks
 // #define RANDO_SAVE_ENTRANCES(fileNum) gSaveBuffer.files[fileNum]->shipSaveData.randoSaveData.randoSaveEntrances
 // #define RANDO_SAVE_OPTIONS(fileNum) gSaveBuffer.files[fileNum]->shipSaveData.randoSaveData.randoSaveOptions

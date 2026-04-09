@@ -6,6 +6,8 @@
 #include <string>
 #include "port/Rando/Types.h"
 
+#include "enums.h"
+
 namespace Rando {
 
 namespace StaticData {
@@ -30,6 +32,8 @@ struct RandoStaticCheck {
     int32_t posY;
     int32_t posZ;
 };
+
+RandoCheckId GetCheckByPosition(std::array<int32_t, 3> position);
 
 extern std::map<RandoCheckId, RandoStaticCheck> Checks;
 // extern RandoStaticCheck GetShuffledRandoStaticCheck(s16 x, s16 y, s16 z);

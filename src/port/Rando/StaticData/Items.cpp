@@ -26,11 +26,17 @@ std::map<RandoItemId, RandoStaticItem> Items = {
     RI(RI_JINJO_ORANGE, "a",    "Orange Jinjo", RITYPE_JINJO,       ACTOR_5F_JINJO_ORANGE),
     RI(RI_JINJO_PINK,   "a",    "Pink Jinjo",   RITYPE_JINJO,       ACTOR_61_JINJO_PINK),
     RI(RI_JINJO_YELLOW, "a",    "Yellow Jinjo", RITYPE_JINJO,       ACTOR_5E_JINJO_YELLOW),
+    RI(RI_MUMBO_TOKEN,  "a",    "Mumbo Token",  RITYPE_MUMBO_TOKEN, ACTOR_2D_MUMBO_TOKEN),
 };
 // clang-format on
 
 RandoItemId GetRandoItemByActorId(actor_e actorId) {
-    
+    for (auto& [randoItemId, randoStaticItem] : Items) {
+        if (randoStaticItem.actorId == actorId) {
+            return randoItemId;
+        }
+    }
+    return RI_UNKNOWN;
 }
 
 // RandoItemId GetShuffledRandoItem(RandoCheckId randoCheckId) {

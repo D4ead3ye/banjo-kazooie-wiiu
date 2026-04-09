@@ -1,5 +1,5 @@
 #include "CustomObject.h"
-// #include "port/Rando/Logic/Logic.h"
+#include "port/Rando/Logic/Logic.h"
 // #include "port/Rando/CheckTracker/CheckTracker.h"
 #include "port/ui/Notification.h"
 #include "port/enhancements/events/hooks/Events.h"
@@ -40,7 +40,30 @@ Actor* SpawnRandoActor(actor_e actorId, int32_t position[3]) {
     return NULL;
 }
 
-bool CustomObject::CheckSpawnQueue(std::array<int32_t, 3> position) {
+QueuedActor CreateCustomQueuedActor(std::array<int32_t, 3> position) {
+    QueuedActor queuedActor;
+    queuedActor.actorId = ACTOR_1_UNKNOWN;
+    
+    RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(position);
+    if (randoCheckId == RC_UNKNOWN) {
+        return queuedActor;
+    }
+
+    Rando::StaticData::RandoShuffledPool shuffledCheck = Rando::Logic::GetShuffledObject(randoCheckId);
+
+    if (shuffledCheck.randoCheckId != RC_UNKNOWN) {
+        queuedActor.actorId = (actor_e)Rando::StaticData::Items[shuffledCheck.randoItemId].actorId;
+        queuedActor.collectionId = shuffledCheck.randoCollectionId;
+        queuedActor.itemType = Rando::StaticData::Items[shuffledCheck.randoItemId].randoItemType;
+        queuedActor.location = position;
+        queuedActor.isSpawned = false;
+    }
+
+    return queuedActor;
+}
+
+bool CustomObject::CheckSpawnQueue(int32_t posX, int32_t posY, int32_t posZ) {
+    std::array<int32_t, 3> position = { posX, posY, posZ };
     bool foundQueuedActor = false;
     for (auto& spawn : actorSpawnQueue) {
         if (spawn.location == position) {
@@ -77,7 +100,7 @@ void CustomObject::InitializeSpawnQueue() {
     }
 }
 
-void CustomObject::AddToSpawnQueue(actor_e id, int32_t collection, RandoItemType type, int32_t posX, int32_t posY, int32_t posZ) {
+void CustomObject::AddToSpawnQueue(int32_t posX, int32_t posY, int32_t posZ) {
     ClearSpawnQueue();
     for (auto& queue : actorSpawnQueue) {
         std::array<int32_t, 3> position = { posX, posY, posZ };
@@ -86,12 +109,10 @@ void CustomObject::AddToSpawnQueue(actor_e id, int32_t collection, RandoItemType
         }
     }
 
-    QueuedActor queuedActor;
-    queuedActor.actorId = id;
-    queuedActor.collectionId = collection;
-    queuedActor.itemType = type;
-    queuedActor.location = { posX, posY, posZ };
-    queuedActor.isSpawned = false;
+    QueuedActor queuedActor = CreateCustomQueuedActor({ posX, posY, posZ });
+    if (queuedActor.actorId == ACTOR_1_UNKNOWN) {
+        return;
+    }
 
     actorSpawnQueue.push_back(queuedActor);
 }

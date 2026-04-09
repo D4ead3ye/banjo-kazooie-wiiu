@@ -11,7 +11,8 @@ namespace Rando {
 
 namespace Logic {
 std::vector<RandoCheckId> checkPool;
-std::vector<int32_t> collectionPool;
+std::vector<std::pair<actor_e, int32_t>> itemPool;
+std::vector<Rando::StaticData::RandoShuffledPool> shuffledPool;
 
 uint32_t GetRandoSeed(const std::string& input) {
     // if (finalSeed > 0) {
@@ -35,7 +36,7 @@ void ShuffleRandoItems(const std::string& input) {
     uint32_t seed = GetRandoSeed(input);
 
     std::mt19937 g(seed);
-    std::shuffle(collectionPool.begin(), collectionPool.end(), g);
+    std::shuffle(itemPool.begin(), itemPool.end(), g);
 
     // finalSeed = seed;
 }
@@ -48,7 +49,7 @@ void GenerateShufflePool() {
         }
 
         checkPool.push_back(randoCheckId);
-        collectionPool.push_back(randoStaticCheck.collectionId);
+        itemPool.push_back({ (actor_e)randoStaticCheck.actorId, randoStaticCheck.collectionId });
     }
 
     ShuffleRandoItems("");
@@ -56,8 +57,8 @@ void GenerateShufflePool() {
     for (int i = 0; i < checkPool.size(); i++) {
         Rando::StaticData::RandoShuffledPool randoShuffleEntry = {
             .randoCheckId = checkPool[i],
-            //.randoItemId = TODO
-            .randoCollectionId = collectionPool[i],
+            .randoItemId = Rando::StaticData::GetRandoItemByActorId(itemPool[i].first),
+            .randoCollectionId = itemPool[i].second,
             .isShuffled = true,
             .obtained = false,
             .skipped = false,
@@ -65,6 +66,8 @@ void GenerateShufflePool() {
 
         shuffledPool.push_back(randoShuffleEntry);
     }
+
+    int done = 0;
 }
 
 

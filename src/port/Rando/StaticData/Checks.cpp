@@ -41,5 +41,21 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
 };
 // clang-format on
 
+RandoCheckId GetCheckByPosition(std::array<int32_t, 3> position) {
+    for (auto& [randoCheckId, randoStaticCheck] : Checks) {
+        std::array<int32_t, 3> checkPosition = {
+            randoStaticCheck.posX,
+            randoStaticCheck.posY,
+            randoStaticCheck.posZ,
+        };
+
+        if (checkPosition == position) {
+            return randoCheckId;
+        }
+    }
+
+    return RC_UNKNOWN;
+}
+
 } // namespace StaticData
 } // namespace Rando

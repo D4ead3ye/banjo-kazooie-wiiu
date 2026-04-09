@@ -1,6 +1,6 @@
 #include "ObjectBehavior.h"
 #include <libultraship/bridge/consolevariablebridge.h>
-// #include "port/Rando/Logic/Logic.h"
+#include "port/Rando/Logic/Logic.h"
 #include "port/enhancements/events/hooks/Events.h"
 #include "port/Rando/CustomObject/CustomObject.h"
 
@@ -21,22 +21,50 @@ void LogOutCollision(int32_t actorId, int16_t posX, int16_t posY, int16_t posZ) 
     SPDLOG_INFO("Collect ID: {} | Position: {}", actorId, locationStr);
 }
 
+bool ShouldOverrideSpawn(int16_t posX, int16_t posY, int16_t posZ) {
+    RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition({ posX, posY, posZ });
+    if (randoCheckId == RC_UNKNOWN) {
+        return false;
+    }
+
+    if (CustomObject::CheckSpawnQueue(posX, posY, posZ)) {
+        return false;
+    }
+
+    if (Rando::Logic::IsCheckShuffled(randoCheckId)) {
+        CustomObject::AddToSpawnQueue(posX, posY, posZ);
+        return true;
+    }
+
+    return false;
+}
+
 // Entry point for the module, run once on game boot
 void Rando::ObjectBehavior::Init() {
     REGISTER_LISTENER(OnActorSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorSpawn* ev = (OnActorSpawn*)event;
 
-        if (!IS_RANDO) {
-            return;
-        }
-        CustomObject::InitializeSpawnQueue();
-        
-        if (CustomObject::CheckSpawnQueue({ ev->posX, ev->posY, ev->posZ })) {
+        // if (!IS_RANDO) {
+        //     return;
+        // }
+
+        if (map_get() != MAP_2_MM_MUMBOS_MOUNTAIN) {
             return;
         }
 
-        if (ev->posX == 5876 && ev->posY == 299 && ev->posZ == 2369) {
-            CustomObject::AddToSpawnQueue(ACTOR_46_JIGGY, JIGGY_02_MM_TICKERS_TOWER, RITYPE_JIGGY, ev->posX, ev->posY, ev->posZ);
+        CustomObject::InitializeSpawnQueue();
+
+        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition({ ev->posX, ev->posY, ev->posZ });
+        if (randoCheckId == RC_UNKNOWN) {
+            return;
+        }
+        
+        if (CustomObject::CheckSpawnQueue(ev->posX, ev->posY, ev->posZ)) {
+            return;
+        }
+
+        if (Rando::Logic::IsCheckShuffled(randoCheckId)) {
+            CustomObject::AddToSpawnQueue(ev->posX, ev->posY, ev->posZ);
             event->cancelled = true;
             ev->result = NULL;
         }
@@ -45,8 +73,25 @@ void Rando::ObjectBehavior::Init() {
     REGISTER_LISTENER(OnPropSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnPropSpawn* ev = (OnPropSpawn*)event;
 
-        if (ev->posX == 2585 && ev->posY == -20 && ev->posZ == 3800) {
-            CustomObject::AddToSpawnQueue(ACTOR_46_JIGGY, JIGGY_02_MM_TICKERS_TOWER, RITYPE_JIGGY, ev->posX, ev->posY, ev->posZ);
+        // if (!IS_RANDO) {
+        //     return;
+        // }
+
+        if (map_get() != MAP_2_MM_MUMBOS_MOUNTAIN) {
+            return;
+        }
+
+        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition({ ev->posX, ev->posY, ev->posZ });
+        if (randoCheckId == RC_UNKNOWN) {
+            return;
+        }
+
+        if (CustomObject::CheckSpawnQueue(ev->posX, ev->posY, ev->posZ)) {
+            return;
+        }
+
+        if (Rando::Logic::IsCheckShuffled(randoCheckId)) {
+            CustomObject::AddToSpawnQueue(ev->posX, ev->posY, ev->posZ);
             event->cancelled = true;
         }
     })
@@ -54,7 +99,11 @@ void Rando::ObjectBehavior::Init() {
     REGISTER_LISTENER(OnActorCollision, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorCollision* ev = (OnActorCollision*)event;
 
-        if (!IS_RANDO) {
+        // if (!IS_RANDO) {
+        //     return;
+        // }
+
+        if (map_get() != MAP_2_MM_MUMBOS_MOUNTAIN) {
             return;
         }
 

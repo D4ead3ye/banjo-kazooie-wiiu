@@ -47,6 +47,7 @@ typedef enum {
     RITYPE_UNKNOWN,
     RITYPE_JIGGY,
     RITYPE_JINJO,
+    RITYPE_MUMBO_TOKEN,
     RITYPE_MAX,
 } RandoItemType;
 
@@ -58,6 +59,7 @@ typedef enum {
     RI_JINJO_ORANGE,
     RI_JINJO_PINK,
     RI_JINJO_YELLOW,
+    RI_MUMBO_TOKEN,
     RI_MAX,
 } RandoItemId;
 

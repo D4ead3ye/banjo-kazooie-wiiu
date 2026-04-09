@@ -9,6 +9,34 @@ namespace Rando {
 namespace Logic {
 extern std::vector<Rando::StaticData::RandoShuffledPool> shuffledPool;
 
+void GenerateShufflePool();
+
+inline Rando::StaticData::RandoShuffledPool GetShuffledObject(RandoCheckId randoCheckId) {
+    Rando::StaticData::RandoShuffledPool shuffledObject;
+    shuffledObject.randoCheckId = RC_UNKNOWN;
+
+    for (auto& object : shuffledPool) {
+        if (object.randoCheckId == randoCheckId) {
+            shuffledObject = object;
+            break;
+        }
+    }
+
+    return shuffledObject;
+}
+
+inline bool IsCheckShuffled(RandoCheckId randoCheckId) {
+    bool isShuffled = false;
+
+    for (auto& object : shuffledPool) {
+        if (object.randoCheckId == randoCheckId) {
+            isShuffled = object.isShuffled;
+            break;
+        }
+    }
+
+    return isShuffled;
+}
 
 // Regions
 // struct RandoRegion {
