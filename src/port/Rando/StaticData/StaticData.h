@@ -72,17 +72,17 @@ extern std::map<RandoItemId, RandoStaticItem> Items;
 
 // RandoEntranceId GetEntranceIdFromDestination(int16_t destinationId);
 
-// struct RandoStaticOption {
-//     RandoOptionId randoOptionId;
-//     const char* name;
-//     const char* cvar;
-//     s32 defaultValue;
-// };
+struct RandoStaticOption {
+    RandoOptionId randoOptionId;
+    const char* name;
+    const char* cvar;
+    s32 defaultValue;
+};
 
-// extern std::map<RandoOptionId, RandoStaticOption> Options;
+extern std::map<RandoOptionId, RandoStaticOption> Options;
 // extern std::unordered_map<int32_t, const char*> logicOptions;
 
-// RandoOptionId GetOptionIdFromName(const char* name);
+RandoOptionId GetOptionIdFromName(const char* name);
 
 // TODO: Import Object Extension
 // extern std::map<RandoCheckId, struct Object*> spawnedRandoObjects;

@@ -67,20 +67,23 @@ typedef enum {
 //     RR_MAX,
 // } RandoRegionId;
 
-// typedef enum {
-//     RO_LOGIC,
-//     RO_MAX,
-// } RandoOptionId;
+typedef enum {
+    RO_LOGIC,
+    RO_SHUFFLE_JIGGIES,
+    RO_SHUFFLE_JINJOS,
+    RO_SHUFFLE_MUMBO_TOKENS,
+    RO_MAX,
+} RandoOptionId;
 
-// typedef enum {
-//     RO_GENERIC_OFF,
-//     RO_GENERIC_ON,
-// } RandoOptionGenericOffOn;
+typedef enum {
+    RO_GENERIC_OFF,
+    RO_GENERIC_ON,
+} RandoOptionGenericOffOn;
 
-// typedef enum {
-//     RO_LOGIC_GLITCHLESS,
-//     RO_LOGIC_NO_LOGIC,
-// } RandoOptionLogic;
+typedef enum {
+    RO_LOGIC_GLITCHLESS,
+    RO_LOGIC_NO_LOGIC,
+} RandoOptionLogic;
 
 // typedef enum {
 //     RANDO_INF_MAX,
