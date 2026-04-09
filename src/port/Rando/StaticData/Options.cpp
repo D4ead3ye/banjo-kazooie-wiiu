@@ -13,10 +13,11 @@ namespace StaticData {
 
 // clang-format off
 std::map<RandoOptionId, RandoStaticOption> Options = {
-    RO(RO_LOGIC,                RO_LOGIC_GLITCHLESS),
-    RO(RO_SHUFFLE_JIGGIES,      RO_GENERIC_OFF),
-    RO(RO_SHUFFLE_JINJOS,       RO_GENERIC_OFF),
-    RO(RO_SHUFFLE_MUMBO_TOKENS, RO_GENERIC_OFF),
+    RO(RO_LOGIC,                    RO_LOGIC_GLITCHLESS),
+    RO(RO_SHUFFLE_EMPTY_HONEYCOMBS, RO_GENERIC_OFF),
+    RO(RO_SHUFFLE_JIGGIES,          RO_GENERIC_OFF),
+    RO(RO_SHUFFLE_JINJOS,           RO_GENERIC_OFF),
+    RO(RO_SHUFFLE_MUMBO_TOKENS,     RO_GENERIC_OFF),
 };
 // clang-format on
 

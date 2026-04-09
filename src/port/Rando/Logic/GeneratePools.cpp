@@ -48,6 +48,11 @@ void GenerateShufflePool() {
             continue;
         }
 
+        if (randoStaticCheck.randoCheckType == RCTYPE_EMPTY_HONEYCOMB &&
+            CVarGetInteger(Rando::StaticData::Options[RO_SHUFFLE_EMPTY_HONEYCOMBS].cvar, 0) == RO_GENERIC_OFF) {
+            continue;
+        }
+
         if (randoStaticCheck.randoCheckType == RCTYPE_JIGGY &&
             CVarGetInteger(Rando::StaticData::Options[RO_SHUFFLE_JIGGIES].cvar, 0) == RO_GENERIC_OFF) {
             continue;

@@ -103,6 +103,11 @@ void Rando::ObjectBehavior::Init() {
                 default:
                     break;
             }
+        } else {
+            if (ev->propId->actorProp.marker->id == MARKER_53_EMPTY_HONEYCOMB) {
+                LogOutCollision(ACTOR_47_EMPTY_HONEYCOMB, ev->propId->actorProp.x, ev->propId->actorProp.y,
+                                ev->propId->actorProp.z);
+            }
         }
     })
 }

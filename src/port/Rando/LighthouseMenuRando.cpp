@@ -38,6 +38,9 @@ path = { "Rando", "Shuffle Options", SECTION_COLUMN_1 };
 
 AddWidget(path, "Shuffle Collectables", WIDGET_SEPARATOR_TEXT);
 
+AddWidget(path, "Shuffle Empty Honeycombs", WIDGET_CVAR_CHECKBOX)
+    .CVar(Rando::StaticData::Options[RO_SHUFFLE_EMPTY_HONEYCOMBS].cvar)
+    .Options(CheckboxOptions().Tooltip("Shuffles Empty Honeycombs into the Pool."));
 AddWidget(path, "Shuffle Jiggies", WIDGET_CVAR_CHECKBOX)
     .CVar(Rando::StaticData::Options[RO_SHUFFLE_JIGGIES].cvar)
     .Options(CheckboxOptions().Tooltip("Shuffles Jiggies into the Pool."));
@@ -47,7 +50,6 @@ AddWidget(path, "Shuffle Jinjos", WIDGET_CVAR_CHECKBOX)
 AddWidget(path, "Shuffle Mumbo Tokens", WIDGET_CVAR_CHECKBOX)
     .CVar(Rando::StaticData::Options[RO_SHUFFLE_MUMBO_TOKENS].cvar)
     .Options(CheckboxOptions().Tooltip("Shuffles Mumbo Tokens into the Pool."));
-
 
 }
 

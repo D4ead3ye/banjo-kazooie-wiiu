@@ -7,6 +7,7 @@ typedef enum {
 
 typedef enum {
     RCTYPE_UNKNOWN,
+    RCTYPE_EMPTY_HONEYCOMB,
     RCTYPE_JIGGY,
     RCTYPE_JINJO,
     RCTYPE_MUMBO_TOKEN,
@@ -15,6 +16,8 @@ typedef enum {
 
 typedef enum {
     RC_UNKNOWN,
+    RC_MM_EMPTY_HONEYCOMB_HILL,
+    RC_MM_EMPTY_HONEYCOMB_JUJU,
     RC_MM_JIGGY_CHIMPY,
     RC_MM_JIGGY_CONGA,
     RC_MM_JIGGY_HILL,
@@ -45,6 +48,7 @@ typedef enum {
 
 typedef enum {
     RITYPE_UNKNOWN,
+    RITYPE_EMPTY_HONEYCOMB,
     RITYPE_JIGGY,
     RITYPE_JINJO,
     RITYPE_MUMBO_TOKEN,
@@ -53,6 +57,7 @@ typedef enum {
 
 typedef enum {
     RI_UNKNOWN,
+    RI_EMPTY_HONEYCOMB,
     RI_JIGGY,
     RI_JINJO_BLUE,
     RI_JINJO_GREEN,
@@ -69,6 +74,7 @@ typedef enum {
 
 typedef enum {
     RO_LOGIC,
+    RO_SHUFFLE_EMPTY_HONEYCOMBS,
     RO_SHUFFLE_JIGGIES,
     RO_SHUFFLE_JINJOS,
     RO_SHUFFLE_MUMBO_TOKENS,
