@@ -54,16 +54,7 @@ void Rando::ObjectBehavior::Init() {
 
         CustomObject::InitializeSpawnQueue();
 
-        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition({ ev->posX, ev->posY, ev->posZ });
-        if (randoCheckId == RC_UNKNOWN) {
-            return;
-        }
-        
-        if (CustomObject::CheckSpawnQueue(ev->posX, ev->posY, ev->posZ)) {
-            return;
-        }
-
-        if (Rando::Logic::IsCheckShuffled(randoCheckId)) {
+        if (ShouldOverrideSpawn(ev->posX, ev->posY, ev->posZ)) {
             CustomObject::AddToSpawnQueue(ev->posX, ev->posY, ev->posZ);
             event->cancelled = true;
             ev->result = NULL;
@@ -81,16 +72,7 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition({ ev->posX, ev->posY, ev->posZ });
-        if (randoCheckId == RC_UNKNOWN) {
-            return;
-        }
-
-        if (CustomObject::CheckSpawnQueue(ev->posX, ev->posY, ev->posZ)) {
-            return;
-        }
-
-        if (Rando::Logic::IsCheckShuffled(randoCheckId)) {
+        if (ShouldOverrideSpawn(ev->posX, ev->posY, ev->posZ)) {
             CustomObject::AddToSpawnQueue(ev->posX, ev->posY, ev->posZ);
             event->cancelled = true;
         }

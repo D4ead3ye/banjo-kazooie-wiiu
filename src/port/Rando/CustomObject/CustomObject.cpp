@@ -101,7 +101,8 @@ void CustomObject::InitializeSpawnQueue() {
                     chjiggy_setJiggyId(newActor, spawn.collectionId);
                     break;
                 case RITYPE_MUMBO_TOKEN:
-                    ActorLocal_MumboToken* local = (ActorLocal_MumboToken*)&newActor->local;
+                    ActorLocal_MumboToken* local;
+                    local = (ActorLocal_MumboToken*)&newActor->local;
                     local->uid = (mumbotoken_e)spawn.collectionId;
                     break;
                 default:
