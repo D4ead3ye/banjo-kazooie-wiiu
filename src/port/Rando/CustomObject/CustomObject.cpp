@@ -11,6 +11,11 @@ typedef struct {
     enum mumbotoken_e uid;
 } ActorLocal_MumboToken;
 
+typedef struct {
+    enum honeycomb_e uid;
+    s32 unk4;
+} ActorLocal_EmptyHoneycomb;
+
 // Custom Actor
 s32 dummy_func_80320248(void);
 extern s32 sSpawnableActorSize;
@@ -97,13 +102,18 @@ void CustomObject::InitializeSpawnQueue() {
             Actor* newActor = SpawnRandoActor(spawn.actorId, spawnPos);
 
             switch (spawn.itemType) {
+                case RITYPE_EMPTY_HONEYCOMB:
+                    ActorLocal_EmptyHoneycomb* honeycombLocal;
+                    honeycombLocal = (ActorLocal_EmptyHoneycomb*)&newActor->local;
+                    honeycombLocal->uid = (honeycomb_e)spawn.collectionId;
+                    break;
                 case RITYPE_JIGGY:
                     chjiggy_setJiggyId(newActor, spawn.collectionId);
                     break;
                 case RITYPE_MUMBO_TOKEN:
-                    ActorLocal_MumboToken* local;
-                    local = (ActorLocal_MumboToken*)&newActor->local;
-                    local->uid = (mumbotoken_e)spawn.collectionId;
+                    ActorLocal_MumboToken* tokenLocal;
+                    tokenLocal = (ActorLocal_MumboToken*)&newActor->local;
+                    tokenLocal->uid = (mumbotoken_e)spawn.collectionId;
                     break;
                 default:
                     break;
