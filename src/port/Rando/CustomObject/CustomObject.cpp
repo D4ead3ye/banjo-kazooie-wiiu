@@ -1,7 +1,6 @@
 #include "CustomObject.h"
 #include "port/Rando/Logic/Logic.h"
 // #include "port/Rando/CheckTracker/CheckTracker.h"
-#include "port/ui/Notification.h"
 #include "port/enhancements/events/hooks/Events.h"
 
 extern "C" {
@@ -26,6 +25,7 @@ enum level_e map_getLevel(enum map_e map);
 }
 
 typedef struct {
+    RandoCheckId randoCheckId;
     actor_e actorId;
     int32_t collectionId;
     RandoItemType itemType;
@@ -36,7 +36,7 @@ typedef struct {
 std::vector<QueuedActor> actorSpawnQueue;
 int32_t currentLevel = -1;
 
-Actor* SpawnRandoActor(actor_e actorId, int32_t position[3]) {
+Actor* CustomObject::SpawnRandoActor(actor_e actorId, int32_t position[3]) {
     s32 i;
     actorId = (!dummy_func_80320248()) ? (ACTOR_4_BIGBUTT) : (actorId);
     for (i = 0; i < sSpawnableActorSize; i++) {
@@ -49,11 +49,32 @@ Actor* SpawnRandoActor(actor_e actorId, int32_t position[3]) {
     return NULL;
 }
 
-QueuedActor CreateCustomQueuedActor(std::array<int32_t, 3> position) {
+Actor* SetCustomObjectParameters(Actor* actor, QueuedActor actorData) {
+    switch (actorData.itemType) {
+        case RITYPE_EMPTY_HONEYCOMB:
+            ActorLocal_EmptyHoneycomb* honeycombLocal;
+            honeycombLocal = (ActorLocal_EmptyHoneycomb*)&actor->local;
+            honeycombLocal->uid = (honeycomb_e)actorData.collectionId;
+            break;
+        case RITYPE_JIGGY:
+            chjiggy_setJiggyId(actor, actorData.collectionId);
+            break;
+        case RITYPE_MUMBO_TOKEN:
+            ActorLocal_MumboToken* tokenLocal;
+            tokenLocal = (ActorLocal_MumboToken*)&actor->local;
+            tokenLocal->uid = (mumbotoken_e)actorData.collectionId;
+            break;
+        default:
+            break;
+    }
+
+    return actor;
+}
+
+QueuedActor CreateCustomQueuedActor(RandoCheckId randoCheckId, std::array<int32_t, 3> position) {
     QueuedActor queuedActor;
     queuedActor.actorId = ACTOR_1_UNKNOWN;
     
-    RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(position);
     if (randoCheckId == RC_UNKNOWN) {
         return queuedActor;
     }
@@ -61,6 +82,7 @@ QueuedActor CreateCustomQueuedActor(std::array<int32_t, 3> position) {
     Rando::StaticData::RandoShuffledPool shuffledCheck = Rando::Logic::GetShuffledObject(randoCheckId);
 
     if (shuffledCheck.randoCheckId != RC_UNKNOWN) {
+        queuedActor.randoCheckId = randoCheckId;
         queuedActor.actorId = (actor_e)Rando::StaticData::Items[shuffledCheck.randoItemId].actorId;
         queuedActor.collectionId = shuffledCheck.randoCollectionId;
         queuedActor.itemType = Rando::StaticData::Items[shuffledCheck.randoItemId].randoItemType;
@@ -71,11 +93,10 @@ QueuedActor CreateCustomQueuedActor(std::array<int32_t, 3> position) {
     return queuedActor;
 }
 
-bool CustomObject::CheckSpawnQueue(int32_t posX, int32_t posY, int32_t posZ) {
-    std::array<int32_t, 3> position = { posX, posY, posZ };
+bool CustomObject::CheckSpawnQueue(RandoCheckId randoCheckId) {
     bool foundQueuedActor = false;
     for (auto& spawn : actorSpawnQueue) {
-        if (spawn.location == position) {
+        if (spawn.randoCheckId == randoCheckId) {
             foundQueuedActor = true;
             break;
         }
@@ -99,41 +120,23 @@ void CustomObject::InitializeSpawnQueue() {
             }
 
             int32_t spawnPos[3] = { spawn.location[0], spawn.location[1], spawn.location[2] };
-            Actor* newActor = SpawnRandoActor(spawn.actorId, spawnPos);
+            Actor* newActor = CustomObject::SpawnRandoActor(spawn.actorId, spawnPos);
 
-            switch (spawn.itemType) {
-                case RITYPE_EMPTY_HONEYCOMB:
-                    ActorLocal_EmptyHoneycomb* honeycombLocal;
-                    honeycombLocal = (ActorLocal_EmptyHoneycomb*)&newActor->local;
-                    honeycombLocal->uid = (honeycomb_e)spawn.collectionId;
-                    break;
-                case RITYPE_JIGGY:
-                    chjiggy_setJiggyId(newActor, spawn.collectionId);
-                    break;
-                case RITYPE_MUMBO_TOKEN:
-                    ActorLocal_MumboToken* tokenLocal;
-                    tokenLocal = (ActorLocal_MumboToken*)&newActor->local;
-                    tokenLocal->uid = (mumbotoken_e)spawn.collectionId;
-                    break;
-                default:
-                    break;
-            }
-
+            newActor = SetCustomObjectParameters(newActor, spawn);
             spawn.isSpawned = true;
         }
     }
 }
 
-void CustomObject::AddToSpawnQueue(int32_t posX, int32_t posY, int32_t posZ) {
+void CustomObject::AddToSpawnQueue(RandoCheckId randoCheckId, int32_t posX, int32_t posY, int32_t posZ) {
     ClearSpawnQueue();
     for (auto& queue : actorSpawnQueue) {
-        std::array<int32_t, 3> position = { posX, posY, posZ };
-        if (queue.location == position) {
+        if (queue.randoCheckId == randoCheckId) {
             return;
         }
     }
 
-    QueuedActor queuedActor = CreateCustomQueuedActor({ posX, posY, posZ });
+    QueuedActor queuedActor = CreateCustomQueuedActor(randoCheckId, { posX, posY, posZ });
     if (queuedActor.actorId == ACTOR_1_UNKNOWN) {
         return;
     }

@@ -1,9 +1,12 @@
 #include <stdint.h>
+#include "port/Rando/Types.h"
 
 #include "prop.h"
 
 namespace CustomObject {
-bool CheckSpawnQueue(int32_t posX, int32_t posY, int32_t posZ);
+Actor* SpawnRandoActor(actor_e actorId, int32_t position[3]);
+bool CheckSpawnQueue(RandoCheckId randoCheckId);
 void InitializeSpawnQueue();
-void AddToSpawnQueue(int32_t posX, int32_t posY, int32_t posZ);
+
+void AddToSpawnQueue(RandoCheckId randoCheckId, int32_t posX, int32_t posY, int32_t posZ);
 } // namespace CustomObject

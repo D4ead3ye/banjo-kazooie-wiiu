@@ -1,15 +1,52 @@
 #include "ObjectBehavior.h"
+#include "port/ui/UIWidgets.hpp"
 #include <libultraship/bridge/consolevariablebridge.h>
+#include "port/ui/Notification.h"
 #include "port/Rando/Logic/Logic.h"
 #include "port/enhancements/events/hooks/Events.h"
 #include "port/Rando/CustomObject/CustomObject.h"
 
 #include "spdlog/spdlog.h"
 
+#define WIDGET_TEXT_COLOR(id) UIWidgets::ColorValues.at(id)
+
 extern "C" {
+void chjiggy_setJiggyId(Actor* thisx, u32 id);
+
+typedef struct {
+    enum mumbotoken_e uid;
+} ActorLocal_MumboToken;
+
+typedef struct {
+    enum honeycomb_e uid;
+    s32 unk4;
+} ActorLocal_EmptyHoneycomb;
+
 int __baMarker_8028BC60(void);
 void __baMarker_resolveMusicNoteCollision(Prop* arg0);
 }
+
+// clang-format off
+std::map<int32_t, UIWidgets::Colors> randoItemColors = {
+    { RI_EMPTY_HONEYCOMB,   UIWidgets::Colors::Yellow },
+    { RI_JIGGY,             UIWidgets::Colors::Yellow },
+    { RI_JINJO_BLUE,        UIWidgets::Colors::SkyBlue },
+    { RI_JINJO_GREEN,       UIWidgets::Colors::Green },
+    { RI_JINJO_ORANGE,      UIWidgets::Colors::Orange },
+    { RI_JINJO_PINK,        UIWidgets::Colors::Pink },
+    { RI_JINJO_YELLOW,      UIWidgets::Colors::Yellow },
+    { RI_MUMBO_TOKEN,       UIWidgets::Colors::Gray },
+    { RI_MUSIC_NOTE,        UIWidgets::Colors::Yellow },
+};
+
+std::map<int32_t, actor_e> jinjoMarkerMap = {
+    { MARKER_5A_JINJO_BLUE, 	ACTOR_60_JINJO_BLUE },
+    { MARKER_5B_JINJO_GREEN, 	ACTOR_62_JINJO_GREEN },
+    { MARKER_5C_JINJO_ORANGE, 	ACTOR_5F_JINJO_ORANGE },
+    { MARKER_5D_JINJO_PINK, 	ACTOR_61_JINJO_PINK },
+    { MARKER_5E_JINJO_YELLOW, 	ACTOR_5E_JINJO_YELLOW },
+};
+// clang-format on
 
 void LogOutSpawns(int32_t actorId, int16_t posX, int16_t posY, int16_t posZ) {
     std::string locationStr = std::to_string(posX) + ", " + std::to_string(posY) + ", " + std::to_string(posZ);
@@ -21,18 +58,29 @@ void LogOutCollision(int32_t actorId, int16_t posX, int16_t posY, int16_t posZ) 
     SPDLOG_INFO("Collect ID: {} | Position: {}", actorId, locationStr);
 }
 
+void SendCollisionNotification(RandoItemId randoItemId) {
+    std::string prefix = "You collected ";
+    prefix += Rando::StaticData::Items[randoItemId].article;
+    std::string message = Rando::StaticData::Items[randoItemId].name;
+    
+    Notification::Emit({ .prefix = prefix,
+                         .prefixColor = WIDGET_TEXT_COLOR(UIWidgets::Colors::White),
+                         .message = message,
+                         .messageColor = WIDGET_TEXT_COLOR(randoItemColors.at(randoItemId)) });
+};
+
 bool ShouldOverrideSpawn(int16_t posX, int16_t posY, int16_t posZ) {
     RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition({ posX, posY, posZ });
     if (randoCheckId == RC_UNKNOWN) {
         return false;
     }
 
-    if (CustomObject::CheckSpawnQueue(posX, posY, posZ)) {
+    if (CustomObject::CheckSpawnQueue(randoCheckId)) {
         return false;
     }
 
     if (Rando::Logic::IsCheckShuffled(randoCheckId)) {
-        CustomObject::AddToSpawnQueue(posX, posY, posZ);
+        CustomObject::AddToSpawnQueue(randoCheckId, posX, posY, posZ);
         return true;
     }
 
@@ -55,7 +103,6 @@ void Rando::ObjectBehavior::Init() {
         CustomObject::InitializeSpawnQueue();
 
         if (ShouldOverrideSpawn(ev->posX, ev->posY, ev->posZ)) {
-            CustomObject::AddToSpawnQueue(ev->posX, ev->posY, ev->posZ);
             event->cancelled = true;
             ev->result = NULL;
         }
@@ -73,9 +120,68 @@ void Rando::ObjectBehavior::Init() {
         }
 
         if (ShouldOverrideSpawn(ev->posX, ev->posY, ev->posZ)) {
-            CustomObject::AddToSpawnQueue(ev->posX, ev->posY, ev->posZ);
             event->cancelled = true;
         }
+    })
+
+    REGISTER_LISTENER(OnBundleSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnBundleSpawn* ev = (OnBundleSpawn*)event;
+
+        // if (!IS_RANDO) {
+        //     return;
+        // }
+
+        if (map_get() != MAP_2_MM_MUMBOS_MOUNTAIN) {
+            return;
+        }
+
+        int32_t pos[3];
+        pos[0] = (int32_t)ev->posX;
+        pos[1] = (int32_t)ev->posY;
+        pos[2] = (int32_t)ev->posZ;
+
+        Rando::StaticData::RandoShuffledPool randoShuffledObject;
+        randoShuffledObject.randoCheckId = RC_UNKNOWN;
+
+        switch (ev->bundle_id) {
+            case BUNDLE_4_MM_HUT_JIGGY:
+                if (pos[1] < 2000) {
+                    randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_ORANGE_PADS);
+                    
+                } else {
+                    randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_HUTS);
+                }
+                break;
+            default:
+                break;
+        }
+
+        if (randoShuffledObject.randoCheckId == RC_UNKNOWN) {
+            return;
+        }
+
+        *ev->result = CustomObject::SpawnRandoActor(
+            (actor_e)Rando::StaticData::Items[randoShuffledObject.randoItemId].actorId, pos);
+
+        switch (Rando::StaticData::Items[randoShuffledObject.randoItemId].randoItemType) {
+            case RITYPE_EMPTY_HONEYCOMB:
+                ActorLocal_EmptyHoneycomb* honeycombLocal;
+                honeycombLocal = (ActorLocal_EmptyHoneycomb*)&(*ev->result)->local;
+                honeycombLocal->uid = (honeycomb_e)randoShuffledObject.randoCollectionId;
+                break;
+            case RITYPE_JIGGY:
+                chjiggy_setJiggyId(*ev->result, randoShuffledObject.randoCollectionId);
+                break;
+            case RITYPE_MUMBO_TOKEN:
+                ActorLocal_MumboToken* tokenLocal;
+                tokenLocal = (ActorLocal_MumboToken*)&(*ev->result)->local;
+                tokenLocal->uid = (mumbotoken_e)randoShuffledObject.randoCollectionId;
+                break;
+            default:
+                break;
+        }
+
+        event->cancelled = true;
     })
 
     REGISTER_LISTENER(OnActorCollision, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -92,21 +198,42 @@ void Rando::ObjectBehavior::Init() {
         if (!ev->propId->markerFlag) {
             switch (ev->propId->spriteProp.unk0_31) {
                 case RP_MUSIC_NOTE:
-                    if (!__baMarker_8028BC60()) {
-                        ev->propId->spriteProp.unk8_4 = 0;
-                        __baMarker_resolveMusicNoteCollision(ev->propId);
-                        event->cancelled = true;
-                        LogOutCollision(ev->propId->spriteProp.unk0_31, ev->propId->actorProp.x,
-                                        ev->propId->actorProp.y, ev->propId->actorProp.z);
-                    }
+                    LogOutCollision(ev->propId->spriteProp.unk0_31, ev->propId->actorProp.x, ev->propId->actorProp.y,
+                                    ev->propId->actorProp.z);
+                    SendCollisionNotification(RI_MUSIC_NOTE);
                     break;
                 default:
                     break;
             }
         } else {
-            if (ev->propId->actorProp.marker->id == MARKER_53_EMPTY_HONEYCOMB) {
-                LogOutCollision(ACTOR_47_EMPTY_HONEYCOMB, ev->propId->actorProp.x, ev->propId->actorProp.y,
-                                ev->propId->actorProp.z);
+            switch (ev->propId->actorProp.marker->id) {
+                case MARKER_39_MUMBO_TOKEN:
+                    LogOutCollision(ACTOR_2D_MUMBO_TOKEN, ev->propId->actorProp.x, ev->propId->actorProp.y,
+                                    ev->propId->actorProp.z);
+                    SendCollisionNotification(RI_MUMBO_TOKEN);
+                    break;
+                case MARKER_52_JIGGY:
+                    LogOutCollision(ACTOR_46_JIGGY, ev->propId->actorProp.x, ev->propId->actorProp.y,
+                                    ev->propId->actorProp.z);
+                    SendCollisionNotification(RI_JIGGY);
+                    break;
+                case MARKER_53_EMPTY_HONEYCOMB:
+                    LogOutCollision(ACTOR_47_EMPTY_HONEYCOMB, ev->propId->actorProp.x, ev->propId->actorProp.y,
+                                    ev->propId->actorProp.z);
+                    SendCollisionNotification(RI_EMPTY_HONEYCOMB);
+                    break;
+                case MARKER_5A_JINJO_BLUE:
+                case MARKER_5B_JINJO_GREEN:
+                case MARKER_5C_JINJO_ORANGE:
+                case MARKER_5D_JINJO_PINK:
+                case MARKER_5E_JINJO_YELLOW:
+                    LogOutCollision(jinjoMarkerMap.at(ev->propId->actorProp.marker->id), ev->propId->actorProp.x,
+                                    ev->propId->actorProp.y,
+                                    ev->propId->actorProp.z);
+                    SendCollisionNotification(Rando::StaticData::GetRandoItemByActorId(jinjoMarkerMap.at(ev->propId->actorProp.marker->id)));
+                    break;
+                default:
+                    break;
             }
         }
     })

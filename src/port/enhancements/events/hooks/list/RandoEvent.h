@@ -25,6 +25,14 @@ DEFINE_EVENT(OnPropSpawn,
 	int32_t posZ;
 )
 
+DEFINE_EVENT(OnBundleSpawn,
+	int32_t bundle_id;
+	f32 posX;
+	f32 posY;
+	f32 posZ;
+	Actor** result; 
+)
+
 DEFINE_EVENT(OnActorCollision,
 	Prop* propId;
 )

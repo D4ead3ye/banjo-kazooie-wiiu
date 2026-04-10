@@ -144,10 +144,12 @@ Actor *__bundle_spawnWithFirstActor(enum bundle_e bundle_id, f32 position[3], Ac
         }
 
         //L802C9114
-        actor = (i == 0 && firstActor) ? firstActor : actor_spawnWithYaw_f32(bundle_info->actor_id, position, 0);
+        CALL_CANCELLABLE_EVENT(OnBundleSpawn, bundle_id, position[0], position[1], position[2], &actor) {
+            actor = (i == 0 && firstActor) ? firstActor : actor_spawnWithYaw_f32(bundle_info->actor_id, position, 0);
+        }
         actor->is_bundle = true;
-        
-        bundle = (Bundle *) &actor->unkBC;
+
+        bundle = (Bundle*)&actor->unkBC;
         bundle->index = bundle_id;
         bundle->state = BUNDLE_STATE_1_MOVING;
         bundle->unk6 = 1;
