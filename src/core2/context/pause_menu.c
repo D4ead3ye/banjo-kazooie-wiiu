@@ -761,9 +761,7 @@ s32 gcpausemenu_initLargestPageIndex(void) {
 #include <stdio.h>
 #include "port/patches/Patches.h"
 bool gcpausemenu_initReturnToLair(void) {
-    bool shouldInit = true;
-    CALL_EVENT(VanillaBehavior, VB_INIT_RETURN_TO_LAIR, &shouldInit, &D_8036C4E0);
-    return shouldInit;
+    return EventSystem_Should(VB_INIT_RETURN_TO_LAIR, false, &D_8036C4E0);
 }
 
 void gcpausemenu_init(void) {

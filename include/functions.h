@@ -108,6 +108,11 @@ f32  mapModel_getFloorY(f32[3]);
 // --- core2/actor_cubepropsystem.c ---
 BKCollisionTri *func_803311D4(Cube *cube, f32 arg1[3], f32 arg2[3], f32 arg3[3], u32 arg4);
 
+// --- core2/gameloop.c ---
+u8 GetCurrentMap();
+s32 getGameMode(void);
+void transitionToMap(enum map_e map, s32 exit, s32 transition);
+
 // --- core2/map_list.c ---
 BKCollisionTri *func_8029463C(void);
 BKModelBin *func_802946A8(void);
@@ -398,10 +403,6 @@ void player_getPosition(f32 dst[3]);
 void player_getRotation(f32 *dst);
 void player_setThrowTargetPosition(f32[3]);
 
-// --- core2/frame/bufferreadback.c ---
-s32 getGameMode(void);
-void transitionToMap(enum map_e map, s32 exit, s32 transition);
-
 // --- core2/sfx/source.c ---
 void func_8030DD90(u8 indx, s32 arg1);
 int func_8030E3FC(u8 indx);
@@ -565,7 +566,7 @@ void func_80343DEC(Actor *self);
 
 // --- core2/model/render.c ---
 s32 func_8033A0F0(s32 arg0);
-BKModelBin *modelRender_draw(Gfx**, Mtx**, f32 [3], f32[3], f32, f32*, BKModelBin*);
+BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation[3], f32 scale, f32*arg5, BKModelBin* model_bin);
 void func_8033A280(f32);
 
 // --- core2/spawn_queue.c ---
