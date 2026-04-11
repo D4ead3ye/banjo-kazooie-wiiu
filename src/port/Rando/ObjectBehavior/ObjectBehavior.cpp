@@ -24,6 +24,7 @@ typedef struct {
 
 int __baMarker_8028BC60(void);
 void __baMarker_resolveMusicNoteCollision(Prop* arg0);
+enum level_e map_getLevel(enum map_e map);
 }
 
 // clang-format off
@@ -96,11 +97,15 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_get() != MAP_2_MM_MUMBOS_MOUNTAIN) {
+        if (map_getLevel(map_get()) != LEVEL_1_MUMBOS_MOUNTAIN) {
             return;
         }
 
         CustomObject::InitializeSpawnQueue();
+
+        if (ev->actorId == ACTOR_5A_JIGSAW_DANCE) {
+            return;
+        }
 
         if (ShouldOverrideSpawn(ev->posX, ev->posY, ev->posZ)) {
             event->cancelled = true;
@@ -115,7 +120,7 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_get() != MAP_2_MM_MUMBOS_MOUNTAIN) {
+        if (map_getLevel(map_get()) != LEVEL_1_MUMBOS_MOUNTAIN) {
             return;
         }
 
@@ -131,7 +136,7 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_get() != MAP_2_MM_MUMBOS_MOUNTAIN) {
+        if (map_getLevel(map_get()) != LEVEL_1_MUMBOS_MOUNTAIN) {
             return;
         }
 
@@ -181,7 +186,30 @@ void Rando::ObjectBehavior::Init() {
                 break;
         }
 
+        CustomObject::AddToRandoActorMap(randoShuffledObject.randoCheckId, *ev->result);
         event->cancelled = true;
+    })
+
+    REGISTER_LISTENER(OnJiggySpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnJiggySpawn* ev = (OnJiggySpawn*)event;
+
+        // if (!IS_RANDO) {
+        //     return;
+        // }
+
+        if (map_getLevel(map_get()) != LEVEL_1_MUMBOS_MOUNTAIN) {
+            return;
+        }
+
+        int32_t pos[3];
+        pos[0] = (int32_t)ev->posX;
+        pos[1] = (int32_t)ev->posY;
+        pos[2] = (int32_t)ev->posZ;
+
+        if (ShouldOverrideSpawn(pos[0], pos[1], pos[2])) {
+            CustomObject::InitializeSpawnQueue();
+            event->cancelled = true;
+        }
     })
 
     REGISTER_LISTENER(OnActorCollision, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -191,16 +219,17 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_get() != MAP_2_MM_MUMBOS_MOUNTAIN) {
+        if (map_getLevel(map_get()) != LEVEL_1_MUMBOS_MOUNTAIN) {
             return;
         }
+        RandoItemId randoItemId = RI_UNKNOWN;
 
         if (!ev->propId->markerFlag) {
             switch (ev->propId->spriteProp.unk0_31) {
                 case RP_MUSIC_NOTE:
                     LogOutCollision(ev->propId->spriteProp.unk0_31, ev->propId->actorProp.x, ev->propId->actorProp.y,
                                     ev->propId->actorProp.z);
-                    SendCollisionNotification(RI_MUSIC_NOTE);
+                    randoItemId = RI_MUSIC_NOTE;
                     break;
                 default:
                     break;
@@ -210,17 +239,17 @@ void Rando::ObjectBehavior::Init() {
                 case MARKER_39_MUMBO_TOKEN:
                     LogOutCollision(ACTOR_2D_MUMBO_TOKEN, ev->propId->actorProp.x, ev->propId->actorProp.y,
                                     ev->propId->actorProp.z);
-                    SendCollisionNotification(RI_MUMBO_TOKEN);
+                    randoItemId = RI_MUMBO_TOKEN;
                     break;
                 case MARKER_52_JIGGY:
                     LogOutCollision(ACTOR_46_JIGGY, ev->propId->actorProp.x, ev->propId->actorProp.y,
                                     ev->propId->actorProp.z);
-                    SendCollisionNotification(RI_JIGGY);
+                    randoItemId = RI_JIGGY;
                     break;
                 case MARKER_53_EMPTY_HONEYCOMB:
                     LogOutCollision(ACTOR_47_EMPTY_HONEYCOMB, ev->propId->actorProp.x, ev->propId->actorProp.y,
                                     ev->propId->actorProp.z);
-                    SendCollisionNotification(RI_EMPTY_HONEYCOMB);
+                    randoItemId = RI_EMPTY_HONEYCOMB;
                     break;
                 case MARKER_5A_JINJO_BLUE:
                 case MARKER_5B_JINJO_GREEN:
@@ -230,11 +259,16 @@ void Rando::ObjectBehavior::Init() {
                     LogOutCollision(jinjoMarkerMap.at(ev->propId->actorProp.marker->id), ev->propId->actorProp.x,
                                     ev->propId->actorProp.y,
                                     ev->propId->actorProp.z);
-                    SendCollisionNotification(Rando::StaticData::GetRandoItemByActorId(jinjoMarkerMap.at(ev->propId->actorProp.marker->id)));
+                    randoItemId = Rando::StaticData::GetRandoItemByActorId(jinjoMarkerMap.at(ev->propId->actorProp.marker->id));
                     break;
                 default:
                     break;
             }
+        }
+
+        if (randoItemId != RI_UNKNOWN) {
+            CustomObject::ObjectCollected(ev->propId);
+            SendCollisionNotification(randoItemId);
         }
     })
 }

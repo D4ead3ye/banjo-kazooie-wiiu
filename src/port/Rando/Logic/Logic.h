@@ -38,6 +38,19 @@ inline bool IsCheckShuffled(RandoCheckId randoCheckId) {
     return isShuffled;
 }
 
+inline bool IsCheckObtained(RandoCheckId randoCheckId) {
+    bool isObtained = false;
+
+    for (auto& object : shuffledPool) {
+        if (object.randoCheckId == randoCheckId) {
+            isObtained = object.obtained;
+            break;
+        }
+    }
+
+    return isObtained;
+}
+
 // Regions
 // struct RandoRegion {
 //     const char* regionName;

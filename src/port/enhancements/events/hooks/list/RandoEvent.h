@@ -12,6 +12,7 @@ DEFINE_EVENT(OnSaveLoad,
 )
 
 DEFINE_EVENT(OnActorSpawn,
+	int32_t actorId;
 	int32_t posX;
 	int32_t posY;
 	int32_t posZ;
@@ -31,6 +32,12 @@ DEFINE_EVENT(OnBundleSpawn,
 	f32 posY;
 	f32 posZ;
 	Actor** result; 
+)
+
+DEFINE_EVENT(OnJiggySpawn,
+	f32 posX;
+	f32 posY;
+	f32 posZ;
 )
 
 DEFINE_EVENT(OnActorCollision,

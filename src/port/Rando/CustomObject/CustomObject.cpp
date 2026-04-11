@@ -33,6 +33,7 @@ typedef struct {
     bool isSpawned;
 } QueuedActor;
 
+std::map<RandoCheckId, ActorProp> randoActorMap;
 std::vector<QueuedActor> actorSpawnQueue;
 int32_t currentLevel = -1;
 
@@ -111,6 +112,11 @@ void ClearSpawnQueue() {
     }
 }
 
+void CustomObject::AddToRandoActorMap(RandoCheckId randoCheckId, Actor* actor) {
+    ActorProp actorProperty = *actor->marker->propPtr;
+    randoActorMap.emplace(randoCheckId, actorProperty);
+}
+
 void CustomObject::InitializeSpawnQueue() {
     ClearSpawnQueue();
     if (!actorSpawnQueue.empty()) {
@@ -124,6 +130,7 @@ void CustomObject::InitializeSpawnQueue() {
 
             newActor = SetCustomObjectParameters(newActor, spawn);
             spawn.isSpawned = true;
+            AddToRandoActorMap(spawn.randoCheckId, newActor);
         }
     }
 }
@@ -142,4 +149,19 @@ void CustomObject::AddToSpawnQueue(RandoCheckId randoCheckId, int32_t posX, int3
     }
 
     actorSpawnQueue.push_back(queuedActor);
+}
+
+void CustomObject::ObjectCollected(Prop* prop) {
+    for (auto& [randoCheckId, customActor] : randoActorMap) {
+        if (customActor.words[0] == prop->actorProp.words[0]) {
+            for (auto& pool : Rando::Logic::shuffledPool) {
+                if (pool.randoCheckId == randoCheckId && !pool.obtained) {
+                    pool.obtained = true;
+                    BK_LOG_INFO("RandoCheckId %s collected!", Rando::StaticData::Checks[randoCheckId].name);
+                    return;
+                }
+            }
+            return;
+        }
+    }
 }
