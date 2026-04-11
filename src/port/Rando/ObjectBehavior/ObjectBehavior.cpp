@@ -149,6 +149,9 @@ void Rando::ObjectBehavior::Init() {
         randoShuffledObject.randoCheckId = RC_UNKNOWN;
 
         switch (ev->bundle_id) {
+            case BUNDLE_3_MM_HUT_JINJO_GREEN:
+                randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JINJO_GREEN);
+                break;
             case BUNDLE_4_MM_HUT_JIGGY:
                 if (pos[1] < 2000) {
                     randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_ORANGE_PADS);
