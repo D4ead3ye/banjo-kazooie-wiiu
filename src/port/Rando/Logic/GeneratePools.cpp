@@ -86,8 +86,6 @@ void GenerateShufflePool() {
 
         shuffledPool.push_back(randoShuffleEntry);
     }
-
-    int done = 0;
 }
 
 
