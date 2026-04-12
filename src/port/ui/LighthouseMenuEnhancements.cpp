@@ -168,6 +168,12 @@ void LighthouseMenu::AddMenuEnhancements() {
         })
         .Options(CheckboxOptions().Tooltip("Reduces Boggy's max speed during both sled races in Freezeezy Peak."));
 
+    AddWidget(path, "Fast Swimming", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Gameplay.FastSwim"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip(
+            "Hold A+B while underwater to combine Banjo's kick with Kazooie's wing stroke for faster swimming."));
+
     // Enhancements -> Saving
     path = { "Enhancements", "Saving", SECTION_COLUMN_1 };
     AddSidebarEntry("Enhancements", path.sidebarName, 1);
@@ -181,6 +187,16 @@ void LighthouseMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCEMENT("Saving.PersistExtraLives"))
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip("Persists Extra Lives through the save file."));
+
+    // Enhancements -> Cheats
+    path = { "Enhancements", "Cheats", SECTION_COLUMN_1 };
+    AddSidebarEntry("Enhancements", path.sidebarName, 1);
+    path.column = SECTION_COLUMN_1;
+
+    AddWidget(path, "Infinite Health", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cheats.InfiniteHealth"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Prevents health from decreasing."));
 }
 
 } // namespace LighthouseGui
