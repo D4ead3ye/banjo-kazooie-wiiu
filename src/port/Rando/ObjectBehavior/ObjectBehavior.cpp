@@ -91,7 +91,7 @@ void SendCollisionNotification(RandoItemId randoItemId) {
                          .messageColor = WIDGET_TEXT_COLOR(randoItemColors.at(randoItemId)) });
 };
 
-bool ShouldOverrideSpawn(int16_t posX, int16_t posY, int16_t posZ) {
+bool ShouldOverrideSpawn(int32_t posX, int32_t posY, int32_t posZ) {
     RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition({ posX, posY, posZ });
     if (randoCheckId == RC_UNKNOWN) {
         return false;
@@ -102,7 +102,11 @@ bool ShouldOverrideSpawn(int16_t posX, int16_t posY, int16_t posZ) {
     }
 
     if (Rando::Logic::IsCheckShuffled(randoCheckId)) {
-        CustomObject::AddToSpawnQueue(randoCheckId, posX, posY, posZ);
+        int32_t position[3];
+        position[0] = posX;
+        position[1] = posY;
+        position[2] = posZ;
+        CustomObject::AddToSpawnQueue(randoCheckId, position);
         return true;
     }
 
@@ -161,10 +165,10 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        int32_t pos[3];
-        pos[0] = (int32_t)ev->posX;
-        pos[1] = (int32_t)ev->posY;
-        pos[2] = (int32_t)ev->posZ;
+        int32_t position[3];
+        position[0] = (int32_t)ev->posX;
+        position[1] = (int32_t)ev->posY;
+        position[2] = (int32_t)ev->posZ;
 
         Rando::StaticData::RandoShuffledPool randoShuffledObject;
         randoShuffledObject.randoCheckId = RC_UNKNOWN;
@@ -174,7 +178,7 @@ void Rando::ObjectBehavior::Init() {
                 randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JINJO_GREEN);
                 break;
             case BUNDLE_4_MM_HUT_JIGGY:
-                if (pos[1] < 2000) {
+                if (position[1] < 2000) {
                     randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_ORANGE_PADS);
                     
                 } else {
@@ -189,28 +193,15 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        *ev->result = CustomObject::SpawnRandoActor(
-            (actor_e)Rando::StaticData::Items[randoShuffledObject.randoItemId].actorId, pos);
-
-        switch (Rando::StaticData::Items[randoShuffledObject.randoItemId].randoItemType) {
-            case RITYPE_EMPTY_HONEYCOMB:
-                ActorLocal_EmptyHoneycomb* honeycombLocal;
-                honeycombLocal = (ActorLocal_EmptyHoneycomb*)&(*ev->result)->local;
-                honeycombLocal->uid = (honeycomb_e)randoShuffledObject.randoCollectionId;
-                break;
-            case RITYPE_JIGGY:
-                chjiggy_setJiggyId(*ev->result, randoShuffledObject.randoCollectionId);
-                break;
-            case RITYPE_MUMBO_TOKEN:
-                ActorLocal_MumboToken* tokenLocal;
-                tokenLocal = (ActorLocal_MumboToken*)&(*ev->result)->local;
-                tokenLocal->uid = (mumbotoken_e)randoShuffledObject.randoCollectionId;
-                break;
-            default:
-                break;
+        *ev->result = CustomObject::SpawnCustomActor(
+            (actor_e)Rando::StaticData::Items[randoShuffledObject.randoItemId].actorId, position);
+        if (*ev->result == NULL) {
+            return;
         }
 
-        CustomObject::AddToRandoActorMap(randoShuffledObject.randoCheckId, *ev->result);
+        *ev->result = CustomObject::SetCustomActorParameters(*ev->result, randoShuffledObject.randoCheckId);
+        CustomObject::AddToCustomActorMap(randoShuffledObject.randoCheckId, *ev->result);
+
         event->cancelled = true;
     })
 
@@ -239,32 +230,16 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        int32_t pos[3];
-        pos[0] = (int32_t)ev->posX;
-        pos[1] = (int32_t)ev->posY;
-        pos[2] = (int32_t)ev->posZ;
+        int32_t position[3];
+        position[0] = (int32_t)ev->posX;
+        position[1] = (int32_t)ev->posY;
+        position[2] = (int32_t)ev->posZ;
 
-        Actor* actor = CustomObject::SpawnRandoActor((actor_e)Rando::StaticData::Items[randoShuffledObject.randoItemId].actorId, pos);
+        Actor* newCustomActor = CustomObject::SpawnCustomActor(
+            (actor_e)Rando::StaticData::Items[randoShuffledObject.randoItemId].actorId, position);
+        newCustomActor = CustomObject::SetCustomActorParameters(newCustomActor, randoCheckId);
+        CustomObject::AddToCustomActorMap(randoCheckId, newCustomActor);
 
-        switch (Rando::StaticData::Items[randoShuffledObject.randoItemId].randoItemType) {
-            case RITYPE_EMPTY_HONEYCOMB:
-                ActorLocal_EmptyHoneycomb* honeycombLocal;
-                honeycombLocal = (ActorLocal_EmptyHoneycomb*)&actor->local;
-                honeycombLocal->uid = (honeycomb_e)randoShuffledObject.randoCollectionId;
-                break;
-            case RITYPE_JIGGY:
-                chjiggy_setJiggyId(actor, randoShuffledObject.randoCollectionId);
-                break;
-            case RITYPE_MUMBO_TOKEN:
-                ActorLocal_MumboToken* tokenLocal;
-                tokenLocal = (ActorLocal_MumboToken*)&actor->local;
-                tokenLocal->uid = (mumbotoken_e)randoShuffledObject.randoCollectionId;
-                break;
-            default:
-                break;
-        }
-
-        CustomObject::AddToRandoActorMap(randoShuffledObject.randoCheckId, actor);
         CustomObject::InitializeSpawnQueue();
         event->cancelled = true;
     })
