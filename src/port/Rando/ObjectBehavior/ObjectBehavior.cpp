@@ -11,17 +11,6 @@
 #define WIDGET_TEXT_COLOR(id) UIWidgets::ColorValues.at(id)
 
 extern "C" {
-void chjiggy_setJiggyId(Actor* thisx, u32 id);
-
-typedef struct {
-    enum mumbotoken_e uid;
-} ActorLocal_MumboToken;
-
-typedef struct {
-    enum honeycomb_e uid;
-    s32 unk4;
-} ActorLocal_EmptyHoneycomb;
-
 int __baMarker_8028BC60(void);
 void __baMarker_resolveMusicNoteCollision(Prop* arg0);
 enum level_e map_getLevel(enum map_e map);
