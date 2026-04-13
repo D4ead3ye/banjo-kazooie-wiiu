@@ -59,5 +59,19 @@ RandoCheckId GetCheckByPosition(std::array<int32_t, 3> position) {
     return RC_UNKNOWN;
 }
 
+RandoCheckId GetCheckByJiggyId(int32_t jiggyId) {
+    for (auto& [randoCheckId, randoStaticCheck] : Checks) {
+        if (randoStaticCheck.randoCheckType != RCTYPE_JIGGY) {
+            continue;
+        }
+
+        if (randoStaticCheck.collectionId == jiggyId) {
+            return randoCheckId;
+        }
+    }
+
+    return RC_UNKNOWN;
+}
+
 } // namespace StaticData
 } // namespace Rando

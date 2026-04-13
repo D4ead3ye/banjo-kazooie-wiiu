@@ -161,7 +161,7 @@ void Rando::ObjectBehavior::Init() {
                 }
                 break;
             default:
-                break;
+                return;
         }
 
         if (randoShuffledObject.randoCheckId == RC_UNKNOWN) {
@@ -204,15 +204,45 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
+        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByJiggyId(ev->jiggyId);
+
+        if (randoCheckId == RC_UNKNOWN) {
+            return;
+        }
+
+        Rando::StaticData::RandoShuffledPool randoShuffledObject;
+        randoShuffledObject.randoCheckId = RC_UNKNOWN;
+
+        randoShuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
+
         int32_t pos[3];
         pos[0] = (int32_t)ev->posX;
         pos[1] = (int32_t)ev->posY;
         pos[2] = (int32_t)ev->posZ;
 
-        if (ShouldOverrideSpawn(pos[0], pos[1], pos[2])) {
-            CustomObject::InitializeSpawnQueue();
-            event->cancelled = true;
+        Actor* actor = CustomObject::SpawnRandoActor((actor_e)Rando::StaticData::Items[randoShuffledObject.randoItemId].actorId, pos);
+
+        switch (Rando::StaticData::Items[randoShuffledObject.randoItemId].randoItemType) {
+            case RITYPE_EMPTY_HONEYCOMB:
+                ActorLocal_EmptyHoneycomb* honeycombLocal;
+                honeycombLocal = (ActorLocal_EmptyHoneycomb*)&actor->local;
+                honeycombLocal->uid = (honeycomb_e)randoShuffledObject.randoCollectionId;
+                break;
+            case RITYPE_JIGGY:
+                chjiggy_setJiggyId(actor, randoShuffledObject.randoCollectionId);
+                break;
+            case RITYPE_MUMBO_TOKEN:
+                ActorLocal_MumboToken* tokenLocal;
+                tokenLocal = (ActorLocal_MumboToken*)&actor->local;
+                tokenLocal->uid = (mumbotoken_e)randoShuffledObject.randoCollectionId;
+                break;
+            default:
+                break;
         }
+
+        CustomObject::AddToRandoActorMap(randoShuffledObject.randoCheckId, actor);
+        CustomObject::InitializeSpawnQueue();
+        event->cancelled = true;
     })
 
     REGISTER_LISTENER(OnActorCollision, EVENT_PRIORITY_NORMAL, [](IEvent* event) {

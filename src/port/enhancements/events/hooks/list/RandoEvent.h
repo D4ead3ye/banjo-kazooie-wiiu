@@ -35,6 +35,7 @@ DEFINE_EVENT(OnBundleSpawn,
 )
 
 DEFINE_EVENT(OnJiggySpawn,
+	int32_t jiggyId;
 	f32 posX;
 	f32 posY;
 	f32 posZ;

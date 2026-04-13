@@ -34,6 +34,7 @@ struct RandoStaticCheck {
 };
 
 RandoCheckId GetCheckByPosition(std::array<int32_t, 3> position);
+RandoCheckId GetCheckByJiggyId(int32_t jiggyId);
 
 extern std::map<RandoCheckId, RandoStaticCheck> Checks;
 // extern RandoStaticCheck GetShuffledRandoStaticCheck(s16 x, s16 y, s16 z);
@@ -48,8 +49,6 @@ struct RandoStaticItem {
 };
 
 RandoItemId GetRandoItemByActorId(actor_e actorId);
-// RandoCheckId GetCheckByLocation(int16_t posX, int16_t posY, int16_t posZ);
-// RandoCheckId GetCheckByLevelAct(int16_t levelId, int16_t randoAct);
 
 extern std::map<RandoItemId, RandoStaticItem> Items;
 
