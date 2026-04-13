@@ -28,6 +28,18 @@ enum level_e map_getLevel(enum map_e map);
 }
 
 // clang-format off
+std::vector<int32_t> actorSpawnWhitelist = {
+    ACTOR_2D_MUMBO_TOKEN,
+    ACTOR_46_JIGGY,
+    ACTOR_47_EMPTY_HONEYCOMB,
+    ACTOR_51_MUSIC_NOTE,
+    ACTOR_5E_JINJO_YELLOW,
+    ACTOR_5F_JINJO_ORANGE,
+    ACTOR_60_JINJO_BLUE,
+    ACTOR_61_JINJO_PINK,
+    ACTOR_62_JINJO_GREEN,
+};
+
 std::map<int32_t, UIWidgets::Colors> randoItemColors = {
     { RI_EMPTY_HONEYCOMB,   UIWidgets::Colors::Yellow },
     { RI_JIGGY,             UIWidgets::Colors::Yellow },
@@ -57,6 +69,15 @@ void LogOutSpawns(int32_t actorId, int16_t posX, int16_t posY, int16_t posZ) {
 void LogOutCollision(int32_t actorId, int16_t posX, int16_t posY, int16_t posZ) {
     std::string locationStr = std::to_string(posX) + ", " + std::to_string(posY) + ", " + std::to_string(posZ);
     SPDLOG_INFO("Collect ID: {} | Position: {}", actorId, locationStr);
+}
+
+bool IsActorWhitelisted(int32_t actorId) {
+    for (auto& entry : actorSpawnWhitelist) {
+        if (entry == actorId) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void SendCollisionNotification(RandoItemId randoItemId) {
@@ -103,7 +124,7 @@ void Rando::ObjectBehavior::Init() {
 
         CustomObject::InitializeSpawnQueue();
 
-        if (ev->actorId == ACTOR_5A_JIGSAW_DANCE) {
+        if (!IsActorWhitelisted(ev->actorId)) {
             return;
         }
 
