@@ -95,6 +95,7 @@ bool ShouldOverrideSpawn(int32_t posX, int32_t posY, int32_t posZ) {
         position[0] = posX;
         position[1] = posY;
         position[2] = posZ;
+
         CustomObject::AddToSpawnQueue(randoCheckId, position);
         return true;
     }
