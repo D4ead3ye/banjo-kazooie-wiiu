@@ -235,6 +235,9 @@ void Rando::ObjectBehavior::Init() {
         randoShuffledObject.randoCheckId = RC_UNKNOWN;
 
         randoShuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
+        if (randoShuffledObject.randoCheckId == RC_UNKNOWN) {
+            return;
+        }
 
         int32_t pos[3];
         pos[0] = (int32_t)ev->posX;

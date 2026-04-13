@@ -11,20 +11,6 @@ extern std::vector<Rando::StaticData::RandoShuffledPool> shuffledPool;
 
 void GenerateShufflePool();
 
-inline Rando::StaticData::RandoShuffledPool GetShuffledObject(RandoCheckId randoCheckId) {
-    Rando::StaticData::RandoShuffledPool shuffledObject;
-    shuffledObject.randoCheckId = RC_UNKNOWN;
-
-    for (auto& object : shuffledPool) {
-        if (object.randoCheckId == randoCheckId) {
-            shuffledObject = object;
-            break;
-        }
-    }
-
-    return shuffledObject;
-}
-
 inline bool IsCheckShuffled(RandoCheckId randoCheckId) {
     bool isShuffled = false;
 
@@ -36,6 +22,24 @@ inline bool IsCheckShuffled(RandoCheckId randoCheckId) {
     }
 
     return isShuffled;
+}
+
+inline Rando::StaticData::RandoShuffledPool GetShuffledObject(RandoCheckId randoCheckId) {
+    Rando::StaticData::RandoShuffledPool shuffledObject;
+    shuffledObject.randoCheckId = RC_UNKNOWN;
+
+    if (!IsCheckShuffled(randoCheckId)) {
+        return shuffledObject;
+    }
+
+    for (auto& object : shuffledPool) {
+        if (object.randoCheckId == randoCheckId) {
+            shuffledObject = object;
+            break;
+        }
+    }
+
+    return shuffledObject;
 }
 
 inline bool IsCheckObtained(RandoCheckId randoCheckId) {
