@@ -191,7 +191,7 @@ void Rando::ObjectBehavior::Init() {
 
         *ev->result = CustomObject::SetCustomActorParameters(*ev->result, randoShuffledObject.randoCheckId);
         CustomObject::AddToCustomActorMap(randoShuffledObject.randoCheckId, *ev->result);
-        ApplyActorPhysics(*ev->result, ev->bundle_id, (BundleInfo*)ev->bundleInfo, ev->bundleYaw);
+        ApplyBundleActorPhysics(*ev->result, ev->bundle_id, (BundleInfo*)ev->bundleInfo, ev->bundleYaw);
 
         event->cancelled = true;
     })

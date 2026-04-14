@@ -43,6 +43,7 @@ static f32 baseSpeed = 400.0f;
 std::map<RandoCheckId, BundlePhysics> customActorPhysicsMap = {
     { RC_UNKNOWN, { 0, 0, 0, 0, 0, 0, 0, 0 } },
     { RC_MM_JIGGY_CHIMPY, { 0, 800.0f, 0, 0, 10.0f, 0, 0, 0x1 } },
+    { RC_MM_JIGGY_CONGA, { 150.0f, 175.0f, 0, 0, 10.0f, 0, 0, 0x1 } },
 };
 
 BundlePhysics GetPhysicsByCheckId(RandoCheckId randoCheckId) {
