@@ -1,15 +1,48 @@
+#ifndef CUSTOM_OBJECT_H
+#define CUSTOM_OBJECT_H
+
 #include <stdint.h>
 #include "port/Rando/Types.h"
 
 #include "prop.h"
 
-namespace CustomObject {
-Actor* SpawnRandoActor(actor_e actorId, int32_t position[3]);
-bool CheckSpawnQueue(RandoCheckId randoCheckId);
-void AddToRandoActorMap(RandoCheckId randoCheckId, Actor* actor);
-void InitializeSpawnQueue();
+typedef struct {
+    RandoCheckId randoCheckId;
+    int32_t location[3];
+} CustomActor;
 
-void AddToSpawnQueue(RandoCheckId randoCheckId, int32_t posX, int32_t posY, int32_t posZ);
+typedef struct {
+    s16 flags;
+    // u8 pad2[0x2];
+    s32 actor_id;
+    s32 count;
+    s16 sfx_id;
+    s16 sfx_volume;
+    s16 sfx_sampleRate;
+    // u8 pad12[0x2];
+    f32 velocity_x;
+    f32 randomVelocity_x;
+    f32 velocity_y;
+    f32 randomVelocity_y;
+    f32 velocity_z;
+    f32 randomVelocity_z;
+    f32 bounce_factor;
+    f32 yaw;
+} BundleInfo;
 
-void ObjectCollected(Prop* prop);
-} // namespace CustomObject
+CustomActor CreateCustomActor(RandoCheckId randoCheckId, int32_t position[3]);
+void ApplyBundleActorPhysics(Actor* actor, int32_t bundle_id, BundleInfo* bundle_info, f32 bundleYaw);
+void ApplyCustomActorPhysics(RandoCheckId randoCheckId, Actor* actor);
+
+class CustomObject {
+public:
+    static bool CheckSpawnQueue(RandoCheckId randoCheckId);
+    static Actor* SetCustomActorParameters(Actor* actor, RandoCheckId randoCheckId);
+    static Actor* SpawnCustomActor(actor_e actorId, int32_t position[3]);
+    static void AddToCustomActorMap(RandoCheckId randoCheckId, Actor* actor);
+    static void AddToSpawnQueue(RandoCheckId randoCheckId, int32_t position[3]);
+    static void InitializeSpawnQueue();
+    static void ObjectCollected(Prop* prop);
+};
+
+#endif // CUSTOM_OBJECT_H

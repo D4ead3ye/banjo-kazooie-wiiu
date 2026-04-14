@@ -34,22 +34,6 @@ void LighthouseMenu::AddMenuEnhancements() {
         .Options(CheckboxOptions().Tooltip(
             "Skips the jiggy collection dance, collecting the jiggy immediately like underwater pickups."));
 
-    // Enhancements -> Audio
-    path = { "Enhancements", "Audio", SECTION_COLUMN_1 };
-    AddSidebarEntry("Enhancements", path.sidebarName, 1);
-    path.column = SECTION_COLUMN_1;
-
-    AddWidget(path, "Lair Music Continuity", WIDGET_CVAR_CHECKBOX)
-        .CVar(CVAR_ENHANCEMENT("Audio.LairContinuity"))
-        .RaceDisable(false)
-        .PreFunc([](WidgetInfo& info) {
-            if (mLighthouseMenu->disabledMap.at(DISABLE_FOR_ROMHACK).active) {
-                info.activeDisables.push_back(DISABLE_FOR_ROMHACK);
-            }
-        })
-        .Options(CheckboxOptions().Tooltip(
-            "Maintain music position when moving between Gruntilda's Lair floors that share the same theme."));
-
     // Enhancements -> Graphics
     path = { "Enhancements", "Graphics", SECTION_COLUMN_1 };
     AddSidebarEntry("Enhancements", path.sidebarName, 1);
@@ -73,6 +57,11 @@ void LighthouseMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCEMENT("Graphics.AlwaysHighPolyBanjo"))
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip("Makes Banjo always use the high-polygon model, even in low-detail modes."));
+
+    AddWidget(path, "Original Aspect Ratio In Cutscenes", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Graphics.CutsceneAspect"))
+        .Options(CheckboxOptions().Tooltip("Force game to show original aspect ratio during cutscenes to avoid seeing "
+                                           "unfinished edges of scene geometry."));
 
     // Enhancements -> Fixes
     path = { "Enhancements", "Fixes", SECTION_COLUMN_1 };
@@ -115,6 +104,18 @@ void LighthouseMenu::AddMenuEnhancements() {
         .Options(CheckboxOptions().Tooltip("Delays the Grunty Defeated flag until after the Jinjonator attacks, "
                                            "preventing a false win if the player dies before the hit lands."));
 
+    AddWidget(path, "Fix Cutscene Audio Sync", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fix.CutsceneSync"))
+        .RaceDisable(false)
+        .Options(
+            CheckboxOptions().Tooltip("Compensates for N64 frame stutters during cutscenes so audio stays in sync."));
+
+    AddWidget(path, "Fix Widescreen Camera", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fix.WidescreenCamera"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Adjusts static camera angles in widescreen to prevent skybox "
+                                           "exposure at the edges of the screen."));
+
     // Enhancements -> Restorations
     path = { "Enhancements", "Restorations", SECTION_COLUMN_1 };
     AddSidebarEntry("Enhancements", path.sidebarName, 1);
@@ -122,7 +123,6 @@ void LighthouseMenu::AddMenuEnhancements() {
 
     AddWidget(path, "Restore Return to Lair", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Restorations.ReturnToLair"))
-        .RaceDisable(false)
         .PreFunc([](WidgetInfo& info) {
             if (mLighthouseMenu->disabledMap.at(DISABLE_FOR_ROMHACK).active) {
                 info.activeDisables.push_back(DISABLE_FOR_ROMHACK);
@@ -140,6 +140,8 @@ void LighthouseMenu::AddMenuEnhancements() {
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip("Unlocks all Stop N' Swop items when loading a 100% save file."));
 
+    // TODO: All Honeycomb Extensions allows 9 honeycomb health bars instead of the 8 cap,
+    // but in 4:3 mode they overlap with the notes sprite in HUD
     AddWidget(path, "All Honeycomb Extensions", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("AllHoneycombExtensions"))
         .RaceDisable(false)
@@ -166,6 +168,12 @@ void LighthouseMenu::AddMenuEnhancements() {
         })
         .Options(CheckboxOptions().Tooltip("Reduces Boggy's max speed during both sled races in Freezeezy Peak."));
 
+    AddWidget(path, "Fast Swimming", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Gameplay.FastSwim"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip(
+            "Hold A+B while underwater to combine Banjo's kick with Kazooie's wing stroke for faster swimming."));
+
     // Enhancements -> Saving
     path = { "Enhancements", "Saving", SECTION_COLUMN_1 };
     AddSidebarEntry("Enhancements", path.sidebarName, 1);
@@ -179,6 +187,16 @@ void LighthouseMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCEMENT("Saving.PersistExtraLives"))
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip("Persists Extra Lives through the save file."));
+
+    // Enhancements -> Cheats
+    path = { "Enhancements", "Cheats", SECTION_COLUMN_1 };
+    AddSidebarEntry("Enhancements", path.sidebarName, 1);
+    path.column = SECTION_COLUMN_1;
+
+    AddWidget(path, "Infinite Health", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cheats.InfiniteHealth"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Prevents health from decreasing."));
 }
 
 } // namespace LighthouseGui
