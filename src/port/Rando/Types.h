@@ -11,6 +11,7 @@ typedef enum {
     RCTYPE_JIGGY,
     RCTYPE_JINJO,
     RCTYPE_MUMBO_TOKEN,
+    RCTYPE_MUSIC_NOTE,
     RCTYPE_MAX,
 } RandoCheckType;
 
