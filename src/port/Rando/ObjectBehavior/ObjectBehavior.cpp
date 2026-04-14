@@ -191,6 +191,7 @@ void Rando::ObjectBehavior::Init() {
 
         *ev->result = CustomObject::SetCustomActorParameters(*ev->result, randoShuffledObject.randoCheckId);
         CustomObject::AddToCustomActorMap(randoShuffledObject.randoCheckId, *ev->result);
+        ApplyActorPhysics(*ev->result, ev->bundle_id, (BundleInfo*)ev->bundleInfo, ev->bundleYaw);
 
         event->cancelled = true;
     })
@@ -229,6 +230,8 @@ void Rando::ObjectBehavior::Init() {
             (actor_e)Rando::StaticData::Items[randoShuffledObject.randoItemId].actorId, position);
         newCustomActor = CustomObject::SetCustomActorParameters(newCustomActor, randoCheckId);
         CustomObject::AddToCustomActorMap(randoCheckId, newCustomActor);
+
+        ApplyCustomActorPhysics(randoCheckId, newCustomActor);
 
         CustomObject::InitializeSpawnQueue();
         event->cancelled = true;

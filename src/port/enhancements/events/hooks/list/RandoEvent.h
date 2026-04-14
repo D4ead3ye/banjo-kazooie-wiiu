@@ -28,6 +28,8 @@ DEFINE_EVENT(OnPropSpawn,
 
 DEFINE_EVENT(OnBundleSpawn,
 	int32_t bundle_id;
+	f32 bundleYaw;
+	void* bundleInfo;
 	f32 posX;
 	f32 posY;
 	f32 posZ;
