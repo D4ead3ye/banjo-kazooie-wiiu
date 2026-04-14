@@ -46,12 +46,16 @@ void __ncStaticCamera_setToNode(s32 camera_node_index){
 }
 
 void ncStaticCamera_setToNode(s32 camera_node_index){
-    camera_setType(CAMERA_TYPE_3_STATIC);
-    __ncStaticCamera_setToNode(camera_node_index);
+    if (EventSystem_Should(VB_STATIC_CAMERA_SET, true, &camera_node_index)) {
+        camera_setType(CAMERA_TYPE_3_STATIC);
+        __ncStaticCamera_setToNode(camera_node_index);
+    }
 }
 
 void ncStaticCamera_exit(void){
-    camera_setType(CAMERA_TYPE_2_DYNAMIC);
+    if (EventSystem_Should(VB_STATIC_CAMERA_EXIT, true)) {
+        camera_setType(CAMERA_TYPE_2_DYNAMIC);
+    }
 }
 
 void ncStaticCamera_setPositionAndRotation(f32 arg0[3], f32 arg1[3]){

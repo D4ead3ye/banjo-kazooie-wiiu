@@ -25,7 +25,9 @@
 #include "port/ui/cvar_prefixes.h"
 #include "ui/LighthouseGui.hpp"
 #include "2.0L/PR/libaudio.h"
+#include "port/save/SaveManager.h"
 #include "port/enhancements/events/PortEnhancements.h"
+#include "port/patches/Patches.h"
 #include "libultraship/libultra/AudioDmaRegistry.h"
 
 #include <fast/interpreter.h>
@@ -50,12 +52,18 @@ std::string assets_path;
 namespace fs = std::filesystem;
 
 extern "C" {
+
+// Reset support
+extern s32 D_80275610;
+int getDefaultBootMap(void);
+void setBootMap(int map_id);
+
 bool prevAltAssets = false;
 // bool gEnableGammaBoost = true;
 
-// [port] Audio synthesis entry point (decomp n_synthesizer.c)
+// Audio synthesis entry point (decomp n_synthesizer.c)
 Acmd* n_alAudioFrame(Acmd* cmdList, s32* cmdLen, s16* outBuf, s32 outLen);
-// [port] DMA cache cleanup (decomp audio_manager.c)
+// DMA cache cleanup (decomp audio_manager.c)
 void func_802403F0(void);
 void func_80250650(void);
 
@@ -142,6 +150,22 @@ GameEngine::GameEngine() {
     this->context->InitResourceManager({ assets_path }, {}, 3, true);
     this->context->InitConsole();
 
+    // Register console commands for menu buttons
+    Ship::Context::GetInstance()->GetConsole()->AddCommand(
+        "reset", { [](std::shared_ptr<Ship::Console>, const std::vector<std::string>&, std::string*) -> bool {
+                      gPortResetPending = 1; // lets audio spin-waits exit immediately
+                      setBootMap(getDefaultBootMap());
+                      D_80275610 = 3 + 1; // deferred: mainLoop picks this up next frame
+                      return 0;
+                  },
+                   "Reset to boot map." });
+    Ship::Context::GetInstance()->GetConsole()->AddCommand(
+        "quit", { [](std::shared_ptr<Ship::Console>, const std::vector<std::string>&, std::string*) -> bool {
+                     Ship::Context::GetInstance()->GetWindow()->Close();
+                     return 0;
+                 },
+                  "Quit the game." });
+
     lhFast3dWindow = std::make_shared<Fast::Fast3dWindow>(std::vector<std::shared_ptr<Ship::GuiWindow>>({}));
     this->context->InitWindow(lhFast3dWindow);
 
@@ -197,7 +221,7 @@ bool PathTestCleanup(FILE* tfile) {
             std::filesystem::remove("./text.txt");
         if (std::filesystem::exists("./test/"))
             std::filesystem::remove("./test/");
-    } catch (std::filesystem::filesystem_error const& ex) { return false; }
+    } catch (std::filesystem::filesystem_error const&) { return false; }
     return true;
 }
 
@@ -212,13 +236,13 @@ void CheckAndCreateModFolder() {
                 std::ofstream(filePath).close();
             }
         }
-    } catch (std::filesystem::filesystem_error const& ex) {
+    } catch (std::filesystem::filesystem_error const&) {
         // Couldn't make the folder, continue silently
         return;
     }
 }
 
-static const std::vector<std::string> sRomArchives = { "bk.o2r", "bk-jot.o2r", "bk-n64.o2r" };
+static const std::vector<std::string> sRomArchives = { "bk.o2r", "bk-jot.o2r", "bk-n64.o2r", "bk-gm.o2r", "bk-bwdx.o2r" };
 
 static bool AnyRomArchiveExists() {
     for (const auto& archive : sRomArchives) {
@@ -470,7 +494,7 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                         std::filesystem::path tempPath;
                         try {
                             tempPath = std::filesystem::canonical(tempVar);
-                        } catch (std::filesystem::filesystem_error const& ex) {
+                        } catch (std::filesystem::filesystem_error const&) {
                             std::string userPath = getenv("USERPROFILE");
                             userPath.append("\\AppData\\Local\\Temp");
                             tempPath = std::filesystem::canonical(userPath);
@@ -500,7 +524,7 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                         bool error = false;
                         try {
                             create_directories(tfolder);
-                        } catch (std::filesystem::filesystem_error const& ex) { error = true; }
+                        } catch (std::filesystem::filesystem_error const&) { error = true; }
                         if (tfile == NULL || error) {
                             LighthouseGui::RegisterPopup(
                                 "Lighthouse Permissions Error",
@@ -591,14 +615,14 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                         std::string msg = "Archive for current ROM, " + archive + ", already exists.\nExtract again?";
                         LighthouseGui::RegisterPopup("Confirm Re-extract", msg.c_str(), "Yes", "No", [&]() {
                             extracting = true;
-                            threadPool->submit_task([&]() -> void {
+                            (void)threadPool->submit_task([&]() -> void {
                                 extract.GenerateOTR(extractCount, totalExtract, "bk");
                                 extracting = false;
                             });
                         });
                     } else {
                         extracting = true;
-                        threadPool->submit_task([&]() -> void {
+                        (void)threadPool->submit_task([&]() -> void {
                             extract.GenerateOTR(extractCount, totalExtract, "bk");
                             extracting = false;
                         });
@@ -661,7 +685,7 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                         extracting = true;
                         extractStarted = true;
                         file = extract.GetRomPath();
-                        threadPool->submit_task([&]() -> void {
+                        (void)threadPool->submit_task([&]() -> void {
                             extract.GenerateOTR(extractCount, totalExtract, "bk");
                             extracting = false;
                         });
@@ -839,7 +863,7 @@ ImFont* GameEngine::CreateFontWithSize(float size, std::string fontPath) {
         initData->Path = fontPath;
         std::shared_ptr<Ship::Font> fontData = std::static_pointer_cast<Ship::Font>(
             Ship::Context::GetInstance()->GetResourceManager()->LoadResource(fontPath, false, initData));
-        font = mImGuiIo->Fonts->AddFontFromMemoryTTF(fontData->Data, fontData->DataSize, size, &config);
+        font = mImGuiIo->Fonts->AddFontFromMemoryTTF(fontData->Data, static_cast<int>(fontData->DataSize), size, &config);
     }
     // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
     float iconFontSize = size * 2.0f / 3.0f;
@@ -882,6 +906,7 @@ void GameEngine::Create(int argc, char* argv[]) {
     //    osSetTime(0);
     //#endif
     PortEnhancements_Init();
+    SaveManager_Init();
     ShipInit::InitAll();
 
     // Stop rumble on any exit path (including direct exit() calls)
@@ -1090,8 +1115,6 @@ void GameEngine::AudioExit() {
     }
 }
 
-extern "C" int port_isViBlack(void);
-
 void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map<Mtx*, MtxF>>& mtx_replacements) {
     auto wnd = std::dynamic_pointer_cast<Fast::Fast3dWindow>(Ship::Context::GetInstance()->GetWindow());
 
@@ -1106,7 +1129,7 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
 
     interpreter->mInterpolationIndex = 0;
 
-    // [port] Expand DrawAndRunGraphicsCommands so we can read the backbuffer between
+    // Expand DrawAndRunGraphicsCommands so we can read the backbuffer between
     // Run() (frame rendered) and EndFrame() (buffer swap). On N64, CPU/RDP shared
     // physical memory so gFramebuffers always had valid pixel data after rendering.
     auto wndBase = Ship::Context::GetInstance()->GetWindow();
@@ -1114,7 +1137,7 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
     size_t frameCount = mtx_replacements.size();
     for (const auto& m : mtx_replacements) {
         bool isFinalFrame = (frameIdx == frameCount - 1);
-        // [port] Bypass IsFrameReady() when interpolation is active — render all
+        // Bypass IsFrameReady() when interpolation is active — render all
         // frames per tick and let vsync pace them.
         if (frameCount > 1 || wndBase->IsFrameReady()) {
             auto gui = wndBase->GetGui();
@@ -1122,14 +1145,16 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
             gui->StartDraw();
             interpreter->StartFrame();
             interpreter->Run(Commands, m);
-            // [port] Emulate N64 osViBlack: skip presentation so the previous
-            // frame stays on screen (readback still runs so transitions can capture).
-            gui->EndDraw();
+            // Emulate N64 osViBlack to prevent a flicker when the scene is drawn
+            // for the falling jiggy transition framebuffer capture.
             if (port_isViBlack()) {
-                interpreter->Flush();
-            } else {
-                interpreter->EndFrame();
+                interpreter->mGfxFrameBuffer = 0;
+                auto rapi = interpreter->GetCurrentRenderingAPI();
+                rapi->StartDrawToFramebuffer(0, 1.0f);
+                rapi->ClearFramebuffer(true, false);
             }
+            gui->EndDraw();
+            interpreter->EndFrame();
         }
         interpreter->mInterpolationIndex++;
         frameIdx++;
@@ -1220,7 +1245,7 @@ uint32_t GameEngine::GetInterpolationFPS() {
 }
 
 uint32_t GameEngine::GetInterpolationFrameCount() {
-    return ceil((float)GetInterpolationFPS() / (60.0f / gVIsPerFrame));
+    return static_cast<uint32_t>(ceil((float)GetInterpolationFPS() / (60.0f / gVIsPerFrame)));
 }
 
 extern "C" uint32_t GameEngine_GetInterpolationFrameCount() {
@@ -1397,14 +1422,14 @@ extern "C" int32_t OTRConvertHUDXToScreenX(int32_t v) {
     int32_t gameWidth = interpreter->mCurDimensions.width;
     float hudAspectRatio = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
     int32_t hudHeight = gameHeight;
-    int32_t hudWidth = hudHeight * hudAspectRatio;
+    int32_t hudWidth = static_cast<int32_t>(hudHeight * hudAspectRatio);
     float hudScreenRatio = (hudWidth / (float)SCREEN_WIDTH);
     float hudCoord = v * hudScreenRatio;
-    float gameOffset = (gameWidth - hudWidth) / 2;
+    float gameOffset = static_cast<float>((gameWidth - hudWidth) / 2);
     float gameCoord = hudCoord + gameOffset;
     float gameScreenRatio = ((float)SCREEN_WIDTH / gameWidth);
     float screenScaledCoord = gameCoord * gameScreenRatio;
-    int32_t screenScaledCoordInt = screenScaledCoord;
+    int32_t screenScaledCoordInt = static_cast<int32_t>(screenScaledCoord);
     return screenScaledCoordInt;
 }
 
