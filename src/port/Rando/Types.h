@@ -39,9 +39,9 @@ typedef enum {
     RC_MM_MUMBO_TOKEN_INSIDE_TICKERS_TOWER,
     RC_MM_MUMBO_TOKEN_STUMP_NEAR_CONGA,
     RC_MM_MUMBO_TOKEN_UNDER_RAMP_TO_MUMBOS_SKULL,
-    RC_MM_NOTE_SOUTH_SLOPE_FIRST_PLATFORM_1,
-    RC_MM_NOTE_SOUTH_SLOPE_FIRST_PLATFORM_2,
-    RC_MM_NOTE_SOUTH_SLOPE_FIRST_PLATFORM_3,
+    // RC_MM_NOTE_SOUTH_SLOPE_FIRST_PLATFORM_1,
+    // RC_MM_NOTE_SOUTH_SLOPE_FIRST_PLATFORM_2,
+    // RC_MM_NOTE_SOUTH_SLOPE_FIRST_PLATFORM_3,
     RC_MAX,
 } RandoCheckId;
 
@@ -74,9 +74,10 @@ typedef enum {
     RI_MAX,
 } RandoItemId;
 
-// typedef enum {
-//     RR_MAX,
-// } RandoRegionId;
+typedef enum {
+    RR_MUMBOS_MOUNTAIN,
+    RR_MAX,
+} RandoRegionId;
 
 typedef enum {
     RO_LOGIC,

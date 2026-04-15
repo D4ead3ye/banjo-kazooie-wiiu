@@ -43,6 +43,8 @@ DEFINE_EVENT(OnJiggySpawn,
 	f32 posZ;
 )
 
+DEFINE_EVENT(OnActorSaveState)
+
 DEFINE_EVENT(OnActorCollision,
 	Prop* propId;
 )

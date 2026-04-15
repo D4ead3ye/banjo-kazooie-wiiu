@@ -56,28 +56,35 @@ inline bool IsCheckObtained(RandoCheckId randoCheckId) {
 }
 
 // Regions
-// struct RandoRegion {
-//     const char* regionName;
-//     int16_t levelId;
-//     std::map<RandoCheckId, std::pair<std::function<bool()>, std::string>> checks;
-//     std::map<RandoRegionId, std::pair<std::function<bool()>, std::string>> connections;
-// };
+inline std::string LogicString(std::string condition) {
+    if (condition == "true")
+        return "";
 
-// extern std::map<RandoRegionId, RandoRegion> Regions;
+    return condition;
+}
 
-// #define CHECK(check, condition)                               \
-//     {                                                         \
-//         check, {                                              \
-//             [] { return condition; }, LogicString(#condition) \
-//         }                                                     \
-//     }
+struct RandoRegion {
+    const char* regionName;
+    int16_t levelId;
+    std::map<RandoCheckId, std::pair<std::function<bool()>, std::string>> checks;
+    std::map<RandoRegionId, std::pair<std::function<bool()>, std::string>> connections;
+};
 
-// #define CONNECTION(region, condition)                         \
-//     {                                                         \
-//         region, {                                             \
-//             [] { return condition; }, LogicString(#condition) \
-//         }                                                     \
-//     }
+extern std::map<RandoRegionId, RandoRegion> Regions;
+
+#define CHECK(check, condition)                               \
+    {                                                         \
+        check, {                                              \
+            [] { return condition; }, LogicString(#condition) \
+        }                                                     \
+    }
+
+#define CONNECTION(region, condition)                         \
+    {                                                         \
+        region, {                                             \
+            [] { return condition; }, LogicString(#condition) \
+        }                                                     \
+    }
 
 } // namespace Logic
 

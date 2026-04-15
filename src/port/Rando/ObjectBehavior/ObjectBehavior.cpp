@@ -50,6 +50,8 @@ std::map<int32_t, actor_e> jinjoMarkerMap = {
 };
 // clang-format on
 
+bool nextActorSaveState = false;
+
 void LogOutSpawns(int32_t actorId, int16_t posX, int16_t posY, int16_t posZ) {
     std::string locationStr = std::to_string(posX) + ", " + std::to_string(posY) + ", " + std::to_string(posZ);
     SPDLOG_INFO("Actor ID: {} | Position: {}", actorId, locationStr);
@@ -81,7 +83,7 @@ void SendCollisionNotification(RandoItemId randoItemId) {
 };
 
 bool ShouldOverrideSpawn(int32_t posX, int32_t posY, int32_t posZ) {
-    RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition({ posX, posY, posZ });
+    RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(posX, posY, posZ);
     if (randoCheckId == RC_UNKNOWN) {
         return false;
     }
@@ -97,6 +99,7 @@ bool ShouldOverrideSpawn(int32_t posX, int32_t posY, int32_t posZ) {
         position[2] = posZ;
 
         CustomObject::AddToSpawnQueue(randoCheckId, position);
+
         return true;
     }
 
@@ -118,6 +121,11 @@ void Rando::ObjectBehavior::Init() {
 
         CustomObject::InitializeSpawnQueue();
 
+        if (nextActorSaveState) {
+            nextActorSaveState = false;
+            return;
+        }
+
         if (!IsActorWhitelisted(ev->actorId)) {
             return;
         }
@@ -138,7 +146,7 @@ void Rando::ObjectBehavior::Init() {
         if (map_getLevel(map_get()) != LEVEL_1_MUMBOS_MOUNTAIN) {
             return;
         }
-
+                
         if (ShouldOverrideSpawn(ev->posX, ev->posY, ev->posZ)) {
             event->cancelled = true;
         }
@@ -235,6 +243,21 @@ void Rando::ObjectBehavior::Init() {
 
         CustomObject::InitializeSpawnQueue();
         event->cancelled = true;
+    })
+
+    REGISTER_LISTENER(OnActorSaveState, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnActorSaveState* ev = (OnActorSaveState*)event;
+
+        // if (!IS_RANDO) {
+        //     return;
+        // }
+
+        if (map_getLevel(map_get()) != LEVEL_1_MUMBOS_MOUNTAIN) {
+            return;
+        }
+
+        CustomObject::InitializeSpawnQueue();
+        nextActorSaveState = true;
     })
 
     REGISTER_LISTENER(OnActorCollision, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
