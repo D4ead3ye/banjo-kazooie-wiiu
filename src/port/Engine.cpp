@@ -32,6 +32,7 @@
 
 #include <fast/interpreter.h>
 #include <libultraship/bridge/gfxbridge.h>
+#include <SDL2/SDL.h>
 #include <filesystem>
 #include <fstream>
 #include "FrameInterpolation.h"
@@ -368,7 +369,7 @@ void GameEngine::FinishInit() {
     // Instance->LoadDictionary();
     // Instance->LoadPlayerAnims();
 #if defined(__SWITCH__) || defined(__WIIU__)
-    CVarRegisterInteger("gControlNav", 1); // always enable controller nav on switch/wii u
+    CVarRegisterInteger(CVAR_IMGUI_CONTROLLER_NAV, 1); // always enable controller nav on switch/wii u
 #endif
 }
 
@@ -902,11 +903,6 @@ void GameEngine::Create(int argc, char* argv[]) {
     GfxSetNativeDimensions(292, 216);
     instance->RunExtract(argc, argv);
     instance->FinishInit();
-    LighthouseGui::SetupGuiElements();
-    //#if defined(__SWITCH__) || defined(__WIIU__)
-    //    CVarRegisterInteger("gControlNav", 1); // always enable controller nav on switch/wii u
-    //    osSetTime(0);
-    //#endif
     PortEnhancements_Init();
     SaveManager_Init();
     ShipInit::InitAll();
