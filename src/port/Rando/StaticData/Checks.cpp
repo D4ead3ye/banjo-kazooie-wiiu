@@ -137,12 +137,12 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_2,                RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           -127, 0, -308),
     RC(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_3,                RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           119, 0, -298),
     RC(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_4,                RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           286, 0, -155),
-    RC(RC_MM_NOTE_INSIDE_TICKERS_TOWER_1,               RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           NULL, NULL, NULL),
-    RC(RC_MM_NOTE_INSIDE_TICKERS_TOWER_2,               RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           NULL, NULL, NULL),
-    RC(RC_MM_NOTE_INSIDE_TICKERS_TOWER_3,               RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           NULL, NULL, NULL),
-    RC(RC_MM_NOTE_INSIDE_TICKERS_TOWER_4,               RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           NULL, NULL, NULL),
-    RC(RC_MM_NOTE_INSIDE_TICKERS_TOWER_5,               RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           NULL, NULL, NULL),
-    RC(RC_MM_NOTE_INSIDE_TICKERS_TOWER_6,               RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           NULL, NULL, NULL),
+    RC(RC_MM_NOTE_INSIDE_TICKERS_TOWER_1,               RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           -74, 817, 19),
+    RC(RC_MM_NOTE_INSIDE_TICKERS_TOWER_2,               RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           -3, 817, 52),
+    RC(RC_MM_NOTE_INSIDE_TICKERS_TOWER_3,               RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           67, 817, 0),
+    RC(RC_MM_NOTE_INSIDE_TICKERS_TOWER_4,               RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           60, 817, -87),
+    RC(RC_MM_NOTE_INSIDE_TICKERS_TOWER_5,               RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           -10, 817, -125),
+    RC(RC_MM_NOTE_INSIDE_TICKERS_TOWER_6,               RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           -80, 817, -71),
 };
 // clang-format on
 
