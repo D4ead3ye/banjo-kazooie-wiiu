@@ -33,7 +33,7 @@ struct RandoStaticCheck {
     int32_t posZ;
 };
 
-RandoCheckId GetCheckByPosition(std::array<int32_t, 3> position);
+RandoCheckId GetCheckByPosition(int32_t posX, int32_t posY, int32_t posZ);
 RandoCheckId GetCheckByJiggyId(int32_t jiggyId);
 
 extern std::map<RandoCheckId, RandoStaticCheck> Checks;
@@ -83,14 +83,11 @@ extern std::map<RandoOptionId, RandoStaticOption> Options;
 
 RandoOptionId GetOptionIdFromName(const char* name);
 
-// TODO: Import Object Extension
-// extern std::map<RandoCheckId, struct Object*> spawnedRandoObjects;
-
 // TODO: Add Logic and Regions
 // struct RandoStaticRegion {
 //     RandoRegionId randoRegionId;
 //     const char* name;
-//     LevelNum levelId;
+//     int16_t levelId;
 //     std::map<RandoCheckId, std::function<bool()>> checks;
 //     std::map<RandoRegionId, std::function<bool()>> regions;
 // };

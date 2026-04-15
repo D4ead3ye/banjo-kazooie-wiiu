@@ -40,21 +40,15 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_MM_MUMBO_TOKEN_INSIDE_TICKERS_TOWER,          RCTYPE_MUMBO_TOKEN,     LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_2D_MUMBO_TOKEN,       MUMBOTOKEN_05_MM_INSIDE_TICKERS_TOWER,          -343, 345, -518),
     RC(RC_MM_MUMBO_TOKEN_STUMP_NEAR_CONGA,              RCTYPE_MUMBO_TOKEN,     LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_2D_MUMBO_TOKEN,       MUMBOTOKEN_01_MM_STUMP_NEAR_CONGA,              -4431, 475, 6183),
     RC(RC_MM_MUMBO_TOKEN_UNDER_RAMP_TO_MUMBOS_SKULL,    RCTYPE_MUMBO_TOKEN,     LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_2D_MUMBO_TOKEN,       MUMBOTOKEN_03_MM_UNDER_RAMP_TO_MUMBOS_SKULL,    5150, 2168, -2447),
-    RC(RC_MM_NOTE_SOUTH_SLOPE_FIRST_PLATFORM_1,         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           4867, 297, 1766),
-    RC(RC_MM_NOTE_SOUTH_SLOPE_FIRST_PLATFORM_2,         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           4782, 298, 1892),
-    RC(RC_MM_NOTE_SOUTH_SLOPE_FIRST_PLATFORM_3,         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           4971, 299, 1887),
+    // RC(RC_MM_NOTE_SOUTH_SLOPE_FIRST_PLATFORM_1,         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           4867, 297, 1766),
+    // RC(RC_MM_NOTE_SOUTH_SLOPE_FIRST_PLATFORM_2,         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           4782, 298, 1892),
+    // RC(RC_MM_NOTE_SOUTH_SLOPE_FIRST_PLATFORM_3,         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           4971, 299, 1887),
 };
 // clang-format on
 
-RandoCheckId GetCheckByPosition(std::array<int32_t, 3> position) {
+RandoCheckId GetCheckByPosition(int32_t posX, int32_t posY, int32_t posZ) {
     for (auto& [randoCheckId, randoStaticCheck] : Checks) {
-        std::array<int32_t, 3> checkPosition = {
-            randoStaticCheck.posX,
-            randoStaticCheck.posY,
-            randoStaticCheck.posZ,
-        };
-
-        if (checkPosition == position) {
+        if (randoStaticCheck.posX == posX && randoStaticCheck.posY == posY && randoStaticCheck.posZ == posZ) {
             return randoCheckId;
         }
     }

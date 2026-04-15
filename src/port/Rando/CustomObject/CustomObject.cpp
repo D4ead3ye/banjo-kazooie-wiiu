@@ -24,7 +24,7 @@ enum level_e map_getLevel(enum map_e map);
 }
 
 int32_t currentLevel = -1;
-std::map<RandoCheckId, ActorProp> customActorMap;
+std::map<RandoCheckId, Actor*> customActorMap;
 std::vector<std::pair<CustomActor, bool>> actorSpawnQueue;
 
 bool CustomObject::CheckSpawnQueue(RandoCheckId randoCheckId) {
@@ -42,6 +42,7 @@ void ClearSpawnQueue() {
     if (currentLevel != map_getLevel(map_get())) {
         currentLevel = map_getLevel(map_get());
         actorSpawnQueue.clear();
+        customActorMap.clear();
     }
 }
 
@@ -90,8 +91,9 @@ Actor* CustomObject::SpawnCustomActor(actor_e actorId, int32_t position[3]) {
 }
 
 void CustomObject::AddToCustomActorMap(RandoCheckId randoCheckId, Actor* actor) {
-    ActorProp actorProperty = *actor->marker->propPtr;
-    customActorMap.emplace(randoCheckId, actorProperty);
+    Actor* customActor = actor;
+    //ActorProp actorProperty = *actor->marker->propPtr;
+    customActorMap.emplace(randoCheckId, customActor);
 }
 
 void CustomObject::AddToSpawnQueue(RandoCheckId randoCheckId, int32_t position[3]) {
@@ -140,7 +142,7 @@ void CustomObject::InitializeSpawnQueue() {
 
 void CustomObject::ObjectCollected(Prop* prop) {
     for (auto& [randoCheckId, customActor] : customActorMap) {
-        if (customActor.words[0] == prop->actorProp.words[0]) {
+        if (customActor->marker->propPtr->words[0] == prop->actorProp.words[0]) {
             for (auto& pool : Rando::Logic::shuffledPool) {
                 if (pool.randoCheckId == randoCheckId && !pool.obtained) {
                     pool.obtained = true;

@@ -84,6 +84,7 @@ void GenerateShufflePool() {
             .skipped = false,
         };
 
+        Rando::Logic::Regions;
         shuffledPool.push_back(randoShuffleEntry);
     }
 }
