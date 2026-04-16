@@ -158,6 +158,8 @@ void Rando::ObjectBehavior::Init() {
     REGISTER_LISTENER(OnBundleSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnBundleSpawn* ev = (OnBundleSpawn*)event;
 
+        BundleInfo* bundle_info = (BundleInfo*)ev->bundleInfo;
+
         // if (!IS_RANDO) {
         //     return;
         // }
@@ -185,6 +187,10 @@ void Rando::ObjectBehavior::Init() {
                 } else {
                     randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_HUTS);
                 }
+                break;
+            case BUNDLE_0_MM_HUT_MUSIC_NOTE:
+                randoShuffledObject = Rando::Logic::GetShuffledObject((RandoCheckId)((int32_t)RC_MM_NOTE_HUT_BUNDLE_1 + ev->curCount));
+                SPDLOG_INFO("RandoCheckId : {}", Rando::StaticData::Checks[randoShuffledObject.randoCheckId].name);
                 break;
             default:
                 return;

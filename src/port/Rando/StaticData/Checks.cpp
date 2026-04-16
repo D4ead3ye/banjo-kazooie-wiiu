@@ -43,6 +43,11 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     // RC(RC_MM_NOTE_SOUTH_SLOPE_FIRST_PLATFORM_1,         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           4867, 297, 1766),
     // RC(RC_MM_NOTE_SOUTH_SLOPE_FIRST_PLATFORM_2,         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           4782, 298, 1892),
     // RC(RC_MM_NOTE_SOUTH_SLOPE_FIRST_PLATFORM_3,         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           4971, 299, 1887),
+    RC(RC_MM_NOTE_HUT_BUNDLE_1,                         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           5321, 2280, -1715),
+    RC(RC_MM_NOTE_HUT_BUNDLE_2,                         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           5321, 2280, -1715),
+    RC(RC_MM_NOTE_HUT_BUNDLE_3,                         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           5321, 2280, -1715),
+    RC(RC_MM_NOTE_HUT_BUNDLE_4,                         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           5321, 2280, -1715),
+    RC(RC_MM_NOTE_HUT_BUNDLE_5,                         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           5321, 2280, -1715),
 };
 // clang-format on
 
