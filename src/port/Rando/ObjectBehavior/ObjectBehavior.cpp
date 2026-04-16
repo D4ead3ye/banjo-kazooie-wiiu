@@ -14,6 +14,9 @@ extern "C" {
 int __baMarker_8028BC60(void);
 void __baMarker_resolveMusicNoteCollision(Prop* arg0);
 enum level_e map_getLevel(enum map_e map);
+
+Actor* marker_getActor(ActorMarker* thisx);
+bool func_802C9C14(Actor* actor);
 }
 
 // clang-format off
@@ -155,6 +158,8 @@ void Rando::ObjectBehavior::Init() {
     REGISTER_LISTENER(OnBundleSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnBundleSpawn* ev = (OnBundleSpawn*)event;
 
+        BundleInfo* bundle_info = (BundleInfo*)ev->bundleInfo;
+
         // if (!IS_RANDO) {
         //     return;
         // }
@@ -182,6 +187,10 @@ void Rando::ObjectBehavior::Init() {
                 } else {
                     randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_HUTS);
                 }
+                break;
+            case BUNDLE_0_MM_HUT_MUSIC_NOTE:
+                randoShuffledObject = Rando::Logic::GetShuffledObject((RandoCheckId)((int32_t)RC_MM_NOTE_HUT_BUNDLE_1 + ev->curCount));
+                SPDLOG_INFO("RandoCheckId : {}", Rando::StaticData::Checks[randoShuffledObject.randoCheckId].name);
                 break;
             default:
                 return;
@@ -275,7 +284,7 @@ void Rando::ObjectBehavior::Init() {
         if (!ev->propId->markerFlag) {
             switch (ev->propId->spriteProp.unk0_31) {
                 case RP_MUSIC_NOTE:
-                    LogOutCollision(ev->propId->spriteProp.unk0_31, ev->propId->actorProp.x, ev->propId->actorProp.y,
+                    LogOutCollision(ACTOR_51_MUSIC_NOTE, ev->propId->actorProp.x, ev->propId->actorProp.y,
                                     ev->propId->actorProp.z);
                     randoItemId = RI_MUSIC_NOTE;
                     break;
@@ -283,6 +292,11 @@ void Rando::ObjectBehavior::Init() {
                     break;
             }
         } else {
+            Actor* markerActor = marker_getActor(ev->propId->actorProp.marker);
+            if (func_802C9C14(markerActor)) {
+                return;
+            }
+
             switch (ev->propId->actorProp.marker->id) {
                 case MARKER_39_MUMBO_TOKEN:
                     LogOutCollision(ACTOR_2D_MUMBO_TOKEN, ev->propId->actorProp.x, ev->propId->actorProp.y,
@@ -308,6 +322,11 @@ void Rando::ObjectBehavior::Init() {
                                     ev->propId->actorProp.y,
                                     ev->propId->actorProp.z);
                     randoItemId = Rando::StaticData::GetRandoItemByActorId(jinjoMarkerMap.at(ev->propId->actorProp.marker->id));
+                    break;
+                case MARKER_5F_MUSIC_NOTE:
+                    LogOutCollision(ACTOR_51_MUSIC_NOTE, ev->propId->actorProp.x, ev->propId->actorProp.y,
+                                    ev->propId->actorProp.z);
+                    randoItemId = RI_MUSIC_NOTE;
                     break;
                 default:
                     break;
