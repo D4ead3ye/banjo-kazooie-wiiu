@@ -14,6 +14,9 @@ extern "C" {
 int __baMarker_8028BC60(void);
 void __baMarker_resolveMusicNoteCollision(Prop* arg0);
 enum level_e map_getLevel(enum map_e map);
+
+Actor* marker_getActor(ActorMarker* thisx);
+bool func_802C9C14(Actor* actor);
 }
 
 // clang-format off
@@ -283,6 +286,11 @@ void Rando::ObjectBehavior::Init() {
                     break;
             }
         } else {
+            Actor* markerActor = marker_getActor(ev->propId->actorProp.marker);
+            if (func_802C9C14(markerActor)) {
+                return;
+            }
+
             switch (ev->propId->actorProp.marker->id) {
                 case MARKER_39_MUMBO_TOKEN:
                     LogOutCollision(ACTOR_2D_MUMBO_TOKEN, ev->propId->actorProp.x, ev->propId->actorProp.y,
@@ -308,6 +316,11 @@ void Rando::ObjectBehavior::Init() {
                                     ev->propId->actorProp.y,
                                     ev->propId->actorProp.z);
                     randoItemId = Rando::StaticData::GetRandoItemByActorId(jinjoMarkerMap.at(ev->propId->actorProp.marker->id));
+                    break;
+                case MARKER_5F_MUSIC_NOTE:
+                    LogOutCollision(ACTOR_51_MUSIC_NOTE, ev->propId->actorProp.x, ev->propId->actorProp.y,
+                                    ev->propId->actorProp.z);
+                    randoItemId = RI_MUSIC_NOTE;
                     break;
                 default:
                     break;
