@@ -278,7 +278,7 @@ void Rando::ObjectBehavior::Init() {
         if (!ev->propId->markerFlag) {
             switch (ev->propId->spriteProp.unk0_31) {
                 case RP_MUSIC_NOTE:
-                    LogOutCollision(ev->propId->spriteProp.unk0_31, ev->propId->actorProp.x, ev->propId->actorProp.y,
+                    LogOutCollision(ACTOR_51_MUSIC_NOTE, ev->propId->actorProp.x, ev->propId->actorProp.y,
                                     ev->propId->actorProp.z);
                     randoItemId = RI_MUSIC_NOTE;
                     break;
