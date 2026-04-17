@@ -18,6 +18,7 @@ std::map<RandoOptionId, RandoStaticOption> Options = {
     RO(RO_SHUFFLE_JIGGIES,          RO_GENERIC_OFF),
     RO(RO_SHUFFLE_JINJOS,           RO_GENERIC_OFF),
     RO(RO_SHUFFLE_MUMBO_TOKENS,     RO_GENERIC_OFF),
+    RO(RO_SHUFFLE_MUSIC_NOTES,      RO_GENERIC_OFF),
 };
 // clang-format on
 
