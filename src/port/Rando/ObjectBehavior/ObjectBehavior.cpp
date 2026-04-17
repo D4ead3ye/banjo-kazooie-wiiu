@@ -208,7 +208,11 @@ void Rando::ObjectBehavior::Init() {
 
         *ev->result = CustomObject::SetCustomActorParameters(*ev->result, randoShuffledObject.randoCheckId);
         CustomObject::AddToCustomActorMap(randoShuffledObject.randoCheckId, *ev->result);
-        ApplyBundleActorPhysics(*ev->result, ev->bundle_id, (BundleInfo*)ev->bundleInfo, ev->bundleYaw);
+        if (randoShuffledObject.randoCheckId == RC_MM_JIGGY_HUTS) {
+            ApplyCustomActorPhysics(randoShuffledObject.randoCheckId, *ev->result);
+        } else {
+            ApplyBundleActorPhysics(*ev->result, ev->bundle_id, (BundleInfo*)ev->bundleInfo, ev->bundleYaw);
+        }
 
         event->cancelled = true;
     })
