@@ -14,6 +14,17 @@ void PortEnhancements_Register() {
     // Register engine events
     REGISTER_EVENT(GameFrameUpdate);
     REGISTER_EVENT(VanillaBehavior);
+    REGISTER_EVENT(OnMapLoad);
+
+    // Register behavior events
+    REGISTER_EVENT(OnBeakSwimVelocitySet);
+    REGISTER_EVENT(OnBoggyRaceSetSpeed);
+    REGISTER_EVENT(OnBootLogosCheck);
+    REGISTER_EVENT(OnFurnaceFunDialog);
+    REGISTER_EVENT(OnGruntyJinjonatorComplete);
+    REGISTER_EVENT(OnIntroCutsceneCheck);
+    REGISTER_EVENT(OnMumboTokenUpdate);
+    REGISTER_EVENT(OnWaterPyramidTimer);
 
     // Register game events
     REGISTER_EVENT(OnGameLoad);
@@ -22,11 +33,14 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnSaveFileSave);
 
     // Register rando events
-    REGISTER_EVENT(OnSaveCreate);
+    REGISTER_EVENT(OnSaveLoad);
     REGISTER_EVENT(OnActorSpawn);
+    REGISTER_EVENT(OnPropSpawn);
+    REGISTER_EVENT(OnBundleSpawn);
+    REGISTER_EVENT(OnJiggySpawn);
+    REGISTER_EVENT(OnActorSaveState);
     REGISTER_EVENT(OnActorCollision);
 
-    SaveManager_Init();
     Rando::Init();
 }
 

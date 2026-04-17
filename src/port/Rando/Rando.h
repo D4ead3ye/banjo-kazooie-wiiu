@@ -2,18 +2,18 @@
 #define RANDO_H
 
 // #include "port/Rando/CustomObject/CustomObject.h"
-// #include "include/types.h"
 
+#include "StaticData/StaticData.h"
 #include <libultraship/libultra/gbi.h>
 #include "save.h"
 
 extern "C" {
 extern SaveData gameFile_saveData[4];
+enum map_e map_get();
 }
 
 
-#define IS_RANDO (gameFile_saveData[selectedFileNum].shipSaveData.randoSaveData.isRando)
-// #define IS_RANDO(fileNum) (gSaveBuffer.files[fileNum]->shipSaveData.features.rando)
+#define IS_RANDO (gameFile_saveData[selectedFileNum].shipSaveData.fileType == FILE_TYPE_SAVE_RANDO)
 // #define RANDO_SAVE_CHECKS(fileNum) gSaveBuffer.files[fileNum]->shipSaveData.randoSaveData.randoSaveChecks
 // #define RANDO_SAVE_ENTRANCES(fileNum) gSaveBuffer.files[fileNum]->shipSaveData.randoSaveData.randoSaveEntrances
 // #define RANDO_SAVE_OPTIONS(fileNum) gSaveBuffer.files[fileNum]->shipSaveData.randoSaveData.randoSaveOptions

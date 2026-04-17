@@ -1,39 +1,88 @@
 #include "CustomObject.h"
-// #include "port/Rando/Logic/Logic.h"
+#include "port/Rando/Logic/Logic.h"
 // #include "port/Rando/CheckTracker/CheckTracker.h"
-#include "port/ui/Notification.h"
 #include "port/enhancements/events/hooks/Events.h"
 
 extern "C" {
-typedef struct chjiggy_s {
-    u32 unk0;
-    u32 index;
-} ActorLocal_Jiggy;
+void chjiggy_setJiggyId(Actor* thisx, u32 id);
 
-// Custom Item
+typedef struct {
+    enum mumbotoken_e uid;
+} ActorLocal_MumboToken;
+
+typedef struct {
+    enum honeycomb_e uid;
+    s32 unk4;
+} ActorLocal_EmptyHoneycomb;
+
 s32 dummy_func_80320248(void);
 extern s32 sSpawnableActorSize;
 extern ActorSpawn* sSpawnableActorList;
 
 enum map_e map_get(void);
+enum level_e map_getLevel(enum map_e map);
 }
 
-std::vector<actor_e*> spawnedActorIdList;
+int32_t currentLevel = -1;
+std::map<RandoCheckId, ActorProp> customActorMap;
+std::vector<std::pair<CustomActor, bool>> actorSpawnQueue;
 
-void CheckSpawnList() {
-    int hi = 0;
+bool CustomObject::CheckSpawnQueue(RandoCheckId randoCheckId) {
+    bool foundCustomActor = false;
+    for (auto& [actorData, spawned] : actorSpawnQueue) {
+        if (actorData.randoCheckId == randoCheckId) {
+            foundCustomActor = true;
+            break;
+        }
+    }
+    return false;
 }
 
-Actor* SpawnRandoActor(actor_e actorId, int32_t posX, int32_t posY, int32_t posZ, int32_t rot) {
-    s32 pos[3];
-    pos[0] = posX;
-    pos[1] = posY;
-    pos[2] = posZ;
-    s32 i;
+void ClearSpawnQueue() {
+    if (currentLevel != map_getLevel(map_get())) {
+        currentLevel = map_getLevel(map_get());
+        actorSpawnQueue.clear();
+        customActorMap.clear();
+    }
+}
+
+CustomActor CreateCustomActor(RandoCheckId randoCheckId, int32_t position[3]) {
+    CustomActor customActor;
+    customActor.randoCheckId = Rando::Logic::GetShuffledObject(randoCheckId).randoCheckId;
+    customActor.location[0] = position[0];
+    customActor.location[1] = position[1];
+    customActor.location[2] = position[2];
+
+    return customActor;
+}
+
+Actor* CustomObject::SetCustomActorParameters(Actor* actor, RandoCheckId randoCheckId) {
+    switch (Rando::Logic::GetShuffledObject(randoCheckId).randoItemId) {
+        case RI_EMPTY_HONEYCOMB:
+            ActorLocal_EmptyHoneycomb* honeycombLocal;
+            honeycombLocal = (ActorLocal_EmptyHoneycomb*)&actor->local;
+            honeycombLocal->uid = (honeycomb_e)Rando::Logic::GetShuffledObject(randoCheckId).randoCollectionId;
+            break;
+        case RI_JIGGY:
+            chjiggy_setJiggyId(actor, Rando::Logic::GetShuffledObject(randoCheckId).randoCollectionId);
+            break;
+        case RI_MUMBO_TOKEN:
+            ActorLocal_MumboToken* tokenLocal;
+            tokenLocal = (ActorLocal_MumboToken*)&actor->local;
+            tokenLocal->uid = (mumbotoken_e)Rando::Logic::GetShuffledObject(randoCheckId).randoCollectionId;
+            break;
+        default:
+            break;
+    }
+
+    return actor;
+}
+
+Actor* CustomObject::SpawnCustomActor(actor_e actorId, int32_t position[3]) {
     actorId = (!dummy_func_80320248()) ? (ACTOR_4_BIGBUTT) : (actorId);
-    for (i = 0; i < sSpawnableActorSize; i++) {
+    for (int i = 0; i < sSpawnableActorSize; i++) {
         if (actorId == sSpawnableActorList[i].infoPtr->actorId) {
-            return sSpawnableActorList[i].spawnFunc(pos, rot, ((0, sSpawnableActorList[i])).infoPtr,
+            return sSpawnableActorList[i].spawnFunc(position, 0, ((0, sSpawnableActorList[i])).infoPtr,
                                                     sSpawnableActorList[i].unk8);
         }
     }
@@ -41,18 +90,66 @@ Actor* SpawnRandoActor(actor_e actorId, int32_t posX, int32_t posY, int32_t posZ
     return NULL;
 }
 
-Actor* CustomObject::SpawnRandoObject(actor_e actorId, int32_t posX, int32_t posY, int32_t posZ, int32_t rot) {
-    Actor* newActor = SpawnRandoActor(actorId, posX, posY, posZ, rot);
-    // ActorLocal_Jiggy* actorLocal = (ActorLocal_Jiggy*)&newActor->local;
-    // actorLocal->index = JIGGY_03_MM_MUMBOS_SKULL;
+void CustomObject::AddToCustomActorMap(RandoCheckId randoCheckId, Actor* actor) {
+    ActorProp actorProperty = *actor->marker->propPtr;
+    customActorMap.emplace(randoCheckId, actorProperty);
+}
 
-    if (map_get() == MAP_2_MM_MUMBOS_MOUNTAIN) {
-        spawnedActorIdList.push_back(&actorId);
-    } else {
-        spawnedActorIdList.clear();
+void CustomObject::AddToSpawnQueue(RandoCheckId randoCheckId, int32_t position[3]) {
+    ClearSpawnQueue();
+    if (randoCheckId == RC_UNKNOWN) {
+        return;
     }
 
-    CheckSpawnList();
+    for (auto& [actorData, spawned] : actorSpawnQueue) {
+        if (actorData.randoCheckId == randoCheckId) {
+            return;
+        }
+    }
 
-    return newActor;
+    CustomActor customActor = CreateCustomActor(randoCheckId, position);
+
+    actorSpawnQueue.push_back({ customActor, false });
+}
+
+void CustomObject::InitializeSpawnQueue() {
+    ClearSpawnQueue();
+    if (actorSpawnQueue.empty()) {
+        return;
+    }
+
+    for (auto& [customActor, isSpawned] : actorSpawnQueue) {
+        if (isSpawned) {
+            continue;
+        }
+        int32_t customPosition[3];
+        customPosition[0] = customActor.location[0];
+        customPosition[1] = customActor.location[1];
+        customPosition[2] = customActor.location[2];
+
+        Rando::StaticData::RandoShuffledPool shuffledObject = Rando::Logic::GetShuffledObject(customActor.randoCheckId);
+
+        Actor* newCustomActor = CustomObject::SpawnCustomActor((actor_e)Rando::StaticData::Items[shuffledObject.randoItemId].actorId, customPosition);
+        
+        if (newCustomActor != NULL) {
+            newCustomActor = CustomObject::SetCustomActorParameters(newCustomActor, customActor.randoCheckId);
+            CustomObject::AddToCustomActorMap(customActor.randoCheckId, newCustomActor);
+            isSpawned = true;
+        }
+    }
+}
+
+void CustomObject::ObjectCollected(Prop* prop) {
+    for (auto& [randoCheckId, actorProp] : customActorMap) {
+        if (actorProp.words[0] == prop->actorProp.words[0]) {
+            for (auto& pool : Rando::Logic::shuffledPool) {
+                if (pool.randoCheckId == randoCheckId && !pool.obtained) {
+                    pool.obtained = true;
+                    BK_LOG_INFO("RandoCheckId %s collected!", Rando::StaticData::Checks[randoCheckId].name);
+                    return;
+                }
+            }
+            return;
+        }
+    }
 }

@@ -7,7 +7,7 @@
 #include "prop.h"
 
 extern s32 D_80370990;
-extern s32 port_getViewportWidth(void);
+extern f32 GameEngine_GetAspectRatio(void);
 
 #define DIST_SQ_VEC3F(v1, v2) ((v1[0] - v2[0])*(v1[0] - v2[0]) + (v1[1] - v2[1])*(v1[1] - v2[1]) + (v1[2] - v2[2])*(v1[2] - v2[2]))
 
@@ -149,7 +149,7 @@ void actor_predrawMethod(Actor *this){
 
     // [port] In widescreen, only run the predraw callback if the actor would
     // have been visible in the original 4:3 frustum, preserving game logic.
-    if(this->unk130 && (port_getViewportWidth() <= 320 || D_80370990)){
+    if(this->unk130 && (GameEngine_GetAspectRatio() <= 1.34f || D_80370990)){
         this->unk130(this);
     }
 
@@ -199,7 +199,7 @@ void func_80325760(Actor *this) {
 // [port] In widescreen, actors outside the 4:3 frustum are still drawn but
 // should not be marked as visible for game logic purposes.
 void actor_postdrawMethod(ActorMarker *marker){
-    if (port_getViewportWidth() <= 320 || D_80370990) {
+    if (GameEngine_GetAspectRatio() <= 1.34f || D_80370990) {
         marker->unk14_21 = true;
     }
 }
@@ -1887,6 +1887,7 @@ void func_8032A09C(s32 arg0, ActorListSaveState *arg1) {
                 sp50[1] = (s32) var_s0->position[1];
                 sp50[2] = (s32) var_s0->position[2];
                 pad = var_s0->yaw;
+                CALL_EVENT(OnActorSaveState); // Needed for Rando to avoid double spawning Actors
                 temp_v0_6 = actor_spawnWithYaw_s32(var_s0->modelCacheIndex, &sp50, pad);
                 actor_copy(var_s0, temp_v0_6);
                 func_80329B68(temp_v0_6);

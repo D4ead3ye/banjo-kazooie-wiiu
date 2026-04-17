@@ -5,14 +5,10 @@
 
 #include "gc/gctransition.h"
 #include "bk_time.h"
+#include "port/patches/Patches.h"
 
 extern void func_802F5374(void);
 extern void func_802FA0F8(void);
-extern void port_requestReadback(void);
-extern int port_consumeReadbackRequest(void);
-extern int port_shouldCaptureTransition(void);
-extern void port_readTransitionFbToCpu(Gfx **gfx);
-extern void port_patchTransitionModel(BKModelBin *model_bin);
 extern void timedFuncQueue_update(void);
 extern void func_80335128(s32);
 extern void func_8025A2B0(void);
@@ -30,7 +26,7 @@ enum transition_e {
 
 void func_802E3BD0(s32 frame_buffer_indx);
 void func_802E40A8(s32 map, s32 exit);
-void func_802E40C4( s32 arg0);
+void func_802E40C4(s32 arg0);
 void func_802E40D0(s32 map, s32 exit);
 void func_802E40E8(s32 transition);
 bool func_802E4A08(void);
@@ -64,6 +60,10 @@ struct{
     u8 unk1B;
     u8 unk1C;
 } D_8037E8E0;
+
+u8 GetCurrentMap() {
+    return D_8037E8E0.map;
+}
 
 void func_802E3800(void){
     viewport_setPosition_f3(0.0f, 0.0f, 0.0f);

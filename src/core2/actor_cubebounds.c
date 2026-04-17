@@ -7,6 +7,8 @@
 #include "bk_math.h"
 #include "prop.h"
 
+#include "port/patches/Patches.h"
+
 extern void mapModel_getCubeBounds(s32 min[3], s32 max[3]);
 extern f32 func_803243D0(struct56s *arg0, f32 arg1[3]);
 extern s32 *bitfield_new(s32 arg0);
@@ -441,10 +443,7 @@ void func_80302C94(Gfx **gfx, Mtx **mtx, Vtx **vtx) {
 
         // [port] Extended draw distance: scale cube iteration width by CVar level.
         {
-            int drawDistLevel = CVarGetInteger(CVAR_ENHANCEMENT("Graphics.DrawDistance"), 0);
-            if (getGameMode() == GAME_MODE_7_ATTRACT_DEMO) {
-                drawDistLevel = 0;
-            }
+            int drawDistLevel = port_getDrawDistanceLevel();
             if (drawDistLevel >= 4) {
                 width = sCubeList.width[i];
             } else if (drawDistLevel > 0) {
@@ -1315,9 +1314,9 @@ Actor *__actor_spawnWithYaw_s32(enum actor_e arg0, s32 pos[3], s32 rot) {
                 return sSpawnableActorList[i].spawnFunc(pos, rot, ((0, sSpawnableActorList[i])).infoPtr, sSpawnableActorList[i].unk8);
             }
         }
-    }
 
-  return NULL;
+        return NULL;
+    }
 }
 
 void func_8030578C(void){
@@ -2493,9 +2492,14 @@ static void __code7AF80_func_80308F0C(Cube *cube) {
     s32 indx;
 
     indx = cube - sCubeList.cubes;
-    D_803821E0[indx >> 5] |= 1 << (indx & 0x1F);
+    // [port] Bounds check: romhack maps may exceed the 2912-cube bitfield capacity.
+    if ((u32)(indx >> 5) < 0x5B) {
+        D_803821E0[indx >> 5] |= 1 << (indx & 0x1F);
+    }
 }
 
 bool func_80308F54(s32 cube_index) {
+    // [port] Bounds check: romhack maps may exceed the 2912-cube bitfield capacity.
+    if ((u32)(cube_index >> 5) >= 0x5B) return false;
     return D_803821E0[cube_index >> 5] & (1 << (cube_index & 0x1F));
 }

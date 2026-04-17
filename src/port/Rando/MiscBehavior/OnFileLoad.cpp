@@ -5,35 +5,26 @@
 
 #include "port/save/Types.h"
 
-// #include "port/Rando/Logic/Logic.h"
+#include "port/Rando/Logic/Logic.h"
 // #include "port/Rando/Spoiler/Spoiler.h"
 
-extern "C" {
-bool gameFile_isNotEmpty(s32 gamenum);
-}
-
-void Test() {
-    int hi = 0;
-}
-
 void Rando::MiscBehavior::OnFileLoad() {
-    REGISTER_LISTENER(OnSaveCreate, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        OnSaveCreate* ev = (OnSaveCreate*)event;
-        // selectedFileNum = ev->fileNum;
+    REGISTER_LISTENER(OnGameLoad, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnGameLoad* ev = (OnGameLoad*)event;
+        selectedFileNum = ev->fileNum;
+    });
+
+    REGISTER_LISTENER(OnSaveLoad, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnSaveLoad* ev = (OnSaveLoad*)event;
         SaveData* saveData = (SaveData*)ev->saveData;
 
-        saveData->shipSaveData.fileType = FILE_TYPE_SAVE_RANDO;
+        if (saveData->magic != 0) {
+            return;
+        }
 
-        // if (gameFile_isNotEmpty(selectedFileNum)) {
-        //     return;
-        // }
-        // 
-        // if (!IS_RANDO) {
-        //     if (!CVarGetInteger("gRandoSettings.Enabled", 0)) {
-        //         saveData->shipSaveData.fileType = FILE_TYPE_SAVE_RANDO;
-        //     }
-        // }
-        Test();
-        
+        if (CVarGetInteger("gRandoSettings.Enable", 0)) {
+            saveData->shipSaveData.fileType = FILE_TYPE_SAVE_RANDO;
+            Rando::Logic::GenerateShufflePool();
+        }
     });
 }
