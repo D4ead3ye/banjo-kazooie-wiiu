@@ -42,6 +42,7 @@ void ClearSpawnQueue() {
     if (currentLevel != map_getLevel(map_get())) {
         currentLevel = map_getLevel(map_get());
         actorSpawnQueue.clear();
+        customActorMap.clear();
     }
 }
 
@@ -139,8 +140,8 @@ void CustomObject::InitializeSpawnQueue() {
 }
 
 void CustomObject::ObjectCollected(Prop* prop) {
-    for (auto& [randoCheckId, customActor] : customActorMap) {
-        if (customActor.words[0] == prop->actorProp.words[0]) {
+    for (auto& [randoCheckId, actorProp] : customActorMap) {
+        if (actorProp.words[0] == prop->actorProp.words[0]) {
             for (auto& pool : Rando::Logic::shuffledPool) {
                 if (pool.randoCheckId == randoCheckId && !pool.obtained) {
                     pool.obtained = true;

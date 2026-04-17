@@ -128,11 +128,11 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_MM_NOTE_HUT_ROOF_4,                           RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           5025, 2439, -814),
     RC(RC_MM_NOTE_HUT_ROOF_5,                           RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           3847, 2439, -715),
     RC(RC_MM_NOTE_HUT_ROOF_6,                           RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           3255, 2438, -1091),
-    RC(RC_MM_NOTE_HUT_BUNDLE_1,                         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           NULL, NULL, NULL),
-    RC(RC_MM_NOTE_HUT_BUNDLE_2,                         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           NULL, NULL, NULL),
-    RC(RC_MM_NOTE_HUT_BUNDLE_3,                         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           NULL, NULL, NULL),
-    RC(RC_MM_NOTE_HUT_BUNDLE_4,                         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           NULL, NULL, NULL),
-    RC(RC_MM_NOTE_HUT_BUNDLE_5,                         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           NULL, NULL, NULL),
+    RC(RC_MM_NOTE_HUT_BUNDLE_1,                         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           5321, 2280, -1715),
+    RC(RC_MM_NOTE_HUT_BUNDLE_2,                         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           5321, 2280, -1715),
+    RC(RC_MM_NOTE_HUT_BUNDLE_3,                         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           5321, 2280, -1715),
+    RC(RC_MM_NOTE_HUT_BUNDLE_4,                         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           5321, 2280, -1715),
+    RC(RC_MM_NOTE_HUT_BUNDLE_5,                         RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           5321, 2280, -1715),
     RC(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_1,                RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           -288, 0, -154),
     RC(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_2,                RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           -127, 0, -308),
     RC(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_3,                RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           119, 0, -298),
@@ -146,15 +146,9 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
 };
 // clang-format on
 
-RandoCheckId GetCheckByPosition(std::array<int32_t, 3> position) {
+RandoCheckId GetCheckByPosition(int32_t posX, int32_t posY, int32_t posZ) {
     for (auto& [randoCheckId, randoStaticCheck] : Checks) {
-        std::array<int32_t, 3> checkPosition = {
-            randoStaticCheck.posX,
-            randoStaticCheck.posY,
-            randoStaticCheck.posZ,
-        };
-
-        if (checkPosition == position) {
+        if (randoStaticCheck.posX == posX && randoStaticCheck.posY == posY && randoStaticCheck.posZ == posZ) {
             return randoCheckId;
         }
     }

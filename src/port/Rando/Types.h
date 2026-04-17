@@ -171,9 +171,10 @@ typedef enum {
     RI_MAX,
 } RandoItemId;
 
-// typedef enum {
-//     RR_MAX,
-// } RandoRegionId;
+typedef enum {
+    RR_MUMBOS_MOUNTAIN,
+    RR_MAX,
+} RandoRegionId;
 
 typedef enum {
     RO_LOGIC,
