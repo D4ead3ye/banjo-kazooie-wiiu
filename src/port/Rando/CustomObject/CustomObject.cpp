@@ -19,7 +19,7 @@ s32 dummy_func_80320248(void);
 extern s32 sSpawnableActorSize;
 extern ActorSpawn* sSpawnableActorList;
 
-enum map_e map_get(void);
+enum map_e gsworld_getMap(void);
 enum level_e map_getLevel(enum map_e map);
 }
 
@@ -39,8 +39,8 @@ bool CustomObject::CheckSpawnQueue(RandoCheckId randoCheckId) {
 }
 
 void ClearSpawnQueue() {
-    if (currentLevel != map_getLevel(map_get())) {
-        currentLevel = map_getLevel(map_get());
+    if (currentLevel != map_getLevel(gsworld_getMap())) {
+        currentLevel = map_getLevel(gsworld_getMap());
         actorSpawnQueue.clear();
         customActorMap.clear();
     }
