@@ -540,24 +540,24 @@ void __baMarker_resolveCollision(Prop *other_prop){
 
 
             case MARKER_52_JIGGY: //L8028C66C
-                {
-                    if(__baMarker_8028BC20(marker))
-                        return;
-                    
-                    player_getPosition(spA0);
-                    jiggy_id = chjiggy_getJiggyId(actor);
-                    if( jiggy_id != JIGGY_2F_FP_XMAS_TREE
-                        || (player_isStable() && !(3600.0f < ml_distanceSquared_vec3f(actor->position, spA0)))
-                    ){
-                        jiggyscore_setCollected(jiggy_id, true);
-                        BK_LOG_INFO("Banjo collected jiggy index %d in %s!", jiggy_id, port_mapName(gsworld_getMap()));
-                        item_adjustByDiffWithoutHud(ITEM_26_JIGGY_TOTAL, 1);
-                        if(jiggy_id == JIGGY_20_BGS_ELEVATED_WALKWAY || jiggy_id == JIGGY_25_BGS_MAZE){
-                            func_802D6924();
-                        }
-                        if(jiggyscore_total() < 3){
-                            __baMarker_8028B848();
-                        }
+            {
+                if (__baMarker_8028BC20(marker))
+                    return;
+
+                player_getPosition(spA0);
+                jiggy_id = chjiggy_getJiggyId(actor);
+                if (jiggy_id != JIGGY_2F_FP_XMAS_TREE
+                    || (player_isStable() && !(3600.0f < ml_distanceSquared_vec3f(actor->position, spA0)))
+                    ) {
+                    jiggyscore_setCollected(jiggy_id, true);
+                    BK_LOG_INFO("Banjo collected jiggy index %d in %s!", jiggy_id, port_mapName(gsworld_getMap()));
+                    item_adjustByDiffWithoutHud(ITEM_26_JIGGY_TOTAL, 1);
+                    if (jiggy_id == JIGGY_20_BGS_ELEVATED_WALKWAY || jiggy_id == JIGGY_25_BGS_MAZE) {
+                        func_802D6924();
+                    }
+                    if (jiggyscore_total() < 3) {
+                        __baMarker_8028B848();
+                    }
 
                     if (func_8025AD7C(COMUSIC_30_5TH_JINJO_COLLECTED)) {
                         __baMarker_8028B8DC();
@@ -570,25 +570,25 @@ void __baMarker_resolveCollision(Prop *other_prop){
             break;
 
             case MARKER_53_EMPTY_HONEYCOMB: //L8028C774
+            {
+
+                if (__baMarker_8028BC20(marker))
+                    return;
+                sp98 = func_802CA1C4(marker_getActor(marker));
+                if (sp98 != HONEYCOMB_12_MMM_FLOORBOARD || player_getTransformation() == TRANSFORM_3_PUMPKIN)
                 {
-                    
-                    if(__baMarker_8028BC20(marker))
-                        return;
-                    sp98 = func_802CA1C4(marker_getActor(marker));
-                    if(sp98 != HONEYCOMB_12_MMM_FLOORBOARD || player_getTransformation() == TRANSFORM_3_PUMPKIN)
-                    {
-                        honeycombscore_set(sp98, 1);
-                        coMusicPlayer_playMusic(COMUSIC_17_EMPTY_HONEYCOMB_COLLECTED, 28000);
-                        timedFunc_set_1(2.0f, (GenFunction_1)progressDialog_showDialogMaskZero, FILEPROG_B_EMPTY_HONEYCOMB_TEXT);
-                        item_inc(ITEM_13_EMPTY_HONEYCOMB);
-                        if(!(item_getCount(ITEM_13_EMPTY_HONEYCOMB) < 6)){
-                            gcpausemenu_80314AC8(0);
-                        }
-                        fxSparkle_emptyHoneycomb(&other_prop->actorProp.x);
-                        marker_despawn(marker);
+                    honeycombscore_set(sp98, 1);
+                    coMusicPlayer_playMusic(COMUSIC_17_EMPTY_HONEYCOMB_COLLECTED, 28000);
+                    timedFunc_set_1(2.0f, (GenFunction_1)progressDialog_showDialogMaskZero, FILEPROG_B_EMPTY_HONEYCOMB_TEXT);
+                    item_inc(ITEM_13_EMPTY_HONEYCOMB);
+                    if (!(item_getCount(ITEM_13_EMPTY_HONEYCOMB) < 6)) {
+                        gcpausemenu_80314AC8(0);
                     }
+                    fxSparkle_emptyHoneycomb(&other_prop->actorProp.x);
+                    marker_despawn(marker);
                 }
-                break;
+            }
+            break;
 
             case 0x54: //L8028C820
                 coMusicPlayer_playMusic(COMUSIC_19_LOW_PITCH_FLUTES, 28000);
@@ -600,8 +600,8 @@ void __baMarker_resolveCollision(Prop *other_prop){
             case MARKER_55_HONEYCOMB: //L8028C86C
                 if (__baMarker_8028BC20(marker))
                     return;
-                
-                if( gsworld_getMap() == MAP_8E_GL_FURNACE_FUN
+
+                if (gsworld_getMap() == MAP_8E_GL_FURNACE_FUN
                     && volatileFlag_get(VOLATILE_FLAG_0_IN_FURNACE_FUN_QUIZ)
                     && !fileProgressFlag_get(FILEPROG_A6_FURNACE_FUN_COMPLETE)
                     ) {
@@ -617,33 +617,33 @@ void __baMarker_resolveCollision(Prop *other_prop){
                 break;
 
             case MARKER_169_SNS_EGG: //L8028C908
-                { //ONLY THIS CASE DOESN'T MATCH
-                    switch (gsworld_getMap())
-                    {
-                    case MAP_1D_MMM_CELLAR: //L8028C95C
-                        sns_set_item_and_update_payload(SNS_ITEM_EGG_CYAN, 0, 1);
-                        break;
-                    case MAP_61_CCW_WINTER_NABNUTS_HOUSE: //L8028C974
-                        sns_set_item_and_update_payload(SNS_ITEM_EGG_YELLOW, 0, 1);
-                        break;
-                    case MAP_2C_MMM_BATHROOM: //L8028C988
-                        sns_set_item_and_update_payload(SNS_ITEM_EGG_GREEN, 0, 1);
-                        break;
-                    case MAP_3F_RBB_CAPTAINS_CABIN: //L8028C99C
-                        sns_set_item_and_update_payload(SNS_ITEM_EGG_RED, 0, 1);
-                        break;
-                    case MAP_92_GV_SNS_CHAMBER: //L8028C9B0
-                        sns_set_item_and_update_payload(SNS_ITEM_EGG_BLUE, 0, 1);
-                        break;
-                    case MAP_8F_TTC_SHARKFOOD_ISLAND: //L8028C9C4
-                        sns_set_item_and_update_payload(SNS_ITEM_EGG_PINK, 0, 1);
-                        break;
-                    }
-                    comusic_playTrack(COMUSIC_88_BIG_SNS_FANFARE);
-                    FUNC_8030E624(SFX_114_BRICKWALL_BREAKING, 0.8f, 15000);
-                    tmp_v0_2 = 3*(actor->actorTypeSpecificField - 1);
-                    
-                    tmp_f0 = 0.9f;\
+            { //ONLY THIS CASE DOESN'T MATCH
+                switch (gsworld_getMap())
+                {
+                case MAP_1D_MMM_CELLAR: //L8028C95C
+                    sns_set_item_and_update_payload(SNS_ITEM_EGG_CYAN, 0, 1);
+                    break;
+                case MAP_61_CCW_WINTER_NABNUTS_HOUSE: //L8028C974
+                    sns_set_item_and_update_payload(SNS_ITEM_EGG_YELLOW, 0, 1);
+                    break;
+                case MAP_2C_MMM_BATHROOM: //L8028C988
+                    sns_set_item_and_update_payload(SNS_ITEM_EGG_GREEN, 0, 1);
+                    break;
+                case MAP_3F_RBB_CAPTAINS_CABIN: //L8028C99C
+                    sns_set_item_and_update_payload(SNS_ITEM_EGG_RED, 0, 1);
+                    break;
+                case MAP_92_GV_SNS_CHAMBER: //L8028C9B0
+                    sns_set_item_and_update_payload(SNS_ITEM_EGG_BLUE, 0, 1);
+                    break;
+                case MAP_8F_TTC_SHARKFOOD_ISLAND: //L8028C9C4
+                    sns_set_item_and_update_payload(SNS_ITEM_EGG_PINK, 0, 1);
+                    break;
+                }
+                comusic_playTrack(COMUSIC_88_BIG_SNS_FANFARE);
+                FUNC_8030E624(SFX_114_BRICKWALL_BREAKING, 0.8f, 15000);
+                tmp_v0_2 = 3 * (actor->actorTypeSpecificField - 1);
+
+                tmp_f0 = 0.9f; \
                     sp64 = D_80363660;
                 //+C
                 sp78 = 0xA;
@@ -713,7 +713,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
             case MARKER_61_EXTRA_LIFE: //L8028CD50
                 if (__baMarker_8028BC20(marker))
                     return;
-                if( gsworld_getMap() == MAP_8E_GL_FURNACE_FUN
+                if (gsworld_getMap() == MAP_8E_GL_FURNACE_FUN
                     && volatileFlag_get(VOLATILE_FLAG_0_IN_FURNACE_FUN_QUIZ)
                     && !fileProgressFlag_get(FILEPROG_A6_FURNACE_FUN_COMPLETE)
                     ) {
@@ -733,8 +733,9 @@ void __baMarker_resolveCollision(Prop *other_prop){
             case 0x242: //L8028CDEC
                 if (ability_isUnlocked(ABILITY_D_SHOCK_JUMP)) {
                     baflag_set(BA_FLAG_2_ON_SPRING_PAD);
-                }else{
-                    if(!volatileFlag_getAndSet(VOLATILE_FLAG_C_HAS_SEEN_SPRING_PAD, 1)){
+                }
+                else {
+                    if (!volatileFlag_getAndSet(VOLATILE_FLAG_C_HAS_SEEN_SPRING_PAD, 1)) {
                         gcdialog_showDialog(ASSET_A24_DIALOG_JUMP_PAD_DISCOVERED, 4, 0, 0, 0, 0);
                     }
                 }
@@ -746,7 +747,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
                 if (ability_isUnlocked(ABILITY_9_FLIGHT)) {
                     baflag_set(BA_FLAG_1_ON_FLIGHT_PAD);
                 }
-                else if(! volatileFlag_getAndSet(VOLATILE_FLAG_D_HAS_SEEN_FLIGHT_PAD, 1)){
+                else if (!volatileFlag_getAndSet(VOLATILE_FLAG_D_HAS_SEEN_FLIGHT_PAD, 1)) {
                     gcdialog_showDialog(ASSET_A25_DIALOG_FLY_DISC_DISCOVERED, 4, 0, 0, 0, 0);
                 }
                 break;
@@ -812,66 +813,67 @@ void __baMarker_resolveCollision(Prop *other_prop){
                 if (plyr_hitbox_type == HITBOX_1_BEAK_BUSTER)
                     obj_collision_type = MARKER_COLLISION_FUNC_1;
                 break;
-        }//L8028D034
-        if(baiFrame_getState() == 3){
-            plyr_collision_type = MARKER_COLLISION_FUNC_0;
+            }//L8028D034
+            if (baiFrame_getState() == 3) {
+                plyr_collision_type = MARKER_COLLISION_FUNC_0;
+            }
+            if (obj_collision_type) {
+                baflag_set(BA_FLAG_8);
+            }
+            marker_callCollisionFunc(playerMarker, marker, plyr_collision_type);
+            marker_callCollisionFunc(marker, playerMarker, obj_collision_type);
+            if (marker->unk3E_0) {
+                func_8032B258(actor, (enum collision_e)obj_collision_type);
+            }
         }
-        if(obj_collision_type){
-            baflag_set(BA_FLAG_8);
-        }
-        marker_callCollisionFunc(playerMarker, marker, plyr_collision_type);
-        marker_callCollisionFunc(marker, playerMarker, obj_collision_type);
-        if(marker->unk3E_0){
-            func_8032B258(actor, (enum collision_e)obj_collision_type);
-        }
-    }
-    else if(other_prop->unk8_1)//L8028D0B0 //ModelProp
-    {
-        tmp2 = other_prop->modelProp.modelId + 0x2D1;
-        switch (tmp2)
+        else if (other_prop->unk8_1)//L8028D0B0 //ModelProp
         {
-        case 0x2E8:
-            baflag_set(BA_FLAG_1_ON_FLIGHT_PAD); //on flight pad
-            break;
-        case 0x2DD: //on shock spring pad
-            baflag_set(BA_FLAG_2_ON_SPRING_PAD);
-            break;
-        default:
-            func_80332790(tmp2);
-            break;
+            tmp2 = other_prop->modelProp.modelId + 0x2D1;
+            switch (tmp2)
+            {
+            case 0x2E8:
+                baflag_set(BA_FLAG_1_ON_FLIGHT_PAD); //on flight pad
+                break;
+            case 0x2DD: //on shock spring pad
+                baflag_set(BA_FLAG_2_ON_SPRING_PAD);
+                break;
+            default:
+                func_80332790(tmp2);
+                break;
+            }
         }
-    }
-    else{//L8028D10C //SpriteProp
-        tmp3 = other_prop->spriteProp.spriteId + 0x572;
-        switch (tmp3)
-        {
-        case 0x6D6: //L8028D144
-            if(!__baMarker_8028BC60()){
-                other_prop->spriteProp.isNotFeatherEggOrNote = 0;
-                __baMarker_resolveMusicNoteCollision(other_prop);
+        else {//L8028D10C //SpriteProp
+            tmp3 = other_prop->spriteProp.spriteId + 0x572;
+            switch (tmp3)
+            {
+            case 0x6D6: //L8028D144
+                if (!__baMarker_8028BC60()) {
+                    other_prop->spriteProp.isNotFeatherEggOrNote = 0;
+                    __baMarker_resolveMusicNoteCollision(other_prop);
+                }
+                break;
+            case 0x6D7: //L8028D16C
+                if (!__baMarker_8028BC60()) {
+                    other_prop->spriteProp.isNotFeatherEggOrNote = 0;
+                    chCollectible_collectEgg((ActorProp*)other_prop);
+                }
+                break;
+            case 0x580: //L8028D194
+                if (!__baMarker_8028BC60()) {
+                    other_prop->spriteProp.isNotFeatherEggOrNote = 0;
+                    chCollectible_collectRedFeather((ActorProp*)other_prop);
+                }
+                break;
+            case 0x6D1: //L8028D1BC
+                if (!__baMarker_8028BC60()) {
+                    other_prop->spriteProp.isNotFeatherEggOrNote = 0;
+                    chCollectible_collectGoldFeather((ActorProp*)other_prop);
+                }
+                break;
+            default:
+                func_80332790(tmp3);
+                break;
             }
-            break;
-        case 0x6D7: //L8028D16C
-            if(!__baMarker_8028BC60()){
-                other_prop->spriteProp.isNotFeatherEggOrNote = 0;
-                chCollectible_collectEgg((ActorProp *)other_prop);
-            }
-            break;
-        case 0x580: //L8028D194
-            if(!__baMarker_8028BC60()){
-                other_prop->spriteProp.isNotFeatherEggOrNote = 0;
-                chCollectible_collectRedFeather((ActorProp *)other_prop);
-            }
-            break;
-        case 0x6D1: //L8028D1BC
-            if(!__baMarker_8028BC60()){
-                other_prop->spriteProp.isNotFeatherEggOrNote = 0;
-                chCollectible_collectGoldFeather((ActorProp *)other_prop);
-            }
-            break;
-        default:
-            func_80332790(tmp3);
-            break;
         }
     }
 }

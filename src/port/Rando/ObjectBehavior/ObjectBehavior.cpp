@@ -13,6 +13,7 @@
 extern "C" {
 int __baMarker_8028BC60(void);
 void __baMarker_resolveMusicNoteCollision(Prop* arg0);
+enum map_e gsworld_getMap(void);
 enum level_e map_getLevel(enum map_e map);
 
 Actor* marker_getActor(ActorMarker* thisx);
@@ -118,7 +119,7 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_getLevel(map_get()) != LEVEL_1_MUMBOS_MOUNTAIN) {
+        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
             return;
         }
 
@@ -146,7 +147,7 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_getLevel(map_get()) != LEVEL_1_MUMBOS_MOUNTAIN) {
+        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
             return;
         }
                 
@@ -164,7 +165,7 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_getLevel(map_get()) != LEVEL_1_MUMBOS_MOUNTAIN) {
+        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
             return;
         }
 
@@ -224,7 +225,7 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_getLevel(map_get()) != LEVEL_1_MUMBOS_MOUNTAIN) {
+        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
             return;
         }
 
@@ -265,7 +266,7 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_getLevel(map_get()) != LEVEL_1_MUMBOS_MOUNTAIN) {
+        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
             return;
         }
 
@@ -280,13 +281,13 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_getLevel(map_get()) != LEVEL_1_MUMBOS_MOUNTAIN) {
+        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
             return;
         }
         RandoItemId randoItemId = RI_UNKNOWN;
 
         if (!ev->propId->markerFlag) {
-            switch (ev->propId->spriteProp.unk0_31) {
+            switch (ev->propId->spriteProp.spriteId) {
                 case RP_MUSIC_NOTE:
                     LogOutCollision(ACTOR_51_MUSIC_NOTE, ev->propId->actorProp.x, ev->propId->actorProp.y,
                                     ev->propId->actorProp.z);
