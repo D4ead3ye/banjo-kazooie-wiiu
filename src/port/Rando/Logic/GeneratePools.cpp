@@ -68,6 +68,11 @@ void GenerateShufflePool() {
             continue;
         }
 
+        if (randoStaticCheck.randoCheckType == RCTYPE_MUSIC_NOTE &&
+            CVarGetInteger(Rando::StaticData::Options[RO_SHUFFLE_MUSIC_NOTES].cvar, 0) == RO_GENERIC_OFF) {
+            continue;
+        }
+
         checkPool.push_back(randoCheckId);
         itemPool.push_back({ (actor_e)randoStaticCheck.actorId, randoStaticCheck.collectionId });
     }

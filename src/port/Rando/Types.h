@@ -182,6 +182,7 @@ typedef enum {
     RO_SHUFFLE_JIGGIES,
     RO_SHUFFLE_JINJOS,
     RO_SHUFFLE_MUMBO_TOKENS,
+    RO_SHUFFLE_MUSIC_NOTES,
     RO_MAX,
 } RandoOptionId;
 

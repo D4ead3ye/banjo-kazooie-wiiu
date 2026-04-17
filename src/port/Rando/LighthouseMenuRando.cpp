@@ -50,6 +50,9 @@ AddWidget(path, "Shuffle Jinjos", WIDGET_CVAR_CHECKBOX)
 AddWidget(path, "Shuffle Mumbo Tokens", WIDGET_CVAR_CHECKBOX)
     .CVar(Rando::StaticData::Options[RO_SHUFFLE_MUMBO_TOKENS].cvar)
     .Options(CheckboxOptions().Tooltip("Shuffles Mumbo Tokens into the Pool."));
+AddWidget(path, "Shuffle Music Notes", WIDGET_CVAR_CHECKBOX)
+    .CVar(Rando::StaticData::Options[RO_SHUFFLE_MUSIC_NOTES].cvar)
+    .Options(CheckboxOptions().Tooltip("Shuffles Music Notes into the Pool."));
 
 }
 
