@@ -8,6 +8,7 @@ namespace Rando {
 namespace ObjectBehavior {
 
 void Init();
+void InitMolehillBehavior();
 
 } // namespace ObjectBehavior
 

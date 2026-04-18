@@ -31,6 +31,7 @@ std::vector<int32_t> actorSpawnWhitelist = {
     ACTOR_60_JINJO_BLUE,
     ACTOR_61_JINJO_PINK,
     ACTOR_62_JINJO_GREEN,
+    ACTOR_12C_MOLEHILL,
 };
 
 std::map<int32_t, UIWidgets::Colors> randoItemColors = {
@@ -110,8 +111,26 @@ bool ShouldOverrideSpawn(int32_t posX, int32_t posY, int32_t posZ) {
     return false;
 }
 
+bool ShouldOverride(RandoCheckId randoCheckId) {
+    if (randoCheckId == RC_UNKNOWN) {
+        return false;
+    }
+
+    if (CustomObject::CheckSpawnQueue(randoCheckId)) {
+        return false;
+    }
+
+    if (Rando::Logic::IsCheckShuffled(randoCheckId)) {
+        return true;
+    }
+
+    return false;
+}
+
 // Entry point for the module, run once on game boot
 void Rando::ObjectBehavior::Init() {
+    InitMolehillBehavior();
+
     REGISTER_LISTENER(OnActorSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorSpawn* ev = (OnActorSpawn*)event;
 
@@ -123,7 +142,9 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        CustomObject::InitializeSpawnQueue();
+        if (ev->actorId == ACTOR_12C_MOLEHILL) {
+            LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
+        }
 
         if (nextActorSaveState) {
             nextActorSaveState = false;
@@ -134,10 +155,36 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        if (ShouldOverrideSpawn(ev->posX, ev->posY, ev->posZ)) {
-            event->cancelled = true;
-            ev->result = NULL;
+        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
+        
+        if (!ShouldOverride(randoCheckId)) {
+            return;
         }
+
+        int32_t position[3];
+        position[0] = ev->posX;
+        position[1] = ev->posY;
+        position[2] = ev->posZ;
+
+        CustomObject::AddToSpawnQueue(randoCheckId, position);
+        CustomObject::InitializeSpawnQueue();
+
+        switch (ev->actorId) {
+            case ACTOR_12C_MOLEHILL:
+                event->cancelled = true;
+                ev->result = CustomObject::GetCustomActor(randoCheckId);
+                break;
+            default:
+                event->cancelled = true;
+                ev->result = NULL;
+                break;
+        }
+
+        //if (ShouldOverrideSpawn(ev->posX, ev->posY, ev->posZ)) {
+        //    event->cancelled = true;
+        //    // TODO RETURN MOLEHILLACTOR FOR SPAWNCHILD
+        //    ev->result = NULL;
+        //}
     })
 
     REGISTER_LISTENER(OnPropSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {

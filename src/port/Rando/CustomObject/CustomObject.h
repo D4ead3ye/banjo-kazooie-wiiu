@@ -39,6 +39,7 @@ public:
     static bool CheckSpawnQueue(RandoCheckId randoCheckId);
     static Actor* SetCustomActorParameters(Actor* actor, RandoCheckId randoCheckId);
     static Actor* SpawnCustomActor(actor_e actorId, int32_t position[3]);
+    static Actor* GetCustomActor(RandoCheckId randoCheckId);
     static void AddToCustomActorMap(RandoCheckId randoCheckId, Actor* actor);
     static void AddToSpawnQueue(RandoCheckId randoCheckId, int32_t position[3]);
     static void InitializeSpawnQueue();

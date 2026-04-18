@@ -47,6 +47,9 @@ AddWidget(path, "Shuffle Jiggies", WIDGET_CVAR_CHECKBOX)
 AddWidget(path, "Shuffle Jinjos", WIDGET_CVAR_CHECKBOX)
     .CVar(Rando::StaticData::Options[RO_SHUFFLE_JINJOS].cvar)
     .Options(CheckboxOptions().Tooltip("Shuffles Jinjos into the Pool."));
+AddWidget(path, "Shuffle Molehills", WIDGET_CVAR_CHECKBOX)
+    .CVar(Rando::StaticData::Options[RO_SHUFFLE_MOLEHILLS].cvar)
+    .Options(CheckboxOptions().Tooltip("Shuffles which abilities each Molehill unlocks."));
 AddWidget(path, "Shuffle Mumbo Tokens", WIDGET_CVAR_CHECKBOX)
     .CVar(Rando::StaticData::Options[RO_SHUFFLE_MUMBO_TOKENS].cvar)
     .Options(CheckboxOptions().Tooltip("Shuffles Mumbo Tokens into the Pool."));
