@@ -217,7 +217,7 @@ void chmole_additionalAbilityLearnActions(ActorMarker *marker, enum asset_e arg1
 
 // chmole_learnAbility
 int chmole_learnAbility(Actor *this){
-    s32 sp2C = 0;
+    s32 sp2C;
     s32 sp28 = 0xe;
     if (!EventSystem_Should(VB_OVERRIDE_MOLEHILL_ABILITY, false, this, &sp2C, &sp28)) {
         // Known Ability: Refresher Dialog
