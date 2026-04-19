@@ -87,31 +87,7 @@ void SendCollisionNotification(RandoItemId randoItemId) {
                          .messageColor = WIDGET_TEXT_COLOR(randoItemColors.at(randoItemId)) });
 };
 
-bool ShouldOverrideSpawn(int32_t posX, int32_t posY, int32_t posZ) {
-    RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(posX, posY, posZ);
-    if (randoCheckId == RC_UNKNOWN) {
-        return false;
-    }
-
-    if (CustomObject::CheckSpawnQueue(randoCheckId)) {
-        return false;
-    }
-
-    if (Rando::Logic::IsCheckShuffled(randoCheckId)) {
-        int32_t position[3];
-        position[0] = posX;
-        position[1] = posY;
-        position[2] = posZ;
-
-        CustomObject::AddToSpawnQueue(randoCheckId, position);
-
-        return true;
-    }
-
-    return false;
-}
-
-bool ShouldOverride(RandoCheckId randoCheckId) {
+bool ShouldOverrideSpawn(RandoCheckId randoCheckId) {
     if (randoCheckId == RC_UNKNOWN) {
         return false;
     }
@@ -157,7 +133,7 @@ void Rando::ObjectBehavior::Init() {
 
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
         
-        if (!ShouldOverride(randoCheckId)) {
+        if (!ShouldOverrideSpawn(randoCheckId)) {
             return;
         }
 
@@ -191,10 +167,20 @@ void Rando::ObjectBehavior::Init() {
         if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
             return;
         }
-                
-        if (ShouldOverrideSpawn(ev->posX, ev->posY, ev->posZ)) {
-            event->cancelled = true;
+
+        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
+
+        if (!ShouldOverrideSpawn(randoCheckId)) {
+            return;
         }
+
+        int32_t position[3];
+        position[0] = ev->posX;
+        position[1] = ev->posY;
+        position[2] = ev->posZ;
+
+        CustomObject::AddToSpawnQueue(randoCheckId, position);
+        event->cancelled = true;
     })
 
     REGISTER_LISTENER(OnBundleSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -326,7 +312,6 @@ void Rando::ObjectBehavior::Init() {
         RandoItemId randoItemId = RI_UNKNOWN;
 
         if (!ev->propId->markerFlag) {
-            BK_LOG_INFO("!MarkerFlag");
             switch (ev->propId->spriteProp.spriteId) {
                 case RP_MUSIC_NOTE:
                     LogOutCollision(ACTOR_51_MUSIC_NOTE, ev->propId->actorProp.x, ev->propId->actorProp.y,
@@ -337,7 +322,6 @@ void Rando::ObjectBehavior::Init() {
                     break;
             }
         } else {
-            BK_LOG_INFO("IS MarkerFlag");
             Actor* markerActor = marker_getActor(ev->propId->actorProp.marker);
 
             if (markerActor->is_bundle && func_802C9C14(markerActor)) {
@@ -380,10 +364,19 @@ void Rando::ObjectBehavior::Init() {
             }
         }
 
-        BK_LOG_INFO("RandoItem: %i", randoItemId);
         if (randoItemId != RI_UNKNOWN) {
             CustomObject::ObjectCollected(ev->propId);
             SendCollisionNotification(randoItemId);
         }
+    })
+
+    REGISTER_LISTENER(OnWarpDispatch, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnWarpDispatch* ev = (OnWarpDispatch*)event;
+
+        // if (!IS_RANDO) {
+        //     return;
+        // }
+
+        CustomObject::InitializeSpawnQueue();
     })
 }
