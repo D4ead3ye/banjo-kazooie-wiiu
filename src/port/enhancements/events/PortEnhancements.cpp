@@ -38,7 +38,6 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnActorSpawn);
     REGISTER_EVENT(OnPropSpawn);
     REGISTER_EVENT(OnBundleSpawn);
-    REGISTER_EVENT(OnJiggySpawn);
     REGISTER_EVENT(OnActorSaveState);
     REGISTER_EVENT(OnActorCollision);
 

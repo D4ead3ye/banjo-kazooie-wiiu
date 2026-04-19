@@ -40,6 +40,7 @@ typedef enum VBehaviorID {
     VB_PLAY_JIGGY_DANCE,
     VB_VOID_OUT_GAME_OVER,
     VB_OVERRIDE_MOLEHILL_ABILITY,
+    VB_OVERRIDE_JIGGY_SPAWN,
 } VBehaviorID;
 
 #ifndef __cplusplus

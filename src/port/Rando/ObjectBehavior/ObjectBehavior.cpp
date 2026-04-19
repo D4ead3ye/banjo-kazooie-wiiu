@@ -105,6 +105,7 @@ bool ShouldOverrideSpawn(RandoCheckId randoCheckId) {
 
 // Entry point for the module, run once on game boot
 void Rando::ObjectBehavior::Init() {
+    InitJiggyBehavior();
     InitMolehillBehavior();
 
     REGISTER_LISTENER(OnActorSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -240,47 +241,6 @@ void Rando::ObjectBehavior::Init() {
             ApplyBundleActorPhysics(*ev->result, ev->bundle_id, (BundleInfo*)ev->bundleInfo, ev->bundleYaw);
         }
 
-        event->cancelled = true;
-    })
-
-    REGISTER_LISTENER(OnJiggySpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        OnJiggySpawn* ev = (OnJiggySpawn*)event;
-
-        // if (!IS_RANDO) {
-        //     return;
-        // }
-
-        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
-            return;
-        }
-
-        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByJiggyId(ev->jiggyId);
-
-        if (randoCheckId == RC_UNKNOWN) {
-            return;
-        }
-
-        Rando::StaticData::RandoShuffledPool randoShuffledObject;
-        randoShuffledObject.randoCheckId = RC_UNKNOWN;
-
-        randoShuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
-        if (randoShuffledObject.randoCheckId == RC_UNKNOWN) {
-            return;
-        }
-
-        int32_t position[3];
-        position[0] = (int32_t)ev->posX;
-        position[1] = (int32_t)ev->posY;
-        position[2] = (int32_t)ev->posZ;
-
-        Actor* newCustomActor = CustomObject::SpawnCustomActor(
-            (actor_e)Rando::StaticData::Items[randoShuffledObject.randoItemId].actorId, position);
-        newCustomActor = CustomObject::SetCustomActorParameters(newCustomActor, randoCheckId);
-        CustomObject::AddToCustomActorMap(randoCheckId, newCustomActor);
-
-        ApplyCustomActorPhysics(randoCheckId, newCustomActor);
-
-        CustomObject::InitializeSpawnQueue();
         event->cancelled = true;
     })
 

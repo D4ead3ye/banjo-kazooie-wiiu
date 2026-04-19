@@ -37,13 +37,6 @@ DEFINE_EVENT(OnBundleSpawn,
 	Actor** result; 
 )
 
-DEFINE_EVENT(OnJiggySpawn,
-	int32_t jiggyId;
-	f32 posX;
-	f32 posY;
-	f32 posZ;
-)
-
 DEFINE_EVENT(OnActorSaveState)
 
 DEFINE_EVENT(OnActorCollision,
