@@ -107,6 +107,7 @@ bool ShouldOverrideSpawn(RandoCheckId randoCheckId) {
 void Rando::ObjectBehavior::Init() {
     InitJiggyBehavior();
     InitMolehillBehavior();
+    InitPropBehavior();
 
     REGISTER_LISTENER(OnActorSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorSpawn* ev = (OnActorSpawn*)event;
@@ -156,32 +157,6 @@ void Rando::ObjectBehavior::Init() {
                 ev->result = NULL;
                 break;
         }
-    })
-
-    REGISTER_LISTENER(OnPropSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        OnPropSpawn* ev = (OnPropSpawn*)event;
-
-        // if (!IS_RANDO) {
-        //     return;
-        // }
-
-        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
-            return;
-        }
-
-        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
-
-        if (!ShouldOverrideSpawn(randoCheckId)) {
-            return;
-        }
-
-        int32_t position[3];
-        position[0] = ev->posX;
-        position[1] = ev->posY;
-        position[2] = ev->posZ;
-
-        CustomObject::AddToSpawnQueue(randoCheckId, position);
-        event->cancelled = true;
     })
 
     REGISTER_LISTENER(OnBundleSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
