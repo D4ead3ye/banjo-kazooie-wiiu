@@ -87,31 +87,7 @@ void SendCollisionNotification(RandoItemId randoItemId) {
                          .messageColor = WIDGET_TEXT_COLOR(randoItemColors.at(randoItemId)) });
 };
 
-bool ShouldOverrideSpawn(int32_t posX, int32_t posY, int32_t posZ) {
-    RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(posX, posY, posZ);
-    if (randoCheckId == RC_UNKNOWN) {
-        return false;
-    }
-
-    if (CustomObject::CheckSpawnQueue(randoCheckId)) {
-        return false;
-    }
-
-    if (Rando::Logic::IsCheckShuffled(randoCheckId)) {
-        int32_t position[3];
-        position[0] = posX;
-        position[1] = posY;
-        position[2] = posZ;
-
-        CustomObject::AddToSpawnQueue(randoCheckId, position);
-
-        return true;
-    }
-
-    return false;
-}
-
-bool ShouldOverride(RandoCheckId randoCheckId) {
+bool ShouldOverrideSpawn(RandoCheckId randoCheckId) {
     if (randoCheckId == RC_UNKNOWN) {
         return false;
     }
@@ -129,7 +105,10 @@ bool ShouldOverride(RandoCheckId randoCheckId) {
 
 // Entry point for the module, run once on game boot
 void Rando::ObjectBehavior::Init() {
+    InitBundleBehavior();
+    InitJiggyBehavior();
     InitMolehillBehavior();
+    InitPropBehavior();
 
     REGISTER_LISTENER(OnActorSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorSpawn* ev = (OnActorSpawn*)event;
@@ -157,7 +136,7 @@ void Rando::ObjectBehavior::Init() {
 
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
         
-        if (!ShouldOverride(randoCheckId)) {
+        if (!ShouldOverrideSpawn(randoCheckId)) {
             return;
         }
 
@@ -179,123 +158,6 @@ void Rando::ObjectBehavior::Init() {
                 ev->result = NULL;
                 break;
         }
-    })
-
-    REGISTER_LISTENER(OnPropSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        OnPropSpawn* ev = (OnPropSpawn*)event;
-
-        // if (!IS_RANDO) {
-        //     return;
-        // }
-
-        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
-            return;
-        }
-                
-        if (ShouldOverrideSpawn(ev->posX, ev->posY, ev->posZ)) {
-            event->cancelled = true;
-        }
-    })
-
-    REGISTER_LISTENER(OnBundleSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        OnBundleSpawn* ev = (OnBundleSpawn*)event;
-
-        BundleInfo* bundle_info = (BundleInfo*)ev->bundleInfo;
-
-        // if (!IS_RANDO) {
-        //     return;
-        // }
-
-        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
-            return;
-        }
-
-        int32_t position[3];
-        position[0] = (int32_t)ev->posX;
-        position[1] = (int32_t)ev->posY;
-        position[2] = (int32_t)ev->posZ;
-
-        Rando::StaticData::RandoShuffledPool randoShuffledObject;
-        randoShuffledObject.randoCheckId = RC_UNKNOWN;
-
-        switch (ev->bundle_id) {
-            case BUNDLE_3_MM_HUT_JINJO_GREEN:
-                randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JINJO_GREEN);
-                break;
-            case BUNDLE_4_MM_HUT_JIGGY:
-                if (position[1] < 2000) {
-                    randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_ORANGE_PADS);
-                } else {
-                    randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_HUTS);
-                }
-                break;
-            case BUNDLE_0_MM_HUT_MUSIC_NOTE:
-                randoShuffledObject = Rando::Logic::GetShuffledObject((RandoCheckId)((int32_t)RC_MM_NOTE_HUT_BUNDLE_1 + ev->curCount));
-                break;
-            default:
-                return;
-        }
-
-        if (randoShuffledObject.randoCheckId == RC_UNKNOWN) {
-            return;
-        }
-
-        *ev->result = CustomObject::SpawnCustomActor(
-            (actor_e)Rando::StaticData::Items[randoShuffledObject.randoItemId].actorId, position);
-        if (*ev->result == NULL) {
-            return;
-        }
-
-        *ev->result = CustomObject::SetCustomActorParameters(*ev->result, randoShuffledObject.randoCheckId);
-        CustomObject::AddToCustomActorMap(randoShuffledObject.randoCheckId, *ev->result);
-        if (randoShuffledObject.randoCheckId == RC_MM_JIGGY_HUTS) {
-            ApplyCustomActorPhysics(randoShuffledObject.randoCheckId, *ev->result);
-        } else {
-            ApplyBundleActorPhysics(*ev->result, ev->bundle_id, (BundleInfo*)ev->bundleInfo, ev->bundleYaw);
-        }
-
-        event->cancelled = true;
-    })
-
-    REGISTER_LISTENER(OnJiggySpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        OnJiggySpawn* ev = (OnJiggySpawn*)event;
-
-        // if (!IS_RANDO) {
-        //     return;
-        // }
-
-        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
-            return;
-        }
-
-        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByJiggyId(ev->jiggyId);
-
-        if (randoCheckId == RC_UNKNOWN) {
-            return;
-        }
-
-        Rando::StaticData::RandoShuffledPool randoShuffledObject;
-        randoShuffledObject.randoCheckId = RC_UNKNOWN;
-
-        randoShuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
-        if (randoShuffledObject.randoCheckId == RC_UNKNOWN) {
-            return;
-        }
-
-        int32_t position[3];
-        position[0] = (int32_t)ev->posX;
-        position[1] = (int32_t)ev->posY;
-        position[2] = (int32_t)ev->posZ;
-
-        Actor* newCustomActor = CustomObject::SpawnCustomActor(
-            (actor_e)Rando::StaticData::Items[randoShuffledObject.randoItemId].actorId, position);
-        newCustomActor = CustomObject::SetCustomActorParameters(newCustomActor, randoCheckId);
-        CustomObject::AddToCustomActorMap(randoCheckId, newCustomActor);
-
-        ApplyCustomActorPhysics(randoCheckId, newCustomActor);
-
-        CustomObject::InitializeSpawnQueue();
-        event->cancelled = true;
     })
 
     REGISTER_LISTENER(OnActorSaveState, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -326,7 +188,6 @@ void Rando::ObjectBehavior::Init() {
         RandoItemId randoItemId = RI_UNKNOWN;
 
         if (!ev->propId->markerFlag) {
-            BK_LOG_INFO("!MarkerFlag");
             switch (ev->propId->spriteProp.spriteId) {
                 case RP_MUSIC_NOTE:
                     LogOutCollision(ACTOR_51_MUSIC_NOTE, ev->propId->actorProp.x, ev->propId->actorProp.y,
@@ -337,7 +198,6 @@ void Rando::ObjectBehavior::Init() {
                     break;
             }
         } else {
-            BK_LOG_INFO("IS MarkerFlag");
             Actor* markerActor = marker_getActor(ev->propId->actorProp.marker);
 
             if (markerActor->is_bundle && func_802C9C14(markerActor)) {
@@ -380,10 +240,19 @@ void Rando::ObjectBehavior::Init() {
             }
         }
 
-        BK_LOG_INFO("RandoItem: %i", randoItemId);
         if (randoItemId != RI_UNKNOWN) {
             CustomObject::ObjectCollected(ev->propId);
             SendCollisionNotification(randoItemId);
         }
+    })
+
+    REGISTER_LISTENER(OnWarpDispatch, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnWarpDispatch* ev = (OnWarpDispatch*)event;
+
+        // if (!IS_RANDO) {
+        //     return;
+        // }
+
+        CustomObject::InitializeSpawnQueue();
     })
 }

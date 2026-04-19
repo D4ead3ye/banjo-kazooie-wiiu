@@ -3,12 +3,17 @@
 
 #include "port/Rando/Rando.h"
 
+bool ShouldOverrideSpawn(RandoCheckId randoCheckId);
+
 namespace Rando {
 
 namespace ObjectBehavior {
 
 void Init();
+void InitBundleBehavior();
+void InitJiggyBehavior();
 void InitMolehillBehavior();
+void InitPropBehavior();
 
 } // namespace ObjectBehavior
 

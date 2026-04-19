@@ -19,31 +19,6 @@ DEFINE_EVENT(OnActorSpawn,
 	Actor* result;
 )
 
-DEFINE_EVENT(OnPropSpawn,
-	int32_t propId;
-	int32_t posX;
-	int32_t posY;
-	int32_t posZ;
-)
-
-DEFINE_EVENT(OnBundleSpawn,
-	int32_t bundle_id;
-	f32 bundleYaw;
-	void* bundleInfo;
-	int32_t curCount;
-	f32 posX;
-	f32 posY;
-	f32 posZ;
-	Actor** result; 
-)
-
-DEFINE_EVENT(OnJiggySpawn,
-	int32_t jiggyId;
-	f32 posX;
-	f32 posY;
-	f32 posZ;
-)
-
 DEFINE_EVENT(OnActorSaveState)
 
 DEFINE_EVENT(OnActorCollision,

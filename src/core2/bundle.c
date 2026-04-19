@@ -144,7 +144,7 @@ Actor *__bundle_spawnWithFirstActor(enum bundle_e bundle_id, f32 position[3], Ac
         }
 
         //L802C9114
-        CALL_CANCELLABLE_EVENT(OnBundleSpawn, bundle_id, gBundle_yaw, bundle_info, i, position[0], position[1], position[2], &actor) {
+        if (!EventSystem_Should(VB_OVERRIDE_BUNDLE_SPAWN, false, bundle_id, bundle_info, i, position, &actor)) {
             actor = (i == 0 && firstActor) ? firstActor : actor_spawnWithYaw_f32(bundle_info->actor_id, position, 0);
             //}
             actor->is_bundle = true;
