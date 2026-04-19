@@ -179,12 +179,6 @@ void Rando::ObjectBehavior::Init() {
                 ev->result = NULL;
                 break;
         }
-
-        //if (ShouldOverrideSpawn(ev->posX, ev->posY, ev->posZ)) {
-        //    event->cancelled = true;
-        //    // TODO RETURN MOLEHILLACTOR FOR SPAWNCHILD
-        //    ev->result = NULL;
-        //}
     })
 
     REGISTER_LISTENER(OnPropSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -231,14 +225,12 @@ void Rando::ObjectBehavior::Init() {
             case BUNDLE_4_MM_HUT_JIGGY:
                 if (position[1] < 2000) {
                     randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_ORANGE_PADS);
-                    
                 } else {
                     randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_HUTS);
                 }
                 break;
             case BUNDLE_0_MM_HUT_MUSIC_NOTE:
                 randoShuffledObject = Rando::Logic::GetShuffledObject((RandoCheckId)((int32_t)RC_MM_NOTE_HUT_BUNDLE_1 + ev->curCount));
-                SPDLOG_INFO("RandoCheckId : {}", Rando::StaticData::Checks[randoShuffledObject.randoCheckId].name);
                 break;
             default:
                 return;

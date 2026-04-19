@@ -40,7 +40,6 @@ ChMoleDescription GetMoleDescriptionByAbility(int16_t abilityId) {
     return result;
 }
 
-// TODO: CHECK SHOULD TRUE/FALSE
 void Rando::ObjectBehavior::InitMolehillBehavior() {
     COND_VB_SHOULD(VB_OVERRIDE_MOLEHILL_ABILITY, EVENT_PRIORITY_NORMAL, true, {
         Actor* molehillActor = va_arg(args, Actor*);
