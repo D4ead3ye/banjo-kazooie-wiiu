@@ -1,5 +1,6 @@
 #include "ObjectBehavior.h"
 #include "port/Rando/Logic/Logic.h"
+#include "port/Rando/CustomObject/CustomObject.h"
 
 #include <libultraship/bridge.h>
 #include "port/ui/cvar_prefixes.h"
@@ -68,6 +69,7 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
                     molehillActor->has_met_before = true;
                     *textId = (s32)moleInfo.teach_text_id;
                     ability_unlock((ability_e)moleInfo.ability);
+                    CustomObject::CheckObtained(shuffledMolehill.randoCheckId);
                 }
                 
             }

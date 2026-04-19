@@ -43,6 +43,7 @@ public:
     static void AddToCustomActorMap(RandoCheckId randoCheckId, Actor* actor);
     static void AddToSpawnQueue(RandoCheckId randoCheckId, int32_t position[3]);
     static void InitializeSpawnQueue();
+    static void CheckObtained(RandoCheckId randoCheckId);
     static void ObjectCollected(Prop* prop);
 };
 

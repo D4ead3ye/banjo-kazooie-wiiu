@@ -326,6 +326,7 @@ void Rando::ObjectBehavior::Init() {
         RandoItemId randoItemId = RI_UNKNOWN;
 
         if (!ev->propId->markerFlag) {
+            BK_LOG_INFO("!MarkerFlag");
             switch (ev->propId->spriteProp.spriteId) {
                 case RP_MUSIC_NOTE:
                     LogOutCollision(ACTOR_51_MUSIC_NOTE, ev->propId->actorProp.x, ev->propId->actorProp.y,
@@ -336,8 +337,10 @@ void Rando::ObjectBehavior::Init() {
                     break;
             }
         } else {
+            BK_LOG_INFO("IS MarkerFlag");
             Actor* markerActor = marker_getActor(ev->propId->actorProp.marker);
-            if (func_802C9C14(markerActor)) {
+
+            if (markerActor->is_bundle && func_802C9C14(markerActor)) {
                 return;
             }
 
@@ -377,6 +380,7 @@ void Rando::ObjectBehavior::Init() {
             }
         }
 
+        BK_LOG_INFO("RandoItem: %i", randoItemId);
         if (randoItemId != RI_UNKNOWN) {
             CustomObject::ObjectCollected(ev->propId);
             SendCollisionNotification(randoItemId);
