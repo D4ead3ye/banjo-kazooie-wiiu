@@ -10,6 +10,7 @@ namespace Rando {
 namespace ObjectBehavior {
 
 void Init();
+void InitBundleBehavior();
 void InitJiggyBehavior();
 void InitMolehillBehavior();
 void InitPropBehavior();

@@ -42,6 +42,7 @@ typedef enum VBehaviorID {
     VB_OVERRIDE_MOLEHILL_ABILITY,
     VB_OVERRIDE_JIGGY_SPAWN,
     VB_OVERRIDE_PROP_SPAWN,
+    VB_OVERRIDE_BUNDLE_SPAWN,
 } VBehaviorID;
 
 #ifndef __cplusplus
