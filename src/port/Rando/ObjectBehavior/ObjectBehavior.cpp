@@ -31,6 +31,7 @@ std::vector<int32_t> actorSpawnWhitelist = {
     ACTOR_60_JINJO_BLUE,
     ACTOR_61_JINJO_PINK,
     ACTOR_62_JINJO_GREEN,
+    ACTOR_12C_MOLEHILL,
 };
 
 std::map<int32_t, UIWidgets::Colors> randoItemColors = {
@@ -110,8 +111,26 @@ bool ShouldOverrideSpawn(int32_t posX, int32_t posY, int32_t posZ) {
     return false;
 }
 
+bool ShouldOverride(RandoCheckId randoCheckId) {
+    if (randoCheckId == RC_UNKNOWN) {
+        return false;
+    }
+
+    if (CustomObject::CheckSpawnQueue(randoCheckId)) {
+        return false;
+    }
+
+    if (Rando::Logic::IsCheckShuffled(randoCheckId)) {
+        return true;
+    }
+
+    return false;
+}
+
 // Entry point for the module, run once on game boot
 void Rando::ObjectBehavior::Init() {
+    InitMolehillBehavior();
+
     REGISTER_LISTENER(OnActorSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorSpawn* ev = (OnActorSpawn*)event;
 
@@ -123,7 +142,9 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        CustomObject::InitializeSpawnQueue();
+        if (ev->actorId == ACTOR_12C_MOLEHILL) {
+            LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
+        }
 
         if (nextActorSaveState) {
             nextActorSaveState = false;
@@ -134,9 +155,29 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        if (ShouldOverrideSpawn(ev->posX, ev->posY, ev->posZ)) {
-            event->cancelled = true;
-            ev->result = NULL;
+        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
+        
+        if (!ShouldOverride(randoCheckId)) {
+            return;
+        }
+
+        int32_t position[3];
+        position[0] = ev->posX;
+        position[1] = ev->posY;
+        position[2] = ev->posZ;
+
+        CustomObject::AddToSpawnQueue(randoCheckId, position);
+        CustomObject::InitializeSpawnQueue();
+
+        switch (ev->actorId) {
+            case ACTOR_12C_MOLEHILL:
+                event->cancelled = true;
+                ev->result = CustomObject::GetCustomActor(randoCheckId);
+                break;
+            default:
+                event->cancelled = true;
+                ev->result = NULL;
+                break;
         }
     })
 
@@ -184,14 +225,12 @@ void Rando::ObjectBehavior::Init() {
             case BUNDLE_4_MM_HUT_JIGGY:
                 if (position[1] < 2000) {
                     randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_ORANGE_PADS);
-                    
                 } else {
                     randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_HUTS);
                 }
                 break;
             case BUNDLE_0_MM_HUT_MUSIC_NOTE:
                 randoShuffledObject = Rando::Logic::GetShuffledObject((RandoCheckId)((int32_t)RC_MM_NOTE_HUT_BUNDLE_1 + ev->curCount));
-                SPDLOG_INFO("RandoCheckId : {}", Rando::StaticData::Checks[randoShuffledObject.randoCheckId].name);
                 break;
             default:
                 return;
@@ -287,6 +326,7 @@ void Rando::ObjectBehavior::Init() {
         RandoItemId randoItemId = RI_UNKNOWN;
 
         if (!ev->propId->markerFlag) {
+            BK_LOG_INFO("!MarkerFlag");
             switch (ev->propId->spriteProp.spriteId) {
                 case RP_MUSIC_NOTE:
                     LogOutCollision(ACTOR_51_MUSIC_NOTE, ev->propId->actorProp.x, ev->propId->actorProp.y,
@@ -297,8 +337,10 @@ void Rando::ObjectBehavior::Init() {
                     break;
             }
         } else {
+            BK_LOG_INFO("IS MarkerFlag");
             Actor* markerActor = marker_getActor(ev->propId->actorProp.marker);
-            if (func_802C9C14(markerActor)) {
+
+            if (markerActor->is_bundle && func_802C9C14(markerActor)) {
                 return;
             }
 
@@ -338,6 +380,7 @@ void Rando::ObjectBehavior::Init() {
             }
         }
 
+        BK_LOG_INFO("RandoItem: %i", randoItemId);
         if (randoItemId != RI_UNKNOWN) {
             CustomObject::ObjectCollected(ev->propId);
             SendCollisionNotification(randoItemId);

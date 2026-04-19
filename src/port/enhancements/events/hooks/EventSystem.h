@@ -39,6 +39,7 @@ typedef enum VBehaviorID {
     VB_GRUNTY_DEFEATED_FLAG_BOSS,
     VB_PLAY_JIGGY_DANCE,
     VB_VOID_OUT_GAME_OVER,
+    VB_OVERRIDE_MOLEHILL_ABILITY,
 } VBehaviorID;
 
 #ifndef __cplusplus

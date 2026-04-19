@@ -12,6 +12,10 @@ namespace Rando {
 namespace Logic {
 std::vector<RandoCheckId> checkPool;
 std::vector<std::pair<actor_e, int32_t>> itemPool;
+
+std::vector<RandoCheckId> abilityCheckPool;
+std::vector<std::pair<actor_e, int32_t>> abilityItemPool;
+
 std::vector<Rando::StaticData::RandoShuffledPool> shuffledPool;
 
 uint32_t GetRandoSeed(const std::string& input) {
@@ -32,17 +36,23 @@ uint32_t GetRandoSeed(const std::string& input) {
     return rd();
 }
 
-void ShuffleRandoItems(const std::string& input) {
+void ShuffleRandoItems(const std::string& input, std::vector<std::pair<actor_e, int32_t>>& pool) {
     uint32_t seed = GetRandoSeed(input);
 
     std::mt19937 g(seed);
-    std::shuffle(itemPool.begin(), itemPool.end(), g);
+    std::shuffle(pool.begin(), pool.end(), g);
 
     // finalSeed = seed;
 }
 
 
 void GenerateShufflePool() {
+    checkPool.clear();
+    itemPool.clear();
+    abilityCheckPool.clear();
+    abilityItemPool.clear();
+    shuffledPool.clear();
+
     for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
         if (randoCheckId == RC_UNKNOWN) {
             continue;
@@ -63,6 +73,14 @@ void GenerateShufflePool() {
             continue;
         }
 
+        if (randoStaticCheck.randoCheckType == RCTYPE_MOLEHILL) {
+            if (CVarGetInteger(Rando::StaticData::Options[RO_SHUFFLE_MOLEHILLS].cvar, 0) == RO_GENERIC_ON) {
+                abilityCheckPool.push_back(randoCheckId);
+                abilityItemPool.push_back({ (actor_e)randoStaticCheck.actorId, randoStaticCheck.collectionId });
+            }
+            continue;
+        }
+
         if (randoStaticCheck.randoCheckType == RCTYPE_MUMBO_TOKEN &&
             CVarGetInteger(Rando::StaticData::Options[RO_SHUFFLE_MUMBO_TOKENS].cvar, 0) == RO_GENERIC_OFF) {
             continue;
@@ -77,7 +95,7 @@ void GenerateShufflePool() {
         itemPool.push_back({ (actor_e)randoStaticCheck.actorId, randoStaticCheck.collectionId });
     }
 
-    ShuffleRandoItems("");
+    ShuffleRandoItems("", itemPool);
 
     for (int i = 0; i < checkPool.size(); i++) {
         Rando::StaticData::RandoShuffledPool randoShuffleEntry = {
@@ -90,6 +108,23 @@ void GenerateShufflePool() {
         };
 
         shuffledPool.push_back(randoShuffleEntry);
+    }
+
+    if (!abilityCheckPool.empty()) {
+        ShuffleRandoItems("", abilityItemPool);
+
+        for (int a = 0; a < abilityCheckPool.size(); a++) {
+            Rando::StaticData::RandoShuffledPool randoShuffleEntry = {
+                .randoCheckId = abilityCheckPool[a],
+                .randoItemId = Rando::StaticData::GetRandoItemByActorId(abilityItemPool[a].first),
+                .randoCollectionId = abilityItemPool[a].second,
+                .isShuffled = true,
+                .obtained = false,
+                .skipped = false,
+            };
+
+            shuffledPool.push_back(randoShuffleEntry);
+        }
     }
 }
 

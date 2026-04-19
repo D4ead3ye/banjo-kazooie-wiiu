@@ -219,18 +219,19 @@ void chmole_additionalAbilityLearnActions(ActorMarker *marker, enum asset_e arg1
 int chmole_learnAbility(Actor *this){
     s32 sp2C;
     s32 sp28 = 0xe;
-    // Known Ability: Refresher Dialog
-    if(ability_isUnlocked(moleTable[this->actorTypeSpecificField-9].ability)){
-        sp28 = 0xf;
-        sp2C = moleTable[this->actorTypeSpecificField-9].refresher_text_id;
-    }//L802D99EC
-    // New Ability: Learn Dialog & Misc Actions
-    else{
-        func_80347A14(0);
-        this->has_met_before = true;
-        sp2C = moleTable[this->actorTypeSpecificField-9].teach_text_id;
-        ability_unlock(moleTable[this->actorTypeSpecificField-9].ability);
-        switch(moleTable[this->actorTypeSpecificField-9].ability){
+    if (!EventSystem_Should(VB_OVERRIDE_MOLEHILL_ABILITY, false, this, &sp2C, &sp28)) {
+        // Known Ability: Refresher Dialog
+        if (ability_isUnlocked(moleTable[this->actorTypeSpecificField - 9].ability)) {
+            sp28 = 0xf;
+            sp2C = moleTable[this->actorTypeSpecificField - 9].refresher_text_id;
+        }//L802D99EC
+        // New Ability: Learn Dialog & Misc Actions
+        else {
+            func_80347A14(0);
+            this->has_met_before = true;
+            sp2C = moleTable[this->actorTypeSpecificField - 9].teach_text_id;
+            ability_unlock(moleTable[this->actorTypeSpecificField - 9].ability);
+            switch (moleTable[this->actorTypeSpecificField - 9].ability) {
             case ABILITY_9_FLIGHT:
             case ABILITY_D_SHOCK_JUMP:
                 gcsfx_playWithPitch(SFX_113_PAD_APPEARS, 0.9f, 32000);
@@ -238,8 +239,9 @@ int chmole_learnAbility(Actor *this){
             case ABILITY_13_1ST_NOTEDOOR:
                 func_802FAD64(ITEM_C_NOTE);
                 break;
-        }
-    }//L802D9A9C
+            }
+        }//L802D9A9C
+    }
     gcdialog_showDialog(sp2C, sp28, this->position, this->marker, chmole_healthRefill, chmole_additionalAbilityLearnActions);
     return true;
 }
