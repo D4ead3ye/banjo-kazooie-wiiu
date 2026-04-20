@@ -4,8 +4,11 @@
 
 #ifdef __cplusplus
 #include <nlohmann/json.hpp>
+#define WIDGET_COLOR UIWidgets::Colors(CVarGetInteger("gSettings.Menu.Theme", 5))
+
 using nlohmann::json;
 json Ship_RetrieveSaveFile(int32_t filenum);
+extern std::string Ship_ConvertEnumToReadableName(const std::string& input);
 
 extern "C" {
 #endif
