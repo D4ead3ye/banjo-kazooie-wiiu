@@ -117,12 +117,8 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (ev->actorId == ACTOR_12C_MOLEHILL) {
+        if (IsActorWhitelisted(ev->actorId)) {
             LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
-        }
-
-        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
-            return;
         }
 
         if (nextActorSaveState) {
@@ -167,10 +163,6 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
-            return;
-        }
-
         CustomObject::InitializeSpawnQueue();
         nextActorSaveState = true;
     })
@@ -182,10 +174,8 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
-            return;
-        }
         RandoItemId randoItemId = RI_UNKNOWN;
+        BK_LOG_INFO("Collected Word: %i", ev->propId->actorProp.words[0]);
 
         if (!ev->propId->markerFlag) {
             switch (ev->propId->spriteProp.spriteId) {

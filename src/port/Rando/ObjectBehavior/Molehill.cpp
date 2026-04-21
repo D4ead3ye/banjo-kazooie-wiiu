@@ -91,7 +91,6 @@ bool CheckBridgeState() {
                 smBridgeCheck++;
             }
         }
-        BK_LOG_INFO("Bridge Check: %i / %i", smBridgeCheck, spiralMountainBridge.size());
     }
 
     return smBridgeCheck == BRIDGE_REQUIREMENT ? true : false;
@@ -118,7 +117,7 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
             RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(
                 molehillActor->position_x, molehillActor->position_y, molehillActor->position_z);
 
-            BK_LOG_INFO("RandoCheckId: %i", randoCheckId);
+            //BK_LOG_INFO("RandoCheckId: %i", randoCheckId);
             if (randoCheckId == RC_UNKNOWN) {
                 return;
             }
@@ -127,7 +126,7 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
             ChMoleDescription moleInfo = GetMoleDescriptionByAbility(shuffledMolehill.randoCollectionId);
 
             if (moleInfo.ability >= ABILITY_0_BARGE) {
-                BK_LOG_INFO("Ability ID: %i", moleInfo.ability);
+                //BK_LOG_INFO("Ability ID: %i", moleInfo.ability);
                 *should = true;
 
                 func_80347A14(0);
