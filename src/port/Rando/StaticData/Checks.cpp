@@ -143,6 +143,12 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_MM_NOTE_INSIDE_TICKERS_TOWER_4,               RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           60, 817, -87),
     RC(RC_MM_NOTE_INSIDE_TICKERS_TOWER_5,               RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           -10, 817, -125),
     RC(RC_MM_NOTE_INSIDE_TICKERS_TOWER_6,               RCTYPE_MUSIC_NOTE,      LEVEL_1_MUMBOS_MOUNTAIN,    ACTOR_51_MUSIC_NOTE,        NULL,                                           -80, 817, -71),
+    RC(RC_SM_MOLEHILL_JUMP,                             RCTYPE_MOLEHILL,        LEVEL_B_SPIRAL_MOUNTAIN,    ACTOR_12C_MOLEHILL,         ABILITY_A_HOLD_A_JUMP_HIGHER,                   -164, -190, 3313),
+    RC(RC_SM_MOLEHILL_CAMERA_CONTROL,                   RCTYPE_MOLEHILL,        LEVEL_B_SPIRAL_MOUNTAIN,    ACTOR_12C_MOLEHILL,         ABILITY_3_CAMERA_CONTROL,                       2250, -34, 2774	),
+    RC(RC_SM_MOLEHILL_ATTACK,                           RCTYPE_MOLEHILL,        LEVEL_B_SPIRAL_MOUNTAIN,    ACTOR_12C_MOLEHILL,         ABILITY_4_CLAW_SWIPE,                           4675, 400, 511),
+    RC(RC_SM_MOLEHILL_DIVE,                             RCTYPE_MOLEHILL,        LEVEL_B_SPIRAL_MOUNTAIN,    ACTOR_12C_MOLEHILL,         ABILITY_F_DIVE,                                 -2336, 302, 973),
+    RC(RC_SM_MOLEHILL_CLIMB,                            RCTYPE_MOLEHILL,        LEVEL_B_SPIRAL_MOUNTAIN,    ACTOR_12C_MOLEHILL,         ABILITY_5_CLIMB,                                -1999, 342, -2545),
+    RC(RC_SM_MOLEHILL_BEAK_BARGE,                       RCTYPE_MOLEHILL,        LEVEL_B_SPIRAL_MOUNTAIN,    ACTOR_12C_MOLEHILL,         ABILITY_0_BARGE,                                3271, -110, -2673),
 };
 // clang-format on
 

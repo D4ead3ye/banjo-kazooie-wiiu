@@ -117,12 +117,12 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
-            return;
-        }
-
         if (ev->actorId == ACTOR_12C_MOLEHILL) {
             LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
+        }
+
+        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
+            return;
         }
 
         if (nextActorSaveState) {
