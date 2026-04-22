@@ -43,6 +43,13 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                 randoShuffledObject =
                     Rando::Logic::GetShuffledObject((RandoCheckId)((int32_t)RC_MM_NOTE_HUT_BUNDLE_1 + bundleCount));
                 break;
+            case BUNDLE_1F_SM_EMPTY_HONEYCOMB:
+                if (spawnPosition[1] >= 500 && spawnPosition[1] <= 800) {
+                    randoShuffledObject = Rando::Logic::GetShuffledObject(RC_SM_EMPTY_HONEYCOMB_COLLIWOBBLE);
+                } else if (spawnPosition[1] >= -200 && spawnPosition[1] <= 0) {
+                    randoShuffledObject = Rando::Logic::GetShuffledObject(RC_SM_EMPTY_HONEYCOMB_QUARRIES);
+                }
+                break;
             default:
                 return;
         }

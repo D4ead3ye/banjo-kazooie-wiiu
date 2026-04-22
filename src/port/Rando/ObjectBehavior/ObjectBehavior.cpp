@@ -131,6 +131,10 @@ void Rando::ObjectBehavior::Init() {
         }
 
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
+
+        if (randoCheckId == RC_UNKNOWN) {
+            return;
+        }
         
         if (!ShouldOverrideSpawn(randoCheckId)) {
             return;
@@ -175,7 +179,6 @@ void Rando::ObjectBehavior::Init() {
         // }
 
         RandoItemId randoItemId = RI_UNKNOWN;
-        BK_LOG_INFO("Collected Word: %i", ev->propId->actorProp.words[0]);
 
         if (!ev->propId->markerFlag) {
             switch (ev->propId->spriteProp.spriteId) {
