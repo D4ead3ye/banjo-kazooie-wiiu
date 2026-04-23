@@ -182,7 +182,7 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
+        if (map_getLevel(gsworld_getMap()) != LEVEL_2_TREASURE_TROVE_COVE) {
             return;
         }
         RandoItemId randoItemId = RI_UNKNOWN;
