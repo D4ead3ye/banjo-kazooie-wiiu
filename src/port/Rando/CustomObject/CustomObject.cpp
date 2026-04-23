@@ -137,8 +137,14 @@ void CustomObject::InitializeSpawnQueue() {
         customPosition[2] = customActor.location[2];
 
         Rando::StaticData::RandoShuffledPool shuffledObject = Rando::Logic::GetShuffledObject(customActor.randoCheckId);
+        actor_e randoActorId = GetActorIdByShuffledObjectState(shuffledObject);
 
-        Actor* newCustomActor = CustomObject::SpawnCustomActor((actor_e)Rando::StaticData::Items[shuffledObject.randoItemId].actorId, customPosition);
+        if (randoActorId == ACTOR_1_UNKNOWN) {
+            isSpawned = true;
+            continue;
+        }
+
+        Actor* newCustomActor = CustomObject::SpawnCustomActor(randoActorId, customPosition);
         
         if (newCustomActor != NULL) {
             newCustomActor = CustomObject::SetCustomActorParameters(newCustomActor, customActor.randoCheckId);
