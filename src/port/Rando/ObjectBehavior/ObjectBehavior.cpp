@@ -117,11 +117,7 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
-            return;
-        }
-
-        if (ev->actorId == ACTOR_12C_MOLEHILL) {
+        if (IsActorWhitelisted(ev->actorId)) {
             LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
         }
 
@@ -135,6 +131,10 @@ void Rando::ObjectBehavior::Init() {
         }
 
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
+
+        if (randoCheckId == RC_UNKNOWN) {
+            return;
+        }
         
         if (!ShouldOverrideSpawn(randoCheckId)) {
             return;
@@ -167,10 +167,6 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
-            return;
-        }
-
         CustomObject::InitializeSpawnQueue();
         nextActorSaveState = true;
     })
@@ -182,9 +178,6 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_getLevel(gsworld_getMap()) != LEVEL_2_TREASURE_TROVE_COVE) {
-            return;
-        }
         RandoItemId randoItemId = RI_UNKNOWN;
 
         if (!ev->propId->markerFlag) {
