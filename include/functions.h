@@ -110,6 +110,9 @@ u8 GetCurrentMap();
 s32 getGameMode(void);
 void transitionToMap(enum map_e map, s32 exit, s32 transition);
 
+// --- core2/time.c ---
+f32 time_getDelta(void);
+
 // --- core2/map_list.c ---
 BKCollisionTri *func_8029463C(void);
 BKModelBin *func_802946A8(void);
@@ -1675,6 +1678,11 @@ void func_802992F0(void);
 void func_802993C8(void);
 void func_8029957C(s32 arg0);
 
+// --- core2/ba/ba_timer.c ---
+s32 batimer_decrement(s32 timer_id);
+void batimer_incrementBy(s32 id, f32 inc_value_sec);
+void batimer_set(s32 timer_id, f32 duration);
+
 // --- core2/bs/ant.c ---
 int bsant_inSet(s32 move_indx);
 
@@ -2548,6 +2556,9 @@ void mapSavestate_free_all(void);
 void mapSavestate_init(void);
 void mapSavestate_save(enum map_e map);
 
+// --- core2/map/gsworld.c ---
+enum map_e gsworld_getMap(void);
+
 // --- core2/map/specificflags.c ---
 s32 mapSpecificFlags_validateCRC1(void);
 u32 mapSpecificFlags_getAll(void);
@@ -3289,6 +3300,8 @@ void baModel_80292158(f32);
 
 // --- core2/ba/ba_physics.c ---
 f32  get_slope_timer(void);
+void baphysics_reset_gravity(void);
+void baphysics_set_gravity(f32 gravity);
 
 // --- core2/ba/ba_position.c ---
 f32 player_getYPosition(void);
