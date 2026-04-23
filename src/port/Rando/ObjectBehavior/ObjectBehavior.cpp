@@ -110,6 +110,8 @@ void Rando::ObjectBehavior::Init() {
     InitMolehillBehavior();
     InitPropBehavior();
 
+    UpdateJunkList();
+
     REGISTER_LISTENER(OnActorSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorSpawn* ev = (OnActorSpawn*)event;
 

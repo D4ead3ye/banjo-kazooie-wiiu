@@ -196,6 +196,7 @@ typedef enum {
 
 typedef enum {
     RO_LOGIC,
+    RO_SPAWN_JUNK,
     RO_SHUFFLE_EMPTY_HONEYCOMBS,
     RO_SHUFFLE_JIGGIES,
     RO_SHUFFLE_JINJOS,
