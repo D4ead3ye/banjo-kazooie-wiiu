@@ -23,22 +23,6 @@ std::map<RandoItemId, int32_t> jinjoDiffMap = {
 #define CVAR_NAME Rando::StaticData::Options[RO_SHUFFLE_JINJOS].cvar
 #define CVAR CVarGetInteger(CVAR_NAME, 0)
 
-void Test(int32_t level) {
-    int hi = 0;
-
-    for (auto& pool : Rando::Logic::shuffledPool) {
-        if (Rando::StaticData::Checks[pool.randoCheckId].worldId != level) {
-            continue;
-        }
-
-        if (pool.randoItemId >= RI_JINJO_BLUE && pool.randoItemId <= RI_JINJO_YELLOW) {
-            if (pool.obtained) {
-                item_adjustByDiffWithHud(ITEM_12_JINJOS, jinjoDiffMap.at(pool.randoItemId));
-            }
-        }
-    }
-}
-
 void Rando::ObjectBehavior::InitJinjoBehavior() {
     REGISTER_LISTENER(OnSetJiggyList, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnSetJiggyList* ev = (OnSetJiggyList*)event;
@@ -48,19 +32,18 @@ void Rando::ObjectBehavior::InitJinjoBehavior() {
         // }
 
         if (CVAR) {
-            Test(ev->levelId);
-            //for (auto& pool : Rando::Logic::shuffledPool) {
-            //    if (Rando::StaticData::Checks[pool.randoCheckId].worldId != ev->levelId) {
-            //        continue;
-            //    }
-            //
-            //    if (pool.randoItemId >= RI_JINJO_BLUE && pool.randoItemId <= RI_JINJO_YELLOW) {
-            //        if (pool.obtained) {
-            //            Test();
-            //            item_adjustByDiffWithHud(ITEM_12_JINJOS, jinjoDiffMap.at(pool.randoItemId));
-            //        }
-            //    }
-            //}
+            for (auto& pool : Rando::Logic::shuffledPool) {
+                if (Rando::StaticData::Checks[pool.randoCheckId].worldId != ev->levelId) {
+                    continue;
+                }
+            
+                if (pool.randoItemId >= RI_JINJO_BLUE && pool.randoItemId <= RI_JINJO_YELLOW) {
+                    if (pool.obtained) {
+                        // TODO: Spawn World specific RC for Jinjo Jiggy when 5 are collected anywhere.
+                        item_adjustByDiffWithHud(ITEM_12_JINJOS, jinjoDiffMap.at(pool.randoItemId));
+                    }
+                }
+            }
         }
     })
 }
