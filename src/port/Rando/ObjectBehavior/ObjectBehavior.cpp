@@ -107,6 +107,7 @@ bool ShouldOverrideSpawn(RandoCheckId randoCheckId) {
 void Rando::ObjectBehavior::Init() {
     InitBundleBehavior();
     InitJiggyBehavior();
+    InitJinjoBehavior();
     InitMolehillBehavior();
     InitPropBehavior();
 
@@ -121,11 +122,6 @@ void Rando::ObjectBehavior::Init() {
 
         if (IsActorWhitelisted(ev->actorId)) {
             LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
-        }
-
-        if (nextActorSaveState) {
-            nextActorSaveState = false;
-            return;
         }
 
         if (!IsActorWhitelisted(ev->actorId)) {
@@ -150,6 +146,14 @@ void Rando::ObjectBehavior::Init() {
         CustomObject::AddToSpawnQueue(randoCheckId, position);
         CustomObject::InitializeSpawnQueue();
 
+        if (nextActorSaveState) {
+            event->cancelled = true;
+            ev->result = CustomObject::GetCustomActor(randoCheckId);
+            nextActorSaveState = false;
+            return;
+        }
+
+
         switch (ev->actorId) {
             case ACTOR_12C_MOLEHILL:
                 event->cancelled = true;
@@ -169,7 +173,6 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        CustomObject::InitializeSpawnQueue();
         nextActorSaveState = true;
     })
 

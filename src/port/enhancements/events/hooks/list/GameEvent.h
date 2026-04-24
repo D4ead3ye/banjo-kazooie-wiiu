@@ -28,4 +28,8 @@ DEFINE_EVENT(OnWarpDispatch,
 	int32_t warpId;
 	int32_t warpDest;
 )
+
+DEFINE_EVENT(OnSetJiggyList,
+	int32_t levelId;
+)
 // clang-format on
