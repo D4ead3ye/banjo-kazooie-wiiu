@@ -109,6 +109,7 @@ void Rando::ObjectBehavior::Init() {
     InitJiggyBehavior();
     InitJinjoBehavior();
     InitMolehillBehavior();
+    InitMusicNoteBehavior();
     InitPropBehavior();
 
     UpdateJunkList();

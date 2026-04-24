@@ -37,11 +37,6 @@ void UpdateJunkList() {
 actor_e GetActorIdByShuffledObjectState(Rando::StaticData::RandoShuffledPool shuffledObject) {
     actor_e randoActorId = (actor_e)Rando::StaticData::Items[shuffledObject.randoItemId].actorId;
 
-    // TODO: Add Cvar Check for Persistant Notes when added
-    if (randoActorId == ACTOR_51_MUSIC_NOTE) {
-        return randoActorId;
-    }
-
     if (CVarGetInteger(Rando::StaticData::Options[RO_SPAWN_JUNK].cvar, 0) == RO_GENERIC_ON) {
         randoActorId = shuffledObject.obtained ? junkItemList[(rand() % junkItemList.size())]
                                                : (actor_e)Rando::StaticData::Items[shuffledObject.randoItemId].actorId;
