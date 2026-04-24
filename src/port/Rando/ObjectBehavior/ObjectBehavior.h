@@ -12,6 +12,7 @@ namespace ObjectBehavior {
 void Init();
 void InitBundleBehavior();
 void InitJiggyBehavior();
+void InitJinjoBehavior();
 void InitMolehillBehavior();
 void InitPropBehavior();
 

@@ -21,9 +21,12 @@ extern ActorSpawn* sSpawnableActorList;
 
 enum map_e gsworld_getMap(void);
 enum level_e map_getLevel(enum map_e map);
+
+extern u8 D_80383428[0x1C];
+extern ActorMarker* D_8036E7C8;
 }
 
-int32_t currentLevel = -1;
+int32_t currentMap = -1;
 std::map<RandoCheckId, Actor> customActorMap;
 std::vector<std::pair<CustomActor, bool>> actorSpawnQueue;
 
@@ -39,10 +42,10 @@ bool CustomObject::CheckSpawnQueue(RandoCheckId randoCheckId) {
 }
 
 void ClearSpawnQueue() {
-    if (currentLevel != map_getLevel(gsworld_getMap())) {
-        currentLevel = map_getLevel(gsworld_getMap());
-        actorSpawnQueue.clear();
+    if (currentMap != gsworld_getMap()) {
+        currentMap = gsworld_getMap();
         customActorMap.clear();
+        actorSpawnQueue.clear();
     }
 }
 
@@ -101,7 +104,9 @@ Actor* CustomObject::GetCustomActor(RandoCheckId randoCheckId) {
 
 void CustomObject::AddToCustomActorMap(RandoCheckId randoCheckId, Actor* actor) {
     Actor customActor = *actor;
-    customActorMap.emplace(randoCheckId, customActor);
+
+    customActorMap.insert_or_assign(randoCheckId, *actor);
+    //customActorMap.emplace(randoCheckId, customActor);
 }
 
 void CustomObject::AddToSpawnQueue(RandoCheckId randoCheckId, int32_t position[3]) {
@@ -131,6 +136,7 @@ void CustomObject::InitializeSpawnQueue() {
         if (isSpawned) {
             continue;
         }
+
         int32_t customPosition[3];
         customPosition[0] = customActor.location[0];
         customPosition[1] = customActor.location[1];
@@ -166,6 +172,7 @@ void CustomObject::CheckObtained(RandoCheckId randoCheckId) {
 
 void CustomObject::ObjectCollected(Prop* prop) {
     for (auto& [randoCheckId, customActor] : customActorMap) {
+        // TODO: Fix null actors when changing interiors...
         if (customActor.marker->propPtr->words[0] == prop->actorProp.words[0]) {
             CustomObject::CheckObtained(randoCheckId);
             return;
