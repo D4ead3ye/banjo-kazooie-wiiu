@@ -26,7 +26,6 @@ extern u8 D_80383428[0x1C];
 extern ActorMarker* D_8036E7C8;
 }
 
-int32_t currentLevel = -1;
 int32_t currentMap = -1;
 std::map<RandoCheckId, Actor> customActorMap;
 std::vector<std::pair<CustomActor, bool>> actorSpawnQueue;
