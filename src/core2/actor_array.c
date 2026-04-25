@@ -575,6 +575,8 @@ void func_803268B4(void) {
                             }
                         }
                     }
+                    // [port] Fire one tick event per active actor for port-side features (e.g. nametags).
+                    CALL_EVENT(OnActorTick, actor);
                     actor->unk124_7 = true;
                     actor->unk138_28 = false;
                     if (anim_ctrl != NULL) {
@@ -1134,6 +1136,7 @@ Actor *actor_spawnWithYaw_s16(enum actor_e id, s16 (* pos)[3], s32 yaw){
 
 void marker_despawn(ActorMarker *marker){
     Actor * actor = marker_getActor(marker);
+    CALL_EVENT(OnActorDestroy, actor);
     if(D_8036E574){
         actor->despawn_flag = 1;
         D_8036E578++;
@@ -1600,6 +1603,7 @@ bool func_803296D8(Actor *this, s32 dist){
     }
 }
 
+// actor distance to player?
 s32 func_8032970C(Actor *this){
     f32 sp24[3];
     f32 plyr_pos[3];

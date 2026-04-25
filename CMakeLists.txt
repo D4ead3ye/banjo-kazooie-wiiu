@@ -213,6 +213,7 @@ file(GLOB_RECURSE ALL_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     "${CMAKE_CURRENT_SOURCE_DIR}/lib/libultra/**/*.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/lib/libultra/**/*.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/**/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/*"
 )
 
 

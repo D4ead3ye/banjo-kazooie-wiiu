@@ -29,6 +29,8 @@
 #include "port/enhancements/events/PortEnhancements.h"
 #include "port/patches/Patches.h"
 #include "libultraship/libultra/AudioDmaRegistry.h"
+#include "src/port/enhancements/events/hooks/EventSystem.h"
+#include "src/port/enhancements/events/hooks/Events.h"
 
 #include <fast/interpreter.h>
 #include <libultraship/bridge/gfxbridge.h>
@@ -906,6 +908,7 @@ void GameEngine::Create(int argc, char* argv[]) {
     PortEnhancements_Init();
     SaveManager_Init();
     ShipInit::InitAll();
+    ShipInit::Init("BOOT");
 
     // Stop rumble on any exit path (including direct exit() calls)
     atexit([]() {
@@ -1153,6 +1156,7 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
             }
             gui->EndDraw();
             interpreter->EndFrame();
+            CALL_EVENT(FrameDrawEnd);
         }
         interpreter->mInterpolationIndex++;
         frameIdx++;
