@@ -1,6 +1,8 @@
 #pragma once
 
 #include "port/enhancements/events/hooks/EventSystem.h"
+#include "include/enums.h"
+#include "include/prop.h"
 #include <stdarg.h>
 
 // clang-format off
@@ -28,6 +30,14 @@ DEFINE_EVENT(OnWarpDispatch,
 	int32_t warpId;
 	int32_t warpDest;
 )
+
+DEFINE_EVENT(OnSaveFileSave, void* saveBuffer; int32_t fileNum; int32_t * result;)
+
+DEFINE_EVENT(MapTransitionEnd, GameMap map; s32 exitID;);
+
+DEFINE_EVENT(OnActorDestroy, Actor* actor;);
+
+DEFINE_EVENT(OnPropInit, Prop* propPtr;);
 
 DEFINE_EVENT(OnSetJiggyList,
 	int32_t levelId;
