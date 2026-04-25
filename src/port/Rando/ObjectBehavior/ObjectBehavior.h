@@ -14,6 +14,7 @@ void InitBundleBehavior();
 void InitJiggyBehavior();
 void InitJinjoBehavior();
 void InitMolehillBehavior();
+void InitMusicNoteBehavior();
 void InitPropBehavior();
 
 } // namespace ObjectBehavior
