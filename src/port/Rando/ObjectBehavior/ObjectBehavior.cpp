@@ -121,9 +121,9 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (IsActorWhitelisted(ev->actorId)) {
-            LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
-        }
+        // if (IsActorWhitelisted(ev->actorId)) {
+        //     LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
+        // }
 
         if (!IsActorWhitelisted(ev->actorId)) {
             return;
@@ -198,11 +198,11 @@ void Rando::ObjectBehavior::Init() {
             }
         } else {
             Actor* markerActor = marker_getActor(ev->propId->actorProp.marker);
-
+            
             if (markerActor->is_bundle && func_802C9C14(markerActor)) {
                 return;
             }
-
+            
             switch (ev->propId->actorProp.marker->id) {
                 case MARKER_39_MUMBO_TOKEN:
                     LogOutCollision(ACTOR_2D_MUMBO_TOKEN, ev->propId->actorProp.x, ev->propId->actorProp.y,
