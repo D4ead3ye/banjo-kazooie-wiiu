@@ -47,7 +47,7 @@ void Rando::ObjectBehavior::InitJinjoBehavior() {
         }
     })
 
-    COND_VB_SHOULD(VB_OVERRIDE_BUNDLE_SPAWN, EVENT_PRIORITY_NORMAL, true, {
+    COND_VB_SHOULD(VB_OVERRIDE_ITEM_COUNT, EVENT_PRIORITY_NORMAL, true, {
         f32* position = va_arg(args, f32*);
         // if (!IS_RANDO) {
         //     return;
