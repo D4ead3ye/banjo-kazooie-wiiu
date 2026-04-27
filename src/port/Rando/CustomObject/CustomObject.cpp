@@ -24,6 +24,11 @@ enum level_e map_getLevel(enum map_e map);
 
 extern u8 D_80383428[0x1C];
 extern ActorMarker* D_8036E7C8;
+
+void marker_despawn(ActorMarker* marker);
+void item_inc(enum item_e item);
+
+void fxSparkle_musicNote(s16 position[3]);
 }
 
 int32_t currentMap = -1;
@@ -160,13 +165,48 @@ void CustomObject::InitializeSpawnQueue() {
     }
 }
 
+void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId, Actor* customActor) {
+    if (randoCheckId == RC_UNKNOWN) {
+        return;
+    }
+
+    Rando::StaticData::RandoShuffledPool shuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
+    int16_t position[3];
+    position[0] = (int16_t)customActor->position[0];
+    position[1] = (int16_t)customActor->position[1];
+    position[2] = (int16_t)customActor->position[2];
+
+    switch (shuffledObject.randoItemId) {
+        case RI_MUSIC_NOTE:
+            if (Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId == map_getLevel(gsworld_getMap())) {
+                item_inc(ITEM_C_NOTE);
+            }
+            fxSparkle_musicNote(position);
+            break;
+        default:
+            break;
+    }
+
+    if (shuffledObject.randoItemId != RI_UNKNOWN) {
+        marker_despawn(customActorMap.at(randoCheckId).marker);
+        customActorMap.erase(randoCheckId);
+    }
+}
+
 void CustomObject::CheckObtained(RandoCheckId randoCheckId) {
+    bool shouldRemove = false;
     for (auto& pool : Rando::Logic::shuffledPool) {
         if (pool.randoCheckId == randoCheckId && !pool.obtained) {
             pool.obtained = true;
+            shouldRemove = true;
             BK_LOG_INFO("RandoCheckId %s collected!", Rando::StaticData::Checks[randoCheckId].name);
-            return;
+            break;
         }
+    }
+
+    if (shouldRemove) {
+        CustomObject::ResolveCustomActorCollision(randoCheckId, &customActorMap.at(randoCheckId));
+        shouldRemove = false;
     }
 }
 

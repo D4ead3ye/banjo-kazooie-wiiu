@@ -47,6 +47,7 @@ public:
     static void AddToCustomActorMap(RandoCheckId randoCheckId, Actor* actor);
     static void AddToSpawnQueue(RandoCheckId randoCheckId, int32_t position[3]);
     static void InitializeSpawnQueue();
+    static void ResolveCustomActorCollision(RandoCheckId randoCheckId, Actor* customActor);
     static void CheckObtained(RandoCheckId randoCheckId);
     static void ObjectCollected(Prop* prop);
 };

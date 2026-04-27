@@ -14,6 +14,7 @@ namespace StaticData {
 
 struct RandoShuffledPool {
     RandoCheckId randoCheckId;
+    RandoCheckId shuffleCheckId;
     RandoItemId randoItemId;
     int32_t randoCollectionId;
     bool isShuffled;

@@ -240,6 +240,7 @@ void Rando::ObjectBehavior::Init() {
         }
 
         if (randoItemId != RI_UNKNOWN) {
+            event->cancelled = true;
             CustomObject::ObjectCollected(ev->propId);
             SendCollisionNotification(randoItemId);
         }
