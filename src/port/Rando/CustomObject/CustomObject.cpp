@@ -27,8 +27,10 @@ extern ActorMarker* D_8036E7C8;
 
 void marker_despawn(ActorMarker* marker);
 void item_inc(enum item_e item);
+s32 item_adjustByDiffWithHud(enum item_e item, s32 diff);
 
 void fxSparkle_musicNote(s16 position[3]);
+void actor_loopAnimation(Actor* thisx);
 }
 
 int32_t currentMap = -1;
@@ -177,6 +179,16 @@ void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId, Actor*
     position[2] = (int16_t)customActor->position[2];
 
     switch (shuffledObject.randoItemId) {
+        case RI_JINJO_BLUE:
+        case RI_JINJO_GREEN:
+        case RI_JINJO_ORANGE:
+        case RI_JINJO_PINK:
+        case RI_JINJO_YELLOW:
+            if (Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId == map_getLevel(gsworld_getMap())) {
+                item_adjustByDiffWithHud(
+                    ITEM_12_JINJOS, 1 << ((Rando::StaticData::Items[shuffledObject.randoItemId].actorId + 6) & 0x1F));
+            }
+            break;
         case RI_MUSIC_NOTE:
             if (Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId == map_getLevel(gsworld_getMap())) {
                 item_inc(ITEM_C_NOTE);
@@ -187,7 +199,7 @@ void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId, Actor*
             break;
     }
 
-    if (shuffledObject.randoItemId != RI_UNKNOWN) {
+    if (shuffledObject.randoItemId == RI_MUSIC_NOTE) {
         marker_despawn(customActorMap.at(randoCheckId).marker);
         customActorMap.erase(randoCheckId);
     }

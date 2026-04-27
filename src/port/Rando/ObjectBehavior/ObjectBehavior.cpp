@@ -240,7 +240,9 @@ void Rando::ObjectBehavior::Init() {
         }
 
         if (randoItemId != RI_UNKNOWN) {
-            event->cancelled = true;
+            if (randoItemId == RI_MUSIC_NOTE) {
+                event->cancelled = true;
+            }
             CustomObject::ObjectCollected(ev->propId);
             SendCollisionNotification(randoItemId);
         }

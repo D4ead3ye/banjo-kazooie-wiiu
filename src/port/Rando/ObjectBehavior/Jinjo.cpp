@@ -36,7 +36,7 @@ void Rando::ObjectBehavior::InitJinjoBehavior() {
                 if (Rando::StaticData::Checks[pool.randoCheckId].worldId != ev->levelId) {
                     continue;
                 }
-            
+
                 if (pool.randoItemId >= RI_JINJO_BLUE && pool.randoItemId <= RI_JINJO_YELLOW) {
                     if (pool.obtained) {
                         // TODO: Spawn World specific RC for Jinjo Jiggy when 5 are collected anywhere.
@@ -44,6 +44,34 @@ void Rando::ObjectBehavior::InitJinjoBehavior() {
                     }
                 }
             }
+        }
+    })
+
+    COND_VB_SHOULD(VB_OVERRIDE_BUNDLE_SPAWN, EVENT_PRIORITY_NORMAL, true, {
+        f32* position = va_arg(args, f32*);
+        // if (!IS_RANDO) {
+        //     return;
+        // }
+
+        if (CVAR) {
+            int16_t actorPos[3];
+            actorPos[0] = (int16_t)position[0];
+            actorPos[1] = (int16_t)position[1];
+            actorPos[2] = (int16_t)position[2];
+
+            RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(actorPos[0], actorPos[1], actorPos[2]);
+            if (randoCheckId == RC_UNKNOWN) {
+                *should = false; 
+                return;
+            }
+
+            Rando::StaticData::RandoShuffledPool shuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
+            if (shuffledObject.randoCheckId == RC_UNKNOWN) {
+                *should = false;
+                return;
+            }
+
+            *should = true;
         }
     })
 }
