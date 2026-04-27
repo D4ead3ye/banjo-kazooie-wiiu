@@ -107,8 +107,12 @@ bool ShouldOverrideSpawn(RandoCheckId randoCheckId) {
 void Rando::ObjectBehavior::Init() {
     InitBundleBehavior();
     InitJiggyBehavior();
+    InitJinjoBehavior();
     InitMolehillBehavior();
+    InitMusicNoteBehavior();
     InitPropBehavior();
+
+    UpdateJunkList();
 
     REGISTER_LISTENER(OnActorSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorSpawn* ev = (OnActorSpawn*)event;
@@ -117,24 +121,19 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
-            return;
-        }
-
-        if (ev->actorId == ACTOR_12C_MOLEHILL) {
-            LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
-        }
-
-        if (nextActorSaveState) {
-            nextActorSaveState = false;
-            return;
-        }
+        // if (IsActorWhitelisted(ev->actorId)) {
+        //     LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
+        // }
 
         if (!IsActorWhitelisted(ev->actorId)) {
             return;
         }
 
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
+
+        if (randoCheckId == RC_UNKNOWN) {
+            return;
+        }
         
         if (!ShouldOverrideSpawn(randoCheckId)) {
             return;
@@ -147,6 +146,14 @@ void Rando::ObjectBehavior::Init() {
 
         CustomObject::AddToSpawnQueue(randoCheckId, position);
         CustomObject::InitializeSpawnQueue();
+
+        if (nextActorSaveState) {
+            event->cancelled = true;
+            ev->result = CustomObject::GetCustomActor(randoCheckId);
+            nextActorSaveState = false;
+            return;
+        }
+
 
         switch (ev->actorId) {
             case ACTOR_12C_MOLEHILL:
@@ -167,11 +174,6 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
-            return;
-        }
-
-        CustomObject::InitializeSpawnQueue();
         nextActorSaveState = true;
     })
 
@@ -182,9 +184,6 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        if (map_getLevel(gsworld_getMap()) != LEVEL_1_MUMBOS_MOUNTAIN) {
-            return;
-        }
         RandoItemId randoItemId = RI_UNKNOWN;
 
         if (!ev->propId->markerFlag) {
@@ -199,11 +198,11 @@ void Rando::ObjectBehavior::Init() {
             }
         } else {
             Actor* markerActor = marker_getActor(ev->propId->actorProp.marker);
-
+            
             if (markerActor->is_bundle && func_802C9C14(markerActor)) {
                 return;
             }
-
+            
             switch (ev->propId->actorProp.marker->id) {
                 case MARKER_39_MUMBO_TOKEN:
                     LogOutCollision(ACTOR_2D_MUMBO_TOKEN, ev->propId->actorProp.x, ev->propId->actorProp.y,

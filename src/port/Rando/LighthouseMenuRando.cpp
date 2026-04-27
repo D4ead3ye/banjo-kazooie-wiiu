@@ -5,7 +5,7 @@
 #include "port/ResourceHelpers.h"
 #include "port/ui/UIWidgets.hpp"
 
-#include "port/Rando/StaticData/StaticData.h"
+#include "port/Rando/CustomObject/CustomObject.h"
 
 extern "C" {
 #include "variables.h"
@@ -21,23 +21,23 @@ void LighthouseMenu::AddMenuRando() {
 
     // Add Rando Menu
     AddMenuEntry("Rando", CVAR_SETTING("Menu.RandoSidebarSection"));
-
+    
     // Rando - General
     AddSidebarEntry("Rando", "General", 1);
     WidgetPath path = { "Rando", "General", SECTION_COLUMN_1 };
-
+    
     AddWidget(path, "Enable Rando", WIDGET_SEPARATOR_TEXT);
-
+    
     AddWidget(path, "Enable Rando", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_RANDOMIZER_SETTING("Enable"))
         .Options(CheckboxOptions().Tooltip("Enables Randomizer on the next new save file."));
-
+    
     // Rando - Shuffle Options
     AddSidebarEntry("Rando", "Shuffle Options", 1);
     path = { "Rando", "Shuffle Options", SECTION_COLUMN_1 };
-
+    
     AddWidget(path, "Shuffle Collectables", WIDGET_SEPARATOR_TEXT);
-
+    
     AddWidget(path, "Shuffle Empty Honeycombs", WIDGET_CVAR_CHECKBOX)
         .CVar(Rando::StaticData::Options[RO_SHUFFLE_EMPTY_HONEYCOMBS].cvar)
         .Options(CheckboxOptions().Tooltip("Shuffles Empty Honeycombs into the Pool."));
@@ -56,6 +56,36 @@ void LighthouseMenu::AddMenuRando() {
     AddWidget(path, "Shuffle Music Notes", WIDGET_CVAR_CHECKBOX)
         .CVar(Rando::StaticData::Options[RO_SHUFFLE_MUSIC_NOTES].cvar)
         .Options(CheckboxOptions().Tooltip("Shuffles Music Notes into the Pool."));
+    
+    // Rando - Junk Options
+    AddSidebarEntry("Rando", "Junk Options", 1);
+    path = { "Rando", "Junk Options", SECTION_COLUMN_1 };
+    
+    AddWidget(path, "Enable Junk", WIDGET_SEPARATOR_TEXT);
+    
+    AddWidget(path, "Spawn Junk For Obtained Checks", WIDGET_CVAR_CHECKBOX)
+        .CVar(Rando::StaticData::Options[RO_SPAWN_JUNK].cvar)
+        .Options(CheckboxOptions().Tooltip("Spawns a junk item in place of an object that has already been collected."))
+        .Callback([](WidgetInfo& info) { UpdateJunkList(); });
+    
+    AddWidget(path, "Junk Selection", WIDGET_SEPARATOR_TEXT);
+    
+    AddWidget(path, "Honeycomb Refills", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_RANDOMIZER_SETTING("Junk.HealthRefill"))
+        .Options(CheckboxOptions().Tooltip("Adds Health Refills to the Junk List."))
+        .Callback([](WidgetInfo& info) { UpdateJunkList(); });
+    AddWidget(path, "Blue Eggs", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_RANDOMIZER_SETTING("Junk.BlueEggs"))
+        .Options(CheckboxOptions().Tooltip("Adds Blue Eggs to the Junk List."))
+        .Callback([](WidgetInfo& info) { UpdateJunkList(); });
+    AddWidget(path, "Red Feathers", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_RANDOMIZER_SETTING("Junk.RedFeathers"))
+        .Options(CheckboxOptions().Tooltip("Adds Red Feathers to the Junk List."))
+        .Callback([](WidgetInfo& info) { UpdateJunkList(); });
+    AddWidget(path, "Gold Feathers", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_RANDOMIZER_SETTING("Junk.GoldFeathers"))
+        .Options(CheckboxOptions().Tooltip("Adds Gold Feathers to the Junk List."))
+        .Callback([](WidgetInfo& info) { UpdateJunkList(); });
 
     // Rando - Check Tracker
     path.sidebarName = "Check Tracker";

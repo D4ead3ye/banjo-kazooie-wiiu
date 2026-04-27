@@ -17,6 +17,8 @@ void Rando::ObjectBehavior::InitJiggyBehavior() {
 		jiggy_e jiggyId = va_arg(args, jiggy_e);
         f32* position = va_arg(args, f32*);
 
+        //LogOutSpawns(jiggyId, position[0], position[1], position[2]);
+
         if (CVAR) {
             RandoCheckId randoCheckId = Rando::StaticData::GetCheckByJiggyId(jiggyId);
             
@@ -24,21 +26,26 @@ void Rando::ObjectBehavior::InitJiggyBehavior() {
                 return;
             }
             
-            Rando::StaticData::RandoShuffledPool randoShuffledObject;
-            randoShuffledObject.randoCheckId = RC_UNKNOWN;
+            Rando::StaticData::RandoShuffledPool shuffledObject;
+            shuffledObject.randoCheckId = RC_UNKNOWN;
             
-            randoShuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
-            if (randoShuffledObject.randoCheckId == RC_UNKNOWN) {
+            shuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
+            if (shuffledObject.randoCheckId == RC_UNKNOWN) {
                 return;
             }
-            
+
+            actor_e randoActorId = GetActorIdByShuffledObjectState(shuffledObject);
+
+            if (randoActorId == ACTOR_1_UNKNOWN) {
+                return;
+            }
+
             int32_t spawnPosition[3];
             spawnPosition[0] = (int32_t)position[0];
             spawnPosition[1] = (int32_t)position[1];
             spawnPosition[2] = (int32_t)position[2];
             
-            Actor* newCustomActor = CustomObject::SpawnCustomActor(
-                (actor_e)Rando::StaticData::Items[randoShuffledObject.randoItemId].actorId, spawnPosition);
+            Actor* newCustomActor = CustomObject::SpawnCustomActor(randoActorId, spawnPosition);
             newCustomActor = CustomObject::SetCustomActorParameters(newCustomActor, randoCheckId);
             CustomObject::AddToCustomActorMap(randoCheckId, newCustomActor);
             
