@@ -55,6 +55,31 @@ inline bool IsCheckObtained(RandoCheckId randoCheckId) {
     return isObtained;
 }
 
+inline bool ShouldSpawnJinjoJiggy(int16_t levelId) {
+    bool shouldSpawn = false;
+    int16_t jinjoCount = 0;
+
+    for (auto& pool : Rando::Logic::shuffledPool) {
+        if (!pool.obtained) {
+            continue;
+        }
+
+        if (Rando::StaticData::Checks[pool.shuffleCheckId].worldId != levelId) {
+            continue;
+        }
+
+        if (pool.randoItemId >= RI_JINJO_BLUE && pool.randoItemId <= RI_JINJO_YELLOW) {
+            jinjoCount++;
+        }
+    }
+
+    if (jinjoCount == 5) {
+        shouldSpawn = true;
+    }
+
+    return shouldSpawn;
+}
+
 // Regions
 inline std::string LogicString(std::string condition) {
     if (condition == "true")

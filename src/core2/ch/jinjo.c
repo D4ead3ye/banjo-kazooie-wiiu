@@ -49,7 +49,7 @@ void __chJinjo_802CDBA8(ActorMarker *this, ActorMarker *other){
             fileProgressFlag_set(FILEPROG_E_JINJO_TEXT, 1);
         }
         subaddie_set_state_with_direction(actorPtr, 6, 0.0f , -1);
-        if (EventSystem_Should(VB_OVERRIDE_ITEM_COUNT, false, actorPtr->position)) {
+        if (EventSystem_Should(VB_SET_JINJO_COUNT, true, actorPtr->position)) {
             if (item_adjustByDiffWithHud(ITEM_12_JINJOS, 1 << ((this->id + 6) & 0x1F)) == 0x1f) // [port] MIPS SLL uses low 5 bits; mask to avoid UB
                 localPtr->unk4 = 1;
         }

@@ -76,6 +76,16 @@ bool IsActorWhitelisted(int32_t actorId) {
     return false;
 }
 
+int32_t GetJinjoActorMarkerId(actor_e actorId) {
+    for (auto& [marker, actor] : jinjoMarkerMap) {
+        if (actor == actorId) {
+            return marker;
+        }
+    }
+
+    return NULL;
+}
+
 void SendCollisionNotification(RandoItemId randoItemId) {
     std::string prefix = "You collected ";
     prefix += Rando::StaticData::Items[randoItemId].article;

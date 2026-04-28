@@ -45,7 +45,7 @@ typedef enum VBehaviorID {
     VB_OVERRIDE_JIGGY_SPAWN,
     VB_OVERRIDE_PROP_SPAWN,
     VB_OVERRIDE_BUNDLE_SPAWN,
-    VB_OVERRIDE_ITEM_COUNT,
+    VB_SET_JINJO_COUNT,
 } VBehaviorID;
 
 #ifndef __cplusplus

@@ -30,8 +30,9 @@ void item_inc(enum item_e item);
 s32 item_adjustByDiffWithHud(enum item_e item, s32 diff);
 
 void fxSparkle_musicNote(s16 position[3]);
-void actor_loopAnimation(Actor* thisx);
 }
+
+extern int32_t GetJinjoActorMarkerId(actor_e actorId);
 
 int32_t currentMap = -1;
 std::map<RandoCheckId, Actor> customActorMap;
@@ -107,6 +108,34 @@ Actor* CustomObject::GetCustomActor(RandoCheckId randoCheckId) {
         }
     }
     return NULL;
+}
+
+void CustomObject::SpawnJinjoJiggy(int16_t levelId, int16_t position[3]) {
+    RandoCheckId jiggyCheckId = Rando::StaticData::GetJinjoJiggyCheckByLevelId(levelId);
+
+    int32_t spawnPosition[3];
+    spawnPosition[0] = (int32_t)position[0];
+    spawnPosition[1] = (int32_t)position[1];
+    spawnPosition[2] = (int32_t)position[2];
+
+    if (jiggyCheckId != RC_UNKNOWN) {
+        Actor* actor;
+        Rando::StaticData::RandoShuffledPool shuffledObject = Rando::Logic::GetShuffledObject(jiggyCheckId);
+        if (shuffledObject.randoCheckId != RC_UNKNOWN) {
+            actor = CustomObject::SpawnCustomActor(
+                (actor_e)Rando::StaticData::Items[shuffledObject.randoItemId].actorId, spawnPosition);
+            if (actor != NULL) {
+                actor = CustomObject::SetCustomActorParameters(actor, shuffledObject.randoCheckId);
+                ApplyCustomActorPhysics(shuffledObject.randoCheckId, actor, true);
+            }
+        } else {
+            actor = CustomObject::SpawnCustomActor((actor_e)Rando::StaticData::Checks[jiggyCheckId].actorId, spawnPosition);
+            if (actor != NULL) {
+                chjiggy_setJiggyId(actor, Rando::StaticData::Checks[jiggyCheckId].collectionId);
+                ApplyCustomActorPhysics(jiggyCheckId, actor, true);
+            }
+        }
+    }
 }
 
 void CustomObject::AddToCustomActorMap(RandoCheckId randoCheckId, Actor* actor) {
@@ -185,8 +214,13 @@ void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId, Actor*
         case RI_JINJO_PINK:
         case RI_JINJO_YELLOW:
             if (Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId == map_getLevel(gsworld_getMap())) {
-                item_adjustByDiffWithHud(
-                    ITEM_12_JINJOS, 1 << ((Rando::StaticData::Items[shuffledObject.randoItemId].actorId + 6) & 0x1F));
+                int32_t jinjoMarkerId = GetJinjoActorMarkerId((actor_e)Rando::StaticData::Items[shuffledObject.randoItemId].actorId);
+                item_adjustByDiffWithHud(ITEM_12_JINJOS, 1 << ((jinjoMarkerId + 6) & 0x1F));
+            } else {
+                if (Rando::Logic::ShouldSpawnJinjoJiggy(
+                        Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId)) {
+                    CustomObject::SpawnJinjoJiggy(Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId, position);
+                }
             }
             break;
         case RI_MUSIC_NOTE:

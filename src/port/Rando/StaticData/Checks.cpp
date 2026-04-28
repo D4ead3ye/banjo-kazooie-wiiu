@@ -305,5 +305,19 @@ RandoCheckId GetCheckByJiggyId(int32_t jiggyId) {
     return RC_UNKNOWN;
 }
 
+RandoCheckId GetJinjoJiggyCheckByLevelId(int16_t levelId) {
+    for (auto& [randoCheckId, randoStaticCheck] : Checks) {
+        if (randoStaticCheck.randoCheckType != RCTYPE_JIGGY) {
+            continue;
+        }
+
+        if (randoStaticCheck.collectionId == (10 * levelId) - 9) {
+            return randoCheckId;
+        }
+    }
+
+    return RC_UNKNOWN;
+}
+
 } // namespace StaticData
 } // namespace Rando

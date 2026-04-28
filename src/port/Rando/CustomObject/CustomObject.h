@@ -34,7 +34,7 @@ typedef struct {
 CustomActor CreateCustomActor(RandoCheckId randoCheckId, int32_t position[3]);
 actor_e GetActorIdByShuffledObjectState(Rando::StaticData::RandoShuffledPool shuffledObject);
 void ApplyBundleActorPhysics(Actor* actor, int32_t bundle_id, BundleInfo* bundle_info, f32 bundleYaw);
-void ApplyCustomActorPhysics(RandoCheckId randoCheckId, Actor* actor);
+void ApplyCustomActorPhysics(RandoCheckId randoCheckId, Actor* actor, bool isJinjoJiggy);
 
 void UpdateJunkList();
 
@@ -44,6 +44,7 @@ public:
     static Actor* SetCustomActorParameters(Actor* actor, RandoCheckId randoCheckId);
     static Actor* SpawnCustomActor(actor_e actorId, int32_t position[3]);
     static Actor* GetCustomActor(RandoCheckId randoCheckId);
+    static void SpawnJinjoJiggy(int16_t levelId, int16_t position[3]);
     static void AddToCustomActorMap(RandoCheckId randoCheckId, Actor* actor);
     static void AddToSpawnQueue(RandoCheckId randoCheckId, int32_t position[3]);
     static void InitializeSpawnQueue();

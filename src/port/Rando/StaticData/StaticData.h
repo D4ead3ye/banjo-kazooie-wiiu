@@ -36,6 +36,7 @@ struct RandoStaticCheck {
 
 RandoCheckId GetCheckByPosition(int32_t posX, int32_t posY, int32_t posZ);
 RandoCheckId GetCheckByJiggyId(int32_t jiggyId);
+RandoCheckId GetJinjoJiggyCheckByLevelId(int16_t levelId);
 
 extern std::map<RandoCheckId, RandoStaticCheck> Checks;
 // extern RandoStaticCheck GetShuffledRandoStaticCheck(s16 x, s16 y, s16 z);
