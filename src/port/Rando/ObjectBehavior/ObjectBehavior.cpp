@@ -196,17 +196,7 @@ void Rando::ObjectBehavior::Init() {
 
         RandoItemId randoItemId = RI_UNKNOWN;
 
-        if (!ev->propId->markerFlag) {
-            switch (ev->propId->spriteProp.spriteId) {
-                case RP_MUSIC_NOTE:
-                    LogOutCollision(ACTOR_51_MUSIC_NOTE, ev->propId->actorProp.x, ev->propId->actorProp.y,
-                                    ev->propId->actorProp.z);
-                    randoItemId = RI_MUSIC_NOTE;
-                    break;
-                default:
-                    break;
-            }
-        } else {
+        if (ev->propId->markerFlag) {
             Actor* markerActor = marker_getActor(ev->propId->actorProp.marker);
             
             if (markerActor->is_bundle && func_802C9C14(markerActor)) {
