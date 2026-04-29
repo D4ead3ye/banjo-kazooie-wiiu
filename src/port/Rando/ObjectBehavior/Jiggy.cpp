@@ -49,7 +49,7 @@ void Rando::ObjectBehavior::InitJiggyBehavior() {
             newCustomActor = CustomObject::SetCustomActorParameters(newCustomActor, randoCheckId);
             CustomObject::AddToCustomActorMap(randoCheckId, newCustomActor);
             
-            ApplyCustomActorPhysics(randoCheckId, newCustomActor);
+            ApplyCustomActorPhysics(randoCheckId, newCustomActor, false);
             
             CustomObject::InitializeSpawnQueue();
             *should = true;
