@@ -38,10 +38,8 @@ void Rando::ObjectBehavior::InitJinjoBehavior() {
                 }
             
                 if (pool.randoItemId >= RI_JINJO_BLUE && pool.randoItemId <= RI_JINJO_YELLOW) {
-                    // TODO: Spawn World specific RC for Jinjo Jiggy when 5 are collected anywhere.
-                    // int32_t jinjoMarkerId = GetJinjoActorMarkerId((actor_e)Rando::StaticData::Items[pool.randoItemId].actorId);
-                    int32_t jinjoMarkerId = jinjoDiffMap.at(pool.randoItemId);
-                    item_adjustByDiffWithHud(ITEM_12_JINJOS, jinjoMarkerId);
+                    int32_t jinjoMarkerId = GetJinjoActorMarkerId((actor_e)Rando::StaticData::Items[pool.randoItemId].actorId);
+                    item_adjustByDiffWithHud(ITEM_12_JINJOS, (1 << ((jinjoMarkerId + 6) & 0x1F)));
                 }
             }
         }

@@ -6,7 +6,6 @@
 bool ShouldOverrideSpawn(RandoCheckId randoCheckId);
 void LogOutSpawns(int32_t actorId, int16_t posX, int16_t posY, int16_t posZ);
 int32_t GetJinjoActorMarkerId(actor_e actorId);
-extern std::map<RandoItemId, int32_t> jinjoDiffMap;
 
 namespace Rando {
 
