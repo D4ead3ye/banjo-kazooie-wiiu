@@ -33,6 +33,7 @@ void fxSparkle_musicNote(s16 position[3]);
 }
 
 extern int32_t GetJinjoActorMarkerId(actor_e actorId);
+extern std::map<RandoItemId, int32_t> jinjoDiffMap;
 
 int32_t currentMap = -1;
 std::map<RandoCheckId, Actor> customActorMap;
@@ -215,7 +216,8 @@ void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId, Actor*
         case RI_JINJO_YELLOW:
             if (Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId == map_getLevel(gsworld_getMap())) {
                 int32_t jinjoMarkerId = GetJinjoActorMarkerId((actor_e)Rando::StaticData::Items[shuffledObject.randoItemId].actorId);
-                item_adjustByDiffWithHud(ITEM_12_JINJOS, 1 << ((jinjoMarkerId + 6) & 0x1F));
+                // item_adjustByDiffWithHud(ITEM_12_JINJOS, (1 << ((jinjoMarkerId + 6) & 0x1F)));
+                item_adjustByDiffWithHud(ITEM_12_JINJOS, jinjoDiffMap.at(shuffledObject.randoItemId));
             } else {
                 if (Rando::Logic::ShouldSpawnJinjoJiggy(
                         Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId)) {

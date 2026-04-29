@@ -39,8 +39,9 @@ void Rando::ObjectBehavior::InitJinjoBehavior() {
             
                 if (pool.randoItemId >= RI_JINJO_BLUE && pool.randoItemId <= RI_JINJO_YELLOW) {
                     // TODO: Spawn World specific RC for Jinjo Jiggy when 5 are collected anywhere.
-                    int32_t jinjoMarkerId = GetJinjoActorMarkerId((actor_e)Rando::StaticData::Items[pool.randoItemId].actorId);
-                    item_adjustByDiffWithHud(ITEM_12_JINJOS, 1 << ((jinjoMarkerId + 6) & 0x1F));
+                    // int32_t jinjoMarkerId = GetJinjoActorMarkerId((actor_e)Rando::StaticData::Items[pool.randoItemId].actorId);
+                    int32_t jinjoMarkerId = jinjoDiffMap.at(pool.randoItemId);
+                    item_adjustByDiffWithHud(ITEM_12_JINJOS, jinjoMarkerId);
                 }
             }
         }
@@ -52,21 +53,27 @@ void Rando::ObjectBehavior::InitJinjoBehavior() {
         //     return;
         // }
 
-        int16_t actorPos[3];
-        actorPos[0] = (int16_t)position[0];
-        actorPos[1] = (int16_t)position[1];
-        actorPos[2] = (int16_t)position[2];
-
-        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(actorPos[0], actorPos[1], actorPos[2]);
-        if (randoCheckId == RC_UNKNOWN) {
-            return;
-        }
-        
-        Rando::StaticData::RandoShuffledPool shuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
-        if (shuffledObject.randoCheckId == RC_UNKNOWN) {
-            return;
-        }
-        
         *should = false;
+
+        // int16_t actorPos[3];
+        // actorPos[0] = (int16_t)position[0];
+        // actorPos[1] = (int16_t)position[1];
+        // actorPos[2] = (int16_t)position[2];
+        // 
+        // RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(actorPos[0], actorPos[1], actorPos[2]);
+        // if (randoCheckId == RC_UNKNOWN) {
+        //     return;
+        // }
+        // 
+        // Rando::StaticData::RandoShuffledPool shuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
+        // if (shuffledObject.randoCheckId == RC_UNKNOWN) {
+        //     return;
+        // }
+        // 
+        // if (Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId != map_getLevel(gsworld_getMap())) {
+        //     return;
+        // }
+        // 
+        // *should = false;
     })
 }

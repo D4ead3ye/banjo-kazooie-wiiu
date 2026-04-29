@@ -20,6 +20,10 @@ Actor* marker_getActor(ActorMarker* thisx);
 bool func_802C9C14(Actor* actor);
 }
 
+std::map<RandoItemId, int32_t> jinjoDiffMap = {
+    { RI_JINJO_BLUE, 1 }, { RI_JINJO_GREEN, 2 }, { RI_JINJO_ORANGE, 4 }, { RI_JINJO_PINK, 8 }, { RI_JINJO_YELLOW, 16 },
+};
+
 // clang-format off
 std::vector<int32_t> actorSpawnWhitelist = {
     ACTOR_2D_MUMBO_TOKEN,
