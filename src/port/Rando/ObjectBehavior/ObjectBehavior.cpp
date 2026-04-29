@@ -131,6 +131,8 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
+        CustomObject::InitializeSpawnQueue();
+
         // if (IsActorWhitelisted(ev->actorId)) {
         //     LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
         // }
