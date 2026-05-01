@@ -71,7 +71,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
         actor = CustomObject::SetCustomActorParameters(actor, shuffledObject.randoCheckId);
         CustomObject::AddToCustomActorMap(shuffledObject.randoCheckId, actor);
         if (shuffledObject.randoCheckId == RC_MM_JIGGY_HUTS) {
-            ApplyCustomActorPhysics(shuffledObject.randoCheckId, actor);
+            ApplyCustomActorPhysics(shuffledObject.randoCheckId, actor, false);
         } else {
             ApplyBundleActorPhysics(actor, bundleId, (BundleInfo*)bundleInfo, gBundle_yaw);
         }

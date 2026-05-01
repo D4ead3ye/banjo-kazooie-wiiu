@@ -76,6 +76,16 @@ bool IsActorWhitelisted(int32_t actorId) {
     return false;
 }
 
+int32_t GetJinjoActorMarkerId(actor_e actorId) {
+    for (auto& [marker, actor] : jinjoMarkerMap) {
+        if (actor == actorId) {
+            return marker;
+        }
+    }
+
+    return NULL;
+}
+
 void SendCollisionNotification(RandoItemId randoItemId) {
     std::string prefix = "You collected ";
     prefix += Rando::StaticData::Items[randoItemId].article;
@@ -121,9 +131,9 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        // if (IsActorWhitelisted(ev->actorId)) {
-        //     LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
-        // }
+        if (IsActorWhitelisted(ev->actorId)) {
+            LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
+        }
 
         if (!IsActorWhitelisted(ev->actorId)) {
             return;
@@ -136,6 +146,7 @@ void Rando::ObjectBehavior::Init() {
         }
         
         if (!ShouldOverrideSpawn(randoCheckId)) {
+            CustomObject::InitializeSpawnQueue();
             return;
         }
 
@@ -184,19 +195,18 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        RandoItemId randoItemId = RI_UNKNOWN;
-
         if (!ev->propId->markerFlag) {
             switch (ev->propId->spriteProp.spriteId) {
                 case RP_MUSIC_NOTE:
                     LogOutCollision(ACTOR_51_MUSIC_NOTE, ev->propId->actorProp.x, ev->propId->actorProp.y,
                                     ev->propId->actorProp.z);
-                    randoItemId = RI_MUSIC_NOTE;
-                    break;
-                default:
                     break;
             }
-        } else {
+        }
+
+        RandoItemId randoItemId = RI_UNKNOWN;
+
+        if (ev->propId->markerFlag) {
             Actor* markerActor = marker_getActor(ev->propId->actorProp.marker);
             
             if (markerActor->is_bundle && func_802C9C14(markerActor)) {
@@ -240,6 +250,9 @@ void Rando::ObjectBehavior::Init() {
         }
 
         if (randoItemId != RI_UNKNOWN) {
+            if (randoItemId == RI_MUSIC_NOTE) {
+                event->cancelled = true;
+            }
             CustomObject::ObjectCollected(ev->propId);
             SendCollisionNotification(randoItemId);
         }
