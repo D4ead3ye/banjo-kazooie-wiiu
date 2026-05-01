@@ -1020,9 +1020,6 @@ void code7AF80_initCubeFromFile(File *file_ptr, Cube *cube) {
                     }
                     //Prop* ptr = cube->prop2Ptr + i * sizeof(Prop);
                     CALL_EVENT(OnPropInit, &cube->prop2Ptr[i]);
-                    if (cube->prop2Ptr[i].spriteProp.spriteId == 356) {
-                        BK_LOG_INFO("Note: %i, %i, %i", pos[0], pos[1], pos[2]);
-                    }
                 }
             }
         }
