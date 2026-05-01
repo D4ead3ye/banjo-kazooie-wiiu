@@ -131,9 +131,9 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        // if (IsActorWhitelisted(ev->actorId)) {
-        //     LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
-        // }
+        if (IsActorWhitelisted(ev->actorId)) {
+            LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
+        }
 
         if (!IsActorWhitelisted(ev->actorId)) {
             return;
@@ -194,6 +194,15 @@ void Rando::ObjectBehavior::Init() {
         // if (!IS_RANDO) {
         //     return;
         // }
+
+        if (!ev->propId->markerFlag) {
+            switch (ev->propId->spriteProp.spriteId) {
+                case RP_MUSIC_NOTE:
+                    LogOutCollision(ACTOR_51_MUSIC_NOTE, ev->propId->actorProp.x, ev->propId->actorProp.y,
+                                    ev->propId->actorProp.z);
+                    break;
+            }
+        }
 
         RandoItemId randoItemId = RI_UNKNOWN;
 
