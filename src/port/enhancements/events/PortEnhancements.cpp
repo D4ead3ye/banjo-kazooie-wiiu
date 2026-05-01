@@ -1,6 +1,7 @@
 #include "PortEnhancements.h"
 #include "port/save/SaveManager.h"
 #include "port/rando/Rando.h"
+#include "port/ShipUtils.h"
 
 #define INIT_EVENT_IDS
 

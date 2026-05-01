@@ -86,6 +86,13 @@ void LighthouseMenu::AddMenuRando() {
         .CVar(CVAR_RANDOMIZER_SETTING("Junk.GoldFeathers"))
         .Options(CheckboxOptions().Tooltip("Adds Gold Feathers to the Junk List."))
         .Callback([](WidgetInfo& info) { UpdateJunkList(); });
+
+    // Rando - Check Tracker
+    path.sidebarName = "Check Tracker";
+    AddSidebarEntry("Rando", path.sidebarName, 1);
+    AddWidget(path, "Popout Settings", WIDGET_WINDOW_BUTTON)
+        .CVar("gWindows.CheckTrackerSettings")
+        .WindowName("Check Tracker Settings");
 }
 
 } // namespace LighthouseGui
