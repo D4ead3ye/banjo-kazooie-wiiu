@@ -94,13 +94,5 @@ void LighthouseMenu::AddMenuRando() {
         .CVar("gWindows.CheckTrackerSettings")
         .WindowName("Check Tracker Settings");
 }
-//AddWidget(path, "Popout Check Tracker", WIDGET_WINDOW_BUTTON)
-//    .CVar(CVAR_WINDOW("CheckTracker"))
-//    .WindowName("Check Tracker")
-//    .HideInSearch(true)
-//    .Options(WindowButtonOptions().Tooltip("Enables the separate Check Tracker Window."));
-//}
-
-
 
 } // namespace LighthouseGui

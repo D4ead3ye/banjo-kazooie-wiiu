@@ -53,7 +53,6 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnActorDestroy);
 
     Rando::Init();
-//    LoadGuiTextures();
 }
 
 void PortEnhancements_Exit() {
