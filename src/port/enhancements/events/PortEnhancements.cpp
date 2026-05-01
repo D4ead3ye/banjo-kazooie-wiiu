@@ -1,6 +1,7 @@
 #include "PortEnhancements.h"
 #include "port/save/SaveManager.h"
 #include "port/rando/Rando.h"
+#include "port/ShipUtils.h"
 
 #define INIT_EVENT_IDS
 
@@ -52,6 +53,7 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnActorDestroy);
 
     Rando::Init();
+//    LoadGuiTextures();
 }
 
 void PortEnhancements_Exit() {

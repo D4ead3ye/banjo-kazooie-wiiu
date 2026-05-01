@@ -366,3 +366,13 @@ std::string Ship_ConvertEnumToReadableName(const std::string& input) {
 
     return result;
 }
+
+//std::array<const char*, 1> miscellaneousTextures = {
+//    "assets/sprite/Talk_GreenJinjo"
+//};
+//
+//void LoadGuiTextures() {
+//    for (const auto entry : miscellaneousTextures) {
+//        Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(entry, entry, ImVec4(1, 1, 1, 1));
+//    }
+//}

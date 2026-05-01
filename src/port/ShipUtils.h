@@ -2,6 +2,8 @@
 
 #include "libultraship/libultra/types.h"
 
+void LoadGuiTextures();
+
 #ifdef __cplusplus
 #include <nlohmann/json.hpp>
 #define WIDGET_COLOR UIWidgets::Colors(CVarGetInteger("gSettings.Menu.Theme", 5))

@@ -88,6 +88,12 @@ void RandoHelper_ObjectSpawner() {
     player_getPosition_s32(playerPosition);
     RandoHelper_SpawnPosition();
     
+
+    ImGui::Image(Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName("assets/sprite/Talk_GreenJinjo"),
+                 ImVec2(64.0f, 64.0f));
+
+
+
     ImGui::SeparatorText("Spawn Data");
     if (ImGui::BeginTable("SpawnInfoTable", 3)) {
         ImGui::TableSetupColumn("Label", ImGuiTableColumnFlags_WidthFixed, 75.0f);
