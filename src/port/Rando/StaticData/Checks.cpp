@@ -158,7 +158,7 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_GV_JINJO_ORANGE,                              RCTYPE_JINJO,           LEVEL_7_GOBIS_VALLEY,       ACTOR_5F_JINJO_ORANGE,      NULL,                                           58, 535, 1570),
     RC(RC_GV_JINJO_PINK,                                RCTYPE_JINJO,           LEVEL_7_GOBIS_VALLEY,       ACTOR_61_JINJO_PINK,        NULL,                                           -4964, 0, 700),
     RC(RC_GV_JINJO_YELLOW,                              RCTYPE_JINJO,           LEVEL_7_GOBIS_VALLEY,       ACTOR_5E_JINJO_YELLOW,      NULL,                                           4952, 2538, 439),
-    RC(RC_GV_MOLEHILL_TURBO_TALON,                      RCTYPE_MOLEHILL,        LEVEL_7_GOBIS_VALLEY,       ACTOR_12C_MOLEHILL,         ABILITY_11_TURBO_TALON,                         -259, -500, 1413),
+    RC(RC_GV_MOLEHILL_TURBO_TALON,                      RCTYPE_MOLEHILL,        LEVEL_7_GOBIS_VALLEY,       ACTOR_12C_MOLEHILL,         ABILITY_11_TURBO_TALON,                         -6445, 2831, -822),
     RC(RC_GV_MUMBO_TOKEN_BEHIND_SANDYBUTTS_SARCOPHAGUS, RCTYPE_MUMBO_TOKEN,     LEVEL_7_GOBIS_VALLEY,       ACTOR_2D_MUMBO_TOKEN,       MUMBOTOKEN_2F_GV_BEHIND_SANDYBUTTS_SARCOPHAGUS, -5514, 0, 138),
     RC(RC_GV_MUMBO_TOKEN_BOTTOM_OF_MOAT,                RCTYPE_MUMBO_TOKEN,     LEVEL_7_GOBIS_VALLEY,       ACTOR_2D_MUMBO_TOKEN,       MUMBOTOKEN_2B_GV_BOTTOM_OF_MOAT,                91, 535, -860),
     RC(RC_GV_MUMBO_TOKEN_FRONT_OF_STAR_DOOR,            RCTYPE_MUMBO_TOKEN,     LEVEL_7_GOBIS_VALLEY,       ACTOR_2D_MUMBO_TOKEN,       MUMBOTOKEN_2D_GV_FRONT_OF_STAR_DOOR,            -230, 2843, -3091),
