@@ -136,6 +136,7 @@ void Rando::ObjectBehavior::Init() {
         }
 
         if (!IsActorWhitelisted(ev->actorId)) {
+            CustomObject::InitializeSpawnQueue();
             return;
         }
 
