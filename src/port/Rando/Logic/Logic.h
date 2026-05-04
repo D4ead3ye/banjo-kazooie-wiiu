@@ -4,6 +4,15 @@
 #include "port/Rando/Rando.h"
 #include "port/ShipUtils.h"
 
+extern "C" {
+s32 item_getCount(enum item_e item);
+
+int ability_isUnlocked(enum ability_e uid);
+
+bool fileProgressFlag_get(enum file_progress_e index);
+s32 __transformation_getCost(enum transformation_e trans_id);
+}
+
 namespace Rando {
 
 namespace Logic {
@@ -110,6 +119,24 @@ extern std::map<RandoRegionId, RandoRegion> Regions;
             [] { return condition; }, LogicString(#condition) \
         }                                                     \
     }
+
+// Check Logic
+inline bool CanUseTransformation(transformation_e transId) {
+    file_progress_e progressId = (file_progress_e)((transId - TRANSFORM_2_TERMITE) + FILEPROG_90_PAID_TERMITE_COST);
+
+    if (fileProgressFlag_get(progressId)) {
+        return true;
+    } else {
+        if (__transformation_getCost(transId) <= item_getCount(ITEM_1C_MUMBO_TOKEN)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+#define CAN_USE_ABILITY(abilityId) ability_isUnlocked(abilityId)
+#define CAN_USE_TRANSFORMATION(transId) CanUseTransformation(transId)
+
 
 } // namespace Logic
 
