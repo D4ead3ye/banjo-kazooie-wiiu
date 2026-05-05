@@ -164,7 +164,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_TREASURE_TROVE_COVE, CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
         },
     };
-    Regions[RR_TREASURE_TROVE_COVE_LIGHTHOUSE_BASE] = RandoRegion{ .regionName = "Treasure Trove Cove Lighthouse", .levelId = LEVEL_2_TREASURE_TROVE_COVE,
+    Regions[RR_TREASURE_TROVE_COVE_LIGHTHOUSE_BASE] = RandoRegion{ .regionName = "Treasure Trove Cove Lighthouse Base", .levelId = LEVEL_2_TREASURE_TROVE_COVE,
         .checks = {
             CHECK(RC_TTC_JINJO_YELLOW, 								CAN_EXTEND_JUMP_DISTANCE),
             CHECK(RC_TTC_MUMBO_TOKEN_BEHIND_LIGHTHOUSE_DOOR, 		CAN_EXTEND_JUMP_DISTANCE && (CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP) || CAN_USE_ABILITY(ABILITY_6_EGGS) || CAN_USE_ABILITY(ABILITY_12_WONDERWING))),
@@ -177,7 +177,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_TREASURE_TROVE_COVE_LIGHTHOUSE_TOP, CAN_EXTEND_JUMP_DISTANCE && (CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP) || CAN_USE_ABILITY(ABILITY_6_EGGS) || CAN_USE_ABILITY(ABILITY_12_WONDERWING)))
         },
     };
-    Regions[RR_TREASURE_TROVE_COVE_LIGHTHOUSE_TOP] = RandoRegion{ .regionName = "Treasure Trove Cove Lighthouse", .levelId = LEVEL_2_TREASURE_TROVE_COVE,
+    Regions[RR_TREASURE_TROVE_COVE_LIGHTHOUSE_TOP] = RandoRegion{ .regionName = "Treasure Trove Cove Lighthouse Top", .levelId = LEVEL_2_TREASURE_TROVE_COVE,
         .checks = {
             CHECK(RC_TTC_JIGGY_LIGHTHOUSE, 							CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
             CHECK(RC_TTC_NOTE_LIGHTHOUSE_TOP_1, 					true),
