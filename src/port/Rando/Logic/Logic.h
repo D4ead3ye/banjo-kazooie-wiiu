@@ -136,6 +136,13 @@ inline bool CanUseTransformation(transformation_e transId) {
 
 #define CAN_USE_ABILITY(abilityId) ability_isUnlocked(abilityId)
 #define CAN_USE_TRANSFORMATION(transId) CanUseTransformation(transId)
+#define CAN_EXTEND_JUMP_DISTANCE                                                           \
+    (CAN_USE_ABILITY(ABILITY_7_FEATHERY_FLAP) || CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP) || \
+     CAN_USE_ABILITY(ABILITY_10_TALON_TROT))
+#define CAN_ATTACK                                                                                                  \
+    (CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP) || CAN_USE_ABILITY(ABILITY_4_CLAW_SWIPE) ||                             \
+     CAN_USE_ABILITY(ABILITY_6_EGGS) || CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) || CAN_USE_ABILITY(ABILITY_C_ROLL) || \
+     CAN_USE_ABILITY(ABILITY_12_WONDERWING))
 
 
 } // namespace Logic
