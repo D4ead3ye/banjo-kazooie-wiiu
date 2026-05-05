@@ -48,6 +48,8 @@ std::map<RandoCheckId, BundlePhysics> customActorPhysicsMap = {
     { RC_MM_JIGGY_JUJU, { 0, 300.0f, 0, 0, 10.0f, 0, 0, 0x1 } },
 };
 
+BundlePhysics jinjoJiggySpawnPhysics = { 0, 300.0f, 0, 0, 10.0f, 0, 0, 0x1 };
+
 BundlePhysics GetPhysicsByCheckId(RandoCheckId randoCheckId) {
     for (auto& [check, physics] : customActorPhysicsMap) {
         if (check == randoCheckId) {
@@ -98,13 +100,13 @@ void ApplyBundleActorPhysics(Actor* actor, int32_t bundle_id, BundleInfo* bundle
     }
 }
 
-void ApplyCustomActorPhysics(RandoCheckId randoCheckId, Actor* actor) {
+void ApplyCustomActorPhysics(RandoCheckId randoCheckId, Actor* actor, bool isJinjoJiggy) {
     if (actor == NULL) {
         return;
     }
 
     float bundleYaw = gBundle_yaw;
-    BundlePhysics physicsData = GetPhysicsByCheckId(randoCheckId);
+    BundlePhysics physicsData = isJinjoJiggy ? jinjoJiggySpawnPhysics : GetPhysicsByCheckId(randoCheckId);
 
     actor->is_bundle = true;
     Bundle* bundle = (Bundle*)&actor->unkBC;

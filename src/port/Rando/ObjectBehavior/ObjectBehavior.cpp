@@ -76,6 +76,16 @@ bool IsActorWhitelisted(int32_t actorId) {
     return false;
 }
 
+int32_t GetJinjoActorMarkerId(actor_e actorId) {
+    for (auto& [marker, actor] : jinjoMarkerMap) {
+        if (actor == actorId) {
+            return marker;
+        }
+    }
+
+    return NULL;
+}
+
 void SendCollisionNotification(RandoItemId randoItemId) {
     std::string prefix = "You collected ";
     prefix += Rando::StaticData::Items[randoItemId].article;
@@ -107,8 +117,12 @@ bool ShouldOverrideSpawn(RandoCheckId randoCheckId) {
 void Rando::ObjectBehavior::Init() {
     InitBundleBehavior();
     InitJiggyBehavior();
+    InitJinjoBehavior();
     InitMolehillBehavior();
+    InitMusicNoteBehavior();
     InitPropBehavior();
+
+    UpdateJunkList();
 
     REGISTER_LISTENER(OnActorSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorSpawn* ev = (OnActorSpawn*)event;
@@ -121,12 +135,8 @@ void Rando::ObjectBehavior::Init() {
             LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
         }
 
-        if (nextActorSaveState) {
-            nextActorSaveState = false;
-            return;
-        }
-
         if (!IsActorWhitelisted(ev->actorId)) {
+            CustomObject::InitializeSpawnQueue();
             return;
         }
 
@@ -137,6 +147,7 @@ void Rando::ObjectBehavior::Init() {
         }
         
         if (!ShouldOverrideSpawn(randoCheckId)) {
+            CustomObject::InitializeSpawnQueue();
             return;
         }
 
@@ -147,6 +158,14 @@ void Rando::ObjectBehavior::Init() {
 
         CustomObject::AddToSpawnQueue(randoCheckId, position);
         CustomObject::InitializeSpawnQueue();
+
+        if (nextActorSaveState) {
+            event->cancelled = true;
+            ev->result = CustomObject::GetCustomActor(randoCheckId);
+            nextActorSaveState = false;
+            return;
+        }
+
 
         switch (ev->actorId) {
             case ACTOR_12C_MOLEHILL:
@@ -167,7 +186,6 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        CustomObject::InitializeSpawnQueue();
         nextActorSaveState = true;
     })
 
@@ -178,25 +196,24 @@ void Rando::ObjectBehavior::Init() {
         //     return;
         // }
 
-        RandoItemId randoItemId = RI_UNKNOWN;
-
         if (!ev->propId->markerFlag) {
             switch (ev->propId->spriteProp.spriteId) {
                 case RP_MUSIC_NOTE:
                     LogOutCollision(ACTOR_51_MUSIC_NOTE, ev->propId->actorProp.x, ev->propId->actorProp.y,
                                     ev->propId->actorProp.z);
-                    randoItemId = RI_MUSIC_NOTE;
-                    break;
-                default:
                     break;
             }
-        } else {
-            Actor* markerActor = marker_getActor(ev->propId->actorProp.marker);
+        }
 
+        RandoItemId randoItemId = RI_UNKNOWN;
+
+        if (ev->propId->markerFlag) {
+            Actor* markerActor = marker_getActor(ev->propId->actorProp.marker);
+            
             if (markerActor->is_bundle && func_802C9C14(markerActor)) {
                 return;
             }
-
+            
             switch (ev->propId->actorProp.marker->id) {
                 case MARKER_39_MUMBO_TOKEN:
                     LogOutCollision(ACTOR_2D_MUMBO_TOKEN, ev->propId->actorProp.x, ev->propId->actorProp.y,
@@ -234,6 +251,9 @@ void Rando::ObjectBehavior::Init() {
         }
 
         if (randoItemId != RI_UNKNOWN) {
+            if (randoItemId == RI_MUSIC_NOTE) {
+                event->cancelled = true;
+            }
             CustomObject::ObjectCollected(ev->propId);
             SendCollisionNotification(randoItemId);
         }
