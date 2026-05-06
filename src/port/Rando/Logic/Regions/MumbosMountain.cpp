@@ -7,6 +7,7 @@ using namespace Rando::Logic;
 static RegisterShipInitFunc initFunc([]() {
     Regions[RR_MUMBOS_MOUNTAIN] = RandoRegion{ .regionName = "Mumbo's Mountain", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
         .checks = {
+        // TODO: Add region for Mumbo's Skull, Ticker's Tower, Top of Tickers Tower
             CHECK(RC_MM_EMPTY_HONEYCOMB_HILL, 					true),
             CHECK(RC_MM_EMPTY_HONEYCOMB_JUJU, 					CAN_USE_ABILITY(ABILITY_6_EGGS) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
             CHECK(RC_MM_JIGGY_CHIMPY, 							CAN_USE_ABILITY(ABILITY_5_CLIMB) || CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
@@ -18,7 +19,6 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_MM_JIGGY_MUMBOS_SKULL, 					CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
             CHECK(RC_MM_JIGGY_ORANGE_PADS, 						true),
             CHECK(RC_MM_JIGGY_RUINS, 							true),
-            CHECK(RC_MM_JIGGY_TICKERS_TOWER, 					CAN_USE_TRANSFORMATION(TRANSFORM_2_TERMITE)),
             CHECK(RC_MM_JINJO_BLUE, 							true),
             CHECK(RC_MM_JINJO_GREEN, 							CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
             CHECK(RC_MM_JINJO_ORANGE, 							true),
@@ -29,7 +29,6 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_MM_MOLEHILL_USE_EGGS, 						CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
             CHECK(RC_MM_MUMBO_TOKEN_BEHIND_PINK_JINJO, 			true),
             CHECK(RC_MM_MUMBO_TOKEN_BEHIND_RUINS, 				true),
-            CHECK(RC_MM_MUMBO_TOKEN_INSIDE_TICKERS_TOWER, 		CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP) || CAN_USE_ABILITY(ABILITY_10_TALON_TROT) || CAN_USE_TRANSFORMATION(TRANSFORM_2_TERMITE)),
             CHECK(RC_MM_MUMBO_TOKEN_STUMP_NEAR_CONGA, 			CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
             CHECK(RC_MM_MUMBO_TOKEN_UNDER_RAMP_TO_MUMBOS_SKULL, true),
             CHECK(RC_MM_NOTE_SOUTH_SLOPE_FIRST_PLATFORM_1, 		true),
@@ -122,10 +121,15 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_MM_NOTE_HUT_BUNDLE_3, 						CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
             CHECK(RC_MM_NOTE_HUT_BUNDLE_4, 						CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
             CHECK(RC_MM_NOTE_HUT_BUNDLE_5, 						CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
-            CHECK(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_1, 			true),
-            CHECK(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_2, 			true),
-            CHECK(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_3, 			true),
-            CHECK(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_4, 			true),
+        },
+        .connections = {
+            CONNECTION(RR_MUMBOS_MOUNTAIN_INTERIOR_TICKERS_TOWER, true),
+            CONNECTION(RR_MUMBOS_MOUNTAIN_INTERIOR_MUMBOS_SKULL, true),
+        },
+    };
+    Regions[RR_MUMBOS_MOUNTAIN_INTERIOR_TICKERS_TOWER] = RandoRegion{ .regionName = "Mumbo's Mountain", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
+        .checks = {
+            CHECK(RC_MM_MUMBO_TOKEN_INSIDE_TICKERS_TOWER, 		CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP) || CAN_USE_ABILITY(ABILITY_10_TALON_TROT) || CAN_USE_TRANSFORMATION(TRANSFORM_2_TERMITE)),
             CHECK(RC_MM_NOTE_INSIDE_TICKERS_TOWER_1, 			CAN_USE_TRANSFORMATION(TRANSFORM_2_TERMITE)),
             CHECK(RC_MM_NOTE_INSIDE_TICKERS_TOWER_2, 			CAN_USE_TRANSFORMATION(TRANSFORM_2_TERMITE)),
             CHECK(RC_MM_NOTE_INSIDE_TICKERS_TOWER_3, 			CAN_USE_TRANSFORMATION(TRANSFORM_2_TERMITE)),
@@ -133,6 +137,32 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_MM_NOTE_INSIDE_TICKERS_TOWER_5, 			CAN_USE_TRANSFORMATION(TRANSFORM_2_TERMITE)),
             CHECK(RC_MM_NOTE_INSIDE_TICKERS_TOWER_6, 			CAN_USE_TRANSFORMATION(TRANSFORM_2_TERMITE)),
         },
+        .connections = {
+            CONNECTION(RR_MUMBOS_MOUNTAIN, true),
+            CONNECTION(RR_MUMBOS_MOUNTAIN_TICKERS_TOWER_TOP, CAN_USE_TRANSFORMATION(TRANSFORM_2_TERMITE)),
+        },
     };
+    Regions[RR_MUMBOS_MOUNTAIN_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Mumbo's Mountain", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
+        .checks = {
+            CHECK(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_1, 			true),
+            CHECK(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_2, 			true),
+            CHECK(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_3, 			true),
+            CHECK(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_4, 			true),
+        },
+        .connections = {
+            CONNECTION(RR_MUMBOS_MOUNTAIN, true),
+        },
+    };
+    Regions[RR_MUMBOS_MOUNTAIN_TICKERS_TOWER_TOP] = RandoRegion{ .regionName = "Mumbo's Mountain", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
+        .checks = {
+            CHECK(RC_MM_JIGGY_TICKERS_TOWER, 					true),
+        },
+        .connections = {
+            CONNECTION(RR_MUMBOS_MOUNTAIN, true),
+            CONNECTION(RR_MUMBOS_MOUNTAIN_INTERIOR_TICKERS_TOWER, true),
+        },
+    };
+
+
 }, {});
 // clang-format on
