@@ -38,7 +38,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_FREEZEEZY_PEAK_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Freezeezy Peak Inside Mumbo's Skull", .levelId = LEVEL_5_FREEZEEZY_PEAK,
         .checks = {
-            CHECK(RC_MM_JINJO_YELLOW,							    true),
+            CHECK(RC_FP_JINJO_YELLOW,							    true),
             CHECK(RC_FP_NOTE_MUMBOS_SKULL_INTERIOR_1,			    true),
             CHECK(RC_FP_NOTE_MUMBOS_SKULL_INTERIOR_2,			    true),
             CHECK(RC_FP_NOTE_MUMBOS_SKULL_INTERIOR_3,			    true),
@@ -52,7 +52,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_FREEZEEZY_PEAK_INTERIOR_WOZZAS_CAVE] = RandoRegion{ .regionName = "Freezeezy Peak Inside Wozza's Cave", .levelId = LEVEL_5_FREEZEEZY_PEAK,
         .checks = {
-            CHECK(RC_MM_JINJO_ORANGE,							    CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
+            CHECK(RC_FP_JINJO_ORANGE,							    CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
             CHECK(RC_FP_EMPTY_HONEYCOMB_WOZZAS_CAVE,		        true),
         },
         .connections = {
@@ -67,8 +67,8 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_FP_JIGGY_BOGGY_RACE_2,					        CAN_USE_ABILITY(ABILITY_10_TALON_TROT) && CAN_USE_TRANSFORMATION(TRANSFORM_4_WALRUS) && CAN_USE_ABILITY(ABILITY_11_TURBO_TALON)),
             CHECK(RC_FP_JIGGY_SNOWMANS_BUTTONS,				        CAN_USE_ABILITY(ABILITY_1_BEAK_BOMB) && CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
             CHECK(RC_FP_JIGGY_WOZZA,						        CAN_USE_TRANSFORMATION(TRANSFORM_4_WALRUS)),
-            CHECK(RC_MM_JINJO_GREEN,							    true),
-            CHECK(RC_MM_JINJO_PINK,							        CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP) || CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
+            CHECK(RC_FP_JINJO_GREEN,							    true),
+            CHECK(RC_FP_JINJO_PINK,							        CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP) || CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
             CHECK(RC_FP_MOLEHILL_BEAK_BOMB,				            true),
             CHECK(RC_FP_MUMBO_TOKEN_POTTED_TREE,                    true),
             CHECK(RC_FP_MUMBO_TOKEN_PRESENT_STACK,                  true),
@@ -130,7 +130,7 @@ static RegisterShipInitFunc initFunc([]() {
         .checks = {
             CHECK(RC_FP_JIGGY_BEAT_ALL_SIR_SLUSH,			        CAN_USE_ABILITY(ABILITY_1_BEAK_BOMB) && CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
             CHECK(RC_FP_JIGGY_SNOWMANS_PIPE,				        CAN_USE_ABILITY(ABILITY_10_TALON_TROT) && CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
-            CHECK(RC_MM_JINJO_BLUE,							        CAN_EXTEND_JUMP_DISTANCE && CAN_USE_ABILITY(ABILITY_10_TALON_TROT)),
+            CHECK(RC_FP_JINJO_BLUE,							        CAN_EXTEND_JUMP_DISTANCE && CAN_USE_ABILITY(ABILITY_10_TALON_TROT)),
             CHECK(RC_FP_MUMBO_TOKEN_SLED_TO_BOGGY,                  CAN_USE_ABILITY(ABILITY_10_TALON_TROT)),
             CHECK(RC_FP_NOTE_NEAR_WOZZA_1,					        true),
             CHECK(RC_FP_NOTE_NEAR_WOZZA_2,					        true),
