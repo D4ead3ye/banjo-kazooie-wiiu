@@ -10,6 +10,9 @@
 
 extern "C" {
 extern f32 gBundle_yaw;
+
+enum map_e gsworld_getMap(void);
+enum level_e map_getLevel(enum map_e map);
 }
 
 void Rando::ObjectBehavior::InitBundleBehavior() {
@@ -18,7 +21,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
         BundleInfo* bundleInfo = va_arg(args, BundleInfo*);
         s32 bundleCount = va_arg(args, s32);
 		f32* position = va_arg(args, f32*);
-        Actor* actor = va_arg(args, Actor*);
+        Actor** actor = va_arg(args, Actor**);
 
         int32_t spawnPosition[3];
         spawnPosition[0] = (int32_t)position[0];
@@ -50,6 +53,11 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                     shuffledObject = Rando::Logic::GetShuffledObject(RC_SM_EMPTY_HONEYCOMB_QUARRIES);
                 }
                 break;
+            case BUNDLE_C_BGS_HUT_JIGGY:
+                if (map_getLevel(gsworld_getMap()) == LEVEL_6_LAIR) {
+                    shuffledObject = Rando::Logic::GetShuffledObject(RC_GL_JIGGY_WITCH_SWITCH_MUMBOS_MOUNTAIN);
+                }
+                break;
             default:
                 return;
         }
@@ -63,17 +71,17 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             return;
         }
 
-        actor = CustomObject::SpawnCustomActor(randoActorId, spawnPosition);
-        if (actor == NULL) {
+        *actor = CustomObject::SpawnCustomActor(randoActorId, spawnPosition);
+        if (*actor == NULL) {
             return;
         }
 
-        actor = CustomObject::SetCustomActorParameters(actor, shuffledObject.randoCheckId);
-        CustomObject::AddToCustomActorMap(shuffledObject.randoCheckId, actor);
+        *actor = CustomObject::SetCustomActorParameters(*actor, shuffledObject.randoCheckId);
+        CustomObject::AddToCustomActorMap(shuffledObject.randoCheckId, *actor);
         if (shuffledObject.randoCheckId == RC_MM_JIGGY_HUTS) {
-            ApplyCustomActorPhysics(shuffledObject.randoCheckId, actor, false);
+            ApplyCustomActorPhysics(shuffledObject.randoCheckId, *actor, false);
         } else {
-            ApplyBundleActorPhysics(actor, bundleId, (BundleInfo*)bundleInfo, gBundle_yaw);
+            ApplyBundleActorPhysics(*actor, bundleId, (BundleInfo*)bundleInfo, gBundle_yaw);
         }
 
         *should = true;

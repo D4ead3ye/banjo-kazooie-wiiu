@@ -11,6 +11,7 @@ int ability_isUnlocked(enum ability_e uid);
 
 bool fileProgressFlag_get(enum file_progress_e index);
 s32 __transformation_getCost(enum transformation_e trans_id);
+s32 _puzzleCost(s32 index);
 }
 
 namespace Rando {
@@ -134,15 +135,44 @@ inline bool CanUseTransformation(transformation_e transId) {
     return false;
 }
 
-#define CAN_USE_ABILITY(abilityId) ability_isUnlocked(abilityId)
-#define CAN_USE_TRANSFORMATION(transId) CanUseTransformation(transId)
+inline bool CanOpenWorld(level_e levelId) {
+    if (levelId == LEVEL_6_LAIR) {
+        return false;
+    }
+
+    int32_t levelNum = levelId;
+
+    if (levelNum > LEVEL_6_LAIR) {
+        levelNum = levelId - 1;
+    }
+
+    if (fileProgressFlag_get(worldOpenFlags[levelNum - 1])) {
+        return true;
+    }
+
+    int32_t puzzleCost = _puzzleCost(levelNum - 1);
+    int32_t jiggyCount = item_getCount(ITEM_26_JIGGY_TOTAL);
+
+    if (jiggyCount >= puzzleCost) {
+        return true;
+    }
+
+    return false;
+}
+
+#define CAN_ATTACK                                                                                                   \
+    (CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP) || CAN_USE_ABILITY(ABILITY_4_CLAW_SWIPE) ||                              \
+     CAN_USE_ABILITY(ABILITY_6_EGGS) || CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) || CAN_USE_ABILITY(ABILITY_C_ROLL) || \
+     CAN_USE_ABILITY(ABILITY_12_WONDERWING))
+
 #define CAN_EXTEND_JUMP_DISTANCE                                                           \
     (CAN_USE_ABILITY(ABILITY_7_FEATHERY_FLAP) || CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP) || \
      CAN_USE_ABILITY(ABILITY_10_TALON_TROT))
-#define CAN_ATTACK                                                                                                  \
-    (CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP) || CAN_USE_ABILITY(ABILITY_4_CLAW_SWIPE) ||                             \
-     CAN_USE_ABILITY(ABILITY_6_EGGS) || CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) || CAN_USE_ABILITY(ABILITY_C_ROLL) || \
-     CAN_USE_ABILITY(ABILITY_12_WONDERWING))
+
+#define CAN_UNLOCK_WORLD(levelId) CanOpenWorld(levelId)
+#define CAN_USE_ABILITY(abilityId) ability_isUnlocked(abilityId)
+#define CAN_USE_TRANSFORMATION(transId) CanUseTransformation(transId)
+
 
 
 } // namespace Logic
