@@ -102,9 +102,6 @@ bool ShouldOverrideSpawn(RandoCheckId randoCheckId) {
         return false;
     }
 
-    if (CustomObject::CheckSpawnQueue(randoCheckId)) {
-        return false;
-    }
 
     if (Rando::Logic::IsCheckShuffled(randoCheckId)) {
         return true;
@@ -267,5 +264,15 @@ void Rando::ObjectBehavior::Init() {
         // }
 
         CustomObject::InitializeSpawnQueue();
+    })
+
+    REGISTER_LISTENER(OnSetJiggyList, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnSetJiggyList* ev = (OnSetJiggyList*)event;
+
+        // if (!IS_RANDO) {
+        //     return;
+        // }
+
+        ClearSpawnQueue();
     })
 }

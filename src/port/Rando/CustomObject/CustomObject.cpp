@@ -50,11 +50,9 @@ bool CustomObject::CheckSpawnQueue(RandoCheckId randoCheckId) {
 }
 
 void ClearSpawnQueue() {
-    if (currentMap != gsworld_getMap()) {
-        currentMap = gsworld_getMap();
-        customActorMap.clear();
-        actorSpawnQueue.clear();
-    }
+    currentMap = gsworld_getMap();
+    customActorMap.clear();
+    actorSpawnQueue.clear();
 }
 
 CustomActor CreateCustomActor(RandoCheckId randoCheckId, int32_t position[3]) {
@@ -146,7 +144,6 @@ void CustomObject::AddToCustomActorMap(RandoCheckId randoCheckId, Actor* actor) 
 }
 
 void CustomObject::AddToSpawnQueue(RandoCheckId randoCheckId, int32_t position[3]) {
-    ClearSpawnQueue();
     if (randoCheckId == RC_UNKNOWN) {
         return;
     }
@@ -163,7 +160,6 @@ void CustomObject::AddToSpawnQueue(RandoCheckId randoCheckId, int32_t position[3
 }
 
 void CustomObject::InitializeSpawnQueue() {
-    ClearSpawnQueue();
     if (actorSpawnQueue.empty()) {
         return;
     }
