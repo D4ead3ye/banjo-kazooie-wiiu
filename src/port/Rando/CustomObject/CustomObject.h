@@ -35,6 +35,7 @@ CustomActor CreateCustomActor(RandoCheckId randoCheckId, int32_t position[3]);
 actor_e GetActorIdByShuffledObjectState(Rando::StaticData::RandoShuffledPool shuffledObject);
 void ApplyBundleActorPhysics(Actor* actor, int32_t bundle_id, BundleInfo* bundle_info, f32 bundleYaw);
 void ApplyCustomActorPhysics(RandoCheckId randoCheckId, Actor* actor, bool isJinjoJiggy);
+void ClearSpawnQueue();
 
 void UpdateJunkList();
 

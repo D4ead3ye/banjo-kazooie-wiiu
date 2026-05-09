@@ -12,6 +12,10 @@ extern int ResourceMgr_IsModelAsset(uint32_t assetId);
 
 #define AssetCacheSize 0x3D5
 
+// Port Expand Marker Pool for Rando Allocation
+#define MARKER_POOL_SIZE 0x1C0
+#define MARKER_BITMAP_BYTES (MARKER_POOL_SIZE / 8)
+
 extern bool func_802E74A0(f32[3], f32, f32[3], f32[3]);
 extern BKCollisionTri *func_802E9118(BKCollisionList * collision_list, BKVertexList *vtx_list, f32 arg2[3], f32 arg3[3], f32 arg4, f32 arg5[3], f32 arg6[3], f32 arg7, f32 arg8[3], s32 arg9, s32 argA);
 extern f32 vtxList_getGlobalNorm(BKVertexList *);
@@ -89,7 +93,7 @@ s32 D_8038340C;
 f32 D_80383410[3];
 ActorMarker *D_8038341C;
 BKCollisionTri *D_80383420;
-u8  D_80383428[0x1C];
+u8  D_80383428[MARKER_BITMAP_BYTES];
 s32 D_80383444;
 int D_80383448;
 s32 D_80383450[0x40];
@@ -2382,13 +2386,13 @@ void func_8033297C(void){
 void func_803329AC(void){
     s32 i;
     
-    D_8036E7C8 = (ActorMarker *)bk_malloc(0xE0*sizeof(ActorMarker));
+    D_8036E7C8 = (ActorMarker *)bk_malloc(MARKER_POOL_SIZE * sizeof(ActorMarker));
 
-    for( i = 0; i < 0x1C; i++){
+    for( i = 0; i < MARKER_BITMAP_BYTES; i++){
         D_80383428[i] = 0;
     }
        
-    for(i =0; i<0xE0; i++){
+    for(i =0; i< MARKER_POOL_SIZE; i++){
         D_8036E7C8[i].unk5C = 0;
     }
 }
@@ -2406,8 +2410,8 @@ ActorMarker * func_80332A60(void){
     int tmp_a2;
     ActorMarker *marker;
 
-    for(i = 0; i < 0x1C && D_80383428[i] == 0xff; i++);
-    if(i == 0x1C)
+    for(i = 0; i < MARKER_BITMAP_BYTES && D_80383428[i] == 0xff; i++);
+    if(i == MARKER_BITMAP_BYTES)
         return NULL;
 
     tmp_a2 = 0x80;
