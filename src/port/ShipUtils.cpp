@@ -1,6 +1,8 @@
 #include "ShipUtils.h"
 #include "save/SaveManager.h"
+#include "save/Types.h"
 #include "Engine.h"
+#include "GameConfig.h"
 #include <chrono>
 #include <cstdarg>
 #include <cstdio>
@@ -246,6 +248,10 @@ const char* port_mapName(int map_id) {
 }
 
 int port_getBootSequence(void) {
+    // Romhacks always boot to file select; their intros aren't compatible with the
+    // vanilla cutscene/demo path.
+    if (port_isRomhack())
+        return 2; // BOOTSEQUENCE_FILESELECT
     return CVarGetInteger(CVAR_SETTING("BootSequence"), 0);
 }
 
@@ -308,7 +314,10 @@ std::vector<std::string> levelAbbreviations = {
 };
 
 json Ship_RetrieveSaveFile(int32_t filenum) {
-    std::string fileName = "file" + std::to_string(filenum) + ".json";
+    if (filenum < 0 || filenum > 2) {
+        return json::object();
+    }
+    std::string fileName = "file" + std::to_string(SlotToFileIndex(filenum)) + ".json";
     std::string filePath = SaveManager_GetSavePath(fileName);
 
     if (!std::filesystem::exists(filePath)) {
