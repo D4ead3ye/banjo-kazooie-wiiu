@@ -4,7 +4,7 @@
 
 // clang-format off
 DEFINE_EVENT(OnGameSave, 
-	int32_t fileNum;
+	void* saveData;
 )
 
 DEFINE_EVENT(OnGameLoad,

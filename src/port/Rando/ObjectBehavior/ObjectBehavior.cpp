@@ -124,9 +124,9 @@ void Rando::ObjectBehavior::Init() {
     REGISTER_LISTENER(OnActorSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorSpawn* ev = (OnActorSpawn*)event;
 
-        // if (!IS_RANDO) {
-        //     return;
-        // }
+        if (!IS_RANDO) {
+            return;
+        }
 
         if (IsActorWhitelisted(ev->actorId)) {
             LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
@@ -179,9 +179,9 @@ void Rando::ObjectBehavior::Init() {
     REGISTER_LISTENER(OnActorSaveState, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorSaveState* ev = (OnActorSaveState*)event;
 
-        // if (!IS_RANDO) {
-        //     return;
-        // }
+        if (!IS_RANDO) {
+            return;
+        }
 
         nextActorSaveState = true;
     })
@@ -189,9 +189,9 @@ void Rando::ObjectBehavior::Init() {
     REGISTER_LISTENER(OnActorCollision, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorCollision* ev = (OnActorCollision*)event;
 
-        // if (!IS_RANDO) {
-        //     return;
-        // }
+        if (!IS_RANDO) {
+            return;
+        }
 
         if (!ev->propId->markerFlag) {
             switch (ev->propId->spriteProp.spriteId) {
@@ -259,9 +259,9 @@ void Rando::ObjectBehavior::Init() {
     REGISTER_LISTENER(OnWarpDispatch, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnWarpDispatch* ev = (OnWarpDispatch*)event;
 
-        // if (!IS_RANDO) {
-        //     return;
-        // }
+        if (!IS_RANDO) {
+            return;
+        }
 
         CustomObject::InitializeSpawnQueue();
     })
@@ -269,9 +269,9 @@ void Rando::ObjectBehavior::Init() {
     REGISTER_LISTENER(OnSetJiggyList, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnSetJiggyList* ev = (OnSetJiggyList*)event;
 
-        // if (!IS_RANDO) {
-        //     return;
-        // }
+        if (!IS_RANDO) {
+            return;
+        }
 
         ClearSpawnQueue();
     })
