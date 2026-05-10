@@ -385,10 +385,10 @@ void saveData_load(void *savedata_){
     __savedata_load_timeScores((u8*)savedata);
     func_8033C4E4((u8*)savedata);
     __savedata_load_abilities((u8*)savedata);
-    CALL_EVENT(OnSaveLoad, savedata);
     for(i = 0; D_80370A20[i].unk0 != -1; i++){
         volatileFlag_set(D_80370A20[i].unk0, fileProgressFlag_get(D_80370A20[i].unk2));
     }
+    CALL_EVENT(OnSaveLoad, savedata);
 }
 
 void saveData_create(void *savedata_){
@@ -439,9 +439,11 @@ int savedata_8033CE40(void *buffer){
 }
 
 void savedata_clear(void *savedata_){
-    u8 *savedata = (u8 *)savedata_;
-    int i;
-    for(i = 0; i < sizeof(SaveData); i++){
-        savedata[i] = 0;
+    CALL_CANCELLABLE_RETURN_EVENT(OnSaveClear, savedata_) {
+        u8* savedata = (u8*)savedata_;
+        int i;
+        for (i = 0; i < sizeof(SaveData); i++) {
+            savedata[i] = 0;
+        }
     }
 }

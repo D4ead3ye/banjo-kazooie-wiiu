@@ -576,6 +576,24 @@ void SaveManager_Init() {
         event->Cancelled = true;
     });
 
+    REGISTER_LISTENER(OnSaveClear, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnSaveClear* ev = (OnSaveClear*)event;
+        SaveData* saveData = (SaveData*)ev->result;
+
+        FileType fileType = saveData->shipSaveData.fileType; // Retain File Type during Save Process
+
+        u8* savedata = (u8*)saveData;
+        int i;
+        for (i = 0; i < sizeof(SaveData); i++) {
+            savedata[i] = 0;
+        }
+
+        saveData = (SaveData*)savedata;
+        saveData->shipSaveData.fileType = fileType;
+
+        event->Cancelled = true;
+    });
+
     // Decomp clears global arrays (e.g. gCompletedBottlesBonusGames) just before
     // gameFile_load fires OnGameLoad. Restore them from global.json here before
     // other OnGameLoad listeners read them.

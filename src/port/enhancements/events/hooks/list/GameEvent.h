@@ -33,4 +33,8 @@ DEFINE_EVENT(OnPropInit, Prop* propPtr;);
 DEFINE_EVENT(OnSetJiggyList,
 	int32_t levelId;
 )
+
+DEFINE_EVENT(OnSaveClear,
+	void* result;
+)
 // clang-format on

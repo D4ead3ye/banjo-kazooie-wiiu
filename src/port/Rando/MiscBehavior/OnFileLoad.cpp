@@ -8,6 +8,10 @@
 #include "port/Rando/Logic/Logic.h"
 // #include "port/Rando/Spoiler/Spoiler.h"
 
+extern "C" {
+extern SaveData gameFile_saveData[4];
+}
+
 void Rando::MiscBehavior::OnFileLoad() {
     REGISTER_LISTENER(OnGameLoad, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnGameLoad* ev = (OnGameLoad*)event;
@@ -21,10 +25,10 @@ void Rando::MiscBehavior::OnFileLoad() {
         if (saveData->magic != 0) {
             return;
         }
-
+        
         if (CVarGetInteger("gRandoSettings.Enable", 0)) {
-            saveData->shipSaveData.fileType = FILE_TYPE_SAVE_RANDO;
             Rando::Logic::GenerateShufflePool();
+            saveData->shipSaveData.fileType = FILE_TYPE_SAVE_RANDO;
         }
     });
 }
