@@ -23,9 +23,9 @@ void Rando::ObjectBehavior::InitMusicNoteBehavior() {
     REGISTER_LISTENER(OnSetJiggyList, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnSetJiggyList* ev = (OnSetJiggyList*)event;
 
-        // if (!IS_RANDO) {
-        //     return;
-        // }
+        if (!IS_RANDO) {
+            return;
+        }
 
         if (CVAR) {
             for (auto& pool : Rando::Logic::shuffledPool) {

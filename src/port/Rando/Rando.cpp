@@ -11,7 +11,7 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
-int16_t selectedFileNum = 0;
+int16_t selectedFileNum = DEFAULT_FILE_NUM;
 const fs::path randomizerFolderPath(Ship::Context::GetPathRelativeToAppDirectory("randomizer", "bk64"));
 
 // Entry point for the module, run once on game boot

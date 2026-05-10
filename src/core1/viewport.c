@@ -83,7 +83,7 @@ void viewport_setRenderViewportAndOrthoMatrix(Gfx **gfx, Mtx **mtx) {
 
     guOrtho(*mtx, -(2*(f32)gFramebufferWidth), (2*(f32)gFramebufferWidth), -(2*(f32)gFramebufferHeight), (2*(f32)gFramebufferHeight), 1.0f, 20.0f, 1.0f);
     gSPMatrix((*gfx)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
-    
+
     guTranslate(*mtx, 0.0f, 0.0f, 0.0f);
     gSPMatrix((*gfx)++, OS_K0_TO_PHYSICAL((*mtx)++), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 }
@@ -109,6 +109,8 @@ void viewport_setRenderPerspectiveMatrix(Gfx **gfx, Mtx **mtx, f32 near, f32 far
     guPerspective(*mtx, &perspNorm, sViewportFOVy, sViewportAspect, near, far, 0.5f);
     gSPPerspNormalize((*gfx)++, perspNorm);
     gSPMatrix((*gfx)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+
+    port_viewport_applyMirror(gfx, mtx);
 
     guRotate(*mtx, -sViewportRotation[2], 0.0f, 0.0f, -1.0f);
     gSPMatrix((*gfx)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
@@ -224,20 +226,13 @@ void viewport_unused_pushVpScaleAndTranslation(f32 scale_x, f32 scale_y, f32 tra
 }
 
 void viewport_update(void) {
-    // [port] Compute frustum plane normals from the actual FOV and aspect ratio.
-    f32 halfFovYRad = (sViewportFOVy * 0.5f) * (M_PI / 180.0f);
-    f32 halfFovXRad = atanf(tanf(halfFovYRad) * sViewportAspect);
-    // Scale to match the vanilla magnitude (100.0 unnormalized length)
-    f32 mag = sqrtf(89.21774f * 89.21774f + 45.168514f * 45.168514f);
-    f32 frustumX = sinf(halfFovXRad) * mag;
-    f32 frustumZ = cosf(halfFovXRad) * mag;
-    func_80256E24(sViewportFrustumPlanes[0], sViewportRotation[0], sViewportRotation[1], -frustumX, 0.0f, frustumZ);
-    func_80256E24(sViewportFrustumPlanes[1], sViewportRotation[0], sViewportRotation[1], frustumX, 0.0f, frustumZ);
-    // [port] Pad top/bottom planes slightly to reduce pop-in during vertical cam movement.
-    f32 frustumY = 93.9692611694336f * 1.15f;
-    f32 frustumZv = 34.20201110839844f;
-    func_80256E24(sViewportFrustumPlanes[2], sViewportRotation[0], sViewportRotation[1], 0.0f, frustumY, frustumZv);
-    func_80256E24(sViewportFrustumPlanes[3], sViewportRotation[0], sViewportRotation[1], 0.0f, -frustumY, frustumZv);
+    f32 frustumX = 89.21774f;
+    f32 frustumY = 93.9692611694336f;
+    CALL_EVENT(ViewportFrustumUpdate, &frustumX, &frustumY);
+    func_80256E24(sViewportFrustumPlanes[0], sViewportRotation[0], sViewportRotation[1], -frustumX, 0.0f, 45.168514251708984f);
+    func_80256E24(sViewportFrustumPlanes[1], sViewportRotation[0], sViewportRotation[1], frustumX, 0.0f, 45.168514251708984f);
+    func_80256E24(sViewportFrustumPlanes[2], sViewportRotation[0], sViewportRotation[1], 0.0f, frustumY, 34.20201110839844f);
+    func_80256E24(sViewportFrustumPlanes[3], sViewportRotation[0], sViewportRotation[1], 0.0f, -frustumY, 34.20201110839844f);
 
     ml_vec3f_normalize(sViewportFrustumPlanes[0]);
     ml_vec3f_normalize(sViewportFrustumPlanes[1]);

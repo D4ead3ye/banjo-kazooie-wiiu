@@ -23,9 +23,9 @@ void Rando::ObjectBehavior::InitJinjoBehavior() {
     REGISTER_LISTENER(OnSetJiggyList, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnSetJiggyList* ev = (OnSetJiggyList*)event;
 
-        // if (!IS_RANDO) {
-        //     return;
-        // }
+        if (!IS_RANDO) {
+            return;
+        }
 
         if (CVAR) {
             for (auto& pool : Rando::Logic::shuffledPool) {
@@ -47,9 +47,10 @@ void Rando::ObjectBehavior::InitJinjoBehavior() {
 
     COND_VB_SHOULD(VB_SET_JINJO_COUNT, EVENT_PRIORITY_NORMAL, CVAR, {
         f32* position = va_arg(args, f32*);
-        // if (!IS_RANDO) {
-        //     return;
-        // }
+
+        if (!IS_RANDO) {
+            return;
+        }
 
         *should = false;
 
