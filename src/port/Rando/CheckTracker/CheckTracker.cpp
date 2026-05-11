@@ -220,10 +220,14 @@ void CheckTrackerWindow::Draw() {
         checkTrackerBG.w = ImGui::IsWindowDocked() ? 1.0f : CVAR_CHECK_TRACKER_OPACITY;
         ImGui::SetWindowFontScale(checkTrackerScale);
 
-        if (ImGui::BeginChild("CheckTrackerChild")) {
-            DrawCheckTrackerList();
-            expandState = expandToggle;
-            ImGui::EndChild();
+        if (gsworld_getMap() == MAP_91_FILE_SELECT) {
+            ImGui::TextColored(UIWidgets::ColorValues.at(UIWidgets::Colors::Orange), "No Rando File Selected...");
+        } else {
+            if (ImGui::BeginChild("CheckTrackerChild")) {
+                DrawCheckTrackerList();
+                expandState = expandToggle;
+                ImGui::EndChild();
+            }
         }
     }
 

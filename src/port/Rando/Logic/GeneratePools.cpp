@@ -130,6 +130,23 @@ void GenerateShufflePool() {
     }
 }
 
+void GeneratePoolFromSaveData(SaveData* saveData) {
+    for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
+        RandoSaveCheck randoSaveCheck = saveData->shipSaveData.randoSaveData.randoSaveCheck[i];
+
+        Rando::StaticData::RandoShuffledPool shuffledObject = {
+            .randoCheckId = (RandoCheckId)i,
+            .shuffleCheckId = randoSaveCheck.shuffledCheckId,
+            .randoItemId = randoSaveCheck.randoItemId,
+            .isShuffled = randoSaveCheck.isShuffled,
+            .obtained = randoSaveCheck.obtained,
+            .skipped = randoSaveCheck.skipped,
+        };
+
+        Rando::Logic::shuffledPool.push_back(shuffledObject);
+    }
+}
+
 
 } // namespace Logic
 
