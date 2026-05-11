@@ -67,15 +67,13 @@ static void BitfieldSetNBits(uint8_t* array, int startIndex, int numBits, int va
     }
 }
 
-nlohmann::json RandoSaveCheck_to_json(json& j, const RandoSaveCheck& randoSaveCheck) {
-    return nlohmann::json{
-        { "randoItemId", randoSaveCheck.randoItemId },
-        { "shuffledCheckId", randoSaveCheck.shuffledCheckId },
-        { "randoCollectionId", randoSaveCheck.randoCollectionId },
-        { "shuffled", randoSaveCheck.isShuffled },
-        { "obtained", randoSaveCheck.obtained },
-        { "skipped", randoSaveCheck.skipped },
-    };
+void RandoSaveCheck_to_json(nlohmann::json& j, const RandoSaveCheck& randoSaveCheck) {
+    j["randoItemId"] = randoSaveCheck.randoItemId;
+    j["shuffledCheckId"] = randoSaveCheck.shuffledCheckId;
+    j["randoCollectionId"] = randoSaveCheck.randoCollectionId;
+    j["shuffled"] = randoSaveCheck.isShuffled;
+    j["obtained"] = randoSaveCheck.obtained;
+    j["skipped"] = randoSaveCheck.skipped;
 }
 
 RandoSaveCheck RandoSaveCheck_from_json(const json& j, RandoSaveCheck& randoSaveCheck) {
@@ -89,13 +87,44 @@ RandoSaveCheck RandoSaveCheck_from_json(const json& j, RandoSaveCheck& randoSave
     return randoSaveCheck;
 }
 
-std::string CollapsedJSONArray(ordered_json jsonFile) {
-    std::string jsonString = jsonFile.dump(4);
-    jsonString = std::regex_replace(jsonString, std::regex(R"(\[\s+([01,\s]+?)\s+\])"), "[$1]");
-    jsonString = std::regex_replace(jsonString, std::regex(R"(\s+([01]))"), " $1");
-    jsonString = std::regex_replace(jsonString, std::regex(R"(\s+\])"), "]");
+std::string CollapsedJSONArray(const nlohmann::ordered_json& jsonFile) {
+    std::string source = jsonFile.dump(4);
+    std::string result;
+    result.reserve(source.length());
 
-    return jsonString;
+    bool isCollapsed = false;
+
+    for (size_t i = 0; i < source.length(); ++i) {
+        char c = source[i];
+
+        if (c == '[') {
+            size_t next = source.find_first_not_of(" \n\r\t", i + 1);
+            if (next != std::string::npos && (isdigit(source[next]) || source[next] == ']')) {
+                isCollapsed = true;
+                result += c;
+                continue;
+            }
+        }
+
+        if (isCollapsed) {
+            if (isspace(c)) {
+                continue;
+            }
+
+            if (c == ']') {
+                isCollapsed = false;
+                result += c;
+            } else if (c == ',') {
+                result += ", ";
+            } else {
+                result += c;
+            }
+        } else {
+            result += c;
+        }
+    }
+
+    return result;
 }
 
 ordered_json Convert_SaveDataToJSON(SaveData* saveData, int32_t fileNum) {
@@ -275,13 +304,13 @@ ordered_json Convert_SaveDataToJSON(SaveData* saveData, int32_t fileNum) {
 
     if (saveData->shipSaveData.fileType == FILE_TYPE_SAVE_RANDO) {
         Rando::Logic::GenerateSaveData(saveData);
-
+    
         for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
             json randoSaveChecks = nlohmann::json::object();
             RandoSaveCheck randoSaveCheck = saveData->shipSaveData.randoSaveData.randoSaveCheck[i];
-            randoSaveChecks = RandoSaveCheck_to_json(randoSaveChecks, randoSaveCheck);
-
-            shipRando["randoSaveCheck"][Rando::StaticData::Checks[(RandoCheckId)i].name] = randoSaveChecks;
+            RandoSaveCheck_to_json(randoSaveChecks, randoSaveCheck);
+    
+            shipRando["randoSaveCheck"][randoSaveCheck.name] = randoSaveChecks;
         }
         ship["rando"] = shipRando;
     }
@@ -482,11 +511,11 @@ SaveData* Convert_JSONToSaveData(int32_t fileNum) {
 
     if (j["ship"]["fileType"].get<int>() == FILE_TYPE_SAVE_RANDO) {
         json rando = j["ship"]["rando"];
-
+    
         for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
             json jsonRandoSaveChecks = rando["randoSaveCheck"][Rando::StaticData::Checks[(RandoCheckId)i].name];
             RandoSaveCheck randoSaveCheck = RandoSaveCheck_from_json(jsonRandoSaveChecks, randoSaveCheck);
-
+    
             saveData->shipSaveData.randoSaveData.randoSaveCheck[i] = randoSaveCheck;
         }
     }
@@ -536,19 +565,6 @@ static void LoadGlobalData() {
     }
 }
 
-void SaveManager_LoadAll() {
-    for (int i = 0; i < 3; i++) {
-        SaveData* loadSave = Convert_JSONToSaveData(i);
-        if (loadSave->slotIndex != 0) {
-            loadSave->magic = SAVE_MAGIC;
-        }
-        gameFile_saveData[i] = *(loadSave);
-        delete loadSave;
-    }
-
-    LoadGlobalData();
-}
-
 static void SaveGlobalData() {
     ordered_json j = ordered_json::object();
 
@@ -580,7 +596,7 @@ static void SaveGlobalData() {
 }
 
 void SaveManager_Init() {
-    SaveManager_LoadAll();
+    LoadGlobalData();
 
     // Ensure global.json exists
     std::string globalPath = SaveManager_GetSavePath("global.json");

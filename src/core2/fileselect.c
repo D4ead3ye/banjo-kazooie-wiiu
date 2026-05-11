@@ -15,13 +15,14 @@ int __gameFile_8033CD90(s32 filenum){
     s32 tmp_v1;
     void *save_data_ptr;
     save_data_ptr = &gameFile_saveData[filenum];
-    i = 3;
-    do{
-        tmp_v1 = savedata_8033CA2C(filenum, save_data_ptr);
-        if(!tmp_v1)
-            break;
-        i--;
-    }while(i != 0);
+    tmp_v1 = savedata_8033CA2C(filenum, save_data_ptr);
+    // i = 3;
+    // do{
+    //     tmp_v1 = savedata_8033CA2C(filenum, save_data_ptr);
+    //     if(!tmp_v1)
+    //         break;
+    //     i--;
+    // }while(i != 0);
     if(tmp_v1)
         savedata_clear(save_data_ptr);
     return tmp_v1;

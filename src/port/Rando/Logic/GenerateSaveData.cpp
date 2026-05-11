@@ -9,6 +9,7 @@ void Rando::Logic::InitializeSaveData(SaveData* saveData) {
     // RandoSaveCheck - Initialize
     for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
         RandoSaveCheck randoSaveCheck = {
+            .name = randoStaticCheck.name,
             .randoItemId = Rando::StaticData::GetRandoItemByActorId((actor_e)randoStaticCheck.actorId),
             .shuffledCheckId = randoCheckId,
             .randoCollectionId = randoStaticCheck.collectionId,
@@ -24,6 +25,7 @@ void Rando::Logic::InitializeSaveData(SaveData* saveData) {
 void Rando::Logic::GenerateSaveData(SaveData* saveData) {
     for (auto& object : Rando::Logic::shuffledPool) {
         RandoSaveCheck randoSaveCheck = {
+            .name = object.name,
             .randoItemId = object.randoItemId,
             .shuffledCheckId = object.shuffleCheckId,
             .randoCollectionId = object.randoCollectionId,

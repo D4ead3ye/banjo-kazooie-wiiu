@@ -1054,6 +1054,7 @@ typedef enum {
 // } RandoInf;
 
 typedef struct RandoSaveCheck {
+    const char* name;
     RandoItemId randoItemId;
     RandoCheckId shuffledCheckId;
     int32_t randoCollectionId;
