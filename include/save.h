@@ -1,13 +1,16 @@
 #ifndef __SAVE_H__
 #define __SAVE_H__
 
+#include "port/Rando/Types.h"
+
 typedef enum {
     FILE_TYPE_SAVE_VANILLA,
     FILE_TYPE_SAVE_RANDO,
 } FileType;
 
 typedef struct {
-    bool isRando;
+    RandoSaveCheck randoSaveCheck[RC_MAX];
+    RandoSaveOption randoSaveOption[RO_MAX];
 } RandoSaveData;
 
 typedef struct {

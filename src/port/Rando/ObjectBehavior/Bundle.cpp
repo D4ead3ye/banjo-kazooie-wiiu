@@ -23,6 +23,10 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
 		f32* position = va_arg(args, f32*);
         Actor** actor = va_arg(args, Actor**);
 
+        if (!IS_RANDO) {
+            return;
+        }
+
         int32_t spawnPosition[3];
         spawnPosition[0] = (int32_t)position[0];
         spawnPosition[1] = (int32_t)position[1];

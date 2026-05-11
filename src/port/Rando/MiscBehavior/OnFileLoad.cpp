@@ -18,7 +18,6 @@ void Rando::MiscBehavior::OnFileLoad() {
     REGISTER_LISTENER(OnGameLoad, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnGameLoad* ev = (OnGameLoad*)event;
         selectedFileNum = ev->fileNum;
-        SPDLOG_INFO("Load Selected File: {}", std::to_string(selectedFileNum));
     });
 
     REGISTER_LISTENER(OnSaveLoad, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -28,11 +27,15 @@ void Rando::MiscBehavior::OnFileLoad() {
         Rando::Logic::shuffledPool.clear();
 
         if (saveData->magic != 0) {
+            if (saveData->shipSaveData.fileType == FILE_TYPE_SAVE_RANDO) {
+                Rando::Logic::GeneratePoolFromSaveData(saveData);
+            }
             return;
         }
         
         if (CVarGetInteger("gRandoSettings.Enable", 0)) {
             Rando::Logic::GenerateShufflePool();
+            Rando::Logic::InitializeSaveData(saveData);
             saveData->shipSaveData.fileType = FILE_TYPE_SAVE_RANDO;
         }
     });
@@ -41,6 +44,5 @@ void Rando::MiscBehavior::OnFileLoad() {
         OnSaveFileLoad* ev = (OnSaveFileLoad*)event;
 
         selectedFileNum = DEFAULT_FILE_NUM;
-        SPDLOG_INFO("Reset Selected File: {}", std::to_string(selectedFileNum));
     });
 }

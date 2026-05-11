@@ -1053,4 +1053,19 @@ typedef enum {
 //     RANDO_INF_MAX,
 // } RandoInf;
 
+typedef struct RandoSaveCheck {
+    const char* name;
+    RandoItemId randoItemId;
+    RandoCheckId shuffledCheckId;
+    int32_t randoCollectionId;
+    bool isShuffled;
+    bool obtained;
+    bool skipped;
+} RandoSaveCheck;
+
+typedef struct RandoSaveOption {
+    const char* name;
+    int32_t optionValue;
+} RandoSaveOption;
+
 #endif // RANDO_TYPES_H

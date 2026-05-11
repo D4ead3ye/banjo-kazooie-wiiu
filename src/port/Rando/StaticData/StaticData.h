@@ -13,6 +13,7 @@ namespace Rando {
 namespace StaticData {
 
 struct RandoShuffledPool {
+    const char* name;
     RandoCheckId randoCheckId;
     RandoCheckId shuffleCheckId;
     RandoItemId randoItemId;

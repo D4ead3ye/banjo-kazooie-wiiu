@@ -20,6 +20,9 @@ namespace Logic {
 extern std::vector<Rando::StaticData::RandoShuffledPool> shuffledPool;
 
 void GenerateShufflePool();
+void GeneratePoolFromSaveData(SaveData* saveData);
+void InitializeSaveData(SaveData* saveData);
+void GenerateSaveData(SaveData* saveData);
 
 inline bool IsCheckShuffled(RandoCheckId randoCheckId) {
     bool isShuffled = false;

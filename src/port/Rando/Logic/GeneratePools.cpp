@@ -99,6 +99,7 @@ void GenerateShufflePool() {
 
     for (int i = 0; i < checkPool.size(); i++) {
         Rando::StaticData::RandoShuffledPool randoShuffleEntry = {
+            .name = Rando::StaticData::Checks[checkPool[i]].name,
             .randoCheckId = checkPool[i],
             .shuffleCheckId = std::get<2>(itemPool[i]),
             .randoItemId = Rando::StaticData::GetRandoItemByActorId(std::get<0>(itemPool[i])),
@@ -116,6 +117,7 @@ void GenerateShufflePool() {
 
         for (int a = 0; a < abilityCheckPool.size(); a++) {
             Rando::StaticData::RandoShuffledPool randoShuffleEntry = {
+                .name = Rando::StaticData::Checks[abilityCheckPool[a]].name,
                 .randoCheckId = abilityCheckPool[a],
                 .shuffleCheckId = std::get<2>(abilityItemPool[a]),
                 .randoItemId = Rando::StaticData::GetRandoItemByActorId(std::get<0>(abilityItemPool[a])),
@@ -127,6 +129,24 @@ void GenerateShufflePool() {
 
             shuffledPool.push_back(randoShuffleEntry);
         }
+    }
+}
+
+void GeneratePoolFromSaveData(SaveData* saveData) {
+    for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
+        RandoSaveCheck randoSaveCheck = saveData->shipSaveData.randoSaveData.randoSaveCheck[i];
+
+        Rando::StaticData::RandoShuffledPool shuffledObject = {
+            .name = Rando::StaticData::Checks[(RandoCheckId)i].name,
+            .randoCheckId = (RandoCheckId)i,
+            .shuffleCheckId = randoSaveCheck.shuffledCheckId,
+            .randoItemId = randoSaveCheck.randoItemId,
+            .isShuffled = randoSaveCheck.isShuffled,
+            .obtained = randoSaveCheck.obtained,
+            .skipped = randoSaveCheck.skipped,
+        };
+
+        Rando::Logic::shuffledPool.push_back(shuffledObject);
     }
 }
 

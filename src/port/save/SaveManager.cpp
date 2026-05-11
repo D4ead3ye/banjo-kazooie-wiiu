@@ -12,6 +12,8 @@
 #include "save.h"
 #include "Types.h"
 
+#include "port/Rando/Logic/Logic.h"
+
 extern "C" {
 #include "core1/sns.h"
 
@@ -65,13 +67,64 @@ static void BitfieldSetNBits(uint8_t* array, int startIndex, int numBits, int va
     }
 }
 
-std::string CollapsedJSONArray(ordered_json jsonFile) {
-    std::string jsonString = jsonFile.dump(4);
-    jsonString = std::regex_replace(jsonString, std::regex(R"(\[\s+([01,\s]+?)\s+\])"), "[$1]");
-    jsonString = std::regex_replace(jsonString, std::regex(R"(\s+([01]))"), " $1");
-    jsonString = std::regex_replace(jsonString, std::regex(R"(\s+\])"), "]");
+void RandoSaveCheck_to_json(nlohmann::json& j, const RandoSaveCheck& randoSaveCheck) {
+    j["randoItemId"] = randoSaveCheck.randoItemId;
+    j["shuffledCheckId"] = randoSaveCheck.shuffledCheckId;
+    j["randoCollectionId"] = randoSaveCheck.randoCollectionId;
+    j["shuffled"] = randoSaveCheck.isShuffled;
+    j["obtained"] = randoSaveCheck.obtained;
+    j["skipped"] = randoSaveCheck.skipped;
+}
 
-    return jsonString;
+RandoSaveCheck RandoSaveCheck_from_json(const json& j, RandoSaveCheck& randoSaveCheck) {
+    j.at("randoItemId").get_to(randoSaveCheck.randoItemId);
+    j.at("shuffledCheckId").get_to(randoSaveCheck.shuffledCheckId);
+    j.at("randoCollectionId").get_to(randoSaveCheck.randoCollectionId);
+    j.at("shuffled").get_to(randoSaveCheck.isShuffled);
+    j.at("obtained").get_to(randoSaveCheck.obtained);
+    j.at("skipped").get_to(randoSaveCheck.skipped);
+
+    return randoSaveCheck;
+}
+
+std::string CollapsedJSONArray(const nlohmann::ordered_json& jsonFile) {
+    std::string source = jsonFile.dump(4);
+    std::string result;
+    result.reserve(source.length());
+
+    bool isCollapsed = false;
+
+    for (size_t i = 0; i < source.length(); ++i) {
+        char c = source[i];
+
+        if (c == '[') {
+            size_t next = source.find_first_not_of(" \n\r\t", i + 1);
+            if (next != std::string::npos && (isdigit(source[next]) || source[next] == ']')) {
+                isCollapsed = true;
+                result += c;
+                continue;
+            }
+        }
+
+        if (isCollapsed) {
+            if (isspace(c)) {
+                continue;
+            }
+
+            if (c == ']') {
+                isCollapsed = false;
+                result += c;
+            } else if (c == ',') {
+                result += ", ";
+            } else {
+                result += c;
+            }
+        } else {
+            result += c;
+        }
+    }
+
+    return result;
 }
 
 ordered_json Convert_SaveDataToJSON(SaveData* saveData, int32_t fileNum) {
@@ -245,8 +298,29 @@ ordered_json Convert_SaveDataToJSON(SaveData* saveData, int32_t fileNum) {
     ordered_json ship = ordered_json::object();
     ordered_json shipRando = ordered_json::object();
 
+    
+
     ship["fileType"] = static_cast<int>(saveData->shipSaveData.fileType);
-    ship["randoSaveData"] = shipRando;
+
+    if (saveData->shipSaveData.fileType == FILE_TYPE_SAVE_RANDO) {
+        Rando::Logic::GenerateSaveData(saveData);
+    
+        for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
+            json jsonSaveChecks = nlohmann::json::object();
+            RandoSaveCheck randoSaveCheck = saveData->shipSaveData.randoSaveData.randoSaveCheck[i];
+            RandoSaveCheck_to_json(jsonSaveChecks, randoSaveCheck);
+    
+            shipRando["randoSaveCheck"][randoSaveCheck.name] = jsonSaveChecks;
+        }
+
+        for (int o = RO_LOGIC; o < RO_MAX; o++) {
+            RandoSaveOption randoSaveOption = saveData->shipSaveData.randoSaveData.randoSaveOption[o];
+
+            shipRando["randoSaveOption"][randoSaveOption.name] = randoSaveOption.optionValue;
+        }
+
+        ship["rando"] = shipRando;
+    }
 
     j["ship"] = ship;
 
@@ -442,6 +516,26 @@ SaveData* Convert_JSONToSaveData(int32_t fileNum) {
     // Ship Save Data
     saveData->shipSaveData.fileType = j["ship"]["fileType"];
 
+    if (j["ship"]["fileType"].get<int>() == FILE_TYPE_SAVE_RANDO) {
+        json rando = j["ship"]["rando"];
+    
+        for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
+            json jsonSaveChecks = rando["randoSaveCheck"][Rando::StaticData::Checks[(RandoCheckId)i].name];
+            RandoSaveCheck randoSaveCheck = RandoSaveCheck_from_json(jsonSaveChecks, randoSaveCheck);
+    
+            saveData->shipSaveData.randoSaveData.randoSaveCheck[i] = randoSaveCheck;
+        }
+
+        for (int o = RO_LOGIC; o < RO_MAX; o++) {
+            RandoSaveOption randoSaveOption = {
+                .name = Rando::StaticData::Options[(RandoOptionId)o].name,
+                .optionValue = rando["randoSaveOption"][Rando::StaticData::Options[(RandoOptionId)o].name],
+            };
+
+            saveData->shipSaveData.randoSaveData.randoSaveOption[o] = randoSaveOption;
+        }
+    }
+
     return saveData;
 }
 
@@ -487,19 +581,6 @@ static void LoadGlobalData() {
     }
 }
 
-void SaveManager_LoadAll() {
-    for (int i = 0; i < 3; i++) {
-        SaveData* loadSave = Convert_JSONToSaveData(i);
-        if (loadSave->slotIndex != 0) {
-            loadSave->magic = SAVE_MAGIC;
-        }
-        gameFile_saveData[i] = *(loadSave);
-        delete loadSave;
-    }
-
-    LoadGlobalData();
-}
-
 static void SaveGlobalData() {
     ordered_json j = ordered_json::object();
 
@@ -531,7 +612,7 @@ static void SaveGlobalData() {
 }
 
 void SaveManager_Init() {
-    SaveManager_LoadAll();
+    LoadGlobalData();
 
     // Ensure global.json exists
     std::string globalPath = SaveManager_GetSavePath("global.json");
@@ -580,7 +661,7 @@ void SaveManager_Init() {
         OnSaveClear* ev = (OnSaveClear*)event;
         SaveData* saveData = (SaveData*)ev->result;
 
-        FileType fileType = saveData->shipSaveData.fileType; // Retain File Type during Save Process
+        ShipSaveData ship = saveData->shipSaveData; // Retain ShipSaveData during Save Process
 
         u8* savedata = (u8*)saveData;
         int i;
@@ -589,7 +670,7 @@ void SaveManager_Init() {
         }
 
         saveData = (SaveData*)savedata;
-        saveData->shipSaveData.fileType = fileType;
+        saveData->shipSaveData = ship;
 
         event->Cancelled = true;
     });
