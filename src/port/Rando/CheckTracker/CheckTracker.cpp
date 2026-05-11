@@ -154,8 +154,6 @@ void DrawCheckTrackerList() {
                         continue;
                     }
 
-                    
-
                     ImVec4 checkTextColor = entry.obtained ? VecFromRGBA8(CVAR_COLLECTED_COLOR)
                                                            : UIWidgets::ColorValues.at(UIWidgets::Colors::White);
                     ImVec4 itemTextColor = entry.obtained ? VecFromRGBA8(CVAR_ITEM_COLOR)
