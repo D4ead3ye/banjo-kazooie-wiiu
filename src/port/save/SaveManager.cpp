@@ -306,12 +306,19 @@ ordered_json Convert_SaveDataToJSON(SaveData* saveData, int32_t fileNum) {
         Rando::Logic::GenerateSaveData(saveData);
     
         for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
-            json randoSaveChecks = nlohmann::json::object();
+            json jsonSaveChecks = nlohmann::json::object();
             RandoSaveCheck randoSaveCheck = saveData->shipSaveData.randoSaveData.randoSaveCheck[i];
-            RandoSaveCheck_to_json(randoSaveChecks, randoSaveCheck);
+            RandoSaveCheck_to_json(jsonSaveChecks, randoSaveCheck);
     
-            shipRando["randoSaveCheck"][randoSaveCheck.name] = randoSaveChecks;
+            shipRando["randoSaveCheck"][randoSaveCheck.name] = jsonSaveChecks;
         }
+
+        for (int o = RO_LOGIC; o < RO_MAX; o++) {
+            RandoSaveOption randoSaveOption = saveData->shipSaveData.randoSaveData.randoSaveOption[o];
+
+            shipRando["randoSaveOption"][randoSaveOption.name] = randoSaveOption.optionValue;
+        }
+
         ship["rando"] = shipRando;
     }
 
@@ -513,10 +520,19 @@ SaveData* Convert_JSONToSaveData(int32_t fileNum) {
         json rando = j["ship"]["rando"];
     
         for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
-            json jsonRandoSaveChecks = rando["randoSaveCheck"][Rando::StaticData::Checks[(RandoCheckId)i].name];
-            RandoSaveCheck randoSaveCheck = RandoSaveCheck_from_json(jsonRandoSaveChecks, randoSaveCheck);
+            json jsonSaveChecks = rando["randoSaveCheck"][Rando::StaticData::Checks[(RandoCheckId)i].name];
+            RandoSaveCheck randoSaveCheck = RandoSaveCheck_from_json(jsonSaveChecks, randoSaveCheck);
     
             saveData->shipSaveData.randoSaveData.randoSaveCheck[i] = randoSaveCheck;
+        }
+
+        for (int o = RO_LOGIC; o < RO_MAX; o++) {
+            RandoSaveOption randoSaveOption = {
+                .name = Rando::StaticData::Options[(RandoOptionId)o].name,
+                .optionValue = rando["randoSaveOption"][Rando::StaticData::Options[(RandoOptionId)o].name],
+            };
+
+            saveData->shipSaveData.randoSaveData.randoSaveOption[o] = randoSaveOption;
         }
     }
 

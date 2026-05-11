@@ -20,6 +20,15 @@ void Rando::Logic::InitializeSaveData(SaveData* saveData) {
 
         saveData->shipSaveData.randoSaveData.randoSaveCheck[randoCheckId] = randoSaveCheck;
     }
+
+    for (auto& [randoOptionId, randoStaticOption] : Rando::StaticData::Options) {
+        RandoSaveOption randoSaveOption = {
+            .name = randoStaticOption.name,
+            .optionValue = CVarGetInteger(randoStaticOption.cvar, randoStaticOption.defaultValue),
+        };
+
+        saveData->shipSaveData.randoSaveData.randoSaveOption[randoOptionId] = randoSaveOption;
+    }
 }
 
 void Rando::Logic::GenerateSaveData(SaveData* saveData) {

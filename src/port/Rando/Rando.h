@@ -19,10 +19,10 @@ extern int16_t selectedFileNum;
     (selectedFileNum == DEFAULT_FILE_NUM ? false : gameFile_saveData[selectedFileNum].shipSaveData.fileType == \
      FILE_TYPE_SAVE_RANDO)
 
-#define RANDO_SAVE_CHECKS gameFile_saveData[selectedFileNum].shipSaveData.randoSaveData.randoSaveChecks
+#define RANDO_SAVE_CHECKS gameFile_saveData[selectedFileNum].shipSaveData.randoSaveData.randoSaveCheck
+#define RANDO_SAVE_OPTIONS gameFile_saveData[selectedFileNum].shipSaveData.randoSaveData.randoSaveOption
 
 // #define RANDO_SAVE_ENTRANCES(fileNum) gSaveBuffer.files[fileNum]->shipSaveData.randoSaveData.randoSaveEntrances
-// #define RANDO_SAVE_OPTIONS(fileNum) gSaveBuffer.files[fileNum]->shipSaveData.randoSaveData.randoSaveOptions
 // #define RANDO_EVENTS gSaveContext.save.shipSaveInfo.rando.randoEvents
 // #define RANDO_STARTING_ITEMS gSaveContext.save.shipSaveInfo.rando.randoStartingItems
 

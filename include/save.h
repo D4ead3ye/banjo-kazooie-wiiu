@@ -10,6 +10,7 @@ typedef enum {
 
 typedef struct {
     RandoSaveCheck randoSaveCheck[RC_MAX];
+    RandoSaveOption randoSaveOption[RO_MAX];
 } RandoSaveData;
 
 typedef struct {

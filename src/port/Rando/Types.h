@@ -1063,4 +1063,9 @@ typedef struct RandoSaveCheck {
     bool skipped;
 } RandoSaveCheck;
 
+typedef struct RandoSaveOption {
+    const char* name;
+    int32_t optionValue;
+} RandoSaveOption;
+
 #endif // RANDO_TYPES_H
