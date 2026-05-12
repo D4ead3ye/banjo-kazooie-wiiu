@@ -61,6 +61,9 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             CONNECTION(RR_GOBIS_VALLEY_UPPER_AREA, true),
         },
+        .events = {
+            EVENT(RA_WITCH_SWITCH_GOBIS_VALLEY, CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
+        }
     };
 
     Regions[RR_GOBIS_VALLEY_INTERIOR_RUBEES_PYRAMID] = RandoRegion{ .regionName = "Gobi's Valley Rubee's Pyramid Interior", .levelId = LEVEL_7_GOBIS_VALLEY,

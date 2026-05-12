@@ -126,6 +126,9 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MUMBOS_MOUNTAIN_INTERIOR_TICKERS_TOWER, true),
             CONNECTION(RR_MUMBOS_MOUNTAIN_INTERIOR_MUMBOS_SKULL, true),
         },
+        .events = {
+            EVENT(RA_WITCH_SWITCH_MUMBOS_MOUNTAIN, CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
+        }
     };
     Regions[RR_MUMBOS_MOUNTAIN_INTERIOR_TICKERS_TOWER] = RandoRegion{ .regionName = "Mumbo's Mountain", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
         .checks = {
