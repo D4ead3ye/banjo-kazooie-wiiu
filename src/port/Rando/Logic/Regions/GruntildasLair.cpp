@@ -7,7 +7,6 @@ using namespace Rando::Logic;
 static RegisterShipInitFunc initFunc([]() {
     Regions[RR_GRUNTILDAS_LAIR_LOBBY] = RandoRegion{ .regionName = "Gruntilda's Lair Lobby", .levelId = LEVEL_6_LAIR,
         .checks = {
-        // TODO: Events for each Witch Switch
 		    CHECK(RC_GL_JIGGY_LOBBY, true),
             CHECK(RC_GL_JIGGY_WITCH_SWITCH_BUBBLEGLOOP_SWAMP,   CAN_ACCESS(RA_WITCH_SWITCH_BUBBLEGLOOP_SWAMP)),
             CHECK(RC_GL_JIGGY_WITCH_SWITCH_CLANKERS_CAVERN,     CAN_ACCESS(RA_WITCH_SWITCH_CLANKERS_CAVERN)),
