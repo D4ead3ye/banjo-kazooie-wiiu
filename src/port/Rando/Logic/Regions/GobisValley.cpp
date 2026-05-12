@@ -7,7 +7,6 @@ using namespace Rando::Logic;
 static RegisterShipInitFunc initFunc([]() {
     Regions[RR_GOBIS_VALLEY_ENTRANCE] = RandoRegion{ .regionName = "Gobi's Valley", .levelId = LEVEL_7_GOBIS_VALLEY,
         .checks = {
-        // TODO: Moat Bottom needs Access Event for Water Pyramid Interior
             CHECK(RC_GV_EMPTY_HONEYCOMB_GOBI, 						CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP) && CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
             CHECK(RC_GV_JIGGY_GOBI_2, 								CAN_EXTEND_JUMP_DISTANCE && CAN_USE_ABILITY(ABILITY_5_CLIMB)),
             CHECK(RC_GV_JIGGY_JINJO, 								true),
@@ -19,12 +18,12 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_GV_NOTE_ENTRANCE_3, 							CAN_USE_ABILITY(ABILITY_10_TALON_TROT) || CAN_USE_ABILITY(ABILITY_11_TURBO_TALON)),
             CHECK(RC_GV_NOTE_ENTRANCE_4, 							CAN_USE_ABILITY(ABILITY_10_TALON_TROT) || CAN_USE_ABILITY(ABILITY_11_TURBO_TALON)),
             CHECK(RC_GV_NOTE_ENTRANCE_5, 							CAN_USE_ABILITY(ABILITY_10_TALON_TROT) || CAN_USE_ABILITY(ABILITY_11_TURBO_TALON)),
-            CHECK(RC_GV_NOTE_MOAT_BOTTOM_1, 						true),
-            CHECK(RC_GV_NOTE_MOAT_BOTTOM_2, 						true),
-            CHECK(RC_GV_NOTE_MOAT_BOTTOM_3, 						true),
-            CHECK(RC_GV_NOTE_MOAT_BOTTOM_4, 						true),
-            CHECK(RC_GV_NOTE_MOAT_BOTTOM_5, 						true),
-            CHECK(RC_GV_NOTE_MOAT_BOTTOM_6, 						true),
+            CHECK(RC_GV_NOTE_MOAT_BOTTOM_1, 						CAN_ACCESS(RA_DRAIN_WATER_PYRAMID)),
+            CHECK(RC_GV_NOTE_MOAT_BOTTOM_2, 						CAN_ACCESS(RA_DRAIN_WATER_PYRAMID)),
+            CHECK(RC_GV_NOTE_MOAT_BOTTOM_3, 						CAN_ACCESS(RA_DRAIN_WATER_PYRAMID)),
+            CHECK(RC_GV_NOTE_MOAT_BOTTOM_4, 						CAN_ACCESS(RA_DRAIN_WATER_PYRAMID)),
+            CHECK(RC_GV_NOTE_MOAT_BOTTOM_5, 						CAN_ACCESS(RA_DRAIN_WATER_PYRAMID)),
+            CHECK(RC_GV_NOTE_MOAT_BOTTOM_6, 						CAN_ACCESS(RA_DRAIN_WATER_PYRAMID)),
         },
         .connections = {
             CONNECTION(RR_GOBIS_VALLEY_UPPER_AREA, CAN_USE_ABILITY(ABILITY_10_TALON_TROT) || CAN_USE_ABILITY(ABILITY_11_TURBO_TALON)),
@@ -61,6 +60,9 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             CONNECTION(RR_GOBIS_VALLEY_UPPER_AREA, true),
         },
+        .events = {
+            EVENT(RA_WITCH_SWITCH_GOBIS_VALLEY, CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
+        }
     };
 
     Regions[RR_GOBIS_VALLEY_INTERIOR_RUBEES_PYRAMID] = RandoRegion{ .regionName = "Gobi's Valley Rubee's Pyramid Interior", .levelId = LEVEL_7_GOBIS_VALLEY,
@@ -112,6 +114,9 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             CONNECTION(RR_GOBIS_VALLEY_UPPER_AREA, CAN_USE_ABILITY(ABILITY_F_DIVE)),
         },
+        .events = {
+            EVENT(RA_DRAIN_WATER_PYRAMID, CAN_USE_ABILITY(ABILITY_F_DIVE)),
+        }
     };
 
     Regions[RR_GOBIS_VALLEY_UPPER_AREA] = RandoRegion{ .regionName = "Gobi's Valley Upper Areas", .levelId = LEVEL_7_GOBIS_VALLEY,
