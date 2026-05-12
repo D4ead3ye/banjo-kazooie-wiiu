@@ -36,6 +36,7 @@ void Rando::MiscBehavior::OnFileLoad() {
         if (CVarGetInteger("gRandoSettings.Enable", 0)) {
             Rando::Logic::GenerateShufflePool();
             Rando::Logic::InitializeSaveData(saveData);
+            Rando::Logic::GrantStartingLoadout();
             saveData->shipSaveData.fileType = FILE_TYPE_SAVE_RANDO;
         }
     });

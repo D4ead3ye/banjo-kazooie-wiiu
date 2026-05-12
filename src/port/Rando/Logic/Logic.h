@@ -14,6 +14,9 @@ s32 __transformation_getCost(enum transformation_e trans_id);
 s32 _puzzleCost(s32 index);
 }
 
+extern std::map<ability_e, std::pair<const char*, const char*>> abilityLoadoutMap;
+extern std::map<item_e, std::pair<const char*, const char*>> itemLoadoutMap;
+
 namespace Rando {
 
 namespace Logic {
@@ -23,6 +26,7 @@ void GenerateShufflePool();
 void GeneratePoolFromSaveData(SaveData* saveData);
 void InitializeSaveData(SaveData* saveData);
 void GenerateSaveData(SaveData* saveData);
+void GrantStartingLoadout();
 
 inline bool IsCheckShuffled(RandoCheckId randoCheckId) {
     bool isShuffled = false;
