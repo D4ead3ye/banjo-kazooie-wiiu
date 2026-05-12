@@ -6,6 +6,7 @@
 #include "port/ui/UIWidgets.hpp"
 
 #include "port/Rando/CustomObject/CustomObject.h"
+#include "port/Rando/Logic/Logic.h"
 
 extern "C" {
 #include "variables.h"
@@ -56,7 +57,99 @@ void LighthouseMenu::AddMenuRando() {
     AddWidget(path, "Shuffle Music Notes", WIDGET_CVAR_CHECKBOX)
         .CVar(Rando::StaticData::Options[RO_SHUFFLE_MUSIC_NOTES].cvar)
         .Options(CheckboxOptions().Tooltip("Shuffles Music Notes into the Pool."));
-    
+
+    // Rando - Starting Loadout
+    AddSidebarEntry("Rando", "Starting Loadout", 1);
+    path = { "Rando", "Starting Loadout", SECTION_COLUMN_1 };
+
+    AddWidget(path, "Starting Abilities", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Abilities", WIDGET_CUSTOM)
+        .CustomFunction([](WidgetInfo& info) {
+            std::string abilityToolTip;
+            bool defaultValue = false;
+
+            ImGui::PushID(SECTION_COLUMN_1);
+            if (UIWidgets::Button("Enable All", UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Green).Size(ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 0)))) {
+                for (auto& [abilityId, abilityInfo] : abilityLoadoutMap) {
+                    if (abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER) {
+                        continue;
+                    }
+                    CVarSetInteger(abilityInfo.second, true);
+                }
+                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+            }
+            ImGui::SameLine();
+            if (UIWidgets::Button("Disable All", UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Red))) {
+                for (auto& [abilityId, abilityInfo] : abilityLoadoutMap) {
+                    if (abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER) {
+                        continue;
+                    }
+                    CVarSetInteger(abilityInfo.second, false);
+                }
+                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+            }
+            ImGui::PopID();
+
+            if (ImGui::BeginTable("Abilities Table", 3, ImGuiTableFlags_SizingStretchSame)) {
+                ImGui::TableNextColumn();
+
+                for (auto& [abilityId, abilityInfo] : abilityLoadoutMap) {
+                    abilityToolTip = std::format("Start with {} unlocked.", abilityInfo.first);
+                    defaultValue = abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER ? true : false;
+
+                    ImGui::BeginDisabled(abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER);
+                    UIWidgets::CVarCheckbox(abilityInfo.first, abilityInfo.second,
+                                            UIWidgets::CheckboxOptions()
+                                                .Color(WIDGET_COLOR)
+                                                .Tooltip(abilityToolTip.c_str())
+                                                .DefaultValue(defaultValue));
+                    ImGui::EndDisabled();
+                    ImGui::TableNextColumn();
+                }
+                ImGui::EndTable();
+            }
+        });
+
+    AddWidget(path, "Starting Consumables", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Consumables", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
+        std::string itemToolTip;
+        bool defaultValue = false;
+
+        ImGui::PushID(SECTION_COLUMN_2);
+        if (UIWidgets::Button("Enable All", UIWidgets::ButtonOptions()
+                                                .Color(UIWidgets::Colors::Green)
+                                                .Size(ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 0)))) {
+            for (auto& [itemId, itemInfo] : itemLoadoutMap) {
+                CVarSetInteger(itemInfo.second, true);
+            }
+            Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+        }
+        ImGui::SameLine();
+        if (UIWidgets::Button("Disable All", UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Red))) {
+            for (auto& [itemId, itemInfo] : itemLoadoutMap) {
+                CVarSetInteger(itemInfo.second, false);
+            }
+            Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+        }
+        ImGui::PopID();
+
+        if (ImGui::BeginTable("Items Table", 3, ImGuiTableFlags_SizingStretchSame)) {
+            ImGui::TableNextColumn();
+
+            for (auto& [itemId, itemInfo] : itemLoadoutMap) {
+                itemToolTip = std::format("Start with max {}.", itemInfo.first);
+
+                UIWidgets::CVarCheckbox(itemInfo.first, itemInfo.second,
+                                        UIWidgets::CheckboxOptions().Color(WIDGET_COLOR).Tooltip(itemToolTip.c_str()));
+                ImGui::TableNextColumn();
+            }
+            ImGui::EndTable();
+        }
+
+    });
+
     // Rando - Junk Options
     AddSidebarEntry("Rando", "Junk Options", 1);
     path = { "Rando", "Junk Options", SECTION_COLUMN_1 };

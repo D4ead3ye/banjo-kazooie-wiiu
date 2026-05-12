@@ -11,7 +11,11 @@ int ability_isUnlocked(enum ability_e uid);
 
 bool fileProgressFlag_get(enum file_progress_e index);
 s32 __transformation_getCost(enum transformation_e trans_id);
+s32 _puzzleCost(s32 index);
 }
+
+extern std::map<ability_e, std::pair<const char*, const char*>> abilityLoadoutMap;
+extern std::map<item_e, std::pair<const char*, const char*>> itemLoadoutMap;
 
 namespace Rando {
 
@@ -19,6 +23,10 @@ namespace Logic {
 extern std::vector<Rando::StaticData::RandoShuffledPool> shuffledPool;
 
 void GenerateShufflePool();
+void GeneratePoolFromSaveData(SaveData* saveData);
+void InitializeSaveData(SaveData* saveData);
+void GenerateSaveData(SaveData* saveData);
+void GrantStartingLoadout();
 
 inline bool IsCheckShuffled(RandoCheckId randoCheckId) {
     bool isShuffled = false;
@@ -102,6 +110,7 @@ struct RandoRegion {
     int16_t levelId;
     std::map<RandoCheckId, std::pair<std::function<bool()>, std::string>> checks;
     std::map<RandoRegionId, std::pair<std::function<bool()>, std::string>> connections;
+    std::vector<std::pair<RandoAccessId, std::function<bool()>>> events;
 };
 
 extern std::map<RandoRegionId, RandoRegion> Regions;
@@ -120,7 +129,31 @@ extern std::map<RandoRegionId, RandoRegion> Regions;
         }                                                     \
     }
 
+#define EVENT(randoEvent, condition)         \
+    {                                        \
+        randoEvent, [] { return condition; } \
+    }
+
 // Check Logic
+inline bool CanAccessEvent(RandoAccessId randoAccessId) {
+    bool canAccess = false;
+    for (auto& [regionId, regionData] : Rando::Logic::Regions) {
+        if (canAccess) {
+            break;
+        }
+        for (auto& [accessId, logic] : regionData.events) {
+            if (accessId == randoAccessId) {
+                if (logic) {
+                    canAccess = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    return canAccess;
+}
+
 inline bool CanUseTransformation(transformation_e transId) {
     file_progress_e progressId = (file_progress_e)((transId - TRANSFORM_2_TERMITE) + FILEPROG_90_PAID_TERMITE_COST);
 
@@ -134,15 +167,46 @@ inline bool CanUseTransformation(transformation_e transId) {
     return false;
 }
 
-#define CAN_USE_ABILITY(abilityId) ability_isUnlocked(abilityId)
-#define CAN_USE_TRANSFORMATION(transId) CanUseTransformation(transId)
+inline bool CanOpenWorld(level_e levelId) {
+    if (levelId == LEVEL_6_LAIR) {
+        return false;
+    }
+
+    int32_t levelNum = levelId;
+
+    if (levelNum > LEVEL_6_LAIR) {
+        levelNum = levelId - 1;
+    }
+
+    if (fileProgressFlag_get(worldOpenFlags[levelNum - 1])) {
+        return true;
+    }
+
+    int32_t puzzleCost = _puzzleCost(levelNum - 1);
+    int32_t jiggyCount = item_getCount(ITEM_26_JIGGY_TOTAL);
+
+    if (jiggyCount >= puzzleCost) {
+        return true;
+    }
+
+    return false;
+}
+
+#define CAN_ACCESS(accessId) CanAccessEvent(accessId)
+
+#define CAN_ATTACK                                                                                                   \
+    (CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP) || CAN_USE_ABILITY(ABILITY_4_CLAW_SWIPE) ||                              \
+     CAN_USE_ABILITY(ABILITY_6_EGGS) || CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) || CAN_USE_ABILITY(ABILITY_C_ROLL) || \
+     CAN_USE_ABILITY(ABILITY_12_WONDERWING))
+
 #define CAN_EXTEND_JUMP_DISTANCE                                                           \
     (CAN_USE_ABILITY(ABILITY_7_FEATHERY_FLAP) || CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP) || \
      CAN_USE_ABILITY(ABILITY_10_TALON_TROT))
-#define CAN_ATTACK                                                                                                  \
-    (CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP) || CAN_USE_ABILITY(ABILITY_4_CLAW_SWIPE) ||                             \
-     CAN_USE_ABILITY(ABILITY_6_EGGS) || CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) || CAN_USE_ABILITY(ABILITY_C_ROLL) || \
-     CAN_USE_ABILITY(ABILITY_12_WONDERWING))
+
+#define CAN_UNLOCK_WORLD(levelId) CanOpenWorld(levelId)
+#define CAN_USE_ABILITY(abilityId) ability_isUnlocked(abilityId)
+#define CAN_USE_TRANSFORMATION(transId) CanUseTransformation(transId)
+
 
 
 } // namespace Logic

@@ -9,18 +9,22 @@
 
 extern "C" {
 extern SaveData gameFile_saveData[4];
-enum map_e map_get();
 }
 
+extern int16_t selectedFileNum;
 
-#define IS_RANDO (gameFile_saveData[selectedFileNum].shipSaveData.fileType == FILE_TYPE_SAVE_RANDO)
-// #define RANDO_SAVE_CHECKS(fileNum) gSaveBuffer.files[fileNum]->shipSaveData.randoSaveData.randoSaveChecks
+#define DEFAULT_FILE_NUM -1
+
+#define IS_RANDO                                                                                               \
+    (selectedFileNum == DEFAULT_FILE_NUM ? false : gameFile_saveData[selectedFileNum].shipSaveData.fileType == \
+     FILE_TYPE_SAVE_RANDO)
+
+#define RANDO_SAVE_CHECKS gameFile_saveData[selectedFileNum].shipSaveData.randoSaveData.randoSaveCheck
+#define RANDO_SAVE_OPTIONS gameFile_saveData[selectedFileNum].shipSaveData.randoSaveData.randoSaveOption
+
 // #define RANDO_SAVE_ENTRANCES(fileNum) gSaveBuffer.files[fileNum]->shipSaveData.randoSaveData.randoSaveEntrances
-// #define RANDO_SAVE_OPTIONS(fileNum) gSaveBuffer.files[fileNum]->shipSaveData.randoSaveData.randoSaveOptions
 // #define RANDO_EVENTS gSaveContext.save.shipSaveInfo.rando.randoEvents
 // #define RANDO_STARTING_ITEMS gSaveContext.save.shipSaveInfo.rando.randoStartingItems
-
-extern int16_t selectedFileNum;
 
 namespace Rando {
 

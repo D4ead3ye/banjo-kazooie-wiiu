@@ -1,6 +1,8 @@
 #include "ShipUtils.h"
 #include "save/SaveManager.h"
+#include "save/Types.h"
 #include "Engine.h"
+#include "GameConfig.h"
 #include <chrono>
 #include <cstdarg>
 #include <cstdio>
@@ -246,6 +248,10 @@ const char* port_mapName(int map_id) {
 }
 
 int port_getBootSequence(void) {
+    // Romhacks always boot to file select; their intros aren't compatible with the
+    // vanilla cutscene/demo path.
+    if (port_isRomhack())
+        return 2; // BOOTSEQUENCE_FILESELECT
     return CVarGetInteger(CVAR_SETTING("BootSequence"), 0);
 }
 
@@ -297,12 +303,21 @@ bool port_CButtonIsAxis(void) {
 
 } // extern "C"
 
+std::vector<file_progress_e> worldOpenFlags = {
+    FILEPROG_5D_MM_PUZZLE_PIECES_PLACED,  FILEPROG_5E_TTC_PUZZLE_PIECES_PLACED, FILEPROG_60_CC_PUZZLE_PIECES_PLACED,
+    FILEPROG_63_BGS_PUZZLE_PIECES_PLACED, FILEPROG_66_FP_PUZZLE_PIECES_PLACED,  FILEPROG_6A_GV_PUZZLE_PIECES_PLACED,
+    FILEPROG_6E_MMM_PUZZLE_PIECES_PLACED, FILEPROG_72_RBB_PUZZLE_PIECES_PLACED, FILEPROG_76_CCW_PUZZLE_PIECES_PLACED,
+};
+
 std::vector<std::string> levelAbbreviations = {
     "MM", "TTC", "CC", "BGS", "FP", "Lair", "GV", "CCW", "RBB", "MMM", "SM", 
 };
 
 json Ship_RetrieveSaveFile(int32_t filenum) {
-    std::string fileName = "file" + std::to_string(filenum) + ".json";
+    if (filenum < 0 || filenum > 2) {
+        return json::object();
+    }
+    std::string fileName = "file" + std::to_string(SlotToFileIndex(filenum)) + ".json";
     std::string filePath = SaveManager_GetSavePath(fileName);
 
     if (!std::filesystem::exists(filePath)) {

@@ -12,9 +12,9 @@ void Rando::ObjectBehavior::InitPropBehavior() {
 	COND_VB_SHOULD(VB_OVERRIDE_PROP_SPAWN, EVENT_PRIORITY_NORMAL, true, {
 		s16* position = va_arg(args, s16*);
 
-		// if (!IS_RANDO) {
-        //     return;
-        // }
+		if (!IS_RANDO) {
+            return;
+        }
 
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(position[0], position[1], position[2]);
 

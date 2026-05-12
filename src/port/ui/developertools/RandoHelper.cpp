@@ -206,6 +206,9 @@ void DrawGrantUnlocks() {
         item_set(ITEM_10_GOLD_FEATHER, 10);
         item_set(ITEM_1C_MUMBO_TOKEN, 25);
     }
+    if (UIWidgets::Button("Add Notes", { .color = THEME_COLOR })) {
+        item_set(ITEM_C_NOTE, 900);
+    }
 }
 
 void RandoHelper_DrawTabBar() {

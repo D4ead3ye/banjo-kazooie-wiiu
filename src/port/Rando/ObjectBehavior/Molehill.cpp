@@ -84,7 +84,6 @@ ChMoleDescription GetMoleDescriptionByAbility(int16_t abilityId) {
 
 bool CheckBridgeState() {
     int32_t smBridgeCheck = 0;
-    // TODO: Fix Bridge when all abilities learned
     if (!mapSpecificFlags_get(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED)) {
         for (auto& check : spiralMountainBridge) {
             if (Rando::Logic::GetShuffledObject(check).obtained) {

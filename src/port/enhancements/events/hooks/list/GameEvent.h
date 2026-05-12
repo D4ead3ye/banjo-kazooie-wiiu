@@ -1,13 +1,10 @@
 #pragma once
 
-#include "port/enhancements/events/hooks/EventSystem.h"
-#include "include/enums.h"
-#include "include/prop.h"
-#include <stdarg.h>
+#include <libultraship/bridge/eventsbridge.h>
 
 // clang-format off
 DEFINE_EVENT(OnGameSave, 
-	int32_t fileNum;
+	void* saveData;
 )
 
 DEFINE_EVENT(OnGameLoad,
@@ -35,5 +32,9 @@ DEFINE_EVENT(OnPropInit, Prop* propPtr;);
 
 DEFINE_EVENT(OnSetJiggyList,
 	int32_t levelId;
+)
+
+DEFINE_EVENT(OnSaveClear,
+	void* result;
 )
 // clang-format on
