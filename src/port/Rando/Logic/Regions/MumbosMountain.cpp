@@ -7,7 +7,6 @@ using namespace Rando::Logic;
 static RegisterShipInitFunc initFunc([]() {
     Regions[RR_MUMBOS_MOUNTAIN] = RandoRegion{ .regionName = "Mumbo's Mountain", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
         .checks = {
-        // TODO: Add region for Mumbo's Skull, Ticker's Tower, Top of Tickers Tower
             CHECK(RC_MM_EMPTY_HONEYCOMB_HILL, 					true),
             CHECK(RC_MM_EMPTY_HONEYCOMB_JUJU, 					CAN_USE_ABILITY(ABILITY_6_EGGS) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
             CHECK(RC_MM_JIGGY_CHIMPY, 							CAN_USE_ABILITY(ABILITY_5_CLIMB) || CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
@@ -126,6 +125,9 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MUMBOS_MOUNTAIN_INTERIOR_TICKERS_TOWER, true),
             CONNECTION(RR_MUMBOS_MOUNTAIN_INTERIOR_MUMBOS_SKULL, true),
         },
+        .events = {
+            EVENT(RA_WITCH_SWITCH_MUMBOS_MOUNTAIN, CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
+        }
     };
     Regions[RR_MUMBOS_MOUNTAIN_INTERIOR_TICKERS_TOWER] = RandoRegion{ .regionName = "Mumbo's Mountain", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
         .checks = {

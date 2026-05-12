@@ -106,6 +106,7 @@ struct RandoRegion {
     int16_t levelId;
     std::map<RandoCheckId, std::pair<std::function<bool()>, std::string>> checks;
     std::map<RandoRegionId, std::pair<std::function<bool()>, std::string>> connections;
+    std::vector<std::pair<RandoAccessId, std::function<bool()>>> events;
 };
 
 extern std::map<RandoRegionId, RandoRegion> Regions;
@@ -124,7 +125,31 @@ extern std::map<RandoRegionId, RandoRegion> Regions;
         }                                                     \
     }
 
+#define EVENT(randoEvent, condition)         \
+    {                                        \
+        randoEvent, [] { return condition; } \
+    }
+
 // Check Logic
+inline bool CanAccessEvent(RandoAccessId randoAccessId) {
+    bool canAccess = false;
+    for (auto& [regionId, regionData] : Rando::Logic::Regions) {
+        if (canAccess) {
+            break;
+        }
+        for (auto& [accessId, logic] : regionData.events) {
+            if (accessId == randoAccessId) {
+                if (logic) {
+                    canAccess = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    return canAccess;
+}
+
 inline bool CanUseTransformation(transformation_e transId) {
     file_progress_e progressId = (file_progress_e)((transId - TRANSFORM_2_TERMITE) + FILEPROG_90_PAID_TERMITE_COST);
 
@@ -162,6 +187,8 @@ inline bool CanOpenWorld(level_e levelId) {
 
     return false;
 }
+
+#define CAN_ACCESS(accessId) CanAccessEvent(accessId)
 
 #define CAN_ATTACK                                                                                                   \
     (CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP) || CAN_USE_ABILITY(ABILITY_4_CLAW_SWIPE) ||                              \

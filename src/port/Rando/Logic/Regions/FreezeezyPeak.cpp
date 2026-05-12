@@ -125,6 +125,9 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_FREEZEEZY_PEAK_POTTED_TREE, CAN_USE_ABILITY(ABILITY_5_CLIMB)),
             CONNECTION(RR_FREEZEEZY_PEAK_INTERIOR_WOZZAS_CAVE, CAN_USE_TRANSFORMATION(TRANSFORM_4_WALRUS)),
         },
+        .events = {
+            EVENT(RA_WITCH_SWITCH_FREEZEEZY_PEAK, CAN_USE_ABILITY(ABILITY_1_BEAK_BOMB) && CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) && CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
+        }
     };
     Regions[RR_FREEZEEZY_PEAK_MAIN_UPPER] = RandoRegion{ .regionName = "Freezeezy Peak Inside Mumbo's Skull", .levelId = LEVEL_5_FREEZEEZY_PEAK,
         .checks = {

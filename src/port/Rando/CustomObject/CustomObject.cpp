@@ -254,7 +254,6 @@ void CustomObject::CheckObtained(RandoCheckId randoCheckId) {
 
 void CustomObject::ObjectCollected(Prop* prop) {
     for (auto& [randoCheckId, customActor] : customActorMap) {
-        // TODO: Fix null actors when changing interiors...
         if (customActor.marker->propPtr->words[0] == prop->actorProp.words[0]) {
             CustomObject::CheckObtained(randoCheckId);
             return;

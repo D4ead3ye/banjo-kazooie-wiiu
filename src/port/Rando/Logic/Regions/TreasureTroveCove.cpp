@@ -190,6 +190,9 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             CONNECTION(RR_TREASURE_TROVE_COVE_LIGHTHOUSE_BASE, true),
         },
+        .events = {
+            EVENT(RA_WITCH_SWITCH_TREASURE_TROVE_COVE, CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
+        }
     };
 
 
