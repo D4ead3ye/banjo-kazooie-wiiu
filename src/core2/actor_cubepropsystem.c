@@ -1024,7 +1024,6 @@ void code7AF80_initCubeFromFile(File *file_ptr, Cube *cube) {
                     }
                     //Prop* ptr = cube->prop2Ptr + i * sizeof(Prop);
                     CALL_EVENT(OnPropInit, &cube->prop2Ptr[i]);
-                    }
                 }
             }
         }
