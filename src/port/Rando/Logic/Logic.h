@@ -184,7 +184,7 @@ inline bool CanOpenWorld(level_e levelId) {
         return true;
     }
 
-    int32_t puzzleCost = _puzzleCost(levelNum - 1);
+    int32_t puzzleCost = levelId == LEVEL_6_LAIR ? 25 : _puzzleCost(levelNum - 1);
     int32_t jiggyCount = item_getCount(ITEM_26_JIGGY_TOTAL);
 
     if (jiggyCount >= puzzleCost) {
@@ -200,24 +200,25 @@ inline bool CanOpenWorld(level_e levelId) {
                 puzzleBoardAccessID = RA_PUZZLE_BOARD_CLANKERS_CAVERN;
                 break;
             case LEVEL_4_BUBBLEGLOOP_SWAMP:
+                puzzleBoardAccessID = RA_PUZZLE_BOARD_BUBBLEGLOOP_SWAMP;
                 break;
             case LEVEL_5_FREEZEEZY_PEAK:
+                puzzleBoardAccessID = RA_PUZZLE_BOARD_FREEZEEZY_PEAK;
                 break;
             case LEVEL_6_LAIR:
+                puzzleBoardAccessID = RA_PUZZLE_BOARD_GRUNTILDA;
                 break;
             case LEVEL_7_GOBIS_VALLEY:
+                puzzleBoardAccessID = RA_PUZZLE_BOARD_GOBIS_VALLEY;
                 break;
             case LEVEL_8_CLICK_CLOCK_WOOD:
+                puzzleBoardAccessID = RA_PUZZLE_BOARD_CLICK_CLOCK_WOOD;
                 break;
             case LEVEL_9_RUSTY_BUCKET_BAY:
+                puzzleBoardAccessID = RA_PUZZLE_BOARD_RUSTY_BUCKET_BAY;
                 break;
             case LEVEL_A_MAD_MONSTER_MANSION:
-                break;
-            case LEVEL_B_SPIRAL_MOUNTAIN:
-                break;
-            case LEVEL_C_BOSS:
-                break;
-            case LEVEL_D_CUTSCENE:
+                puzzleBoardAccessID = RA_PUZZLE_BOARD_MAD_MONSTER_MANSION;
                 break;
             default:
                 break;
