@@ -129,7 +129,7 @@ static RegisterShipInitFunc initFunc([]() {
             EVENT(RA_WITCH_SWITCH_MUMBOS_MOUNTAIN, CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
         }
     };
-    Regions[RR_MUMBOS_MOUNTAIN_INTERIOR_TICKERS_TOWER] = RandoRegion{ .regionName = "Mumbo's Mountain", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
+    Regions[RR_MUMBOS_MOUNTAIN_INTERIOR_TICKERS_TOWER] = RandoRegion{ .regionName = "Inside Tickers Tower", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
         .checks = {
             CHECK(RC_MM_MUMBO_TOKEN_INSIDE_TICKERS_TOWER, 		CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP) || CAN_USE_ABILITY(ABILITY_10_TALON_TROT) || CAN_USE_TRANSFORMATION(TRANSFORM_2_TERMITE)),
             CHECK(RC_MM_NOTE_INSIDE_TICKERS_TOWER_1, 			CAN_USE_TRANSFORMATION(TRANSFORM_2_TERMITE)),
@@ -144,7 +144,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MUMBOS_MOUNTAIN_TICKERS_TOWER_TOP, CAN_USE_TRANSFORMATION(TRANSFORM_2_TERMITE)),
         },
     };
-    Regions[RR_MUMBOS_MOUNTAIN_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Mumbo's Mountain", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
+    Regions[RR_MUMBOS_MOUNTAIN_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Inside Mumbo's Skull", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
         .checks = {
             CHECK(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_1, 			true),
             CHECK(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_2, 			true),
@@ -155,7 +155,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MUMBOS_MOUNTAIN, true),
         },
     };
-    Regions[RR_MUMBOS_MOUNTAIN_TICKERS_TOWER_TOP] = RandoRegion{ .regionName = "Mumbo's Mountain", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
+    Regions[RR_MUMBOS_MOUNTAIN_TICKERS_TOWER_TOP] = RandoRegion{ .regionName = "Top of Tickers Tower", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
         .checks = {
             CHECK(RC_MM_JIGGY_TICKERS_TOWER, 					true),
         },
