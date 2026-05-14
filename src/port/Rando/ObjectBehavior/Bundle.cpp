@@ -26,7 +26,6 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
         if (!IS_RANDO) {
             return;
         }
-        BK_LOG_INFO("is bundle");
 
         int32_t spawnPosition[3];
         spawnPosition[0] = (int32_t)position[0];
@@ -56,6 +55,15 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                     shuffledObject = Rando::Logic::GetShuffledObject(RC_SM_EMPTY_HONEYCOMB_COLLIWOBBLE);
                 } else if (spawnPosition[1] >= -200 && spawnPosition[1] <= 0) {
                     shuffledObject = Rando::Logic::GetShuffledObject(RC_SM_EMPTY_HONEYCOMB_QUARRIES);
+                }
+                break;
+            case BUNDLE_7__JIGGY:
+                if (map_getLevel(gsworld_getMap()) == LEVEL_4_BUBBLEGLOOP_SWAMP) {
+                    switch (spawnPosition[2]) {
+                        case 1850:
+                            shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_CROCTUS);
+                            break;
+                    }
                 }
                 break;
             case BUNDLE_8__JIGGY:
@@ -91,13 +99,9 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                         case -1020:
                             shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_TIPTUP);
                             break;
-                        //THESE TWO ARE NOT DONE, WRONG BUNDLES POTENTIALLY
-                        //case 1850:
-                        //    shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_CROCTUS);
-                        //    break;
-                        //case 0:
-                        //    shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_MAZE);
-                        //    break;
+                        case -6148:
+                            shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_MAZE);
+                            break;
                     }
                 }
                 break;
