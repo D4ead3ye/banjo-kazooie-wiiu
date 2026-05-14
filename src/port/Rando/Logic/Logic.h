@@ -12,6 +12,8 @@ int ability_isUnlocked(enum ability_e uid);
 bool fileProgressFlag_get(enum file_progress_e index);
 s32 __transformation_getCost(enum transformation_e trans_id);
 s32 _puzzleCost(s32 index);
+
+u32 player_getTransformation(void);
 }
 
 extern std::map<ability_e, std::pair<const char*, const char*>> abilityLoadoutMap;
@@ -192,6 +194,36 @@ inline bool CanOpenWorld(level_e levelId) {
     return false;
 }
 
+inline bool CanBreakObject(RandoAccessId objectType) {
+    bool canBreakObject = false;
+
+    switch (objectType) {
+        case RA_BREAK_OBJECT_IRON_GATE:
+            if (ability_isUnlocked(ABILITY_0_BARGE) || ability_isUnlocked(ABILITY_12_WONDERWING) ||
+                ability_isUnlocked(ABILITY_B_RATATAT_RAP)) {
+                canBreakObject = true;
+            }
+            break;
+        case RA_BREAK_OBJECT_WINDOWS:
+            if (ability_isUnlocked(ABILITY_6_EGGS) || ability_isUnlocked(ABILITY_12_WONDERWING) ||
+                ability_isUnlocked(ABILITY_B_RATATAT_RAP)) {
+                canBreakObject = true;
+            }
+            break;
+        case RA_BREAK_OBJECT_CELLAR_CASK:
+        case RA_BREAK_OBJECT_WOODEN_DOOR:
+            if (ability_isUnlocked(ABILITY_0_BARGE) || ability_isUnlocked(ABILITY_12_WONDERWING) ||
+                ability_isUnlocked(ABILITY_B_RATATAT_RAP) || ability_isUnlocked(ABILITY_6_EGGS)){
+                canBreakObject = true;
+            }
+            break;
+        default:
+            break;
+    }
+    
+    return canBreakObject;
+}
+
 #define CAN_ACCESS(accessId) CanAccessEvent(accessId)
 
 #define CAN_ATTACK                                                                                                   \
@@ -203,10 +235,11 @@ inline bool CanOpenWorld(level_e levelId) {
     (CAN_USE_ABILITY(ABILITY_7_FEATHERY_FLAP) || CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP) || \
      CAN_USE_ABILITY(ABILITY_10_TALON_TROT))
 
+#define CAN_BREAK_OBJECT(objectType) CanBreakObject(objectType)
 #define CAN_UNLOCK_WORLD(levelId) CanOpenWorld(levelId)
 #define CAN_USE_ABILITY(abilityId) ability_isUnlocked(abilityId)
 #define CAN_USE_TRANSFORMATION(transId) CanUseTransformation(transId)
-
+#define GET_CURRENT_TRANSFORMATION(transId) player_getTransformation() == transId
 
 
 } // namespace Logic
