@@ -198,6 +198,12 @@ inline bool CanBreakObject(RandoAccessId objectType) {
     bool canBreakObject = false;
 
     switch (objectType) {
+        case RA_BREAK_OBJECT_GNAWTYS_BOULDER:
+            if (ability_isUnlocked(ABILITY_0_BARGE) || ability_isUnlocked(ABILITY_2_BEAK_BUSTER) ||
+                ability_isUnlocked(ABILITY_6_EGGS) || ability_isUnlocked(ABILITY_12_WONDERWING)) {
+                canBreakObject = true;
+            }
+            break;
         case RA_BREAK_OBJECT_IRON_GATE:
             if (ability_isUnlocked(ABILITY_0_BARGE) || ability_isUnlocked(ABILITY_12_WONDERWING) ||
                 ability_isUnlocked(ABILITY_B_RATATAT_RAP)) {
@@ -229,7 +235,7 @@ inline bool CanBreakObject(RandoAccessId objectType) {
 #define CAN_ATTACK                                                                                                   \
     (CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP) || CAN_USE_ABILITY(ABILITY_4_CLAW_SWIPE) ||                              \
      CAN_USE_ABILITY(ABILITY_6_EGGS) || CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) || CAN_USE_ABILITY(ABILITY_C_ROLL) || \
-     CAN_USE_ABILITY(ABILITY_12_WONDERWING))
+     CAN_USE_ABILITY(ABILITY_12_WONDERWING) || CAN_USE_ABILITY(ABILITY_0_BARGE))
 
 #define CAN_EXTEND_JUMP_DISTANCE                                                           \
     (CAN_USE_ABILITY(ABILITY_7_FEATHERY_FLAP) || CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP) || \
