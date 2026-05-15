@@ -89,7 +89,7 @@ static RegisterShipInitFunc initFunc([]() {
 		}
 	};
 
-	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_ANCHOR] = RandoRegion{ .regionName = "Rusty Bucket Bay Anchor Interior", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
+	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_ANCHOR] = RandoRegion{ .regionName = "Anchor Interior", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
         .checks = {
 			CHECK(RC_RBB_NOTE_ANCHOR_ROOM_1,	true),
 			CHECK(RC_RBB_NOTE_ANCHOR_ROOM_2,	true),
@@ -104,7 +104,7 @@ static RegisterShipInitFunc initFunc([]() {
 		}
 	};
 
-	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_BOAT_HOUSE] = RandoRegion{ .regionName = "Rusty Bucket Bay Boat House", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
+	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_BOAT_HOUSE] = RandoRegion{ .regionName = "Boat House", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
         .checks = {
 			CHECK(RC_RBB_EMPTY_HONEYCOMB_BOAT_HOUSE,	CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) && CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
 		},
@@ -113,7 +113,7 @@ static RegisterShipInitFunc initFunc([]() {
 		}
 	};
 
-	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_BOSS_BOOM_BOX_ROOM] = RandoRegion{ .regionName = "Rusty Bucket Bay Boom Box Room", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
+	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_BOSS_BOOM_BOX_ROOM] = RandoRegion{ .regionName = "Boom Box Room", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
         .checks = {
 			CHECK(RC_RBB_JIGGY_BOSS_BOOM_BOX,	CAN_ATTACK),
 		},
@@ -122,7 +122,7 @@ static RegisterShipInitFunc initFunc([]() {
 		}
 	};
 
-	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_BUNK_CABIN] = RandoRegion{ .regionName = "Rusty Bucket Bay Bunk Cabin", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
+	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_BUNK_CABIN] = RandoRegion{ .regionName = "Bunk Cabin", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
         .checks = {
 			CHECK(RC_RBB_MUMBO_TOKEN_TOP_OF_BUNK_IN_CABIN,	CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
 			CHECK(RC_RBB_NOTE_BUNK_CABIN_1, 				true),
@@ -135,7 +135,7 @@ static RegisterShipInitFunc initFunc([]() {
 		}
 	};
 
-	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_CAPTAINS_CABIN] = RandoRegion{ .regionName = "Rusty Bucket Bay Captains Cabin", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
+	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_CAPTAINS_CABIN] = RandoRegion{ .regionName = "Captains Cabin", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
         .checks = {
 			CHECK(RC_RBB_JIGGY_CAPTAINS_CABIN, 	CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP) || CAN_USE_ABILITY(ABILITY_0_BARGE) || CAN_USE_ABILITY(ABILITY_6_EGGS)),
 			CHECK(RC_RBB_NOTE_CAPTAINS_CABIN_1,	true),
@@ -147,7 +147,7 @@ static RegisterShipInitFunc initFunc([]() {
 		}
 	};
 
-	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_ENGINE_ROOM_BEHIND_GLASS] = RandoRegion{ .regionName = "Rusty Bucket Bay Engine Room Behind Glass", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
+	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_ENGINE_ROOM_BEHIND_GLASS] = RandoRegion{ .regionName = "Engine Room Behind Glass", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
         .checks = {
 			CHECK(RC_RBB_NOTE_ENGINE_ROOM_BEHIND_GLASS_1,	true),
 			CHECK(RC_RBB_NOTE_ENGINE_ROOM_BEHIND_GLASS_2,	true),
@@ -162,7 +162,7 @@ static RegisterShipInitFunc initFunc([]() {
 		}
 	};
 
-	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_ENGINE_ROOM_MAIN] = RandoRegion{ .regionName = "Rusty Bucket Bay Engine Room Main", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
+	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_ENGINE_ROOM_MAIN] = RandoRegion{ .regionName = "Engine Room Main", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
         .checks = {
 			CHECK(RC_RBB_EMPTY_HONEYCOMB_ENGINE_ROOM, 				CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
 			CHECK(RC_RBB_JIGGY_ENGINE_ROOM, 						CAN_ACCESS(RA_TRIGGER_SWITCH_PROPELLOR_FIRST)),
@@ -190,7 +190,7 @@ static RegisterShipInitFunc initFunc([]() {
 		}
 	};
 
-	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_KITCHEN] = RandoRegion{ .regionName = "Rusty Bucket Bay Kitchen", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
+	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_KITCHEN] = RandoRegion{ .regionName = "Kitchen", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
         .checks = {
 			CHECK(RC_RBB_MUMBO_TOKEN_INSIDE_KITCHEN,	true),
 			CHECK(RC_RBB_NOTE_KITCHEN_1,				true),
@@ -204,7 +204,7 @@ static RegisterShipInitFunc initFunc([]() {
 		}
 	};
 
-	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_NAVIGATION_ROOM] = RandoRegion{ .regionName = "Rusty Bucket Bay Navigation Room", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
+	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_NAVIGATION_ROOM] = RandoRegion{ .regionName = "Navigation Room", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
         .checks = {
 			CHECK(RC_RBB_MUMBO_TOKEN_INSIDE_NAVIGATION_ROOM,	true),
 			CHECK(RC_RBB_NOTE_NAVIGATION_ROOM_1, 				true),
@@ -217,7 +217,7 @@ static RegisterShipInitFunc initFunc([]() {
 		}
 	};
 
-	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_SHIPPING_CONTAINER_FIRST] = RandoRegion{ .regionName = "Rusty Bucket Bay Shipping Container First", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
+	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_SHIPPING_CONTAINER_FIRST] = RandoRegion{ .regionName = "Shipping Container First", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
         .checks = {
 			CHECK(RC_RBB_MUMBO_TOKEN_UNDER_CHOMPA_INSIDE_FIRST_BLUE_CONTAINER, 	true),
 			CHECK(RC_RBB_NOTE_SHIPPING_CONTAINER_INTERIOR_FIRST_1,				true),
@@ -234,7 +234,7 @@ static RegisterShipInitFunc initFunc([]() {
 		}
 	};
 
-	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_SHIPPING_CONTAINER_SECOND] = RandoRegion{ .regionName = "Rusty Bucket Bay Shipping Container Second", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
+	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_SHIPPING_CONTAINER_SECOND] = RandoRegion{ .regionName = "Shipping Container Second", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
         .checks = {
 			CHECK(RC_RBB_JINJO_BLUE, 											true),
 			CHECK(RC_RBB_MUMBO_TOKEN_TOP_OF_BOX_INSIDE_SECOND_BLUE_CONTAINER,	CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
@@ -244,7 +244,7 @@ static RegisterShipInitFunc initFunc([]() {
 		}
 	};
 
-	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_SHIPPING_CONTAINER_THIRD] = RandoRegion{ .regionName = "Rusty Bucket Bay Shipping Container Third", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
+	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_SHIPPING_CONTAINER_THIRD] = RandoRegion{ .regionName = "Shipping Container Third", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
         .checks = {
 			CHECK(RC_RBB_NOTE_SHIPPING_CONTAINER_INTERIOR_THIRD_1,	true),
 			CHECK(RC_RBB_NOTE_SHIPPING_CONTAINER_INTERIOR_THIRD_2,	true),
@@ -256,7 +256,7 @@ static RegisterShipInitFunc initFunc([]() {
 		}
 	};
 
-	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_TNT_ROOM] = RandoRegion{ .regionName = "Rusty Bucket Bay TNT Room", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
+	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_TNT_ROOM] = RandoRegion{ .regionName = "TNT Room", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
         .checks = {
 			CHECK(RC_RBB_MUMBO_TOKEN_TOP_OF_BOX_INSIDE_TNT_ROOM,	true),
 			CHECK(RC_RBB_NOTE_TNT_ROOM_1, 							CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
@@ -270,7 +270,7 @@ static RegisterShipInitFunc initFunc([]() {
 		}
 	};
 
-	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_WAREHOUSE_LOWER] = RandoRegion{ .regionName = "Rusty Bucket Bay Warehouse Upper", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
+	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_WAREHOUSE_LOWER] = RandoRegion{ .regionName = "Warehouse Lower", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
         .checks = {
 			CHECK(RC_RBB_NOTE_WAREHOUSE_INTERIOR_1,	CAN_EXTEND_JUMP_DISTANCE && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
 			CHECK(RC_RBB_NOTE_WAREHOUSE_INTERIOR_2,	CAN_EXTEND_JUMP_DISTANCE && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
@@ -282,7 +282,7 @@ static RegisterShipInitFunc initFunc([]() {
 		}
 	};
 
-	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_WAREHOUSE_UPPER] = RandoRegion{ .regionName = "Rusty Bucket Bay Warehouse Upper", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
+	Regions[RR_RUSTY_BUCKET_BAY_INTERIOR_WAREHOUSE_UPPER] = RandoRegion{ .regionName = "Warehouse Upper", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
         .checks = {
 			CHECK(RC_RBB_JIGGY_WAREHOUSE,	CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
 		},
