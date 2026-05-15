@@ -241,12 +241,16 @@ inline bool CanBreakObject(RandoAccessId objectType) {
                 canBreakObject = true;
             }
             break;
+        case RA_BREAK_OBJECT_WEB:
+            canBreakObject = ability_isUnlocked(ABILITY_6_EGGS);
+            break;
         case RA_BREAK_OBJECT_WINDOWS:
             if (ability_isUnlocked(ABILITY_6_EGGS) || ability_isUnlocked(ABILITY_12_WONDERWING) ||
                 ability_isUnlocked(ABILITY_B_RATATAT_RAP)) {
                 canBreakObject = true;
             }
             break;
+        case RA_BREAK_OBJECT_BRICK_WALL:
         case RA_BREAK_OBJECT_CELLAR_CASK:
         case RA_BREAK_OBJECT_WOODEN_DOOR:
             if (ability_isUnlocked(ABILITY_0_BARGE) || ability_isUnlocked(ABILITY_12_WONDERWING) ||

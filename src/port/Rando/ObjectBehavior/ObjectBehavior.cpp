@@ -23,15 +23,15 @@ bool func_802C9C14(Actor* actor);
 // clang-format off
 std::vector<int32_t> actorSpawnWhitelist = {
     ACTOR_2D_MUMBO_TOKEN,
-    ACTOR_46_JIGGY,
-    ACTOR_47_EMPTY_HONEYCOMB,
-    ACTOR_51_MUSIC_NOTE,
-    ACTOR_5E_JINJO_YELLOW,
-    ACTOR_5F_JINJO_ORANGE,
-    ACTOR_60_JINJO_BLUE,
-    ACTOR_61_JINJO_PINK,
-    ACTOR_62_JINJO_GREEN,
-    ACTOR_12C_MOLEHILL,
+    //ACTOR_46_JIGGY,
+    //ACTOR_47_EMPTY_HONEYCOMB,
+    //ACTOR_51_MUSIC_NOTE,
+    //ACTOR_5E_JINJO_YELLOW,
+    //ACTOR_5F_JINJO_ORANGE,
+    //ACTOR_60_JINJO_BLUE,
+    //ACTOR_61_JINJO_PINK,
+    //ACTOR_62_JINJO_GREEN,
+    //ACTOR_12C_MOLEHILL,
 };
 
 std::map<int32_t, UIWidgets::Colors> randoItemColors = {
@@ -52,6 +52,11 @@ std::map<int32_t, actor_e> jinjoMarkerMap = {
     { MARKER_5C_JINJO_ORANGE, 	ACTOR_5F_JINJO_ORANGE },
     { MARKER_5D_JINJO_PINK, 	ACTOR_61_JINJO_PINK },
     { MARKER_5E_JINJO_YELLOW, 	ACTOR_5E_JINJO_YELLOW },
+};
+
+std::map<RandoCheckId, std::tuple<int32_t, int32_t, int32_t>> multiSpawnCheckMap = {
+    { RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD, { 0, 3354, 2270 } },
+    { RC_GL_JIGGY_WITCH_SWITCH_TREASURE_TROVE_COVE, { 950, 905, -1600 } },
 };
 // clang-format on
 
