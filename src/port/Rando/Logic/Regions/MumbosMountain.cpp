@@ -5,7 +5,7 @@ using namespace Rando::Logic;
 
 // clang-format off
 static RegisterShipInitFunc initFunc([]() {
-    Regions[RR_MUMBOS_MOUNTAIN] = RandoRegion{ .regionName = "Mumbo's Mountain", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
+    Regions[RR_MUMBOS_MOUNTAIN_ENTRANCE] = RandoRegion{ .regionName = "Mumbo's Mountain", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
         .checks = {
             CHECK(RC_MM_EMPTY_HONEYCOMB_HILL, 					true),
             CHECK(RC_MM_EMPTY_HONEYCOMB_JUJU, 					CAN_USE_ABILITY(ABILITY_6_EGGS) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
@@ -140,7 +140,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_MM_NOTE_INSIDE_TICKERS_TOWER_6, 			CAN_USE_TRANSFORMATION(TRANSFORM_2_TERMITE)),
         },
         .connections = {
-            CONNECTION(RR_MUMBOS_MOUNTAIN, true),
+            CONNECTION(RR_MUMBOS_MOUNTAIN_ENTRANCE, true),
             CONNECTION(RR_MUMBOS_MOUNTAIN_TICKERS_TOWER_TOP, CAN_USE_TRANSFORMATION(TRANSFORM_2_TERMITE)),
         },
     };
@@ -152,7 +152,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_4, 			true),
         },
         .connections = {
-            CONNECTION(RR_MUMBOS_MOUNTAIN, true),
+            CONNECTION(RR_MUMBOS_MOUNTAIN_ENTRANCE, true),
         },
     };
     Regions[RR_MUMBOS_MOUNTAIN_TICKERS_TOWER_TOP] = RandoRegion{ .regionName = "Mumbo's Mountain", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
@@ -160,7 +160,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_MM_JIGGY_TICKERS_TOWER, 					true),
         },
         .connections = {
-            CONNECTION(RR_MUMBOS_MOUNTAIN, true),
+            CONNECTION(RR_MUMBOS_MOUNTAIN_ENTRANCE, true),
             CONNECTION(RR_MUMBOS_MOUNTAIN_INTERIOR_TICKERS_TOWER, true),
         },
     };

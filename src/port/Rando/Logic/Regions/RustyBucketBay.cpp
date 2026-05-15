@@ -5,7 +5,7 @@ using namespace Rando::Logic;
 
 // clang-format off
 static RegisterShipInitFunc initFunc([]() {
-    Regions[RR_RUSTY_BUCKET_BAY] = RandoRegion{ .regionName = "Rusty Bucket Bay", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
+    Regions[RR_RUSTY_BUCKET_BAY_ENTRANCE] = RandoRegion{ .regionName = "Rusty Bucket Bay", .levelId = LEVEL_9_RUSTY_BUCKET_BAY,
         .checks = {
 			CHECK(RC_RBB_JIGGY_CRANE_CAGE, 										CAN_USE_ABILITY(ABILITY_0_BARGE) && CAN_USE_ABILITY(ABILITY_5_CLIMB) && CAN_USE_ABILITY(ABILITY_6_EGGS)),
 			CHECK(RC_RBB_JIGGY_FUNNEL, 											CAN_USE_ABILITY(ABILITY_5_CLIMB)),
@@ -97,7 +97,7 @@ static RegisterShipInitFunc initFunc([]() {
 			CHECK(RC_RBB_NOTE_ANCHOR_ROOM_4,	true),
 		},
 		.connections = {
-			CONNECTION(RR_RUSTY_BUCKET_BAY, CAN_USE_ABILITY(ABILITY_F_DIVE)),
+			CONNECTION(RR_RUSTY_BUCKET_BAY_ENTRANCE, CAN_USE_ABILITY(ABILITY_F_DIVE)),
 		},
 		.events = {
 			EVENT(RA_TRIGGER_SWITCH_ANCHOR, CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
@@ -109,7 +109,7 @@ static RegisterShipInitFunc initFunc([]() {
 			CHECK(RC_RBB_EMPTY_HONEYCOMB_BOAT_HOUSE,	CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) && CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
 		},
 		.connections = {
-			CONNECTION(RR_RUSTY_BUCKET_BAY, CAN_USE_ABILITY(ABILITY_F_DIVE)),
+			CONNECTION(RR_RUSTY_BUCKET_BAY_ENTRANCE, CAN_USE_ABILITY(ABILITY_F_DIVE)),
 		}
 	};
 
@@ -118,7 +118,7 @@ static RegisterShipInitFunc initFunc([]() {
 			CHECK(RC_RBB_JIGGY_BOSS_BOOM_BOX,	CAN_ATTACK),
 		},
 		.connections = {
-			CONNECTION(RR_RUSTY_BUCKET_BAY, CAN_USE_ABILITY(ABILITY_5_CLIMB)),
+			CONNECTION(RR_RUSTY_BUCKET_BAY_ENTRANCE, CAN_USE_ABILITY(ABILITY_5_CLIMB)),
 		}
 	};
 
@@ -131,7 +131,7 @@ static RegisterShipInitFunc initFunc([]() {
 			CHECK(RC_RBB_NOTE_BUNK_CABIN_4, 				true),
 		},
 		.connections = {
-			CONNECTION(RR_RUSTY_BUCKET_BAY, true),
+			CONNECTION(RR_RUSTY_BUCKET_BAY_ENTRANCE, true),
 		}
 	};
 
@@ -143,7 +143,7 @@ static RegisterShipInitFunc initFunc([]() {
 			CHECK(RC_RBB_NOTE_CAPTAINS_CABIN_3,	true),
 		},
 		.connections = {
-			CONNECTION(RR_RUSTY_BUCKET_BAY, true),
+			CONNECTION(RR_RUSTY_BUCKET_BAY_ENTRANCE, true),
 		}
 	};
 
@@ -155,7 +155,7 @@ static RegisterShipInitFunc initFunc([]() {
 			CHECK(RC_RBB_NOTE_ENGINE_ROOM_BEHIND_GLASS_4,	true),
 		},
 		.connections = {
-			CONNECTION(RR_RUSTY_BUCKET_BAY, CAN_USE_ABILITY(ABILITY_5_CLIMB)),
+			CONNECTION(RR_RUSTY_BUCKET_BAY_ENTRANCE, CAN_USE_ABILITY(ABILITY_5_CLIMB)),
 		},
 		.events = {
 			EVENT(RA_TRIGGER_SWITCH_PROPELLOR_FIRST, CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
@@ -183,7 +183,7 @@ static RegisterShipInitFunc initFunc([]() {
 			CHECK(RC_RBB_NOTE_ENGINE_ROOM_RIGHT_4, 					true),
 		},
 		.connections = {
-			CONNECTION(RR_RUSTY_BUCKET_BAY, CAN_USE_ABILITY(ABILITY_5_CLIMB)),
+			CONNECTION(RR_RUSTY_BUCKET_BAY_ENTRANCE, CAN_USE_ABILITY(ABILITY_5_CLIMB)),
 		},
 		.events = {
 			EVENT(RA_TRIGGER_SWITCH_PROPELLOR_SECOND, CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
@@ -200,7 +200,7 @@ static RegisterShipInitFunc initFunc([]() {
 			CHECK(RC_RBB_NOTE_KITCHEN_5,				true),
 		},
 		.connections = {
-			CONNECTION(RR_RUSTY_BUCKET_BAY, true),
+			CONNECTION(RR_RUSTY_BUCKET_BAY_ENTRANCE, true),
 		}
 	};
 
@@ -213,7 +213,7 @@ static RegisterShipInitFunc initFunc([]() {
 			CHECK(RC_RBB_NOTE_NAVIGATION_ROOM_4, 				true),
 		},
 		.connections = {
-			CONNECTION(RR_RUSTY_BUCKET_BAY, true),
+			CONNECTION(RR_RUSTY_BUCKET_BAY_ENTRANCE, true),
 		}
 	};
 
@@ -230,7 +230,7 @@ static RegisterShipInitFunc initFunc([]() {
 			CHECK(RC_RBB_NOTE_SHIPPING_CONTAINER_INTERIOR_FIRST_8,				true),
 		},
 		.connections = {
-			CONNECTION(RR_RUSTY_BUCKET_BAY, true),
+			CONNECTION(RR_RUSTY_BUCKET_BAY_ENTRANCE, true),
 		}
 	};
 
@@ -240,7 +240,7 @@ static RegisterShipInitFunc initFunc([]() {
 			CHECK(RC_RBB_MUMBO_TOKEN_TOP_OF_BOX_INSIDE_SECOND_BLUE_CONTAINER,	CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
 		},
 		.connections = {
-			CONNECTION(RR_RUSTY_BUCKET_BAY, (CAN_USE_ABILITY(ABILITY_5_CLIMB) || CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP))),
+			CONNECTION(RR_RUSTY_BUCKET_BAY_ENTRANCE, (CAN_USE_ABILITY(ABILITY_5_CLIMB) || CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP))),
 		}
 	};
 
@@ -252,7 +252,7 @@ static RegisterShipInitFunc initFunc([]() {
 			CHECK(RC_RBB_NOTE_SHIPPING_CONTAINER_INTERIOR_THIRD_4,	true),
 		},
 		.connections = {
-			CONNECTION(RR_RUSTY_BUCKET_BAY, true),
+			CONNECTION(RR_RUSTY_BUCKET_BAY_ENTRANCE, true),
 		}
 	};
 
@@ -266,7 +266,7 @@ static RegisterShipInitFunc initFunc([]() {
 			CHECK(RC_RBB_NOTE_TNT_ROOM_5, 							CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
 		},
 		.connections = {
-			CONNECTION(RR_RUSTY_BUCKET_BAY, true),
+			CONNECTION(RR_RUSTY_BUCKET_BAY_ENTRANCE, true),
 		}
 	};
 
@@ -278,7 +278,7 @@ static RegisterShipInitFunc initFunc([]() {
 			CHECK(RC_RBB_NOTE_WAREHOUSE_INTERIOR_4,	CAN_EXTEND_JUMP_DISTANCE && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
 		},
 		.connections = {
-			CONNECTION(RR_RUSTY_BUCKET_BAY, true),
+			CONNECTION(RR_RUSTY_BUCKET_BAY_ENTRANCE, true),
 		}
 	};
 
@@ -287,7 +287,7 @@ static RegisterShipInitFunc initFunc([]() {
 			CHECK(RC_RBB_JIGGY_WAREHOUSE,	CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
 		},
 		.connections = {
-			CONNECTION(RR_RUSTY_BUCKET_BAY, true),
+			CONNECTION(RR_RUSTY_BUCKET_BAY_ENTRANCE, true),
 		}
 	};
 
