@@ -1,6 +1,8 @@
 #ifndef RANDO_TYPES_H
 #define RANDO_TYPES_H
 
+#include "Types.h"
+
 typedef enum {
     RP_MUMBO_TOKEN_INSIDE_LOGGO = 0x74,
     RP_MUSIC_NOTE = 0x164,
