@@ -235,6 +235,12 @@ inline bool CanBreakObject(RandoAccessId objectType) {
     bool canBreakObject = false;
 
     switch (objectType) {
+        case RA_BREAK_OBJECT_BOULDER:
+            if (ability_isUnlocked(ABILITY_0_BARGE) || ability_isUnlocked(ABILITY_6_EGGS) ||
+                ability_isUnlocked(ABILITY_2_BEAK_BUSTER) || ability_isUnlocked(ABILITY_12_WONDERWING)) {
+                canBreakObject = true;
+            }
+            break;
         case RA_BREAK_OBJECT_BRICK_WALL:
         case RA_BREAK_OBJECT_CELLAR_CASK:
         case RA_BREAK_OBJECT_WOODEN_DOOR:

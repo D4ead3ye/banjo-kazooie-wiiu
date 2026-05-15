@@ -23,15 +23,15 @@ bool func_802C9C14(Actor* actor);
 // clang-format off
 std::vector<int32_t> actorSpawnWhitelist = {
     ACTOR_2D_MUMBO_TOKEN,
-    //ACTOR_46_JIGGY,
-    //ACTOR_47_EMPTY_HONEYCOMB,
-    //ACTOR_51_MUSIC_NOTE,
-    //ACTOR_5E_JINJO_YELLOW,
-    //ACTOR_5F_JINJO_ORANGE,
-    //ACTOR_60_JINJO_BLUE,
-    //ACTOR_61_JINJO_PINK,
-    //ACTOR_62_JINJO_GREEN,
-    //ACTOR_12C_MOLEHILL,
+    ACTOR_46_JIGGY,
+    ACTOR_47_EMPTY_HONEYCOMB,
+    ACTOR_51_MUSIC_NOTE,
+    ACTOR_5E_JINJO_YELLOW,
+    ACTOR_5F_JINJO_ORANGE,
+    ACTOR_60_JINJO_BLUE,
+    ACTOR_61_JINJO_PINK,
+    ACTOR_62_JINJO_GREEN,
+    ACTOR_12C_MOLEHILL,
 };
 
 std::map<int32_t, UIWidgets::Colors> randoItemColors = {

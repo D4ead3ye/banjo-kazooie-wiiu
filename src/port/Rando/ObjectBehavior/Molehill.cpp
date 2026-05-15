@@ -97,9 +97,6 @@ bool CheckBridgeState() {
 
 void SetSpiralMountainFlags() {
     mapSpecificFlags_set(SM_SPECIFIC_FLAG_1_TALKED_TO_BOTTLES, true);
-    //mapSpecificFlags_set(SM_SPECIFIC_FLAG_2, true);
-    //mapSpecificFlags_set(SM_SPECIFIC_FLAG_C, true);
-    //mapSpecificFlags_set(SM_SPECIFIC_FLAG_F, true);
 }
 
 void Rando::ObjectBehavior::InitMolehillBehavior() {
