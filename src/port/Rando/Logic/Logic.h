@@ -184,11 +184,48 @@ inline bool CanOpenWorld(level_e levelId) {
         return true;
     }
 
-    int32_t puzzleCost = _puzzleCost(levelNum - 1);
+    int32_t puzzleCost = levelId == LEVEL_6_LAIR ? 25 : _puzzleCost(levelNum - 1);
     int32_t jiggyCount = item_getCount(ITEM_26_JIGGY_TOTAL);
 
     if (jiggyCount >= puzzleCost) {
-        return true;
+        RandoAccessId puzzleBoardAccessID = RA_MAX;
+        switch (levelId) {
+            case LEVEL_1_MUMBOS_MOUNTAIN:
+                puzzleBoardAccessID = RA_PUZZLE_BOARD_MUMBOS_MOUNTAIN;
+                break;
+            case LEVEL_2_TREASURE_TROVE_COVE:
+                puzzleBoardAccessID = RA_PUZZLE_BOARD_TREASURE_TROVE_COVE;
+                break;
+            case LEVEL_3_CLANKERS_CAVERN:
+                puzzleBoardAccessID = RA_PUZZLE_BOARD_CLANKERS_CAVERN;
+                break;
+            case LEVEL_4_BUBBLEGLOOP_SWAMP:
+                puzzleBoardAccessID = RA_PUZZLE_BOARD_BUBBLEGLOOP_SWAMP;
+                break;
+            case LEVEL_5_FREEZEEZY_PEAK:
+                puzzleBoardAccessID = RA_PUZZLE_BOARD_FREEZEEZY_PEAK;
+                break;
+            case LEVEL_6_LAIR:
+                puzzleBoardAccessID = RA_PUZZLE_BOARD_GRUNTILDA;
+                break;
+            case LEVEL_7_GOBIS_VALLEY:
+                puzzleBoardAccessID = RA_PUZZLE_BOARD_GOBIS_VALLEY;
+                break;
+            case LEVEL_8_CLICK_CLOCK_WOOD:
+                puzzleBoardAccessID = RA_PUZZLE_BOARD_CLICK_CLOCK_WOOD;
+                break;
+            case LEVEL_9_RUSTY_BUCKET_BAY:
+                puzzleBoardAccessID = RA_PUZZLE_BOARD_RUSTY_BUCKET_BAY;
+                break;
+            case LEVEL_A_MAD_MONSTER_MANSION:
+                puzzleBoardAccessID = RA_PUZZLE_BOARD_MAD_MONSTER_MANSION;
+                break;
+            default:
+                break;
+        }
+        if (puzzleBoardAccessID != RA_MAX) {
+            return CanAccessEvent(puzzleBoardAccessID);
+        }
     }
 
     return false;
@@ -198,9 +235,28 @@ inline bool CanBreakObject(RandoAccessId objectType) {
     bool canBreakObject = false;
 
     switch (objectType) {
+        case RA_BREAK_OBJECT_BOULDER:
+            if (ability_isUnlocked(ABILITY_0_BARGE) || ability_isUnlocked(ABILITY_6_EGGS) ||
+                ability_isUnlocked(ABILITY_2_BEAK_BUSTER) || ability_isUnlocked(ABILITY_12_WONDERWING)) {
+                canBreakObject = true;
+            }
+            break;
+        case RA_BREAK_OBJECT_BRICK_WALL:
+        case RA_BREAK_OBJECT_CELLAR_CASK:
+        case RA_BREAK_OBJECT_WOODEN_DOOR:
+            if (ability_isUnlocked(ABILITY_0_BARGE) || ability_isUnlocked(ABILITY_12_WONDERWING) ||
+                ability_isUnlocked(ABILITY_B_RATATAT_RAP) || ability_isUnlocked(ABILITY_6_EGGS)) {
+                canBreakObject = true;
+            }
+            break;
         case RA_BREAK_OBJECT_GNAWTYS_BOULDER:
             if (ability_isUnlocked(ABILITY_0_BARGE) || ability_isUnlocked(ABILITY_2_BEAK_BUSTER) ||
                 ability_isUnlocked(ABILITY_6_EGGS) || ability_isUnlocked(ABILITY_12_WONDERWING)) {
+                canBreakObject = true;
+            }
+            break;
+        case RA_BREAK_OBJECT_GRATE:
+            if (ability_isUnlocked(ABILITY_6_EGGS) || ability_isUnlocked(ABILITY_B_RATATAT_RAP)) {
                 canBreakObject = true;
             }
             break;
@@ -210,16 +266,12 @@ inline bool CanBreakObject(RandoAccessId objectType) {
                 canBreakObject = true;
             }
             break;
+        case RA_BREAK_OBJECT_WEB:
+            canBreakObject = ability_isUnlocked(ABILITY_6_EGGS);
+            break;
         case RA_BREAK_OBJECT_WINDOWS:
             if (ability_isUnlocked(ABILITY_6_EGGS) || ability_isUnlocked(ABILITY_12_WONDERWING) ||
                 ability_isUnlocked(ABILITY_B_RATATAT_RAP)) {
-                canBreakObject = true;
-            }
-            break;
-        case RA_BREAK_OBJECT_CELLAR_CASK:
-        case RA_BREAK_OBJECT_WOODEN_DOOR:
-            if (ability_isUnlocked(ABILITY_0_BARGE) || ability_isUnlocked(ABILITY_12_WONDERWING) ||
-                ability_isUnlocked(ABILITY_B_RATATAT_RAP) || ability_isUnlocked(ABILITY_6_EGGS)){
                 canBreakObject = true;
             }
             break;
@@ -242,6 +294,7 @@ inline bool CanBreakObject(RandoAccessId objectType) {
      CAN_USE_ABILITY(ABILITY_10_TALON_TROT))
 
 #define CAN_BREAK_OBJECT(objectType) CanBreakObject(objectType)
+#define CAN_UNLOCK_NOTE_DOOR(noteCount) item_getCount(ITEM_C_NOTE) >= noteCount&& CAN_ACCESS(RA_NOTE_DOOR_##noteCount)
 #define CAN_UNLOCK_WORLD(levelId) CanOpenWorld(levelId)
 #define CAN_USE_ABILITY(abilityId) ability_isUnlocked(abilityId)
 #define CAN_USE_TRANSFORMATION(transId) CanUseTransformation(transId)
