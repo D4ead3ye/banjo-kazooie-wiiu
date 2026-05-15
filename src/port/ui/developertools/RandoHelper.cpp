@@ -22,6 +22,7 @@ Actor* actor_spawnWithYaw_s32(enum actor_e id, s32 (*pos)[3], s32 rot);
 void func_8031D04C(enum map_e arg0, s32 exit_id);
 
 void item_set(s32 item, s32 val);
+void item_setMaxCount(s32 item);
 void ability_setAllLearned(s32 val);
 void ability_setAllUsed(s32 val);
 
@@ -207,7 +208,7 @@ void DrawGrantUnlocks() {
         item_set(ITEM_1C_MUMBO_TOKEN, 25);
     }
     if (UIWidgets::Button("Add Notes", { .color = THEME_COLOR })) {
-        item_set(ITEM_C_NOTE, 900);
+        item_setMaxCount(ITEM_C_NOTE);
     }
 }
 
