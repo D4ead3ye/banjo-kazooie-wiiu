@@ -235,6 +235,18 @@ inline bool CanBreakObject(RandoAccessId objectType) {
     bool canBreakObject = false;
 
     switch (objectType) {
+        case RA_BREAK_OBJECT_CELLAR_CASK:
+        case RA_BREAK_OBJECT_WOODEN_DOOR:
+            if (ability_isUnlocked(ABILITY_0_BARGE) || ability_isUnlocked(ABILITY_12_WONDERWING) ||
+                ability_isUnlocked(ABILITY_B_RATATAT_RAP) || ability_isUnlocked(ABILITY_6_EGGS)) {
+                canBreakObject = true;
+            }
+            break;
+        case RA_BREAK_OBJECT_GRATE:
+            if (ability_isUnlocked(ABILITY_6_EGGS) || ability_isUnlocked(ABILITY_B_RATATAT_RAP)) {
+                canBreakObject = true;
+            }
+            break;
         case RA_BREAK_OBJECT_IRON_GATE:
             if (ability_isUnlocked(ABILITY_0_BARGE) || ability_isUnlocked(ABILITY_12_WONDERWING) ||
                 ability_isUnlocked(ABILITY_B_RATATAT_RAP)) {
