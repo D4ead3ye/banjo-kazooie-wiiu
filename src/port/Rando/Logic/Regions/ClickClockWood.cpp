@@ -81,15 +81,11 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
     Regions[RR_CLICK_CLOCK_WOOD_AUTUMN_INTERIOR_NABNUTS_WINDOW] = RandoRegion{ .regionName = "Autumn - Inside the Window near Nabnut's House", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
-        .checks = {
-        },
         .connections = {
             CONNECTION(RR_CLICK_CLOCK_WOOD_AUTUMN_UPPER_TREE, true),
         },
     };
     Regions[RR_CLICK_CLOCK_WOOD_AUTUMN_TOP_ROOM] = RandoRegion{ .regionName = "Autumn - Top Room of the Tree", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
-        .checks = {
-        },
         .connections = {
             CONNECTION(RR_CLICK_CLOCK_WOOD_AUTUMN_UPPER_TREE, true),
         },
@@ -238,7 +234,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_CLICK_CLOCK_WOOD_SUMMER_INTERIOR_BEEHIVE] = RandoRegion{ .regionName = "Summer - Inside the Beehive", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
         .checks = {
-            CHECK(RC_CCW_JIGGY_ZUBBAS,      CAN_USE_ABILITY(ABILITY_0_BARGE) || CAN_USE_ABILITY(ABILITY_12_WONDERWING) || CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP)),
+            CHECK(RC_CCW_JIGGY_ZUBBAS,      CAN_KILL_ENEMY(ACTOR_29B_ZUBBA)),
         },
         .connections = {
             CONNECTION(RR_CLICK_CLOCK_WOOD_SUMMER, CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
@@ -289,7 +285,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_CCW_MUMBO_TOKEN_WINTER_BIG_FLOWER,                                     true),
             CHECK(RC_CCW_MUMBO_TOKEN_WINTER_BROKEN_BEEHIVE,                                 true),
             CHECK(RC_CCW_MUMBO_TOKEN_WINTER_FROZEN_RIVER_NEAR_FLIGHT_PAD,                   true),
-            CHECK(RC_CCW_MUMBO_TOKEN_WINTER_SIR_SLUSH_BETWEEN_BIG_FLOWER_AND_MUMBOS_SKULL,  CAN_USE_ABILITY(ABILITY_1_BEAK_BOMB) && CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
+            CHECK(RC_CCW_MUMBO_TOKEN_WINTER_SIR_SLUSH_BETWEEN_BIG_FLOWER_AND_MUMBOS_SKULL,  CAN_KILL_ENEMY(ACTOR_124_SIR_SLUSH)),
             CHECK(RC_CCW_NOTE_WINTER_TOP_OF_BRANCH_1,                                       true),
             CHECK(RC_CCW_NOTE_WINTER_TOP_OF_BRANCH_2,                                       true),
             CHECK(RC_CCW_NOTE_WINTER_TOP_OF_BRANCH_3,                                       true),
