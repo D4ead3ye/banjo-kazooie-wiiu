@@ -70,7 +70,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLICK_CLOCK_WOOD_AUTUMN, CAN_USE_ABILITY(ABILITY_E_WADING_BOOTS)),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_AUTUMN_INTERIOR_NABNUTS_HOUSE] = RandoRegion{ .regionName = "Autumn - Inside the Nabnut's House", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_AUTUMN_INTERIOR_NABNUTS_HOUSE] = RandoRegion{ .regionName = "Autumn - Inside Nabnut's House", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
         .checks = {
             CHECK(RC_CCW_NOTE_AUTUMN_INSIDE_NABNUTS_HOUSE_1,           CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
             CHECK(RC_CCW_NOTE_AUTUMN_INSIDE_NABNUTS_HOUSE_2,           CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
