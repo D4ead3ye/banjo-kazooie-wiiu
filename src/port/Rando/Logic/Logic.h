@@ -249,6 +249,12 @@ inline bool CanBreakObject(RandoAccessId objectType) {
                 canBreakObject = true;
             }
             break;
+        case RA_BREAK_OBJECT_GNAWTYS_BOULDER:
+            if (ability_isUnlocked(ABILITY_0_BARGE) || ability_isUnlocked(ABILITY_2_BEAK_BUSTER) ||
+                ability_isUnlocked(ABILITY_6_EGGS) || ability_isUnlocked(ABILITY_12_WONDERWING)) {
+                canBreakObject = true;
+            }
+            break;
         case RA_BREAK_OBJECT_GRATE:
             if (ability_isUnlocked(ABILITY_6_EGGS) || ability_isUnlocked(ABILITY_B_RATATAT_RAP)) {
                 canBreakObject = true;
@@ -276,18 +282,38 @@ inline bool CanBreakObject(RandoAccessId objectType) {
     return canBreakObject;
 }
 
+inline bool CanKillEnemy(actor_e enemyType) {
+    bool canKillEnemy = false;
+
+    switch (enemyType) {
+        case ACTOR_124_SIR_SLUSH:
+            if (ability_isUnlocked(ABILITY_1_BEAK_BOMB) && ability_isUnlocked(ABILITY_9_FLIGHT)) {
+                canKillEnemy = true;
+            }
+            break;
+        case ACTOR_29B_ZUBBA:
+            if (ability_isUnlocked(ABILITY_0_BARGE) || ability_isUnlocked(ABILITY_12_WONDERWING) || ability_isUnlocked(ABILITY_B_RATATAT_RAP)) {
+                canKillEnemy = true;
+            }
+            break;
+    }
+
+    return canKillEnemy;
+}
+
 #define CAN_ACCESS(accessId) CanAccessEvent(accessId)
 
 #define CAN_ATTACK                                                                                                   \
     (CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP) || CAN_USE_ABILITY(ABILITY_4_CLAW_SWIPE) ||                              \
      CAN_USE_ABILITY(ABILITY_6_EGGS) || CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) || CAN_USE_ABILITY(ABILITY_C_ROLL) || \
-     CAN_USE_ABILITY(ABILITY_12_WONDERWING))
+     CAN_USE_ABILITY(ABILITY_12_WONDERWING) || CAN_USE_ABILITY(ABILITY_0_BARGE))
 
 #define CAN_EXTEND_JUMP_DISTANCE                                                           \
     (CAN_USE_ABILITY(ABILITY_7_FEATHERY_FLAP) || CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP) || \
      CAN_USE_ABILITY(ABILITY_10_TALON_TROT))
 
 #define CAN_BREAK_OBJECT(objectType) CanBreakObject(objectType)
+#define CAN_KILL_ENEMY(enemyType) CanKillEnemy(enemyType)
 #define CAN_UNLOCK_NOTE_DOOR(noteCount) item_getCount(ITEM_C_NOTE) >= noteCount&& CAN_ACCESS(RA_NOTE_DOOR_##noteCount)
 #define CAN_UNLOCK_WORLD(levelId) CanOpenWorld(levelId)
 #define CAN_USE_ABILITY(abilityId) ability_isUnlocked(abilityId)
