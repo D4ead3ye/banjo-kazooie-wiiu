@@ -53,6 +53,11 @@ std::map<int32_t, actor_e> jinjoMarkerMap = {
     { MARKER_5D_JINJO_PINK, 	ACTOR_61_JINJO_PINK },
     { MARKER_5E_JINJO_YELLOW, 	ACTOR_5E_JINJO_YELLOW },
 };
+
+std::map<RandoCheckId, std::tuple<int32_t, int32_t, int32_t>> multiSpawnCheckMap = {
+    { RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD, { 0, 3354, 2270 } },
+    { RC_GL_JIGGY_WITCH_SWITCH_TREASURE_TROVE_COVE, { 950, 905, -1600 } },
+};
 // clang-format on
 
 bool nextActorSaveState = false;

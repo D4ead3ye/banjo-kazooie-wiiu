@@ -1,0 +1,33 @@
+#include "src/port/ShipInit.hpp"
+#include "src/port/Rando/Logic/Logic.h"
+
+using namespace Rando::Logic;
+
+// clang-format off
+static RegisterShipInitFunc initFunc([]() {
+    Regions[RR_SPIRAL_MOUNTAIN_ENTRANCE] = RandoRegion{ .regionName = "Spiral Mountain", .levelId = LEVEL_B_SPIRAL_MOUNTAIN,
+        .checks = {
+		    CHECK(RC_SM_EMPTY_HONEYCOMB_COLLIWOBBLE,    CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP)),
+            CHECK(RC_SM_EMPTY_HONEYCOMB_QUARRIES, 	    CAN_BREAK_OBJECT(RA_BREAK_OBJECT_BOULDER)),
+            CHECK(RC_SM_EMPTY_HONEYCOMB_STUMP, 		    CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
+            CHECK(RC_SM_EMPTY_HONEYCOMB_TREE, 		    CAN_USE_ABILITY(ABILITY_5_CLIMB)),
+            CHECK(RC_SM_EMPTY_HONEYCOMB_UNDERWATER,     true),
+            CHECK(RC_SM_EMPTY_HONEYCOMB_WATERFALL, 	    CAN_EXTEND_JUMP_DISTANCE),
+            CHECK(RC_SM_MOLEHILL_ATTACK, 			    true),
+            CHECK(RC_SM_MOLEHILL_BEAK_BARGE, 		    true),
+            CHECK(RC_SM_MOLEHILL_CAMERA_CONTROL, 	    true),
+            CHECK(RC_SM_MOLEHILL_CLIMB, 			    true),
+            CHECK(RC_SM_MOLEHILL_DIVE, 				    true),
+            CHECK(RC_SM_MOLEHILL_JUMP, 				    true),
+		},
+        .connections = {
+            CONNECTION(RR_GRUNTILDAS_LAIR_LOBBY,    true),
+        },
+        .events = {
+            EVENT(RA_NOTE_DOOR_180,                 CAN_USE_ABILITY(ABILITY_10_TALON_TROT)),
+            EVENT(RA_PUZZLE_BOARD_CLICK_CLOCK_WOOD, CAN_USE_ABILITY(ABILITY_F_DIVE)),
+        }
+    };
+
+}, {});
+// clang-format on

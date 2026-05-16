@@ -15,6 +15,8 @@ enum map_e gsworld_getMap(void);
 enum level_e map_getLevel(enum map_e map);
 }
 
+bool applyCustomPhysics = false;
+
 void Rando::ObjectBehavior::InitBundleBehavior() {
     COND_VB_SHOULD(VB_OVERRIDE_BUNDLE_SPAWN, EVENT_PRIORITY_NORMAL, true, {
         bundle_e bundleId = va_arg(args, bundle_e);
@@ -27,6 +29,10 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             return;
         }
 
+        RandoCheckId randoCheckId = RC_UNKNOWN;
+
+        BK_LOG_INFO("Bundle Spawn: %i", bundleId);
+
         int32_t spawnPosition[3];
         spawnPosition[0] = (int32_t)position[0];
         spawnPosition[1] = (int32_t)position[1];
@@ -34,6 +40,8 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
 
         Rando::StaticData::RandoShuffledPool shuffledObject;
         shuffledObject.randoCheckId = RC_UNKNOWN;
+        level_e levelId = map_getLevel(gsworld_getMap());
+        applyCustomPhysics = false;
 
         switch (bundleId) {
             case BUNDLE_3_MM_HUT_JINJO_GREEN:
@@ -44,6 +52,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                     shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_ORANGE_PADS);
                 } else {
                     shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_HUTS);
+                    applyCustomPhysics = true;
                 }
                 break;
             case BUNDLE_0_MM_HUT_MUSIC_NOTE:
@@ -107,14 +116,19 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                 break;
             case BUNDLE_C_BGS_HUT_JIGGY:
                 if (map_getLevel(gsworld_getMap()) == LEVEL_6_LAIR) {
-                    shuffledObject = Rando::Logic::GetShuffledObject(RC_GL_JIGGY_WITCH_SWITCH_MUMBOS_MOUNTAIN);
-                } else if (map_getLevel(gsworld_getMap()) == LEVEL_4_BUBBLEGLOOP_SWAMP) {
+                    if (spawnPosition[1] == Rando::StaticData::Checks[RC_GL_JIGGY_WITCH_SWITCH_MUMBOS_MOUNTAIN].posY) {
+                        shuffledObject = Rando::Logic::GetShuffledObject(RC_GL_JIGGY_WITCH_SWITCH_MUMBOS_MOUNTAIN);
+                    } else if (spawnPosition[1] ==
+                               Rando::StaticData::Checks[RC_GL_JIGGY_WITCH_SWITCH_RUSTY_BUCKET_BAY].posY) {
+                        shuffledObject = Rando::Logic::GetShuffledObject(RC_GL_JIGGY_WITCH_SWITCH_RUSTY_BUCKET_BAY);
+                    } else if (spawnPosition[1] ==
+                               Rando::StaticData::Checks[RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD].posY) {
+                        shuffledObject = Rando::Logic::GetShuffledObject(RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD);
+                    }
+                }
+                if (map_getLevel(gsworld_getMap()) == LEVEL_4_BUBBLEGLOOP_SWAMP) {
                     shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_HUTS);
                 }
-                break;
-            case BUNDLE_B_BGS_HUT_MUSIC_NOTE:
-                shuffledObject =
-                    Rando::Logic::GetShuffledObject((RandoCheckId)((int32_t)RC_BGS_NOTE_HUT_BUNDLE_1 + bundleCount));
                 break;
             default:
                 return;
@@ -135,7 +149,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
 
         *actor = CustomObject::SetCustomActorParameters(*actor, shuffledObject.randoCheckId);
         CustomObject::AddToCustomActorMap(shuffledObject.randoCheckId, *actor);
-        if (shuffledObject.randoCheckId == RC_MM_JIGGY_HUTS) {
+        if (applyCustomPhysics) {
             ApplyCustomActorPhysics(shuffledObject.randoCheckId, *actor, false);
         } else {
             ApplyBundleActorPhysics(*actor, bundleId, (BundleInfo*)bundleInfo, gBundle_yaw);
