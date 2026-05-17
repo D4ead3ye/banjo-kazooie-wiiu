@@ -7,7 +7,7 @@ using namespace Rando::Logic;
 static RegisterShipInitFunc initFunc([]() {
     Regions[RR_CLANKERS_CAVERN_ENTRANCE] = RandoRegion{ .regionName = "Clanker's Cavern Entrance", .levelId = LEVEL_3_CLANKERS_CAVERN,
         .checks = {
-            CHECK(RC_CC_JIGGY_JINJO,                                true),
+            CHECK(RC_CC_JIGGY_JINJO, CAN_COLLECT_JINJOS(LEVEL_3_CLANKERS_CAVERN)),
         },
         .connections = {
             CONNECTION(RR_CLANKERS_CAVERN_ENTRANCE_UPPER,                   CAN_USE_ABILITY(ABILITY_5_CLIMB) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),

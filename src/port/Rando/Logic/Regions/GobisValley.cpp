@@ -9,7 +9,7 @@ static RegisterShipInitFunc initFunc([]() {
         .checks = {
             CHECK(RC_GV_EMPTY_HONEYCOMB_GOBI, 						CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP) && CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
             CHECK(RC_GV_JIGGY_GOBI_2, 								CAN_EXTEND_JUMP_DISTANCE && CAN_USE_ABILITY(ABILITY_5_CLIMB)),
-            CHECK(RC_GV_JIGGY_JINJO, 								true),
+            CHECK(RC_GV_JIGGY_JINJO, 								CAN_COLLECT_JINJOS(LEVEL_7_GOBIS_VALLEY)),
             CHECK(RC_GV_JINJO_BLUE, 								true),
             CHECK(RC_GV_JINJO_YELLOW, 								true),
             CHECK(RC_GV_MUMBO_TOKEN_BOTTOM_OF_MOAT, 				true),

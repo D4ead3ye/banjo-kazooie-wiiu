@@ -87,7 +87,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_MAD_MONSTER_MANSION_ENTRANCE] = RandoRegion{ .regionName = "Mad Monster Mansion", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
         .checks = {
-            CHECK(RC_MMM_JIGGY_JINJO_JIGGY,                           	true),
+            CHECK(RC_MMM_JIGGY_JINJO_JIGGY,                           	CAN_COLLECT_JINJOS(LEVEL_A_MAD_MONSTER_MANSION)),
             CHECK(RC_MMM_JINJO_BLUE,                                  	CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
             CHECK(RC_MMM_JINJO_GREEN,                                 	CAN_USE_ABILITY(ABILITY_5_CLIMB) && CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
             CHECK(RC_MMM_JINJO_ORANGE,                                	true),
