@@ -114,7 +114,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_CLICK_CLOCK_WOOD_ENTRANCE] = RandoRegion{ .regionName = "Click Clock Wood Entrance", .mapId = MAP_40_CCW_HUB,
         .checks = {
-            CHECK(RC_CCW_JIGGY_JINJO,                      true),
+            CHECK(RC_CCW_JIGGY_JINJO,                      CAN_COLLECT_JINJOS(LEVEL_8_CLICK_CLOCK_WOOD)),
             CHECK(RC_CCW_NOTE_ENTRANCE_HUB_1,              true),
             CHECK(RC_CCW_NOTE_ENTRANCE_HUB_2,              true),
             CHECK(RC_CCW_NOTE_ENTRANCE_HUB_3,              true),
