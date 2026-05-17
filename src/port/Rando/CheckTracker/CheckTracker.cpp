@@ -102,10 +102,6 @@ std::string GetTotalCheckCount() {
     return totalChecks;
 }
 
-void RefreshChecksInLogic() {
-    Rando::Logic::RefreshReachableRegions();
-}
-
 void DrawCheckTrackerCount() {
     if (CVAR_SHOW_COLLECTED_CHECKS) {
         totalCheckCount = GetTotalCheckCount();
@@ -132,7 +128,7 @@ void DrawCheckTrackerList() {
         return;
     }
 
-    RefreshChecksInLogic();
+    Rando::Logic::RefreshReachableRegions();
 
     if (CVAR_SHOW_COLLECTED_CHECKS && !CVAR_SHOW_SEPARATE_COLLECTED_CHECKS) {
         DrawCheckTrackerCount();
@@ -165,7 +161,10 @@ void DrawCheckTrackerList() {
                     }
 
                     ImVec4 checkTextColor = entry.obtained ? VecFromRGBA8(CVAR_COLLECTED_COLOR)
-                                                           : UIWidgets::ColorValues.at(UIWidgets::Colors::White);
+                                            : Rando::Logic::CanAccessCheck(entry.randoCheckId)
+                                                ? UIWidgets::ColorValues.at(UIWidgets::Colors::White)
+                                                : UIWidgets::ColorValues.at(UIWidgets::Colors::Gray);
+
                     ImVec4 itemTextColor = entry.obtained ? VecFromRGBA8(CVAR_ITEM_COLOR)
                                                           : UIWidgets::ColorValues.at(UIWidgets::Colors::Indigo);
                     if (entry.skipped) {

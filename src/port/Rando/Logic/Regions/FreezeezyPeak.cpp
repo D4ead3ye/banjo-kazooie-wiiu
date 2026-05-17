@@ -23,8 +23,9 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_FP_NOTE_SECOND_SLOPE_4,				        true),
         },
         .connections = {
-            CONNECTION(RR_FREEZEEZY_PEAK_INTERIOR_BOGGYS_IGLOO, true),
-            CONNECTION(RR_FREEZEEZY_PEAK_MAIN_LOWER, true),
+            CONNECTION(RR_FREEZEEZY_PEAK_INTERIOR_BOGGYS_IGLOO,         true),
+            CONNECTION(RR_FREEZEEZY_PEAK_MAIN_LOWER,                    true),
+            CONNECTION(RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_FREEZEEZY_PEAK, true),
         },
     };
     Regions[RR_FREEZEEZY_PEAK_INTERIOR_BOGGYS_IGLOO] = RandoRegion{ .regionName = "Boggy's Igloo", .levelId = LEVEL_5_FREEZEEZY_PEAK,
