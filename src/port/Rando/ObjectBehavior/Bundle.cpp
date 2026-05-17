@@ -94,24 +94,50 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                 }
                 break;
             case BUNDLE_10__JIGGY:
-                if (map_getLevel(gsworld_getMap()) == LEVEL_4_BUBBLEGLOOP_SWAMP) {
-                    switch (spawnPosition[2]) {
-                        case 49:
-                            shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_ELEVATED_WALKWAY);
-                            break;
-                        case -1386:
-                            shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_FLIBBITS);
-                            break;
-                        case 2799:
-                            shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_PINKEGG);
-                            break;
-                        case -1020:
-                            shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_TIPTUP);
-                            break;
-                        case -6148:
-                            shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_MAZE);
-                            break;
-                    }
+                switch (levelId) {
+                    case LEVEL_4_BUBBLEGLOOP_SWAMP:
+                        switch (spawnPosition[2]) {
+                            case 49:
+                                shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_ELEVATED_WALKWAY);
+                                break;
+                            case -1386:
+                                shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_FLIBBITS);
+                                break;
+                            case 2799:
+                                shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_PINKEGG);
+                                break;
+                            case -1020:
+                                shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_TIPTUP);
+                                break;
+                            case -6148:
+                                shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_MAZE);
+                                break;
+                        }
+                        break;
+                    case LEVEL_6_LAIR:
+                        for (auto& [checkId, spawnPos] : multiSpawnCheckMap) {
+                            if (std::get<0>(spawnPos) == spawnPosition[0] &&
+                                std::get<1>(spawnPos) == spawnPosition[1] &&
+                                std::get<2>(spawnPos) == spawnPosition[2]) {
+                                randoCheckId = checkId;
+                                break;
+                            }
+                        }
+
+                        if (randoCheckId == RC_UNKNOWN) {
+                            randoCheckId = Rando::StaticData::GetCheckByPosition(spawnPosition[0], spawnPosition[1],
+                                                                                 spawnPosition[2]);
+                            applyCustomPhysics = true;
+                        }
+
+                        shuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
+                        break;
+                    case LEVEL_7_GOBIS_VALLEY:
+                        shuffledObject = Rando::Logic::GetShuffledObject(Rando::StaticData::GetCheckByPosition(
+                            spawnPosition[0], spawnPosition[1], spawnPosition[2]));
+                        break;
+                    default:
+                        break;
                 }
                 break;
             case BUNDLE_C_BGS_HUT_JIGGY:
