@@ -12,6 +12,10 @@ namespace Rando {
 
 namespace StaticData {
 
+struct RandoLogicData {
+    bool canAccess;
+};
+
 struct RandoShuffledPool {
     const char* name;
     RandoCheckId randoCheckId;

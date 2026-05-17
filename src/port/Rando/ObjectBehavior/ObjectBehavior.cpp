@@ -134,7 +134,7 @@ void Rando::ObjectBehavior::Init() {
         }
 
         if (IsActorWhitelisted(ev->actorId)) {
-            LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
+            // LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
         }
 
         if (!IsActorWhitelisted(ev->actorId)) {

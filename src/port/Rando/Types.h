@@ -1123,6 +1123,7 @@ typedef enum {
 } RandoItemId;
 
 typedef enum {
+    RR_UNKNOWN,
     RR_CLANKERS_CAVERN_ENTRANCE,
     RR_CLANKERS_CAVERN_ENTRANCE_UPPER,
     RR_CLANKERS_CAVERN_ENTRANCE_UNDERWATER,
@@ -1219,6 +1220,7 @@ typedef enum {
 } RandoRegionId;
 
 typedef enum {
+    RA_UNKNOWN,
     RA_DRAIN_WATER_PYRAMID,
     RA_BREAK_OBJECT_BOULDER,
     RA_BREAK_OBJECT_BRICK_WALL,

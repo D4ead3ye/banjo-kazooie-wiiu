@@ -5,7 +5,7 @@ using namespace Rando::Logic;
 
 // clang-format off
 static RegisterShipInitFunc initFunc([]() {
-    Regions[RR_GRUNTILDAS_LAIR_BEFORE_NOTE_DOOR_180] = RandoRegion{ .regionName = "Before Second Note Door", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_BEFORE_NOTE_DOOR_180] = RandoRegion{ .regionName = "Before Second Note Door", .levelId = MAP_6B_GL_180_NOTE_DOOR,
         .checks = {
 		    CHECK(RC_GL_MUMBO_TOKEN_CCW_JIGGY_PODIUM, CAN_USE_ABILITY(ABILITY_F_DIVE)),
 		},
@@ -22,7 +22,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_BEFORE_NOTE_DOOR_260] = RandoRegion{ .regionName = "Before Third Note Door", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_BEFORE_NOTE_DOOR_260] = RandoRegion{ .regionName = "Before Third Note Door", .levelId = MAP_71_GL_STATUE_ROOM,
         .checks = {
 		    CHECK(RC_GL_JIGGY_WITCH_SWITCH_BUBBLEGLOOP_SWAMP,   CAN_ACCESS(RA_TRIGGER_SWITCH_GL_SHOCK_PAD) && CAN_ACCESS(RA_WITCH_SWITCH_BUBBLEGLOOP_SWAMP) && CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
 		},
@@ -36,7 +36,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_BEFORE_NOTE_DOOR_640] = RandoRegion{ .regionName = "Before Fifth Note Door", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_BEFORE_NOTE_DOOR_640] = RandoRegion{ .regionName = "Before Fifth Note Door", .levelId = MAP_76_GL_640_NOTE_DOOR,
         .checks = {
 		    CHECK(RC_GL_JIGGY_WITCH_SWITCH_RUSTY_BUCKET_BAY,    CAN_ACCESS(RA_WITCH_SWITCH_RUSTY_BUCKET_BAY) && CAN_ACCESS(RA_TRIGGER_SWITCH_GL_WATER_LEVEL_1)),
             CHECK(RC_GL_MUMBO_TOKEN_ABOVE_NOTE_DOOR_WATER_AREA, CAN_USE_TRANSFORMATION(TRANSFORM_6_BEE)),
@@ -52,13 +52,13 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_BOSS_GRUNTILDA] = RandoRegion{ .regionName = "Gruntilda Boss Arena", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_BOSS_GRUNTILDA] = RandoRegion{ .regionName = "Gruntilda Boss Arena", .levelId = MAP_90_GL_BATTLEMENTS,
         .events = {
             EVENT(RA_GAME_COMPLETE, true),
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_FINAL_ROOM] = RandoRegion{ .regionName = "Final Room", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_FINAL_ROOM] = RandoRegion{ .regionName = "Final Room", .levelId = MAP_93_GL_DINGPOT,
         .connections = {
             CONNECTION(RR_GRUNTILDAS_LAIR_BOSS_GRUNTILDA,   CAN_UNLOCK_WORLD(LEVEL_6_LAIR)),
             CONNECTION(RR_GRUNTILDAS_LAIR_FURNACE_FUN,      true),
@@ -74,7 +74,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_FURNACE_FUN] = RandoRegion{ .regionName = "Furnace Fun", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_FURNACE_FUN] = RandoRegion{ .regionName = "Furnace Fun", .levelId = MAP_8E_GL_FURNACE_FUN,
         .connections = {
             CONNECTION(RR_GRUNTILDAS_LAIR_FINAL_ROOM,                       true),
             CONNECTION(RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_CLICK_CLOCK_WOOD,   true),
@@ -84,7 +84,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_LOBBY] = RandoRegion{ .regionName = "Lobby", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_LOBBY] = RandoRegion{ .regionName = "Lobby", .levelId = MAP_69_GL_MM_LOBBY,
         .checks = {
 		    CHECK(RC_GL_JIGGY_LOBBY,                        true),
             CHECK(RC_GL_JIGGY_WITCH_SWITCH_MUMBOS_MOUNTAIN, CAN_ACCESS(RA_WITCH_SWITCH_MUMBOS_MOUNTAIN) && CAN_USE_TRANSFORMATION(TRANSFORM_2_TERMITE)),
@@ -99,7 +99,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_BUBBLEGLOOP_SWAMP] = RandoRegion{ .regionName = "Near Bubblegloop Swamp Entrance", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_BUBBLEGLOOP_SWAMP] = RandoRegion{ .regionName = "Near Bubblegloop Swamp Entrance", .levelId = MAP_72_GL_BGS_LOBBY,
         .checks = {
 		    // CHECK(RC_GL_JIGGY_LOBBY, true),
 		},
@@ -112,7 +112,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_CLANKERS_CAVERN] = RandoRegion{ .regionName = "Near Clanker's Cavern Entrance", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_CLANKERS_CAVERN] = RandoRegion{ .regionName = "Near Clanker's Cavern Entrance", .levelId = MAP_70_GL_CC_LOBBY,
         .checks = {
 		    CHECK(RC_GL_MUMBO_TOKEN_ABOVE_CC_ENTRANCE, CAN_ACCESS(RA_TRIGGER_SWITCH_GL_UNDERWATER_PIPES) && CAN_EXTEND_JUMP_DISTANCE && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
 		},
@@ -128,7 +128,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_CLICK_CLOCK_WOOD] = RandoRegion{ .regionName = "Near Click Clock Wood Entrance", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_CLICK_CLOCK_WOOD] = RandoRegion{ .regionName = "Near Click Clock Wood Entrance", .levelId = MAP_79_GL_CCW_LOBBY,
         .checks = {
 		    CHECK(RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD,    CAN_ACCESS(RA_WITCH_SWITCH_CLICK_CLOCK_WOOD) && CAN_USE_TRANSFORMATION(TRANSFORM_6_BEE)),
 		},
@@ -143,7 +143,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_FREEZEEZY_PEAK] = RandoRegion{ .regionName = "Near Freezeezy Peak Entrance", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_FREEZEEZY_PEAK] = RandoRegion{ .regionName = "Near Freezeezy Peak Entrance", .levelId = MAP_6F_GL_FP_LOBBY,
         .checks = {
 		    CHECK(RC_GL_JIGGY_WITCH_SWITCH_FREEZEEZY_PEAK,      CAN_ACCESS(RA_WITCH_SWITCH_FREEZEEZY_PEAK) && CAN_ACCESS(RA_TRIGGER_SWITCH_GL_FLIGHT_PAD) && CAN_USE_ABILITY(ABILITY_11_TURBO_TALON)),
             CHECK(RC_GL_JIGGY_WITCH_SWITCH_MAD_MONSTER_MANSION, CAN_ACCESS(RA_WITCH_SWITCH_MAD_MONSTER_MANSION) && CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WINDOWS) && CAN_EXTEND_JUMP_DISTANCE),
@@ -164,7 +164,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_GOBIS_VALLEY] = RandoRegion{ .regionName = "Near Gobi's Valley Entrance", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_GOBIS_VALLEY] = RandoRegion{ .regionName = "Near Gobi's Valley Entrance", .levelId = MAP_6E_GL_GV_LOBBY,
         .checks = {
 		    CHECK(RC_GL_JIGGY_WITCH_SWITCH_GOBIS_VALLEY,        CAN_ACCESS(RA_WITCH_SWITCH_GOBIS_VALLEY) && CAN_ACCESS(RA_TRIGGER_SWITCH_GL_SHOCK_PAD) && CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
             CHECK(RC_GL_MUMBO_TOKEN_BEHIND_SARCOPHAGUS,         true),
@@ -179,7 +179,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_RUSTY_BUCKET_BAY] = RandoRegion{ .regionName = "Near Rusty Bucket Bay Entrance", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_RUSTY_BUCKET_BAY] = RandoRegion{ .regionName = "Near Rusty Bucket Bay Entrance", .levelId = MAP_77_GL_RBB_LOBBY,
         .checks = {
 		    CHECK(RC_GL_MUMBO_TOKEN_UNDERWATER_RBB_ENTRANCE_AREA, CAN_USE_ABILITY(ABILITY_F_DIVE)),
 		},
@@ -194,7 +194,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_MAD_MONSTER_MANSION] = RandoRegion{ .regionName = "Near Mad Monster Mansion Entrance", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_MAD_MONSTER_MANSION] = RandoRegion{ .regionName = "Near Mad Monster Mansion Entrance", .levelId = MAP_75_GL_MMM_LOBBY,
         .connections = {
             CONNECTION(RR_GRUNTILDAS_LAIR_NEAR_PUZZLE_BOARD_GOBIS_VALLEY,   true),
             CONNECTION(RR_GRUNTILDAS_LAIR_WATER_SWITCH_1_ROOM,              CAN_BREAK_OBJECT(RA_BREAK_OBJECT_IRON_GATE) && CAN_USE_TRANSFORMATION(TRANSFORM_3_PUMPKIN)),
@@ -205,7 +205,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_TREASURE_TROVE_COVE] = RandoRegion{ .regionName = "Near Treasure Trove Cove Entrance", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_TREASURE_TROVE_COVE] = RandoRegion{ .regionName = "Near Treasure Trove Cove Entrance", .levelId = MAP_6D_GL_TTC_LOBBY,
         .checks = {
 		    CHECK(RC_GL_JIGGY_WITCH_SWITCH_TREASURE_TROVE_COVE, CAN_ACCESS(RA_WITCH_SWITCH_TREASURE_TROVE_COVE) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
 		},
@@ -215,7 +215,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_NEAR_ORANGE_CAULDRON_1] = RandoRegion{ .regionName = "Near Orange Warp Cauldron 1", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_NEAR_ORANGE_CAULDRON_1] = RandoRegion{ .regionName = "Near Orange Warp Cauldron 1", .levelId = MAP_6C_GL_RED_CAULDRON_ROOM,
         .checks = {
             CHECK(RC_GL_MUMBO_TOKEN_TOP_OF_PIPE_IN_ORANGE_CAULDRON_ROOM, true)
         },
@@ -227,7 +227,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_NEAR_PUZZLE_BOARD_GOBIS_VALLEY] = RandoRegion{ .regionName = "Near Gobi's Valley Puzzle Board", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_NEAR_PUZZLE_BOARD_GOBIS_VALLEY] = RandoRegion{ .regionName = "Near Gobi's Valley Puzzle Board", .levelId = MAP_74_GL_GV_PUZZLE,
         .connections = {
             CONNECTION(RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_FREEZEEZY_PEAK,         true),
             CONNECTION(RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_MAD_MONSTER_MANSION,    true),
@@ -237,7 +237,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_NEAR_PUZZLE_BOARD_MAD_MONSTER_MANSION] = RandoRegion{ .regionName = "Near Mad Monster Mansion Puzzle Board", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_NEAR_PUZZLE_BOARD_MAD_MONSTER_MANSION] = RandoRegion{ .regionName = "Near Mad Monster Mansion Puzzle Board", .levelId = MAP_78_GL_RBB_AND_MMM_PUZZLE,
         .checks = {
             CHECK(RC_GL_MUMBO_TOKEN_WHIPCRACK_NEAR_MMM_JIGGY_PODIUM, CAN_EXTEND_JUMP_DISTANCE),
         },
@@ -250,7 +250,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_NEAR_PUZZLE_BOARD_RUSTY_BUCKET_BAY] = RandoRegion{ .regionName = "Near Rusty Bucket Bay Puzzle Board", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_NEAR_PUZZLE_BOARD_RUSTY_BUCKET_BAY] = RandoRegion{ .regionName = "Near Rusty Bucket Bay Puzzle Board", .levelId = MAP_78_GL_RBB_AND_MMM_PUZZLE,
         .connections = {
             CONNECTION(RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_RUSTY_BUCKET_BAY,           true),
             CONNECTION(RR_GRUNTILDAS_LAIR_NEAR_PUZZLE_BOARD_MAD_MONSTER_MANSION,    CAN_BREAK_OBJECT(RA_BREAK_OBJECT_GRATE)),
@@ -260,7 +260,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_PAST_NOTE_DOOR_50] = RandoRegion{ .regionName = "Past First Note Door", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_PAST_NOTE_DOOR_50] = RandoRegion{ .regionName = "Past First Note Door", .levelId = MAP_6A_GL_TTC_AND_CC_PUZZLE,
         .checks = {
 		    CHECK(RC_GL_JIGGY_WITCH_SWITCH_CLANKERS_CAVERN, CAN_ACCESS(RA_WITCH_SWITCH_CLANKERS_CAVERN)),
 		    CHECK(RC_GL_MUMBO_TOKEN_BEHIND_PURPLE_CAULDRON, true),
@@ -276,7 +276,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GRUNTILDAS_LAIR_WATER_SWITCH_1_ROOM] = RandoRegion{ .regionName = "First Water Switch Room", .levelId = LEVEL_6_LAIR,
+    Regions[RR_GRUNTILDAS_LAIR_WATER_SWITCH_1_ROOM] = RandoRegion{ .regionName = "First Water Switch Room", .levelId = MAP_7A_GL_CRYPT,
         .checks = {
             CHECK(RC_GL_MUMBO_TOKEN_BEHIND_MUMBO_IN_CRYPT, true),
         },

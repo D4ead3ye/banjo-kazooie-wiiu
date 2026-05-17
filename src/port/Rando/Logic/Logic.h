@@ -4,8 +4,11 @@
 #include "port/Rando/Rando.h"
 #include "port/ShipUtils.h"
 
+#include <unordered_set>
+
 extern "C" {
 s32 item_getCount(enum item_e item);
+s32 itemscore_noteScores_getTotal(void);
 
 int ability_isUnlocked(enum ability_e uid);
 
@@ -14,10 +17,17 @@ s32 __transformation_getCost(enum transformation_e trans_id);
 s32 _puzzleCost(s32 index);
 
 u32 player_getTransformation(void);
+
+enum level_e map_getLevel(enum map_e map);
+enum map_e gsworld_getMap(void);
 }
 
 extern std::map<ability_e, std::pair<const char*, const char*>> abilityLoadoutMap;
 extern std::map<item_e, std::pair<const char*, const char*>> itemLoadoutMap;
+
+extern Rando::StaticData::RandoLogicData reachableRegions[RR_MAX];
+extern Rando::StaticData::RandoLogicData reachableEvents[RA_MAX];
+extern Rando::StaticData::RandoLogicData reachableChecks[RC_MAX];
 
 namespace Rando {
 
@@ -29,6 +39,8 @@ void GeneratePoolFromSaveData(SaveData* saveData);
 void InitializeSaveData(SaveData* saveData);
 void GenerateSaveData(SaveData* saveData);
 void GrantStartingLoadout();
+
+void RefreshReachableRegions();
 
 inline bool IsCheckShuffled(RandoCheckId randoCheckId) {
     bool isShuffled = false;
@@ -137,23 +149,34 @@ extern std::map<RandoRegionId, RandoRegion> Regions;
     }
 
 // Check Logic
+inline bool CanAccessRegion(RandoRegionId randoRegionId) {
+    return reachableRegions[randoRegionId].canAccess;
+}
+
 inline bool CanAccessEvent(RandoAccessId randoAccessId) {
-    bool canAccess = false;
-    for (auto& [regionId, regionData] : Rando::Logic::Regions) {
-        if (canAccess) {
-            break;
+    return reachableEvents[randoAccessId].canAccess;
+}
+
+inline bool CanAccessCheck(RandoCheckId randoCheckId) {
+    return reachableChecks[randoCheckId].canAccess;
+}
+
+inline bool CanCollectWorldJinjos(level_e levelId) {
+    int32_t accessibleJinjos = 0;
+
+    for (auto& entry : Rando::Logic::shuffledPool) {
+        if (Rando::StaticData::Checks[entry.shuffleCheckId].worldId != levelId) {
+            continue;
         }
-        for (auto& [accessId, logic] : regionData.events) {
-            if (accessId == randoAccessId) {
-                if (logic) {
-                    canAccess = true;
-                    break;
-                }
+
+        if (entry.randoItemId >= RI_JINJO_BLUE && entry.randoItemId <= RI_JINJO_YELLOW) {
+            if (CanAccessCheck(entry.shuffleCheckId)) {
+                accessibleJinjos++;
             }
         }
     }
 
-    return canAccess;
+    return accessibleJinjos == 5 ? true : false;
 }
 
 inline bool CanUseTransformation(transformation_e transId) {
@@ -288,7 +311,8 @@ inline bool CanBreakObject(RandoAccessId objectType) {
      CAN_USE_ABILITY(ABILITY_10_TALON_TROT))
 
 #define CAN_BREAK_OBJECT(objectType) CanBreakObject(objectType)
-#define CAN_UNLOCK_NOTE_DOOR(noteCount) item_getCount(ITEM_C_NOTE) >= noteCount&& CAN_ACCESS(RA_NOTE_DOOR_##noteCount)
+#define CAN_COLLECT_JINJOS(levelId) CanCollectWorldJinjos(levelId)
+#define CAN_UNLOCK_NOTE_DOOR(noteCount) itemscore_noteScores_getTotal() >= noteCount&& CAN_ACCESS(RA_NOTE_DOOR_##noteCount)
 #define CAN_UNLOCK_WORLD(levelId) CanOpenWorld(levelId)
 #define CAN_USE_ABILITY(abilityId) ability_isUnlocked(abilityId)
 #define CAN_USE_TRANSFORMATION(transId) CanUseTransformation(transId)

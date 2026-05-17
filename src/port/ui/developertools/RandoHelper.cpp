@@ -17,6 +17,7 @@ extern "C" {
 void jiggy_spawn(enum jiggy_e jiggy_id, f32 pos[3]);
 void player_getPosition(f32 dst[3]);
 void player_getPosition_s32(s32 arg0[3]);
+enum map_e gsworld_getMap(void);
 Actor* actor_new(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags);
 Actor* actor_spawnWithYaw_s32(enum actor_e id, s32 (*pos)[3], s32 rot);
 void func_8031D04C(enum map_e arg0, s32 exit_id);
@@ -90,6 +91,8 @@ void RandoHelper_ObjectSpawner() {
     RandoHelper_SpawnPosition();
 
     ImGui::SeparatorText("Spawn Data");
+    ImGui::Text("Map ID: %i", gsworld_getMap());
+
     if (ImGui::BeginTable("SpawnInfoTable", 3)) {
         ImGui::TableSetupColumn("Label", ImGuiTableColumnFlags_WidthFixed, 75.0f);
         ImGui::TableSetupColumn("PlayerPos", ImGuiTableColumnFlags_WidthFixed, 100.0f);

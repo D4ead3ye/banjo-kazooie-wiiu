@@ -67,6 +67,10 @@ std::vector<std::tuple<const char*, Color_RGBA8, const char*>> defaultCheckColor
     { CVAR_NAME_ITEM_COLOR, DEFAULT_ITEM_COLOR, "Obtained Item" },
 };
 
+Rando::StaticData::RandoLogicData reachableRegions[RR_MAX];
+Rando::StaticData::RandoLogicData reachableEvents[RA_MAX];
+Rando::StaticData::RandoLogicData reachableChecks[RC_MAX];
+
 bool checkTrackerPopoutState = false;
 ImVec4 checkTrackerBG = ImVec4{ 0, 0, 0, 0.5f };
 ImVec4 collectedChecksBG = ImVec4{ 0, 0, 0, 0.5f };
@@ -98,6 +102,10 @@ std::string GetTotalCheckCount() {
     return totalChecks;
 }
 
+void RefreshChecksInLogic() {
+    Rando::Logic::RefreshReachableRegions();
+}
+
 void DrawCheckTrackerCount() {
     if (CVAR_SHOW_COLLECTED_CHECKS) {
         totalCheckCount = GetTotalCheckCount();
@@ -123,6 +131,8 @@ void DrawCheckTrackerList() {
     if (Rando::Logic::shuffledPool.empty()) {
         return;
     }
+
+    RefreshChecksInLogic();
 
     if (CVAR_SHOW_COLLECTED_CHECKS && !CVAR_SHOW_SEPARATE_COLLECTED_CHECKS) {
         DrawCheckTrackerCount();
