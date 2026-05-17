@@ -12,9 +12,8 @@ void RefreshReachableRegions() {
     Rando::StaticData::RandoLogicData checkSnapshot[RC_MAX] = {};
 
     for (auto const& [regionId, regionData] : Rando::Logic::Regions) {
-        if (regionData.levelId == map_getLevel(gsworld_getMap())) {
+        if (regionData.mapId == gsworld_getMap()) {
             seen.insert(regionId);
-            break;
         }
     }
 

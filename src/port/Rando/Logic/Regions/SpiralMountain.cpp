@@ -5,7 +5,7 @@ using namespace Rando::Logic;
 
 // clang-format off
 static RegisterShipInitFunc initFunc([]() {
-    Regions[RR_SPIRAL_MOUNTAIN_ENTRANCE] = RandoRegion{ .regionName = "Spiral Mountain", .levelId = LEVEL_B_SPIRAL_MOUNTAIN,
+    Regions[RR_SPIRAL_MOUNTAIN_ENTRANCE] = RandoRegion{ .regionName = "Spiral Mountain", .mapId = MAP_1_SM_SPIRAL_MOUNTAIN,
         .checks = {
 		    CHECK(RC_SM_EMPTY_HONEYCOMB_COLLIWOBBLE,    CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP)),
             CHECK(RC_SM_EMPTY_HONEYCOMB_QUARRIES, 	    CAN_BREAK_OBJECT(RA_BREAK_OBJECT_BOULDER)),

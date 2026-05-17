@@ -121,7 +121,7 @@ inline std::string LogicString(std::string condition) {
 
 struct RandoRegion {
     const char* regionName;
-    int16_t levelId;
+    int16_t mapId;
     std::map<RandoCheckId, std::pair<std::function<bool()>, std::string>> checks;
     std::map<RandoRegionId, std::pair<std::function<bool()>, std::string>> connections;
     std::vector<std::pair<RandoAccessId, std::function<bool()>>> events;

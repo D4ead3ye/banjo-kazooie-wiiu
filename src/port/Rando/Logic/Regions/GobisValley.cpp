@@ -5,7 +5,7 @@ using namespace Rando::Logic;
 
 // clang-format off
 static RegisterShipInitFunc initFunc([]() {
-    Regions[RR_GOBIS_VALLEY_ENTRANCE] = RandoRegion{ .regionName = "Gobi's Valley", .levelId = LEVEL_7_GOBIS_VALLEY,
+    Regions[RR_GOBIS_VALLEY_ENTRANCE] = RandoRegion{ .regionName = "Gobi's Valley", .mapId = MAP_12_GV_GOBIS_VALLEY,
         .checks = {
             CHECK(RC_GV_EMPTY_HONEYCOMB_GOBI, 						CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP) && CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
             CHECK(RC_GV_JIGGY_GOBI_2, 								CAN_EXTEND_JUMP_DISTANCE && CAN_USE_ABILITY(ABILITY_5_CLIMB)),
@@ -31,7 +31,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
 
-    Regions[RR_GOBIS_VALLEY_INTERIOR_MATCH_GAME_PYRAMID] = RandoRegion{ .regionName = "Match Game Pyramid Interior", .levelId = LEVEL_7_GOBIS_VALLEY,
+    Regions[RR_GOBIS_VALLEY_INTERIOR_MATCH_GAME_PYRAMID] = RandoRegion{ .regionName = "Match Game Pyramid Interior", .mapId = MAP_13_GV_MEMORY_GAME,
         .checks = {
             CHECK(RC_GV_JIGGY_MATCHING_GAME, 						CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
             CHECK(RC_GV_MUMBO_TOKEN_INSIDE_MEMORY_GAME_ROOM, 		true),
@@ -45,7 +45,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
 
-    Regions[RR_GOBIS_VALLEY_INTERIOR_MAZE_PYRAMID] = RandoRegion{ .regionName = "Maze Pyramid Interior", .levelId = LEVEL_7_GOBIS_VALLEY,
+    Regions[RR_GOBIS_VALLEY_INTERIOR_MAZE_PYRAMID] = RandoRegion{ .regionName = "Maze Pyramid Interior", .mapId = MAP_14_GV_SANDYBUTTS_MAZE,
         .checks = {
             CHECK(RC_GV_JIGGY_MAZE, 								true),
             CHECK(RC_GV_JINJO_PINK, 								true),
@@ -66,7 +66,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GOBIS_VALLEY_INTERIOR_RUBEES_PYRAMID] = RandoRegion{ .regionName = "Rubee's Pyramid Interior", .levelId = LEVEL_7_GOBIS_VALLEY,
+    Regions[RR_GOBIS_VALLEY_INTERIOR_RUBEES_PYRAMID] = RandoRegion{ .regionName = "Rubee's Pyramid Interior", .mapId = MAP_16_GV_RUBEES_CHAMBER,
         .checks = {
             CHECK(RC_GV_JIGGY_HISTUP, 								CAN_USE_ABILITY(ABILITY_6_EGGS) && CAN_USE_ABILITY(ABILITY_5_CLIMB) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
             CHECK(RC_GV_MUMBO_TOKEN_NEXT_TO_RUBEE,					true),
@@ -84,7 +84,7 @@ static RegisterShipInitFunc initFunc([]() {
         },
     };
 
-    Regions[RR_GOBIS_VALLEY_INTERIOR_SPHYNX] = RandoRegion{ .regionName = "Sphynx Interior", .levelId = LEVEL_7_GOBIS_VALLEY,
+    Regions[RR_GOBIS_VALLEY_INTERIOR_SPHYNX] = RandoRegion{ .regionName = "Sphynx Interior", .mapId = MAP_1A_GV_INSIDE_JINXY,
         .checks = {
             CHECK(RC_GV_JIGGY_SHYINX, 								CAN_USE_ABILITY(ABILITY_6_EGGS)),
             CHECK(RC_GV_JINJO_ORANGE, 								CAN_USE_ABILITY(ABILITY_6_EGGS)),
@@ -103,7 +103,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
 
 
-    Regions[RR_GOBIS_VALLEY_INTERIOR_WATER_PYRAMID] = RandoRegion{ .regionName = "Water Pyramid Interior", .levelId = LEVEL_7_GOBIS_VALLEY,
+    Regions[RR_GOBIS_VALLEY_INTERIOR_WATER_PYRAMID] = RandoRegion{ .regionName = "Water Pyramid Interior", .mapId = MAP_15_GV_WATER_PYRAMID,
         .checks = {
             CHECK(RC_GV_JIGGY_WATER_PYRAMID, 						CAN_USE_ABILITY(ABILITY_F_DIVE)),
             CHECK(RC_GV_MUMBO_TOKEN_INSIDE_WATER_PYRAMID, 			true),
@@ -120,7 +120,7 @@ static RegisterShipInitFunc initFunc([]() {
         }
     };
 
-    Regions[RR_GOBIS_VALLEY_UPPER_AREA] = RandoRegion{ .regionName = "Upper Areas", .levelId = LEVEL_7_GOBIS_VALLEY,
+    Regions[RR_GOBIS_VALLEY_UPPER_AREA] = RandoRegion{ .regionName = "Upper Areas", .mapId = MAP_12_GV_GOBIS_VALLEY,
         .checks = {
             CHECK(RC_GV_EMPTY_HONEYCOMB_CACTUS, 					CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP) && CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
             CHECK(RC_GV_JIGGY_ANCIENT_ONES, 						CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP) && CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
