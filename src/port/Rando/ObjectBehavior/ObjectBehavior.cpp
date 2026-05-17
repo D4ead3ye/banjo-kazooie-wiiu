@@ -11,11 +11,6 @@
 #define WIDGET_TEXT_COLOR(id) UIWidgets::ColorValues.at(id)
 
 extern "C" {
-int __baMarker_8028BC60(void);
-void __baMarker_resolveMusicNoteCollision(Prop* arg0);
-enum map_e gsworld_getMap(void);
-enum level_e map_getLevel(enum map_e map);
-
 Actor* marker_getActor(ActorMarker* thisx);
 bool func_802C9C14(Actor* actor);
 }
@@ -107,7 +102,6 @@ bool ShouldOverrideSpawn(RandoCheckId randoCheckId) {
         return false;
     }
 
-
     if (Rando::Logic::IsCheckShuffled(randoCheckId)) {
         return true;
     }
@@ -131,10 +125,6 @@ void Rando::ObjectBehavior::Init() {
 
         if (!IS_RANDO) {
             return;
-        }
-
-        if (IsActorWhitelisted(ev->actorId)) {
-            // LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
         }
 
         if (!IsActorWhitelisted(ev->actorId)) {
@@ -198,15 +188,6 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        if (!ev->propId->markerFlag) {
-            switch (ev->propId->spriteProp.spriteId) {
-                case RP_MUSIC_NOTE:
-                    LogOutCollision(ACTOR_51_MUSIC_NOTE, ev->propId->actorProp.x, ev->propId->actorProp.y,
-                                    ev->propId->actorProp.z);
-                    break;
-            }
-        }
-
         RandoItemId randoItemId = RI_UNKNOWN;
 
         if (ev->propId->markerFlag) {
@@ -218,18 +199,12 @@ void Rando::ObjectBehavior::Init() {
             
             switch (ev->propId->actorProp.marker->id) {
                 case MARKER_39_MUMBO_TOKEN:
-                    LogOutCollision(ACTOR_2D_MUMBO_TOKEN, ev->propId->actorProp.x, ev->propId->actorProp.y,
-                                    ev->propId->actorProp.z);
                     randoItemId = RI_MUMBO_TOKEN;
                     break;
                 case MARKER_52_JIGGY:
-                    LogOutCollision(ACTOR_46_JIGGY, ev->propId->actorProp.x, ev->propId->actorProp.y,
-                                    ev->propId->actorProp.z);
                     randoItemId = RI_JIGGY;
                     break;
                 case MARKER_53_EMPTY_HONEYCOMB:
-                    LogOutCollision(ACTOR_47_EMPTY_HONEYCOMB, ev->propId->actorProp.x, ev->propId->actorProp.y,
-                                    ev->propId->actorProp.z);
                     randoItemId = RI_EMPTY_HONEYCOMB;
                     break;
                 case MARKER_5A_JINJO_BLUE:
@@ -237,14 +212,9 @@ void Rando::ObjectBehavior::Init() {
                 case MARKER_5C_JINJO_ORANGE:
                 case MARKER_5D_JINJO_PINK:
                 case MARKER_5E_JINJO_YELLOW:
-                    LogOutCollision(jinjoMarkerMap.at(ev->propId->actorProp.marker->id), ev->propId->actorProp.x,
-                                    ev->propId->actorProp.y,
-                                    ev->propId->actorProp.z);
                     randoItemId = Rando::StaticData::GetRandoItemByActorId(jinjoMarkerMap.at(ev->propId->actorProp.marker->id));
                     break;
                 case MARKER_5F_MUSIC_NOTE:
-                    LogOutCollision(ACTOR_51_MUSIC_NOTE, ev->propId->actorProp.x, ev->propId->actorProp.y,
-                                    ev->propId->actorProp.z);
                     randoItemId = RI_MUSIC_NOTE;
                     break;
                 default:
