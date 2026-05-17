@@ -15,7 +15,7 @@ void Rando::ObjectBehavior::InitJiggyBehavior() {
 		jiggy_e jiggyId = va_arg(args, jiggy_e);
         f32* position = va_arg(args, f32*);
 
-        //LogOutSpawns(jiggyId, position[0], position[1], position[2]);
+        LogOutSpawns(jiggyId, position[0], position[1], position[2]);
 
         if (!IS_RANDO && !OPTION_ENABLED) {
             return;
