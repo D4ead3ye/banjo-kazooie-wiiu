@@ -5,7 +5,7 @@ using namespace Rando::Logic;
 
 // clang-format off
 static RegisterShipInitFunc initFunc([]() {
-    Regions[RR_CLICK_CLOCK_WOOD_AUTUMN] = RandoRegion{ .regionName = "Autumn Season", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_AUTUMN] = RandoRegion{ .regionName = "Autumn Season", .mapId = MAP_45_CCW_AUTUMN,
         .checks = {
             CHECK(RC_CCW_JIGGY_FLOWER,                                              true),
             CHECK(RC_CCW_JIGGY_GNAWTY,                                              CAN_ACCESS(RA_GNAWTYS_BOULDER) && CAN_USE_ABILITY(ABILITY_F_DIVE)),
@@ -48,7 +48,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLICK_CLOCK_WOOD_AUTUMN_INTERIOR_BEEHIVE, CAN_USE_ABILITY(ABILITY_10_TALON_TROT)),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_AUTUMN_INTERIOR_BEEHIVE] = RandoRegion{ .regionName = "Autumn - Inside the Beehive", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_AUTUMN_INTERIOR_BEEHIVE] = RandoRegion{ .regionName = "Autumn - Inside the Beehive", .mapId = MAP_5C_CCW_AUTUMN_ZUBBA_HIVE,
         .checks = {
             CHECK(RC_CCW_NOTE_AUTUMN_BEEHIVE_INTERIOR_1,       true),
             CHECK(RC_CCW_NOTE_AUTUMN_BEEHIVE_INTERIOR_2,       true),
@@ -59,7 +59,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLICK_CLOCK_WOOD_AUTUMN, CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_AUTUMN_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Autumn - Inside Mumbo's Skull", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_AUTUMN_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Autumn - Inside Mumbo's Skull", .mapId = MAP_4C_CCW_AUTUMN_MUMBOS_SKULL,
         .checks = {
             CHECK(RC_CCW_NOTE_AUTUMN_INSIDE_MUMBOS_SKULL_1,        CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
             CHECK(RC_CCW_NOTE_AUTUMN_INSIDE_MUMBOS_SKULL_2,        CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
@@ -70,7 +70,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLICK_CLOCK_WOOD_AUTUMN, CAN_USE_ABILITY(ABILITY_E_WADING_BOOTS)),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_AUTUMN_INTERIOR_NABNUTS_HOUSE] = RandoRegion{ .regionName = "Autumn - Inside Nabnut's House", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_AUTUMN_INTERIOR_NABNUTS_HOUSE] = RandoRegion{ .regionName = "Autumn - Inside Nabnut's House", .mapId = MAP_60_CCW_AUTUMN_NABNUTS_HOUSE,
         .checks = {
             CHECK(RC_CCW_NOTE_AUTUMN_INSIDE_NABNUTS_HOUSE_1,           CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
             CHECK(RC_CCW_NOTE_AUTUMN_INSIDE_NABNUTS_HOUSE_2,           CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
@@ -80,17 +80,17 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLICK_CLOCK_WOOD_AUTUMN_UPPER_TREE, true),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_AUTUMN_INTERIOR_NABNUTS_WINDOW] = RandoRegion{ .regionName = "Autumn - Inside the Window near Nabnut's House", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_AUTUMN_INTERIOR_NABNUTS_WINDOW] = RandoRegion{ .regionName = "Autumn - Inside the Window near Nabnut's House", .mapId = MAP_63_CCW_AUTUMN_NABNUTS_WATER_SUPPLY,
         .connections = {
             CONNECTION(RR_CLICK_CLOCK_WOOD_AUTUMN_UPPER_TREE, true),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_AUTUMN_TOP_ROOM] = RandoRegion{ .regionName = "Autumn - Top Room of the Tree", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_AUTUMN_TOP_ROOM] = RandoRegion{ .regionName = "Autumn - Top Room of the Tree", .mapId = MAP_67_CCW_AUTUMN_WHIPCRACK_ROOM,
         .connections = {
             CONNECTION(RR_CLICK_CLOCK_WOOD_AUTUMN_UPPER_TREE, true),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_AUTUMN_UPPER_TREE] = RandoRegion{ .regionName = "Autumn - Upper Portion of the Tree", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_AUTUMN_UPPER_TREE] = RandoRegion{ .regionName = "Autumn - Upper Portion of the Tree", .mapId = MAP_45_CCW_AUTUMN,
         .checks = {
             CHECK(RC_CCW_JIGGY_NABNUT,                                  CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WINDOWS) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP) && CAN_USE_ABILITY(ABILITY_F_DIVE)),
             CHECK(RC_CCW_MUMBO_TOKEN_AUTUMN_SNAREBEAR_TOP_OF_TREE,      CAN_USE_ABILITY(ABILITY_12_WONDERWING)),
@@ -112,7 +112,7 @@ static RegisterShipInitFunc initFunc([]() {
             EVENT(RA_TRIGGER_SWITCH_CCW_WINTER, CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_ENTRANCE] = RandoRegion{ .regionName = "Click Clock Wood Entrance", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_ENTRANCE] = RandoRegion{ .regionName = "Click Clock Wood Entrance", .mapId = MAP_40_CCW_HUB,
         .checks = {
             CHECK(RC_CCW_JIGGY_JINJO,                      true),
             CHECK(RC_CCW_NOTE_ENTRANCE_HUB_1,              true),
@@ -125,12 +125,13 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLICK_CLOCK_WOOD_SUMMER, CAN_ACCESS(RA_TRIGGER_SWITCH_CCW_SUMMER)),
             CONNECTION(RR_CLICK_CLOCK_WOOD_AUTUMN, CAN_ACCESS(RA_TRIGGER_SWITCH_CCW_AUTUMN)),
             CONNECTION(RR_CLICK_CLOCK_WOOD_WINTER, CAN_ACCESS(RA_TRIGGER_SWITCH_CCW_WINTER)),
+            CONNECTION(RR_GRUNTILDAS_LAIR_LOBBY,   true),
         },
         .events = {
             EVENT(RA_TRIGGER_SWITCH_CCW_SPRING, CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_SPRING] = RandoRegion{ .regionName = "Spring Season", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_SPRING] = RandoRegion{ .regionName = "Spring Season", .mapId = MAP_43_CCW_SPRING,
         .checks = {
             CHECK(RC_CCW_MUMBO_TOKEN_SPRING_SNAREBEAR_NEAR_BIG_FLOWER,             CAN_USE_ABILITY(ABILITY_12_WONDERWING) || CAN_USE_TRANSFORMATION(TRANSFORM_6_BEE)),
             CHECK(RC_CCW_MUMBO_TOKEN_SPRING_SNAREBEAR_NEAR_ENTRANCE,               CAN_USE_ABILITY(ABILITY_12_WONDERWING) || CAN_USE_TRANSFORMATION(TRANSFORM_6_BEE)),
@@ -160,7 +161,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLICK_CLOCK_WOOD_SPRING_UPPER_TREE, (CAN_USE_ABILITY(ABILITY_10_TALON_TROT) && CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)) || CAN_USE_TRANSFORMATION(TRANSFORM_6_BEE)),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_SPRING_INTERIOR_BEEHIVE] = RandoRegion{ .regionName = "Spring - Inside the Beehive", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_SPRING_INTERIOR_BEEHIVE] = RandoRegion{ .regionName = "Spring - Inside the Beehive", .mapId = MAP_5B_CCW_SPRING_ZUBBA_HIVE,
         .checks = {
             CHECK(RC_CCW_JINJO_PINK,            true),
         },
@@ -168,12 +169,12 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLICK_CLOCK_WOOD_SPRING, true),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_SPRING_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Spring - Inside Mumbo's Skull", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_SPRING_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Spring - Inside Mumbo's Skull", .mapId = MAP_4A_CCW_SPRING_MUMBOS_SKULL,
         .connections = {
             CONNECTION(RR_CLICK_CLOCK_WOOD_SPRING, CAN_USE_ABILITY(ABILITY_E_WADING_BOOTS) || CAN_USE_TRANSFORMATION(TRANSFORM_6_BEE)),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_SPRING_INTERIOR_NABNUTS_HOUSE] = RandoRegion{ .regionName = "Spring - Inside Nabnut's House", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_SPRING_INTERIOR_NABNUTS_HOUSE] = RandoRegion{ .regionName = "Spring - Inside Nabnut's House", .mapId = MAP_5E_CCW_SPRING_NABNUTS_HOUSE,
         .checks = {
             CHECK(RC_CCW_MUMBO_TOKEN_SPRING_NABNUTS_HOUSE,              true),
         },
@@ -181,7 +182,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLICK_CLOCK_WOOD_SPRING_UPPER_TREE, true),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_SPRING_TOP_ROOM] = RandoRegion{ .regionName = "Spring - Top Room of the Tree", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_SPRING_TOP_ROOM] = RandoRegion{ .regionName = "Spring - Top Room of the Tree", .mapId = MAP_65_CCW_SPRING_WHIPCRACK_ROOM,
         .checks = {
             CHECK(RC_CCW_JIGGY_TOP_ROOM,        true),
         },
@@ -189,7 +190,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLICK_CLOCK_WOOD_SPRING_UPPER_TREE, true),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_SPRING_UPPER_TREE] = RandoRegion{ .regionName = "Spring - Upper Portion of the Tree", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_SPRING_UPPER_TREE] = RandoRegion{ .regionName = "Spring - Upper Portion of the Tree", .mapId = MAP_43_CCW_SPRING,
         .checks = {
             CHECK(RC_CCW_JIGGY_TREE_TOP,                                    CAN_USE_TRANSFORMATION(TRANSFORM_6_BEE) || (CAN_ACCESS(RA_TRIGGER_SWITCH_CCW_WINTER) && CAN_USE_ABILITY(ABILITY_9_FLIGHT))),
             CHECK(RC_CCW_JINJO_GREEN,                                       (CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP) && CAN_USE_ABILITY(ABILITY_12_WONDERWING)) || CAN_USE_TRANSFORMATION(TRANSFORM_6_BEE)),
@@ -205,7 +206,7 @@ static RegisterShipInitFunc initFunc([]() {
             EVENT(RA_TRIGGER_SWITCH_CCW_SUMMER, CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_SUMMER] = RandoRegion{ .regionName = "Summer Season", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_SUMMER] = RandoRegion{ .regionName = "Summer Season", .mapId = MAP_44_CCW_SUMMER,
         .checks = {
             CHECK(RC_CCW_JIGGY_SUMMER_LEAF_JUMPS,                          CAN_EXTEND_JUMP_DISTANCE && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP) && CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
             CHECK(RC_CCW_JINJO_YELLOW,                                     true),
@@ -232,7 +233,7 @@ static RegisterShipInitFunc initFunc([]() {
             EVENT(RA_GNAWTYS_BOULDER, CAN_BREAK_OBJECT(RA_BREAK_OBJECT_GNAWTYS_BOULDER)),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_SUMMER_INTERIOR_BEEHIVE] = RandoRegion{ .regionName = "Summer - Inside the Beehive", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_SUMMER_INTERIOR_BEEHIVE] = RandoRegion{ .regionName = "Summer - Inside the Beehive", .mapId = MAP_5A_CCW_SUMMER_ZUBBA_HIVE,
         .checks = {
             CHECK(RC_CCW_JIGGY_ZUBBAS,      CAN_KILL_ENEMY(ACTOR_29B_ZUBBA)),
         },
@@ -240,7 +241,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLICK_CLOCK_WOOD_SUMMER, CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_SUMMER_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Summer - Inside Mumbo's Skull", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_SUMMER_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Summer - Inside Mumbo's Skull", .mapId = MAP_4B_CCW_SUMMER_MUMBOS_SKULL,
         .checks = {
             CHECK(RC_CCW_MUMBO_TOKEN_SUMMER_INSIDE_MUMBOS_SKULL,    true),
         },
@@ -248,17 +249,17 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLICK_CLOCK_WOOD_SUMMER, CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
         },
     };
-        Regions[RR_CLICK_CLOCK_WOOD_SUMMER_INTERIOR_NABNUTS_HOUSE] = RandoRegion{ .regionName = "Summer - Inside Nabnut's House", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+        Regions[RR_CLICK_CLOCK_WOOD_SUMMER_INTERIOR_NABNUTS_HOUSE] = RandoRegion{ .regionName = "Summer - Inside Nabnut's House", .mapId = MAP_5F_CCW_SUMMER_NABNUTS_HOUSE,
         .connections = {
             CONNECTION(RR_CLICK_CLOCK_WOOD_SUMMER_UPPER_TREE, true),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_SUMMER_TOP_ROOM] = RandoRegion{ .regionName = "Summer - Top Room of the Tree", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_SUMMER_TOP_ROOM] = RandoRegion{ .regionName = "Summer - Top Room of the Tree", .mapId = MAP_66_CCW_SUMMER_WHIPCRACK_ROOM,
         .connections = {
             CONNECTION(RR_CLICK_CLOCK_WOOD_SUMMER_UPPER_TREE, true),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_SUMMER_UPPER_TREE] = RandoRegion{ .regionName = "Summer - Upper Portion of the Tree", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_SUMMER_UPPER_TREE] = RandoRegion{ .regionName = "Summer - Upper Portion of the Tree", .mapId = MAP_44_CCW_SUMMER,
         .checks = {
             CHECK(RC_CCW_JIGGY_HOUSE,                                          true),
             CHECK(RC_CCW_MUMBO_TOKEN_SUMMER_PLATFORMS_BEFORE_EYRIES_NEST,      true),
@@ -278,7 +279,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLICK_CLOCK_WOOD_SUMMER_TOP_ROOM, CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WOODEN_DOOR) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_WINTER] = RandoRegion{ .regionName = "Winter Season", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_WINTER] = RandoRegion{ .regionName = "Winter Season", .mapId = MAP_46_CCW_WINTER,
         .checks = {
             CHECK(RC_CCW_EMPTY_HONEYCOMB_GNAWTYS,                                           CAN_ACCESS(RA_GNAWTYS_BOULDER) && CAN_USE_ABILITY(ABILITY_F_DIVE)),
             CHECK(RC_CCW_JINJO_BLUE,                                                        CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP) || CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
@@ -295,22 +296,22 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLICK_CLOCK_WOOD_WINTER_UPPER_TREE, true),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_WINTER_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Winter - Inside Mumbo's Skull", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_WINTER_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Winter - Inside Mumbo's Skull", .mapId = MAP_4D_CCW_WINTER_MUMBOS_SKULL,
         .connections = {
             CONNECTION(RR_CLICK_CLOCK_WOOD_WINTER, true),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_WINTER_INTERIOR_NABNUTS_HOUSE] = RandoRegion{ .regionName = "Winter - Inside Nabnut's House", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_WINTER_INTERIOR_NABNUTS_HOUSE] = RandoRegion{ .regionName = "Winter - Inside Nabnut's House", .mapId = MAP_61_CCW_WINTER_NABNUTS_HOUSE,
         .connections = {
             CONNECTION(RR_CLICK_CLOCK_WOOD_WINTER_UPPER_TREE, true),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_WINTER_INTERIOR_NABNUTS_WINDOW] = RandoRegion{ .regionName = "Winter - Inside the Window near Nabnut's House", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_WINTER_INTERIOR_NABNUTS_WINDOW] = RandoRegion{ .regionName = "Winter - Inside the Window near Nabnut's House", .mapId = MAP_64_CCW_WINTER_NABNUTS_WATER_SUPPLY,
         .connections = {
             CONNECTION(RR_CLICK_CLOCK_WOOD_WINTER_UPPER_TREE, true),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_WINTER_INTERIOR_WINDOW_ABOVE_NABNUT] = RandoRegion{ .regionName = "Winter - Inside the Window Above Nabnut's House", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_WINTER_INTERIOR_WINDOW_ABOVE_NABNUT] = RandoRegion{ .regionName = "Winter - Inside the Window Above Nabnut's House", .mapId = MAP_62_CCW_WINTER_HONEYCOMB_ROOM,
         .checks = {
             CHECK(RC_CCW_EMPTY_HONEYCOMB_NABNUTS,          CAN_EXTEND_JUMP_DISTANCE && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
         },
@@ -318,12 +319,12 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLICK_CLOCK_WOOD_WINTER_UPPER_TREE, true),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_WINTER_TOP_ROOM] = RandoRegion{ .regionName = "Winter - Top Room of the Tree", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_WINTER_TOP_ROOM] = RandoRegion{ .regionName = "Winter - Top Room of the Tree", .mapId = MAP_68_CCW_WINTER_WHIPCRACK_ROOM,
         .connections = {
             CONNECTION(RR_CLICK_CLOCK_WOOD_WINTER_UPPER_TREE, true),
         },
     };
-    Regions[RR_CLICK_CLOCK_WOOD_WINTER_UPPER_TREE] = RandoRegion{ .regionName = "Winter - Upper Portion of the Tree", .levelId = LEVEL_8_CLICK_CLOCK_WOOD,
+    Regions[RR_CLICK_CLOCK_WOOD_WINTER_UPPER_TREE] = RandoRegion{ .regionName = "Winter - Upper Portion of the Tree", .mapId = MAP_46_CCW_WINTER,
         .checks = {
             CHECK(RC_CCW_JIGGY_EYRIE,                                                       true),
             CHECK(RC_CCW_MUMBO_TOKEN_WINTER_WALKWAY_FRONT_OF_NABNUTS_HOUSE,                 true),
