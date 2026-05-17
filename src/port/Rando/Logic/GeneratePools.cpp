@@ -136,6 +136,10 @@ void GeneratePoolFromSaveData(SaveData* saveData) {
     for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
         RandoSaveCheck randoSaveCheck = saveData->shipSaveData.randoSaveData.randoSaveCheck[i];
 
+        if (randoSaveCheck.isShuffled == false) {
+            continue;
+        }
+
         Rando::StaticData::RandoShuffledPool shuffledObject = {
             .name = Rando::StaticData::Checks[(RandoCheckId)i].name,
             .randoCheckId = (RandoCheckId)i,
