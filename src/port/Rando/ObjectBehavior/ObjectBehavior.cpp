@@ -6,8 +6,6 @@
 #include "port/enhancements/events/hooks/Events.h"
 #include "port/Rando/CustomObject/CustomObject.h"
 
-#include "spdlog/spdlog.h"
-
 #define WIDGET_TEXT_COLOR(id) UIWidgets::ColorValues.at(id)
 
 extern "C" {
@@ -59,12 +57,12 @@ bool nextActorSaveState = false;
 
 void LogOutSpawns(int32_t actorId, int16_t posX, int16_t posY, int16_t posZ) {
     std::string locationStr = std::to_string(posX) + ", " + std::to_string(posY) + ", " + std::to_string(posZ);
-    SPDLOG_INFO("Actor ID: {} | Position: {}", actorId, locationStr);
+    BK_LOG_INFO("Actor ID: %i | Position: %s", actorId, locationStr);
 }
 
 void LogOutCollision(int32_t actorId, int16_t posX, int16_t posY, int16_t posZ) {
     std::string locationStr = std::to_string(posX) + ", " + std::to_string(posY) + ", " + std::to_string(posZ);
-    SPDLOG_INFO("Collect ID: {} | Position: {}", actorId, locationStr);
+    BK_LOG_INFO("Collect ID: %i | Position: %s", actorId, locationStr);
 }
 
 bool IsActorWhitelisted(int32_t actorId) {
