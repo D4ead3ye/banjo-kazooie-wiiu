@@ -12,6 +12,20 @@ extern "C" {
 #include "variables.h"
 }
 
+const char* logicModes[2] = {
+    "Glitchless",
+    "No Logic",
+};
+
+std::map<int32_t, const char*> logicModeMap = {
+    { RO_LOGIC_GLITCHLESS, "Glitchless" },
+    { RO_LOGIC_NO_LOGIC, "No Logic" },
+};
+std::map<const char*, int32_t> logicModeMapa = {
+    { "Glitchless", RO_LOGIC_GLITCHLESS },
+    { "No Logic", RO_LOGIC_NO_LOGIC },
+};
+
 namespace LighthouseGui {
 
 extern std::shared_ptr<LighthouseMenu> mLighthouseMenu;
@@ -32,6 +46,28 @@ void LighthouseMenu::AddMenuRando() {
     AddWidget(path, "Enable Rando", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_RANDOMIZER_SETTING("Enable"))
         .Options(CheckboxOptions().Tooltip("Enables Randomizer on the next new save file."));
+    AddWidget(path, "Logic Mode", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
+        int32_t currentIndex = CVarGetInteger(Rando::StaticData::Options[RO_LOGIC].cvar, 0);
+        const char* widgetLabel = logicModes[currentIndex];
+
+        ImGui::SetNextItemWidth(ImGui::GetContentRegionMax().x * 0.5f);
+        UIWidgets::PushStyleCombobox(WIDGET_COLOR);
+        if (ImGui::BeginCombo("##randoLogicMode", widgetLabel)) {
+            for (int i = 0; i < IM_ARRAYSIZE(logicModes); i++) {
+                const bool isSelected = (currentIndex == i);
+
+                if (ImGui::Selectable(logicModes[i], isSelected)) {
+                    CVarSetInteger(Rando::StaticData::Options[RO_LOGIC].cvar, i);
+                }
+
+                if (isSelected) {
+                    ImGui::SetItemDefaultFocus();
+                }
+            }
+            ImGui::EndCombo();
+        }
+        UIWidgets::PopStyleCombobox();
+        });
     
     // Rando - Shuffle Options
     AddSidebarEntry("Rando", "Shuffle Options", 1);
