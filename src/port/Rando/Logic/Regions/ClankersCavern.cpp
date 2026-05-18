@@ -5,16 +5,17 @@ using namespace Rando::Logic;
 
 // clang-format off
 static RegisterShipInitFunc initFunc([]() {
-    Regions[RR_CLANKERS_CAVERN_ENTRANCE] = RandoRegion{ .regionName = "Clanker's Cavern Entrance", .levelId = LEVEL_3_CLANKERS_CAVERN,
+    Regions[RR_CLANKERS_CAVERN_ENTRANCE] = RandoRegion{ .regionName = "Clanker's Cavern Entrance", .mapId = MAP_B_CC_CLANKERS_CAVERN,
         .checks = {
-            CHECK(RC_CC_JIGGY_JINJO,                                true),
+            CHECK(RC_CC_JIGGY_JINJO, CAN_COLLECT_JINJOS(LEVEL_3_CLANKERS_CAVERN)),
         },
         .connections = {
-            CONNECTION(RR_CLANKERS_CAVERN_ENTRANCE_UPPER, CAN_USE_ABILITY(ABILITY_5_CLIMB) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
-            CONNECTION(RR_CLANKERS_CAVERN_ENTRANCE_UNDERWATER, CAN_USE_ABILITY(ABILITY_F_DIVE)),
+            CONNECTION(RR_CLANKERS_CAVERN_ENTRANCE_UPPER,                   CAN_USE_ABILITY(ABILITY_5_CLIMB) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
+            CONNECTION(RR_CLANKERS_CAVERN_ENTRANCE_UNDERWATER,              CAN_USE_ABILITY(ABILITY_F_DIVE)),
+            CONNECTION(RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_CLANKERS_CAVERN,    true),
         },
     };
-    Regions[RR_CLANKERS_CAVERN_ENTRANCE_UPPER] = RandoRegion{ .regionName = "Upper Entrance", .levelId = LEVEL_3_CLANKERS_CAVERN,
+    Regions[RR_CLANKERS_CAVERN_ENTRANCE_UPPER] = RandoRegion{ .regionName = "Upper Entrance", .mapId = MAP_B_CC_CLANKERS_CAVERN,
         .checks = {
             CHECK(RC_CC_JINJO_YELLOW,                               CAN_EXTEND_JUMP_DISTANCE),
             CHECK(RC_CC_MUMBO_TOKEN_ABOVE_LEVEL_ENTRANCE,           CAN_EXTEND_JUMP_DISTANCE),
@@ -32,7 +33,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLANKERS_CAVERN_ENTRANCE_UNDERWATER, CAN_USE_ABILITY(ABILITY_F_DIVE)),
         },
     };
-    Regions[RR_CLANKERS_CAVERN_ENTRANCE_UNDERWATER] = RandoRegion{ .regionName = "Entrance Underwater", .levelId = LEVEL_3_CLANKERS_CAVERN,
+    Regions[RR_CLANKERS_CAVERN_ENTRANCE_UNDERWATER] = RandoRegion{ .regionName = "Entrance Underwater", .mapId = MAP_B_CC_CLANKERS_CAVERN,
         .checks = {
             CHECK(RC_CC_NOTE_ENTRANCE_TUNNEL_1,                     true),
             CHECK(RC_CC_NOTE_ENTRANCE_TUNNEL_2,                     true),
@@ -46,7 +47,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLANKERS_CAVERN_NEAR_CLANKER, true),
         },
     };
-        Regions[RR_CLANKERS_CAVERN_INTERIOR_CLANKER] = RandoRegion{ .regionName = "Inside Clanker", .levelId = LEVEL_3_CLANKERS_CAVERN,
+        Regions[RR_CLANKERS_CAVERN_INTERIOR_CLANKER] = RandoRegion{ .regionName = "Inside Clanker", .mapId = MAP_22_CC_INSIDE_CLANKER,
         .checks = {
             CHECK(RC_CC_JIGGY_RINGS,                                CAN_EXTEND_JUMP_DISTANCE && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
             CHECK(RC_CC_JINJO_PINK,                                 true),
@@ -74,7 +75,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLANKERS_CAVERN_INTERIOR_CLANKER_FAST_SAWBLADE, CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
         },
     };
-    Regions[RR_CLANKERS_CAVERN_INTERIOR_CLANKER_FAST_SAWBLADE] = RandoRegion{ .regionName = "Fast Sawblade Room", .levelId = LEVEL_3_CLANKERS_CAVERN,
+    Regions[RR_CLANKERS_CAVERN_INTERIOR_CLANKER_FAST_SAWBLADE] = RandoRegion{ .regionName = "Fast Sawblade Room", .mapId = MAP_23_CC_GOLDFEATHER_ROOM,
         .checks = {
             CHECK(RC_CC_JIGGY_FAST_SAWBLADES,                       CAN_USE_ABILITY(ABILITY_12_WONDERWING)),
             CHECK(RC_CC_MOLEHILL_WONDERWING,                        true),
@@ -89,7 +90,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLANKERS_CAVERN_INTERIOR_CLANKER, true),
         },
     };
-        Regions[RR_CLANKERS_CAVERN_INTERIOR_CLANKER_SLOW_SAWBLADE] = RandoRegion{ .regionName = "Slow Sawblade Room", .levelId = LEVEL_3_CLANKERS_CAVERN,
+        Regions[RR_CLANKERS_CAVERN_INTERIOR_CLANKER_SLOW_SAWBLADE] = RandoRegion{ .regionName = "Slow Sawblade Room", .mapId = MAP_21_CC_WITCH_SWITCH_ROOM,
         .checks = {
             CHECK(RC_CC_JIGGY_SLOW_SAWBLADES,                       true),
             CHECK(RC_CC_NOTE_SLOW_SAWBLADES_1,                      true),
@@ -103,7 +104,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLANKERS_CAVERN_INTERIOR_CLANKER, true),
         },
     };
-    Regions[RR_CLANKERS_CAVERN_NEAR_CLANKER] = RandoRegion{ .regionName = "Near Clanker", .levelId = LEVEL_3_CLANKERS_CAVERN,
+    Regions[RR_CLANKERS_CAVERN_NEAR_CLANKER] = RandoRegion{ .regionName = "Near Clanker", .mapId = MAP_B_CC_CLANKERS_CAVERN,
         .checks = {
             CHECK(RC_CC_EMPTY_HONEYCOMB_UNDERWATER,                 true),
             CHECK(RC_CC_JIGGY_BOLT,                                 CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
@@ -162,7 +163,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLANKERS_CAVERN_INTERIOR_CLANKER_SLOW_SAWBLADE, true),
         },
     };
-        Regions[RR_CLANKERS_CAVERN_NEAR_CLANKER_UPPER] = RandoRegion{ .regionName = "Upper Area Near Clanker", .levelId = LEVEL_3_CLANKERS_CAVERN,
+        Regions[RR_CLANKERS_CAVERN_NEAR_CLANKER_UPPER] = RandoRegion{ .regionName = "Upper Area Near Clanker", .mapId = MAP_B_CC_CLANKERS_CAVERN,
         .checks = {
             CHECK(RC_CC_EMPTY_HONEYCOMB_ABOVEWATER,                 CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
             CHECK(RC_CC_JINJO_ORANGE,                               CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
@@ -181,7 +182,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_CLANKERS_CAVERN_NEAR_CLANKER, true),
         },
     };
-    Regions[RR_CLANKERS_CAVERN_UNDERWATER_LOCK] = RandoRegion{ .regionName = "Near the Underwater Lock", .levelId = LEVEL_3_CLANKERS_CAVERN,
+    Regions[RR_CLANKERS_CAVERN_UNDERWATER_LOCK] = RandoRegion{ .regionName = "Near the Underwater Lock", .mapId = MAP_B_CC_CLANKERS_CAVERN,
         .checks = {
             CHECK(RC_CC_JINJO_GREEN,                                true),
             CHECK(RC_CC_NOTE_UNDERWATER_LOCK_1,                     true),

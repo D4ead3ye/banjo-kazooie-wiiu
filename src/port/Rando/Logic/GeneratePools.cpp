@@ -36,7 +36,7 @@ uint32_t GetRandoSeed(const std::string& input) {
     return rd();
 }
 
-void ShuffleRandoItems(const std::string& input, std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& pool) {
+void Rando::Logic::ShuffleRandoItems(const std::string& input, std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& pool) {
     uint32_t seed = GetRandoSeed(input);
 
     std::mt19937 g(seed);
@@ -95,7 +95,13 @@ void GenerateShufflePool() {
         itemPool.push_back({ (actor_e)randoStaticCheck.actorId, randoStaticCheck.collectionId, randoCheckId });
     }
 
-    ShuffleRandoItems("", itemPool);
+    // if (RANDO_SAVE_OPTIONS[RO_LOGIC].optionValue == RO_LOGIC_GLITCHLESS) {
+    //     Rando::Logic::GenerateGlitchlessLogicPool(checkPool, itemPool, abilityCheckPool, abilityItemPool);
+    // } else if (RANDO_SAVE_OPTIONS[RO_LOGIC].optionValue == RO_LOGIC_NO_LOGIC) {
+    //     Rando::Logic::GenerateNoLogicPool(itemPool, abilityItemPool);
+    // }
+
+    Rando::Logic::GenerateNoLogicPool(itemPool, abilityItemPool);
 
     for (int i = 0; i < checkPool.size(); i++) {
         Rando::StaticData::RandoShuffledPool randoShuffleEntry = {
@@ -113,8 +119,6 @@ void GenerateShufflePool() {
     }
 
     if (!abilityCheckPool.empty()) {
-        ShuffleRandoItems("", abilityItemPool);
-
         for (int a = 0; a < abilityCheckPool.size(); a++) {
             Rando::StaticData::RandoShuffledPool randoShuffleEntry = {
                 .name = Rando::StaticData::Checks[abilityCheckPool[a]].name,
@@ -135,6 +139,10 @@ void GenerateShufflePool() {
 void GeneratePoolFromSaveData(SaveData* saveData) {
     for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
         RandoSaveCheck randoSaveCheck = saveData->shipSaveData.randoSaveData.randoSaveCheck[i];
+
+        if (randoSaveCheck.isShuffled == false) {
+            continue;
+        }
 
         Rando::StaticData::RandoShuffledPool shuffledObject = {
             .name = Rando::StaticData::Checks[(RandoCheckId)i].name,

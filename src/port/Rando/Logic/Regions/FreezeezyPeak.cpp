@@ -5,29 +5,31 @@ using namespace Rando::Logic;
 
 // clang-format off
 static RegisterShipInitFunc initFunc([]() {
-    Regions[RR_FREEZEEZY_PEAK_ENTRANCE] = RandoRegion{ .regionName = "Freezeezy Peak Entrance", .levelId = LEVEL_5_FREEZEEZY_PEAK,
+    Regions[RR_FREEZEEZY_PEAK_ENTRANCE] = RandoRegion{ .regionName = "Freezeezy Peak Entrance", .mapId = MAP_27_FP_FREEZEEZY_PEAK,
         .checks = {
-            CHECK(RC_FP_JIGGY_SLED_TO_BOGGY,				        CAN_USE_ABILITY(ABILITY_10_TALON_TROT)),
-            CHECK(RC_FP_NOTE_FIRST_SLOPE_1,					        true),
-            CHECK(RC_FP_NOTE_FIRST_SLOPE_2,					        true),
-            CHECK(RC_FP_NOTE_FIRST_SLOPE_3,					        true),
-            CHECK(RC_FP_NOTE_FIRST_SLOPE_4,					        true),
-            CHECK(RC_FP_NOTE_FIRST_SLOPE_5,					        true),
-            CHECK(RC_FP_NOTE_NEAR_RACE_START_1,				        true),
-            CHECK(RC_FP_NOTE_NEAR_RACE_START_2,				        true),
-            CHECK(RC_FP_NOTE_NEAR_RACE_START_3,				        true),
-            CHECK(RC_FP_NOTE_NEAR_RACE_START_4,				        true),
-            CHECK(RC_FP_NOTE_SECOND_SLOPE_1,				        true),
-            CHECK(RC_FP_NOTE_SECOND_SLOPE_2,				        true),
-            CHECK(RC_FP_NOTE_SECOND_SLOPE_3,				        true),
-            CHECK(RC_FP_NOTE_SECOND_SLOPE_4,				        true),
+            CHECK(RC_FP_JIGGY_JINJO,		    CAN_COLLECT_JINJOS(LEVEL_5_FREEZEEZY_PEAK)),
+            CHECK(RC_FP_JIGGY_SLED_TO_BOGGY,    CAN_USE_ABILITY(ABILITY_10_TALON_TROT)),
+            CHECK(RC_FP_NOTE_FIRST_SLOPE_1,	    true),
+            CHECK(RC_FP_NOTE_FIRST_SLOPE_2,	    true),
+            CHECK(RC_FP_NOTE_FIRST_SLOPE_3,	    true),
+            CHECK(RC_FP_NOTE_FIRST_SLOPE_4,	    true),
+            CHECK(RC_FP_NOTE_FIRST_SLOPE_5,	    true),
+            CHECK(RC_FP_NOTE_NEAR_RACE_START_1, true),
+            CHECK(RC_FP_NOTE_NEAR_RACE_START_2, true),
+            CHECK(RC_FP_NOTE_NEAR_RACE_START_3, true),
+            CHECK(RC_FP_NOTE_NEAR_RACE_START_4, true),
+            CHECK(RC_FP_NOTE_SECOND_SLOPE_1,    true),
+            CHECK(RC_FP_NOTE_SECOND_SLOPE_2,    true),
+            CHECK(RC_FP_NOTE_SECOND_SLOPE_3,    true),
+            CHECK(RC_FP_NOTE_SECOND_SLOPE_4,    true),
         },
         .connections = {
-            CONNECTION(RR_FREEZEEZY_PEAK_INTERIOR_BOGGYS_IGLOO, true),
-            CONNECTION(RR_FREEZEEZY_PEAK_MAIN_LOWER, true),
+            CONNECTION(RR_FREEZEEZY_PEAK_INTERIOR_BOGGYS_IGLOO,         true),
+            CONNECTION(RR_FREEZEEZY_PEAK_MAIN_LOWER,                    true),
+            CONNECTION(RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_FREEZEEZY_PEAK, true),
         },
     };
-    Regions[RR_FREEZEEZY_PEAK_INTERIOR_BOGGYS_IGLOO] = RandoRegion{ .regionName = "Boggy's Igloo", .levelId = LEVEL_5_FREEZEEZY_PEAK,
+    Regions[RR_FREEZEEZY_PEAK_INTERIOR_BOGGYS_IGLOO] = RandoRegion{ .regionName = "Boggy's Igloo", .mapId = MAP_41_FP_BOGGYS_IGLOO,
         .checks = {
             CHECK(RC_FP_MUMBO_TOKEN_INSIDE_BOGGYS_IGLOO,            true),
             CHECK(RC_FP_JIGGY_IGLOO,						        CAN_USE_ABILITY(ABILITY_10_TALON_TROT) && CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP) && CAN_USE_ABILITY(ABILITY_5_CLIMB)),
@@ -36,7 +38,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_FREEZEEZY_PEAK_ENTRANCE, true),
         },
     };
-    Regions[RR_FREEZEEZY_PEAK_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Inside Mumbo's Skull", .levelId = LEVEL_5_FREEZEEZY_PEAK,
+    Regions[RR_FREEZEEZY_PEAK_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Inside Mumbo's Skull", .mapId = MAP_48_FP_MUMBOS_SKULL,
         .checks = {
             CHECK(RC_FP_JINJO_YELLOW,							    true),
             CHECK(RC_FP_NOTE_MUMBOS_SKULL_INTERIOR_1,			    true),
@@ -50,7 +52,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_FREEZEEZY_PEAK_MAIN_LOWER, CAN_USE_ABILITY(ABILITY_E_WADING_BOOTS) || CAN_USE_TRANSFORMATION(TRANSFORM_4_WALRUS)),
         },
     };
-    Regions[RR_FREEZEEZY_PEAK_INTERIOR_WOZZAS_CAVE] = RandoRegion{ .regionName = "Inside Wozza's Cave", .levelId = LEVEL_5_FREEZEEZY_PEAK,
+    Regions[RR_FREEZEEZY_PEAK_INTERIOR_WOZZAS_CAVE] = RandoRegion{ .regionName = "Inside Wozza's Cave", .mapId = MAP_7F_FP_WOZZAS_CAVE,
         .checks = {
             CHECK(RC_FP_JINJO_ORANGE,							    CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
             CHECK(RC_FP_EMPTY_HONEYCOMB_WOZZAS_CAVE,		        true),
@@ -59,10 +61,9 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_FREEZEEZY_PEAK_MAIN_LOWER, true),
         },
     };
-    Regions[RR_FREEZEEZY_PEAK_MAIN_LOWER] = RandoRegion{ .regionName = "Lower Area near the Snowman", .levelId = LEVEL_5_FREEZEEZY_PEAK,
+    Regions[RR_FREEZEEZY_PEAK_MAIN_LOWER] = RandoRegion{ .regionName = "Lower Area near the Snowman", .mapId = MAP_27_FP_FREEZEEZY_PEAK,
         .checks = {
             CHECK(RC_FP_EMPTY_HONEYCOMB_UNDER_SIR_SLUSH,	        CAN_USE_ABILITY(ABILITY_1_BEAK_BOMB) && CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
-            CHECK(RC_FP_JIGGY_JINJO,						        true),
             CHECK(RC_FP_JIGGY_BOGGY_RACE_1,					        CAN_USE_ABILITY(ABILITY_10_TALON_TROT) && CAN_USE_TRANSFORMATION(TRANSFORM_4_WALRUS)),
             CHECK(RC_FP_JIGGY_BOGGY_RACE_2,					        CAN_USE_ABILITY(ABILITY_10_TALON_TROT) && CAN_USE_TRANSFORMATION(TRANSFORM_4_WALRUS) && CAN_USE_ABILITY(ABILITY_11_TURBO_TALON)),
             CHECK(RC_FP_JIGGY_SNOWMANS_BUTTONS,				        CAN_USE_ABILITY(ABILITY_1_BEAK_BOMB) && CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
@@ -129,7 +130,7 @@ static RegisterShipInitFunc initFunc([]() {
             EVENT(RA_WITCH_SWITCH_FREEZEEZY_PEAK, CAN_USE_ABILITY(ABILITY_1_BEAK_BOMB) && CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) && CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
         }
     };
-    Regions[RR_FREEZEEZY_PEAK_MAIN_UPPER] = RandoRegion{ .regionName = "Upper Area near the Snowman", .levelId = LEVEL_5_FREEZEEZY_PEAK,
+    Regions[RR_FREEZEEZY_PEAK_MAIN_UPPER] = RandoRegion{ .regionName = "Upper Area near the Snowman", .mapId = MAP_27_FP_FREEZEEZY_PEAK,
         .checks = {
             CHECK(RC_FP_JIGGY_BEAT_ALL_SIR_SLUSH,			        CAN_USE_ABILITY(ABILITY_1_BEAK_BOMB) && CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
             CHECK(RC_FP_JIGGY_SNOWMANS_PIPE,				        CAN_USE_ABILITY(ABILITY_10_TALON_TROT) && CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
@@ -171,7 +172,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_FREEZEEZY_PEAK_MAIN_LOWER, true),
         },
     };
-    Regions[RR_FREEZEEZY_PEAK_POTTED_TREE] = RandoRegion{ .regionName = "Inside the Potted Tree", .levelId = LEVEL_5_FREEZEEZY_PEAK,
+    Regions[RR_FREEZEEZY_PEAK_POTTED_TREE] = RandoRegion{ .regionName = "Inside the Potted Tree", .mapId = MAP_53_FP_CHRISTMAS_TREE,
         .checks = {
             CHECK(RC_FP_JIGGY_INSIDE_THE_TREE,				        CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) && CAN_USE_ABILITY(ABILITY_6_EGGS) && CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
             CHECK(RC_FP_NOTE_POTTED_TREE_INTERIOR_1,			    true),

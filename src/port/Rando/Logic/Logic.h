@@ -4,8 +4,11 @@
 #include "port/Rando/Rando.h"
 #include "port/ShipUtils.h"
 
+#include <unordered_set>
+
 extern "C" {
 s32 item_getCount(enum item_e item);
+s32 itemscore_noteScores_getTotal(void);
 
 int ability_isUnlocked(enum ability_e uid);
 
@@ -14,21 +17,40 @@ s32 __transformation_getCost(enum transformation_e trans_id);
 s32 _puzzleCost(s32 index);
 
 u32 player_getTransformation(void);
+
+enum level_e map_getLevel(enum map_e map);
+enum map_e gsworld_getMap(void);
 }
 
 extern std::map<ability_e, std::pair<const char*, const char*>> abilityLoadoutMap;
 extern std::map<item_e, std::pair<const char*, const char*>> itemLoadoutMap;
+
+extern Rando::StaticData::RandoLogicData reachableRegions[RR_MAX];
+extern Rando::StaticData::RandoLogicData reachableEvents[RA_MAX];
+extern Rando::StaticData::RandoLogicData reachableChecks[RC_MAX];
 
 namespace Rando {
 
 namespace Logic {
 extern std::vector<Rando::StaticData::RandoShuffledPool> shuffledPool;
 
+void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
+                                 std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& itemPool,
+                                 std::vector<RandoCheckId>& abilityCheckPool,
+                                 std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& abilityItemPool);
+
+void GenerateNoLogicPool(std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& itemPool,
+                         std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& abilityItemPool);
+
+void ShuffleRandoItems(const std::string& input, std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& pool);
+
 void GenerateShufflePool();
 void GeneratePoolFromSaveData(SaveData* saveData);
 void InitializeSaveData(SaveData* saveData);
 void GenerateSaveData(SaveData* saveData);
 void GrantStartingLoadout();
+
+void RefreshReachableRegions();
 
 inline bool IsCheckShuffled(RandoCheckId randoCheckId) {
     bool isShuffled = false;
@@ -109,7 +131,7 @@ inline std::string LogicString(std::string condition) {
 
 struct RandoRegion {
     const char* regionName;
-    int16_t levelId;
+    int16_t mapId;
     std::map<RandoCheckId, std::pair<std::function<bool()>, std::string>> checks;
     std::map<RandoRegionId, std::pair<std::function<bool()>, std::string>> connections;
     std::vector<std::pair<RandoAccessId, std::function<bool()>>> events;
@@ -137,23 +159,34 @@ extern std::map<RandoRegionId, RandoRegion> Regions;
     }
 
 // Check Logic
+inline bool CanAccessRegion(RandoRegionId randoRegionId) {
+    return reachableRegions[randoRegionId].canAccess;
+}
+
 inline bool CanAccessEvent(RandoAccessId randoAccessId) {
-    bool canAccess = false;
-    for (auto& [regionId, regionData] : Rando::Logic::Regions) {
-        if (canAccess) {
-            break;
+    return reachableEvents[randoAccessId].canAccess;
+}
+
+inline bool CanAccessCheck(RandoCheckId randoCheckId) {
+    return reachableChecks[randoCheckId].canAccess;
+}
+
+inline bool CanCollectWorldJinjos(level_e levelId) {
+    int32_t accessibleJinjos = 0;
+
+    for (auto& entry : Rando::Logic::shuffledPool) {
+        if (Rando::StaticData::Checks[entry.shuffleCheckId].worldId != levelId) {
+            continue;
         }
-        for (auto& [accessId, logic] : regionData.events) {
-            if (accessId == randoAccessId) {
-                if (logic) {
-                    canAccess = true;
-                    break;
-                }
+
+        if (entry.randoItemId >= RI_JINJO_BLUE && entry.randoItemId <= RI_JINJO_YELLOW) {
+            if (CanAccessCheck(entry.shuffleCheckId)) {
+                accessibleJinjos++;
             }
         }
     }
 
-    return canAccess;
+    return accessibleJinjos == 5 ? true : false;
 }
 
 inline bool CanUseTransformation(transformation_e transId) {
@@ -313,6 +346,7 @@ inline bool CanKillEnemy(actor_e enemyType) {
      CAN_USE_ABILITY(ABILITY_10_TALON_TROT))
 
 #define CAN_BREAK_OBJECT(objectType) CanBreakObject(objectType)
+#define CAN_COLLECT_JINJOS(levelId) CanCollectWorldJinjos(levelId)
 #define CAN_KILL_ENEMY(enemyType) CanKillEnemy(enemyType)
 #define CAN_UNLOCK_NOTE_DOOR(noteCount) item_getCount(ITEM_C_NOTE) >= noteCount&& CAN_ACCESS(RA_NOTE_DOOR_##noteCount)
 #define CAN_UNLOCK_WORLD(levelId) CanOpenWorld(levelId)

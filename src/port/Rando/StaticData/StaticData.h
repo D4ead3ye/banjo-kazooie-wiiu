@@ -12,6 +12,10 @@ namespace Rando {
 
 namespace StaticData {
 
+struct RandoLogicData {
+    bool canAccess;
+};
+
 struct RandoShuffledPool {
     const char* name;
     RandoCheckId randoCheckId;
@@ -40,7 +44,6 @@ RandoCheckId GetCheckByJiggyId(int32_t jiggyId);
 RandoCheckId GetJinjoJiggyCheckByLevelId(int16_t levelId);
 
 extern std::map<RandoCheckId, RandoStaticCheck> Checks;
-// extern RandoStaticCheck GetShuffledRandoStaticCheck(s16 x, s16 y, s16 z);
 
 struct RandoStaticItem {
     RandoItemId randoItemId;
@@ -54,12 +57,6 @@ struct RandoStaticItem {
 RandoItemId GetRandoItemByActorId(actor_e actorId);
 
 extern std::map<RandoItemId, RandoStaticItem> Items;
-
-// int16_t GetModelByRandoItem(RandoItemId randoItem);
-// const BehaviorScript *GetBehaviorByModel(int16_t modelId);
-// int16_t GetModelByBehavior(const BehaviorScript* behavior);
-// RandoItemId GetShuffledRandoItem(RandoCheckId randoCheckId);
-// RandoAct GetShuffledRandoAct(RandoCheckId randoCheckId);
 
 // struct RandoStaticEntrance {
 //     RandoEntranceId randoEntranceId;
@@ -82,7 +79,6 @@ struct RandoStaticOption {
 };
 
 extern std::map<RandoOptionId, RandoStaticOption> Options;
-// extern std::unordered_map<int32_t, const char*> logicOptions;
 
 RandoOptionId GetOptionIdFromName(const char* name);
 

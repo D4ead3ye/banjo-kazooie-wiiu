@@ -5,7 +5,7 @@ using namespace Rando::Logic;
 
 // clang-format off
 static RegisterShipInitFunc initFunc([]() {
-    Regions[RR_MAD_MONSTER_MANSION_CHURCH_CLOCK_TOWER] = RandoRegion{ .regionName = "Church Clock Tower", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+    Regions[RR_MAD_MONSTER_MANSION_CHURCH_CLOCK_TOWER] = RandoRegion{ .regionName = "Church Clock Tower", .mapId = MAP_1B_MMM_MAD_MONSTER_MANSION,
         .checks = {
             CHECK(RC_MMM_JIGGY_CLOCKTOWER_TOP,                        	CAN_USE_ABILITY(ABILITY_5_CLIMB) && CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
             CHECK(RC_MMM_NOTE_CLOCKTOWER_ROOF_1,                      	true),
@@ -17,7 +17,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MAD_MONSTER_MANSION_CHURCH_EXTERIOR, true),
         },
     };
-    Regions[RR_MAD_MONSTER_MANSION_CHURCH_EXTERIOR] = RandoRegion{ .regionName = "Church Exterior", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+    Regions[RR_MAD_MONSTER_MANSION_CHURCH_EXTERIOR] = RandoRegion{ .regionName = "Church Exterior", .mapId = MAP_1B_MMM_MAD_MONSTER_MANSION,
         .checks = {
             CHECK(RC_MMM_JIGGY_CEMETARY_POTS,                         	CAN_USE_ABILITY(ABILITY_6_EGGS)),
             CHECK(RC_MMM_MUMBO_TOKEN_BEHIND_CHURCH,                   	true),
@@ -40,7 +40,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MAD_MONSTER_MANSION_CHURCH_INTERIOR_WINDOW, true),
         },
     };
-    Regions[RR_MAD_MONSTER_MANSION_CHURCH_INTERIOR] = RandoRegion{ .regionName = "Church Interior", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+    Regions[RR_MAD_MONSTER_MANSION_CHURCH_INTERIOR] = RandoRegion{ .regionName = "Church Interior", .mapId = MAP_1C_MMM_CHURCH,
         .checks = {
             CHECK(RC_MMM_MUMBO_TOKEN_TOP_OF_STOOL_INSIDE_CHURCH,      	CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
             CHECK(RC_MMM_NOTE_ORGAN_PEDALS_1,                         	true),
@@ -55,7 +55,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MAD_MONSTER_MANSION_CHURCH_INTERIOR_UPPER_ORGAN, CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP) && CAN_USE_ABILITY(ABILITY_10_TALON_TROT) && CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP))
         },
     };
-        Regions[RR_MAD_MONSTER_MANSION_CHURCH_INTERIOR_UPPER_ORGAN] = RandoRegion{ .regionName = "Church Organ", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+        Regions[RR_MAD_MONSTER_MANSION_CHURCH_INTERIOR_UPPER_ORGAN] = RandoRegion{ .regionName = "Church Organ", .mapId = MAP_1C_MMM_CHURCH,
         .checks = {
             CHECK(RC_MMM_JIGGY_MOTZAND,                               	CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
             CHECK(RC_MMM_NOTE_ORGAN_PIPES_1,                          	true),
@@ -68,7 +68,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MAD_MONSTER_MANSION_CHURCH_INTERIOR_RAFTERS, CAN_USE_ABILITY(ABILITY_9_FLIGHT)),
         },
     };
-    Regions[RR_MAD_MONSTER_MANSION_CHURCH_INTERIOR_RAFTERS] = RandoRegion{ .regionName = "Church Rafters", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+    Regions[RR_MAD_MONSTER_MANSION_CHURCH_INTERIOR_RAFTERS] = RandoRegion{ .regionName = "Church Rafters", .mapId = MAP_1C_MMM_CHURCH,
         .checks = {
             CHECK(RC_MMM_EMPTY_HONEYCOMB_CHURCH_RAFTERS,              	true),
             CHECK(RC_MMM_MUMBO_TOKEN_TOP_OF_RAFTER_INSIDE_CHURCH,     	true),
@@ -78,16 +78,16 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MAD_MONSTER_MANSION_CHURCH_INTERIOR_UPPER_ORGAN, true),
         },
     };
-    Regions[RR_MAD_MONSTER_MANSION_CHURCH_INTERIOR_WINDOW] = RandoRegion{ .regionName = "Church Banjo Kazooie Window", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+    Regions[RR_MAD_MONSTER_MANSION_CHURCH_INTERIOR_WINDOW] = RandoRegion{ .regionName = "Church Banjo Kazooie Window", .mapId = MAP_2B_MMM_SECRET_CHURCH_ROOM,
         .checks = {
         },
         .connections = {
             CONNECTION(RR_MAD_MONSTER_MANSION_CHURCH_EXTERIOR, true),
         },
     };
-    Regions[RR_MAD_MONSTER_MANSION_ENTRANCE] = RandoRegion{ .regionName = "Mad Monster Mansion", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+    Regions[RR_MAD_MONSTER_MANSION_ENTRANCE] = RandoRegion{ .regionName = "Mad Monster Mansion", .mapId = MAP_1B_MMM_MAD_MONSTER_MANSION,
         .checks = {
-            CHECK(RC_MMM_JIGGY_JINJO_JIGGY,                           	true),
+            CHECK(RC_MMM_JIGGY_JINJO_JIGGY,                           	CAN_COLLECT_JINJOS(LEVEL_A_MAD_MONSTER_MANSION)),
             CHECK(RC_MMM_JINJO_BLUE,                                  	CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
             CHECK(RC_MMM_JINJO_GREEN,                                 	CAN_USE_ABILITY(ABILITY_5_CLIMB) && CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
             CHECK(RC_MMM_JINJO_ORANGE,                                	true),
@@ -132,22 +132,23 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_MMM_NOTE_STAGNANT_FOUNTAIN_4,                    	true),
         },
         .connections = {
-            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_BARREL, CAN_USE_TRANSFORMATION(TRANSFORM_3_PUMPKIN)),
-            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_BATHROOM, CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WINDOWS) && (CAN_USE_ABILITY(ABILITY_5_CLIMB) || CAN_USE_TRANSFORMATION(TRANSFORM_3_PUMPKIN))),
-            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_BEDROOM, CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WINDOWS) && CAN_USE_ABILITY(ABILITY_5_CLIMB) && CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
-            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_CELLAR, CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WOODEN_DOOR)),
-            CONNECTION(RR_MAD_MONSTER_MANSION_CHURCH_EXTERIOR, CAN_BREAK_OBJECT(RA_BREAK_OBJECT_IRON_GATE)),
-            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_DINING_ROOM, CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WOODEN_DOOR) || (CAN_USE_ABILITY(ABILITY_5_CLIMB) && CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP))),
-            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_MUMBOS_SKULL, CAN_BREAK_OBJECT(RA_BREAK_OBJECT_IRON_GATE) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
-            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_TUMBLARS_SHED, CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WOODEN_DOOR)),
-            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_WELL, true),
-            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_WINDOW_BOTTOM_NORTH, CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WINDOWS)),
-            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_WINDOW_BOTTOM_SOUTH, CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WINDOWS)),
-            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_WINDOW_MIDDLE_WEST, CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WINDOWS) && (CAN_USE_ABILITY(ABILITY_5_CLIMB) || CAN_USE_TRANSFORMATION(TRANSFORM_3_PUMPKIN))),
-            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_WINDOW_TOP_ATTIC, CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WINDOWS) && CAN_USE_ABILITY(ABILITY_5_CLIMB) && CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
+            CONNECTION(RR_GRUNTILDAS_LAIR_NEAR_ENTRANCE_MAD_MONSTER_MANSION,    true),
+            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_BARREL,                  CAN_USE_TRANSFORMATION(TRANSFORM_3_PUMPKIN)),
+            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_BATHROOM,                CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WINDOWS) && (CAN_USE_ABILITY(ABILITY_5_CLIMB) || CAN_USE_TRANSFORMATION(TRANSFORM_3_PUMPKIN))),
+            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_BEDROOM,                 CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WINDOWS) && CAN_USE_ABILITY(ABILITY_5_CLIMB) && CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
+            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_CELLAR,                  CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WOODEN_DOOR)),
+            CONNECTION(RR_MAD_MONSTER_MANSION_CHURCH_EXTERIOR,                  CAN_BREAK_OBJECT(RA_BREAK_OBJECT_IRON_GATE)),
+            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_DINING_ROOM,             CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WOODEN_DOOR) || (CAN_USE_ABILITY(ABILITY_5_CLIMB) && CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP))),
+            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_MUMBOS_SKULL,            CAN_BREAK_OBJECT(RA_BREAK_OBJECT_IRON_GATE) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
+            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_TUMBLARS_SHED,           CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WOODEN_DOOR)),
+            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_WELL,                    true),
+            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_WINDOW_BOTTOM_NORTH,     CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WINDOWS)),
+            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_WINDOW_BOTTOM_SOUTH,     CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WINDOWS)),
+            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_WINDOW_MIDDLE_WEST,      CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WINDOWS) && (CAN_USE_ABILITY(ABILITY_5_CLIMB) || CAN_USE_TRANSFORMATION(TRANSFORM_3_PUMPKIN))),
+            CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_WINDOW_TOP_ATTIC,        CAN_BREAK_OBJECT(RA_BREAK_OBJECT_WINDOWS) && CAN_USE_ABILITY(ABILITY_5_CLIMB) && CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
         },
     };
-    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_BARREL] = RandoRegion{ .regionName = "Barrel at the House Front", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_BARREL] = RandoRegion{ .regionName = "Barrel at the House Front", .mapId = MAP_2F_MMM_WATERDRAIN_BARREL,
         .checks = {
             CHECK(RC_MMM_JIGGY_BARREL_INTERIOR,                       	true),
             CHECK(RC_MMM_NOTE_BARREL_INTERIOR_1,                      	true),
@@ -160,7 +161,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MAD_MONSTER_MANSION_ENTRANCE, true),
         },
     };
-    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_BATHROOM] = RandoRegion{ .regionName = "Bathroom", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_BATHROOM] = RandoRegion{ .regionName = "Bathroom", .mapId = MAP_2C_MMM_BATHROOM,
         .checks = {
             CHECK(RC_MMM_MUMBO_TOKEN_IN_LOGGOS_ROOM,                  	true),
         },
@@ -169,7 +170,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_INSIDE_LOGGO, CAN_USE_TRANSFORMATION(TRANSFORM_3_PUMPKIN)),
         },
     };
-    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_BEDROOM] = RandoRegion{ .regionName = "Bedroom", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_BEDROOM] = RandoRegion{ .regionName = "Bedroom", .mapId = MAP_2D_MMM_BEDROOM,
         .checks = {
             CHECK(RC_MMM_JINJO_YELLOW,                                	CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
             CHECK(RC_MMM_MUMBO_TOKEN_INSIDE_BEDROOM,                  	true),
@@ -182,7 +183,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MAD_MONSTER_MANSION_ENTRANCE, true),
         },
     };
-    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_CELLAR] = RandoRegion{ .regionName = "Cellar", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_CELLAR] = RandoRegion{ .regionName = "Cellar", .mapId = MAP_1D_MMM_CELLAR,
         .checks = {
             CHECK(RC_MMM_JIGGY_CELLAR,                                	CAN_BREAK_OBJECT(RA_BREAK_OBJECT_CELLAR_CASK)),
             CHECK(RC_MMM_JINJO_PINK,                                  	CAN_BREAK_OBJECT(RA_BREAK_OBJECT_CELLAR_CASK)),
@@ -196,7 +197,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MAD_MONSTER_MANSION_ENTRANCE, true),
         },
     };
-    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_DINING_ROOM] = RandoRegion{ .regionName = "Dining Room", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_DINING_ROOM] = RandoRegion{ .regionName = "Dining Room", .mapId = MAP_26_MMM_NAPPERS_ROOM,
         .checks = {
             CHECK(RC_MMM_JIGGY_MANSION_TABLE,                         	CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
             CHECK(RC_MMM_MUMBO_TOKEN_IN_CHIMNEY_INSIDE_DINING_ROOM,   	CAN_USE_ABILITY(ABILITY_12_WONDERWING)),
@@ -213,7 +214,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MAD_MONSTER_MANSION_ENTRANCE, true),
         },
     };
-        Regions[RR_MAD_MONSTER_MANSION_INTERIOR_INSIDE_LOGGO] = RandoRegion{ .regionName = "Inside Loggo", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+        Regions[RR_MAD_MONSTER_MANSION_INTERIOR_INSIDE_LOGGO] = RandoRegion{ .regionName = "Inside Loggo", .mapId = MAP_8D_MMM_INSIDE_LOGGO,
         .checks = {
             CHECK(RC_MMM_JIGGY_INSIDE_LOGGO,                          	true),
             CHECK(RC_MMM_MUMBO_TOKEN_INSIDE_LOGGO,                    	true),
@@ -222,7 +223,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MAD_MONSTER_MANSION_INTERIOR_BATHROOM, true),
         },
     };
-    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Inside Mumbos Skull", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Inside Mumbos Skull", .mapId = MAP_30_MMM_MUMBOS_SKULL,
         .checks = {
             CHECK(RC_MMM_NOTE_MUMBOS_SKULL_INTERIOR_1,                	true),
             CHECK(RC_MMM_NOTE_MUMBOS_SKULL_INTERIOR_2,                	true),
@@ -231,7 +232,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MAD_MONSTER_MANSION_ENTRANCE, CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP))
         },
     };
-    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_TUMBLARS_SHED] = RandoRegion{ .regionName = "Inside Tumblar's Shed", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_TUMBLARS_SHED] = RandoRegion{ .regionName = "Inside Tumblar's Shed", .mapId = MAP_24_MMM_TUMBLARS_SHED,
         .checks = {
             CHECK(RC_MMM_JIGGY_TUMBLARS_PUZZLE,                       	true),
             CHECK(RC_MMM_NOTE_SHED_INTERIOR_1,                        	true),
@@ -243,7 +244,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MAD_MONSTER_MANSION_ENTRANCE, true),
         },
     };
-    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_WELL] = RandoRegion{ .regionName = "Inside the Well", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_WELL] = RandoRegion{ .regionName = "Inside the Well", .mapId = MAP_25_MMM_WELL,
         .checks = {
             CHECK(RC_MMM_JIGGY_INSIDE_THE_WELLS_BUCKET,               	CAN_USE_ABILITY(ABILITY_F_DIVE) || CAN_USE_TRANSFORMATION(TRANSFORM_3_PUMPKIN)),
             CHECK(RC_MMM_MUMBO_TOKEN_INSIDE_WELL,                     	CAN_USE_ABILITY(ABILITY_F_DIVE) || CAN_USE_TRANSFORMATION(TRANSFORM_3_PUMPKIN)),
@@ -259,21 +260,21 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MAD_MONSTER_MANSION_ENTRANCE, CAN_USE_ABILITY(ABILITY_5_CLIMB) || GET_CURRENT_TRANSFORMATION(TRANSFORM_3_PUMPKIN)),
         },
     };
-    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_WINDOW_BOTTOM_NORTH] = RandoRegion{ .regionName = "Bottom North Window", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_WINDOW_BOTTOM_NORTH] = RandoRegion{ .regionName = "Bottom North Window", .mapId = MAP_2A_MMM_FEATHER_ROOM,
         .checks = {
         },
         .connections = {
             CONNECTION(RR_MAD_MONSTER_MANSION_ENTRANCE, true),
         },
     };
-    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_WINDOW_BOTTOM_SOUTH] = RandoRegion{ .regionName = "Bottom South Window", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_WINDOW_BOTTOM_SOUTH] = RandoRegion{ .regionName = "Bottom South Window", .mapId = MAP_28_MMM_EGG_ROOM,
         .checks = {
         },
         .connections = {
             CONNECTION(RR_MAD_MONSTER_MANSION_ENTRANCE, true),
         },
     };
-    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_WINDOW_MIDDLE_WEST] = RandoRegion{ .regionName = "Middle West Window", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_WINDOW_MIDDLE_WEST] = RandoRegion{ .regionName = "Middle West Window", .mapId = MAP_2E_MMM_HONEYCOMB_ROOM,
         .checks = {
             CHECK(RC_MMM_EMPTY_HONEYCOMB_BENEATH_THE_FLOORBOARDS,     	CAN_USE_TRANSFORMATION(TRANSFORM_3_PUMPKIN)),
         },
@@ -281,7 +282,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MAD_MONSTER_MANSION_ENTRANCE, true),
         },
     };
-    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_WINDOW_TOP_ATTIC] = RandoRegion{ .regionName = "Attic", .levelId = LEVEL_A_MAD_MONSTER_MANSION,
+    Regions[RR_MAD_MONSTER_MANSION_INTERIOR_WINDOW_TOP_ATTIC] = RandoRegion{ .regionName = "Attic", .mapId = MAP_29_MMM_NOTE_ROOM,
         .checks = {
             CHECK(RC_MMM_NOTE_FRONT_WINDOW_ATTIC_1,                   	true),
             CHECK(RC_MMM_NOTE_FRONT_WINDOW_ATTIC_2,                   	true),

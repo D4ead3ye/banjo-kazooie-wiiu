@@ -5,7 +5,7 @@ using namespace Rando::Logic;
 
 // clang-format off
 static RegisterShipInitFunc initFunc([]() {
-    Regions[RR_MUMBOS_MOUNTAIN_ENTRANCE] = RandoRegion{ .regionName = "Mumbo's Mountain", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
+    Regions[RR_MUMBOS_MOUNTAIN_ENTRANCE] = RandoRegion{ .regionName = "Mumbo's Mountain", .mapId = MAP_2_MM_MUMBOS_MOUNTAIN,
         .checks = {
             CHECK(RC_MM_EMPTY_HONEYCOMB_HILL, 					true),
             CHECK(RC_MM_EMPTY_HONEYCOMB_JUJU, 					CAN_USE_ABILITY(ABILITY_6_EGGS) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
@@ -13,7 +13,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_MM_JIGGY_CONGA, 							CAN_USE_ABILITY(ABILITY_6_EGGS) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
             CHECK(RC_MM_JIGGY_HILL, 							true),
             CHECK(RC_MM_JIGGY_HUTS, 							CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
-            CHECK(RC_MM_JIGGY_JINJO, 							true),
+            CHECK(RC_MM_JIGGY_JINJO, 							CAN_COLLECT_JINJOS(LEVEL_1_MUMBOS_MOUNTAIN)),
             CHECK(RC_MM_JIGGY_JUJU, 							CAN_USE_ABILITY(ABILITY_6_EGGS)),
             CHECK(RC_MM_JIGGY_MUMBOS_SKULL, 					CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
             CHECK(RC_MM_JIGGY_ORANGE_PADS, 						true),
@@ -122,14 +122,15 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_MM_NOTE_HUT_BUNDLE_5, 						CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
         },
         .connections = {
-            CONNECTION(RR_MUMBOS_MOUNTAIN_INTERIOR_TICKERS_TOWER, true),
-            CONNECTION(RR_MUMBOS_MOUNTAIN_INTERIOR_MUMBOS_SKULL, true),
+            CONNECTION(RR_GRUNTILDAS_LAIR_LOBBY,                    true),
+            CONNECTION(RR_MUMBOS_MOUNTAIN_INTERIOR_TICKERS_TOWER,   true),
+            CONNECTION(RR_MUMBOS_MOUNTAIN_INTERIOR_MUMBOS_SKULL,    true),
         },
         .events = {
             EVENT(RA_WITCH_SWITCH_MUMBOS_MOUNTAIN, CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) && CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
         }
     };
-    Regions[RR_MUMBOS_MOUNTAIN_INTERIOR_TICKERS_TOWER] = RandoRegion{ .regionName = "Inside Tickers Tower", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
+    Regions[RR_MUMBOS_MOUNTAIN_INTERIOR_TICKERS_TOWER] = RandoRegion{ .regionName = "Inside Tickers Tower", .mapId = MAP_C_MM_TICKERS_TOWER,
         .checks = {
             CHECK(RC_MM_MUMBO_TOKEN_INSIDE_TICKERS_TOWER, 		CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP) || CAN_USE_ABILITY(ABILITY_10_TALON_TROT) || CAN_USE_TRANSFORMATION(TRANSFORM_2_TERMITE)),
             CHECK(RC_MM_NOTE_INSIDE_TICKERS_TOWER_1, 			CAN_USE_TRANSFORMATION(TRANSFORM_2_TERMITE)),
@@ -144,7 +145,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MUMBOS_MOUNTAIN_TICKERS_TOWER_TOP, CAN_USE_TRANSFORMATION(TRANSFORM_2_TERMITE)),
         },
     };
-    Regions[RR_MUMBOS_MOUNTAIN_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Inside Mumbo's Skull", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
+    Regions[RR_MUMBOS_MOUNTAIN_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Inside Mumbo's Skull", .mapId = MAP_E_MM_MUMBOS_SKULL,
         .checks = {
             CHECK(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_1, 			true),
             CHECK(RC_MM_NOTE_INSIDE_MUMBOS_SKULL_2, 			true),
@@ -155,7 +156,7 @@ static RegisterShipInitFunc initFunc([]() {
             CONNECTION(RR_MUMBOS_MOUNTAIN_ENTRANCE, true),
         },
     };
-    Regions[RR_MUMBOS_MOUNTAIN_TICKERS_TOWER_TOP] = RandoRegion{ .regionName = "Top of Tickers Tower", .levelId = LEVEL_1_MUMBOS_MOUNTAIN,
+    Regions[RR_MUMBOS_MOUNTAIN_TICKERS_TOWER_TOP] = RandoRegion{ .regionName = "Top of Tickers Tower", .mapId = MAP_2_MM_MUMBOS_MOUNTAIN,
         .checks = {
             CHECK(RC_MM_JIGGY_TICKERS_TOWER, 					true),
         },
