@@ -28,6 +28,7 @@
 #define CVAR_NAME_CHECK_TRACKER_SCALE "gRando.CheckTracker.Scale"
 #define CVAR_NAME_SHOW_CURRENT_LEVEL "gRando.CheckTracker.ShowCurrentLevel"
 #define CVAR_NAME_SHOW_COLLECTED_CHECKS "gRando.CheckTracker.ShowCollectedChecks"
+#define CVAR_NAME_SHOW_LOGIC "gRando.CheckTracker.ShowLogic"
 #define CVAR_NAME_SEPARATE_COLLECTED_CHECKS "gRando.CheckTracker.SeparateCollectedChecks"
 #define CVAR_NAME_COLLECTED_CHECKS_OPACITY "gRando.CheckTracker.CollectedChecksOpacity"
 #define CVAR_NAME_COLLECTED_CHECKS_SCALE "gRando.CheckTracker.CollectedChecksScale"
@@ -42,6 +43,7 @@
 #define CVAR_CHECK_TRACKER_SCALE CVarGetFloat(CVAR_NAME_CHECK_TRACKER_SCALE, 1.0f)
 #define CVAR_SHOW_CURRENT_LEVEL CVarGetInteger(CVAR_NAME_SHOW_CURRENT_LEVEL, 0)
 #define CVAR_SHOW_COLLECTED_CHECKS CVarGetInteger(CVAR_NAME_SHOW_COLLECTED_CHECKS, 0)
+#define CVAR_SHOW_LOGIC CVarGetInteger(CVAR_NAME_SHOW_LOGIC, 0)
 #define CVAR_SHOW_SEPARATE_COLLECTED_CHECKS CVarGetInteger(CVAR_NAME_SEPARATE_COLLECTED_CHECKS, 0)
 #define CVAR_COLLECTED_CHECKS_OPACITY CVarGetFloat(CVAR_NAME_COLLECTED_CHECKS_OPACITY, 0.5f)
 #define CVAR_COLLECTED_CHECKS_SCALE CVarGetFloat(CVAR_NAME_COLLECTED_CHECKS_SCALE, 1.0f)
@@ -161,14 +163,18 @@ void DrawCheckTrackerList() {
                     }
 
                     ImVec4 checkTextColor = entry.obtained ? VecFromRGBA8(CVAR_COLLECTED_COLOR)
-                                            : Rando::Logic::CanAccessCheck(entry.randoCheckId)
-                                                ? UIWidgets::ColorValues.at(UIWidgets::Colors::White)
-                                                : UIWidgets::ColorValues.at(UIWidgets::Colors::Gray);
+                                                           : UIWidgets::ColorValues.at(UIWidgets::Colors::White);
 
                     ImVec4 itemTextColor = entry.obtained ? VecFromRGBA8(CVAR_ITEM_COLOR)
                                                           : UIWidgets::ColorValues.at(UIWidgets::Colors::Indigo);
                     if (entry.skipped) {
                         checkTextColor = itemTextColor = VecFromRGBA8(CVAR_SKIPPED_COLOR);
+                    }
+
+                    if (!entry.obtained && CVAR_SHOW_LOGIC) {
+                        checkTextColor = Rando::Logic::CanAccessCheck(entry.randoCheckId)
+                                             ? UIWidgets::ColorValues.at(UIWidgets::Colors::White)
+                                             : VecFromRGBA8(CVAR_LOGIC_COLOR);
                     }
 
                     ImGui::BeginGroup();
@@ -280,6 +286,7 @@ void SettingsWindow::DrawElement() {
         ImGui::SeparatorText("Window Settings");
         UIWidgets::CVarCheckbox("Only Show Current Level", CVAR_NAME_SHOW_CURRENT_LEVEL);
         UIWidgets::CVarCheckbox("Display Total Collected Checks", CVAR_NAME_SHOW_COLLECTED_CHECKS);
+        UIWidgets::CVarCheckbox("Dim Out of Logic Checks", CVAR_NAME_SHOW_LOGIC);
 
         ImGui::BeginDisabled(!CVAR_SHOW_COLLECTED_CHECKS);
         UIWidgets::CVarCheckbox("Separate Total Collected Checks", CVAR_NAME_SEPARATE_COLLECTED_CHECKS);
