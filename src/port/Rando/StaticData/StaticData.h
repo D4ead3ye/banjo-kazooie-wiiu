@@ -16,6 +16,7 @@ struct RandoLogicData {
     const char* name;
     bool canAccess;
     bool isFilled;
+    bool isShuffled;
 };
 
 struct RandoShuffledPool {

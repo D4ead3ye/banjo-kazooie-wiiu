@@ -103,8 +103,7 @@ void UpdateSaveDataItemCounts(PlacedItemCounts itemCounts) {
     }
 }
 
-int32_t GetRandomAvailableCheckIndexExcludingType(Rando::StaticData::RandoLogicData (&checks)[RC_MAX],
-                                                  RandoCheckType checkType) {
+int32_t GetRandomCheckIndexS(Rando::StaticData::RandoLogicData (&checks)[RC_MAX], RandoCheckType checkType, bool shouldExclude, bool shouldRestrict, bool gameComplete) {
     std::vector<int32_t> availableIndex;
     availableIndex.reserve(RC_MAX);
 
@@ -112,9 +111,22 @@ int32_t GetRandomAvailableCheckIndexExcludingType(Rando::StaticData::RandoLogicD
         if (i == RC_UNKNOWN) {
             continue;
         }
-
-        if (!checks[i].isFilled && Rando::StaticData::Checks[(RandoCheckId)i].randoCheckType != checkType) {
-            availableIndex.push_back(i);
+        
+        if (checks[i].canAccess || gameComplete) {
+            if (!checks[i].isFilled && checks[i].isShuffled) {
+                if (shouldExclude) {
+                    if (Rando::StaticData::Checks[(RandoCheckId)i].randoCheckType != checkType) {
+                        availableIndex.push_back(i);
+                        continue;
+                    }
+                }
+                if (shouldRestrict) {
+                    if (Rando::StaticData::Checks[(RandoCheckId)i].randoCheckType == checkType) {
+                        availableIndex.push_back(i);
+                        continue;
+                    }
+                }
+            }
         }
     }
 
@@ -127,82 +139,24 @@ int32_t GetRandomAvailableCheckIndexExcludingType(Rando::StaticData::RandoLogicD
     return availableIndex[randomCheck];
 }
 
-int32_t GetRandomAvailableCheckIndexByType(Rando::StaticData::RandoLogicData (&checks)[RC_MAX],
-                                                  RandoCheckType checkType) {
-    std::vector<int32_t> availableIndex;
-    availableIndex.reserve(RC_MAX);
-
-    for (int i = RC_UNKNOWN; i < RC_MAX; ++i) {
-        if (i == RC_UNKNOWN) {
-            continue;
-        }
-
-        if (!checks[i].isFilled && Rando::StaticData::Checks[(RandoCheckId)i].randoCheckType == checkType) {
-            availableIndex.push_back(i);
-        }
-    }
-
-    if (availableIndex.empty()) {
-        return -1;
-    }
-
-    int32_t randomCheck = rand() % availableIndex.size();
-
-    return availableIndex[randomCheck];
-}
-
-int32_t GetRandomCheckIndexByType(Rando::StaticData::RandoLogicData (&checks)[RC_MAX], RandoCheckType checkType) {
-    std::vector<int32_t> availableIndex;
-    availableIndex.reserve(RC_MAX);
-
-    for (int i = RC_UNKNOWN; i < RC_MAX; ++i) {
-        if (i == RC_UNKNOWN) {
-            continue;
-        }
-
-        if (checks[i].canAccess && !checks[i].isFilled && Rando::StaticData::Checks[(RandoCheckId)i].randoCheckType == checkType) {
-            availableIndex.push_back(i);
-        }
-    }
-
-    if (availableIndex.empty()) {
-        return -1;
-    }
-
-    int32_t randomCheck = rand() % availableIndex.size();
-
-    return availableIndex[randomCheck];
-}
-
-int32_t GetRandomCheckIndexExcludingType(Rando::StaticData::RandoLogicData (&checks)[RC_MAX], RandoCheckType checkType) {
-    std::vector<int32_t> availableIndex;
-    availableIndex.reserve(RC_MAX);
-
-    for (int i = RC_UNKNOWN; i < RC_MAX; ++i) {
-        if (i == RC_UNKNOWN) {
-            continue;
-        }
-
-        if (checks[i].canAccess && !checks[i].isFilled && Rando::StaticData::Checks[(RandoCheckId)i].randoCheckType != checkType) {
-            availableIndex.push_back(i);
-        }
-    }
-
-    if (availableIndex.empty()) {
-        return -1;
-    }
-
-    int32_t randomCheck = rand() % availableIndex.size();
-
-    return availableIndex[randomCheck];
-}
-
-int32_t GetRandomItemIndex(std::vector<std::tuple<actor_e, int32_t, RandoCheckId>> items) {
+int32_t GetRandomItemIndexS(std::vector<std::tuple<actor_e, int32_t, RandoCheckId>> items, actor_e actorId) {
     std::vector<int32_t> availableIndex;
     availableIndex.reserve(items.size());
-
+    
     for (int i = 0; i < items.size(); ++i) {
-        availableIndex.push_back(i);
+        if (std::get<2>(items[i]) == RC_UNKNOWN) {
+            continue;
+        }
+
+        if (actorId != ACTOR_1_UNKNOWN) {
+            if (std::get<0>(items[i]) == actorId) {
+                availableIndex.push_back(i);
+                continue;
+            }
+        } else {
+            availableIndex.push_back(i);
+            continue;
+        }
     }
 
     if (availableIndex.empty()) {
@@ -214,23 +168,61 @@ int32_t GetRandomItemIndex(std::vector<std::tuple<actor_e, int32_t, RandoCheckId
     return availableIndex[randomItem];
 }
 
-int32_t GetRandomItemIndexByActor(std::vector<std::tuple<actor_e, int32_t, RandoCheckId>> items, actor_e actorId) {
-    std::vector<int32_t> availableIndex;
-    availableIndex.reserve(items.size());
+void FlushRemainingPools(Rando::StaticData::RandoLogicData (&accessibleChecks)[RC_MAX],
+                         PlacedItemCounts placedItems, PlacedCheckObject (&placedCheckItems)[RC_MAX],
+                         std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& itemPool,
+                         std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& abilityItemPool) {
+    int32_t checkIndex = 0;
+    int32_t itemPoolIndex = 0;
 
-    for (int i = 0; i < items.size(); ++i) {
-        if (std::get<0>(items[i]) == actorId) {
-            availableIndex.push_back(i);
+    while (!abilityItemPool.empty()) {
+        checkIndex = GetRandomCheckIndexS(accessibleChecks, RCTYPE_MOLEHILL, false, true, true);
+        itemPoolIndex = GetRandomItemIndexS(abilityItemPool, ACTOR_1_UNKNOWN);
+
+        if (checkIndex < 0 || itemPoolIndex < 0) {
+            break;
         }
+
+        placedCheckItems[checkIndex] = {
+            .actorId = std::get<0>(abilityItemPool[itemPoolIndex]),
+            .collectionId = std::get<1>(abilityItemPool[itemPoolIndex]),
+            .shuffledCheckId = std::get<2>(abilityItemPool[itemPoolIndex]),
+        };
+
+        accessibleChecks[checkIndex].isFilled = true;
+        abilityItemPool.erase(abilityItemPool.begin() + itemPoolIndex);
     }
+    while (!itemPool.empty()) {
+        checkIndex = GetRandomCheckIndexS(accessibleChecks, RCTYPE_MOLEHILL, true, false, true);
+        itemPoolIndex = GetRandomItemIndexS(itemPool, ACTOR_1_UNKNOWN);
 
-    if (availableIndex.empty()) {
-        return -1;
+        if (checkIndex < 0 || itemPoolIndex < 0) {
+            break;
+        }
+
+        placedCheckItems[checkIndex] = {
+            .actorId = std::get<0>(itemPool[itemPoolIndex]),
+            .collectionId = std::get<1>(itemPool[itemPoolIndex]),
+            .shuffledCheckId = std::get<2>(itemPool[itemPoolIndex]),
+        };
+
+        accessibleChecks[checkIndex].isFilled = true;
+        switch (std::get<0>(itemPool[itemPoolIndex])) {
+            case ACTOR_46_JIGGY:
+                placedItems.jiggyCount++;
+                break;
+            case ACTOR_51_MUSIC_NOTE:
+                placedItems.noteCount++;
+                break;
+            case ACTOR_2D_MUMBO_TOKEN:
+                placedItems.mumboTokenCount++;
+                break;
+            default:
+                break;
+        }
+        UpdateSaveDataItemCounts(placedItems);
+        itemPool.erase(itemPool.begin() + itemPoolIndex);
     }
-
-    int32_t randomItem = rand() % availableIndex.size();
-
-    return availableIndex[randomItem];
 }
 
 namespace Rando {
@@ -252,6 +244,13 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
     Rando::StaticData::RandoLogicData accessibleRegions[RR_MAX] = {};
     Rando::StaticData::RandoLogicData accessibleEvents[RA_MAX] = {};
     Rando::StaticData::RandoLogicData accessibleChecks[RC_MAX] = {};
+
+    for (auto& shuffledCheck : checkPool) {
+        accessibleChecks[shuffledCheck].isShuffled = true;
+    }
+    for (auto& shuffledAbiity : abilityCheckPool) {
+        accessibleChecks[shuffledAbiity].isShuffled = true;
+    }
 
     // This doesn't have to exist, added strictly for better development testing.
     for (auto& [regionId, regionData] : Rando::Logic::Regions) {
@@ -315,8 +314,8 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
 
             if (i == RR_GRUNTILDAS_LAIR_LOBBY && placedItems.jiggyCount == 0) {
                 if (CVarGetInteger(Rando::StaticData::Options[RO_SHUFFLE_JIGGIES].cvar, 0) == RO_GENERIC_ON) {
-                    checkIndex = GetRandomCheckIndexExcludingType(accessibleChecks, RCTYPE_MOLEHILL);
-                    itemPoolIndex = GetRandomItemIndexByActor(itemPool, ACTOR_46_JIGGY);
+                    checkIndex = GetRandomCheckIndexS(accessibleChecks, RCTYPE_MOLEHILL, true, false, isGameComplete);
+                    itemPoolIndex = GetRandomItemIndexS(itemPool, ACTOR_46_JIGGY);
 
                     if (checkIndex >= 0 && itemPoolIndex >= 0) {
                         placedCheckItems[checkIndex] = {
@@ -337,13 +336,11 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
         }
 
         if (accessibleEvents[RA_GAME_COMPLETE].canAccess) {
+            FlushRemainingPools(accessibleChecks, placedItems, placedCheckItems, itemPool, abilityItemPool);
+
             itemPool.clear();
             abilityItemPool.clear();
             for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
-                if (i == RC_UNKNOWN) {
-                    continue;
-                }
-
                 if (Rando::StaticData::Checks[(RandoCheckId)i].randoCheckType != RCTYPE_MOLEHILL) {
                     itemPool.push_back({ (actor_e)placedCheckItems[i].actorId, placedCheckItems[i].collectionId,
                                          placedCheckItems[i].shuffledCheckId });
@@ -379,60 +376,6 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
 
         RefreshReachableRegions();
 
-        if (progressionIndex >= progressionItems.size()) {
-            while (!abilityItemPool.empty()) {
-                checkIndex = GetRandomAvailableCheckIndexByType(accessibleChecks, RCTYPE_MOLEHILL);
-                itemPoolIndex = GetRandomItemIndex(abilityItemPool);
-
-                if (checkIndex < 0 || itemPoolIndex < 0) {
-                    break;
-                }
-
-                placedCheckItems[checkIndex] = {
-                    .actorId = std::get<0>(abilityItemPool[itemPoolIndex]),
-                    .collectionId = std::get<1>(abilityItemPool[itemPoolIndex]),
-                    .shuffledCheckId = std::get<2>(abilityItemPool[itemPoolIndex]),
-                };
-
-                accessibleChecks[checkIndex].isFilled = true;
-                abilityItemPool.erase(abilityItemPool.begin() + itemPoolIndex);
-                accessibilityAdded = true;
-            }
-            while (!itemPool.empty()) {
-                checkIndex = GetRandomAvailableCheckIndexExcludingType(accessibleChecks, RCTYPE_MOLEHILL);
-                itemPoolIndex = GetRandomItemIndex(itemPool);
-
-                if (checkIndex < 0 || itemPoolIndex < 0) {
-                    break;
-                }
-
-                placedCheckItems[checkIndex] = {
-                    .actorId = std::get<0>(itemPool[itemPoolIndex]),
-                    .collectionId = std::get<1>(itemPool[itemPoolIndex]),
-                    .shuffledCheckId = std::get<2>(itemPool[itemPoolIndex]),
-                };
-
-                accessibleChecks[checkIndex].isFilled = true;
-                switch (std::get<0>(itemPool[itemPoolIndex])) {
-                    case ACTOR_46_JIGGY:
-                        placedItems.jiggyCount++;
-                        break;
-                    case ACTOR_51_MUSIC_NOTE:
-                        placedItems.noteCount++;
-                        break;
-                    case ACTOR_2D_MUMBO_TOKEN:
-                        placedItems.mumboTokenCount++;
-                        break;
-                    default:
-                        break;
-                }
-                UpdateSaveDataItemCounts(placedItems);
-                itemPool.erase(itemPool.begin() + itemPoolIndex);
-                accessibilityAdded = true;
-            }
-            continue;
-        }
-
         if (CVarGetInteger(Rando::StaticData::Options[RO_SHUFFLE_MOLEHILLS].cvar, 0) == RO_GENERIC_ON) {
             int32_t progCheck = 0;
             for (auto& abilityId : progressionAbilities[progressionIndex].abilityIds) {
@@ -445,7 +388,7 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
                                        [abilityId](const auto& item) { return std::get<1>(item) == abilityId; });
 
                 if (it != abilityItemPool.end()) {
-                    checkIndex = GetRandomCheckIndexByType(accessibleChecks, RCTYPE_MOLEHILL);
+                    checkIndex = GetRandomCheckIndexS(accessibleChecks, RCTYPE_MOLEHILL, false, true, isGameComplete);
                     if (checkIndex >= 0) {
                         placedCheckItems[checkIndex] = {
                             .actorId = std::get<0>(*it),
@@ -478,8 +421,8 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
         if (accessibleEvents[progressionItems[progressionIndex].progId].canAccess) {
             if (CVarGetInteger(Rando::StaticData::Options[RO_SHUFFLE_JIGGIES].cvar, 0) == RO_GENERIC_ON) {
                 while (placedItems.jiggyCount < progressionItems[progressionIndex].itemData[1].itemCount) {
-                    checkIndex = GetRandomCheckIndexExcludingType(accessibleChecks, RCTYPE_MOLEHILL);
-                    itemPoolIndex = GetRandomItemIndexByActor(itemPool, ACTOR_46_JIGGY);
+                    checkIndex = GetRandomCheckIndexS(accessibleChecks, RCTYPE_MOLEHILL, true, false, isGameComplete);
+                    itemPoolIndex = GetRandomItemIndexS(itemPool, ACTOR_46_JIGGY);
 
                     if (checkIndex < 0 || itemPoolIndex < 0)
                         break;
@@ -500,8 +443,8 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
 
             if (CVarGetInteger(Rando::StaticData::Options[RO_SHUFFLE_MUMBO_TOKENS].cvar, 0) == RO_GENERIC_ON) {
                 while (placedItems.mumboTokenCount < progressionItems[progressionIndex].itemData[2].itemCount) {
-                    checkIndex = GetRandomCheckIndexExcludingType(accessibleChecks, RCTYPE_MOLEHILL);
-                    itemPoolIndex = GetRandomItemIndexByActor(itemPool, ACTOR_2D_MUMBO_TOKEN);
+                    checkIndex = GetRandomCheckIndexS(accessibleChecks, RCTYPE_MOLEHILL, true, false, isGameComplete);
+                    itemPoolIndex = GetRandomItemIndexS(itemPool, ACTOR_2D_MUMBO_TOKEN);
 
                     if (checkIndex < 0 || itemPoolIndex < 0)
                         break;
@@ -522,8 +465,8 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
 
             if (CVarGetInteger(Rando::StaticData::Options[RO_SHUFFLE_MUSIC_NOTES].cvar, 0) == RO_GENERIC_ON) {
                 while (placedItems.noteCount < progressionItems[progressionIndex].itemData[0].itemCount) {
-                    checkIndex = GetRandomCheckIndexExcludingType(accessibleChecks, RCTYPE_MOLEHILL);
-                    itemPoolIndex = GetRandomItemIndexByActor(itemPool, ACTOR_51_MUSIC_NOTE);
+                    checkIndex = GetRandomCheckIndexS(accessibleChecks, RCTYPE_MOLEHILL, true, false, isGameComplete);
+                    itemPoolIndex = GetRandomItemIndexS(itemPool, ACTOR_51_MUSIC_NOTE);
 
                     if (checkIndex < 0 || itemPoolIndex < 0)
                         break;
@@ -556,7 +499,7 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
                 failSafeTrigger = true;
                 for (int a = 0; a < abilityItemPool.size(); a++) {
                     if (!ability_isUnlocked((ability_e)std::get<1>(abilityItemPool[a]))) {
-                        checkIndex = GetRandomCheckIndexByType(accessibleChecks, RCTYPE_MOLEHILL);
+                        checkIndex = GetRandomCheckIndexS(accessibleChecks, RCTYPE_MOLEHILL, false, true, isGameComplete);
                         if (checkIndex >= 0) {
                             placedCheckItems[checkIndex] = {
                                 .actorId = std::get<0>(abilityItemPool[a]),

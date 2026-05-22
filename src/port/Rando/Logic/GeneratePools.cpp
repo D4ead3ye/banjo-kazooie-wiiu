@@ -54,9 +54,9 @@ void GenerateShufflePool(SaveData* saveData) {
     shuffledPool.clear();
 
     for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
-        if (randoCheckId == RC_UNKNOWN) {
-            continue;
-        }
+        // if (randoCheckId == RC_UNKNOWN) {
+        //     continue;
+        // }
 
         if (randoStaticCheck.randoCheckType == RCTYPE_EMPTY_HONEYCOMB &&
             CVarGetInteger(Rando::StaticData::Options[RO_SHUFFLE_EMPTY_HONEYCOMBS].cvar, 0) == RO_GENERIC_OFF) {
@@ -95,9 +95,16 @@ void GenerateShufflePool(SaveData* saveData) {
         itemPool.push_back({ (actor_e)randoStaticCheck.actorId, randoStaticCheck.collectionId, randoCheckId });
     }
 
+    if (!itemPool.empty()) {
+        Rando::Logic::ShuffleRandoItems("", itemPool);
+    }
+
+    if (!abilityItemPool.empty()) {
+        Rando::Logic::ShuffleRandoItems("", abilityItemPool);
+    }
+
     if (RANDO_SAVE_OPTIONS[RO_LOGIC].optionValue == RO_LOGIC_GLITCHLESS) {
-        Rando::Logic::TestLogic(checkPool, itemPool, abilityCheckPool, abilityItemPool, saveData);
-        // Rando::Logic::GenerateGlitchlessLogicPool(checkPool, itemPool, abilityCheckPool, abilityItemPool);
+        Rando::Logic::GenerateGlitchlessLogicPool(checkPool, itemPool, abilityCheckPool, abilityItemPool, saveData);
     } else if (RANDO_SAVE_OPTIONS[RO_LOGIC].optionValue == RO_LOGIC_NO_LOGIC) {
         Rando::Logic::GenerateNoLogicPool(itemPool, abilityItemPool);
     }
@@ -109,7 +116,7 @@ void GenerateShufflePool(SaveData* saveData) {
             .shuffleCheckId = std::get<2>(itemPool[i]),
             .randoItemId = Rando::StaticData::GetRandoItemByActorId(std::get<0>(itemPool[i])),
             .randoCollectionId = std::get<1>(itemPool[i]),
-            .isShuffled = true,
+            .isShuffled = checkPool[i] == RC_UNKNOWN ? false : true,
             .obtained = false,
             .skipped = false,
         };
