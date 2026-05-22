@@ -7,11 +7,16 @@
 #include <unordered_set>
 
 extern "C" {
+void item_set(s32 item, s32 val);
+void item_adjustByDiffWithoutHud(enum item_e item, s32 diff);
 s32 item_getCount(enum item_e item);
 s32 itemscore_noteScores_getTotal(void);
 
+void ability_unlock(enum ability_e);
 int ability_isUnlocked(enum ability_e uid);
+void ability_setLearned(s32 move, s32 val);
 
+void fileProgressFlag_set(enum file_progress_e index, s32 set);
 bool fileProgressFlag_get(enum file_progress_e index);
 s32 __transformation_getCost(enum transformation_e trans_id);
 s32 _puzzleCost(s32 index);
@@ -34,17 +39,21 @@ namespace Rando {
 namespace Logic {
 extern std::vector<Rando::StaticData::RandoShuffledPool> shuffledPool;
 
-void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
-                                 std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& itemPool,
-                                 std::vector<RandoCheckId>& abilityCheckPool,
-                                 std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& abilityItemPool);
+void TestLogic(std::vector<RandoCheckId>& checkPool, std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& itemPool,
+               std::vector<RandoCheckId>& abilityCheckPool,
+               std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& abilityItemPool, SaveData* saveData);
+
+//void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
+//                                 std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& itemPool,
+//                                 std::vector<RandoCheckId>& abilityCheckPool,
+//                                 std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& abilityItemPool);
 
 void GenerateNoLogicPool(std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& itemPool,
                          std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& abilityItemPool);
 
 void ShuffleRandoItems(const std::string& input, std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& pool);
 
-void GenerateShufflePool();
+void GenerateShufflePool(SaveData* saveData);
 void GeneratePoolFromSaveData(SaveData* saveData);
 void InitializeSaveData(SaveData* saveData);
 void GenerateSaveData(SaveData* saveData);
@@ -203,10 +212,6 @@ inline bool CanUseTransformation(transformation_e transId) {
 }
 
 inline bool CanOpenWorld(level_e levelId) {
-    if (levelId == LEVEL_6_LAIR) {
-        return false;
-    }
-
     int32_t levelNum = levelId;
 
     if (levelNum > LEVEL_6_LAIR) {
@@ -218,7 +223,7 @@ inline bool CanOpenWorld(level_e levelId) {
     }
 
     int32_t puzzleCost = levelId == LEVEL_6_LAIR ? 25 : _puzzleCost(levelNum - 1);
-    int32_t jiggyCount = item_getCount(ITEM_26_JIGGY_TOTAL);
+    int32_t jiggyCount = item_getCount(ITEM_E_JIGGY);
 
     if (jiggyCount >= puzzleCost) {
         RandoAccessId puzzleBoardAccessID = RA_MAX;

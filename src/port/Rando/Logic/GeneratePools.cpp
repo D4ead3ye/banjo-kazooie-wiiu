@@ -46,7 +46,7 @@ void Rando::Logic::ShuffleRandoItems(const std::string& input, std::vector<std::
 }
 
 
-void GenerateShufflePool() {
+void GenerateShufflePool(SaveData* saveData) {
     checkPool.clear();
     itemPool.clear();
     abilityCheckPool.clear();
@@ -95,13 +95,12 @@ void GenerateShufflePool() {
         itemPool.push_back({ (actor_e)randoStaticCheck.actorId, randoStaticCheck.collectionId, randoCheckId });
     }
 
-    // if (RANDO_SAVE_OPTIONS[RO_LOGIC].optionValue == RO_LOGIC_GLITCHLESS) {
-    //     Rando::Logic::GenerateGlitchlessLogicPool(checkPool, itemPool, abilityCheckPool, abilityItemPool);
-    // } else if (RANDO_SAVE_OPTIONS[RO_LOGIC].optionValue == RO_LOGIC_NO_LOGIC) {
-    //     Rando::Logic::GenerateNoLogicPool(itemPool, abilityItemPool);
-    // }
-
-    Rando::Logic::GenerateNoLogicPool(itemPool, abilityItemPool);
+    if (RANDO_SAVE_OPTIONS[RO_LOGIC].optionValue == RO_LOGIC_GLITCHLESS) {
+        Rando::Logic::TestLogic(checkPool, itemPool, abilityCheckPool, abilityItemPool, saveData);
+        // Rando::Logic::GenerateGlitchlessLogicPool(checkPool, itemPool, abilityCheckPool, abilityItemPool);
+    } else if (RANDO_SAVE_OPTIONS[RO_LOGIC].optionValue == RO_LOGIC_NO_LOGIC) {
+        Rando::Logic::GenerateNoLogicPool(itemPool, abilityItemPool);
+    }
 
     for (int i = 0; i < checkPool.size(); i++) {
         Rando::StaticData::RandoShuffledPool randoShuffleEntry = {

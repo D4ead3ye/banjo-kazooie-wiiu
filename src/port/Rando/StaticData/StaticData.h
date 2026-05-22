@@ -13,7 +13,9 @@ namespace Rando {
 namespace StaticData {
 
 struct RandoLogicData {
+    const char* name;
     bool canAccess;
+    bool isFilled;
 };
 
 struct RandoShuffledPool {

@@ -1,4 +1,5 @@
 #include "Logic.h"
+#include <libultraship/bridge/consolevariablebridge.h>
 
 namespace Rando {
 
@@ -15,6 +16,10 @@ void RefreshReachableRegions() {
         if (regionData.mapId == gsworld_getMap()) {
             seen.insert(regionId);
         }
+    }
+
+    if (CVarGetInteger("gRandoSettings.GeneratingSeed", 0)) {
+        seen.insert(RR_SPIRAL_MOUNTAIN_ENTRANCE);
     }
 
     bool changed = true;

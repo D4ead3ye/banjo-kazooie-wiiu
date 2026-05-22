@@ -39,7 +39,7 @@ ChMoleDescription moleDialogTable[MOLETABLE_SIZE] = {
     { ASSET_DFB_DIALOG_BOTTLES_DIVE_LEARN,              ASSET_DFE_DIALOG_BOTTLES_DIVE_REFRESHER,            0x5, ABILITY_F_DIVE },
     { -1,                                               ASSET_E00_DIALOG_BOTTLES_ATTACK_REFRESHER,          0x6, ABILITY_4_CLAW_SWIPE },
     { ASSET_E04_DIALOG_BOTTLES_BEAK_BARGE_LEARN,        ASSET_E06_DIALOG_BOTTLES_BEAK_BARGE_REFRESHER,      0x8, ABILITY_0_BARGE },
-    { -1,                                               ASSET_DFA_DIALOG_BOTTLES_JUMP_REFRESHER,            0x4, ABILITY_A_HOLD_A_JUMP_HIGHER },
+    { -1,                                               ASSET_DFA_DIALOG_BOTTLES_JUMP_REFRESHER,            0x4, ABILITY_8_FLAP_FLIP },
     { ASSET_E01_DIALOG_BOTTLES_CLIMB_LEARN,             ASSET_E03_DIALOG_BOTTLES_CLIMB_REFRESHER,           0x7, ABILITY_5_CLIMB },
     //{ ASSET_E10_DIALOG_BOTTLES_BRIDGE_BROKEN,           ASSET_E11_DIALOG_BOTTLES_BRIDGE_STILL_BROKEN,       0x11, -1 },
     { ASSET_C23_DIALOG_BEAKBOMB_LEARN,                  ASSET_C24_DIALOG_BEAKBOMB_REFRESHER,                0x0F, ABILITY_1_BEAK_BOMB },
@@ -135,7 +135,7 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
                         ability_unlock(ABILITY_C_ROLL);
                         ability_unlock(ABILITY_B_RATATAT_RAP);
                         break;
-                    case ABILITY_A_HOLD_A_JUMP_HIGHER:
+                    case ABILITY_8_FLAP_FLIP:
                         *textId = (s32)moleInfo.refresher_text_id;
                         ability_unlock(ABILITY_A_HOLD_A_JUMP_HIGHER);
                         ability_unlock(ABILITY_7_FEATHERY_FLAP);

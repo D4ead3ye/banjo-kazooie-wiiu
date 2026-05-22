@@ -23,10 +23,6 @@ static RegisterShipInitFunc initFunc([]() {
         .connections = {
             CONNECTION(RR_GRUNTILDAS_LAIR_LOBBY,    true),
         },
-        .events = {
-            EVENT(RA_NOTE_DOOR_180,                 CAN_USE_ABILITY(ABILITY_10_TALON_TROT)),
-            EVENT(RA_PUZZLE_BOARD_CLICK_CLOCK_WOOD, CAN_USE_ABILITY(ABILITY_F_DIVE)),
-        }
     };
 
 }, {});
