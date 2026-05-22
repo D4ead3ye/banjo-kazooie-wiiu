@@ -130,10 +130,6 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        if (ev->actorId == ACTOR_12C_MOLEHILL) {
-            LogOutSpawns(ev->actorId, ev->posX, ev->posY, ev->posZ);
-        }
-
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
 
         if (randoCheckId == RC_UNKNOWN) {

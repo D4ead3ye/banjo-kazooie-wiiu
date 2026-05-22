@@ -39,14 +39,11 @@ namespace Rando {
 namespace Logic {
 extern std::vector<Rando::StaticData::RandoShuffledPool> shuffledPool;
 
-void TestLogic(std::vector<RandoCheckId>& checkPool, std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& itemPool,
-               std::vector<RandoCheckId>& abilityCheckPool,
-               std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& abilityItemPool, SaveData* saveData);
-
-//void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
-//                                 std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& itemPool,
-//                                 std::vector<RandoCheckId>& abilityCheckPool,
-//                                 std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& abilityItemPool);
+void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
+                                 std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& itemPool,
+                                 std::vector<RandoCheckId>& abilityCheckPool,
+                                 std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& abilityItemPool,
+                                 SaveData* saveData);
 
 void GenerateNoLogicPool(std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& itemPool,
                          std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& abilityItemPool);

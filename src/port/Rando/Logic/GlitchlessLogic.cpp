@@ -237,9 +237,10 @@ namespace Rando {
 
 namespace Logic {
 
-void TestLogic(std::vector<RandoCheckId>& checkPool, std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& itemPool,
-               std::vector<RandoCheckId>& abilityCheckPool,
-               std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& abilityItemPool, SaveData* saveData) {
+void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
+                                 std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& itemPool,
+                                 std::vector<RandoCheckId>& abilityCheckPool,
+                                 std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& abilityItemPool, SaveData* saveData) {
     bool isGameComplete = false;
     int32_t checkIndex = 0;
     int32_t itemPoolIndex = 0;
