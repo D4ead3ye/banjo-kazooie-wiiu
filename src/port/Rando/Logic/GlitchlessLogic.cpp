@@ -70,7 +70,6 @@ std::vector<ProgressionAbilityData> progressionAbilities = {
     { RA_NOTE_DOOR_640, { ABILITY_F_DIVE },                                                 false },
     { RA_NOTE_DOOR_765, { ABILITY_2_BEAK_BUSTER },                                          false },
     { RA_NOTE_DOOR_810, { ABILITY_1_BEAK_BOMB },                                            false },
-
 };
 // clang-format on
 
@@ -416,6 +415,44 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
             if (progCheck == progressionAbilities[progressionIndex].abilityIds.size()) {
                 progressionAbilities[progressionIndex].isComplete = true;
             }
+        } else {
+            switch (progressionAbilities[progressionIndex].progID) {
+                case RA_NOTE_DOOR_50:
+                    __chSmBottles_skipIntroTutorial();
+                    ability_unlock(ABILITY_6_EGGS);
+                    ability_unlock(ABILITY_10_TALON_TROT);
+                    ability_unlock(ABILITY_2_BEAK_BUSTER);
+                    break;
+                case RA_NOTE_DOOR_180:
+                    ability_unlock(ABILITY_D_SHOCK_JUMP);
+                    ability_unlock(ABILITY_12_WONDERWING);
+                    ability_unlock(ABILITY_9_FLIGHT);
+                    break;
+                case RA_NOTE_DOOR_260:
+                    ability_unlock(ABILITY_E_WADING_BOOTS);
+                    break;
+                case RA_NOTE_DOOR_450:
+                    ability_unlock(ABILITY_1_BEAK_BOMB);
+                    ability_unlock(ABILITY_11_TURBO_TALON);
+                    break;
+                default:
+                    break;
+            }
+
+            for (auto& abilityId : progressionAbilities[progressionIndex].abilityIds) {
+                if (!ability_isUnlocked((ability_e)abilityId)) {
+                    ability_unlock((ability_e)abilityId);
+
+                    if (abilityId == ABILITY_8_FLAP_FLIP) {
+                        ability_unlock(ABILITY_A_HOLD_A_JUMP_HIGHER);
+                        ability_unlock(ABILITY_7_FEATHERY_FLAP);
+                    } else if (abilityId == ABILITY_4_CLAW_SWIPE) {
+                        ability_unlock(ABILITY_C_ROLL);
+                        ability_unlock(ABILITY_B_RATATAT_RAP);
+                    }
+                }
+            }
+            progressionAbilities[progressionIndex].isComplete = true;
         }
 
         if (accessibleEvents[progressionItems[progressionIndex].progId].canAccess) {
@@ -439,6 +476,9 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
                     itemPool.erase(itemPool.begin() + itemPoolIndex);
                     accessibilityAdded = true;
                 }
+            } else {
+                placedItems.jiggyCount = progressionItems[progressionIndex].itemData[1].itemCount;
+                UpdateSaveDataItemCounts(placedItems);
             }
 
             if (CVarGetInteger(Rando::StaticData::Options[RO_SHUFFLE_MUMBO_TOKENS].cvar, 0) == RO_GENERIC_ON) {
@@ -461,6 +501,9 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
                     itemPool.erase(itemPool.begin() + itemPoolIndex);
                     accessibilityAdded = true;
                 }
+            } else {
+                placedItems.mumboTokenCount = progressionItems[progressionIndex].itemData[2].itemCount;
+                UpdateSaveDataItemCounts(placedItems);
             }
 
             if (CVarGetInteger(Rando::StaticData::Options[RO_SHUFFLE_MUSIC_NOTES].cvar, 0) == RO_GENERIC_ON) {
@@ -483,14 +526,17 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
                     itemPool.erase(itemPool.begin() + itemPoolIndex);
                     accessibilityAdded = true;
                 }
+            } else {
+                placedItems.noteCount = progressionItems[progressionIndex].itemData[0].itemCount;
+                UpdateSaveDataItemCounts(placedItems);
             }
         }
 
         if (placedItems.noteCount >= progressionItems[progressionIndex].itemData[0].itemCount &&
             placedItems.jiggyCount >= progressionItems[progressionIndex].itemData[1].itemCount &&
             placedItems.mumboTokenCount >= progressionItems[progressionIndex].itemData[2].itemCount &&
-            (CVarGetInteger(Rando::StaticData::Options[RO_SHUFFLE_MOLEHILLS].cvar, 0) == RO_GENERIC_OFF ||
-             progressionAbilities[progressionIndex].isComplete)) {
+            progressionAbilities[progressionIndex].isComplete) {
+
             progressionIndex++;
         }
 

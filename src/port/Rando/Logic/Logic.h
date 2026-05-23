@@ -15,6 +15,7 @@ s32 itemscore_noteScores_getTotal(void);
 void ability_unlock(enum ability_e);
 int ability_isUnlocked(enum ability_e uid);
 void ability_setLearned(s32 move, s32 val);
+void __chSmBottles_skipIntroTutorial(void);
 
 void fileProgressFlag_set(enum file_progress_e index, s32 set);
 bool fileProgressFlag_get(enum file_progress_e index);
