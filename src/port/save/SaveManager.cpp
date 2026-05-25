@@ -310,13 +310,13 @@ ordered_json Convert_SaveDataToJSON(SaveData* saveData, int32_t fileNum) {
             RandoSaveCheck randoSaveCheck = saveData->shipSaveData.randoSaveData.randoSaveCheck[i];
             RandoSaveCheck_to_json(jsonSaveChecks, randoSaveCheck);
     
-            shipRando["randoSaveCheck"][randoSaveCheck.name] = jsonSaveChecks;
+            shipRando["randoSaveCheck"][Rando::StaticData::Checks[(RandoCheckId)i].name] = jsonSaveChecks;
         }
 
         for (int o = RO_LOGIC; o < RO_MAX; o++) {
             RandoSaveOption randoSaveOption = saveData->shipSaveData.randoSaveData.randoSaveOption[o];
 
-            shipRando["randoSaveOption"][randoSaveOption.name] = randoSaveOption.optionValue;
+            shipRando["randoSaveOption"][Rando::StaticData::Options[(RandoOptionId)o].name] = randoSaveOption.optionValue;
         }
 
         ship["rando"] = shipRando;
