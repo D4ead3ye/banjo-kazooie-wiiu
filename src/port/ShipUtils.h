@@ -14,6 +14,8 @@ json Ship_RetrieveSaveFile(int32_t filenum);
 extern std::string Ship_ConvertEnumToReadableName(const std::string& input);
 extern std::vector<file_progress_e> worldOpenFlags;
 
+extern std::vector<std::string> abilityNameList;
+
 extern "C" {
 #endif
 

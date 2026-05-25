@@ -40,12 +40,6 @@ std::vector<std::string> worldNameList = {
     "Rusty Bucket Bay", "Mad Monster Mansion", "Spiral Mountain",
 };
 
-std::vector<std::string> abilityNameList = {
-    "Beak Barge",    "Beak Bomb", "Beak Buster", "Camera Control", "Claw Swipe",  "Climb", "Eggs",
-    "Feathery Flap", "Flap Flip", "Flight",      "Jump Higher",    "Ratatat Rap", "Roll",  "Shock Jump",
-    "Wading Boots",  "Dive",      "Talon Trot",  "Turbo Talon",    "Wonderwing",
-};
-
 std::vector<std::string> warpCauldronList = {
     "Lower Pink Cauldron",
     "Upper Pink Cauldron",

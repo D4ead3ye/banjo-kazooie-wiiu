@@ -35,9 +35,18 @@ extern Rando::StaticData::RandoLogicData reachableRegions[RR_MAX];
 extern Rando::StaticData::RandoLogicData reachableEvents[RA_MAX];
 extern Rando::StaticData::RandoLogicData reachableChecks[RC_MAX];
 
+void DrawSeedMetrics();
+void RefreshMetrics();
+
 namespace Rando {
 
 namespace Logic {
+extern std::vector<RandoCheckId> checkPool;
+extern std::vector<std::tuple<actor_e, int32_t, RandoCheckId>> itemPool;
+
+extern std::vector<RandoCheckId> abilityCheckPool;
+extern std::vector<std::tuple<actor_e, int32_t, RandoCheckId>> abilityItemPool;
+
 extern std::vector<Rando::StaticData::RandoShuffledPool> shuffledPool;
 
 void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,

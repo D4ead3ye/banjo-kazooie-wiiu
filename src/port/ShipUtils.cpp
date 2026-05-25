@@ -24,6 +24,12 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
+std::vector<std::string> abilityNameList = {
+    "Beak Barge",    "Beak Bomb", "Beak Buster", "Camera Control", "Claw Swipe",  "Climb", "Eggs",
+    "Feathery Flap", "Flap Flip", "Flight",      "Jump Higher",    "Ratatat Rap", "Roll",  "Shock Jump",
+    "Wading Boots",  "Dive",      "Talon Trot",  "Turbo Talon",    "Wonderwing",
+};
+
 // Helper for C-style variadic log functions
 static void bk_log_vfmt(spdlog::level::level_enum level, const char* fmt, va_list args) {
     char buf[512];

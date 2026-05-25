@@ -68,6 +68,10 @@ void LighthouseMenu::AddMenuRando() {
         }
         UIWidgets::PopStyleCombobox();
         });
+
+    AddWidget(path, "Seed Metrics", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Metrics", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) { DrawSeedMetrics(); });
     
     // Rando - Shuffle Options
     AddSidebarEntry("Rando", "Shuffle Options", 1);
