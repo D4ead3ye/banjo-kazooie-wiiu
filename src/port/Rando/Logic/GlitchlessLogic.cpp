@@ -259,8 +259,29 @@ void FlushRemainingPools(PlacedItemCounts placedItems, PlacedCheckObject (&place
     }
 }
 
-void UpdateAccessibility() {
+bool UpdateAccessibility(RandoRegionId randoRegionId, bool& accessChanged) {
+    auto regionData = Rando::Logic::Regions[randoRegionId];
 
+    for (auto& availableConnections : regionData.connections) {
+        if (!reachableRegions[availableConnections.first].canAccess && availableConnections.second.first()) {
+            reachableRegions[availableConnections.first].canAccess = true;
+            accessChanged = true;
+        }
+    }
+    for (auto& availableEvents : regionData.events) {
+        if (!reachableEvents[availableEvents.first].canAccess && availableEvents.second()) {
+            reachableEvents[availableEvents.first].canAccess = true;
+            accessChanged = true;
+        }
+    }
+    for (auto& availableChecks : regionData.checks) {
+        if (!reachableChecks[availableChecks.first].canAccess && availableChecks.second.first()) {
+            reachableChecks[availableChecks.first].canAccess = true;
+            accessChanged = true;
+        }
+    }
+
+    return accessChanged;
 }
 
 namespace Rando {
@@ -301,23 +322,7 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
 
     // Starting Region Initialization
     reachableRegions[RR_SPIRAL_MOUNTAIN_ENTRANCE].canAccess = true;
-    auto regionData = Rando::Logic::Regions[RR_SPIRAL_MOUNTAIN_ENTRANCE];
-
-    for (auto& availableConnections : regionData.connections) {
-        if (availableConnections.second.first()) {
-            reachableRegions[availableConnections.first].canAccess = true;
-        }
-    }
-    for (auto& availableEvents : regionData.events) {
-        if (availableEvents.second()) {
-            reachableEvents[availableEvents.first].canAccess = true;
-        }
-    }
-    for (auto& availableChecks : regionData.checks) {
-        if (availableChecks.second.first()) {
-            reachableChecks[availableChecks.first].canAccess = true;
-        }
-    }
+    UpdateAccessibility(RR_SPIRAL_MOUNTAIN_ENTRANCE, reachableRegions[RR_SPIRAL_MOUNTAIN_ENTRANCE].canAccess);
 
     while (!isGameComplete) {
         bool accessibilityAdded = false;
@@ -327,28 +332,7 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
                 continue;
             }
 
-            auto currentRegion = Rando::Logic::Regions[(RandoRegionId)i];
-
-            for (auto& conn : currentRegion.connections) {
-                if (!reachableRegions[conn.first].canAccess && conn.second.first()) {
-                    reachableRegions[conn.first].canAccess = true;
-                    accessibilityAdded = true;
-                }
-            }
-
-            for (auto& ev : currentRegion.events) {
-                if (!reachableEvents[ev.first].canAccess && ev.second()) {
-                    reachableEvents[ev.first].canAccess = true;
-                    accessibilityAdded = true;
-                }
-            }
-
-            for (auto& chk : currentRegion.checks) {
-                if (!reachableChecks[chk.first].canAccess && chk.second.first()) {
-                    reachableChecks[chk.first].canAccess = true;
-                    accessibilityAdded = true;
-                }
-            }
+            accessibilityAdded = UpdateAccessibility((RandoRegionId)i, accessibilityAdded);
 
             if (i == RR_GRUNTILDAS_LAIR_LOBBY && placedItems.jiggyCount == 0) {
                 if (CVarGetInteger(Rando::StaticData::Options[RO_SHUFFLE_JIGGIES].cvar, 0) == RO_GENERIC_ON) {
