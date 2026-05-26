@@ -23,7 +23,7 @@
     }
 
 #define CVAR_NAME_SHOW_CHECK_TRACKER "gWindows.CheckTracker"
-#define CVAR_NAME_ENABLE_FLOATING_WINDOW "gWindows.CheckTracker.Floating"
+#define CVAR_NAME_ENABLE_FLOATING_WINDOW "gRando.CheckTracker.Floating"
 #define CVAR_NAME_CHECK_TRACKER_OPACITY "gRando.CheckTracker.Opacity"
 #define CVAR_NAME_CHECK_TRACKER_SCALE "gRando.CheckTracker.Scale"
 #define CVAR_NAME_SHOW_CURRENT_LEVEL "gRando.CheckTracker.ShowCurrentLevel"
@@ -252,7 +252,7 @@ void CheckTrackerWindow::Draw() {
 
 void SettingsWindow::DrawElement() {
     windowFlags = ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoFocusOnAppearing;
-    if (CVAR_NAME_ENABLE_FLOATING_WINDOW) {
+    if (CVAR_ENABLE_FLOATING_WINDOW) {
         windowFlags |= ImGuiWindowFlags_NoTitleBar;
     }
 
