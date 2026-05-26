@@ -37,6 +37,13 @@ static void bk_log_vfmt(spdlog::level::level_enum level, const char* fmt, va_lis
     spdlog::default_logger_raw()->log(spdlog::source_loc{}, level, buf);
 }
 
+void TableCellCenteredText(const char* text) {
+    float textHeight = ImGui::GetTextLineHeight();
+    float offsetY = (32.0f - textHeight + 5.0f) * 0.5f;
+    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + offsetY);
+    ImGui::Text("%s", text);
+}
+
 extern "C" {
 
 // Furnace Fun active flag

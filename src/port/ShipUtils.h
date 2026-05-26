@@ -16,6 +16,8 @@ extern std::vector<file_progress_e> worldOpenFlags;
 
 extern std::vector<std::string> abilityNameList;
 
+void TableCellCenteredText(const char* text);
+
 extern "C" {
 #endif
 

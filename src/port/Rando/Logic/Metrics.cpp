@@ -2,6 +2,7 @@
 #include "port/ui/UIWidgets.hpp"
 #include <imgui.h>
 #include <libultraship/bridge/consolevariablebridge.h>
+#include "port/ShipUtils.h"
 
 int32_t checksInPool = 0;
 int32_t itemsInPool = 0;
@@ -10,6 +11,10 @@ int32_t abilitiesInPool = 0;
 std::vector<std::string> learnedAbilities;
 std::vector<std::string> regionAccessList;
 std::vector<std::string> eventAccessList;
+
+#define WIDGET_TEXT_COLOR(color) UIWidgets::ColorValues.at(UIWidgets::Colors::##color)
+
+bool metricsInitialized = false;
 
 void Metrics_DrawEventData() {
     if (ImGui::BeginChild("EventData", ImVec2(ImGui::GetContentRegionAvail().x, 0))) {
@@ -40,9 +45,45 @@ void Metrics_DrawAbilityData() {
 
 void Metrics_DrawSeedData() {
     if (ImGui::BeginChild("SeedData", ImVec2(ImGui::GetContentRegionAvail().x, 0))) {
+        bool status = reachableEvents[RA_GAME_COMPLETE].canAccess;
+        std::string statusText = status ? "Generation Complete" : "Generation Incomplete";
+        ImVec4 statusColor = WIDGET_TEXT_COLOR(Orange);
+
+        if (checksInPool < 0) {
+            statusText = "Generation Not Started";
+            statusColor = WIDGET_TEXT_COLOR(Red);
+        }
+
         ImGui::SeparatorText("Seed Data");
-        ImGui::Text("Checks: %i ", checksInPool);
-        ImGui::Text("Items:  %i ", itemsInPool);
+        
+        ImGui::TextColored(status ? WIDGET_TEXT_COLOR(Green) : statusColor, statusText.c_str());
+
+        if (ImGui::BeginTable("SeedDataTable", 3, ImGuiTableFlags_SizingStretchProp)) {
+            ImGui::TableSetupColumn("Labels", ImGuiTableColumnFlags_WidthFixed);
+            ImGui::TableSetupColumn("Values", ImGuiTableColumnFlags_WidthFixed);
+            ImGui::TableSetupColumn("Metric", ImGuiTableColumnFlags_WidthStretch);
+
+            ImGui::TableNextColumn();
+            TableCellCenteredText("Total Checks:");
+            TableCellCenteredText("Total Items:");
+
+            ImGui::TableNextColumn();
+            std::string checkStr = std::to_string(checksInPool).c_str();
+            checkStr += " / " + std::to_string(RC_MAX - 1);
+            std::string itemStr = std::to_string(itemsInPool).c_str();
+            itemStr += " / " + std::to_string(RC_MAX - 1);
+            TableCellCenteredText(checkStr.c_str());
+            TableCellCenteredText(itemStr.c_str());
+
+            ImGui::TableNextColumn();
+            ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(0.2f, 0.8f, 0.2f, 1.0f));
+            ImGui::ProgressBar(((float)checksInPool / (RC_MAX - 1)), ImVec2(-1.0f, 0));
+            ImGui::ProgressBar(((float)itemsInPool / (RC_MAX - 1)), ImVec2(-1.0f, 0));
+            ImGui::PopStyleColor();
+
+            ImGui::EndTable();
+        }
+        
         ImGui::EndChild();
     }
 }
@@ -71,13 +112,9 @@ void Metrics_DrawTabBar() {
     UIWidgets::PopStyleTabs();
 }
 
-void DrawSeedMetrics() {
-    Metrics_DrawTabBar();
-}
-
 void RefreshMetrics() {
-    checksInPool = Rando::Logic::checkPool.size();
-    itemsInPool = Rando::Logic::itemPool.size();
+    checksInPool = Rando::Logic::checkPool.size() + Rando::Logic::abilityCheckPool.size() - 1;
+    itemsInPool = Rando::Logic::itemPool.size() + Rando::Logic::abilityItemPool.size() - 1;
 
     learnedAbilities.clear();
     for (int a = ABILITY_0_BARGE; a < ABILITY_13_1ST_NOTEDOOR; a++) {
@@ -99,4 +136,12 @@ void RefreshMetrics() {
             eventAccessList.push_back(std::to_string((RandoAccessId)e));
         }
     }
+}
+
+void DrawSeedMetrics() {
+    if (!metricsInitialized) {
+        metricsInitialized = true;
+        RefreshMetrics();
+    }
+    Metrics_DrawTabBar();
 }
