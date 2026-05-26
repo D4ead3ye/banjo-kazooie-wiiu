@@ -74,15 +74,12 @@ void RandoSaveCheck_to_json(nlohmann::json& j, const RandoSaveCheck& randoSaveCh
 }
 
 RandoSaveCheck RandoSaveCheck_from_json(const nlohmann::json& j, RandoSaveCheck& randoSaveCheck) {
-    // Optional: Add a safety check to prevent out-of-bounds crashes
-    if (j.is_array() && j.size() >= 6) {
-        j.at(0).get_to(randoSaveCheck.randoItemId);
-        j.at(1).get_to(randoSaveCheck.shuffledCheckId);
-        j.at(2).get_to(randoSaveCheck.randoCollectionId);
-        j.at(3).get_to(randoSaveCheck.isShuffled);
-        j.at(4).get_to(randoSaveCheck.obtained);
-        j.at(5).get_to(randoSaveCheck.skipped);
-    }
+    j.at(0).get_to(randoSaveCheck.randoItemId);
+    j.at(1).get_to(randoSaveCheck.shuffledCheckId);
+    j.at(2).get_to(randoSaveCheck.randoCollectionId);
+    j.at(3).get_to(randoSaveCheck.isShuffled);
+    j.at(4).get_to(randoSaveCheck.obtained);
+    j.at(5).get_to(randoSaveCheck.skipped);
 
     return randoSaveCheck;
 }
