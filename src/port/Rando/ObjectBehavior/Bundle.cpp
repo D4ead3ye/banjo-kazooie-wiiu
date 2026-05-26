@@ -95,6 +95,9 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                 break;
             case BUNDLE_10__JIGGY:
                 switch (levelId) {
+                    case LEVEL_1_MUMBOS_MOUNTAIN:
+                        shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_JUJU);
+                        break;
                     case LEVEL_4_BUBBLEGLOOP_SWAMP:
                         switch (spawnPosition[2]) {
                             case 49:

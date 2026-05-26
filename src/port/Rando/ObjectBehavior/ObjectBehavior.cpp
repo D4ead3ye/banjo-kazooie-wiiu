@@ -11,6 +11,8 @@
 extern "C" {
 Actor* marker_getActor(ActorMarker* thisx);
 bool func_802C9C14(Actor* actor);
+
+void coMusicPlayer_playMusic(enum comusic_e track_id, s32 volume);
 }
 
 // clang-format off
@@ -214,6 +216,7 @@ void Rando::ObjectBehavior::Init() {
                     break;
                 case MARKER_5F_MUSIC_NOTE:
                     randoItemId = RI_MUSIC_NOTE;
+                    coMusicPlayer_playMusic(COMUSIC_9_NOTE_COLLECTED, 16000);
                     break;
                 default:
                     break;

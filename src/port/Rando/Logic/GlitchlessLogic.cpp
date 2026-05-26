@@ -176,6 +176,8 @@ void ResetSaveData() {
         ability_setLearned((ability_e)a, false);
     }
 
+    itemscore_noteScores_clear();
+
     item_adjustByDiffWithoutHud(ITEM_C_NOTE, 0);
     item_adjustByDiffWithoutHud(ITEM_E_JIGGY, 0);
     item_adjustByDiffWithoutHud(ITEM_1C_MUMBO_TOKEN, 0);
