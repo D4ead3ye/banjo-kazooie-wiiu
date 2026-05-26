@@ -2,6 +2,8 @@
 #include <libultraship/bridge/consolevariablebridge.h>
 #include "port/ui/Notification.h"
 
+extern "C" f32 itemPrintValues[0x2C];
+
 typedef struct {
     int32_t actorId;
     int32_t collectionId;
@@ -176,11 +178,13 @@ void ResetSaveData() {
         ability_setLearned((ability_e)a, false);
     }
 
-    itemscore_noteScores_clear();
+    item_adjustByDiffWithoutHud(ITEM_C_NOTE, -item_getCount(ITEM_C_NOTE));
+    item_adjustByDiffWithoutHud(ITEM_E_JIGGY, -item_getCount(ITEM_26_JIGGY_TOTAL));
+    item_adjustByDiffWithoutHud(ITEM_26_JIGGY_TOTAL, -item_getCount(ITEM_26_JIGGY_TOTAL));
+    item_adjustByDiffWithoutHud(ITEM_1C_MUMBO_TOKEN, -item_getCount(ITEM_1C_MUMBO_TOKEN));
+    item_adjustByDiffWithoutHud(ITEM_25_MUMBO_TOKEN_TOTAL, -item_getCount(ITEM_25_MUMBO_TOKEN_TOTAL));
 
-    item_adjustByDiffWithoutHud(ITEM_C_NOTE, 0);
-    item_adjustByDiffWithoutHud(ITEM_E_JIGGY, 0);
-    item_adjustByDiffWithoutHud(ITEM_1C_MUMBO_TOKEN, 0);
+    itemscore_noteScores_clear();
 }
 
 void SetUnlockedAbility(ability_e abilityId) {

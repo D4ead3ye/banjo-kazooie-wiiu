@@ -12,6 +12,8 @@ void item_adjustByDiffWithoutHud(enum item_e item, s32 diff);
 s32 item_getCount(enum item_e item);
 s32 itemscore_noteScores_getTotal(void);
 void itemscore_noteScores_clear(void);
+void item_setItemsStartCounts(void);
+void itemPrint_update(void);
 
 void ability_unlock(enum ability_e);
 int ability_isUnlocked(enum ability_e uid);
