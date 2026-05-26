@@ -350,29 +350,16 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
             itemPool.clear();
             abilityItemPool.clear();
             for (auto& check : checkPool) {
-                if (Rando::StaticData::Checks[check].randoCheckType != RCTYPE_MOLEHILL) {
-                    itemPool.push_back({ (actor_e)placedCheckItems[check].actorId, placedCheckItems[check].collectionId,
-                                         placedCheckItems[check].shuffledCheckId });
-                } else {
-                    abilityItemPool.push_back({ (actor_e)placedCheckItems[check].actorId, placedCheckItems[check].collectionId,
-                                                placedCheckItems[check].shuffledCheckId });
-                }
+                itemPool.push_back({ (actor_e)placedCheckItems[check].actorId, placedCheckItems[check].collectionId,
+                                        placedCheckItems[check].shuffledCheckId });
+            }
+            for (auto& mole : abilityCheckPool) {
+                abilityItemPool.push_back({ (actor_e)placedCheckItems[mole].actorId, placedCheckItems[mole].collectionId,
+                                        placedCheckItems[mole].shuffledCheckId });
             }
 
             RefreshMetrics();
             ResetSaveData();
-
-            //for (int s = 0; s < sizeof(SaveData); s++) {
-            //    gameFile_saveData[selectedFileNum].data[s] = 0;
-            //}
-            //
-            //for (int a = ABILITY_0_BARGE; a < ABILITY_13_1ST_NOTEDOOR; a++) {
-            //    ability_setLearned((ability_e)a, false);
-            //}
-            //
-            //item_adjustByDiffWithoutHud(ITEM_C_NOTE, 0);
-            //item_adjustByDiffWithoutHud(ITEM_E_JIGGY, 0);
-            //item_adjustByDiffWithoutHud(ITEM_1C_MUMBO_TOKEN, 0);
 
             isGameComplete = true;
             Notification::Emit({ .message = "Seed Generation completed!" });

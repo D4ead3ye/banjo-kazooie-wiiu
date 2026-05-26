@@ -66,9 +66,7 @@ std::vector<RandoCheckId> spiralMountainBridge = {
 
 ChMoleDescription result;
 
-// TODO: SWAP TO RANDO_SAVE_OPTIONS
-#define CVAR_NAME Rando::StaticData::Options[RO_SHUFFLE_MOLEHILLS].cvar
-#define CVAR CVarGetInteger(CVAR_NAME, 0)
+#define OPTION_ENABLED RANDO_SAVE_OPTIONS[RO_SHUFFLE_MOLEHILLS].optionValue
 
 ChMoleDescription GetMoleDescriptionByAbility(int16_t abilityId) {
     result.ability = -1;
@@ -104,10 +102,10 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
         Actor* molehillActor = va_arg(args, Actor*);
         s32* textId = va_arg(args, s32*);
         s32* isLearned = va_arg(args, s32*);
-
-        if (CVAR) {
+        
+        if (OPTION_ENABLED) {
             if (molehillActor->actorTypeSpecificField == 8) {
-
+                return;
             }
 
             RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(
@@ -160,7 +158,7 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
         Actor* molehillActor = va_arg(args, Actor*);
 
         
-        if (CVAR) {
+        if (OPTION_ENABLED) {
             if (CheckBridgeState() && !mapSpecificFlags_get(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED)) {
                 mapSpecificFlags_set(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, true);
                 //mapSpecificFlags_set(SM_SPECIFIC_FLAG_10, true);
@@ -173,7 +171,7 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
     })
 
     COND_VB_SHOULD(VB_OVERRIDE_SM_BRIDGE_STATE, EVENT_PRIORITY_NORMAL, true, {
-        if (CVAR) {
+        if (OPTION_ENABLED) {
             if (CheckBridgeState()) {
                 *should = true;
             }

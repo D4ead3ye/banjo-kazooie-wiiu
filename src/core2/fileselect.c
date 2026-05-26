@@ -120,14 +120,14 @@ void gameFile_clear(s32 gamenum){
 
 void gameFile_load(s32 gamenum){
     s32 filenum = gameFile_GameIdToFileIdMap[gamenum];
-    CALL_EVENT(OnGameLoad, filenum);
-    saveData_load(&gameFile_saveData[filenum]);
+    CALL_EVENT(OnGameLoad, gamenum);
+    saveData_load(&gameFile_saveData[gamenum]);
 }
 
 void gameFile_save(s32 gamenum){
     s32 filenum = gameFile_GameIdToFileIdMap[gamenum];
-    saveData_create(&gameFile_saveData[filenum]);
-    CALL_EVENT(OnGameSave, &gameFile_saveData[filenum]);
+    saveData_create(&gameFile_saveData[gamenum]);
+    CALL_EVENT(OnGameSave, &gameFile_saveData[gamenum]);
 }
 
 bool gameFile_isNotEmpty(s32 gamenum){

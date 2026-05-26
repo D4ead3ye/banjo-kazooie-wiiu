@@ -1,6 +1,7 @@
 #include "Logic.h"
 // #include "port/Rando/Spoiler/Spoiler.h"
 #include "port/ui/Notification.h"
+#include "port/ui/cvar_prefixes.h"
 #include <libultraship/bridge/consolevariablebridge.h>
 #include <sstream>
 #include <random>
@@ -122,6 +123,14 @@ void GenerateShufflePool(SaveData* saveData) {
         };
 
         shuffledPool.push_back(randoShuffleEntry);
+
+        RANDO_SAVE_CHECKS[randoShuffleEntry.randoCheckId].name = randoShuffleEntry.name;
+        RANDO_SAVE_CHECKS[randoShuffleEntry.randoCheckId].randoItemId = randoShuffleEntry.randoItemId;
+        RANDO_SAVE_CHECKS[randoShuffleEntry.randoCheckId].randoCollectionId = randoShuffleEntry.randoCollectionId;
+        RANDO_SAVE_CHECKS[randoShuffleEntry.randoCheckId].shuffledCheckId = randoShuffleEntry.shuffleCheckId;
+        RANDO_SAVE_CHECKS[randoShuffleEntry.randoCheckId].isShuffled = randoShuffleEntry.isShuffled;
+        RANDO_SAVE_CHECKS[randoShuffleEntry.randoCheckId].obtained = randoShuffleEntry.obtained;
+        RANDO_SAVE_CHECKS[randoShuffleEntry.randoCheckId].skipped = randoShuffleEntry.skipped;
     }
 
     if (!abilityCheckPool.empty()) {
@@ -138,7 +147,20 @@ void GenerateShufflePool(SaveData* saveData) {
             };
 
             shuffledPool.push_back(randoShuffleEntry);
+
+            RANDO_SAVE_CHECKS[randoShuffleEntry.randoCheckId].name = randoShuffleEntry.name;
+            RANDO_SAVE_CHECKS[randoShuffleEntry.randoCheckId].randoItemId = randoShuffleEntry.randoItemId;
+            RANDO_SAVE_CHECKS[randoShuffleEntry.randoCheckId].randoCollectionId = randoShuffleEntry.randoCollectionId;
+            RANDO_SAVE_CHECKS[randoShuffleEntry.randoCheckId].shuffledCheckId = randoShuffleEntry.shuffleCheckId;
+            RANDO_SAVE_CHECKS[randoShuffleEntry.randoCheckId].isShuffled = randoShuffleEntry.isShuffled;
+            RANDO_SAVE_CHECKS[randoShuffleEntry.randoCheckId].obtained = randoShuffleEntry.obtained;
+            RANDO_SAVE_CHECKS[randoShuffleEntry.randoCheckId].skipped = randoShuffleEntry.skipped;
         }
+    }
+
+    for (auto& [optionId, optionValue] : Rando::StaticData::Options) {
+        RANDO_SAVE_OPTIONS[optionId].name = optionValue.name;
+        RANDO_SAVE_OPTIONS[optionId].optionValue = CVarGetInteger(optionValue.cvar, optionValue.defaultValue);
     }
 }
 
