@@ -37,6 +37,10 @@ void UpdateJunkList() {
 actor_e GetActorIdByShuffledObjectState(Rando::StaticData::RandoShuffledPool shuffledObject) {
     actor_e randoActorId = (actor_e)Rando::StaticData::Items[shuffledObject.randoItemId].actorId;
 
+    if (randoActorId == ACTOR_12C_MOLEHILL) {
+        return randoActorId;
+    }
+
     if (CVarGetInteger(Rando::StaticData::Options[RO_SPAWN_JUNK].cvar, 0) == RO_GENERIC_ON) {
         randoActorId = shuffledObject.obtained ? junkItemList[(rand() % junkItemList.size())]
                                                : (actor_e)Rando::StaticData::Items[shuffledObject.randoItemId].actorId;

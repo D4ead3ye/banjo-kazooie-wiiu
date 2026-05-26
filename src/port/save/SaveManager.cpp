@@ -68,21 +68,21 @@ static void BitfieldSetNBits(uint8_t* array, int startIndex, int numBits, int va
 }
 
 void RandoSaveCheck_to_json(nlohmann::json& j, const RandoSaveCheck& randoSaveCheck) {
-    j["randoItemId"] = randoSaveCheck.randoItemId;
-    j["shuffledCheckId"] = randoSaveCheck.shuffledCheckId;
-    j["randoCollectionId"] = randoSaveCheck.randoCollectionId;
-    j["shuffled"] = randoSaveCheck.isShuffled;
-    j["obtained"] = randoSaveCheck.obtained;
-    j["skipped"] = randoSaveCheck.skipped;
+    j = nlohmann::json::array({ randoSaveCheck.randoItemId, randoSaveCheck.shuffledCheckId,
+                                randoSaveCheck.randoCollectionId, randoSaveCheck.isShuffled, randoSaveCheck.obtained,
+                                randoSaveCheck.skipped });
 }
 
-RandoSaveCheck RandoSaveCheck_from_json(const json& j, RandoSaveCheck& randoSaveCheck) {
-    j.at("randoItemId").get_to(randoSaveCheck.randoItemId);
-    j.at("shuffledCheckId").get_to(randoSaveCheck.shuffledCheckId);
-    j.at("randoCollectionId").get_to(randoSaveCheck.randoCollectionId);
-    j.at("shuffled").get_to(randoSaveCheck.isShuffled);
-    j.at("obtained").get_to(randoSaveCheck.obtained);
-    j.at("skipped").get_to(randoSaveCheck.skipped);
+RandoSaveCheck RandoSaveCheck_from_json(const nlohmann::json& j, RandoSaveCheck& randoSaveCheck) {
+    // Optional: Add a safety check to prevent out-of-bounds crashes
+    if (j.is_array() && j.size() >= 6) {
+        j.at(0).get_to(randoSaveCheck.randoItemId);
+        j.at(1).get_to(randoSaveCheck.shuffledCheckId);
+        j.at(2).get_to(randoSaveCheck.randoCollectionId);
+        j.at(3).get_to(randoSaveCheck.isShuffled);
+        j.at(4).get_to(randoSaveCheck.obtained);
+        j.at(5).get_to(randoSaveCheck.skipped);
+    }
 
     return randoSaveCheck;
 }
