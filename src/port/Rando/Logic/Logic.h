@@ -10,10 +10,7 @@ extern "C" {
 void item_set(s32 item, s32 val);
 void item_adjustByDiffWithoutHud(enum item_e item, s32 diff);
 s32 item_getCount(enum item_e item);
-s32 itemscore_noteScores_getTotal(void);
 void itemscore_noteScores_clear(void);
-void item_setItemsStartCounts(void);
-void itemPrint_update(void);
 
 void ability_unlock(enum ability_e);
 int ability_isUnlocked(enum ability_e uid);
@@ -363,7 +360,7 @@ inline bool CanKillEnemy(actor_e enemyType) {
 #define CAN_BREAK_OBJECT(objectType) CanBreakObject(objectType)
 #define CAN_COLLECT_JINJOS(levelId) CanCollectWorldJinjos(levelId)
 #define CAN_KILL_ENEMY(enemyType) CanKillEnemy(enemyType)
-#define CAN_UNLOCK_NOTE_DOOR(noteCount) item_getCount(ITEM_C_NOTE) >= noteCount&& CAN_ACCESS(RA_NOTE_DOOR_##noteCount)
+#define CAN_UNLOCK_NOTE_DOOR(noteCount) item_getCount(ITEM_C_NOTE) >= noteCount && CAN_ACCESS(RA_NOTE_DOOR_##noteCount)
 #define CAN_UNLOCK_WORLD(levelId) CanOpenWorld(levelId)
 #define CAN_USE_ABILITY(abilityId) ability_isUnlocked(abilityId)
 #define CAN_USE_TRANSFORMATION(transId) CanUseTransformation(transId)

@@ -111,7 +111,6 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
             RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(
                 molehillActor->position_x, molehillActor->position_y, molehillActor->position_z);
 
-            //BK_LOG_INFO("RandoCheckId: %i", randoCheckId);
             if (randoCheckId == RC_UNKNOWN) {
                 return;
             }
@@ -120,7 +119,6 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
             ChMoleDescription moleInfo = GetMoleDescriptionByAbility(shuffledMolehill.randoCollectionId);
 
             if (moleInfo.ability >= ABILITY_0_BARGE) {
-                //BK_LOG_INFO("Ability ID: %i", moleInfo.ability);
                 *should = true;
 
                 func_80347A14(0);
@@ -133,11 +131,26 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
                         ability_unlock(ABILITY_C_ROLL);
                         ability_unlock(ABILITY_B_RATATAT_RAP);
                         break;
+                    case ABILITY_6_EGGS:
+                        *textId = (s32)moleInfo.refresher_text_id;
+                        ability_unlock((ability_e)moleInfo.ability);
+                        item_adjustByDiffWithoutHud(ITEM_D_EGGS, 25);
+                        break;
                     case ABILITY_8_FLAP_FLIP:
                         *textId = (s32)moleInfo.refresher_text_id;
                         ability_unlock(ABILITY_A_HOLD_A_JUMP_HIGHER);
                         ability_unlock(ABILITY_7_FEATHERY_FLAP);
                         ability_unlock(ABILITY_8_FLAP_FLIP);
+                        break;
+                    case ABILITY_9_FLIGHT:
+                        *textId = (s32)moleInfo.refresher_text_id;
+                        ability_unlock((ability_e)moleInfo.ability);
+                        item_adjustByDiffWithoutHud(ITEM_F_RED_FEATHER, 25);
+                        break;
+                    case ABILITY_12_WONDERWING:
+                        *textId = (s32)moleInfo.refresher_text_id;
+                        ability_unlock((ability_e)moleInfo.ability);
+                        item_adjustByDiffWithoutHud(ITEM_10_GOLD_FEATHER, 5);
                         break;
                     default:
                         *textId = (s32)moleInfo.refresher_text_id;
