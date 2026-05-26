@@ -264,10 +264,14 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
     // This doesn't have to exist, added strictly for better development testing.
     for (auto& [regionId, regionData] : Rando::Logic::Regions) {
         reachableRegions[regionId].name = regionData.regionName;
+        reachableRegions[regionId].canAccess = false;
+        reachableRegions[regionId].isFilled = false;
     }
 
     for (auto& [checkId, checkData] : Rando::StaticData::Checks) {
         reachableChecks[checkId].name = checkData.name;
+        reachableChecks[checkId].canAccess = false;
+        reachableChecks[checkId].isFilled = false;
     }
 
     // Starting Region Initialization
