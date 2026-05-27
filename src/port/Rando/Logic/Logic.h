@@ -28,6 +28,8 @@ enum level_e map_getLevel(enum map_e map);
 enum map_e gsworld_getMap(void);
 }
 
+extern int32_t randoFinalSeed;
+
 extern std::map<ability_e, std::pair<const char*, const char*>> abilityLoadoutMap;
 extern std::map<item_e, std::pair<const char*, const char*>> itemLoadoutMap;
 

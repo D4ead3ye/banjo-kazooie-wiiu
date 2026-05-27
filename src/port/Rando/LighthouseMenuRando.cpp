@@ -41,7 +41,7 @@ void LighthouseMenu::AddMenuRando() {
     AddSidebarEntry("Rando", "General", 1);
     WidgetPath path = { "Rando", "General", SECTION_COLUMN_1 };
     
-    AddWidget(path, "Enable Rando", WIDGET_SEPARATOR_TEXT);
+    AddWidget(path, "Settings", WIDGET_SEPARATOR_TEXT);
     
     AddWidget(path, "Enable Rando", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_RANDOMIZER_SETTING("Enable"))
@@ -58,7 +58,7 @@ void LighthouseMenu::AddMenuRando() {
 
                 if (ImGui::Selectable(logicModes[i], isSelected)) {
                     CVarSetInteger(Rando::StaticData::Options[RO_LOGIC].cvar, i);
-                }
+        }
 
                 if (isSelected) {
                     ImGui::SetItemDefaultFocus();
@@ -67,7 +67,36 @@ void LighthouseMenu::AddMenuRando() {
             ImGui::EndCombo();
         }
         UIWidgets::PopStyleCombobox();
-        });
+    });
+
+    AddWidget(path, "Manual Seed Options", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Manual Seed ID", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
+        // TODO: Seeded Glitchless Generation
+        ImGui::BeginDisabled(true);
+        UIWidgets::CVarCheckbox("Use Manual Seed Input", CVAR_RANDOMIZER_SETTING("ManualInput"),
+                                UIWidgets::CheckboxOptions().Color(WIDGET_COLOR));
+
+        UIWidgets::PushStyleSlider();
+        static char seed[256];
+        std::string stringSeed = CVarGetString(CVAR_RANDOMIZER_SETTING("InputSeed"), "");
+        strcpy(seed, stringSeed.c_str());
+
+        // ImGui::BeginDisabled(!CVarGetInteger(CVAR_RANDOMIZER_SETTING("ManualInput"), 0));
+        ImGui::InputText("##Seed", seed, sizeof(seed), ImGuiInputTextFlags_CallbackAlways,
+                         [](ImGuiInputTextCallbackData* data) {
+                             CVarSetString(CVAR_RANDOMIZER_SETTING("InputSeed"), data->Buf);
+                             return 0;
+                         });
+        if (stringSeed.length() < 1) {
+            ImGui::SameLine(17.0f);
+            ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 0.4f), "Leave blank for random seed");
+        }
+        // ImGui::EndDisabled();
+        ImGui::EndDisabled();
+
+        UIWidgets::PopStyleSlider();
+    });
 
     AddWidget(path, "Seed Metrics", WIDGET_SEPARATOR_TEXT);
 

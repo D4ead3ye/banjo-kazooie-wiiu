@@ -178,6 +178,10 @@ void ResetSaveData() {
         ability_setLearned((ability_e)a, false);
     }
 
+    for (int f = FILEPROG_90_PAID_TERMITE_COST; f < FILEPROG_94_PAID_BEE_COST; f++) {
+        fileProgressFlag_set((file_progress_e)f, 0);
+    }
+
     item_adjustByDiffWithoutHud(ITEM_C_NOTE, -item_getCount(ITEM_C_NOTE));
     item_adjustByDiffWithoutHud(ITEM_E_JIGGY, -item_getCount(ITEM_26_JIGGY_TOTAL));
     item_adjustByDiffWithoutHud(ITEM_26_JIGGY_TOTAL, -item_getCount(ITEM_26_JIGGY_TOTAL));
@@ -324,7 +328,7 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
         reachableChecks[checkId].isFilled = false;
     }
 
-    // Starting Region Initialization
+    // Starting Initialization
     reachableRegions[RR_SPIRAL_MOUNTAIN_ENTRANCE].canAccess = true;
     UpdateAccessibility(RR_SPIRAL_MOUNTAIN_ENTRANCE, reachableRegions[RR_SPIRAL_MOUNTAIN_ENTRANCE].canAccess);
 
