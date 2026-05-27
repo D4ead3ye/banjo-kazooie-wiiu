@@ -11,7 +11,7 @@
 #define OPTION_ENABLED RANDO_SAVE_OPTIONS[RO_SHUFFLE_JIGGIES].optionValue
 
 void Rando::ObjectBehavior::InitJiggyBehavior() {
-    COND_VB_SHOULD(VB_OVERRIDE_JIGGY_SPAWN, EVENT_PRIORITY_NORMAL, OPTION_ENABLED, {
+    COND_VB_SHOULD(VB_OVERRIDE_JIGGY_SPAWN, EVENT_PRIORITY_NORMAL, true, {
 		jiggy_e jiggyId = va_arg(args, jiggy_e);
         f32* position = va_arg(args, f32*);
 
@@ -38,6 +38,7 @@ void Rando::ObjectBehavior::InitJiggyBehavior() {
         actor_e randoActorId = GetActorIdByShuffledObjectState(shuffledObject);
 
         if (randoActorId == ACTOR_1_UNKNOWN) {
+            *should = true;
             return;
         }
 
