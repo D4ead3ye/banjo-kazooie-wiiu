@@ -4,6 +4,8 @@
 #include "port/enhancements/events/hooks/Events.h"
 
 extern "C" {
+extern u8 D_80385FF0[0xE];
+
 void chjiggy_setJiggyId(Actor* thisx, u32 id);
 
 typedef struct {
@@ -30,6 +32,8 @@ void item_inc(enum item_e item);
 s32 item_adjustByDiffWithHud(enum item_e item, s32 diff);
 
 void fxSparkle_musicNote(s16 position[3]);
+void player_getPosition(f32 dst[3]);
+void ml_vec3f_to_vec3h(s16 dst[3], f32 src[3]);
 }
 
 extern int32_t GetJinjoActorMarkerId(actor_e actorId);
@@ -198,10 +202,11 @@ void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId, Actor*
     }
 
     Rando::StaticData::RandoShuffledPool shuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
-    int16_t position[3];
-    position[0] = (int16_t)customActor->position[0];
-    position[1] = (int16_t)customActor->position[1];
-    position[2] = (int16_t)customActor->position[2];
+
+    int16_t playerPosI[3];
+    f32 playerPosF[3];
+    player_getPosition(playerPosF);
+    ml_vec3f_to_vec3h(playerPosI, playerPosF);
 
     switch (shuffledObject.randoItemId) {
         case RI_JINJO_BLUE:
@@ -215,7 +220,7 @@ void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId, Actor*
             } else {
                 if (Rando::Logic::ShouldSpawnJinjoJiggy(
                         Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId)) {
-                    CustomObject::SpawnJinjoJiggy(Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId, position);
+                    CustomObject::SpawnJinjoJiggy(Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId, playerPosI);
                 }
             }
             break;
@@ -223,7 +228,9 @@ void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId, Actor*
             if (Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId == map_getLevel(gsworld_getMap())) {
                 item_inc(ITEM_C_NOTE);
             }
-            fxSparkle_musicNote(position);
+            D_80385FF0[Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId]++;
+            UpdateSaveDataNoteScores();
+            fxSparkle_musicNote(playerPosI);
             break;
         default:
             break;

@@ -4,6 +4,8 @@
 #include <libultraship/bridge/consolevariablebridge.h>
 #include "port/ShipUtils.h"
 
+bool seedStatus = false;
+std::string statusText = "";
 int32_t checksInPool = 0;
 int32_t itemsInPool = 0;
 int32_t abilitiesInPool = 0;
@@ -45,18 +47,20 @@ void Metrics_DrawAbilityData() {
 
 void Metrics_DrawSeedData() {
     if (ImGui::BeginChild("SeedData", ImVec2(ImGui::GetContentRegionAvail().x, 0))) {
-        bool status = reachableEvents[RA_GAME_COMPLETE].canAccess;
-        std::string statusText = status ? "Generation Complete" : "Generation Incomplete";
-        ImVec4 statusColor = WIDGET_TEXT_COLOR(Orange);
+        ImVec4 statusColor = seedStatus         ? WIDGET_TEXT_COLOR(Green)
+                             : checksInPool < 0 ? WIDGET_TEXT_COLOR(Red)
+                                                : WIDGET_TEXT_COLOR(Orange);
 
         if (checksInPool < 0) {
             statusText = "Generation Not Started";
-            statusColor = WIDGET_TEXT_COLOR(Red);
         }
 
         ImGui::SeparatorText("Seed Data");
         
-        ImGui::TextColored(status ? WIDGET_TEXT_COLOR(Green) : statusColor, statusText.c_str());
+        ImGui::TextColored(statusColor, statusText.c_str());
+        ImGui::Separator();
+        ImGui::Text("Seed ID: %i", randoFinalSeed);
+        ImGui::Separator();
 
         if (ImGui::BeginTable("SeedDataTable", 3, ImGuiTableFlags_SizingStretchProp)) {
             ImGui::TableSetupColumn("Labels", ImGuiTableColumnFlags_WidthFixed);
@@ -112,9 +116,13 @@ void Metrics_DrawTabBar() {
     UIWidgets::PopStyleTabs();
 }
 
-void RefreshMetrics() {
+void RefreshMetrics(std::string text) {
+    statusText = text.c_str();
+    
     checksInPool = Rando::Logic::checkPool.size() + Rando::Logic::abilityCheckPool.size() - 1;
     itemsInPool = Rando::Logic::itemPool.size() + Rando::Logic::abilityItemPool.size() - 1;
+
+    seedStatus = checksInPool > 0 && statusText == "Generation Complete" ? true : false;
 
     learnedAbilities.clear();
     for (int a = ABILITY_0_BARGE; a < ABILITY_13_1ST_NOTEDOOR; a++) {
@@ -141,7 +149,7 @@ void RefreshMetrics() {
 void DrawSeedMetrics() {
     if (!metricsInitialized) {
         metricsInitialized = true;
-        RefreshMetrics();
+        RefreshMetrics("Generation Not Started");
     }
     Metrics_DrawTabBar();
 }

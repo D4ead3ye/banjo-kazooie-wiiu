@@ -301,6 +301,7 @@ ordered_json Convert_SaveDataToJSON(SaveData* saveData, int32_t fileNum) {
 
     if (saveData->shipSaveData.fileType == FILE_TYPE_SAVE_RANDO) {
         Rando::Logic::GenerateSaveData(saveData);
+        shipRando["seedId"] = saveData->shipSaveData.randoSaveData.seedId;
     
         for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
             json jsonSaveChecks = nlohmann::json::object();
@@ -515,6 +516,7 @@ SaveData* Convert_JSONToSaveData(int32_t fileNum) {
 
     if (j["ship"]["fileType"].get<int>() == FILE_TYPE_SAVE_RANDO) {
         json rando = j["ship"]["rando"];
+        saveData->shipSaveData.randoSaveData.seedId = rando["seedId"];
     
         for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
             json jsonSaveChecks = rando["randoSaveCheck"][Rando::StaticData::Checks[(RandoCheckId)i].name];

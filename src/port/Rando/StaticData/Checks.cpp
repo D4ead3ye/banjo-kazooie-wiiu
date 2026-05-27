@@ -1259,5 +1259,19 @@ RandoCheckId GetJinjoJiggyCheckByLevelId(int16_t levelId) {
     return RC_UNKNOWN;
 }
 
+RandoCheckId GetCheckByAbilityId(int32_t abilityId) {
+    for (auto& [randoCheckId, randoStaticCheck] : Checks) {
+        if (randoStaticCheck.randoCheckType != RCTYPE_MOLEHILL) {
+            continue;
+        }
+
+        if (randoStaticCheck.collectionId == abilityId) {
+            return randoCheckId;
+        }
+    }
+
+    return RC_UNKNOWN;
+}
+
 } // namespace StaticData
 } // namespace Rando

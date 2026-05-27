@@ -44,6 +44,16 @@ void TableCellCenteredText(const char* text) {
     ImGui::Text("%s", text);
 }
 
+extern uint32_t Ship_Hash(std::string str) {
+    const size_t len = str.size();
+    uint32_t hval = 0x811c9dc5;
+    for (size_t pos = 0; pos < len; pos++) {
+        hval ^= (uint32_t)str[pos];
+        hval *= 0x01000193;
+    }
+    return hval;
+}
+
 extern "C" {
 
 // Furnace Fun active flag

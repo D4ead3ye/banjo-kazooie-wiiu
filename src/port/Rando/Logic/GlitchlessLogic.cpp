@@ -178,6 +178,10 @@ void ResetSaveData() {
         ability_setLearned((ability_e)a, false);
     }
 
+    for (int f = FILEPROG_90_PAID_TERMITE_COST; f < FILEPROG_94_PAID_BEE_COST; f++) {
+        fileProgressFlag_set((file_progress_e)f, 0);
+    }
+
     item_adjustByDiffWithoutHud(ITEM_C_NOTE, -item_getCount(ITEM_C_NOTE));
     item_adjustByDiffWithoutHud(ITEM_E_JIGGY, -item_getCount(ITEM_26_JIGGY_TOTAL));
     item_adjustByDiffWithoutHud(ITEM_26_JIGGY_TOTAL, -item_getCount(ITEM_26_JIGGY_TOTAL));
@@ -324,8 +328,21 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
         reachableChecks[checkId].isFilled = false;
     }
 
-    // Starting Region Initialization
+    // Starting Initialization
     reachableRegions[RR_SPIRAL_MOUNTAIN_ENTRANCE].canAccess = true;
+    Rando::Logic::GrantStartingLoadout();
+    for (auto& [ability, abilityInfo] : abilityLoadoutMap) {
+        if (CVarGetInteger(abilityInfo.second, 0)) {
+            RandoCheckId abilityCheck = Rando::StaticData::GetCheckByAbilityId(ability);
+
+            auto it = std::find(abilityCheckPool.begin(), abilityCheckPool.end(), abilityCheck);
+            if (it != abilityCheckPool.end()) {
+                abilityCheckPool.erase(it);
+                UpdateAccessibility(RR_SPIRAL_MOUNTAIN_ENTRANCE, reachableRegions[RR_SPIRAL_MOUNTAIN_ENTRANCE].canAccess);
+                continue;
+            }
+        }
+    }
     UpdateAccessibility(RR_SPIRAL_MOUNTAIN_ENTRANCE, reachableRegions[RR_SPIRAL_MOUNTAIN_ENTRANCE].canAccess);
 
     while (!isGameComplete) {
@@ -349,6 +366,7 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
                         accessibilityAdded = true;
                     } else {
                         Notification::Emit({ .message = "No Checks left for First Jiggy." });
+                        RefreshMetrics("No Checks Available for First Jiggy");
                     }
                 }
             }
@@ -368,7 +386,7 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
                                         placedCheckItems[mole].shuffledCheckId });
             }
 
-            RefreshMetrics();
+            RefreshMetrics("Generation Complete");
             ResetSaveData();
 
             isGameComplete = true;
@@ -516,7 +534,7 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
             } else {
                 if (prevProgressionIndex == progressionIndex) {
                     Notification::Emit({ .message = "Seed Configuration impossible, failed to generate." });
-                    RefreshMetrics();
+                    RefreshMetrics("Seed Failed to Generate");
                     ResetSaveData();
                     break;
                 } else {

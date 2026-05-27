@@ -8,6 +8,8 @@
 
 #include "enums.h"
 
+int32_t randoFinalSeed = 0;
+
 namespace Rando {
 
 namespace Logic {
@@ -20,30 +22,26 @@ std::vector<std::tuple<actor_e, int32_t, RandoCheckId>> abilityItemPool;
 std::vector<Rando::StaticData::RandoShuffledPool> shuffledPool;
 
 uint32_t GetRandoSeed(const std::string& input) {
-    // if (finalSeed > 0) {
-    //     return finalSeed;
-    // }
+    if (randoFinalSeed > 0) {
+        return randoFinalSeed;
+    }
 
-    std::random_device rd;
+    std::random_device randDevice;
 
-    // if (CVarGetInteger("gRandoSettings.ManualSeedEntry", 0)) {
-    //     if (input.empty()) {
-    //         return rd();
-    //     } else {
-    //         return Ship_Hash(input);
-    //     }
-    // }
+    if (CVarGetInteger(CVAR_RANDOMIZER_SETTING("ManualInput"), 0) && !input.empty()) {
+        return Ship_Hash(input);
+    }
 
-    return rd();
+    return randDevice();
 }
 
 void Rando::Logic::ShuffleRandoItems(const std::string& input, std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& pool) {
     uint32_t seed = GetRandoSeed(input);
 
-    std::mt19937 g(seed);
-    std::shuffle(pool.begin(), pool.end(), g);
+    std::mt19937 rando(seed);
+    std::shuffle(pool.begin(), pool.end(), rando);
 
-    // finalSeed = seed;
+    randoFinalSeed = seed;
 }
 
 
@@ -97,11 +95,11 @@ void GenerateShufflePool(SaveData* saveData) {
     }
 
     if (!itemPool.empty()) {
-        Rando::Logic::ShuffleRandoItems("", itemPool);
+        Rando::Logic::ShuffleRandoItems(CVarGetString(CVAR_RANDOMIZER_SETTING("InputSeed"), ""), itemPool);
     }
 
     if (!abilityItemPool.empty()) {
-        Rando::Logic::ShuffleRandoItems("", abilityItemPool);
+        Rando::Logic::ShuffleRandoItems(CVarGetString(CVAR_RANDOMIZER_SETTING("InputSeed"), ""), abilityItemPool);
     }
 
     if (RANDO_SAVE_OPTIONS[RO_LOGIC].optionValue == RO_LOGIC_GLITCHLESS) {
@@ -162,6 +160,8 @@ void GenerateShufflePool(SaveData* saveData) {
         RANDO_SAVE_OPTIONS[optionId].name = optionValue.name;
         RANDO_SAVE_OPTIONS[optionId].optionValue = CVarGetInteger(optionValue.cvar, optionValue.defaultValue);
     }
+
+    saveData->shipSaveData.randoSaveData.seedId = randoFinalSeed;
 }
 
 void GeneratePoolFromSaveData(SaveData* saveData) {
