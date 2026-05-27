@@ -4,6 +4,8 @@
 #include "port/enhancements/events/hooks/Events.h"
 
 extern "C" {
+extern u8 D_80385FF0[0xE];
+
 void chjiggy_setJiggyId(Actor* thisx, u32 id);
 
 typedef struct {
@@ -223,6 +225,8 @@ void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId, Actor*
             if (Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId == map_getLevel(gsworld_getMap())) {
                 item_inc(ITEM_C_NOTE);
             }
+            D_80385FF0[Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId]++;
+            UpdateSaveDataNoteScores();
             fxSparkle_musicNote(position);
             break;
         default:
