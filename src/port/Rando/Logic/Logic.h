@@ -38,7 +38,7 @@ extern Rando::StaticData::RandoLogicData reachableEvents[RA_MAX];
 extern Rando::StaticData::RandoLogicData reachableChecks[RC_MAX];
 
 void DrawSeedMetrics();
-void RefreshMetrics();
+void RefreshMetrics(std::string text);
 
 namespace Rando {
 

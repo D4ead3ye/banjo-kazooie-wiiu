@@ -330,6 +330,19 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
 
     // Starting Initialization
     reachableRegions[RR_SPIRAL_MOUNTAIN_ENTRANCE].canAccess = true;
+    Rando::Logic::GrantStartingLoadout();
+    for (auto& [ability, abilityInfo] : abilityLoadoutMap) {
+        if (CVarGetInteger(abilityInfo.second, 0)) {
+            RandoCheckId abilityCheck = Rando::StaticData::GetCheckByAbilityId(ability);
+
+            auto it = std::find(abilityCheckPool.begin(), abilityCheckPool.end(), abilityCheck);
+            if (it != abilityCheckPool.end()) {
+                abilityCheckPool.erase(it);
+                UpdateAccessibility(RR_SPIRAL_MOUNTAIN_ENTRANCE, reachableRegions[RR_SPIRAL_MOUNTAIN_ENTRANCE].canAccess);
+                continue;
+            }
+        }
+    }
     UpdateAccessibility(RR_SPIRAL_MOUNTAIN_ENTRANCE, reachableRegions[RR_SPIRAL_MOUNTAIN_ENTRANCE].canAccess);
 
     while (!isGameComplete) {
@@ -353,6 +366,7 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
                         accessibilityAdded = true;
                     } else {
                         Notification::Emit({ .message = "No Checks left for First Jiggy." });
+                        RefreshMetrics("No Checks Available for First Jiggy");
                     }
                 }
             }
@@ -372,7 +386,7 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
                                         placedCheckItems[mole].shuffledCheckId });
             }
 
-            RefreshMetrics();
+            RefreshMetrics("Generation Complete");
             ResetSaveData();
 
             isGameComplete = true;
@@ -520,7 +534,7 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
             } else {
                 if (prevProgressionIndex == progressionIndex) {
                     Notification::Emit({ .message = "Seed Configuration impossible, failed to generate." });
-                    RefreshMetrics();
+                    RefreshMetrics("Seed Failed to Generate");
                     ResetSaveData();
                     break;
                 } else {
