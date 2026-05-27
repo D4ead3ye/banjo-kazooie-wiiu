@@ -134,7 +134,7 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
                     case ABILITY_6_EGGS:
                         *textId = (s32)moleInfo.refresher_text_id;
                         ability_unlock((ability_e)moleInfo.ability);
-                        item_adjustByDiffWithoutHud(ITEM_D_EGGS, 25);
+                        item_adjustByDiffWithoutHud(ITEM_D_EGGS, 50);
                         break;
                     case ABILITY_8_FLAP_FLIP:
                         *textId = (s32)moleInfo.refresher_text_id;
