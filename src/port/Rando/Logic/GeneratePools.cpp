@@ -176,6 +176,7 @@ void GeneratePoolFromSaveData(SaveData* saveData) {
             .name = Rando::StaticData::Checks[(RandoCheckId)i].name,
             .randoCheckId = (RandoCheckId)i,
             .shuffleCheckId = randoSaveCheck.shuffledCheckId,
+            .randoCollectionId = randoSaveCheck.randoCollectionId,
             .randoItemId = randoSaveCheck.randoItemId,
             .isShuffled = randoSaveCheck.isShuffled,
             .obtained = randoSaveCheck.obtained,
