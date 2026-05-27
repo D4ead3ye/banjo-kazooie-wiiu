@@ -168,6 +168,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
 
         actor_e randoActorId = GetActorIdByShuffledObjectState(shuffledObject);
         if (randoActorId == ACTOR_1_UNKNOWN) {
+            *should = true;
             return;
         }
 
