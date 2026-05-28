@@ -71,9 +71,7 @@ void Rando::Logic::InitializeSaveData(SaveData* saveData) {
 
 void Rando::Logic::GenerateSaveData(SaveData* saveData) {
     for (auto& object : Rando::Logic::shuffledPool) {
-        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByName(object.name);
-
-        saveData->shipSaveData.randoSaveData.randoSaveCheck[randoCheckId] = object;
+        saveData->shipSaveData.randoSaveData.randoSaveCheck[object.randoCheckId] = object;
     }
 }
 
