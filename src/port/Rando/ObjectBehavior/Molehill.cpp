@@ -115,7 +115,7 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
                 return;
             }
 
-            Rando::StaticData::RandoShuffledPool shuffledMolehill = Rando::Logic::GetShuffledObject(randoCheckId);
+            RandoSaveCheck shuffledMolehill = Rando::Logic::GetShuffledObject(randoCheckId);
             ChMoleDescription moleInfo = GetMoleDescriptionByAbility(shuffledMolehill.randoCollectionId);
 
             if (moleInfo.ability >= ABILITY_0_BARGE) {
@@ -158,10 +158,12 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
                         break;
                 }
 
-                CustomObject::CheckObtained(shuffledMolehill.randoCheckId);
+                CustomObject::CheckObtained(Rando::StaticData::GetCheckByName(shuffledMolehill.name));
 
-                if (CheckBridgeState()) {
-                    SetSpiralMountainFlags();
+                if (map_getLevel(gsworld_getMap()) == LEVEL_B_SPIRAL_MOUNTAIN) {
+                    if (CheckBridgeState()) {
+                        SetSpiralMountainFlags();
+                    }
                 }
             }
         }

@@ -34,7 +34,7 @@ void UpdateJunkList() {
     }
 }
 
-actor_e GetActorIdByShuffledObjectState(Rando::StaticData::RandoShuffledPool shuffledObject) {
+actor_e GetActorIdByShuffledObjectState(RandoSaveCheck shuffledObject) {
     actor_e randoActorId = (actor_e)Rando::StaticData::Items[shuffledObject.randoItemId].actorId;
 
     if (randoActorId == ACTOR_12C_MOLEHILL) {

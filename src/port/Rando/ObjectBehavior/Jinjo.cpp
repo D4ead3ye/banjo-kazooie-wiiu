@@ -30,7 +30,7 @@ void Rando::ObjectBehavior::InitJinjoBehavior() {
                 continue;
             }
         
-            if (Rando::StaticData::Checks[pool.shuffleCheckId].worldId != ev->levelId) {
+            if (Rando::StaticData::Checks[pool.shuffledCheckId].worldId != ev->levelId) {
                 continue;
             }
         

@@ -32,7 +32,7 @@ typedef struct {
 } BundleInfo;
 
 CustomActor CreateCustomActor(RandoCheckId randoCheckId, int32_t position[3]);
-actor_e GetActorIdByShuffledObjectState(Rando::StaticData::RandoShuffledPool shuffledObject);
+actor_e GetActorIdByShuffledObjectState(RandoSaveCheck shuffledObject);
 void UpdateSaveDataNoteScores();
 void ApplyBundleActorPhysics(Actor* actor, int32_t bundle_id, BundleInfo* bundle_info, f32 bundleYaw);
 void ApplyCustomActorPhysics(RandoCheckId randoCheckId, Actor* actor, bool isJinjoJiggy);

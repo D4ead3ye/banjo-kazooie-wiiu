@@ -158,7 +158,8 @@ void DrawCheckTrackerList() {
 
                 ImGui::TableNextColumn();
                 for (auto& entry : Rando::Logic::shuffledPool) {
-                    if (Rando::StaticData::Checks[entry.randoCheckId].worldId != i) {
+                    RandoCheckId randoCheckId = Rando::StaticData::GetCheckByName(entry.name);
+                    if (Rando::StaticData::Checks[randoCheckId].worldId != i) {
                         continue;
                     }
 
@@ -172,19 +173,21 @@ void DrawCheckTrackerList() {
                     }
 
                     if (!entry.obtained && CVAR_SHOW_LOGIC) {
-                        checkTextColor = Rando::Logic::CanAccessCheck(entry.randoCheckId)
+                        checkTextColor = Rando::Logic::CanAccessCheck(randoCheckId)
                                              ? UIWidgets::ColorValues.at(UIWidgets::Colors::White)
                                              : VecFromRGBA8(CVAR_LOGIC_COLOR);
                     }
 
                     ImGui::BeginGroup();
-                    ImGui::TextColored(
-                        checkTextColor,
-                        Ship_ConvertEnumToReadableName(Rando::StaticData::Checks[entry.randoCheckId].name).c_str());
+                    ImGui::TextColored(checkTextColor, Ship_ConvertEnumToReadableName(entry.name).c_str());
                     if (entry.obtained) {
                         ImGui::SameLine();
-                        RandoItemId randoItemId = Rando::Logic::GetShuffledObject(entry.randoCheckId).randoItemId;
-                        ImGui::TextColored(itemTextColor, "(%s)", Rando::StaticData::Items[randoItemId].name);
+                        RandoItemId randoItemId = Rando::Logic::GetShuffledObject(randoCheckId).randoItemId;
+                        std::string randoItemName =
+                            Rando::StaticData::Checks[randoCheckId].randoCheckType == RCTYPE_MOLEHILL
+                                ? abilityNameList[entry.randoCollectionId]
+                                : Rando::StaticData::Items[randoItemId].name;
+                        ImGui::TextColored(itemTextColor, "(%s)", randoItemName);
                     } else if (entry.skipped) {
                         ImGui::SameLine();
                         ImGui::TextColored(itemTextColor, "(Skipped)");
