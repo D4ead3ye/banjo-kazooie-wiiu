@@ -158,8 +158,7 @@ void DrawCheckTrackerList() {
 
                 ImGui::TableNextColumn();
                 for (auto& entry : Rando::Logic::shuffledPool) {
-                    RandoCheckId randoCheckId = Rando::StaticData::GetCheckByName(entry.name);
-                    if (Rando::StaticData::Checks[randoCheckId].worldId != i) {
+                    if (Rando::StaticData::Checks[entry.randoCheckId].worldId != i) {
                         continue;
                     }
 
@@ -173,7 +172,7 @@ void DrawCheckTrackerList() {
                     }
 
                     if (!entry.obtained && CVAR_SHOW_LOGIC) {
-                        checkTextColor = Rando::Logic::CanAccessCheck(randoCheckId)
+                        checkTextColor = Rando::Logic::CanAccessCheck(entry.randoCheckId)
                                              ? UIWidgets::ColorValues.at(UIWidgets::Colors::White)
                                              : VecFromRGBA8(CVAR_LOGIC_COLOR);
                     }
@@ -182,9 +181,9 @@ void DrawCheckTrackerList() {
                     ImGui::TextColored(checkTextColor, Ship_ConvertEnumToReadableName(entry.name).c_str());
                     if (entry.obtained) {
                         ImGui::SameLine();
-                        RandoItemId randoItemId = Rando::Logic::GetShuffledObject(randoCheckId).randoItemId;
+                        RandoItemId randoItemId = Rando::Logic::GetShuffledObject(entry.randoCheckId).randoItemId;
                         std::string randoItemName =
-                            Rando::StaticData::Checks[randoCheckId].randoCheckType == RCTYPE_MOLEHILL
+                            Rando::StaticData::Checks[entry.randoCheckId].randoCheckType == RCTYPE_MOLEHILL
                                 ? abilityNameList[entry.randoCollectionId]
                                 : Rando::StaticData::Items[randoItemId].name;
                         ImGui::TextColored(itemTextColor, "(%s)", randoItemName);

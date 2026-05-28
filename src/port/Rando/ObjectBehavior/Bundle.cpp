@@ -50,7 +50,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
         spawnPosition[2] = (int32_t)position[2];
 
         RandoSaveCheck shuffledObject;
-        shuffledObject.name = "";
+        shuffledObject.randoCheckId = RC_UNKNOWN;
         level_e levelId = map_getLevel(gsworld_getMap());
         applyCustomPhysics = false;
 
@@ -166,7 +166,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             default:
                 return;
         }
-        if (shuffledObject.name == "") {
+        if (shuffledObject.randoCheckId == RC_UNKNOWN) {
             return;
         }
 
@@ -181,11 +181,10 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             return;
         }
 
-        RandoCheckId customActorCheckId = Rando::StaticData::GetCheckByName(shuffledObject.name);
-        *actor = CustomObject::SetCustomActorParameters(*actor, customActorCheckId);
-        CustomObject::AddToCustomActorMap(customActorCheckId, *actor);
+        *actor = CustomObject::SetCustomActorParameters(*actor, shuffledObject.randoCheckId);
+        CustomObject::AddToCustomActorMap(shuffledObject.randoCheckId, *actor);
         if (applyCustomPhysics) {
-            ApplyCustomActorPhysics(customActorCheckId, *actor, false);
+            ApplyCustomActorPhysics(shuffledObject.randoCheckId, *actor, false);
         } else {
             ApplyBundleActorPhysics(*actor, bundleId, (BundleInfo*)bundleInfo, gBundle_yaw);
         }

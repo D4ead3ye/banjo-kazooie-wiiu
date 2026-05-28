@@ -124,13 +124,12 @@ void CustomObject::SpawnJinjoJiggy(int16_t levelId, int16_t position[3]) {
         Actor* actor;
         RandoSaveCheck shuffledObject = Rando::Logic::GetShuffledObject(jiggyCheckId);
         
-        if (shuffledObject.name != "") {
-            RandoCheckId randoCheckId = Rando::StaticData::GetCheckByName(shuffledObject.name);
+        if (shuffledObject.randoCheckId != RC_UNKNOWN) {
             actor = CustomObject::SpawnCustomActor(
                 (actor_e)Rando::StaticData::Items[shuffledObject.randoItemId].actorId, spawnPosition);
             if (actor != NULL) {
-                actor = CustomObject::SetCustomActorParameters(actor, randoCheckId);
-                ApplyCustomActorPhysics(randoCheckId, actor, true);
+                actor = CustomObject::SetCustomActorParameters(actor, shuffledObject.randoCheckId);
+                ApplyCustomActorPhysics(shuffledObject.randoCheckId, actor, true);
             }
         } else {
             actor = CustomObject::SpawnCustomActor((actor_e)Rando::StaticData::Checks[jiggyCheckId].actorId, spawnPosition);
