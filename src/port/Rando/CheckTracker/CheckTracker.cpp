@@ -179,7 +179,7 @@ void DrawCheckTrackerList() {
 
                     ImGui::BeginGroup();
                     ImGui::TextColored(checkTextColor, Ship_ConvertEnumToReadableName(entry.name).c_str());
-                    if (!entry.obtained) {
+                    if (entry.obtained) {
                         ImGui::SameLine();
                         RandoItemId randoItemId = Rando::Logic::GetShuffledObject(entry.randoCheckId).randoItemId;
                         std::string randoItemName =
