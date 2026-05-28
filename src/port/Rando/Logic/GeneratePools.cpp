@@ -121,13 +121,7 @@ void GenerateShufflePool(SaveData* saveData) {
 
         shuffledPool.push_back(randoShuffleEntry);
 
-        RANDO_SAVE_CHECKS[checkPool[i]].name = randoShuffleEntry.name;
-        RANDO_SAVE_CHECKS[checkPool[i]].randoItemId = randoShuffleEntry.randoItemId;
-        RANDO_SAVE_CHECKS[checkPool[i]].shuffledCheckId = randoShuffleEntry.shuffledCheckId;
-        RANDO_SAVE_CHECKS[checkPool[i]].randoCollectionId = randoShuffleEntry.randoCollectionId;
-        RANDO_SAVE_CHECKS[checkPool[i]].isShuffled = randoShuffleEntry.isShuffled;
-        RANDO_SAVE_CHECKS[checkPool[i]].obtained = randoShuffleEntry.obtained;
-        RANDO_SAVE_CHECKS[checkPool[i]].skipped = randoShuffleEntry.skipped;
+        RANDO_SAVE_CHECKS[checkPool[i]] = randoShuffleEntry;
     }
 
     if (!abilityCheckPool.empty()) {
@@ -143,14 +137,7 @@ void GenerateShufflePool(SaveData* saveData) {
             };
 
             shuffledPool.push_back(randoShuffleEntry);
-
-            RANDO_SAVE_CHECKS[abilityCheckPool[a]].name = randoShuffleEntry.name;
-            RANDO_SAVE_CHECKS[abilityCheckPool[a]].randoItemId = randoShuffleEntry.randoItemId;
-            RANDO_SAVE_CHECKS[abilityCheckPool[a]].shuffledCheckId = randoShuffleEntry.shuffledCheckId;
-            RANDO_SAVE_CHECKS[abilityCheckPool[a]].randoCollectionId = randoShuffleEntry.randoCollectionId;
-            RANDO_SAVE_CHECKS[abilityCheckPool[a]].isShuffled = randoShuffleEntry.isShuffled;
-            RANDO_SAVE_CHECKS[abilityCheckPool[a]].obtained = randoShuffleEntry.obtained;
-            RANDO_SAVE_CHECKS[abilityCheckPool[a]].skipped = randoShuffleEntry.skipped;
+            RANDO_SAVE_CHECKS[abilityCheckPool[a]] = randoShuffleEntry;
         }
     }
 
