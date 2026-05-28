@@ -160,8 +160,10 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
 
                 CustomObject::CheckObtained(Rando::StaticData::GetCheckByName(shuffledMolehill.name));
 
-                if (CheckBridgeState()) {
-                    SetSpiralMountainFlags();
+                if (map_getLevel(gsworld_getMap()) == LEVEL_B_SPIRAL_MOUNTAIN) {
+                    if (CheckBridgeState()) {
+                        SetSpiralMountainFlags();
+                    }
                 }
             }
         }
