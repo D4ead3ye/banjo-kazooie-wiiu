@@ -135,6 +135,7 @@ int32_t GetRandomCheckIndexS(Rando::StaticData::RandoLogicData (&checks)[RC_MAX]
         return -1;
     }
 
+    srand(randoFinalSeed);
     int32_t randomCheck = rand() % availableIndex.size();
 
     return availableIndex[randomCheck];
@@ -164,6 +165,7 @@ int32_t GetRandomItemIndexS(std::vector<std::tuple<actor_e, int32_t, RandoCheckI
         return -1;
     }
 
+    srand(randoFinalSeed);
     int32_t randomItem = rand() % availableIndex.size();
 
     return availableIndex[randomItem];

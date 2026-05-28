@@ -22,17 +22,11 @@ std::vector<std::tuple<actor_e, int32_t, RandoCheckId>> abilityItemPool;
 std::vector<RandoSaveCheck> shuffledPool;
 
 uint32_t GetRandoSeed(const std::string& input) {
-    if (randoFinalSeed > 0) {
-        return randoFinalSeed;
-    }
-
-    std::random_device randDevice;
-
     if (CVarGetInteger(CVAR_RANDOMIZER_SETTING("ManualInput"), 0) && !input.empty()) {
         return Ship_Hash(input);
     }
-
-    return randDevice();
+    std::string randoHash = std::to_string(GetUnixTimestamp());
+    return Ship_Hash(randoHash);
 }
 
 void Rando::Logic::ShuffleRandoItems(const std::string& input, std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& pool) {
