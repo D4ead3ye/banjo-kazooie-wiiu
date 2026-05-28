@@ -186,7 +186,7 @@ void DrawCheckTrackerList() {
                             Rando::StaticData::Checks[entry.randoCheckId].randoCheckType == RCTYPE_MOLEHILL
                                 ? abilityNameList[entry.randoCollectionId]
                                 : Rando::StaticData::Items[randoItemId].name;
-                        ImGui::TextColored(itemTextColor, "(%s)", randoItemName);
+                        ImGui::TextColored(itemTextColor, "(%s)", randoItemName.c_str());
                     } else if (entry.skipped) {
                         ImGui::SameLine();
                         ImGui::TextColored(itemTextColor, "(Skipped)");

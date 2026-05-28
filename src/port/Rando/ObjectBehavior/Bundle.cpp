@@ -79,11 +79,10 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                 break;
             case BUNDLE_7__JIGGY:
                 if (map_getLevel(gsworld_getMap()) == LEVEL_4_BUBBLEGLOOP_SWAMP) {
-                    switch (spawnPosition[2]) {
-                        case 1850:
-                            shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_CROCTUS);
-                            break;
-                    }
+                    shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_CROCTUS);
+                }
+                if (map_getLevel(gsworld_getMap()) == LEVEL_2_TREASURE_TROVE_COVE) {
+                    shuffledObject = Rando::Logic::GetShuffledObject(RC_TTC_JIGGY_BLUBBER);
                 }
                 break;
             case BUNDLE_8__JIGGY:
