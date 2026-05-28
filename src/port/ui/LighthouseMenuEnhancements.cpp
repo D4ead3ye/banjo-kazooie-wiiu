@@ -28,6 +28,11 @@ void LighthouseMenu::AddMenuEnhancements() {
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip("Press Start to Skip Intro Cutscenes."));
 
+    AddWidget(path, "Allow Start to Skip Misc Cutscenes", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cutscenes.SkipMiscCutscenes"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Press Start to skip the Gruntilda's Lair and Game Over cutscenes."));
+
     AddWidget(path, "Skip Jiggy Dance", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Cutscenes.SkipJiggyDance"))
         .RaceDisable(false)
