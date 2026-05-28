@@ -179,13 +179,15 @@ void DrawCheckTrackerList() {
                     }
 
                     ImGui::BeginGroup();
-                    ImGui::TextColored(
-                        checkTextColor,
-                        Ship_ConvertEnumToReadableName(Rando::StaticData::Checks[randoCheckId].name).c_str());
+                    ImGui::TextColored(checkTextColor, Ship_ConvertEnumToReadableName(entry.name).c_str());
                     if (entry.obtained) {
                         ImGui::SameLine();
                         RandoItemId randoItemId = Rando::Logic::GetShuffledObject(randoCheckId).randoItemId;
-                        ImGui::TextColored(itemTextColor, "(%s)", Rando::StaticData::Items[randoItemId].name);
+                        std::string randoItemName =
+                            Rando::StaticData::Checks[randoCheckId].randoCheckType == RCTYPE_MOLEHILL
+                                ? abilityNameList[entry.randoCollectionId]
+                                : Rando::StaticData::Items[randoItemId].name;
+                        ImGui::TextColored(itemTextColor, "(%s)", randoItemName);
                     } else if (entry.skipped) {
                         ImGui::SameLine();
                         ImGui::TextColored(itemTextColor, "(Skipped)");
