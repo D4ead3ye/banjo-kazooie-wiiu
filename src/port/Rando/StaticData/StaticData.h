@@ -19,17 +19,6 @@ struct RandoLogicData {
     bool isShuffled;
 };
 
-struct RandoShuffledPool {
-    const char* name;
-    RandoCheckId randoCheckId;
-    RandoCheckId shuffleCheckId;
-    RandoItemId randoItemId;
-    int32_t randoCollectionId;
-    bool isShuffled;
-    bool obtained;
-    bool skipped;
-};
-
 struct RandoStaticCheck {
     RandoCheckId randoCheckId;
     const char* name;
@@ -46,6 +35,7 @@ RandoCheckId GetCheckByPosition(int32_t posX, int32_t posY, int32_t posZ);
 RandoCheckId GetCheckByJiggyId(int32_t jiggyId);
 RandoCheckId GetJinjoJiggyCheckByLevelId(int16_t levelId);
 RandoCheckId GetCheckByAbilityId(int32_t abilityId);
+RandoCheckId GetCheckByName(const char* checkName);
 
 extern std::map<RandoCheckId, RandoStaticCheck> Checks;
 

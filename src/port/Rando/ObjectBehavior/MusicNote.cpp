@@ -26,7 +26,7 @@ void Rando::ObjectBehavior::InitMusicNoteBehavior() {
         }
 
         for (auto& pool : Rando::Logic::shuffledPool) {
-            if (Rando::StaticData::Checks[pool.shuffleCheckId].worldId != ev->levelId) {
+            if (Rando::StaticData::Checks[pool.shuffledCheckId].worldId != ev->levelId) {
                 continue;
             }
         
