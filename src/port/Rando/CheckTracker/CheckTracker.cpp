@@ -182,7 +182,7 @@ void DrawCheckTrackerList() {
                     if (entry.obtained) {
                         ImGui::SameLine();
                         RandoItemId randoItemId = Rando::Logic::GetShuffledObject(entry.randoCheckId).randoItemId;
-                        std::string randoItemName =
+                        const std::string& randoItemName =
                             Rando::StaticData::Checks[entry.randoCheckId].randoCheckType == RCTYPE_MOLEHILL
                                 ? abilityNameList[entry.randoCollectionId]
                                 : Rando::StaticData::Items[randoItemId].name;
