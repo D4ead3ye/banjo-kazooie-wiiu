@@ -75,7 +75,7 @@ inline bool IsCheckShuffled(RandoCheckId randoCheckId) {
     const char* checkName = Rando::StaticData::Checks[randoCheckId].name;
 
     for (auto& object : shuffledPool) {
-        if (std::string_view(object.name) == std::string_view(checkName)) {
+        if (object.randoCheckId == randoCheckId) {
             isShuffled = object.isShuffled;
             break;
         }
@@ -94,7 +94,7 @@ inline RandoSaveCheck GetShuffledObject(RandoCheckId randoCheckId) {
     }
 
     for (auto& object : shuffledPool) {
-        if (std::string_view(object.name) == std::string_view(checkName)) {
+        if (object.randoCheckId == randoCheckId) {
             shuffledObject = object;
             break;
         }
@@ -108,7 +108,7 @@ inline bool IsCheckObtained(RandoCheckId randoCheckId) {
     const char* checkName = Rando::StaticData::Checks[randoCheckId].name;
 
     for (auto& object : shuffledPool) {
-        if (std::string_view(object.name) == std::string_view(checkName)) {
+        if (object.randoCheckId == randoCheckId) {
             isObtained = object.obtained;
             break;
         }

@@ -8,6 +8,7 @@ namespace Rando {
 namespace MiscBehavior {
 
 void Init();
+void InitWorldStateBehavior();
 void OnFileLoad();
 void OnFileSave();
 
