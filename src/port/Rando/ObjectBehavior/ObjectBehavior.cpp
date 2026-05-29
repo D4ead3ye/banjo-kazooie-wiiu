@@ -228,7 +228,7 @@ void Rando::ObjectBehavior::Init() {
                 event->Cancelled = true;
             }
             CustomObject::ObjectCollected(ev->propId);
-            SendCollisionNotification(randoItemId);
+            //SendCollisionNotification(randoItemId);
         }
     })
 

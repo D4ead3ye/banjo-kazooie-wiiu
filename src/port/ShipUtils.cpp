@@ -333,7 +333,7 @@ std::vector<file_progress_e> worldOpenFlags = {
 };
 
 std::vector<std::string> levelAbbreviations = {
-    "MM", "TTC", "CC", "BGS", "FP", "Lair", "GV", "CCW", "RBB", "MMM", "SM", 
+    "MM", "TTC", "CC", "BGS", "FP", "GL", "GV", "CCW", "RBB", "MMM", "SM", 
 };
 
 json Ship_RetrieveSaveFile(int32_t filenum) {
