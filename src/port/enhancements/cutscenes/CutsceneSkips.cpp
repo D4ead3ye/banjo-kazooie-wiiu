@@ -14,6 +14,7 @@ extern "C" {
 
 #define CVAR_SKIP_BOOT_LOGOS CVAR_ENHANCEMENT("Cutscenes.SkipBootLogos")
 #define CVAR_SKIP_INTRO CVAR_ENHANCEMENT("Cutscenes.StartSkipIntro")
+#define CVAR_SKIP_MISC_CUTSCENES CVAR_ENHANCEMENT("Cutscenes.SkipMiscCutscenes")
 #define CVAR_SKIP_JIGGY_DANCE CVAR_ENHANCEMENT("Cutscenes.SkipJiggyDance")
 
 void RegisterSkipBootLogos_Init() {
@@ -30,6 +31,13 @@ void RegisterSkipIntroCutscene_Init() {
     });
 }
 
+void RegisterSkipMiscCutscenes_Init() {
+    COND_HOOK(OnMiscCutscenesCheck, EVENT_PRIORITY_NORMAL, CVarGetInteger(CVAR_SKIP_MISC_CUTSCENES, 0), [](IEvent* event) {
+        auto* ev = reinterpret_cast<OnMiscCutscenesCheck*>(event);
+        *ev->skipMiscCutscenes = true;
+    });
+}
+
 void RegisterSkipJiggyDance_Init() {
     COND_VB_SHOULD(VB_PLAY_JIGGY_DANCE, EVENT_PRIORITY_NORMAL, CVarGetInteger(CVAR_SKIP_JIGGY_DANCE, 0),
                    { *should = false; });
@@ -37,4 +45,5 @@ void RegisterSkipJiggyDance_Init() {
 
 static RegisterShipInitFunc initBootLogosFunc(RegisterSkipBootLogos_Init, { CVAR_SKIP_BOOT_LOGOS });
 static RegisterShipInitFunc initSkipIntroFunc(RegisterSkipIntroCutscene_Init, { CVAR_SKIP_INTRO });
+static RegisterShipInitFunc initSkipMiscCutscenesFunc(RegisterSkipMiscCutscenes_Init, { CVAR_SKIP_MISC_CUTSCENES });
 static RegisterShipInitFunc initSkipJiggyDanceFunc(RegisterSkipJiggyDance_Init, { CVAR_SKIP_JIGGY_DANCE });
