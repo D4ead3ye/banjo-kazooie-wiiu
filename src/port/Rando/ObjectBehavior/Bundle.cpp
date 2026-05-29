@@ -54,63 +54,64 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
         level_e levelId = map_getLevel(gsworld_getMap());
         applyCustomPhysics = false;
 
-        switch (bundleId) {
-            case BUNDLE_3_MM_HUT_JINJO_GREEN:
-                shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JINJO_GREEN);
-                break;
-            case BUNDLE_4_MM_HUT_JIGGY:
-                if (map_getLevel(gsworld_getMap()) == LEVEL_1_MUMBOS_MOUNTAIN && spawnPosition[1] < 2000) {
-                    shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_ORANGE_PADS);
-                } else if (map_getLevel(gsworld_getMap()) == LEVEL_1_MUMBOS_MOUNTAIN) {
-                    shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_HUTS);
-                    applyCustomPhysics = true;
-                } else if (map_getLevel(gsworld_getMap()) == LEVEL_2_TREASURE_TROVE_COVE) {
-                    shuffledObject = Rando::Logic::GetShuffledObject(RC_TTC_JIGGY_RED_X);
-                }
-                break;
-            case BUNDLE_0_MM_HUT_MUSIC_NOTE:
-                shuffledObject =
-                    Rando::Logic::GetShuffledObject((RandoCheckId)((int32_t)RC_MM_NOTE_HUT_BUNDLE_1 + bundleCount));
-                break;
-            case BUNDLE_1F_SM_EMPTY_HONEYCOMB:
-                if (spawnPosition[1] >= 500 && spawnPosition[1] <= 800) {
-                    shuffledObject = Rando::Logic::GetShuffledObject(RC_SM_EMPTY_HONEYCOMB_COLLIWOBBLE);
-                } else if (spawnPosition[1] >= -200 && spawnPosition[1] <= 0) {
-                    shuffledObject = Rando::Logic::GetShuffledObject(RC_SM_EMPTY_HONEYCOMB_QUARRIES);
-                }
-                break;
-            case BUNDLE_7__JIGGY:
-                if (map_getLevel(gsworld_getMap()) == LEVEL_4_BUBBLEGLOOP_SWAMP) {
-                    shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_CROCTUS);
-                }
-                if (map_getLevel(gsworld_getMap()) == LEVEL_2_TREASURE_TROVE_COVE) {
-                    shuffledObject = Rando::Logic::GetShuffledObject(RC_TTC_JIGGY_BLUBBER);
-                }
-                break;
-            case BUNDLE_8__JIGGY:
-                if (map_getLevel(gsworld_getMap()) == LEVEL_4_BUBBLEGLOOP_SWAMP) {
-                    switch (spawnPosition[2]) {
-                        default:
-                             shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_MR_VILE);
-                             break;
-                    }
-                }
-                break;
-            case BUNDLE_9__JIGGY:
-                if (map_getLevel(gsworld_getMap()) == LEVEL_4_BUBBLEGLOOP_SWAMP) {
-                    switch (spawnPosition[2]) {
-                        case 1140:
-                             shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_TANKTUP);
-                             break;
-                    }
-                }
-                break;
-            case BUNDLE_10__JIGGY:
-                switch (levelId) {
-                    case LEVEL_1_MUMBOS_MOUNTAIN:
+        switch (levelId) {
+            case LEVEL_1_MUMBOS_MOUNTAIN:
+                switch (bundleId) {
+                    case BUNDLE_0_MM_HUT_MUSIC_NOTE:
+                        shuffledObject = Rando::Logic::GetShuffledObject(
+                            (RandoCheckId)((int32_t)RC_MM_NOTE_HUT_BUNDLE_1 + bundleCount));
+                        break;
+                    case BUNDLE_3_MM_HUT_JINJO_GREEN:
+                        shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JINJO_GREEN);
+                        break;
+                    case BUNDLE_4_MM_HUT_JIGGY:
+                        if (spawnPosition[1] < 2000) {
+                            shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_ORANGE_PADS);
+                        } else {
+                            shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_HUTS);
+                            applyCustomPhysics = true;
+                        }
+                        break;
+                    case BUNDLE_7__JIGGY:
+                        shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_CHIMPY);
+                        break;
+                    case BUNDLE_10__JIGGY:
                         shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_JUJU);
                         break;
-                    case LEVEL_4_BUBBLEGLOOP_SWAMP:
+                    case BUNDLE_15__JIGGY:
+                        shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_CONGA);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case LEVEL_2_TREASURE_TROVE_COVE:
+                switch (bundleId) {
+                    case BUNDLE_4_MM_HUT_JIGGY:
+                        shuffledObject = Rando::Logic::GetShuffledObject(RC_TTC_JIGGY_RED_X);
+                        break;
+                    case BUNDLE_7__JIGGY:
+                        shuffledObject = Rando::Logic::GetShuffledObject(RC_TTC_JIGGY_BLUBBER);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case LEVEL_4_BUBBLEGLOOP_SWAMP:
+                switch (bundleId) {
+                    case BUNDLE_7__JIGGY:
+                        shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_CROCTUS);
+                        break;
+                    case BUNDLE_8__JIGGY:
+                        shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_MR_VILE);
+                        break;
+                    case BUNDLE_9__JIGGY:
+                        shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_TANKTUP);
+                        break;
+                    case BUNDLE_C_BGS_HUT_JIGGY:
+                        shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_HUTS);
+                        break;
+                    case BUNDLE_10__JIGGY:
                         switch (spawnPosition[2]) {
                             case 49:
                                 shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_ELEVATED_WALKWAY);
@@ -127,20 +128,49 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                             case -6148:
                                 shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_MAZE);
                                 break;
+                            default:
+                                break;
                         }
                         break;
-                    case LEVEL_6_LAIR:
-                        randoCheckId = CheckMultiSpawnMap(spawnPosition);
-
+                    default:
+                        break;
+                }
+                break;
+            case LEVEL_6_LAIR:
+                randoCheckId = CheckMultiSpawnMap(spawnPosition);
+                switch (bundleId) {
+                    case BUNDLE_C_BGS_HUT_JIGGY:
+                        if (spawnPosition[1] ==
+                            Rando::StaticData::Checks[RC_GL_JIGGY_WITCH_SWITCH_MUMBOS_MOUNTAIN].posY) {
+                            shuffledObject = Rando::Logic::GetShuffledObject(RC_GL_JIGGY_WITCH_SWITCH_MUMBOS_MOUNTAIN);
+                            break;
+                        }
+                        if (spawnPosition[1] ==
+                            Rando::StaticData::Checks[RC_GL_JIGGY_WITCH_SWITCH_RUSTY_BUCKET_BAY].posY) {
+                            shuffledObject = Rando::Logic::GetShuffledObject(RC_GL_JIGGY_WITCH_SWITCH_RUSTY_BUCKET_BAY);
+                            break;
+                        }
+                        if (spawnPosition[1] ==
+                            Rando::StaticData::Checks[RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD].posY) {
+                            shuffledObject = Rando::Logic::GetShuffledObject(RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD);
+                            break;
+                        }
+                        break;
+                    case BUNDLE_10__JIGGY:
                         if (randoCheckId == RC_UNKNOWN) {
                             randoCheckId = Rando::StaticData::GetCheckByPosition(spawnPosition[0], spawnPosition[1],
                                                                                  spawnPosition[2]);
                             applyCustomPhysics = true;
                         }
-
                         shuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
                         break;
-                    case LEVEL_7_GOBIS_VALLEY:
+                    default:
+                        break;
+                }
+                break;
+            case LEVEL_7_GOBIS_VALLEY:
+                switch (bundleId) {
+                    case BUNDLE_10__JIGGY:
                         shuffledObject = Rando::Logic::GetShuffledObject(Rando::StaticData::GetCheckByPosition(
                             spawnPosition[0], spawnPosition[1], spawnPosition[2]));
                         break;
@@ -148,25 +178,23 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                         break;
                 }
                 break;
-            case BUNDLE_C_BGS_HUT_JIGGY:
-                if (map_getLevel(gsworld_getMap()) == LEVEL_6_LAIR) {
-                    if (spawnPosition[1] == Rando::StaticData::Checks[RC_GL_JIGGY_WITCH_SWITCH_MUMBOS_MOUNTAIN].posY) {
-                        shuffledObject = Rando::Logic::GetShuffledObject(RC_GL_JIGGY_WITCH_SWITCH_MUMBOS_MOUNTAIN);
-                    } else if (spawnPosition[1] ==
-                               Rando::StaticData::Checks[RC_GL_JIGGY_WITCH_SWITCH_RUSTY_BUCKET_BAY].posY) {
-                        shuffledObject = Rando::Logic::GetShuffledObject(RC_GL_JIGGY_WITCH_SWITCH_RUSTY_BUCKET_BAY);
-                    } else if (spawnPosition[1] ==
-                               Rando::StaticData::Checks[RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD].posY) {
-                        shuffledObject = Rando::Logic::GetShuffledObject(RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD);
-                    }
-                }
-                if (map_getLevel(gsworld_getMap()) == LEVEL_4_BUBBLEGLOOP_SWAMP) {
-                    shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_HUTS);
+            case LEVEL_B_SPIRAL_MOUNTAIN:
+                switch (bundleId) {
+                    case BUNDLE_1F_SM_EMPTY_HONEYCOMB:
+                        if (spawnPosition[1] >= 500 && spawnPosition[1] <= 800) {
+                            shuffledObject = Rando::Logic::GetShuffledObject(RC_SM_EMPTY_HONEYCOMB_COLLIWOBBLE);
+                        } else {
+                            shuffledObject = Rando::Logic::GetShuffledObject(RC_SM_EMPTY_HONEYCOMB_QUARRIES);
+                        }
+                        break;
+                    default:
+                        break;
                 }
                 break;
             default:
                 return;
         }
+
         if (shuffledObject.randoCheckId == RC_UNKNOWN) {
             return;
         }
