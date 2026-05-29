@@ -61,7 +61,7 @@ void ClearSpawnQueue() {
 
 CustomActor CreateCustomActor(RandoCheckId randoCheckId, int32_t position[3]) {
     CustomActor customActor;
-    customActor.randoCheckId = Rando::Logic::GetShuffledObject(randoCheckId).randoCheckId;
+    customActor.randoCheckId = randoCheckId;
     customActor.location[0] = position[0];
     customActor.location[1] = position[1];
     customActor.location[2] = position[2];
@@ -122,7 +122,8 @@ void CustomObject::SpawnJinjoJiggy(int16_t levelId, int16_t position[3]) {
 
     if (jiggyCheckId != RC_UNKNOWN) {
         Actor* actor;
-        Rando::StaticData::RandoShuffledPool shuffledObject = Rando::Logic::GetShuffledObject(jiggyCheckId);
+        RandoSaveCheck shuffledObject = Rando::Logic::GetShuffledObject(jiggyCheckId);
+        
         if (shuffledObject.randoCheckId != RC_UNKNOWN) {
             actor = CustomObject::SpawnCustomActor(
                 (actor_e)Rando::StaticData::Items[shuffledObject.randoItemId].actorId, spawnPosition);
@@ -144,7 +145,6 @@ void CustomObject::AddToCustomActorMap(RandoCheckId randoCheckId, Actor* actor) 
     Actor customActor = *actor;
 
     customActorMap.insert_or_assign(randoCheckId, *actor);
-    //customActorMap.emplace(randoCheckId, customActor);
 }
 
 void CustomObject::AddToSpawnQueue(RandoCheckId randoCheckId, int32_t position[3]) {
@@ -178,7 +178,7 @@ void CustomObject::InitializeSpawnQueue() {
         customPosition[1] = customActor.location[1];
         customPosition[2] = customActor.location[2];
 
-        Rando::StaticData::RandoShuffledPool shuffledObject = Rando::Logic::GetShuffledObject(customActor.randoCheckId);
+        RandoSaveCheck shuffledObject = Rando::Logic::GetShuffledObject(customActor.randoCheckId);
         actor_e randoActorId = GetActorIdByShuffledObjectState(shuffledObject);
 
         if (randoActorId == ACTOR_1_UNKNOWN) {
@@ -201,7 +201,7 @@ void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId, Actor*
         return;
     }
 
-    Rando::StaticData::RandoShuffledPool shuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
+    RandoSaveCheck shuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
 
     int16_t playerPosI[3];
     f32 playerPosF[3];
@@ -214,21 +214,21 @@ void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId, Actor*
         case RI_JINJO_ORANGE:
         case RI_JINJO_PINK:
         case RI_JINJO_YELLOW:
-            if (Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId == map_getLevel(gsworld_getMap())) {
+            if (Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId == map_getLevel(gsworld_getMap())) {
                 int32_t jinjoMarkerId = GetJinjoActorMarkerId((actor_e)Rando::StaticData::Items[shuffledObject.randoItemId].actorId);
                 item_adjustByDiffWithHud(ITEM_12_JINJOS, (1 << ((jinjoMarkerId + 6) & 0x1F)));
             } else {
                 if (Rando::Logic::ShouldSpawnJinjoJiggy(
-                        Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId)) {
-                    CustomObject::SpawnJinjoJiggy(Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId, playerPosI);
+                        Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId)) {
+                    CustomObject::SpawnJinjoJiggy(Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId, playerPosI);
                 }
             }
             break;
         case RI_MUSIC_NOTE:
-            if (Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId == map_getLevel(gsworld_getMap())) {
+            if (Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId == map_getLevel(gsworld_getMap())) {
                 item_inc(ITEM_C_NOTE);
             }
-            D_80385FF0[Rando::StaticData::Checks[shuffledObject.shuffleCheckId].worldId]++;
+            D_80385FF0[Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId]++;
             UpdateSaveDataNoteScores();
             fxSparkle_musicNote(playerPosI);
             break;
@@ -244,8 +244,10 @@ void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId, Actor*
 
 void CustomObject::CheckObtained(RandoCheckId randoCheckId) {
     bool shouldRemove = false;
+    const char* checkName = Rando::StaticData::Checks[randoCheckId].name;
+
     for (auto& pool : Rando::Logic::shuffledPool) {
-        if (pool.randoCheckId == randoCheckId && !pool.obtained) {
+        if (std::string_view(pool.name) == std::string_view(checkName) && !pool.obtained) {
             pool.obtained = true;
             shouldRemove = true;
             BK_LOG_INFO("RandoCheckId %s collected!", Rando::StaticData::Checks[randoCheckId].name);

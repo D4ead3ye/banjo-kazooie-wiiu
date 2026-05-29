@@ -49,7 +49,7 @@ extern std::vector<std::tuple<actor_e, int32_t, RandoCheckId>> itemPool;
 extern std::vector<RandoCheckId> abilityCheckPool;
 extern std::vector<std::tuple<actor_e, int32_t, RandoCheckId>> abilityItemPool;
 
-extern std::vector<Rando::StaticData::RandoShuffledPool> shuffledPool;
+extern std::vector<RandoSaveCheck> shuffledPool;
 
 void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
                                  std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& itemPool,
@@ -72,9 +72,10 @@ void RefreshReachableRegions();
 
 inline bool IsCheckShuffled(RandoCheckId randoCheckId) {
     bool isShuffled = false;
+    const char* checkName = Rando::StaticData::Checks[randoCheckId].name;
 
     for (auto& object : shuffledPool) {
-        if (object.randoCheckId == randoCheckId) {
+        if (std::string_view(object.name) == std::string_view(checkName)) {
             isShuffled = object.isShuffled;
             break;
         }
@@ -83,16 +84,17 @@ inline bool IsCheckShuffled(RandoCheckId randoCheckId) {
     return isShuffled;
 }
 
-inline Rando::StaticData::RandoShuffledPool GetShuffledObject(RandoCheckId randoCheckId) {
-    Rando::StaticData::RandoShuffledPool shuffledObject;
-    shuffledObject.randoCheckId = RC_UNKNOWN;
+inline RandoSaveCheck GetShuffledObject(RandoCheckId randoCheckId) {
+    RandoSaveCheck shuffledObject;
+    const char* checkName = Rando::StaticData::Checks[randoCheckId].name;
+    shuffledObject.name = "";
 
     if (!IsCheckShuffled(randoCheckId)) {
         return shuffledObject;
     }
 
     for (auto& object : shuffledPool) {
-        if (object.randoCheckId == randoCheckId) {
+        if (std::string_view(object.name) == std::string_view(checkName)) {
             shuffledObject = object;
             break;
         }
@@ -103,9 +105,10 @@ inline Rando::StaticData::RandoShuffledPool GetShuffledObject(RandoCheckId rando
 
 inline bool IsCheckObtained(RandoCheckId randoCheckId) {
     bool isObtained = false;
+    const char* checkName = Rando::StaticData::Checks[randoCheckId].name;
 
     for (auto& object : shuffledPool) {
-        if (object.randoCheckId == randoCheckId) {
+        if (std::string_view(object.name) == std::string_view(checkName)) {
             isObtained = object.obtained;
             break;
         }
@@ -123,7 +126,7 @@ inline bool ShouldSpawnJinjoJiggy(int16_t levelId) {
             continue;
         }
 
-        if (Rando::StaticData::Checks[pool.shuffleCheckId].worldId != levelId) {
+        if (Rando::StaticData::Checks[pool.shuffledCheckId].worldId != levelId) {
             continue;
         }
 
@@ -193,12 +196,12 @@ inline bool CanCollectWorldJinjos(level_e levelId) {
     int32_t accessibleJinjos = 0;
 
     for (auto& entry : Rando::Logic::shuffledPool) {
-        if (Rando::StaticData::Checks[entry.shuffleCheckId].worldId != levelId) {
+        if (Rando::StaticData::Checks[entry.shuffledCheckId].worldId != levelId) {
             continue;
         }
 
         if (entry.randoItemId >= RI_JINJO_BLUE && entry.randoItemId <= RI_JINJO_YELLOW) {
-            if (CanAccessCheck(entry.shuffleCheckId)) {
+            if (CanAccessCheck(entry.shuffledCheckId)) {
                 accessibleJinjos++;
             }
         }

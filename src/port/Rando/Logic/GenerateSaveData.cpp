@@ -71,17 +71,7 @@ void Rando::Logic::InitializeSaveData(SaveData* saveData) {
 
 void Rando::Logic::GenerateSaveData(SaveData* saveData) {
     for (auto& object : Rando::Logic::shuffledPool) {
-        RandoSaveCheck randoSaveCheck = {
-            .name = object.name,
-            .randoItemId = object.randoItemId,
-            .shuffledCheckId = object.shuffleCheckId,
-            .randoCollectionId = object.randoCollectionId,
-            .isShuffled = object.isShuffled,
-            .obtained = object.obtained,
-            .skipped = object.skipped,
-        };
-
-        saveData->shipSaveData.randoSaveData.randoSaveCheck[object.randoCheckId] = randoSaveCheck;
+        saveData->shipSaveData.randoSaveData.randoSaveCheck[object.randoCheckId] = object;
     }
 }
 

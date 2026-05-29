@@ -27,11 +27,11 @@ void Rando::ObjectBehavior::InitJiggyBehavior() {
             return;
         }
         
-        Rando::StaticData::RandoShuffledPool shuffledObject;
-        shuffledObject.randoCheckId = RC_UNKNOWN;
+        RandoSaveCheck shuffledObject;
+        shuffledObject.name = "";
         
         shuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
-        if (shuffledObject.randoCheckId == RC_UNKNOWN) {
+        if (shuffledObject.name = "") {
             return;
         }
 

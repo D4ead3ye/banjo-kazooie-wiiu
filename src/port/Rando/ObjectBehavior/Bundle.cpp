@@ -17,6 +17,17 @@ enum level_e map_getLevel(enum map_e map);
 
 bool applyCustomPhysics = false;
 
+RandoCheckId CheckMultiSpawnMap(int32_t spawnPosition[3]) {
+    for (auto& [checkId, spawnPos] : multiSpawnCheckMap) {
+        if (std::get<0>(spawnPos) == spawnPosition[0] && std::get<1>(spawnPos) == spawnPosition[1] &&
+            std::get<2>(spawnPos) == spawnPosition[2]) {
+            return checkId;
+        }
+    }
+
+    return RC_UNKNOWN;
+}
+
 void Rando::ObjectBehavior::InitBundleBehavior() {
     COND_VB_SHOULD(VB_OVERRIDE_BUNDLE_SPAWN, EVENT_PRIORITY_NORMAL, true, {
         bundle_e bundleId = va_arg(args, bundle_e);
@@ -38,7 +49,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
         spawnPosition[1] = (int32_t)position[1];
         spawnPosition[2] = (int32_t)position[2];
 
-        Rando::StaticData::RandoShuffledPool shuffledObject;
+        RandoSaveCheck shuffledObject;
         shuffledObject.randoCheckId = RC_UNKNOWN;
         level_e levelId = map_getLevel(gsworld_getMap());
         applyCustomPhysics = false;
@@ -118,14 +129,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                         }
                         break;
                     case LEVEL_6_LAIR:
-                        for (auto& [checkId, spawnPos] : multiSpawnCheckMap) {
-                            if (std::get<0>(spawnPos) == spawnPosition[0] &&
-                                std::get<1>(spawnPos) == spawnPosition[1] &&
-                                std::get<2>(spawnPos) == spawnPosition[2]) {
-                                randoCheckId = checkId;
-                                break;
-                            }
-                        }
+                        randoCheckId = CheckMultiSpawnMap(spawnPosition);
 
                         if (randoCheckId == RC_UNKNOWN) {
                             randoCheckId = Rando::StaticData::GetCheckByPosition(spawnPosition[0], spawnPosition[1],
