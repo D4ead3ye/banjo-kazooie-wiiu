@@ -86,8 +86,7 @@ inline bool IsCheckShuffled(RandoCheckId randoCheckId) {
 
 inline RandoSaveCheck GetShuffledObject(RandoCheckId randoCheckId) {
     RandoSaveCheck shuffledObject;
-    const char* checkName = Rando::StaticData::Checks[randoCheckId].name;
-    shuffledObject.name = "";
+    shuffledObject.randoCheckId = RC_UNKNOWN;
 
     if (!IsCheckShuffled(randoCheckId)) {
         return shuffledObject;
@@ -105,7 +104,6 @@ inline RandoSaveCheck GetShuffledObject(RandoCheckId randoCheckId) {
 
 inline bool IsCheckObtained(RandoCheckId randoCheckId) {
     bool isObtained = false;
-    const char* checkName = Rando::StaticData::Checks[randoCheckId].name;
 
     for (auto& object : shuffledPool) {
         if (object.randoCheckId == randoCheckId) {

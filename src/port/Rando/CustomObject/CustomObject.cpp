@@ -244,12 +244,12 @@ void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId, Actor*
 
 void CustomObject::CheckObtained(RandoCheckId randoCheckId) {
     bool shouldRemove = false;
-    const char* checkName = Rando::StaticData::Checks[randoCheckId].name;
 
     for (auto& pool : Rando::Logic::shuffledPool) {
-        if (std::string_view(pool.name) == std::string_view(checkName) && !pool.obtained) {
+        if (pool.randoCheckId == randoCheckId && !pool.obtained) {
             pool.obtained = true;
             shouldRemove = true;
+            RANDO_SAVE_CHECKS[pool.randoCheckId].obtained = true;
             BK_LOG_INFO("RandoCheckId %s collected!", Rando::StaticData::Checks[randoCheckId].name);
             break;
         }

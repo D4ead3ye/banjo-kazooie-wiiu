@@ -27,6 +27,11 @@ void item_setMaxCount(s32 item);
 void ability_setAllLearned(s32 val);
 void ability_setAllUsed(s32 val);
 
+s32 mapSpecificFlags_get(s32 i);
+void mapSpecificFlags_set(s32 i, s32 val);
+enum map_e gsworld_getMap(void);
+enum level_e map_getLevel(enum map_e map);
+
 typedef struct {
     enum honeycomb_e uid;
     s32 unk4;
@@ -78,6 +83,12 @@ std::vector<int32_t> mapIdList = {
     MAP_7B_CS_INTRO_GL_DINGPOT_1,
     MAP_69_GL_MM_LOBBY,
     MAP_90_GL_BATTLEMENTS,
+};
+
+std::map<int32_t, std::pair<const char*, level_e>> mapSpecificFlagList = {
+    { MM_SPECIFIC_FLAG_0_CHIMPY_STUMP_RAISED, { "Chimpy Stump Raised", LEVEL_1_MUMBOS_MOUNTAIN } },
+    { MM_SPECIFIC_FLAG_2_ORANGE_HAS_BEEN_RETURNED, { "Orange Returned", LEVEL_1_MUMBOS_MOUNTAIN } },
+    { MM_SPECIFIC_FLAG_3_CHIMPY_HAS_LEFT, { "Chimpy Has Left", LEVEL_1_MUMBOS_MOUNTAIN } },
 };
 
 void RandoHelper_SpawnPosition() {
@@ -215,6 +226,31 @@ void DrawGrantUnlocks() {
     }
 }
 
+void DrawMonitoringTools() {
+    level_e currentLevel = map_getLevel(gsworld_getMap());
+
+    ImGui::SeparatorText("Flags");
+    if (ImGui::BeginTable("FlagTable", 3, ImGuiTableFlags_SizingFixedFit)) {
+        ImGui::TableNextColumn();
+        for (auto& [flagId, flagData] : mapSpecificFlagList) {
+            if (flagData.second == currentLevel) {
+                bool flagState = mapSpecificFlags_get(flagId);
+                if (UIWidgets::Checkbox("state", &flagState, UIWidgets::CheckboxOptions().LabelPosition(UIWidgets::LabelPositions::None))) {
+                    mapSpecificFlags_set(flagId, !mapSpecificFlags_get(flagId));
+                }
+
+                ImGui::TableNextColumn();
+                ImGui::Text(flagData.first);
+
+                ImGui::TableNextColumn();
+                ImGui::Text(std::to_string(mapSpecificFlags_get(flagId)).c_str());
+                ImGui::TableNextColumn();
+            }
+        }
+        ImGui::EndTable();
+    }
+}
+
 void RandoHelper_DrawTabBar() {
     UIWidgets::PushStyleTabs(THEME_COLOR);
     if (ImGui::BeginTabBar("RandoHelperTabBar")) {
@@ -228,6 +264,10 @@ void RandoHelper_DrawTabBar() {
         }
         if (ImGui::BeginTabItem("Grant Unlocks")) {
             DrawGrantUnlocks();
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Monitoring")) {
+            DrawMonitoringTools();
             ImGui::EndTabItem();
         }
         ImGui::EndTabBar();
