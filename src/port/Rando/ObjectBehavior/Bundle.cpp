@@ -59,11 +59,13 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                 shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JINJO_GREEN);
                 break;
             case BUNDLE_4_MM_HUT_JIGGY:
-                if (spawnPosition[1] < 2000) {
+                if (map_getLevel(gsworld_getMap()) == LEVEL_1_MUMBOS_MOUNTAIN && spawnPosition[1] < 2000) {
                     shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_ORANGE_PADS);
-                } else {
+                } else if (map_getLevel(gsworld_getMap()) == LEVEL_1_MUMBOS_MOUNTAIN) {
                     shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_HUTS);
                     applyCustomPhysics = true;
+                } else if (map_getLevel(gsworld_getMap()) == LEVEL_2_TREASURE_TROVE_COVE) {
+                    shuffledObject = Rando::Logic::GetShuffledObject(RC_TTC_JIGGY_RED_X);
                 }
                 break;
             case BUNDLE_0_MM_HUT_MUSIC_NOTE:
