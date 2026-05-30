@@ -196,7 +196,7 @@ void CustomObject::InitializeSpawnQueue() {
     }
 }
 
-void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId, Actor* customActor) {
+void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId) {
     if (randoCheckId == RC_UNKNOWN) {
         return;
     }
@@ -235,11 +235,6 @@ void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId, Actor*
         default:
             break;
     }
-
-    if (shuffledObject.randoItemId == RI_MUSIC_NOTE) {
-        marker_despawn(customActorMap.at(randoCheckId).marker);
-        customActorMap.erase(randoCheckId);
-    }
 }
 
 void CustomObject::CheckObtained(RandoCheckId randoCheckId) {
@@ -256,7 +251,11 @@ void CustomObject::CheckObtained(RandoCheckId randoCheckId) {
     }
 
     if (shouldRemove) {
-        CustomObject::ResolveCustomActorCollision(randoCheckId, &customActorMap.at(randoCheckId));
+        CustomObject::ResolveCustomActorCollision(randoCheckId);
+        if (RANDO_SAVE_CHECKS[randoCheckId].randoItemId == RI_MUSIC_NOTE && customActorMap.contains(randoCheckId)) {
+            marker_despawn(customActorMap.at(randoCheckId).marker);
+            customActorMap.erase(randoCheckId);
+        }
         shouldRemove = false;
     }
 }
