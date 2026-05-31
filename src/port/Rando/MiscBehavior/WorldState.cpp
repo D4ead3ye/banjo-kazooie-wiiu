@@ -1,8 +1,6 @@
 #include "MiscBehavior.h"
 #include "port/enhancements/events/hooks/Events.h"
 
-#include "spdlog/spdlog.h"
-
 extern "C" {
 struct {
     u8 D_803832C0[0xD];
@@ -16,11 +14,6 @@ void mapSpecificFlags_set(s32 i, s32 val);
 enum map_e gsworld_getMap(void);
 enum level_e map_getLevel(enum map_e map);
 }
-
-#define FUNC_8030E624(sfx_e, vol, sample_rate) \
-    func_8030E624(_SHIFTL((vol * 1023), 21, 11) + _SHIFTL(sample_rate >> 5, 11, 10) + _SHIFTL(sfx_e, 0, 11))
-
-bool congaSpawned = false;
 
 void Rando::MiscBehavior::InitWorldStateBehavior() {
     REGISTER_LISTENER(OnActorSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
