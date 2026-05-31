@@ -15,6 +15,8 @@ enum map_e gsworld_getMap(void);
 enum level_e map_getLevel(enum map_e map);
 }
 
+#define JIGGY_OPTION_ENABLED RANDO_SAVE_OPTIONS[RO_SHUFFLE_JIGGIES].optionValue
+
 void Rando::MiscBehavior::InitWorldStateBehavior() {
     REGISTER_LISTENER(OnActorSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorSpawn* ev = (OnActorSpawn*)event;
@@ -51,13 +53,25 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             return;
         }
 
+        if (!JIGGY_OPTION_ENABLED) {
+            return;
+        }
+
         bool hasJiggy = (jiggyscore.D_803832C0[(ev->jiggyId - 1) / 8] & (1 << (ev->jiggyId & 7))) != 0;
 
         switch (ev->jiggyId) {
             case JIGGY_A_MM_CONGA:
-                if (hasJiggy && !RANDO_SAVE_CHECKS[RC_MM_JIGGY_CONGA].obtained) {
+                if (!RANDO_SAVE_CHECKS[RC_MM_JIGGY_CONGA].obtained) {
                     event->Cancelled = true;
                     ev->result = 0;
+                }
+                break;
+            case JIGGY_37_LAIR_BGS_WITCH_SWITCH:
+                event->Cancelled = true;
+                if (!RANDO_SAVE_CHECKS[RC_GL_JIGGY_WITCH_SWITCH_BUBBLEGLOOP_SWAMP].obtained) {
+                    ev->result = 0;
+                } else {
+                    ev->result = 1;
                 }
                 break;
             default:
