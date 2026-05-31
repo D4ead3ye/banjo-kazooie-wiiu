@@ -342,7 +342,8 @@ void DrawRandoSaveEditor() {
                 }
                 ImGui::TableNextColumn();
 
-                ImGui::TextWrapped(check.name);
+                std::string checkName = Rando::StaticData::Checks[check.randoCheckId].name;
+                ImGui::TextWrapped(checkName.c_str());
                 ImGui::TableNextColumn();
 
                 if (check.randoItemId == RI_MOLEHILL) {

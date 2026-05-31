@@ -56,6 +56,7 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnActorSaveState);
     REGISTER_EVENT(OnActorCollision);
     REGISTER_EVENT(OnActorDestroy);
+    REGISTER_EVENT(OnIsJiggyScoreCollected);
 
     Rando::Init();
 }

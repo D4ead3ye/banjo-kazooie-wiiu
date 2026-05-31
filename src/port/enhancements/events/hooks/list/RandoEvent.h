@@ -23,4 +23,9 @@ DEFINE_EVENT(OnActorSaveState)
 DEFINE_EVENT(OnActorCollision,
 	Prop* propId;
 )
+
+DEFINE_EVENT(OnIsJiggyScoreCollected,
+	int32_t jiggyId;
+	int32_t result;
+)
 // clang-format on
