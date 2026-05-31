@@ -108,6 +108,10 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                     case BUNDLE_9__JIGGY:
                         shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_TANKTUP);
                         break;
+                    case BUNDLE_B_BGS_HUT_MUSIC_NOTE:
+                        shuffledObject = Rando::Logic::GetShuffledObject(
+                            (RandoCheckId)((int32_t)RC_BGS_NOTE_HUT_BUNDLE_1 + bundleCount));
+                        break;
                     case BUNDLE_C_BGS_HUT_JIGGY:
                         shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_HUTS);
                         break;
