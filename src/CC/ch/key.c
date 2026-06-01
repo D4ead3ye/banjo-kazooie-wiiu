@@ -163,7 +163,6 @@ void chClankerKey_update(Actor *this){
         if(this->state == 0x1 && local->unk2 == 1){
             if(--local->unk3 == 0){
                 CC_func_80386920(this, 4);
-                CALL_EVENT(SetRandoInfFlag, RANDO_INF_CLANKER_RAISED, 1);
             }
             else{
                 CC_func_80386920(this, 2);

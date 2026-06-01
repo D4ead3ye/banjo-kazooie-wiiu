@@ -1476,6 +1476,7 @@ typedef enum {
 typedef enum {
     RANDO_INF_UNKNOWN,
     RANDO_INF_CLANKER_RAISED,
+    RANDO_INF_MINIGAME_RINGS_COMPLETED,
     RANDO_INF_MAX,
 } RandoInf;
 

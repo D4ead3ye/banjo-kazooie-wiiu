@@ -30,6 +30,11 @@ DEFINE_EVENT(OnIsJiggyScoreCollected,
 	int32_t result;
 )
 
+DEFINE_EVENT(OnIsJiggyScoreSpawned,
+	int32_t jiggyId;
+	int32_t result;
+)
+
 DEFINE_EVENT(SetRandoInfFlag,
 	int32_t flagId;
 	int32_t flagState;

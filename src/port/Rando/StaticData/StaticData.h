@@ -76,6 +76,8 @@ extern std::map<RandoOptionId, RandoStaticOption> Options;
 
 RandoOptionId GetOptionIdFromName(const char* name);
 
+void ModifyRandoInfFlagState(RandoCheckId randoCheckId);
+
 // TODO: Add Logic and Regions
 // struct RandoStaticRegion {
 //     RandoRegionId randoRegionId;

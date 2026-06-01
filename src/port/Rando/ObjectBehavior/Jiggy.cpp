@@ -28,10 +28,10 @@ void Rando::ObjectBehavior::InitJiggyBehavior() {
         }
         
         RandoSaveCheck shuffledObject;
-        shuffledObject.name = "";
+        shuffledObject.randoCheckId = RC_UNKNOWN;
         
         shuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
-        if (shuffledObject.name = "") {
+        if (shuffledObject.randoCheckId == RC_UNKNOWN) {
             return;
         }
 
@@ -51,7 +51,9 @@ void Rando::ObjectBehavior::InitJiggyBehavior() {
         newCustomActor = CustomObject::SetCustomActorParameters(newCustomActor, randoCheckId);
         CustomObject::AddToCustomActorMap(randoCheckId, newCustomActor);
         
-        ApplyCustomActorPhysics(randoCheckId, newCustomActor, false);
+        if (jiggyId != JIGGY_17_CC_CLANKER_RAISED) {
+            ApplyCustomActorPhysics(randoCheckId, newCustomActor, false);
+        }
         
         CustomObject::InitializeSpawnQueue();
         *should = true;

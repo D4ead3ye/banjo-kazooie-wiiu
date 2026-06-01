@@ -17,9 +17,31 @@ void mapSpecificFlags_set(s32 i, s32 val);
 
 enum map_e gsworld_getMap(void);
 enum level_e map_getLevel(enum map_e map);
+
+Struct70s* func_8034C5AC(s32 arg0);
+void func_8034E71C(Struct73s* arg0, s32 arg1, f32 arg2);
 }
 
 #define JIGGY_OPTION_ENABLED RANDO_SAVE_OPTIONS[RO_SHUFFLE_JIGGIES].optionValue
+
+void Rando::StaticData::ModifyRandoInfFlagState(RandoCheckId randoCheckId) {
+    RandoInf randoInfFlag = RANDO_INF_UNKNOWN;
+
+    switch (randoCheckId) {
+        case RC_CC_JIGGY_CLANKER_RAISED:
+            randoInfFlag = RANDO_INF_CLANKER_RAISED;
+            break;
+        case RC_CC_JIGGY_RINGS:
+            randoInfFlag = RANDO_INF_MINIGAME_RINGS_COMPLETED;
+            break;
+        default:
+            break;
+    }
+
+    if (randoInfFlag != RANDO_INF_UNKNOWN) {
+        CALL_EVENT(SetRandoInfFlag, randoInfFlag, 1);
+    }
+}
 
 void Rando::MiscBehavior::InitWorldStateBehavior() {
     REGISTER_LISTENER(SetRandoInfFlag, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -61,12 +83,9 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                                      RANDO_SAVE_CHECKS[RC_MM_JIGGY_CHIMPY].obtained);
                 break;
             case LEVEL_3_CLANKERS_CAVERN:
-                if (ev->actorId == ACTOR_3C_CC_KEY) {
-                    if (!RANDO_SAVE_CHECKS[RC_CC_JIGGY_CLANKER_RAISED].obtained &&
-                        RANDO_SAVE_FLAGS[RANDO_INF_CLANKER_RAISED].flagState) {
-                        jiggy_spawn(JIGGY_17_CC_CLANKER_RAISED, D_80389C00);
-                        SPDLOG_INFO("Spawning Clanker Jiggy");
-                    }
+                if (gsworld_getMap() == MAP_22_CC_INSIDE_CLANKER &&
+                    RANDO_SAVE_FLAGS[RANDO_INF_MINIGAME_RINGS_COMPLETED].flagState) {
+                    func_8034E71C((Struct73s*)func_8034C5AC(0x131), 0x190, 12.0f);
                 }
                 break;
             default:
@@ -83,8 +102,6 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
         if (!JIGGY_OPTION_ENABLED) {
             return;
         }
-
-        bool hasJiggy = (jiggyscore.D_803832C0[(ev->jiggyId - 1) / 8] & (1 << (ev->jiggyId & 7))) != 0;
 
         switch (ev->jiggyId) {
             case JIGGY_A_MM_CONGA:
@@ -132,5 +149,26 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             default:
                 break;
         }
+    })
+    REGISTER_LISTENER(OnIsJiggyScoreSpawned, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnIsJiggyScoreSpawned* ev = (OnIsJiggyScoreSpawned*)event;
+
+        if (!IS_RANDO) {
+            return;
+        }
+
+        if (!JIGGY_OPTION_ENABLED) {
+            return;
+        }
+
+        switch (ev->jiggyId) {
+            case JIGGY_17_CC_CLANKER_RAISED:
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_FLAGS[RANDO_INF_CLANKER_RAISED].flagState;
+                break;
+            default:
+                break;
+        }
+
     })
 }

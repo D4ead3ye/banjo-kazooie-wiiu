@@ -246,6 +246,7 @@ void CustomObject::CheckObtained(RandoCheckId randoCheckId) {
             shouldRemove = true;
             RANDO_SAVE_CHECKS[pool.randoCheckId].obtained = true;
             BK_LOG_INFO("RandoCheckId %s collected!", Rando::StaticData::Checks[randoCheckId].name);
+            Rando::StaticData::ModifyRandoInfFlagState(randoCheckId);
             break;
         }
     }

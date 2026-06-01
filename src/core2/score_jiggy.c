@@ -32,8 +32,10 @@ u8* jiggyscore_getPtr(void){
 }
 
 int jiggyscore_isSpawned(enum jiggy_e jiggy_id) {
-    return ((jiggyscore.D_803832CD[(jiggy_id - 1) / 8] & (1 << (jiggy_id & 7))) != 0) 
-           || (jiggyscore_isCollected(jiggy_id) != 0);
+    CALL_CANCELLABLE_RETURN_EVENT(OnIsJiggyScoreSpawned, jiggy_id) {
+        return ((jiggyscore.D_803832CD[(jiggy_id - 1) / 8] & (1 << (jiggy_id & 7))) != 0)
+            || (jiggyscore_isCollected(jiggy_id) != 0);
+    }
 }
 
 u32 jiggyscore_isCollected(enum jiggy_e jiggy_id){

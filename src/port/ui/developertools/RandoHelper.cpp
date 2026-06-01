@@ -2,6 +2,7 @@
 #include "port/Rando/Rando.h"
 #include "port/Rando/Logic/Logic.h"
 #include "port/Rando/CustomObject/CustomObject.h"
+#include "port/enhancements/events/hooks/Events.h"
 
 #include "port/ui/UIWidgets.hpp"
 #include "port/ui/Notification.h"
@@ -277,27 +278,55 @@ void DrawGrantUnlocks() {
 void DrawMonitoringTools() {
     level_e currentLevel = map_getLevel(gsworld_getMap());
 
-    ImGui::SeparatorText("Flags");
-    if (ImGui::BeginTable("FlagTable", 3, ImGuiTableFlags_SizingFixedFit)) {
-        ImGui::TableNextColumn();
-        for (auto& [flagId, flagData] : mapSpecificFlagList) {
-            ImGui::PushID(flagId);
-            if (flagData.second == currentLevel) {
-                bool flagState = mapSpecificFlags_get(flagId);
-                if (UIWidgets::Checkbox("state", &flagState, UIWidgets::CheckboxOptions().LabelPosition(UIWidgets::LabelPositions::None))) {
-                    mapSpecificFlags_set(flagId, !mapSpecificFlags_get(flagId));
+    ImGui::SeparatorText("Map Specific Flags");
+    if (ImGui::BeginChild("MapFlagChild", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionMax().y * 0.45f))) {
+        if (ImGui::BeginTable("MapFlagTable", 3, ImGuiTableFlags_SizingFixedFit)) {
+            ImGui::TableNextColumn();
+            for (auto& [flagId, flagData] : mapSpecificFlagList) {
+                ImGui::PushID(flagId);
+                if (flagData.second == currentLevel) {
+                    bool flagState = mapSpecificFlags_get(flagId);
+                    if (UIWidgets::Checkbox("state", &flagState, UIWidgets::CheckboxOptions().LabelPosition(UIWidgets::LabelPositions::None))) {
+                        mapSpecificFlags_set(flagId, !mapSpecificFlags_get(flagId));
+                    }
+
+                    ImGui::TableNextColumn();
+                    ImGui::Text(flagData.first);
+
+                    ImGui::TableNextColumn();
+                    ImGui::Text(std::to_string(mapSpecificFlags_get(flagId)).c_str());
+                    ImGui::TableNextColumn();
+                }
+                ImGui::PopID();
+            }
+            ImGui::EndTable();
+        }
+        ImGui::EndChild();
+    }
+
+    ImGui::SeparatorText("Rando INF Flags");
+    if (ImGui::BeginChild("RandoFlagChild", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionMax().y * 0.45f))) {
+        if (ImGui::BeginTable("RandoFlagTable", 3, ImGuiTableFlags_SizingFixedFit)) {
+            ImGui::TableNextColumn();
+            for (int f = RANDO_INF_UNKNOWN; f < RANDO_INF_MAX; f++) {
+                ImGui::PushID(f);
+                bool flagState = RANDO_SAVE_FLAGS[f].flagState;
+                if (UIWidgets::Checkbox("state", &flagState,
+                                        UIWidgets::CheckboxOptions().LabelPosition(UIWidgets::LabelPositions::None))) {
+                    CALL_EVENT(SetRandoInfFlag, (RandoInf)f, !RANDO_SAVE_FLAGS[f].flagState);
                 }
 
                 ImGui::TableNextColumn();
-                ImGui::Text(flagData.first);
+                ImGui::Text(std::to_string(f).c_str());
 
                 ImGui::TableNextColumn();
-                ImGui::Text(std::to_string(mapSpecificFlags_get(flagId)).c_str());
+                ImGui::Text(flagState == true ? "True" : "False");
                 ImGui::TableNextColumn();
+                ImGui::PopID();
             }
-            ImGui::PopID();
+            ImGui::EndTable();
         }
-        ImGui::EndTable();
+        ImGui::EndChild();
     }
 }
 
