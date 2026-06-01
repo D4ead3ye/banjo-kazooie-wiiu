@@ -97,6 +97,15 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                         break;
                 }
                 break;
+            case LEVEL_3_CLANKERS_CAVERN:
+                switch (bundleId) {
+                    case BUNDLE_10__JIGGY:
+                        shuffledObject = Rando::Logic::GetShuffledObject(RC_CC_JIGGY_RINGS);
+                        break;
+                    default:
+                        break;
+                }
+                break;
             case LEVEL_4_BUBBLEGLOOP_SWAMP:
                 switch (bundleId) {
                     case BUNDLE_7__JIGGY:
@@ -222,6 +231,8 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
 
         actor_e randoActorId = GetActorIdByShuffledObjectState(shuffledObject);
         if (randoActorId == ACTOR_1_UNKNOWN) {
+            // TODO: Find better way to handle Bundles requiring an actor return.
+            *actor = CustomObject::SpawnCustomActor(ACTOR_17_PLAYER_SHADOW, spawnPosition);
             *should = true;
             return;
         }
