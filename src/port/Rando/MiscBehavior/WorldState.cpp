@@ -35,7 +35,6 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
         }
 
         RANDO_SAVE_FLAGS[(RandoInf)flagId].flagState = ev->flagState;
-        SPDLOG_INFO("Flag ID {} set to {}", std::to_string(ev->flagId).c_str(), std::to_string(ev->flagState).c_str());
     })
     REGISTER_LISTENER(OnActorSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorSpawn* ev = (OnActorSpawn*)event;
