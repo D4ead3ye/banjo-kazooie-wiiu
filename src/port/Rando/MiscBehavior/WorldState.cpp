@@ -4,15 +4,6 @@
 #include "spdlog/spdlog.h"
 
 extern "C" {
-extern f32 D_80389C00[3];
-struct {
-    u8 D_803832C0[0xD];
-    u8 D_803832CD[0xD];
-} jiggyscore;
-
-u32 jiggyscore_isCollected(enum jiggy_e jiggy_id);
-void jiggy_spawn(enum jiggy_e jiggy_id, f32 pos[3]);
-
 void mapSpecificFlags_set(s32 i, s32 val);
 
 enum map_e gsworld_getMap(void);
