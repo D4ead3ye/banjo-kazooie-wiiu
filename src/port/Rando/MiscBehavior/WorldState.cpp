@@ -106,6 +106,30 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                     ev->result = 1;
                 }
                 break;
+            case JIGGY_2A_FP_BOGGY_1:
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_SLED_TO_BOGGY].obtained;
+                break;
+            case JIGGY_2C_FP_BOGGY_3:
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_BOGGY_RACE_2].obtained;
+                break;
+            case JIGGY_2D_FP_SNOWMAN_BUTTONS:
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_SNOWMANS_BUTTONS].obtained;
+                break;
+            case JIGGY_30_FP_BOGGY_2:
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_BOGGY_RACE_1].obtained;
+                break;
+            case JIGGY_32_FP_WOZZA:
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_WOZZA].obtained;
+                break;
+            case JIGGY_31_FP_SIR_SLUSH:
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_BEAT_ALL_SIR_SLUSH].obtained;
+
             default:
                 break;
         }
