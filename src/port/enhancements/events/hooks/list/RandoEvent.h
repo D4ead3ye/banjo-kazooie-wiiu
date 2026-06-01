@@ -1,6 +1,7 @@
 #pragma once
 
 #include <libultraship/bridge/eventsbridge.h>
+#include "port/Rando/Types.h"
 
 #include "enums.h"
 #include "prop.h"
@@ -27,5 +28,10 @@ DEFINE_EVENT(OnActorCollision,
 DEFINE_EVENT(OnIsJiggyScoreCollected,
 	int32_t jiggyId;
 	int32_t result;
+)
+
+DEFINE_EVENT(SetRandoInfFlag,
+	int32_t flagId;
+	int32_t flagState;
 )
 // clang-format on

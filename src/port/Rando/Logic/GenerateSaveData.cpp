@@ -127,11 +127,19 @@ void Rando::Logic::InitializeSaveData(SaveData* saveData) {
 
         saveData->shipSaveData.randoSaveData.randoSaveOption[randoOptionId] = randoSaveOption;
     }
+
+    for (int i = RANDO_INF_UNKNOWN; i < RANDO_INF_MAX; i++) {
+        saveData->shipSaveData.randoSaveData.randoSaveFlag[i].flagState = 0;
+    }
 }
 
 void Rando::Logic::GenerateSaveData(SaveData* saveData) {
     for (auto& object : Rando::Logic::shuffledPool) {
         saveData->shipSaveData.randoSaveData.randoSaveCheck[object.randoCheckId] = object;
+    }
+
+    for (int f = RANDO_INF_UNKNOWN; f < RANDO_INF_MAX; f++) {
+        saveData->shipSaveData.randoSaveData.randoSaveFlag[f].flagState = RANDO_SAVE_FLAGS[f].flagState;
     }
 }
 

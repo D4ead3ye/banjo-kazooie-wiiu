@@ -10,6 +10,7 @@ typedef enum {
 
 typedef struct {
     int32_t seedId;
+    RandoSaveFlag randoSaveFlag[RANDO_INF_MAX];
     RandoSaveCheck randoSaveCheck[RC_MAX];
     RandoSaveOption randoSaveOption[RO_MAX];
 } RandoSaveData;

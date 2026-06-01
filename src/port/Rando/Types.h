@@ -1473,9 +1473,11 @@ typedef enum {
     RO_LOGIC_NO_LOGIC,
 } RandoOptionLogic;
 
-// typedef enum {
-//     RANDO_INF_MAX,
-// } RandoInf;
+typedef enum {
+    RANDO_INF_UNKNOWN,
+    RANDO_INF_CLANKER_RAISED,
+    RANDO_INF_MAX,
+} RandoInf;
 
 typedef struct RandoSaveCheck {
     const char* name;
@@ -1492,5 +1494,9 @@ typedef struct RandoSaveOption {
     const char* name;
     int32_t optionValue;
 } RandoSaveOption;
+
+typedef struct RandoSaveFlag {
+    int32_t flagState;
+} RandoSaveFlag;
 
 #endif // RANDO_TYPES_H

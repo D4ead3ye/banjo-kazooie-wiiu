@@ -1,13 +1,17 @@
 #include "MiscBehavior.h"
 #include "port/enhancements/events/hooks/Events.h"
 
+#include "spdlog/spdlog.h"
+
 extern "C" {
+extern f32 D_80389C00[3];
 struct {
     u8 D_803832C0[0xD];
     u8 D_803832CD[0xD];
 } jiggyscore;
 
 u32 jiggyscore_isCollected(enum jiggy_e jiggy_id);
+void jiggy_spawn(enum jiggy_e jiggy_id, f32 pos[3]);
 
 void mapSpecificFlags_set(s32 i, s32 val);
 
@@ -18,6 +22,21 @@ enum level_e map_getLevel(enum map_e map);
 #define JIGGY_OPTION_ENABLED RANDO_SAVE_OPTIONS[RO_SHUFFLE_JIGGIES].optionValue
 
 void Rando::MiscBehavior::InitWorldStateBehavior() {
+    REGISTER_LISTENER(SetRandoInfFlag, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        SetRandoInfFlag* ev = (SetRandoInfFlag*)event;
+        RandoInf flagId = (RandoInf)ev->flagId;
+
+        if (!IS_RANDO) {
+            return;
+        }
+
+        if (flagId < RANDO_INF_UNKNOWN && flagId > RANDO_INF_MAX) {
+            return;
+        }
+
+        RANDO_SAVE_FLAGS[(RandoInf)flagId].flagState = ev->flagState;
+        SPDLOG_INFO("Flag ID {} set to {}", std::to_string(ev->flagId).c_str(), std::to_string(ev->flagState).c_str());
+    })
     REGISTER_LISTENER(OnActorSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorSpawn* ev = (OnActorSpawn*)event;
 
@@ -42,6 +61,15 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                 mapSpecificFlags_set(MM_SPECIFIC_FLAG_3_CHIMPY_HAS_LEFT,
                                      RANDO_SAVE_CHECKS[RC_MM_JIGGY_CHIMPY].obtained);
                 break;
+            case LEVEL_3_CLANKERS_CAVERN:
+                if (ev->actorId == ACTOR_3C_CC_KEY) {
+                    if (!RANDO_SAVE_CHECKS[RC_CC_JIGGY_CLANKER_RAISED].obtained &&
+                        RANDO_SAVE_FLAGS[RANDO_INF_CLANKER_RAISED].flagState) {
+                        jiggy_spawn(JIGGY_17_CC_CLANKER_RAISED, D_80389C00);
+                        SPDLOG_INFO("Spawning Clanker Jiggy");
+                    }
+                }
+                break;
             default:
                 break;
         }
@@ -65,6 +93,10 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                     event->Cancelled = true;
                     ev->result = 0;
                 }
+                break;
+            case JIGGY_17_CC_CLANKER_RAISED:
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[RC_CC_JIGGY_CLANKER_RAISED].obtained;
                 break;
             case JIGGY_37_LAIR_BGS_WITCH_SWITCH:
                 event->Cancelled = true;

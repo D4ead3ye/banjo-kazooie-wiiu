@@ -322,6 +322,12 @@ ordered_json Convert_SaveDataToJSON(SaveData* saveData, int32_t fileNum) {
             shipRando["randoSaveOption"][Rando::StaticData::Options[(RandoOptionId)o].name] = randoSaveOption.optionValue;
         }
 
+        nlohmann::json randoInfArray = nlohmann::json::array();
+        for (int f = RANDO_INF_UNKNOWN; f < RANDO_INF_MAX; f++) {
+            randoInfArray.push_back(saveData->shipSaveData.randoSaveData.randoSaveFlag[f].flagState);
+        }
+        shipRando["randoSaveFlag"] = randoInfArray;
+
         ship["rando"] = shipRando;
     }
 
@@ -537,6 +543,10 @@ SaveData* Convert_JSONToSaveData(int32_t fileNum) {
             };
 
             saveData->shipSaveData.randoSaveData.randoSaveOption[o] = randoSaveOption;
+        }
+
+        for (int f = RANDO_INF_UNKNOWN; f < RANDO_INF_MAX; f++) {
+            saveData->shipSaveData.randoSaveData.randoSaveFlag[f].flagState = rando["randoSaveFlag"][f];
         }
     }
 
