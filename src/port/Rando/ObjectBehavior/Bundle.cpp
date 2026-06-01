@@ -100,7 +100,14 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             case LEVEL_3_CLANKERS_CAVERN:
                 switch (bundleId) {
                     case BUNDLE_10__JIGGY:
-                        shuffledObject = Rando::Logic::GetShuffledObject(RC_CC_JIGGY_RINGS);
+                        switch (spawnPosition[1]) {
+                            case 1536:
+                                shuffledObject = Rando::Logic::GetShuffledObject(RC_CC_JIGGY_TOOTH);
+                                break;
+                            default:
+                                shuffledObject = Rando::Logic::GetShuffledObject(RC_CC_JIGGY_RINGS);
+                                break;
+                        }
                         break;
                     default:
                         break;
