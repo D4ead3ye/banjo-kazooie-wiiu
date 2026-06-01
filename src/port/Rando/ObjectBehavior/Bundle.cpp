@@ -140,6 +140,23 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                         break;
                 }
                 break;
+            case LEVEL_5_FREEZEEZY_PEAK:
+                switch (bundleId) {
+                    case BUNDLE_9__JIGGY:
+                        shuffledObject = Rando::Logic::GetShuffledObject(RC_FP_JIGGY_SLED_TO_BOGGY);
+                        break;
+                    case BUNDLE_10__JIGGY:
+                        if (spawnPosition[1] > 1900) {
+                            shuffledObject = Rando::Logic::GetShuffledObject(RC_FP_JIGGY_BOGGY_RACE_1);
+                        } else if (spawnPosition[1] < 850) {
+                            shuffledObject = Rando::Logic::GetShuffledObject(RC_FP_JIGGY_WOZZA);
+                        }
+                        break;
+                    case BUNDLE_7__JIGGY:
+                        shuffledObject = Rando::Logic::GetShuffledObject(RC_FP_JIGGY_BOGGY_RACE_2);
+                        break;
+                }
+                break;
             case LEVEL_6_LAIR:
                 randoCheckId = CheckMultiSpawnMap(spawnPosition);
                 switch (bundleId) {
