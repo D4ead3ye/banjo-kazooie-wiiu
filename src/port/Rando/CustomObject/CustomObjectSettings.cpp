@@ -49,6 +49,7 @@ static f32 baseSpeed = 400.0f;
 // clang-format off
 std::map<RandoCheckId, BundlePhysics> customActorPhysicsMap = {
     { RC_UNKNOWN,                                   { 0, 0, 0, 0, 0, 0, 0, 0 } },
+    { RC_BGS_JIGGY_TANKTUP,                         { 0, 100.0f, 300.0f, 0, 0, 0, 0, 0x1 } },
     { RC_GL_JIGGY_WITCH_SWITCH_TREASURE_TROVE_COVE, { 0, 100.0f, 2800.0f, 0, 0, 0, 0, 0x1 } },
     { RC_MM_JIGGY_CHIMPY,                           { 0, 800.0f, 0, 0, 10.0f, 0, 0, 0x1 } },
     { RC_MM_JIGGY_CONGA,                            { 150.0f, 175.0f, 0, 0, 10.0f, 0, 0, 0x1 } },

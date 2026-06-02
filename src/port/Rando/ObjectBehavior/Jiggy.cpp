@@ -46,6 +46,12 @@ void Rando::ObjectBehavior::InitJiggyBehavior() {
         spawnPosition[0] = (int32_t)position[0];
         spawnPosition[1] = (int32_t)position[1];
         spawnPosition[2] = (int32_t)position[2];
+
+        if (jiggyId == JIGGY_26_BGS_TANKTUP) {
+              spawnPosition[0] -= 300;
+              spawnPosition[1] += 100;
+              spawnPosition[2] -= 300;
+        }
         
         Actor* newCustomActor = CustomObject::SpawnCustomActor(randoActorId, spawnPosition);
         newCustomActor = CustomObject::SetCustomActorParameters(newCustomActor, randoCheckId);
