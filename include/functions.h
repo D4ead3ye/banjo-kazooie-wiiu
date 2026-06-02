@@ -89,7 +89,7 @@ void marker_setFreeMethod(ActorMarker *, void (*)(Actor *));
 // --- core2/actor_cubebounds.c ---
 NodeProp *cubeList_findNodePropByActorIdAndPosition_s32(enum actor_e actor_id, s32 position[3]);
 NodeProp *func_80305510(s32 arg0);
-BKCollisionTri *func_80303800(f32 volume_p1[3], f32 volume_p2[3], f32 arg2[3], u32 arg3);
+BKCollisionTriangle *func_80303800(f32 volume_p1[3], f32 volume_p2[3], f32 arg2[3], u32 arg3);
 NodeProp *nodeprop_findByActorIdAndPosition_s16(enum actor_e actor_id, s16 *position);
 Actor * func_803055E0(enum actor_e id, s32 pos[3], s32 arg2, s32 arg3, s32 arg4);
 NodeProp *nodeprop_findByActorIdAndActorPosition(enum actor_e actor_id, Actor *actor_ptr);
@@ -99,16 +99,16 @@ void spawnableActorList_add(ActorInfo *arg0, Actor *(*arg1)(s32[3], s32, ActorIn
 void spawnableActorList_addIfMapVisited(ActorInfo *arg0, Actor *(*arg1)(s32[3], s32, ActorInfo *, u32), u32 arg2, enum map_e arg3);
 
 // --- core2/map/model.c ---
-BKCollisionTri *func_80309B48(f32 startPoint[3], f32 endPoint[3], f32 arg2[3], u32 flagFilter);
-// NOTE: func_802E76B0, func_802E805C, func_802E8E88, func_802E9118,
-// func_802E92AC, func_802E9DD8 return BKCollisionTri* but have conflicting
+BKCollisionTriangle *func_80309B48(f32 startPoint[3], f32 endPoint[3], f32 arg2[3], u32 flagFilter);
+// NOTE: func_802E76B0, collisionList_func_802E805C, func_802E8E88, func_802E9118,
+// func_802E92AC, func_802E9DD8 return BKCollisionTriangle* but have conflicting
 // local externs (bool/s32/void) in decomp source files. Files that need
 // the pointer type already have correct local externs.
-BKCollisionTri *func_802E76B0(BKCollisionList *collisionList, BKVertexList *vertexList, f32 startPoint[3], f32 endPoint[3], f32 arg4[3], u32 flagFilter);
+BKCollisionTriangle *func_802E76B0(BKCollisionList *collisionList, BKVertexList *vertexList, f32 startPoint[3], f32 endPoint[3], f32 arg4[3], u32 flagFilter);
 f32  mapModel_getFloorY(f32[3]);
 
 // --- core2/actor_cubepropsystem.c ---
-BKCollisionTri *func_803311D4(Cube *cube, f32 arg1[3], f32 arg2[3], f32 arg3[3], u32 arg4);
+BKCollisionTriangle *func_803311D4(Cube *cube, f32 arg1[3], f32 arg2[3], f32 arg3[3], u32 arg4);
 
 // --- core2/gameloop.c ---
 u8 GetCurrentMap();
@@ -119,28 +119,28 @@ void transitionToMap(enum map_e map, s32 exit, s32 transition);
 f32 time_getDelta(void);
 
 // --- core2/map_list.c ---
-BKCollisionTri *func_8029463C(void);
+BKCollisionTriangle *func_8029463C(void);
 BKModelBin *func_802946A8(void);
-BKCollisionTri *func_802946CC(void);
+BKCollisionTriangle *func_802946CC(void);
 
 // --- core2/collision/raycast.c ---
-BKCollisionTri *func_8031BABC(f32 *arg0, f32 arg1, f32 arg2, u32 arg3, struct86s *arg4);
-BKCollisionTri *func_8031BBA0(f32 *self, f32 arg1, f32 arg2, u32 arg3, struct86s *arg4);
-BKCollisionTri *func_8031C5EC(struct0 *self);
-BKCollisionTri *func_8031C5F4(struct0 *self);
+BKCollisionTriangle *func_8031BABC(f32 *arg0, f32 arg1, f32 arg2, u32 arg3, struct86s *arg4);
+BKCollisionTriangle *func_8031BBA0(f32 *self, f32 arg1, f32 arg2, u32 arg3, struct86s *arg4);
+BKCollisionTriangle *func_8031C5EC(struct0 *self);
+BKCollisionTriangle *func_8031C5F4(struct0 *self);
 BKModelBin *func_8031C5DC(struct0 *self);
 struct0 *func_8031B9D8(void);
 
 // --- core2/collision/funcs.c ---
-BKCollisionTri *func_80320B98(f32 arg0[3], f32 arg1[3], f32 arg2[3], u32 arg3);
-// func_80320C94, func_80320DB0 return BKCollisionTri* but
+BKCollisionTriangle *func_80320B98(f32 arg0[3], f32 arg1[3], f32 arg2[3], u32 arg3);
+// func_80320C94, func_80320DB0 return BKCollisionTriangle* but
 // have conflicting local externs (bool/s32/int) in decomp source files.
 void *func_803209EC(void);
 
 // --- core1/collision.c ---
-BKCollisionTri *func_80244E54(f32 arg0[3], f32 arg1[3], f32 arg2[3], u32 arg3, f32 arg4, f32 arg5);
-BKCollisionTri *func_8024575C(f32 arg0[3], f32 arg1[3], f32 arg2, f32 arg3[3], s32 arg4, u32 arg5);
-BKCollisionTri *func_802457C4(f32 arg0[3], f32 arg1[3], f32 arg2, f32 arg3, f32 arg4[3], s32 arg5, u32 arg6);
+BKCollisionTriangle *func_80244E54(f32 arg0[3], f32 arg1[3], f32 arg2[3], u32 arg3, f32 arg4, f32 arg5);
+BKCollisionTriangle *func_8024575C(f32 arg0[3], f32 arg1[3], f32 arg2, f32 arg3[3], s32 arg4, u32 arg5);
+BKCollisionTriangle *func_802457C4(f32 arg0[3], f32 arg1[3], f32 arg2, f32 arg3, f32 arg4[3], s32 arg5, u32 arg6);
 
 // --- core2/actor_array.c ---
 BKModelBin *func_803257B4(ActorMarker *marker);
@@ -172,7 +172,7 @@ int  subaddie_maybe_set_state(Actor *, s32, f32);
 int actor_animationIsAt(Actor*, f32);
 s32  subaddie_getYawToPlayer(Actor *);
 s32 asset_getFlag(enum asset_e arg0);
-struct5Bs *func_80329934(void);
+Vec3fArray *func_80329934(void);
 void actor_collisionOff(Actor *);
 void actor_collisionOn(Actor *);
 void actor_loopAnimation(Actor *);
@@ -201,19 +201,13 @@ Struct83s *func_803406B0(void);
 Struct83s *func_803406D4(Struct83s *self);
 
 // --- core2/vtx/list.c ---
-BKVertexList *vtxList_clone(BKVertexList *vtxList);
 
 // --- core2/spline_bezier.c ---
-struct5Bs *func_8034A2C8(void);
-struct5Bs *func_8034A348(struct5Bs *self);
-void func_8034A174(struct5Bs *s5b, s32 indx,f32 dst[3]);
 
 // --- core2/map/model.c ---
-struct5Bs *func_803097A0(void);
-BKCollisionList *model_getCollisionList(BKModelBin *arg0);
+Vec3fArray *func_803097A0(void);
 
 // --- core2/model/render.c ---
-BKModelUnk14List *func_8033A12C(BKModelBin *self);
 
 // --- core2/vtx/colorapply.c ---
 Struct70s *func_8034C344(s32 arg0);
@@ -270,13 +264,6 @@ u8 *func_8032479C(void);
 #ifndef _BONE_TRANSFORMATION_H_
 typedef struct bone_transform_list_s BoneTransformList;
 #endif
-MtxF *animMtxList_get(AnimMtxList *self, s32 arg1);
-AnimMtxList *animMtxList_new(void);
-void animMtxList_free(AnimMtxList *self);
-s32 animMtxList_len(AnimMtxList *self);
-void animMtxList_setBoneless(AnimMtxList **this_ptr, BKAnimationList *anim_list);
-void animMtxList_setBoned(AnimMtxList **this_ptr, BKAnimationList *anim_list, BoneTransformList *arg2);
-AnimMtxList *animMtxList_defrag(AnimMtxList *self);
 
 // FLOAT-RETURNING FUNCTIONS
 
@@ -324,13 +311,12 @@ f32 player_getYaw(void);
 // These return pointers but are commonly listed with utility functions.
 // Only functions that return pointers or have no conflicting local externs.
 NodeProp *cube_findNodePropByActorId(Cube *cube, enum actor_e actor_id);
-AnimTexture *model_getAnimTextureList(BKModelBin *);
 
 // --- core2/camera/cameranodelist.c ---
-CameraNodeType1 *ncCameraNodeList_getCameraNodeType1(int camera_node_index);
-CameraNodeType2 *ncCameraNodeList_getCameraNodeType2(int camera_node_index);
-CameraNodeType3 *ncCameraNodeList_getCameraNodeType3(int camera_node_index);
-CameraNodeType4 *ncCameraNodeList_getCameraNodeType4(int camera_node_index);
+PivotCameraNode *ncCameraNodeList_getPivotCameraNode(int camera_node_index);
+StaticCameraNode *ncCameraNodeList_getStaticCameraNode(int camera_node_index);
+ZoomCameraNode *ncCameraNodeList_getZoomCameraNode(int camera_node_index);
+RandomCameraNode *ncCameraNodeList_getRandomCameraNode(int camera_node_index);
 
 // MISC POINTER-RETURNING + OS + GBI PROTOTYPES
 
@@ -550,16 +536,14 @@ void func_80320B44(void *arg0, void *arg1, void *arg2, void *arg3);
 
 // --- core2/collision/climbsurface.c ---
 s32 func_8029453C(void);
-BKCollisionTri *func_802946F0(void);
+BKCollisionTriangle *func_802946F0(void);
 f32  func_80294438(void);
 f32  floor_getCurrentFloorYPosition(void);
 void func_80293D48(f32, f32);
 
 // --- core2/spline_bezier.c ---
-void func_8034A2A8(struct5Bs *self);
 
 // --- core2/vtx/list.c ---
-void vtxList_free(BKVertexList *vtxList);
 
 // --- core2/ba/ba_model.c / assetcache ---
 void assetcache_release(void *);
@@ -568,9 +552,6 @@ void assetcache_release(void *);
 void func_80343DEC(Actor *self);
 
 // --- core2/model/render.c ---
-s32 func_8033A0F0(s32 arg0);
-BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation[3], f32 scale, f32*arg5, BKModelBin* model_bin);
-void func_8033A280(f32);
 
 // --- core2/spawn_queue.c ---
 void __spawnQueue_add_0(void (*arg0)(void));
@@ -1018,7 +999,7 @@ void baMotor_init(void);
 int collisionTri_isHitFromAbove_actor(f32 arg0[3], Actor *arg1, s32 arg2);
 int collisionTri_isHitFromAbove_marker(f32 position[3], ActorMarker *marker, s32 verticalOffset);
 s32 func_8024559C(f32 arg0[3], intptr_t *arg1, f32 *arg2);
-void collisionTri_copy(BKCollisionTri *dst, BKCollisionTri *src);
+void collisionTri_copy(BKCollisionTriangle *dst, BKCollisionTriangle *src);
 void func_802450DC(f32 arg0[3], f32 arg1[3], f32 arg2[3], f32 arg3[3], f32 arg4[3]);
 void func_802451A4(f32 arg0[3], f32 arg1[3], f32 arg2[3], f32 arg3[3], f32 arg4[3], s32 arg5);
 
@@ -1031,13 +1012,6 @@ void gcdebugText_pauseThread(void);
 // --- core1/defragmanager.c ---
 void defragManager_free(void);
 void defragManager_init(void);
-
-// --- core1/graphics_thread.c ---
-void func_80246670(OSMesg arg0);
-void func_80247380(void);
-void func_80247560(void);
-void func_802476DC(void);
-void func_802476EC(Gfx **gfx);
 
 // --- core1/math/mlmtx.c ---
 void _guMtxF2L(float mf[4][4], Mtx *m);
@@ -1071,9 +1045,7 @@ void func_802596AC(f32 a0[3], f32 a1[3], f32 a2[3], f32 a3[3]);
 void func_802515D4(f32 arg0[3][3]);
 
 // --- core1/overlaymanager.c ---
-bool overlayManagerload(enum overlay_e overlay_id);
-int overlayManagergetLoadedId(void);
-void overlayManagerloadCore2(void);
+// overlayManager_* functions are declared in core1/core1.h
 
 // --- core1/sns.c ---
 void snspayload_finalise_outgoing_payload(struct SnsPayload *payload);
@@ -1141,7 +1113,6 @@ void func_803283D4(void);
 void func_80328CA8(Actor *self, s32 angle);
 void func_803297FC(Actor *arg0, f32 *o1, f32 *o2);
 s32 func_80329904(ActorMarker *arg0, s32 arg1, f32 *arg2);
-void func_8032A09C(s32 arg0, ActorListSaveState *arg1);
 void func_8032A5F8(void);
 void func_8032A82C(Actor *arg0, s32 arg1);
 void func_8032A95C(Actor *arg0, s32 arg1, s32 arg2);
@@ -1173,7 +1144,6 @@ s32 func_80306DBC(s32 arg0);
 s32 func_80306DDC(s32 *position);
 s32 func_80307164(s32 arg0[3]);
 s32 func_80307258(f32 arg0[3], s32 arg1, s32 arg2);
-s32 func_803083B0(s32 arg0);
 s32 nodeprop_getRadius(NodeProp *arg0);
 s32 nodeprop_getScale(NodeProp *nodeProp);
 u32 nodeprop_getYaw(NodeProp *nodeProp);
@@ -1195,7 +1165,6 @@ void func_803065E4(s32 arg0, s32 position[3], s32 radius, s32 arg3, s32 arg4);
 void func_8030688C(s32 arg0, s32 position[3], s32 radius, s32 arg3);
 void func_80306AA8(s32 arg0, s32 position[3], s32 radius);
 void func_80307CA0(ActorMarker *marker);
-void cubeList_sort(s32 arg0);
 void nodeprop_getPosition_s32(NodeProp *nodeProp, s32 dst[3]);
 void spawnableActorList_free(void);
 void spawnableActorList_new(void);
@@ -1304,7 +1273,7 @@ void func_80361EE0(Actor *self);
 // --- core2/anim/anim_texturecache.c ---
 bool AnimTextureListCache_tryGetTextureOffset(s32 list_index, s32 texture_index, s32 *current_frame);
 s32 AnimTextureListCache_newList(void);
-void AnimTextureListCache_at(s32 arg0, AnimTexture arg1[4]);
+void AnimTextureListCache_setAnimTextureList(s32 arg0, BKAnimTextureList *bk_anim_texture_list);
 void AnimTextureListCache_free(void);
 void AnimTextureListCache_freeList(s32 arg0);
 void AnimTextureListCache_init(void);
@@ -1840,17 +1809,17 @@ void func_802BE940(void);
 void func_803525A0(f32 arg0[3]);
 
 // --- core2/camera/cameranode_type1.c ---
-bool code336F0_func_802BA87C(CameraNodeType1 *self);
-bool code336F0_func_802BA89C(CameraNodeType1 *self);
-bool code336F0_func_802BA8BC(CameraNodeType1 *self);
-void code336F0_func_802BA7D8(CameraNodeType1 *self, f32 arg1[3]);
+bool code336F0_func_802BA87C(PivotCameraNode *self);
+bool code336F0_func_802BA89C(PivotCameraNode *self);
+bool code336F0_func_802BA8BC(PivotCameraNode *self);
+void code336F0_func_802BA7D8(PivotCameraNode *self, f32 arg1[3]);
 
 // --- core2/camera/cameranode_type3.c ---
-bool code33310_func_802BA4D0(CameraNodeType3 *self);
-bool code33310_func_802BA4F0(CameraNodeType3 *self);
+bool code33310_func_802BA4D0(ZoomCameraNode *self);
+bool code33310_func_802BA4F0(ZoomCameraNode *self);
 
 // --- core2/camera/cameranode_type4.c ---
-s32 code33250_func_802BA234(CameraNodeType4 *self);
+s32 code33250_func_802BA234(RandomCameraNode *self);
 
 // --- core2/camera/cameranodelist.c ---
 s32 ncCameraNodeList_getNodeType(int camera_node_index);
@@ -2512,8 +2481,7 @@ void func_80341A54(void);
 void glspline_defrag(void);
 
 // --- core2/level/lightconfig.c ---
-void func_802BC538(s32 arg0, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4, s32 *arg5, s32 *arg6, s32 *arg7, s32 *arg8, s32 *arg9);
-void func_802BC5CC(void);
+// code35520_getDistanceVectors and code35520_selectTable are declared in core2/core2.h
 
 // --- core2/level/metadata.c ---
 int barebound_set_active(s32 arg0);
@@ -2558,22 +2526,15 @@ void mapModel_xlu_draw(Gfx **gfx, Mtx **mtx, Vtx **vtx);
 
 // --- core2/map/savestate.c ---
 int game_is_frozen(void);
-void mapSavestate_apply(enum map_e map_id);
-void mapSavestate_defrag_all(void);
-void mapSavestate_free_all(void);
-void mapSavestate_init(void);
-void mapSavestate_save(enum map_e map);
 
 // --- core2/map/gsworld.c ---
 enum map_e gsworld_getMap(void);
 
 // --- core2/map/specificflags.c ---
 s32 mapSpecificFlags_validateCRC1(void);
-u32 mapSpecificFlags_getAll(void);
 u32 mapSpecificFlags_getClear(s32 i);
 u32 mapSpecificFlags_getN(s32 idx, s32 n);
 void mapSpecificFlags_clearAll(void);
-void mapSpecificFlags_setAll(u32 arg0);
 void mapSpecificFlags_setN(s32 idx, s32 val, s32 n);
 
 // --- core2/map_list.c ---
@@ -2587,23 +2548,15 @@ void func_8033F9C0(void);
 void func_8033FA24(void);
 
 // --- core2/model/meshbounds.c ---
-s32 func_8033F3C0(BKModel *model, f32 position[3]);
-s32 func_8033F3E8(BKModel *model, f32 position[3], s32 min_id, s32 max_id);
 void func_8033F738(ActorMarker *arg0);
 void func_8033F784(ActorMarker *arg0);
 void func_8033F7A4(ActorMarker *arg0, BKVertexList *arg1);
 
 // --- core2/model/render.c ---
-s32 func_8033A170(void);
-void func_8033A1FC(void);
-void func_8033A25C(bool arg0);
-void func_8033A28C(bool arg0);
-void modelRender_free(void);
-void modelRender_init(void);
 void modelRender_setBoneTransformList(BoneTransformList *arg0);
 
 // --- core2/model/rendernormal.c ---
-void func_802E6BD0(BKModelUnk28List *arg0, BKVertexList *arg1, AnimMtxList *mtx_list);
+void animVerticesList_transform(BKAnimVerticesList *arg0, BKVertexList *arg1, AnimMtxList *mtx_list);
 
 // --- core2/mumbo_transforms.c ---
 void chmumbo_func_802D1724(void);
@@ -2611,16 +2564,7 @@ void func_802D2CB8(void);
 void func_802D2CDC(void);
 
 // --- core2/overlay.c ---
-enum overlay_e level_to_overlay(enum level_e lvl);
-void func_80322E64(Gfx **gfx, Mtx **mtx, Vtx **vtx);
-void func_80322F5C(void);
-void func_80322F7C(void);
-void func_80322F9C(void);
-void func_80322FBC(void);
-void func_80322FDC(void);
-void func_80323098(s32 arg0, s32 arg1);
-void overlay_init(void);
-void overlay_update(void);
+// leveloverlay_* functions are declared in core2/core2.h
 
 // --- core2/particle/bathroom.c ---
 void func_8029ADA8(void);
@@ -2960,9 +2904,6 @@ void spawnQueue_reset(void);
 void spawnQueue_unlock(void);
 
 // --- core2/spline_bezier.c ---
-void func_8034A130(struct5Bs *self);
-void func_8034A1B4(struct5Bs *self, s32 indx, s32 dst[3]);
-void func_8034A308(struct5Bs *self, s32 indx, f32 arg2[3]);
 
 // --- core2/sprite/displaydata.c ---
 s32 func_8033E8AC(void);
@@ -3033,7 +2974,6 @@ void saveditem_getSizeAndPtr(s32 *size, u8 **buffer);
 void timeScores_getSizeAndPtr(s32 *size, void **ptr);
 
 // --- core2/texture/copy.c ---
-void func_802FEF48(BKModelBin *model_bin);
 
 // --- core2/timed_funcqueue.c ---
 void func_80324C58(void);
@@ -3060,9 +3000,6 @@ void lightingVectorList_fromFile(File *file_ptr);
 // --- core2/vtx/listutils.c ---
 void func_802E73C8(f32 arg0[3][3]);
 
-// --- core2/vtx/meshcount.c ---
-bool meshList_meshContainsVtx(BKMeshList * meshList, s32 mesh_id, void *vtx_id);
-
 // --- core2/vtx/positionset.c ---
 s32 func_8034F560(Struct76s *arg0);
 
@@ -3082,10 +3019,6 @@ void func_8034C97C(void);
 void func_8034C9B0(int arg0);
 
 // --- core2/vtx/list.c ---
-s32 vtxList_getVtxCount(BKVertexList *self);
-void vtxList_getCenterAndNorm(BKVertexList *self, f32 center[3], f32 *norm);
-void vtxList_getVtxRange(BKVertexList *self, Vtx **vtx, Vtx **vtx_end);
-void vtxList_recolor(BKVertexList *self, s32 arg1[3]);
 
 // --- core2/yaw.c ---
 void yaw_init(void);
@@ -3119,7 +3052,6 @@ bool jigsawPicture_isJigsawPictureComplete(s32 arg0);
 // --- port/stub.c ---
 s32 osContSetCh(u8 ch);
 u32 __osGetSR(void);
-void func_80253010(void* dest, void* src, s32 size);
 void osCreateThread(OSThread* thread, OSId id, void* entry, void* arg, void* sp, OSPri p);
 void osDestroyThread(OSThread* thread);
 void osDpSetStatus(u32 data);
@@ -3229,6 +3161,10 @@ void savedata_clear(void *savedata);
 // --- core2/spawn_queue.c ---
 void spawnQueue_defrag(void);
 
+void bkmemcpy64(void *dest, void *src, s32 size); // handwritten assembly code that performs an optimized 8 byte memcpy
+void bkmemset64(void *dest, s32 value, s32 size); // handwritten assembly code that performs an optimized 8 byte memset
+u32 bkGetSR(void); // handwritten assembly code that replicates the __osGetSR function
+
 #endif // FUNCTIONS_H
 
 
@@ -3250,9 +3186,6 @@ void *bk_realloc(void* ptr, size_t size);
 void bk_free(void*);
 void *defrag(void *);
 void *defrag_asset(void *);
-
-// --- core1/pimanager.c ---
-void piMgr_read(void *vaddr, s32 devaddr, s32 size);
 
 // --- core2/anim/anim_bonetransform.c ---
 void *assetcache_get(enum asset_e assetId);

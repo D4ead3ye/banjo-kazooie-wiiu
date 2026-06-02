@@ -19,9 +19,9 @@ extern void bitfield_setAll(s32 *arg0, bool arg1);
 extern void func_8032D510(Cube *, Gfx **, Mtx **, Vtx **);
 // def returns Prop*, but callers here access via the ActorProp union member
 extern ActorProp *func_803322F0(Cube *, ActorMarker *, f32, s32, s32 *);
-extern BKCollisionTri *func_803311D4(Cube *cube, f32 arg1[3], f32 arg2[3], f32 arg3[3], u32 arg4);
-extern BKCollisionTri *func_803319C0(Cube *cube, f32 position[3], f32 radius, f32 arg2[3], u32 flags);
-extern BKCollisionTri *func_80331638(Cube *cube, f32 volume_p1[3], f32 volume_p2[3], f32 radius, f32 arg2[3], s32, u32 flags);
+extern BKCollisionTriangle *func_803311D4(Cube *cube, f32 arg1[3], f32 arg2[3], f32 arg3[3], u32 arg4);
+extern BKCollisionTriangle *func_803319C0(Cube *cube, f32 position[3], f32 radius, f32 arg2[3], u32 flags);
+extern BKCollisionTriangle *func_80331638(Cube *cube, f32 volume_p1[3], f32 volume_p2[3], f32 radius, f32 arg2[3], s32, u32 flags);
 
 bool func_80305C30(s32 arg0);
 
@@ -118,6 +118,12 @@ s16  D_8036ABAC[] = {0x269, 0x26B, 0x26D, 0x26F, 0x271, 0x273, 0x275, 0x277, 0x2
 s16  D_8036ABC0[] = {0x268, 0x26A, 0x26C, 0x26E, 0x270, 0x272, 0x274, 0x276, 0x278, -1};
 // used to index D_80382150
 s16  D_8036ABD4 = 0;
+
+#define CUBE_DIMENSIONS_START_INDICATOR   0x01
+#define CUBE_UNK_INDICATOR                0x02
+#define CUBE_START_INDICATOR              0x03
+#define CUBE_SEPARATOR_INDICATOR          0x01
+#define CUBE_SECTION_END_INDICATOR        0x00
 
 /* .bss */
 struct {
@@ -594,12 +600,12 @@ void __code7AF80_pad_func_80303664(s32 arg0[3], s32 arg1[3]){
     arg1[2] = sCubeList.max[2];
 }
 
-static BKCollisionTri *__code7AF80_func_803036A0(f32 volume_p1[3], f32 volume_p2[3], f32 arg2[3], u32 arg3) {
+static BKCollisionTriangle *__code7AF80_func_803036A0(f32 volume_p1[3], f32 volume_p2[3], f32 arg2[3], u32 arg3) {
     s32 cube_indx[3];
     s32 min[3];
     s32 max[3];
-    BKCollisionTri *temp_v0;
-    BKCollisionTri *var_s5;
+    BKCollisionTriangle *temp_v0;
+    BKCollisionTriangle *var_s5;
 
     var_s5 = NULL;
     cube_volumeToIndices(min, max, volume_p1, volume_p2, sCubeList.margin);
@@ -620,12 +626,12 @@ static BKCollisionTri *__code7AF80_func_803036A0(f32 volume_p1[3], f32 volume_p2
     return var_s5;
 }
 
-BKCollisionTri *func_80303800(f32 volume_p1[3], f32 volume_p2[3], f32 arg2[3], u32 arg3) {
+BKCollisionTriangle *func_80303800(f32 volume_p1[3], f32 volume_p2[3], f32 arg2[3], u32 arg3) {
     s32 cube_indx[3];
     s32 min[3];
     s32 max[3];
-    BKCollisionTri *temp_v0;
-    BKCollisionTri *var_s5;
+    BKCollisionTriangle *temp_v0;
+    BKCollisionTriangle *var_s5;
 
     cube_volumeToIndices(min, max, volume_p1, volume_p2, sCubeList.margin);
     for(cube_indx[0] = min[0]; cube_indx[0] <= max[0]; cube_indx[0]++){
@@ -645,12 +651,12 @@ BKCollisionTri *func_80303800(f32 volume_p1[3], f32 volume_p2[3], f32 arg2[3], u
     return NULL;
 }
 
-static BKCollisionTri *__code7AF80_func_80303960(f32 volume_p1[3], f32 volume_p2[3], f32 radius, f32 arg3[3], s32 arg4, u32 flags) {
+static BKCollisionTriangle *__code7AF80_func_80303960(f32 volume_p1[3], f32 volume_p2[3], f32 radius, f32 arg3[3], s32 arg4, u32 flags) {
     s32 cube_indx[3];
     s32 min[3];
     s32 max[3];
-    BKCollisionTri *temp_v0;
-    BKCollisionTri *var_s5;
+    BKCollisionTriangle *temp_v0;
+    BKCollisionTriangle *var_s5;
     Cube *cube;
 
     var_s5 = NULL;
@@ -679,13 +685,12 @@ uintptr_t D_803820B8[0x20];
 u8 pad_80382138[4];
 s32 D_8038213C;
 
-extern Cube *D_80382144;
-BKCollisionTri* __code7AF80_func_80303AF0(f32 position[3], f32 radius, f32 arg2[3], u32 arg3) {
+BKCollisionTriangle* __code7AF80_func_80303AF0(f32 position[3], f32 radius, f32 arg2[3], u32 arg3) {
     s32 cube_indx[3];
     s32 min[3];
     s32 max[3];
-    BKCollisionTri *temp_v0;
-    BKCollisionTri *var_s5;
+    BKCollisionTriangle *temp_v0;
+    BKCollisionTriangle *var_s5;
 
     var_s5 = NULL;
     cube_volumeToIndices(min, max, position, position, radius + sCubeList.margin);
@@ -729,7 +734,6 @@ void func_80303C54(Cube *cube, ActorMarker *marker, f32 arg2, s32 arg3, s32 *arg
     };
 }
 
-Cube *D_80382144;
 s32 D_80382148;
 s16 D_80382150[0x48];
 u32 D_803821E0[0x5B];
@@ -913,12 +917,12 @@ void func_803045D8(){}
 
 static void __code7AF80_initCubeFromFile(Cube *cube, File* file_ptr) {
     s32 pad[3];
-    while(!file_isNextByteExpected(file_ptr, 1)) {
-        if (file_getNWords_ifExpected(file_ptr, 0, pad, 3)) {
+    while(!file_isNextByteExpected(file_ptr, CUBE_SEPARATOR_INDICATOR)) {
+        if (file_getNWords_ifExpected(file_ptr, CUBE_SECTION_END_INDICATOR, pad, 3)) {
             file_getNWords(file_ptr, pad, 3);
-        } else if (file_getNWords_ifExpected(file_ptr, 2, pad, 3)) {
+        } else if (file_getNWords_ifExpected(file_ptr, CUBE_UNK_INDICATOR, pad, 3)) {
             break; // [port] tag 2: data consumed, exit inner loop (matches original N64 semantics)
-        } else if (file_isNextByteExpected(file_ptr, 3)) {
+        } else if (file_isNextByteExpected(file_ptr, CUBE_START_INDICATOR)) {
             code7AF80_initCubeFromFile(file_ptr, cube);
         } else {
             break; // [port] unhandled tag, avoid infinite loop
@@ -933,7 +937,7 @@ void cubeList_fromFile(File *file_ptr) {
     Cube *cube;
     NodeProp *iPtr;
 
-    file_getNWords_ifExpected(file_ptr, 1, cube_position_from, 3);
+    file_getNWords_ifExpected(file_ptr, CUBE_DIMENSIONS_START_INDICATOR, cube_position_from, 3);
     file_getNWords(file_ptr, cube_position_to, 3);
     for(cube_position[0] = cube_position_from[0]; cube_position[0] <= cube_position_to[0]; cube_position[0]++){
         for(cube_position[1] = cube_position_from[1]; cube_position[1] <= cube_position_to[1]; cube_position[1]++){
@@ -942,7 +946,7 @@ void cubeList_fromFile(File *file_ptr) {
             }
         }
     }
-    file_isNextByteExpected(file_ptr, 0);
+    file_isNextByteExpected(file_ptr, CUBE_SECTION_END_INDICATOR);
     bitfield_setAll(D_8036A9E0, 0);
     for(cube_position[0] = cube_position_from[0]; cube_position[0] <= cube_position_to[0]; cube_position[0]++){
         for(cube_position[1] = cube_position_from[1]; cube_position[1] <= cube_position_to[1]; cube_position[1]++){
@@ -2187,75 +2191,91 @@ Cube *func_80308224(void){
     return D_8036A9DC;
 }
 
-void cubeList_sort(s32 arg0) {
-    Cube *iCube;
-    for(iCube = sCubeList.cubes; iCube < sCubeList.cubes + sCubeList.cubeCnt; iCube++){
-        if (arg0 == 0) {
-            cube_sortRelative(iCube); //sort cube props (dist from viewport)
+void cubeList_sort(bool absolute_positon) {
+    Cube *cube;
+    for (cube = sCubeList.cubes; cube < sCubeList.cubes + sCubeList.cubeCnt; cube++) {
+        if (!absolute_positon) {
+            cube_sortRelative(cube); //sort cube props (dist from viewport)
         } else {
-            cube_sortAbsolute(iCube); //sort cube props (dist from origin)
+            cube_sortAbsolute(cube); //sort cube props (dist from origin)
         }
     }
 }
 
-bool func_803082D8(Cube *arg0, s32 *arg1, bool arg2, bool arg3) {
-    Prop *var_v0;
-    bool var_a0;
+// Reads or writes the unk8_4 (isNotFeatherEggOrNote) flag of the given prop2 ID and advances ID.
+// Returns the previous flag value.
+bool cube_getOrSetProp2Flag(Cube *this_cube, s32 *prop2_index, bool set_flag, bool value) {
+    // Notes
+    // * set_flag is 'SOME_NUM >= 1'
+    // * value is 'SOME_NUM & 1'
+    Prop *prop;
+    bool old_value;
 
-    var_v0 = arg0->prop2Ptr + *arg1;
-    while ((*arg1 < arg0->prop2Cnt) && (var_v0->markerFlag == 1)) {
-        (*arg1)++;
-        var_v0++;
+    prop = this_cube->prop2Ptr + *prop2_index;
+
+    while ((*prop2_index < this_cube->prop2Cnt) && (prop->markerFlag == 1)) {
+        (*prop2_index)++;
+        prop++;
     }
 
-    if (*arg1 >= arg0->prop2Cnt) {
-        *arg1 = 0;
+    if (*prop2_index >= this_cube->prop2Cnt) {
+        *prop2_index = 0;
         return false;
     }
-    var_a0 = var_v0->unk8_4;
-    (*arg1)++;
-    if (arg2) {
-        var_v0->unk8_4 = arg3;
+
+    old_value = prop->unk8_4;
+    (*prop2_index)++;
+
+    if (set_flag) {
+        prop->unk8_4 = value;
     }
-    return var_a0;
+
+    return old_value;
 }
 
-s32 func_803083B0(s32 arg0) {
-    s32 var_v0;
-    Cube *var_s0;
-    static s32 D_80382140;
+// Iterates through the whole cube list and gets or sets the unk8_4 (isNotFeatherEggOrNote) flag of every prop.
+// op: -2: read flag, -1: init, 0: clear flag, 1: set flag
+// return: -1: end of props, 0: flag not set, 1: flag set
+s32 cubeList_getOrSetNextProp2Flags(s32 op) {
+    bool flag_value;
+    Cube *cube;
+    static s32 current_prop_id;
+    static Cube *next_cube;
 
-    if (arg0 == -1) {
-        var_s0 = sCubeList.cubes;
-        D_80382140 = 0;
-        D_80382144 = var_s0;
+    if (op == -1) {
+        // Reset counters
+        cube = sCubeList.cubes;
+        current_prop_id = 0;
+        next_cube = cube;
         return 0;
     }
-   
-    var_s0 = *(Cube **)&D_80382144;
-    if (D_80382140 < var_s0->prop2Cnt) {
-        if (sCubeList.cubes && sCubeList.cubes && sCubeList.cubes );
-        var_v0 = func_803082D8(var_s0, &D_80382140, arg0 >= 0, arg0 & 1);
-        if (D_80382140 != 0) {
-            return var_v0;
+
+    cube = *(Cube **)&next_cube;
+
+    if (current_prop_id < cube->prop2Cnt) {
+        flag_value = cube_getOrSetProp2Flag(cube, &current_prop_id, op >= 0, op & 1);
+        if (current_prop_id != 0) {
+            return flag_value;
         }
     }
-    
-    D_80382140 = 0;
-    while(D_80382140 == 0) {
-        do{
-            var_s0++;
-            if (var_s0 >= sCubeList.cubes + sCubeList.cubeCnt) {
-                D_80382144 = var_s0;
+
+    current_prop_id = 0;
+
+    while (current_prop_id == 0) {
+        do {
+            cube++;
+            if (cube >= sCubeList.cubes + sCubeList.cubeCnt) {
+                next_cube = cube;
                 return -1;
             }
-        }while (0 >= var_s0->prop2Cnt);
+        } while (0 >= cube->prop2Cnt);
 
-        var_v0 = func_803082D8(var_s0, &D_80382140, arg0 >= 0, arg0 & 1);
-
+        flag_value = cube_getOrSetProp2Flag(cube, &current_prop_id, op >= 0, op & 1);
     }
-    D_80382144 = var_s0;
-    return var_v0;
+
+    next_cube = cube;
+
+    return flag_value;
 }
 
 enum actor_e func_803084F0(s32 arg0){

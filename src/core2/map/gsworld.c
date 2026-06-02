@@ -20,6 +20,14 @@ struct {
 s32 D_803835DC;
 u32 sEnableDraw;
 
+enum gsWorldStartIndicators {
+    GS_WORLD_START_INDICATOR_0_END,
+    GS_WORLD_START_INDICATOR_1_CUBES,
+    GS_WORLD_START_INDICATOR_2_UNUSED,
+    GS_WORLD_START_INDICATOR_3_CAMERAS,
+    GS_WORLD_START_INDICATOR_4_LIGHTING
+};
+
 /* public */
 void gsworld_setEnableUpdate(s32);
 void gsworld_setEnableDraw(s32);
@@ -52,7 +60,7 @@ void gsworld_draw(Gfx** gdl, Mtx **mptr, Vtx **vptr) {
     if (mapModel_has_xlu_bin() != 0) {
         mapModel_opa_draw(gdl, mptr, vptr);
         if (game_is_frozen() == 0) {
-            func_80322E64(gdl, mptr, vptr);
+            leveloverlay_drawCallback(gdl, mptr, vptr);
         }
         if (game_is_frozen() == 0) {
             // [port] Scope the player for identity-based interpolation matching.
@@ -90,7 +98,7 @@ void gsworld_draw(Gfx** gdl, Mtx **mptr, Vtx **vptr) {
         func_802D520C(gdl, mptr, vptr);
     } else {
         mapModel_opa_draw(gdl, mptr, vptr);
-        func_80322E64(gdl, mptr, vptr);
+        leveloverlay_drawCallback(gdl, mptr, vptr);
         func_8034F6F0(gdl, mptr, (s32)(intptr_t)vptr);
         // [port] Scope the player for identity-based interpolation matching.
         FrameInterpolation_ScopeBegin((void*)"player", 0, *mptr);
@@ -142,12 +150,12 @@ void gsworld_free(void) {
     func_80350BC8();
     func_8030F1D0();
     gcparade_free();//null
-    func_80322F7C();
+    leveloverlay_releaseCallback_OnlyFP();
     func_803518E8();
     func_802D48F0();
     func_803224FC();
     func_8028E644();
-    func_80322F5C();
+    leveloverlay_releaseCallback_NotFP();
     func_80341A54();
     spawnQueue_free();
     print_freeBoldLetterFont();
@@ -193,7 +201,7 @@ void gsworld_free(void) {
     }
     core1_7090_release();
     AnimTextureListCache_free();
-    func_80322FDC();
+    leveloverlay_debug();
     func_8033BD6C();
     func_80255198();//heap_flush_free_queue
     animCache_flushAll();
@@ -204,7 +212,7 @@ void gsworld_set(enum map_e arg0, s32 arg1, s32 arg2) {
     sGsWorldData.map_4 = arg0;
     CALL_EVENT(OnMapLoad, arg0);
     sGsWorldData.unk8 = arg1;
-    overlay_init();
+    leveloverlay_init();
     gsworld_setEnableUpdate(1);
     gsworld_setEnableDraw(1);
     func_802D2CB8();
@@ -260,9 +268,9 @@ void gsworld_set(enum map_e arg0, s32 arg1, s32 arg2) {
     mapSpecificFlags_clearAll();
     func_803411B0();
     spawnQueue_reset();
-    func_80322FBC();
+    leveloverlay_initCallback_NotFP();
     func_8028E4B0();
-    func_80322F9C();
+    leveloverlay_initCallback_OnlyFP();
     func_80323120();
     func_803223AC();
     bundle_reset();
@@ -292,7 +300,7 @@ void gsworld_stub2(void) {
 }
 
 void gsworld_setUnk0(s32 arg0) {
-    func_80254008();
+    core1_15B30_sendMesg3ToRenderThread();
     func_802BC21C(sGsWorldData.unk0, arg0);
     func_8028F7F4(sGsWorldData.unk0, arg0);
     func_8030D8A8(sGsWorldData.unk0, arg0);
@@ -300,7 +308,7 @@ void gsworld_setUnk0(s32 arg0) {
     func_80323140(sGsWorldData.unk0, arg0);
     func_80351A1C(sGsWorldData.unk0, arg0);
     func_803225B0(sGsWorldData.unk0, arg0);
-    func_80323098(sGsWorldData.unk0, arg0);
+    leveloverlay_unk14Callback(sGsWorldData.unk0, arg0);
     func_802F0E80((void *)(intptr_t)sGsWorldData.unk0, arg0);
     commonParticle_setActive(sGsWorldData.unk0, arg0);
     sGsWorldData.unk0 = arg0;
@@ -334,7 +342,7 @@ s32 gsworld_update(void) {
         } else {
             phi_v1 = 0x1F;
         }
-        if (((phi_v1 & phi_v0) == 3) && (overlayManagergetLoadedId() == OVERLAY_5_BEACH)) {
+        if (((phi_v1 & phi_v0) == 3) && (overlayManager_getLoadedID() == OVERLAY_5_BEACH)) {
             if ((maCastle_isSecretCheatCodeRelatedValueEqualToScrambledAddressValue() == false) || (D_80370250 != 0)) {
                 D_80370250 = (u8)1;
                 for (phi_v0 = 0; phi_v0 != 0x8F0D180; phi_v0++){
@@ -365,7 +373,7 @@ s32 gsworld_update(void) {
         dialogBin_update();
         func_80310D2C();
         gcparade_update();
-        overlay_update();
+        leveloverlay_updateCallback();
         func_80321924();
         func_80334428();
         cutscenetrigger_update();
@@ -401,19 +409,19 @@ s32 gsworld_getEnableDraw(){
 void gsworld_load(enum map_e map_id) {
     File *fp;
 
-    func_80254008();
+    core1_15B30_sendMesg3ToRenderThread();
     fp = file_openMap(map_id); //LevelSetupFile_Open
     if (fp == NULL) {
         return; // [port] safety: file_openMap can return NULL
     }
-    while (file_isNextByteExpected(fp, 0) == 0) {
-        if (file_isNextByteExpected(fp, 2)) {
-            // tag 2: skip
-        } else if (file_isNextByteExpected(fp, 1)) {
+    while (file_isNextByteExpected(fp, GS_WORLD_START_INDICATOR_0_END) == 0) {
+        if (file_isNextByteExpected(fp, GS_WORLD_START_INDICATOR_2_UNUSED)) {
+            /* NO OP */
+        } else if (file_isNextByteExpected(fp, GS_WORLD_START_INDICATOR_1_CUBES)) {
             cubeList_fromFile(fp);
-        } else if (file_isNextByteExpected(fp, 3)) {
+        } else if (file_isNextByteExpected(fp, GS_WORLD_START_INDICATOR_3_CAMERAS)) {
             ncCameraNodeList_fromFile(fp);
-        } else if (file_isNextByteExpected(fp, 4)) {
+        } else if (file_isNextByteExpected(fp, GS_WORLD_START_INDICATOR_4_LIGHTING)) {
             lightingVectorList_fromFile(fp);
         } else {
             break; // [port] unrecognized tag, avoid infinite loop

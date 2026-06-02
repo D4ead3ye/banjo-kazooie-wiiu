@@ -80,7 +80,7 @@ void func_802E3854(void){
     for(i = 0; i < 0xF; i++){
         func_802E6820(5);
         modelRender_defrag();
-        mapSavestate_defrag_all();
+        mapSavestate_defrag();
         gctransition_defrag();
         printbuffer_defrag();
         code_C9E70_defrag();
@@ -197,7 +197,7 @@ void func_802E39D0(Gfx **gdl, Mtx **mptr, Vtx **vptr, s32 framebuffer_idx, s32 a
         gDPReadFB((*gdl)++, 0, (u16 *)gFramebuffers[getActiveFramebuffer()],
                   0, 0, gFramebufferWidth, gFramebufferHeight, 1);
     }
-    finishFrame(gdl);
+    core1_15B30_finishDList(gdl);
     osWritebackDCache(m_start, sizeof(Mtx)*( *mptr - m_start));
     osWritebackDCache(v_start, sizeof(Vtx)*( *vptr - v_start));
 }
@@ -292,7 +292,7 @@ void func_802E3E7C(enum game_mode_e mode){
     s32 sp28;
     s32 prev_mode;
 
-    func_80254008();
+    core1_15B30_sendMesg3ToRenderThread();
     sp34 = D_8037E8E0.unk18;
     sp30 = D_8037E8E0.unk17;
     map = D_8037E8E0.map;
@@ -355,7 +355,7 @@ void game_draw(s32 arg0){
     if(D_8037E8E0.unkC == 0){
         sp2C = gfx;
         viMgr_func_8024C1DC();
-        func_80253EC4(gfx_start, sp2C);
+        core1_15B30_addF3DEXTaskData_40000000(gfx_start, sp2C);
 
         if(arg0) {
             scissorBox_setDefault();
@@ -678,7 +678,7 @@ s32 game_defrag(void){
     gcdialog_defrag();
     if(D_8037E8E0.game_mode == GAME_MODE_4_PAUSED)
         gcpausemenu_defrag();
-    switch(overlayManagergetLoadedId()){
+    switch(overlayManager_getLoadedID()){
         case OVERLAY_2_WHALE:
             func_803894A0();
             break;
