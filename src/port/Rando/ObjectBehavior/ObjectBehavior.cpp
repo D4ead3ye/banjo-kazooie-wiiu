@@ -73,6 +73,15 @@ bool IsActorWhitelisted(int32_t actorId) {
             return true;
         }
     }
+
+    if (CVarGetInteger(Rando::StaticData::Options[RO_SPAWN_JUNK].cvar, 0) == RO_GENERIC_ON) {
+        for (auto& junk : junkItemList) {
+            if (junk == actorId) {
+                return true;
+            }
+        }
+    }
+
     return false;
 }
 

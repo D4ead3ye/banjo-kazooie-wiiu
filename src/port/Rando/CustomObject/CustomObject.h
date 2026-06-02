@@ -2,6 +2,7 @@
 #define CUSTOM_OBJECT_H
 
 #include <stdint.h>
+#include <vector>
 #include "port/Rando/Types.h"
 #include "port/Rando/StaticData/StaticData.h"
 
@@ -38,6 +39,7 @@ void ApplyBundleActorPhysics(Actor* actor, int32_t bundle_id, BundleInfo* bundle
 void ApplyCustomActorPhysics(RandoCheckId randoCheckId, Actor* actor, bool isJinjoJiggy);
 void ClearSpawnQueue();
 
+extern std::vector<actor_e> junkItemList;
 void UpdateJunkList();
 
 class CustomObject {
