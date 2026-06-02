@@ -225,10 +225,12 @@ void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId) {
             }
             break;
         case RI_MUSIC_NOTE:
-            if (Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId == map_getLevel(gsworld_getMap())) {
-                item_inc(ITEM_C_NOTE);
-            }
             D_80385FF0[Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId]++;
+
+            if (Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId == map_getLevel(gsworld_getMap())) {
+                item_set(ITEM_C_NOTE, D_80385FF0[map_getLevel(gsworld_getMap())]);
+            }
+
             UpdateSaveDataNoteScores();
             fxSparkle_musicNote(playerPosI);
             break;

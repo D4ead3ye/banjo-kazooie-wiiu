@@ -1,9 +1,12 @@
 #include "CustomObject.h"
 #include "port/Rando/Rando.h"
+#include "port/ShipUtils.h"
 #include "port/save/Types.h"
 #include <map>
 
 #include "save.h"
+
+#include "spdlog/spdlog.h"
 
 #define BUNDLE_STATE_DEFAULT 1
 

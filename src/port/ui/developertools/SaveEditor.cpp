@@ -34,12 +34,6 @@ bool honeycombscore_get(enum honeycomb_e indx);
 void honeycombscore_set(enum honeycomb_e indx, bool val);
 }
 
-std::vector<std::string> worldNameList = {
-    "Mumbo's Mountain", "Treasure Trove Cove", "Clanker's Cavern", "Bubblegloop Swamp",
-    "Freezeezy Peak",   "Gruntilda's Lair",    "Gobi's Valley",    "Click Clock Wood",
-    "Rusty Bucket Bay", "Mad Monster Mansion", "Spiral Mountain",
-};
-
 std::vector<std::string> warpCauldronList = {
     "Lower Pink Cauldron",
     "Upper Pink Cauldron",

@@ -24,6 +24,12 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
+std::vector<std::string> worldNameList = {
+    "Mumbo's Mountain", "Treasure Trove Cove", "Clanker's Cavern", "Bubblegloop Swamp",
+    "Freezeezy Peak",   "Gruntilda's Lair",    "Gobi's Valley",    "Click Clock Wood",
+    "Rusty Bucket Bay", "Mad Monster Mansion", "Spiral Mountain",
+};
+
 std::vector<std::string> abilityNameList = {
     "Beak Barge",    "Beak Bomb", "Beak Buster", "Camera Control", "Claw Swipe",  "Climb", "Eggs",
     "Feathery Flap", "Flap Flip", "Flight",      "Jump Higher",    "Ratatat Rap", "Roll",  "Shock Jump",
