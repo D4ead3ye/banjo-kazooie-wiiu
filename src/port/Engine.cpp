@@ -34,10 +34,12 @@
 #include <fast/interpreter.h>
 #include <libultraship/bridge/gfxbridge.h>
 #include <SDL2/SDL.h>
+#include <chrono>
 #include <filesystem>
 #include <fstream>
-#include "FrameInterpolation.h"
 #include <libultraship/libultraship.h>
+#include "interpolation/AdaptiveFps.h"
+#include "interpolation/FrameInterpolation.h"
 
 #ifdef __SWITCH__
 #include <port/switch/SwitchImpl.h>
@@ -368,6 +370,7 @@ void GameEngine::FinishInit() {
 
     LighthouseGui::SetupGuiElements();
     Instance->AudioInit();
+    AdaptiveFps_Configure(30); // BK ticks at 30 Hz
     // Instance->LoadDictionary();
     // Instance->LoadPlayerAnims();
 #if defined(__SWITCH__) || defined(__WIIU__)
@@ -1116,7 +1119,17 @@ void GameEngine::AudioExit() {
     }
 }
 
-void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map<Mtx*, MtxF>>& mtx_replacements) {
+// Local timer helper for the per-sub-frame measurement we feed into
+// AdaptiveFps_Sample.
+namespace {
+using Clock = std::chrono::steady_clock;
+inline long long NsSince(Clock::time_point t0) {
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - t0).count();
+}
+} // namespace
+
+void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map<Mtx*, MtxF>>& mtx_replacements,
+                             size_t frameCount) {
     auto wnd = std::dynamic_pointer_cast<Fast::Fast3dWindow>(Ship::Context::GetInstance()->GetWindow());
 
     if (wnd == nullptr) {
@@ -1134,9 +1147,8 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
     // Run() (frame rendered) and EndFrame() (buffer swap). On N64, CPU/RDP shared
     // physical memory so gFramebuffers always had valid pixel data after rendering.
     auto wndBase = Ship::Context::GetInstance()->GetWindow();
-    size_t frameIdx = 0;
-    size_t frameCount = mtx_replacements.size();
-    for (const auto& m : mtx_replacements) {
+    for (size_t frameIdx = 0; frameIdx < frameCount; frameIdx++) {
+        const auto& m = mtx_replacements[frameIdx];
         bool isFinalFrame = (frameIdx == frameCount - 1);
         // Bypass IsFrameReady() when interpolation is active — render all
         // frames per tick and let vsync pace them.
@@ -1145,7 +1157,9 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
             wndBase->GetMouseStateManager()->StartFrame();
             gui->StartDraw();
             interpreter->StartFrame();
+            auto runT0 = Clock::now();
             interpreter->Run(Commands, m);
+            AdaptiveFps_Sample(NsSince(runT0));
             // Emulate N64 osViBlack to prevent a flicker when the scene is drawn
             // for the falling jiggy transition framebuffer capture.
             if (port_isViBlack()) {
@@ -1159,7 +1173,6 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
             CALL_EVENT(FrameDrawEnd);
         }
         interpreter->mInterpolationIndex++;
-        frameIdx++;
     }
 
     bool curAltAssets = CVarGetInteger("gEnhancements.Mods.AlternateAssets", 0);
@@ -1182,68 +1195,86 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
     // }
     wnd->SetRendererUCode(UcodeHandlers::ucode_f3dex);
 
-    std::vector<std::unordered_map<Mtx*, MtxF>> mtx_replacements;
-    int target_fps = GameEngine::Instance->GetInterpolationFPS();
-    static int last_fps;
-    static int last_update_rate;
-    static int time;
-    int fps = target_fps;
-    int original_fps = 60 / gVIsPerFrame;
+    // Persistent across frames so each map's bucket array survives.
+    // Interpolate clears entries but keeps the buckets, saving thousands
+    // of node allocations per tick at high refresh rates.
+    static std::vector<std::unordered_map<Mtx*, MtxF>> mtx_replacements;
+    int target_fps = (int)AdaptiveFps_Cap((uint32_t)GameEngine::Instance->GetInterpolationFPS());
 
-    if (target_fps == 20 || original_fps > target_fps) {
-        fps = original_fps;
+    // Game-logic VI per tick: gVIsPerFrame (=2 -> 30 Hz) normally; demo
+    // replay and cutscene stutter raise it for slow N64 frames.
+    int viPerTick = port_getDemoViCount();
+    if (viPerTick <= 0) {
+        viPerTick = gVIsPerFrame + port_getCutsceneExtraVis();
+    }
+    if (viPerTick < gVIsPerFrame) {
+        viPerTick = gVIsPerFrame;
     }
 
-    if (last_fps != fps || last_update_rate != gVIsPerFrame) {
-        time = 0;
+    int effective_logic_fps = 60 / viPerTick;
+    if (effective_logic_fps < 1) {
+        effective_logic_fps = 1;
     }
 
-    // time_base = fps * original_fps (one second)
-    int next_original_frame = fps;
+    // Subframes per tick: integer count. floor(target_fps / eff), min 1. This
+    // guarantees an integer count even when target_fps isn't a multiple of
+    // eff (the fractional-ratio jitter at target=30 / VI=3).
+    int subframesPerTick = target_fps / effective_logic_fps;
+    if (subframesPerTick < 1) {
+        subframesPerTick = 1;
+    }
 
-    // [port] Scan the display list for matrices and record for interpolation
-    FrameInterpolation_RecordFrame(commands);
+    // paceFps drives DXGI's per-present wait so that subframes * 1/paceFps =
+    // viPerTick/60 wall (= game time per tick). When viPerTick == gVIsPerFrame
+    // and target_fps is a multiple of eff, paceFps == target_fps and stays
+    // constant. Otherwise it varies per tick to keep wall == game.
+    int fps = subframesPerTick * effective_logic_fps;
 
-    while (time + original_fps <= next_original_frame) {
-        time += original_fps;
-        if (time != next_original_frame) {
-            mtx_replacements.push_back(FrameInterpolation_Interpolate((float)time / next_original_frame));
+    // Emit exactly subframesPerTick sub-frames with t values evenly spaced.
+    // No accumulator carry: each tick is independent so VI changes don't
+    // misalign leftover state.
+    if ((int)mtx_replacements.size() < subframesPerTick) {
+        mtx_replacements.resize(subframesPerTick);
+    }
+    size_t activeFrames = 0;
+    for (int i = 1; i <= subframesPerTick; i++) {
+        if (i < subframesPerTick) {
+            float t = (float)i / (float)subframesPerTick;
+            FrameInterpolation_Interpolate(t, mtx_replacements[activeFrames]);
         } else {
-            mtx_replacements.emplace_back();
+            mtx_replacements[activeFrames].clear();
         }
+        activeFrames++;
     }
-
-    time -= fps;
 
     if (wnd != nullptr) {
         wnd->SetTargetFps(fps);
-        wnd->SetMaximumFrameLatency(
-            2); // [port] Hardcoded: CVarGetInteger crashes due to heap corruption in debug builds
+        // Hardcoded: CVarGetInteger crashes due to heap corruption in debug builds.
+        wnd->SetMaximumFrameLatency(2);
     }
 
-    // When the gfx debugger is active, only run with the final mtx
     if (GfxDebuggerIsDebugging()) {
-        mtx_replacements.clear();
-        mtx_replacements.emplace_back();
+        if (mtx_replacements.empty()) {
+            mtx_replacements.emplace_back();
+        }
+        mtx_replacements[0].clear();
+        activeFrames = 1;
     }
 
-    RunCommands(commands, mtx_replacements);
-
-    last_fps = fps;
-    last_update_rate = gVIsPerFrame;
+    RunCommands(commands, mtx_replacements, activeFrames);
 }
 
 uint32_t GameEngine::GetInterpolationFPS() {
-    if (CVarGetInteger("gMatchRefreshRate", 0)) {
+    if (CVarGetInteger(CVAR_SETTING("MatchRefreshRate"), 0)) {
         return Ship::Context::GetInstance()->GetWindow()->GetCurrentRefreshRate();
 
-    } else if (CVarGetInteger("gVsyncEnabled", 1) ||
+    } else if (CVarGetInteger(CVAR_VSYNC_ENABLED, 1) ||
                !Ship::Context::GetInstance()->GetWindow()->CanDisableVerticalSync()) {
         return std::min<uint32_t>(Ship::Context::GetInstance()->GetWindow()->GetCurrentRefreshRate(),
-                                  CVarGetInteger("gInterpolationFPS", 60));
+                                  CVarGetInteger(CVAR_SETTING("InterpolationFPS"), 60));
     }
 
-    return CVarGetInteger("gInterpolationFPS", 60);
+    return CVarGetInteger(CVAR_SETTING("InterpolationFPS"), 30);
 }
 
 uint32_t GameEngine::GetInterpolationFrameCount() {
