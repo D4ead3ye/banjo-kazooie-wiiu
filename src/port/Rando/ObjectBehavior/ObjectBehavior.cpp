@@ -37,6 +37,7 @@ std::map<int32_t, UIWidgets::Colors> randoItemColors = {
     { RI_JINJO_ORANGE,      UIWidgets::Colors::Orange },
     { RI_JINJO_PINK,        UIWidgets::Colors::Pink },
     { RI_JINJO_YELLOW,      UIWidgets::Colors::Yellow },
+    { RI_MOLEHILL,          UIWidgets::Colors::Purple },
     { RI_MUMBO_TOKEN,       UIWidgets::Colors::Gray },
     { RI_MUSIC_NOTE,        UIWidgets::Colors::Yellow },
 };
