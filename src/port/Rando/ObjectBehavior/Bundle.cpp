@@ -17,16 +17,16 @@ enum level_e map_getLevel(enum map_e map);
 
 bool applyCustomPhysics = false;
 
-RandoCheckId CheckMultiSpawnMap(int32_t spawnPosition[3]) {
-    for (auto& [checkId, spawnPos] : multiSpawnCheckMap) {
-        if (std::get<0>(spawnPos) == spawnPosition[0] && std::get<1>(spawnPos) == spawnPosition[1] &&
-            std::get<2>(spawnPos) == spawnPosition[2]) {
-            return checkId;
-        }
-    }
-
-    return RC_UNKNOWN;
-}
+// RandoCheckId CheckMultiSpawnMap(int32_t spawnPosition[3]) {
+//     for (auto& [checkId, spawnPos] : multiSpawnCheckMap) {
+//         if (std::get<0>(spawnPos) == spawnPosition[0] && std::get<1>(spawnPos) == spawnPosition[1] &&
+//             std::get<2>(spawnPos) == spawnPosition[2]) {
+//             return checkId;
+//         }
+//     }
+// 
+//     return RC_UNKNOWN;
+// }
 
 void Rando::ObjectBehavior::InitBundleBehavior() {
     COND_VB_SHOULD(VB_OVERRIDE_BUNDLE_SPAWN, EVENT_PRIORITY_NORMAL, true, {
@@ -40,14 +40,15 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             return;
         }
 
-        RandoCheckId randoCheckId = RC_UNKNOWN;
-
-        BK_LOG_INFO("Bundle Spawn: %i", bundleId);
-
         int32_t spawnPosition[3];
         spawnPosition[0] = (int32_t)position[0];
         spawnPosition[1] = (int32_t)position[1];
         spawnPosition[2] = (int32_t)position[2];
+
+        RandoCheckId randoCheckId =
+            Rando::StaticData::GetCheckByPosition(spawnPosition[0], spawnPosition[1], spawnPosition[2]);
+
+        BK_LOG_INFO("Bundle Spawn: %i", bundleId);
 
         RandoSaveCheck shuffledObject;
         shuffledObject.randoCheckId = RC_UNKNOWN;
@@ -60,9 +61,11 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                     case BUNDLE_0_MM_HUT_MUSIC_NOTE:
                         shuffledObject = Rando::Logic::GetShuffledObject(
                             (RandoCheckId)((int32_t)RC_MM_NOTE_HUT_BUNDLE_1 + bundleCount));
+                        applyCustomPhysics = true;
                         break;
                     case BUNDLE_3_MM_HUT_JINJO_GREEN:
                         shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JINJO_GREEN);
+                        applyCustomPhysics = true;
                         break;
                     case BUNDLE_4_MM_HUT_JIGGY:
                         if (spawnPosition[1] < 2000) {
@@ -174,7 +177,6 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                 }
                 break;
             case LEVEL_6_LAIR:
-                randoCheckId = CheckMultiSpawnMap(spawnPosition);
                 switch (bundleId) {
                     case BUNDLE_C_BGS_HUT_JIGGY:
                         if (spawnPosition[1] ==
@@ -194,11 +196,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                         }
                         break;
                     case BUNDLE_10__JIGGY:
-                        if (randoCheckId == RC_UNKNOWN) {
-                            randoCheckId = Rando::StaticData::GetCheckByPosition(spawnPosition[0], spawnPosition[1],
-                                                                                 spawnPosition[2]);
-                            applyCustomPhysics = true;
-                        }
+                        applyCustomPhysics = true;
                         shuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
                         break;
                     default:
@@ -240,6 +238,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
         if (randoActorId == ACTOR_1_UNKNOWN) {
             // TODO: Find better way to handle Bundles requiring an actor return.
             *actor = CustomObject::SpawnCustomActor(ACTOR_17_PLAYER_SHADOW, spawnPosition);
+            CustomObject::AddToCustomActorMap(shuffledObject.randoCheckId, *actor);
             *should = true;
             return;
         }

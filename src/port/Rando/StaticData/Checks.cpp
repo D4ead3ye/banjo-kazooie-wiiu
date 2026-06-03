@@ -1219,12 +1219,30 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_TTC_NOTE_UPPERLEVEL_POOL_2,                                           RCTYPE_MUSIC_NOTE,      LEVEL_2_TREASURE_TROVE_COVE,    ACTOR_51_MUSIC_NOTE,         NULL,                                                                   -3001, 1840, -2007),
     RC(RC_TTC_NOTE_UPPERLEVEL_POOL_3,                                           RCTYPE_MUSIC_NOTE,      LEVEL_2_TREASURE_TROVE_COVE,    ACTOR_51_MUSIC_NOTE,         NULL,                                                                   -2906, 1840, -2329),
 };
+
+std::map<RandoCheckId, std::tuple<int32_t, int32_t, int32_t>> multiSpawnCheckMap = {
+    { RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD,    { 0, 3354, 2270 } },
+    { RC_GL_JIGGY_WITCH_SWITCH_TREASURE_TROVE_COVE, { 950, 905, -1600 } },
+    { RC_MM_JIGGY_HUTS,                             { 5154, 2165, -1426 } },
+    { RC_MM_JINJO_GREEN,                            { 3778, 2154, -1045 } },
+    { RC_MM_NOTE_HUT_BUNDLE_1,                      { 4390, 2154, -2868 } },
+    { RC_MM_NOTE_HUT_BUNDLE_2,                      { 4007, 2154, -2957 } },
+    { RC_MM_NOTE_HUT_BUNDLE_3,                      { 3804, 2154, -2619 } },
+    { RC_MM_NOTE_HUT_BUNDLE_4,                      { 4062, 2154, -2322 } },
+    { RC_MM_NOTE_HUT_BUNDLE_5,                      { 4425, 2154, -2476 } },
+};
 // clang-format on
 
 RandoCheckId GetCheckByPosition(int32_t posX, int32_t posY, int32_t posZ) {
     for (auto& [randoCheckId, randoStaticCheck] : Checks) {
         if (randoStaticCheck.posX == posX && randoStaticCheck.posY == posY && randoStaticCheck.posZ == posZ) {
             return randoCheckId;
+        }
+    }
+
+    for (auto& [checkId, spawnPos] : multiSpawnCheckMap) {
+        if (std::get<0>(spawnPos) == posX && std::get<1>(spawnPos) == posY && std::get<2>(spawnPos) == posZ) {
+            return checkId;
         }
     }
 
