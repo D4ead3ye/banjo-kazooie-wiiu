@@ -12,6 +12,7 @@
 namespace fs = std::filesystem;
 
 int16_t selectedFileNum = DEFAULT_FILE_NUM;
+level_e rCurrentLevel = LEVEL_B_SPIRAL_MOUNTAIN;
 const fs::path randomizerFolderPath(Ship::Context::GetPathRelativeToAppDirectory("randomizer", "bk64"));
 
 // Entry point for the module, run once on game boot

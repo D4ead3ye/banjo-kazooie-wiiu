@@ -138,7 +138,7 @@ void DrawCheckTrackerList() {
 
     for (int i = LEVEL_1_MUMBOS_MOUNTAIN; i <= LEVEL_B_SPIRAL_MOUNTAIN; i++) {
 
-        if (CVAR_SHOW_CURRENT_LEVEL && i != map_getLevel(gsworld_getMap())) {
+        if (CVAR_SHOW_CURRENT_LEVEL && i != rCurrentLevel) {
             continue;
         }
 

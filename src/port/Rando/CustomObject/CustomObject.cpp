@@ -20,9 +20,6 @@ s32 dummy_func_80320248(void);
 extern s32 sSpawnableActorSize;
 extern ActorSpawn* sSpawnableActorList;
 
-enum map_e gsworld_getMap(void);
-enum level_e map_getLevel(enum map_e map);
-
 extern u8 D_80383428[0x1C];
 extern ActorMarker* D_8036E7C8;
 
@@ -213,7 +210,7 @@ void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId) {
         case RI_JINJO_ORANGE:
         case RI_JINJO_PINK:
         case RI_JINJO_YELLOW:
-            if (Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId == map_getLevel(gsworld_getMap())) {
+            if (Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId == rCurrentLevel) {
                 int32_t jinjoMarkerId = GetJinjoActorMarkerId((actor_e)Rando::StaticData::Items[shuffledObject.randoItemId].actorId);
                 item_adjustByDiffWithHud(ITEM_12_JINJOS, (1 << ((jinjoMarkerId + 6) & 0x1F)));
             } else {
@@ -226,8 +223,8 @@ void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId) {
         case RI_MUSIC_NOTE:
             D_80385FF0[Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId]++;
 
-            if (Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId == map_getLevel(gsworld_getMap())) {
-                item_set(ITEM_C_NOTE, D_80385FF0[map_getLevel(gsworld_getMap())]);
+            if (Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId == rCurrentLevel) {
+                item_set(ITEM_C_NOTE, D_80385FF0[rCurrentLevel]);
             }
 
             UpdateSaveDataNoteScores();

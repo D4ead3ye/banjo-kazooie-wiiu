@@ -138,6 +138,7 @@ void Rando::ObjectBehavior::Init() {
         }
 
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
+        SPDLOG_INFO("RandoCheckId Spawned: {}", Rando::StaticData::Checks[randoCheckId].name);
 
         if (randoCheckId == RC_UNKNOWN) {
             return;
@@ -242,7 +243,6 @@ void Rando::ObjectBehavior::Init() {
         if (!IS_RANDO) {
             return;
         }
-
         CustomObject::InitializeSpawnQueue();
     })
 
@@ -254,5 +254,6 @@ void Rando::ObjectBehavior::Init() {
         }
 
         ClearSpawnQueue();
+        rCurrentLevel = map_getLevel(gsworld_getMap());
     })
 }

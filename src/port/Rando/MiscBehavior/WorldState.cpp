@@ -56,9 +56,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             return;
         }
 
-        level_e currentLevel = map_getLevel(gsworld_getMap());
-
-        switch (currentLevel) {
+        switch (rCurrentLevel) {
             case LEVEL_1_MUMBOS_MOUNTAIN:
                 if (RANDO_SAVE_CHECKS[RC_MM_JIGGY_CHIMPY].obtained) {
                     if (ev->actorId == ACTOR_F_CHIMPY) {

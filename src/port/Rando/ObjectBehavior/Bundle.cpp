@@ -10,23 +10,9 @@
 
 extern "C" {
 extern f32 gBundle_yaw;
-
-enum map_e gsworld_getMap(void);
-enum level_e map_getLevel(enum map_e map);
 }
 
 bool applyCustomPhysics = false;
-
-// RandoCheckId CheckMultiSpawnMap(int32_t spawnPosition[3]) {
-//     for (auto& [checkId, spawnPos] : multiSpawnCheckMap) {
-//         if (std::get<0>(spawnPos) == spawnPosition[0] && std::get<1>(spawnPos) == spawnPosition[1] &&
-//             std::get<2>(spawnPos) == spawnPosition[2]) {
-//             return checkId;
-//         }
-//     }
-// 
-//     return RC_UNKNOWN;
-// }
 
 void Rando::ObjectBehavior::InitBundleBehavior() {
     COND_VB_SHOULD(VB_OVERRIDE_BUNDLE_SPAWN, EVENT_PRIORITY_NORMAL, true, {
@@ -49,13 +35,13 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             Rando::StaticData::GetCheckByPosition(spawnPosition[0], spawnPosition[1], spawnPosition[2]);
 
         BK_LOG_INFO("Bundle Spawn: %i", bundleId);
+        BK_LOG_INFO("Current Level: %i", rCurrentLevel);
 
         RandoSaveCheck shuffledObject;
         shuffledObject.randoCheckId = RC_UNKNOWN;
-        level_e levelId = map_getLevel(gsworld_getMap());
         applyCustomPhysics = false;
 
-        switch (levelId) {
+        switch (rCurrentLevel) {
             case LEVEL_1_MUMBOS_MOUNTAIN:
                 switch (bundleId) {
                     case BUNDLE_0_MM_HUT_MUSIC_NOTE:
@@ -216,6 +202,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             case LEVEL_B_SPIRAL_MOUNTAIN:
                 switch (bundleId) {
                     case BUNDLE_1F_SM_EMPTY_HONEYCOMB:
+                        BK_LOG_INFO("Y Elevation: %i", spawnPosition[1]);
                         if (spawnPosition[1] >= 500 && spawnPosition[1] <= 800) {
                             shuffledObject = Rando::Logic::GetShuffledObject(RC_SM_EMPTY_HONEYCOMB_COLLIWOBBLE);
                         } else {

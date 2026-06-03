@@ -9,9 +9,6 @@
 #include "port/enhancements/events/hooks/Events.h"
 
 extern "C" {
-enum map_e gsworld_getMap(void);
-enum level_e map_getLevel(enum map_e map);
-
 void item_inc(enum item_e item);
 }
 
