@@ -90,7 +90,7 @@ int32_t GetJinjoActorMarkerId(actor_e actorId) {
     return NULL;
 }
 
-void SendCollisionNotification(RandoItemId randoItemId) {
+void Rando::StaticData::SendCollisionNotification(RandoItemId randoItemId) {
     std::string prefix = "You collected ";
     prefix += Rando::StaticData::Items[randoItemId].article;
     std::string message = Rando::StaticData::Items[randoItemId].name;
@@ -111,10 +111,6 @@ bool ShouldOverrideSpawn(RandoCheckId randoCheckId) {
     }
 
     return false;
-}
-
-void Test(int32_t x, int32_t y, int32_t z) {
-    SPDLOG_INFO("RC_UKNOWN at {}, {}, {}", std::to_string(x), std::to_string(y), std::to_string(z));
 }
 
 // Entry point for the module, run once on game boot
@@ -143,7 +139,6 @@ void Rando::ObjectBehavior::Init() {
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
 
         if (randoCheckId == RC_UNKNOWN) {
-            Test(ev->posX, ev->posY, ev->posZ);
             return;
         }
         
@@ -237,7 +232,6 @@ void Rando::ObjectBehavior::Init() {
                 event->Cancelled = true;
             }
             CustomObject::ObjectCollected(ev->propId);
-            //SendCollisionNotification(randoItemId);
         }
     })
 

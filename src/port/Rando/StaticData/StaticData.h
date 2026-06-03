@@ -11,6 +11,7 @@
 namespace Rando {
 
 namespace StaticData {
+void SendCollisionNotification(RandoItemId randoItemId);
 
 struct RandoLogicData {
     const char* name;

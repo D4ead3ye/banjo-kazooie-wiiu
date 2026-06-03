@@ -1,6 +1,5 @@
 #include "CustomObject.h"
 #include "port/Rando/Logic/Logic.h"
-// #include "port/Rando/CheckTracker/CheckTracker.h"
 #include "port/enhancements/events/hooks/Events.h"
 
 extern "C" {
@@ -248,6 +247,7 @@ void CustomObject::CheckObtained(RandoCheckId randoCheckId) {
             shouldRemove = true;
             RANDO_SAVE_CHECKS[pool.randoCheckId].obtained = true;
             BK_LOG_INFO("RandoCheckId %s collected!", Rando::StaticData::Checks[randoCheckId].name);
+            Rando::StaticData::SendCollisionNotification(pool.randoItemId);
             Rando::StaticData::ModifyRandoInfFlagState(randoCheckId);
             break;
         }
@@ -265,7 +265,9 @@ void CustomObject::CheckObtained(RandoCheckId randoCheckId) {
 
 void CustomObject::ObjectCollected(Prop* prop) {
     for (auto& [randoCheckId, customActor] : customActorMap) {
-        if (customActor.marker->propPtr->words[0] == prop->actorProp.words[0]) {
+        if (customActor.marker->propPtr->x == prop->actorProp.x &&
+            customActor.marker->propPtr->y == prop->actorProp.y &&
+            customActor.marker->propPtr->z == prop->actorProp.z) {
             CustomObject::CheckObtained(randoCheckId);
             return;
         }
