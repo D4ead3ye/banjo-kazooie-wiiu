@@ -253,6 +253,5 @@ void Rando::ObjectBehavior::Init() {
         }
 
         ClearSpawnQueue();
-        rCurrentLevel = map_getLevel(gsworld_getMap());
     })
 }

@@ -26,6 +26,8 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             return;
         }
 
+        level_e levelId = map_getLevel(gsworld_getMap());
+
         int32_t spawnPosition[3];
         spawnPosition[0] = (int32_t)position[0];
         spawnPosition[1] = (int32_t)position[1];
@@ -35,13 +37,12 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             Rando::StaticData::GetCheckByPosition(spawnPosition[0], spawnPosition[1], spawnPosition[2]);
 
         BK_LOG_INFO("Bundle Spawn: %i", bundleId);
-        BK_LOG_INFO("Current Level: %i", rCurrentLevel);
 
         RandoSaveCheck shuffledObject;
         shuffledObject.randoCheckId = RC_UNKNOWN;
         applyCustomPhysics = false;
 
-        switch (rCurrentLevel) {
+        switch (levelId) {
             case LEVEL_1_MUMBOS_MOUNTAIN:
                 switch (bundleId) {
                     case BUNDLE_0_MM_HUT_MUSIC_NOTE:

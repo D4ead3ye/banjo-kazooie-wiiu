@@ -12,7 +12,6 @@ extern SaveData gameFile_saveData[4];
 }
 
 extern int16_t selectedFileNum;
-extern level_e rCurrentLevel;
 
 #define DEFAULT_FILE_NUM -1
 
