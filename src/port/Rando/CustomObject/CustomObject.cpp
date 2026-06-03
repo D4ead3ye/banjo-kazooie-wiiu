@@ -2,6 +2,8 @@
 #include "port/Rando/Logic/Logic.h"
 #include "port/enhancements/events/hooks/Events.h"
 
+#include "spdlog/spdlog.h"
+
 extern "C" {
 extern u8 D_80385FF0[0xE];
 
@@ -192,6 +194,21 @@ void CustomObject::InitializeSpawnQueue() {
     }
 }
 
+uint8_t prevNoteScores[14];
+void PrintNoteTotals(std::string typeName) {
+    SPDLOG_INFO("{}", typeName.c_str());
+    for (int i = LEVEL_1_MUMBOS_MOUNTAIN; i <= LEVEL_A_MAD_MONSTER_MANSION; i++) {
+        std::string levelName = worldNameList[i - 1];
+        const char* status = (prevNoteScores[i] != D_80385FF0[i]) ? "[ X ]" : "[   ]";
+
+        SPDLOG_INFO("{} - {} - {} -> {}",status, levelName.c_str(), std::to_string(prevNoteScores[i]).c_str(),
+                    std::to_string(D_80385FF0[i]).c_str());
+    }
+    for (int n = 0; n < 14; n++) {
+        prevNoteScores[n] = D_80385FF0[n];
+    }
+}
+
 void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId) {
     if (randoCheckId == RC_UNKNOWN) {
         return;
@@ -222,7 +239,7 @@ void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId) {
             break;
         case RI_MUSIC_NOTE:
             D_80385FF0[Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId]++;
-
+            PrintNoteTotals("========= Post-Collection ==========");
             if (Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId == map_getLevel(gsworld_getMap())) {
                 item_set(ITEM_C_NOTE, D_80385FF0[map_getLevel(gsworld_getMap())]);
             }

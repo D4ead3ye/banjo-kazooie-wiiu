@@ -22,6 +22,7 @@ void Rando::ObjectBehavior::InitMusicNoteBehavior() {
             return;
         }
 
+        int32_t currentNotes = 0;
         for (auto& pool : Rando::Logic::shuffledPool) {
             if (Rando::StaticData::Checks[pool.shuffledCheckId].worldId != ev->levelId) {
                 continue;
@@ -29,9 +30,11 @@ void Rando::ObjectBehavior::InitMusicNoteBehavior() {
         
             if (pool.randoItemId == RI_MUSIC_NOTE) {
                 if (pool.obtained) {
-                    item_inc(ITEM_C_NOTE);
+                    currentNotes++;
                 }
             }
         }
+        
+        item_set(ITEM_C_NOTE, currentNotes);
     })
 }
