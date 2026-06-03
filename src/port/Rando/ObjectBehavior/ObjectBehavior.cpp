@@ -92,7 +92,7 @@ int32_t GetJinjoActorMarkerId(actor_e actorId) {
 }
 
 void Rando::StaticData::SendCollisionNotification(RandoItemId randoItemId) {
-    std::string prefix = "You collected ";
+    std::string prefix = randoItemId == RI_MOLEHILL ? "You learned" : "You collected ";
     prefix += Rando::StaticData::Items[randoItemId].article;
     std::string message = Rando::StaticData::Items[randoItemId].name;
     
@@ -138,7 +138,6 @@ void Rando::ObjectBehavior::Init() {
         }
 
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
-        SPDLOG_INFO("RandoCheckId Spawned: {}", Rando::StaticData::Checks[randoCheckId].name);
 
         if (randoCheckId == RC_UNKNOWN) {
             return;

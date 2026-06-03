@@ -202,7 +202,6 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             case LEVEL_B_SPIRAL_MOUNTAIN:
                 switch (bundleId) {
                     case BUNDLE_1F_SM_EMPTY_HONEYCOMB:
-                        BK_LOG_INFO("Y Elevation: %i", spawnPosition[1]);
                         if (spawnPosition[1] >= 500 && spawnPosition[1] <= 800) {
                             shuffledObject = Rando::Logic::GetShuffledObject(RC_SM_EMPTY_HONEYCOMB_COLLIWOBBLE);
                         } else {
