@@ -145,7 +145,7 @@ BKCollisionTriangle *func_802457C4(f32 arg0[3], f32 arg1[3], f32 arg2, f32 arg3,
 // --- core2/actor_array.c ---
 BKModelBin *func_803257B4(ActorMarker *marker);
 Actor *actorArray_findActorFromMarkerId(enum marker_e marker_id);
-void *actors_appendToSavestate(void *begin, uintptr_t end);
+void *actors_appendToSavestate(void *begin, void *end);
 Actor * __actor_spawnWithYaw_s32(enum actor_e id, s32 pos[3], s32 yaw);
 Actor * spawn_child_actor(enum actor_e id, Actor ** parent);
 Actor *actorArray_findActorFromActorId(enum actor_e);
@@ -2470,7 +2470,7 @@ void func_80315110(Gfx **gfx, Mtx **mtx, Vtx **vtx);
 void func_803151D0(Gfx **gfx, Mtx **mtx, Vtx **vtx);
 
 // --- core2/spline_pathfollow.c ---
-bool func_80344040(Actor *self);
+void func_80344040(Actor *self);
 int func_80343D50(Actor *self, s32 arg1, s32 arg2, s32 arg3);
 s32 func_80341C78(s32 arg0[3]);
 s32 func_80341D5C(s32 arg0[3], s32 arg1[3]);
@@ -2870,6 +2870,7 @@ void func_8030D8A8(s32 arg0, s32 arg);
 void func_8030D8DC(void);
 void func_8030DCCC(u8, s32);
 void sfxSource_setCallbackByIndex(u8 indx, void (*arg1)(u8));
+void sfxSource_triggerCallbackByIndex(u8 indx);
 void func_8030DFB4(u8 indx, s32 arg1);
 
 // --- core2/sfx/streamctrl.c ---
