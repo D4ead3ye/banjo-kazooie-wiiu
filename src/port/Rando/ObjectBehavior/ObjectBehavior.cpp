@@ -148,6 +148,11 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
+        // TODO: Better handling Clankers Cavern Eel spawning a Honeycomb in the same place as RC_CC_MUMBO_TOKEN_CHOMPA_BEHIND_CLANKERS_TAIL.
+        if (ev->actorId != ACTOR_2D_MUMBO_TOKEN && (ev->posX == 9823, ev->posY == 4225, ev->posZ == -19)) {
+            return;
+        }
+
         int32_t position[3];
         position[0] = ev->posX;
         position[1] = ev->posY;
