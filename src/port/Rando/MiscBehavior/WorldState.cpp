@@ -96,10 +96,12 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
 
         switch (ev->jiggyId) {
             case JIGGY_A_MM_CONGA:
-                if (!RANDO_SAVE_CHECKS[RC_MM_JIGGY_CONGA].obtained) {
-                    event->Cancelled = true;
-                    ev->result = 0;
-                }
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[RC_MM_JIGGY_CONGA].obtained;
+                break;
+            case JIGGY_14_TTC_BLUBBER:
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[RC_TTC_JIGGY_BLUBBER].obtained;
                 break;
             case JIGGY_16_CC_SNIPPETS:
                 event->Cancelled = true;
@@ -115,11 +117,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                 break;
             case JIGGY_37_LAIR_BGS_WITCH_SWITCH:
                 event->Cancelled = true;
-                if (!RANDO_SAVE_CHECKS[RC_GL_JIGGY_WITCH_SWITCH_BUBBLEGLOOP_SWAMP].obtained) {
-                    ev->result = 0;
-                } else {
-                    ev->result = 1;
-                }
+                ev->result = RANDO_SAVE_CHECKS[RC_GL_JIGGY_WITCH_SWITCH_BUBBLEGLOOP_SWAMP].obtained;
                 break;
             case JIGGY_2A_FP_BOGGY_1:
                 event->Cancelled = true;
@@ -144,7 +142,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             case JIGGY_31_FP_SIR_SLUSH:
                 event->Cancelled = true;
                 ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_BEAT_ALL_SIR_SLUSH].obtained;
-
+                break;
             default:
                 break;
         }
