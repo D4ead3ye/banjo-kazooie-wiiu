@@ -56,8 +56,8 @@ std::map<RandoCheckId, BundlePhysics> customActorPhysicsMap = {
     { RC_GL_JIGGY_WITCH_SWITCH_TREASURE_TROVE_COVE, { 0, 100.0f, 2800.0f, 0, 0, 0, 0, 0x1 } },
     { RC_MM_JIGGY_CHIMPY,                           { 0, 800.0f, 0, 0, 10.0f, 0, 0, 0x1 } },
     { RC_MM_JIGGY_CONGA,                            { 150.0f, 175.0f, 0, 0, 10.0f, 0, 0, 0x1 } },
-    { RC_MM_JIGGY_HUTS,                             { 200.0f, 300.0f, 0, 0, 10.0f, 0, 0, 0x1 } },
     { RC_MM_JIGGY_JUJU,                             { 0, 300.0f, 0, 0, 10.0f, 0, 0, 0x1 } },
+    { RC_MM_NOTE_HUT_BUNDLE_1,                      { 125.0f, 725.0f, 125.0f, 0, 0, 0, 0, 0x1 } },
 };
 // clang-format on
 
@@ -142,7 +142,13 @@ void ApplyCustomActorPhysics(RandoCheckId randoCheckId, Actor* actor, bool isJin
     }
 
     float bundleYaw = gBundle_yaw;
-    BundlePhysics physicsData = isJinjoJiggy ? jinjoJiggySpawnPhysics : GetPhysicsByCheckId(randoCheckId);
+    BundlePhysics physicsData;
+
+    if ((randoCheckId >= RC_MM_NOTE_HUT_BUNDLE_1 && randoCheckId <= RC_MM_NOTE_HUT_BUNDLE_5) || randoCheckId == RC_MM_JINJO_GREEN || randoCheckId == RC_MM_JIGGY_HUTS) {
+        physicsData = GetPhysicsByCheckId(RC_MM_NOTE_HUT_BUNDLE_1);
+    } else {
+        physicsData = isJinjoJiggy ? jinjoJiggySpawnPhysics : GetPhysicsByCheckId(randoCheckId);
+    }
 
     actor->is_bundle = true;
     Bundle* bundle = (Bundle*)&actor->unkBC;

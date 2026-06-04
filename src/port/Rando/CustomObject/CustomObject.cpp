@@ -1,7 +1,8 @@
 #include "CustomObject.h"
 #include "port/Rando/Logic/Logic.h"
-// #include "port/Rando/CheckTracker/CheckTracker.h"
 #include "port/enhancements/events/hooks/Events.h"
+
+#include "spdlog/spdlog.h"
 
 extern "C" {
 extern u8 D_80385FF0[0xE];
@@ -20,9 +21,6 @@ typedef struct {
 s32 dummy_func_80320248(void);
 extern s32 sSpawnableActorSize;
 extern ActorSpawn* sSpawnableActorList;
-
-enum map_e gsworld_getMap(void);
-enum level_e map_getLevel(enum map_e map);
 
 extern u8 D_80383428[0x1C];
 extern ActorMarker* D_8036E7C8;
@@ -50,7 +48,18 @@ bool CustomObject::CheckSpawnQueue(RandoCheckId randoCheckId) {
             break;
         }
     }
-    return false;
+    return foundCustomActor;
+}
+
+bool CustomObject::CheckCustomActorMap(RandoCheckId randoCheckId) {
+    bool foundCustomActor = false;
+    for (auto& [checkId, actorData] : customActorMap) {
+        if (checkId == randoCheckId) {
+            foundCustomActor = true;
+            break;
+        }
+    }
+    return foundCustomActor;
 }
 
 void ClearSpawnQueue() {
@@ -196,6 +205,21 @@ void CustomObject::InitializeSpawnQueue() {
     }
 }
 
+// uint8_t prevNoteScores[14];
+// void PrintNoteTotals(std::string typeName) {
+//     SPDLOG_INFO("{}", typeName.c_str());
+//     for (int i = LEVEL_1_MUMBOS_MOUNTAIN; i <= LEVEL_A_MAD_MONSTER_MANSION; i++) {
+//         std::string levelName = worldNameList[i - 1];
+//         const char* status = (prevNoteScores[i] != D_80385FF0[i]) ? "[ X ]" : "[   ]";
+// 
+//         SPDLOG_INFO("{} - {} - {} -> {}",status, levelName.c_str(), std::to_string(prevNoteScores[i]).c_str(),
+//                     std::to_string(D_80385FF0[i]).c_str());
+//     }
+//     for (int n = 0; n < 14; n++) {
+//         prevNoteScores[n] = D_80385FF0[n];
+//     }
+// }
+
 void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId) {
     if (randoCheckId == RC_UNKNOWN) {
         return;
@@ -226,7 +250,6 @@ void CustomObject::ResolveCustomActorCollision(RandoCheckId randoCheckId) {
             break;
         case RI_MUSIC_NOTE:
             D_80385FF0[Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId]++;
-
             if (Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId == map_getLevel(gsworld_getMap())) {
                 item_set(ITEM_C_NOTE, D_80385FF0[map_getLevel(gsworld_getMap())]);
             }
@@ -248,6 +271,7 @@ void CustomObject::CheckObtained(RandoCheckId randoCheckId) {
             shouldRemove = true;
             RANDO_SAVE_CHECKS[pool.randoCheckId].obtained = true;
             BK_LOG_INFO("RandoCheckId %s collected!", Rando::StaticData::Checks[randoCheckId].name);
+            Rando::StaticData::SendCollisionNotification(pool.randoItemId);
             Rando::StaticData::ModifyRandoInfFlagState(randoCheckId);
             break;
         }
@@ -265,7 +289,9 @@ void CustomObject::CheckObtained(RandoCheckId randoCheckId) {
 
 void CustomObject::ObjectCollected(Prop* prop) {
     for (auto& [randoCheckId, customActor] : customActorMap) {
-        if (customActor.marker->propPtr->words[0] == prop->actorProp.words[0]) {
+        if (customActor.marker->propPtr->x == prop->actorProp.x &&
+            customActor.marker->propPtr->y == prop->actorProp.y &&
+            customActor.marker->propPtr->z == prop->actorProp.z) {
             CustomObject::CheckObtained(randoCheckId);
             return;
         }

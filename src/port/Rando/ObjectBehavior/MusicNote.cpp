@@ -9,9 +9,6 @@
 #include "port/enhancements/events/hooks/Events.h"
 
 extern "C" {
-enum map_e gsworld_getMap(void);
-enum level_e map_getLevel(enum map_e map);
-
 void item_inc(enum item_e item);
 }
 
@@ -25,6 +22,7 @@ void Rando::ObjectBehavior::InitMusicNoteBehavior() {
             return;
         }
 
+        int32_t currentNotes = 0;
         for (auto& pool : Rando::Logic::shuffledPool) {
             if (Rando::StaticData::Checks[pool.shuffledCheckId].worldId != ev->levelId) {
                 continue;
@@ -32,9 +30,11 @@ void Rando::ObjectBehavior::InitMusicNoteBehavior() {
         
             if (pool.randoItemId == RI_MUSIC_NOTE) {
                 if (pool.obtained) {
-                    item_inc(ITEM_C_NOTE);
+                    currentNotes++;
                 }
             }
         }
+        
+        item_set(ITEM_C_NOTE, currentNotes);
     })
 }

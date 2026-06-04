@@ -11,6 +11,7 @@
 namespace Rando {
 
 namespace StaticData {
+void SendCollisionNotification(RandoItemId randoItemId);
 
 struct RandoLogicData {
     const char* name;
@@ -38,6 +39,7 @@ RandoCheckId GetCheckByAbilityId(int32_t abilityId);
 RandoCheckId GetCheckByName(const char* checkName);
 
 extern std::map<RandoCheckId, RandoStaticCheck> Checks;
+extern std::map<RandoCheckId, std::tuple<int32_t, int32_t, int32_t>> multiSpawnCheckMap;
 
 struct RandoStaticItem {
     RandoItemId randoItemId;

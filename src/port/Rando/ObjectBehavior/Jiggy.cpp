@@ -1,11 +1,6 @@
 #include "ObjectBehavior.h"
 #include "port/Rando/Logic/Logic.h"
 #include "port/Rando/CustomObject/CustomObject.h"
-
-#include <libultraship/bridge.h>
-#include "port/ui/cvar_prefixes.h"
-#include <libultraship/bridge/consolevariablebridge.h>
-#include "port/enhancements/events/PortEnhancements.h"
 #include "port/enhancements/events/hooks/Events.h"
 
 #define OPTION_ENABLED RANDO_SAVE_OPTIONS[RO_SHUFFLE_JIGGIES].optionValue
@@ -15,7 +10,7 @@ void Rando::ObjectBehavior::InitJiggyBehavior() {
 		jiggy_e jiggyId = va_arg(args, jiggy_e);
         f32* position = va_arg(args, f32*);
 
-        LogOutSpawns(jiggyId, position[0], position[1], position[2]);
+        // LogOutSpawns(jiggyId, position[0], position[1], position[2]);
 
         if (!IS_RANDO && !OPTION_ENABLED) {
             return;
@@ -24,6 +19,11 @@ void Rando::ObjectBehavior::InitJiggyBehavior() {
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByJiggyId(jiggyId);
         
         if (randoCheckId == RC_UNKNOWN) {
+            return;
+        }
+
+        if (CustomObject::CheckCustomActorMap(randoCheckId)) {
+            *should = true;
             return;
         }
         
@@ -52,12 +52,12 @@ void Rando::ObjectBehavior::InitJiggyBehavior() {
               spawnPosition[1] += 100;
               spawnPosition[2] -= 300;
         }
-        
+
         Actor* newCustomActor = CustomObject::SpawnCustomActor(randoActorId, spawnPosition);
         newCustomActor = CustomObject::SetCustomActorParameters(newCustomActor, randoCheckId);
         CustomObject::AddToCustomActorMap(randoCheckId, newCustomActor);
         
-        if (jiggyId != JIGGY_17_CC_CLANKER_RAISED) {
+        if (jiggyId != JIGGY_17_CC_CLANKER_RAISED && jiggyId != JIGGY_1B_CC_TOOTH) {
             ApplyCustomActorPhysics(randoCheckId, newCustomActor, false);
         }
         

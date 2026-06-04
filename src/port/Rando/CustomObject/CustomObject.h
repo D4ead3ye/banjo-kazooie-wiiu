@@ -45,6 +45,7 @@ void UpdateJunkList();
 class CustomObject {
 public:
     static bool CheckSpawnQueue(RandoCheckId randoCheckId);
+    static bool CheckCustomActorMap(RandoCheckId randoCheckId);
     static Actor* SetCustomActorParameters(Actor* actor, RandoCheckId randoCheckId);
     static Actor* SpawnCustomActor(actor_e actorId, int32_t position[3]);
     static Actor* GetCustomActor(RandoCheckId randoCheckId);
