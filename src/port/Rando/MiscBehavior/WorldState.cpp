@@ -109,6 +109,10 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                 event->Cancelled = true;
                 ev->result = RANDO_SAVE_CHECKS[RC_CC_JIGGY_CLANKER_RAISED].obtained;
                 break;
+            case JIGGY_1C_CC_RINGS:
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[RC_CC_JIGGY_RINGS].obtained;
+                break;
             case JIGGY_37_LAIR_BGS_WITCH_SWITCH:
                 event->Cancelled = true;
                 if (!RANDO_SAVE_CHECKS[RC_GL_JIGGY_WITCH_SWITCH_BUBBLEGLOOP_SWAMP].obtained) {
