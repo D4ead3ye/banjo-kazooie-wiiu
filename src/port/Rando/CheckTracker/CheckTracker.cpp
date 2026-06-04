@@ -287,12 +287,13 @@ void SettingsWindow::DrawElement() {
         ImGui::TableNextColumn();
         ImGui::SeparatorText("Window Settings");
         UIWidgets::CVarCheckbox("Only Show Current Level", CVAR_NAME_SHOW_CURRENT_LEVEL);
-        UIWidgets::CVarCheckbox("Display Total Collected Checks", CVAR_NAME_SHOW_COLLECTED_CHECKS);
         UIWidgets::CVarCheckbox("Dim Out of Logic Checks", CVAR_NAME_SHOW_LOGIC);
+        UIWidgets::CVarCheckbox("Display Total Collected Checks", CVAR_NAME_SHOW_COLLECTED_CHECKS);
 
         ImGui::BeginDisabled(!CVAR_SHOW_COLLECTED_CHECKS);
         UIWidgets::CVarCheckbox("Separate Total Collected Checks", CVAR_NAME_SEPARATE_COLLECTED_CHECKS);
-
+        ImGui::EndDisabled();
+        ImGui::BeginDisabled(!CVAR_SHOW_SEPARATE_COLLECTED_CHECKS);
         if (UIWidgets::CVarSliderFloat("  ", CVAR_NAME_COLLECTED_CHECKS_OPACITY,
                                        {
                                            .format = "Opacity: %.1f",

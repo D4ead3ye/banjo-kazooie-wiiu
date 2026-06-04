@@ -141,7 +141,7 @@ void LighthouseMenu::AddMenuRando() {
             ImGui::PushID(SECTION_COLUMN_1);
             if (UIWidgets::Button("Enable All", UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Green).Size(ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 0)))) {
                 for (auto& [abilityId, abilityInfo] : abilityLoadoutMap) {
-                    if (abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER) {
+                    if (abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER || abilityId == ABILITY_13_1ST_NOTEDOOR) {
                         continue;
                     }
                     CVarSetInteger(abilityInfo.second, true);
@@ -151,7 +151,7 @@ void LighthouseMenu::AddMenuRando() {
             ImGui::SameLine();
             if (UIWidgets::Button("Disable All", UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Red))) {
                 for (auto& [abilityId, abilityInfo] : abilityLoadoutMap) {
-                    if (abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER) {
+                    if (abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER || abilityId == ABILITY_13_1ST_NOTEDOOR) {
                         continue;
                     }
                     CVarSetInteger(abilityInfo.second, false);
@@ -165,9 +165,12 @@ void LighthouseMenu::AddMenuRando() {
 
                 for (auto& [abilityId, abilityInfo] : abilityLoadoutMap) {
                     abilityToolTip = std::format("Start with {} unlocked.", abilityInfo.first);
-                    defaultValue = abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER ? true : false;
+                    defaultValue = abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER || abilityId == ABILITY_13_1ST_NOTEDOOR
+                                       ? true
+                                       : false;
 
-                    ImGui::BeginDisabled(abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER);
+                    ImGui::BeginDisabled(abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER ||
+                                         abilityId == ABILITY_13_1ST_NOTEDOOR);
                     UIWidgets::CVarCheckbox(abilityInfo.first, abilityInfo.second,
                                             UIWidgets::CheckboxOptions()
                                                 .Color(WIDGET_COLOR)

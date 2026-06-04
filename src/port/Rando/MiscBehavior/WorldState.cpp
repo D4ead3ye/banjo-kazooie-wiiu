@@ -94,60 +94,71 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             return;
         }
 
-        switch (ev->jiggyId) {
-            case JIGGY_A_MM_CONGA:
-                if (!RANDO_SAVE_CHECKS[RC_MM_JIGGY_CONGA].obtained) {
-                    event->Cancelled = true;
-                    ev->result = 0;
-                }
-                break;
-            case JIGGY_16_CC_SNIPPETS:
-                event->Cancelled = true;
-                ev->result = RANDO_SAVE_CHECKS[RC_CC_JIGGY_SNIPPETS].obtained;
-                break;
-            case JIGGY_17_CC_CLANKER_RAISED:
-                event->Cancelled = true;
-                ev->result = RANDO_SAVE_CHECKS[RC_CC_JIGGY_CLANKER_RAISED].obtained;
-                break;
-            case JIGGY_20_BGS_ELEVATED_WALKWAY:
-                event->Cancelled = true;
-                ev->result = RANDO_SAVE_CHECKS[RC_BGS_JIGGY_ELEVATED_WALKWAY].obtained;
-                break;
-            case JIGGY_37_LAIR_BGS_WITCH_SWITCH:
-                event->Cancelled = true;
-                if (!RANDO_SAVE_CHECKS[RC_GL_JIGGY_WITCH_SWITCH_BUBBLEGLOOP_SWAMP].obtained) {
-                    ev->result = 0;
-                } else {
-                    ev->result = 1;
-                }
-                break;
-            case JIGGY_2A_FP_BOGGY_1:
-                event->Cancelled = true;
-                ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_SLED_TO_BOGGY].obtained;
-                break;
-            case JIGGY_2C_FP_BOGGY_3:
-                event->Cancelled = true;
-                ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_BOGGY_RACE_2].obtained;
-                break;
-            case JIGGY_2D_FP_SNOWMAN_BUTTONS:
-                event->Cancelled = true;
-                ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_SNOWMANS_BUTTONS].obtained;
-                break;
-            case JIGGY_30_FP_BOGGY_2:
-                event->Cancelled = true;
-                ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_BOGGY_RACE_1].obtained;
-                break;
-            case JIGGY_32_FP_WOZZA:
-                event->Cancelled = true;
-                ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_WOZZA].obtained;
-                break;
-            case JIGGY_31_FP_SIR_SLUSH:
-                event->Cancelled = true;
-                ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_BEAT_ALL_SIR_SLUSH].obtained;
+        for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
+            if (randoStaticCheck.randoCheckType != RCTYPE_JIGGY) {
+                continue;
+            }
 
-            default:
-                break;
+            if (randoStaticCheck.collectionId == ev->jiggyId) {
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[randoCheckId].obtained;
+                return;
+            }
         }
+
+        // TODO: Clean this up once fully tested.
+        // switch (ev->jiggyId) {
+        //     case JIGGY_A_MM_CONGA:
+        //         event->Cancelled = true;
+        //         ev->result = RANDO_SAVE_CHECKS[RC_MM_JIGGY_CONGA].obtained;
+        //         break;
+        //     case JIGGY_14_TTC_BLUBBER:
+        //         event->Cancelled = true;
+        //         ev->result = RANDO_SAVE_CHECKS[RC_TTC_JIGGY_BLUBBER].obtained;
+        //         break;
+        //     case JIGGY_16_CC_SNIPPETS:
+        //         event->Cancelled = true;
+        //         ev->result = RANDO_SAVE_CHECKS[RC_CC_JIGGY_SNIPPETS].obtained;
+        //         break;
+        //     case JIGGY_17_CC_CLANKER_RAISED:
+        //         event->Cancelled = true;
+        //         ev->result = RANDO_SAVE_CHECKS[RC_CC_JIGGY_CLANKER_RAISED].obtained;
+        //         break;
+        //     case JIGGY_1C_CC_RINGS:
+        //         event->Cancelled = true;
+        //         ev->result = RANDO_SAVE_CHECKS[RC_CC_JIGGY_RINGS].obtained;
+        //         break;
+        //     case JIGGY_37_LAIR_BGS_WITCH_SWITCH:
+        //         event->Cancelled = true;
+        //         ev->result = RANDO_SAVE_CHECKS[RC_GL_JIGGY_WITCH_SWITCH_BUBBLEGLOOP_SWAMP].obtained;
+        //         break;
+        //     case JIGGY_2A_FP_BOGGY_1:
+        //         event->Cancelled = true;
+        //         ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_SLED_TO_BOGGY].obtained;
+        //         break;
+        //     case JIGGY_2C_FP_BOGGY_3:
+        //         event->Cancelled = true;
+        //         ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_BOGGY_RACE_2].obtained;
+        //         break;
+        //     case JIGGY_2D_FP_SNOWMAN_BUTTONS:
+        //         event->Cancelled = true;
+        //         ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_SNOWMANS_BUTTONS].obtained;
+        //         break;
+        //     case JIGGY_30_FP_BOGGY_2:
+        //         event->Cancelled = true;
+        //         ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_BOGGY_RACE_1].obtained;
+        //         break;
+        //     case JIGGY_32_FP_WOZZA:
+        //         event->Cancelled = true;
+        //         ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_WOZZA].obtained;
+        //         break;
+        //     case JIGGY_31_FP_SIR_SLUSH:
+        //         event->Cancelled = true;
+        //         ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_BEAT_ALL_SIR_SLUSH].obtained;
+        //         break;
+        //     default:
+        //         break;
+        // }
     })
     REGISTER_LISTENER(OnIsJiggyScoreSpawned, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnIsJiggyScoreSpawned* ev = (OnIsJiggyScoreSpawned*)event;
