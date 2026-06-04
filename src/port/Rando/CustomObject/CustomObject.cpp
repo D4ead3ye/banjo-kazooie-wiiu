@@ -48,7 +48,18 @@ bool CustomObject::CheckSpawnQueue(RandoCheckId randoCheckId) {
             break;
         }
     }
-    return false;
+    return foundCustomActor;
+}
+
+bool CustomObject::CheckCustomActorMap(RandoCheckId randoCheckId) {
+    bool foundCustomActor = false;
+    for (auto& [checkId, actorData] : customActorMap) {
+        if (checkId == randoCheckId) {
+            foundCustomActor = true;
+            break;
+        }
+    }
+    return foundCustomActor;
 }
 
 void ClearSpawnQueue() {
