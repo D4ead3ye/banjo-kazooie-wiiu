@@ -49,6 +49,7 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(MapTransitionEnd);
     REGISTER_EVENT(OnWarpDispatch);
     REGISTER_EVENT(OnSetJiggyList);
+    REGISTER_EVENT(OnGetLevelSpecificFlag);
 
     // Register rando events
     REGISTER_EVENT(OnSaveLoad);

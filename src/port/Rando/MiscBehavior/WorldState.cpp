@@ -49,6 +49,26 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
 
         RANDO_SAVE_FLAGS[(RandoInf)flagId].flagState = ev->flagState;
     })
+
+    REGISTER_LISTENER(OnGetLevelSpecificFlag, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnGetLevelSpecificFlag* ev = (OnGetLevelSpecificFlag*)event;
+        ev->result = 0;
+
+        level_e currentLevel = map_getLevel(gsworld_getMap());
+
+        switch (ev->flagId) {
+            case LEVEL_FLAG_29_FP_XMAS_TREE_COMPLETE:
+                if (currentLevel == LEVEL_5_FREEZEEZY_PEAK) {
+                    return;
+                }
+                event->Cancelled = true;
+                ev->result = 1;
+                break;
+            default:
+                break;
+        }
+    })
+
     REGISTER_LISTENER(OnActorSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorSpawn* ev = (OnActorSpawn*)event;
 
@@ -83,6 +103,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                 break;
         }
     })
+
     REGISTER_LISTENER(OnIsJiggyScoreCollected, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnIsJiggyScoreCollected* ev = (OnIsJiggyScoreCollected*)event;
 
@@ -106,6 +127,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             }
         }
     })
+
     REGISTER_LISTENER(OnIsJiggyScoreSpawned, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnIsJiggyScoreSpawned* ev = (OnIsJiggyScoreSpawned*)event;
 
