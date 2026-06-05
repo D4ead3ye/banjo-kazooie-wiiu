@@ -697,18 +697,20 @@ Actor *actorArray_findClosestActorFromActorId(f32 position[3], enum actor_e acto
 }
 
 Actor *actorArray_findActorFromActorId(enum actor_e actor_id) {
-    Actor *begin;
-    Actor *end;
-    Actor *i_actor;
+    CALL_CANCELLABLE_RETURN_EVENT(OnFindActorFromActorId, actor_id) {
+        Actor* begin;
+        Actor* end;
+        Actor* i_actor;
 
-    begin = suBaddieActorArray->data;
-    end = begin + suBaddieActorArray->cnt;
-    for(i_actor = begin; i_actor < end; i_actor++){
-        if ((actor_id == i_actor->modelCacheIndex) && !i_actor->despawn_flag) {
-            return i_actor;
+        begin = suBaddieActorArray->data;
+        end = begin + suBaddieActorArray->cnt;
+        for (i_actor = begin; i_actor < end; i_actor++) {
+            if ((actor_id == i_actor->modelCacheIndex) && !i_actor->despawn_flag) {
+                return i_actor;
+            }
         }
+        return NULL;
     }
-    return NULL;
 }
 
 s32 actorArray_actorCount(enum actor_e actor_id) {

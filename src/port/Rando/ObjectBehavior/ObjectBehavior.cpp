@@ -13,6 +13,7 @@ Actor* marker_getActor(ActorMarker* thisx);
 bool func_802C9C14(Actor* actor);
 
 void coMusicPlayer_playMusic(enum comusic_e track_id, s32 volume);
+void marker_despawn(ActorMarker* marker);
 }
 
 // clang-format off
@@ -199,19 +200,25 @@ void Rando::ObjectBehavior::Init() {
         }
 
         RandoItemId randoItemId = RI_UNKNOWN;
-
         if (ev->propId->markerFlag) {
             Actor* markerActor = marker_getActor(ev->propId->actorProp.marker);
             
             if (markerActor->is_bundle && func_802C9C14(markerActor)) {
                 return;
             }
-            
             switch (ev->propId->actorProp.marker->id) {
                 case MARKER_39_MUMBO_TOKEN:
                     randoItemId = RI_MUMBO_TOKEN;
                     break;
                 case MARKER_52_JIGGY:
+                    if (gsworld_getMap() == MAP_26_MMM_NAPPERS_ROOM &&
+                        ev->propId->actorProp.x != Rando::StaticData::Checks[RC_MMM_JIGGY_MANSION_TABLE].posX &&
+                        ev->propId->actorProp.y != Rando::StaticData::Checks[RC_MMM_JIGGY_MANSION_TABLE].posY &&
+                        ev->propId->actorProp.z != Rando::StaticData::Checks[RC_MMM_JIGGY_MANSION_TABLE].posZ) {
+                        marker_despawn(ev->propId->actorProp.marker);
+                        event->Cancelled = true;
+                        break;
+                    }
                     randoItemId = RI_JIGGY;
                     break;
                 case MARKER_53_EMPTY_HONEYCOMB:
@@ -222,7 +229,8 @@ void Rando::ObjectBehavior::Init() {
                 case MARKER_5C_JINJO_ORANGE:
                 case MARKER_5D_JINJO_PINK:
                 case MARKER_5E_JINJO_YELLOW:
-                    randoItemId = Rando::StaticData::GetRandoItemByActorId(jinjoMarkerMap.at(ev->propId->actorProp.marker->id));
+                    randoItemId = Rando::StaticData::GetRandoItemByActorId(
+                        jinjoMarkerMap.at(ev->propId->actorProp.marker->id));
                     break;
                 case MARKER_5F_MUSIC_NOTE:
                     randoItemId = RI_MUSIC_NOTE;
@@ -234,6 +242,15 @@ void Rando::ObjectBehavior::Init() {
         }
 
         if (randoItemId != RI_UNKNOWN) {
+            if (gsworld_getMap() == MAP_26_MMM_NAPPERS_ROOM && ev->propId->actorProp.y >= 400) {
+                ev->propId->actorProp.x = Rando::StaticData::Checks[RC_MMM_JIGGY_MANSION_TABLE].posX;
+                ev->propId->actorProp.y = Rando::StaticData::Checks[RC_MMM_JIGGY_MANSION_TABLE].posY;
+                ev->propId->actorProp.z = Rando::StaticData::Checks[RC_MMM_JIGGY_MANSION_TABLE].posZ;
+                if (RANDO_SAVE_CHECKS[RC_MMM_JIGGY_MANSION_TABLE].obtained) {
+                    marker_despawn(ev->propId->actorProp.marker);
+                }
+            }
+
             if (randoItemId == RI_MUSIC_NOTE) {
                 event->Cancelled = true;
             }
@@ -258,5 +275,43 @@ void Rando::ObjectBehavior::Init() {
         }
 
         ClearSpawnQueue();
+    })
+
+    REGISTER_LISTENER(OnFindActorFromActorId, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnFindActorFromActorId* ev = (OnFindActorFromActorId*)event;
+        int32_t position[3];
+        Rando::StaticData::RandoStaticCheck randoStaticCheck;
+        RandoSaveCheck randoShuffledObject;
+        Actor* refActor;
+
+        if (!IS_RANDO) {
+            return;
+        }
+
+        switch (ev->actorId) {
+            case ACTOR_46_JIGGY:
+                if (gsworld_getMap() == MAP_26_MMM_NAPPERS_ROOM) {
+                    randoStaticCheck = Rando::StaticData::Checks[RC_MMM_JIGGY_MANSION_TABLE];
+                    randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MMM_JIGGY_MANSION_TABLE);
+
+                    refActor = CustomObject::GetCustomActor(RC_MMM_JIGGY_MANSION_TABLE);
+                    if (!refActor) {
+                        position[0] = randoStaticCheck.posX;
+                        position[1] = randoStaticCheck.posY;
+                        position[2] = randoStaticCheck.posZ;
+
+                        refActor = CustomObject::SpawnCustomActor(
+                            (actor_e)Rando::StaticData::Checks[randoShuffledObject.shuffledCheckId].actorId, position);
+                    }
+                    if (refActor) {
+                        CustomObject::AddToCustomActorMap(RC_MMM_JIGGY_MANSION_TABLE, refActor);
+                        event->Cancelled = true;
+                        ev->result = refActor;
+                    }
+                }
+                break;
+            default:
+                break;
+        }
     })
 }
