@@ -147,6 +147,7 @@ void CustomObject::SpawnJinjoJiggy(int16_t levelId, int16_t position[3]) {
                 ApplyCustomActorPhysics(jiggyCheckId, actor, true);
             }
         }
+        CustomObject::AddToCustomActorMap(shuffledObject.randoCheckId, actor);
     }
 }
 
