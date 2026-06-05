@@ -293,7 +293,7 @@ void SettingsWindow::DrawElement() {
         ImGui::BeginDisabled(!CVAR_SHOW_COLLECTED_CHECKS);
         UIWidgets::CVarCheckbox("Separate Total Collected Checks", CVAR_NAME_SEPARATE_COLLECTED_CHECKS);
         ImGui::EndDisabled();
-        ImGui::BeginDisabled(!CVAR_SHOW_SEPARATE_COLLECTED_CHECKS);
+        ImGui::BeginDisabled(!CVAR_SHOW_SEPARATE_COLLECTED_CHECKS || !CVAR_SHOW_COLLECTED_CHECKS);
         if (UIWidgets::CVarSliderFloat("  ", CVAR_NAME_COLLECTED_CHECKS_OPACITY,
                                        {
                                            .format = "Opacity: %.1f",

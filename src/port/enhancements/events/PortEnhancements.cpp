@@ -55,6 +55,7 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnActorSpawn);
     REGISTER_EVENT(OnActorSaveState);
     REGISTER_EVENT(OnActorCollision);
+    REGISTER_EVENT(OnFindActorFromActorId);
     REGISTER_EVENT(OnActorDestroy);
     REGISTER_EVENT(OnIsJiggyScoreCollected);
     REGISTER_EVENT(OnIsJiggyScoreSpawned);

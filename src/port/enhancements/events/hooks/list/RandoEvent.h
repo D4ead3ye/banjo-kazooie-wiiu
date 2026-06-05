@@ -25,6 +25,11 @@ DEFINE_EVENT(OnActorCollision,
 	Prop* propId;
 )
 
+DEFINE_EVENT(OnFindActorFromActorId,
+	int32_t actorId;
+	Actor* result;
+)
+
 DEFINE_EVENT(OnIsJiggyScoreCollected,
 	int32_t jiggyId;
 	int32_t result;

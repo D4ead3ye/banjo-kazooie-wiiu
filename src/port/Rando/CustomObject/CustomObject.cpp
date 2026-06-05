@@ -147,6 +147,7 @@ void CustomObject::SpawnJinjoJiggy(int16_t levelId, int16_t position[3]) {
                 ApplyCustomActorPhysics(jiggyCheckId, actor, true);
             }
         }
+        CustomObject::AddToCustomActorMap(shuffledObject.randoCheckId, actor);
     }
 }
 
@@ -289,9 +290,9 @@ void CustomObject::CheckObtained(RandoCheckId randoCheckId) {
 
 void CustomObject::ObjectCollected(Prop* prop) {
     for (auto& [randoCheckId, customActor] : customActorMap) {
-        if (customActor.marker->propPtr->x == prop->actorProp.x &&
-            customActor.marker->propPtr->y == prop->actorProp.y &&
-            customActor.marker->propPtr->z == prop->actorProp.z) {
+        if (customActor.position_x == prop->actorProp.x &&
+            customActor.position_y == prop->actorProp.y &&
+            customActor.position_z == prop->actorProp.z) {
             CustomObject::CheckObtained(randoCheckId);
             return;
         }
