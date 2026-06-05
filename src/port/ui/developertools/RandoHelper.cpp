@@ -95,9 +95,7 @@ std::vector<int32_t> mapIdList = {
 };
 
 std::map<int32_t, std::pair<const char*, level_e>> mapSpecificFlagList = {
-    { MM_SPECIFIC_FLAG_0_CHIMPY_STUMP_RAISED, { "Chimpy Stump Raised", LEVEL_1_MUMBOS_MOUNTAIN } },
-    { MM_SPECIFIC_FLAG_2_ORANGE_HAS_BEEN_RETURNED, { "Orange Returned", LEVEL_1_MUMBOS_MOUNTAIN } },
-    { MM_SPECIFIC_FLAG_3_CHIMPY_HAS_LEFT, { "Chimpy Has Left", LEVEL_1_MUMBOS_MOUNTAIN } },
+    { MM_SPECIFIC_FLAG_0_CHIMPY_STUMP_RAISED, { "Honey Comb Switch", LEVEL_9_RUSTY_BUCKET_BAY } },
 };
 
 void RandoHelper_SpawnPosition() {
