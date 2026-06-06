@@ -289,12 +289,26 @@ void CustomObject::CheckObtained(RandoCheckId randoCheckId) {
 }
 
 void CustomObject::ObjectCollected(Prop* prop) {
+    bool checkFound = false;
     for (auto& [randoCheckId, customActor] : customActorMap) {
         if (customActor.position_x == prop->actorProp.x &&
             customActor.position_y == prop->actorProp.y &&
             customActor.position_z == prop->actorProp.z) {
             CustomObject::CheckObtained(randoCheckId);
+            checkFound = true;
             return;
+        }
+    }
+    // TODO: figure out a better way for this whole system... Back up check for objects whose spawn changes for no
+    // reason.
+    if (!checkFound) {
+        for (auto& [randoCheckId, customActor] : customActorMap) {
+            if (customActor.marker->propPtr->x == prop->actorProp.x &&
+                customActor.marker->propPtr->y == prop->actorProp.y &&
+                customActor.marker->propPtr->z == prop->actorProp.z) {
+                CustomObject::CheckObtained(randoCheckId);
+                return;
+            }
         }
     }
 }

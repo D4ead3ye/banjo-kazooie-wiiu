@@ -37,4 +37,9 @@ DEFINE_EVENT(OnSetJiggyList,
 DEFINE_EVENT(OnSaveClear,
 	void* result;
 )
+
+DEFINE_EVENT(OnGetLevelSpecificFlag,
+	int32_t flagId;
+	int32_t result;
+)
 // clang-format on
