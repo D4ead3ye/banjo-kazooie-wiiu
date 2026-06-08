@@ -3,6 +3,7 @@
 #include "ship/window/gui/Fonts.h"
 #include "ship/window/gui/resource/Font.h"
 #include "extractor/GameExtractor.h"
+#include "ui/LighthouseModMenuWindow.h"
 #include <libultraship/controller/controldeck/ControlDeck.h>
 #include "ship/controller/controldevice/controller/mapping/ControllerDefaultMappings.h"
 
@@ -37,6 +38,11 @@
 #include <chrono>
 #include <filesystem>
 #include <fstream>
+#if defined(__linux__) || defined(__APPLE__)
+#include <unistd.h>
+#include <cerrno>
+#include <cstring>
+#endif
 #include <libultraship/libultraship.h>
 #include "interpolation/AdaptiveFps.h"
 #include "interpolation/FrameInterpolation.h"
@@ -202,6 +208,7 @@ typedef enum PromptSteps {
     PS_FILE_CHECK,
     PS_LOCAL,
     PS_FIRST,
+    PS_SECOND,
     PS_DUPE,
     PS_WAIT,
     PS_NONE,
@@ -246,8 +253,7 @@ void CheckAndCreateModFolder() {
     }
 }
 
-static const std::vector<std::string> sRomArchives = { "bk.o2r", "bk-jot.o2r", "bk-n64.o2r", "bk-gm.o2r",
-                                                       "bk-bwdx.o2r" };
+static const std::vector<std::string> sRomArchives = { "bk.o2r" };
 
 static bool AnyRomArchiveExists() {
     for (const auto& archive : sRomArchives) {
@@ -267,33 +273,24 @@ void GameEngine::FinishInit() {
     }
 
     const std::string patches_path = Ship::Context::GetPathRelativeToAppDirectory("mods");
+    if (!patches_path.empty() && !std::filesystem::exists(patches_path)) {
+        std::filesystem::create_directories(patches_path);
+    }
 
-    if (!patches_path.empty()) {
-        if (!std::filesystem::exists(patches_path)) {
-            std::filesystem::create_directories(patches_path);
-        }
+    // Load enabled mod o2rs into the ArchiveManager. Inline romhack extraction
+    // (Mod Menu) already disabled any conflicting overlays before it closed the
+    // app, so the freshly-generated mod auto-enables here as a newcomer.
+    UpdateModFiles(/*init=*/true);
 
-        if (std::filesystem::is_directory(patches_path)) {
-            for (const auto& p : std::filesystem::recursive_directory_iterator(patches_path)) {
-                const auto ext = p.path().extension().string();
-                if (StringHelper::IEquals(ext, ".otr") || StringHelper::IEquals(ext, ".o2r")) {
-                    Ship::Context::GetInstance()->GetResourceManager()->GetArchiveManager()->AddArchive(
-                        p.path().generic_string());
-                }
-
-                if (StringHelper::IEquals(ext, ".zip")) {
-                    SPDLOG_WARN("Zip files should be only used for development purposes, not for distribution");
-                    Ship::Context::GetInstance()->GetResourceManager()->GetArchiveManager()->AddArchive(
-                        p.path().generic_string());
-                }
-            }
-
-            for (const auto& p : std::filesystem::directory_iterator(patches_path)) {
-                if (p.is_directory()) {
-                    SPDLOG_INFO("Found mod directory: {}", p.path().generic_string());
-                    Ship::Context::GetInstance()->GetResourceManager()->GetArchiveManager()->AddArchive(
-                        p.path().generic_string());
-                }
+    // Loose mod directories (development convenience — a folder of unpacked
+    // assets used as an overlay). Not subject to the enable/disable CVar
+    // because they don't represent installable packages.
+    if (!patches_path.empty() && std::filesystem::is_directory(patches_path)) {
+        for (const auto& p : std::filesystem::directory_iterator(patches_path)) {
+            if (p.is_directory()) {
+                SPDLOG_INFO("Found mod directory: {}", p.path().generic_string());
+                Ship::Context::GetInstance()->GetResourceManager()->GetArchiveManager()->AddArchive(
+                    p.path().generic_string());
             }
         }
     }
@@ -369,6 +366,11 @@ void GameEngine::FinishInit() {
     context->GetResourceManager()->SetAltAssetsEnabled(prevAltAssets);
 
     LighthouseGui::SetupGuiElements();
+    // If UpdateModFiles(true) above quarantined conflicting romhack overlays,
+    // surface that to the user now that the modal window is alive.
+    MaybeShowModConflictPopup();
+    // Likewise if it refused romhack overlays due to a non-v1.0 base.
+    MaybeShowRomhackBaseMismatchPopup();
     Instance->AudioInit();
     AdaptiveFps_Configure(30); // BK ticks at 30 Hz
     // Instance->LoadDictionary();
@@ -453,12 +455,32 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
 
     std::shared_ptr<BS::thread_pool> threadPool = std::make_shared<BS::thread_pool>(1);
     while (!extractDone) {
+        if (GameExtractor::sCustomCodePromptRequested.load()) {
+            GameExtractor::sCustomCodePromptRequested = false;
+            LighthouseGui::RegisterPopup(
+                "Custom Code Romhack Detected",
+                "This romhack ships custom code.\n"
+                "Lighthouse cannot extract this code, so expected\n"
+                "behavior will be missing or broken when playing.\n"
+                "\n"
+                "Continue extraction anyway?",
+                "Continue", "Cancel",
+                []() {
+                    GameExtractor::sCustomCodePromptResult = 1;
+                    GameExtractor::sCustomCodePromptActive = false;
+                },
+                []() {
+                    GameExtractor::sCustomCodePromptResult = 0;
+                    GameExtractor::sCustomCodePromptActive = false;
+                });
+        }
         if (LighthouseGui::PopupsQueued() > 0 || extracting) {
             goto render;
         }
 
         if (extractStep == ES_EXTRACT && promptStep == PS_FIRST && extractStarted && !extracting) {
-            extractStep = ES_VERIFY;
+            promptStep = PS_SECOND;
+            extractStarted = false;
             extractCount = 0;
             totalExtract = 0;
         }
@@ -698,6 +720,28 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                         });
                         continue;
                     }
+                    case PS_SECOND: {
+                        promptStep = PS_WAIT;
+                        LighthouseGui::RegisterPopup(
+                            "Extraction Complete", "ROM extracted. Extract another?", "Yes", "No",
+                            [&]() {
+                                if (!extract.SelectGameFromUI()) {
+                                    extractStep = ES_VERIFY;
+                                    promptStep = PS_FIRST;
+                                    return;
+                                }
+                                extracting = true;
+                                extractStarted = true;
+                                file = extract.GetRomPath();
+                                promptStep = PS_FIRST;
+                                (void)threadPool->submit_task([&]() -> void {
+                                    extract.GenerateOTR(extractCount, totalExtract, "bk");
+                                    extracting = false;
+                                });
+                            },
+                            [&]() { extractStep = ES_VERIFY; });
+                        continue;
+                    }
                     default:
                         break;
                 }
@@ -765,10 +809,11 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
         gui->StartDraw();
         lhFast3dWindow->StartFrame();
         lhFast3dWindow->RunGuiOnly();
-        if (extracting && !ImGui::IsPopupOpen("ROM Extraction")) {
+        const bool showExtractPopup = extracting && !GameExtractor::sCustomCodePromptActive.load();
+        if (showExtractPopup && !ImGui::IsPopupOpen("ROM Extraction")) {
             ImGui::OpenPopup("ROM Extraction");
         }
-        if (extracting) {
+        if (showExtractPopup) {
             ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f, 8.0f));
             auto color = UIWidgets::ColorValues.at(THEME_COLOR);
@@ -980,6 +1025,49 @@ void GameEngine::StartFrame() const {
         default:
             break;
     }
+}
+
+void GameEngine::RenderGuiFrame() const {
+    if (lhFast3dWindow == nullptr) {
+        return;
+    }
+    // Pump window events so the modal stays interactive and the window can close.
+    lhFast3dWindow->HandleEvents();
+    if (!lhFast3dWindow->IsFrameReady()) {
+        return;
+    }
+    auto gui = lhFast3dWindow->GetGui();
+    gui->StartDraw();
+    lhFast3dWindow->StartFrame();
+    lhFast3dWindow->RunGuiOnly();
+    gui->EndDraw();
+    lhFast3dWindow->EndFrame();
+}
+
+bool GameEngine::sRelaunchRequested = false;
+
+void GameEngine::RelaunchIfRequested(int argc, char* argv[]) {
+    if (!sRelaunchRequested) {
+        return;
+    }
+    // Called from SDL_main after Destroy()
+#ifdef _WIN32
+    wchar_t exePath[MAX_PATH];
+    if (GetModuleFileNameW(nullptr, exePath, MAX_PATH) > 0) {
+        STARTUPINFOW si{};
+        si.cb = sizeof(si);
+        PROCESS_INFORMATION pi{};
+        if (CreateProcessW(exePath, nullptr, nullptr, nullptr, FALSE, 0, nullptr, nullptr, &si, &pi)) {
+            CloseHandle(pi.hThread);
+            CloseHandle(pi.hProcess);
+        } else {
+            SPDLOG_ERROR("Relaunch failed: CreateProcess error {}", GetLastError());
+        }
+    }
+#elif defined(__linux__) || defined(__APPLE__)
+    execv(argv[0], argv);
+    SPDLOG_ERROR("Relaunch failed: execv error {}", strerror(errno));
+#endif
 }
 
 #if 0
