@@ -181,6 +181,10 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             return;
         }
 
+        if (getGameMode() == GAME_MODE_4_PAUSED) {
+            return;
+        }
+
         for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
             if (randoStaticCheck.randoCheckType != RCTYPE_EMPTY_HONEYCOMB) {
                 continue;
