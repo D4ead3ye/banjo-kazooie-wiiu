@@ -291,8 +291,9 @@ void CustomObject::ResolveCustomActorCollisionEX(RandoCheckId randoCheckId) {
     switch (shuffledObject.randoItemId) {
         case RI_JIGGY:
             if (gsworld_getMap() == MAP_26_MMM_NAPPERS_ROOM && randoCheckId != RC_MMM_JIGGY_MANSION_TABLE) {
-                marker_despawn(customActorMap.at(randoCheckId).marker);
-                customActorMap.erase(randoCheckId);
+                // TODO: Reimplement with new system...
+                // marker_despawn(customActorMap.at(randoCheckId).marker);
+                // customActorMap.erase(randoCheckId);
             }
             break;
         case RI_JINJO_BLUE:

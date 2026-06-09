@@ -5,8 +5,6 @@
 #include "port/Rando/Logic/Logic.h"
 #include "port/enhancements/events/hooks/Events.h"
 #include "port/Rando/CustomObject/CustomObject.h"
-#include "port/ui/developertools/RandoHelper.h"
-#include "spdlog/spdlog.h"
 
 #define WIDGET_TEXT_COLOR(id) UIWidgets::ColorValues.at(id)
 
