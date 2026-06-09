@@ -9,8 +9,6 @@
 extern "C" {
 extern u8 D_80385FF0[0xE];
 
-void chjiggy_setJiggyId(Actor* thisx, u32 id);
-
 typedef struct chjiggy_s {
     u32 unk0;
     u32 index;
@@ -25,23 +23,10 @@ typedef struct {
     s32 unk4;
 } ActorLocal_EmptyHoneycomb;
 
-s32 dummy_func_80320248(void);
-extern s32 sSpawnableActorSize;
-extern ActorSpawn* sSpawnableActorList;
-
-extern u8 D_80383428[0x1C];
-extern ActorMarker* D_8036E7C8;
-
-void marker_despawn(ActorMarker* marker);
-void item_inc(enum item_e item);
 s32 item_adjustByDiffWithHud(enum item_e item, s32 diff);
-
 void fxSparkle_musicNote(s16 position[3]);
 void player_getPosition(f32 dst[3]);
 void ml_vec3f_to_vec3h(s16 dst[3], f32 src[3]);
-
-// NEW STUFF
-void jiggyscore_setCollected(s32 indx, s32 val);
 
 Actor* actor_new(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags);
 extern ActorInfo chJinjoBlue;
@@ -60,7 +45,6 @@ extern ActorInfo D_80367D24;
 extern ActorInfo D_80367D48;
 }
 
-// NEW STUFF
 typedef struct {
     int32_t position[3];
     RandoCheckId randoCheckId;
@@ -96,53 +80,8 @@ std::map<actor_e, std::pair<ActorInfo, int32_t>> actorInfoMap = {
 // clang-format on
 
 extern int32_t GetJinjoActorMarkerId(actor_e actorId);
-
 int32_t currentMap = -1;
-//     RandoCheckId jiggyCheckId = Rando::StaticData::GetJinjoJiggyCheckByLevelId(levelId);
-// 
-//     int32_t spawnPosition[3];
-//     spawnPosition[0] = (int32_t)position[0];
-//     spawnPosition[1] = (int32_t)position[1];
-//     spawnPosition[2] = (int32_t)position[2];
-// 
-//     if (jiggyCheckId != RC_UNKNOWN) {
-//         Actor* actor;
-//         RandoSaveCheck shuffledObject = Rando::Logic::GetShuffledObject(jiggyCheckId);
-//         
-//         if (shuffledObject.randoCheckId != RC_UNKNOWN) {
-//             actor = CustomObject::SpawnCustomActor(
-//                 (actor_e)Rando::StaticData::Items[shuffledObject.randoItemId].actorId, spawnPosition);
-//             if (actor != NULL) {
-//                 actor = CustomObject::SetCustomActorParameters(actor, shuffledObject.randoCheckId);
-//                 ApplyCustomActorPhysics(shuffledObject.randoCheckId, actor, true);
-//             }
-//         } else {
-//             actor = CustomObject::SpawnCustomActor((actor_e)Rando::StaticData::Checks[jiggyCheckId].actorId, spawnPosition);
-//             if (actor != NULL) {
-//                 chjiggy_setJiggyId(actor, Rando::StaticData::Checks[jiggyCheckId].collectionId);
-//                 ApplyCustomActorPhysics(jiggyCheckId, actor, true);
-//             }
-//         }
-//         CustomObject::AddToCustomActorMap(shuffledObject.randoCheckId, actor);
-//     }
-// }
 
-// uint8_t prevNoteScores[14];
-// void PrintNoteTotals(std::string typeName) {
-//     SPDLOG_INFO("{}", typeName.c_str());
-//     for (int i = LEVEL_1_MUMBOS_MOUNTAIN; i <= LEVEL_A_MAD_MONSTER_MANSION; i++) {
-//         std::string levelName = worldNameList[i - 1];
-//         const char* status = (prevNoteScores[i] != D_80385FF0[i]) ? "[ X ]" : "[   ]";
-// 
-//         SPDLOG_INFO("{} - {} - {} -> {}",status, levelName.c_str(), std::to_string(prevNoteScores[i]).c_str(),
-//                     std::to_string(D_80385FF0[i]).c_str());
-//     }
-//     for (int n = 0; n < 14; n++) {
-//         prevNoteScores[n] = D_80385FF0[n];
-//     }
-// }
-
-// NEW STUFF
 bool CheckRandoActorListEX(RandoCheckId randoCheckId) {
     for (auto& customActor : randoActorList) {
         if (customActor.randoCheckId == randoCheckId) {
@@ -308,9 +247,15 @@ void CustomObject::ResolveCustomActorCollisionEX(RandoCheckId randoCheckId) {
             } else {
                 if (Rando::Logic::ShouldSpawnJinjoJiggy(
                         Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId)) {
-                    // TODO: Reimplement with new system...
-                    // CustomObject::SpawnJinjoJiggy(Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId,
-                    //                               playerPosI);
+                    RandoCheckId jiggyCheckId = Rando::StaticData::GetJinjoJiggyCheckByLevelId(
+                        Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId);
+
+                    if (jiggyCheckId != RC_UNKNOWN) {
+                        Actor* customActor = ShouldCreateCustomActorEX(jiggyCheckId, (int32_t*)playerPosI, false);
+                        if (customActor != NULL) {
+                            ApplyCustomActorPhysics(jiggyCheckId, customActor, true);
+                        }
+                    }
                 }
             }
             break;
