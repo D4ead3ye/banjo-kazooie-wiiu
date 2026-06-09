@@ -1,51 +1,52 @@
 #include "Engine.h"
-#include "ship/utils/StringHelper.h"
-#include "ship/window/gui/Fonts.h"
-#include "ship/window/gui/resource/Font.h"
-#include "extractor/GameExtractor.h"
-#include "ui/LighthouseModMenuWindow.h"
-#include <libultraship/controller/controldeck/ControlDeck.h>
-#include "ship/controller/controldevice/controller/mapping/ControllerDefaultMappings.h"
+#include <filesystem>
+#include <fstream>
+#include <chrono>
+#if defined(__linux__) || defined(__APPLE__)
+#include <unistd.h>
+#include <cerrno>
+#include <cstring>
+#endif
+#include "PR/libaudio.h"
+#include <libultraship/libultraship.h>
 
 #include <fast/Fast3dWindow.h>
+#include <fast/interpreter.h>
 #include "fast/resource/ResourceType.h"
 #include <fast/resource/factory/DisplayListFactory.h>
 #include <fast/resource/factory/TextureFactory.h>
 #include <fast/resource/factory/MatrixFactory.h>
 #include <fast/resource/factory/VertexFactory.h>
+#include <libultraship/bridge/gfxbridge.h>
+#include <libultraship/controller/controldeck/ControlDeck.h>
+#include <libultraship/libultra/AudioDmaRegistry.h>
+#include <SDL2/SDL.h>
+#include <ship/controller/controldevice/controller/mapping/ControllerDefaultMappings.h>
 #include <ship/resource/factory/BlobFactory.h>
 #include <ship/resource/type/Blob.h>
+#include <ship/utils/StringHelper.h>
+#include <ship/window/gui/Fonts.h>
+#include <ship/window/gui/resource/Font.h>
+
+#include "audio/GameAudio.h"
+#include "build.h"
+#include "extractor/GameExtractor.h"
+#include "interpolation/AdaptiveFps.h"
+#include "interpolation/FrameInterpolation.h"
+#include "Network/Anchor/Anchor.h"
+#include "port/enhancements/events/PortEnhancements.h"
+#include "port/patches/Patches.h"
+#include "port/save/SaveManager.h"
+#include "port/ui/cvar_prefixes.h"
 #include "resource/importers/AnimFactory.h"
 #include "resource/importers/DemoInputFactory.h"
 #include "resource/importers/DialogFactory.h"
 #include "resource/importers/MapFactory.h"
 #include "resource/importers/ModelFactory.h"
 #include "resource/importers/SpriteFactory.h"
-#include "audio/GameAudio.h"
-#include "build.h"
-#include "port/ui/cvar_prefixes.h"
-#include "ui/LighthouseGui.hpp"
-#include <PR/libaudio.h>
-#include "port/save/SaveManager.h"
-#include "port/enhancements/events/PortEnhancements.h"
-#include "port/patches/Patches.h"
-#include "libultraship/libultra/AudioDmaRegistry.h"
 #include "src/port/enhancements/events/hooks/Events.h"
-
-#include <fast/interpreter.h>
-#include <libultraship/bridge/gfxbridge.h>
-#include <SDL2/SDL.h>
-#include <chrono>
-#include <filesystem>
-#include <fstream>
-#if defined(__linux__) || defined(__APPLE__)
-#include <unistd.h>
-#include <cerrno>
-#include <cstring>
-#endif
-#include <libultraship/libultraship.h>
-#include "interpolation/AdaptiveFps.h"
-#include "interpolation/FrameInterpolation.h"
+#include "ui/LighthouseGui.hpp"
+#include "ui/LighthouseModMenuWindow.h"
 
 #ifdef __SWITCH__
 #include <port/switch/SwitchImpl.h>
@@ -65,8 +66,6 @@ extern "C" {
 
 // Reset support
 extern s32 D_80275610;
-int getDefaultBootMap(void);
-void setBootMap(int map_id);
 
 bool prevAltAssets = false;
 // bool gEnableGammaBoost = true;
@@ -166,6 +165,7 @@ GameEngine::GameEngine() {
                       gPortResetPending = 1; // lets audio spin-waits exit immediately
                       setBootMap(getDefaultBootMap());
                       D_80275610 = 3 + 1; // deferred: mainLoop picks this up next frame
+                      CALL_EVENT(OnReset);
                       return 0;
                   },
                    "Reset to boot map." });
@@ -316,6 +316,10 @@ void GameEngine::FinishInit() {
     lhFast3dWindow->SetTargetFps(60);
     lhFast3dWindow->SetMaximumFrameLatency(1);
     lhFast3dWindow->SetRendererUCode(ucode_f3d);
+
+#ifdef USE_NETWORKING
+    SDLNet_Init();
+#endif
 
     auto loader = context->GetResourceManager()->GetResourceLoader();
     loader->RegisterResourceFactory(std::make_shared<Factories::ResourceFactoryBinarySpriteV0>(),
@@ -953,6 +957,7 @@ void GameEngine::Create(int argc, char* argv[]) {
     instance->RunExtract(argc, argv);
     instance->FinishInit();
     PortEnhancements_Init();
+    Anchor::Init();
     SaveManager_Init();
     ShipInit::InitAll();
     ShipInit::Init("BOOT");

@@ -25,6 +25,8 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(LocalizeUiString);
     REGISTER_EVENT(OnParadeNameDraw);
     REGISTER_EVENT(OnFileSelectInfoBuild);
+    REGISTER_EVENT(OnWorldDraw);
+    REGISTER_EVENT(OnPlayerDraw);
 
     // Register behavior events
     REGISTER_EVENT(OnBeakSwimVelocitySet);
@@ -34,8 +36,11 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnGruntyJinjonatorComplete);
     REGISTER_EVENT(OnIntroCutsceneCheck);
     REGISTER_EVENT(OnMumboTokenUpdate);
-    REGISTER_EVENT(OnWaterPyramidTimer);
     REGISTER_EVENT(OnNametagDraw);
+    REGISTER_EVENT(OnPlayerAnimChange);
+    REGISTER_EVENT(OnPlayerAnimReset);
+    REGISTER_EVENT(OnPlayerAnimSubRangeChange);
+    REGISTER_EVENT(OnWaterPyramidTimer);
 
     // Register game events
     REGISTER_EVENT(OnGameLoad);
@@ -45,8 +50,7 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnPropInit);
     REGISTER_EVENT(OnWarpResolveDest);
 
-    // Register game events
-    REGISTER_EVENT(MapTransitionEnd);
+    REGISTER_EVENT(OnReset);
 
     // Register rando events
     REGISTER_EVENT(OnActorSpawn);

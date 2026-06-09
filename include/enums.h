@@ -476,7 +476,7 @@ enum level_flags_e
     LEVEL_FLAG_3F_LAIR_GRUNTY_DOOR_OPEN
 };
 
-enum transformation_e
+typedef enum transformation_e
 {
     unknown,
     TRANSFORM_1_BANJO,
@@ -486,7 +486,7 @@ enum transformation_e
     TRANSFORM_5_CROC,
     TRANSFORM_6_BEE,
     TRANSFORM_7_WISHWASHY
-};
+} Transformation;
 
 enum ability_e
 {
@@ -1760,7 +1760,7 @@ enum mumbotoken_e
     MUMBOTOKEN_73_CCW_WINTER_SIR_SLUSH_BETWEEN_BIG_FLOWER_AND_MUMBOS_SKULL
 };
 
-enum actor_e
+typedef enum actor_e
 {
     ACTOR_1_UNKNOWN         = 0x1,
     ACTOR_2_UNKNOWN,
@@ -2389,8 +2389,10 @@ enum actor_e
     ACTOR_3C8_FF_PRIZE_TOOTY,
     ACTOR_3C9_FURNACE_FUN_PICK_PRICE,
     ACTOR_3CA_ROCK_TRAPPING_GRUNTY = 0x3CA,
-    ACTOR_3CB_UNKNOWN
-};
+    ACTOR_3CB_UNKNOWN,
+
+    ACTOR_3CC_DUMMY_PLAYER_ANCHOR = 0x3CC,
+} ActorID;
 
 enum bundle_e {
     BUNDLE_0_MM_HUT_MUSIC_NOTE,
@@ -2749,7 +2751,7 @@ enum anctrl_direction_e
     mvmt_dir_forwards = 1
 };
 
-enum game_mode_e
+typedef enum game_mode_e
 {
     GAME_MODE_1_UNKNOWN = 1,
     GAME_MODE_2_UNKNOWN,
@@ -2761,10 +2763,11 @@ enum game_mode_e
     GAME_MODE_8_BOTTLES_BONUS,
     GAME_MODE_9_BANJO_AND_KAZOOIE,
     GAME_MODE_A_SNS_PICTURE
-};
+} GameMode;
 
-enum asset_e
+typedef enum asset_e
 {
+    ASSET_0_NONE = 0,
     ASSET_1_ANIM_BSCROUCH_ENTER = 0x1,
     ASSET_2_ANIM_BSWALK_CREEP = 0x2,
     ASSET_3_ANIM_BSWALK = 0x3,
@@ -5295,7 +5298,7 @@ enum asset_e
     SPRITE_JP_WORLD_NAME_RUSTY_BUCKET_BAY,
     SPRITE_JP_WORLD_NAME_CLICK_CLOCK_WOOD,
     SPRITE_JP_BOLD_FONT_FILL_TEXTURE
-};
+} AssetID;
 
 enum overlay_e {
     OVERLAY_0_CORE2,
@@ -5823,7 +5826,9 @@ enum marker_e{
 
     MARKER_29C_FURNACE_FUN_PICK_PRICE = 0x29C,
     MARKER_29D_ROCK_TRAPPING_GRUNTY,
-    MARKER_29E_BIGBUTT_KNOCKED_DOWN
+    MARKER_29E_BIGBUTT_KNOCKED_DOWN,
+
+    MARKER_29F_DUMMY_PLAYER_ANCHOR,
 };
 
 enum hitbox_e{

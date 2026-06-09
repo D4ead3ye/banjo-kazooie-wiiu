@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.26.0 FATAL_ERROR)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
@@ -108,10 +108,9 @@ set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT
 set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 endif()
 
-if(NOT EXISTS ${CMAKE_BINARY_DIR}/config.yml)
-	execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/config.yml" "${CMAKE_BINARY_DIR}/config.yml")
-	execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/assets/" "${CMAKE_BINARY_DIR}/assets/")
-endif()
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/config.yml" "${CMAKE_BINARY_DIR}/config.yml")
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different "${CMAKE_SOURCE_DIR}/assets/" "${CMAKE_BINARY_DIR}/assets/")
+
 
 if (MSVC)
     set(CPP "${CMAKE_C_COMPILER}" "/EP")
@@ -160,7 +159,7 @@ endif()
 
 # Set game compilation version
 set(VERSION us)
-set(USE_NETWORKING OFF)
+option(USE_NETWORKING "Enable networking features" ON)
 set(SKIP_XCODE_VERSION_CHECK ON)
 
 # Add compile definitions for the target
@@ -185,6 +184,9 @@ endif()
 
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/src/port/build.c.in ${CMAKE_CURRENT_SOURCE_DIR}/src/port/build.c @ONLY)
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/properties.h.in ${CMAKE_CURRENT_SOURCE_DIR}/properties.h @ONLY)
+
+set(Header_Files "resource.h")
+source_group("include" FILES ${Header_Files})
 
 # Include directories
 include_directories(
@@ -215,6 +217,8 @@ file(GLOB_RECURSE ALL_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     "${CMAKE_CURRENT_SOURCE_DIR}/include/**/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/*"
 )
+
+list(APPEND ALL_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Resource.rc)
 
 
 # Create source groups that match the real file directory paths
@@ -344,6 +348,15 @@ include_directories(
   ${dr_libs_SOURCE_DIR}
 )
 
+if (CMAKE_GENERATOR MATCHES "Visual Studio")
+    add_custom_command(
+    TARGET ${PROJECT_NAME}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different ${CMAKE_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/config.yml ${CMAKE_BINARY_DIR}/config.yml
+    )
+endif()
+
 add_subdirectory(libultraship ${CMAKE_CURRENT_SOURCE_DIR}/libultraship)
 add_dependencies(${PROJECT_NAME} libultraship)
 target_link_libraries(${PROJECT_NAME} PRIVATE libultraship)
@@ -412,6 +425,15 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU|Clang|AppleClang")
 	)
 endif()
 
+if(USE_NETWORKING)
+    if(MSVC)
+        vcpkg_install_packages(sdl2-net)
+    endif()
+    find_package(SDL2_net REQUIRED)
+    include_directories(${SDL2_NET_INCLUDE_DIRS})
+    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_net::SDL2_net-static)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE USE_NETWORKING)
+endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     find_package(Ogg CONFIG REQUIRED)
@@ -458,16 +480,6 @@ else()
     if(UNIX AND NOT APPLE)
         list(APPEND ADDITIONAL_LIBRARY_DEPENDENCIES dl)
     endif()
-endif()
-
-if(USE_NETWORKING)
-    if(MSVC)
-        vcpkg_install_packages(sdl2-net)
-    endif()
-    find_package(SDL2_net REQUIRED)
-    include_directories(${SDL2_NET_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_net::SDL2_net)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE USE_NETWORKING)
 endif()
 
 option(USE_STANDALONE "Build as a standalone executable" OFF)
@@ -717,6 +729,7 @@ ExternalProject_Add(TorchExternal
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/Torch
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/Torch -DENABLE_ASAN=${ENABLE_ASAN}
 )
+set_target_properties(TorchExternal PROPERTIES EXCLUDE_FROM_DEFAULT_BUILD TRUE)
 ExternalProject_Get_Property(TorchExternal install_dir)
 if (CMAKE_CONFIGURATION_TYPES)
   set(TORCH_EXECUTABLE ${install_dir}/src/TorchExternal-build/$<CONFIGURATION>/torch)
