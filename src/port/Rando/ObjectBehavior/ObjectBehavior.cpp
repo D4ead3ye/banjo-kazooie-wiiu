@@ -5,6 +5,7 @@
 #include "port/Rando/Logic/Logic.h"
 #include "port/enhancements/events/hooks/Events.h"
 #include "port/Rando/CustomObject/CustomObject.h"
+#include "spdlog/spdlog.h"
 
 #define WIDGET_TEXT_COLOR(id) UIWidgets::ColorValues.at(id)
 
@@ -202,7 +203,7 @@ void Rando::ObjectBehavior::Init() {
         RandoItemId randoItemId = RI_UNKNOWN;
         if (ev->propId->markerFlag) {
             Actor* markerActor = marker_getActor(ev->propId->actorProp.marker);
-            
+
             if (markerActor->is_bundle && func_802C9C14(markerActor)) {
                 return;
             }
