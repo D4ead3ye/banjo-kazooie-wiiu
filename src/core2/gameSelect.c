@@ -206,6 +206,7 @@ void setGameInformationZoombox(s32 gamenum){
     debugScoreStates();
     D_80365E00 = gamenum;
     clearScoreStates();
+    CALL_EVENT(OnLoadFileSelect);
     if(gameFile_isNotEmpty(gamenum)){
         gameFile_load(gamenum);
         D_8037DCCE[gamenum] = (itemscore_timeScores_get(LEVEL_6_LAIR)) ? 1 : 0;

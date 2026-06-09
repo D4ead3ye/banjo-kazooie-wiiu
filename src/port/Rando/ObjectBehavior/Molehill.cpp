@@ -158,7 +158,7 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
                         break;
                 }
 
-                CustomObject::CheckObtained(shuffledMolehill.randoCheckId);
+                CustomObject::CheckObtainedEX(shuffledMolehill.randoCheckId);
 
                 if (map_getLevel(gsworld_getMap()) == LEVEL_B_SPIRAL_MOUNTAIN) {
                     if (CheckBridgeState()) {

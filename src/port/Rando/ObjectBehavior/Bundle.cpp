@@ -33,43 +33,38 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
         spawnPosition[1] = (int32_t)position[1];
         spawnPosition[2] = (int32_t)position[2];
 
-        RandoCheckId randoCheckId =
-            Rando::StaticData::GetCheckByPosition(spawnPosition[0], spawnPosition[1], spawnPosition[2]);
-
         BK_LOG_INFO("Bundle Spawn: %i", bundleId);
-
-        RandoSaveCheck shuffledObject;
-        shuffledObject.randoCheckId = RC_UNKNOWN;
+        
+        RandoCheckId randoCheckId = RC_UNKNOWN;
         applyCustomPhysics = false;
 
         switch (levelId) {
             case LEVEL_1_MUMBOS_MOUNTAIN:
                 switch (bundleId) {
                     case BUNDLE_0_MM_HUT_MUSIC_NOTE:
-                        shuffledObject = Rando::Logic::GetShuffledObject(
-                            (RandoCheckId)((int32_t)RC_MM_NOTE_HUT_BUNDLE_1 + bundleCount));
+                        randoCheckId = (RandoCheckId)((int32_t)RC_MM_NOTE_HUT_BUNDLE_1 + bundleCount);
                         applyCustomPhysics = true;
                         break;
                     case BUNDLE_3_MM_HUT_JINJO_GREEN:
-                        shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JINJO_GREEN);
+                        randoCheckId = RC_MM_JINJO_GREEN;
                         applyCustomPhysics = true;
                         break;
                     case BUNDLE_4_MM_HUT_JIGGY:
                         if (spawnPosition[1] < 2000) {
-                            shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_ORANGE_PADS);
+                            randoCheckId = RC_MM_JIGGY_ORANGE_PADS;
                         } else {
-                            shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_HUTS);
+                            randoCheckId = RC_MM_JIGGY_HUTS;
                             applyCustomPhysics = true;
                         }
                         break;
                     case BUNDLE_7__JIGGY:
-                        shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_CHIMPY);
+                        randoCheckId = RC_MM_JIGGY_CHIMPY;
                         break;
                     case BUNDLE_10__JIGGY:
-                        shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_JUJU);
+                        randoCheckId = RC_MM_JIGGY_JUJU;
                         break;
                     case BUNDLE_15__JIGGY:
-                        shuffledObject = Rando::Logic::GetShuffledObject(RC_MM_JIGGY_CONGA);
+                        randoCheckId = RC_MM_JIGGY_CONGA;
                         break;
                     default:
                         break;
@@ -78,10 +73,10 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             case LEVEL_2_TREASURE_TROVE_COVE:
                 switch (bundleId) {
                     case BUNDLE_4_MM_HUT_JIGGY:
-                        shuffledObject = Rando::Logic::GetShuffledObject(RC_TTC_JIGGY_RED_X);
+                        randoCheckId = RC_TTC_JIGGY_RED_X;
                         break;
                     case BUNDLE_7__JIGGY:
-                        shuffledObject = Rando::Logic::GetShuffledObject(RC_TTC_JIGGY_BLUBBER);
+                        randoCheckId = RC_TTC_JIGGY_BLUBBER;
                         break;
                     default:
                         break;
@@ -92,10 +87,10 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                     case BUNDLE_10__JIGGY:
                         switch (spawnPosition[1]) {
                             case 1536:
-                                shuffledObject = Rando::Logic::GetShuffledObject(RC_CC_JIGGY_TOOTH);
+                                randoCheckId = RC_CC_JIGGY_TOOTH;
                                 break;
                             default:
-                                shuffledObject = Rando::Logic::GetShuffledObject(RC_CC_JIGGY_RINGS);
+                                randoCheckId = RC_CC_JIGGY_RINGS;
                                 break;
                         }
                         break;
@@ -106,37 +101,36 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             case LEVEL_4_BUBBLEGLOOP_SWAMP:
                 switch (bundleId) {
                     case BUNDLE_7__JIGGY:
-                        shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_CROCTUS);
+                        randoCheckId = RC_BGS_JIGGY_CROCTUS;
                         break;
                     case BUNDLE_8__JIGGY:
-                        shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_MR_VILE);
+                        randoCheckId = RC_BGS_JIGGY_MR_VILE;
                         break;
                     case BUNDLE_9__JIGGY:
-                        shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_TANKTUP);
+                        randoCheckId = RC_BGS_JIGGY_TANKTUP;
                         break;
                     case BUNDLE_B_BGS_HUT_MUSIC_NOTE:
-                        shuffledObject = Rando::Logic::GetShuffledObject(
-                            (RandoCheckId)((int32_t)RC_BGS_NOTE_HUT_BUNDLE_1 + bundleCount));
+                        randoCheckId = (RandoCheckId)((int32_t)RC_BGS_NOTE_HUT_BUNDLE_1 + bundleCount);
                         break;
                     case BUNDLE_C_BGS_HUT_JIGGY:
-                        shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_HUTS);
+                        randoCheckId = RC_BGS_JIGGY_HUTS;
                         break;
                     case BUNDLE_10__JIGGY:
                         switch (spawnPosition[2]) {
                             case 49:
-                                shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_ELEVATED_WALKWAY);
+                                randoCheckId = RC_BGS_JIGGY_ELEVATED_WALKWAY;
                                 break;
                             case -1386:
-                                shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_FLIBBITS);
+                                randoCheckId = RC_BGS_JIGGY_FLIBBITS;
                                 break;
                             case 2799:
-                                shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_PINKEGG);
+                                randoCheckId = RC_BGS_JIGGY_PINKEGG;
                                 break;
                             case -1020:
-                                shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_TIPTUP);
+                                randoCheckId = RC_BGS_JIGGY_TIPTUP;
                                 break;
                             case -6148:
-                                shuffledObject = Rando::Logic::GetShuffledObject(RC_BGS_JIGGY_MAZE);
+                                randoCheckId = RC_BGS_JIGGY_MAZE;
                                 break;
                             default:
                                 break;
@@ -149,17 +143,17 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             case LEVEL_5_FREEZEEZY_PEAK:
                 switch (bundleId) {
                     case BUNDLE_9__JIGGY:
-                        shuffledObject = Rando::Logic::GetShuffledObject(RC_FP_JIGGY_SLED_TO_BOGGY);
+                        randoCheckId = RC_FP_JIGGY_SLED_TO_BOGGY;
                         break;
                     case BUNDLE_10__JIGGY:
                         if (spawnPosition[1] > 1900) {
-                            shuffledObject = Rando::Logic::GetShuffledObject(RC_FP_JIGGY_BOGGY_RACE_1);
+                            randoCheckId = RC_FP_JIGGY_BOGGY_RACE_1;
                         } else if (spawnPosition[1] < 850) {
-                            shuffledObject = Rando::Logic::GetShuffledObject(RC_FP_JIGGY_WOZZA);
+                            randoCheckId = RC_FP_JIGGY_WOZZA;
                         }
                         break;
                     case BUNDLE_7__JIGGY:
-                        shuffledObject = Rando::Logic::GetShuffledObject(RC_FP_JIGGY_BOGGY_RACE_2);
+                        randoCheckId = RC_FP_JIGGY_BOGGY_RACE_2;
                         break;
                 }
                 break;
@@ -168,23 +162,23 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                     case BUNDLE_C_BGS_HUT_JIGGY:
                         if (spawnPosition[1] ==
                             Rando::StaticData::Checks[RC_GL_JIGGY_WITCH_SWITCH_MUMBOS_MOUNTAIN].posY) {
-                            shuffledObject = Rando::Logic::GetShuffledObject(RC_GL_JIGGY_WITCH_SWITCH_MUMBOS_MOUNTAIN);
+                            randoCheckId = RC_GL_JIGGY_WITCH_SWITCH_MUMBOS_MOUNTAIN;
                             break;
                         }
                         if (spawnPosition[1] ==
                             Rando::StaticData::Checks[RC_GL_JIGGY_WITCH_SWITCH_RUSTY_BUCKET_BAY].posY) {
-                            shuffledObject = Rando::Logic::GetShuffledObject(RC_GL_JIGGY_WITCH_SWITCH_RUSTY_BUCKET_BAY);
+                            randoCheckId = RC_GL_JIGGY_WITCH_SWITCH_RUSTY_BUCKET_BAY;
                             break;
                         }
                         if (spawnPosition[1] ==
                             Rando::StaticData::Checks[RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD].posY) {
-                            shuffledObject = Rando::Logic::GetShuffledObject(RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD);
+                            randoCheckId = RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD;
                             break;
                         }
                         break;
                     case BUNDLE_10__JIGGY:
                         applyCustomPhysics = true;
-                        shuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
+                        randoCheckId = Rando::StaticData::GetCheckByPosition(spawnPosition[0], spawnPosition[1], spawnPosition[2]);
                         break;
                     default:
                         break;
@@ -193,8 +187,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             case LEVEL_7_GOBIS_VALLEY:
                 switch (bundleId) {
                     case BUNDLE_10__JIGGY:
-                        shuffledObject = Rando::Logic::GetShuffledObject(Rando::StaticData::GetCheckByPosition(
-                            spawnPosition[0], spawnPosition[1], spawnPosition[2]));
+                        randoCheckId = Rando::StaticData::GetCheckByPosition(spawnPosition[0], spawnPosition[1], spawnPosition[2]);
                         break;
                     default:
                         break;
@@ -204,9 +197,9 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                 switch (bundleId) {
                     case BUNDLE_1F_SM_EMPTY_HONEYCOMB:
                         if (spawnPosition[1] >= 500 && spawnPosition[1] <= 800) {
-                            shuffledObject = Rando::Logic::GetShuffledObject(RC_SM_EMPTY_HONEYCOMB_COLLIWOBBLE);
+                            randoCheckId = RC_SM_EMPTY_HONEYCOMB_COLLIWOBBLE;
                         } else {
-                            shuffledObject = Rando::Logic::GetShuffledObject(RC_SM_EMPTY_HONEYCOMB_QUARRIES);
+                            randoCheckId = RC_SM_EMPTY_HONEYCOMB_QUARRIES;
                         }
                         break;
                     default:
@@ -217,28 +210,16 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                 return;
         }
 
-        if (shuffledObject.randoCheckId == RC_UNKNOWN) {
+        if (randoCheckId == RC_UNKNOWN) {
             return;
         }
 
-        actor_e randoActorId = GetActorIdByShuffledObjectState(shuffledObject);
-        if (randoActorId == ACTOR_1_UNKNOWN) {
-            // TODO: Find better way to handle Bundles requiring an actor return.
-            *actor = CustomObject::SpawnCustomActor(ACTOR_17_PLAYER_SHADOW, spawnPosition);
-            CustomObject::AddToCustomActorMap(shuffledObject.randoCheckId, *actor);
-            *should = true;
-            return;
-        }
-
-        *actor = CustomObject::SpawnCustomActor(randoActorId, spawnPosition);
+        *actor = CustomObject::ShouldCreateCustomActorEX(randoCheckId, spawnPosition, false);
         if (*actor == NULL) {
             return;
         }
-
-        *actor = CustomObject::SetCustomActorParameters(*actor, shuffledObject.randoCheckId);
-        CustomObject::AddToCustomActorMap(shuffledObject.randoCheckId, *actor);
         if (applyCustomPhysics) {
-            ApplyCustomActorPhysics(shuffledObject.randoCheckId, *actor, false);
+            ApplyCustomActorPhysics(randoCheckId, *actor, false);
         } else {
             ApplyBundleActorPhysics(*actor, bundleId, (BundleInfo*)bundleInfo, gBundle_yaw);
         }

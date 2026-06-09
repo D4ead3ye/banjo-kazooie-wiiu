@@ -5,6 +5,7 @@
 #include "port/Rando/Logic/Logic.h"
 #include "port/enhancements/events/hooks/Events.h"
 #include "port/Rando/CustomObject/CustomObject.h"
+#include "port/ui/developertools/RandoHelper.h"
 
 #define WIDGET_TEXT_COLOR(id) UIWidgets::ColorValues.at(id)
 
@@ -27,7 +28,7 @@ std::vector<int32_t> actorSpawnWhitelist = {
     ACTOR_60_JINJO_BLUE,
     ACTOR_61_JINJO_PINK,
     ACTOR_62_JINJO_GREEN,
-    ACTOR_12C_MOLEHILL,
+    //ACTOR_12C_MOLEHILL,
 };
 
 std::map<int32_t, UIWidgets::Colors> randoItemColors = {
@@ -133,23 +134,12 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
+        CustomObject::FlushRandoSpawnQueue();
+
         if (!IsActorWhitelisted(ev->actorId)) {
-            CustomObject::InitializeSpawnQueue();
             return;
         }
 
-        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
-
-        if (randoCheckId == RC_UNKNOWN) {
-            return;
-        }
-        
-        if (!ShouldOverrideSpawn(randoCheckId)) {
-            CustomObject::InitializeSpawnQueue();
-            return;
-        }
-
-        // TODO: Better handling Clankers Cavern Eel spawning a Honeycomb in the same place as RC_CC_MUMBO_TOKEN_CHOMPA_BEHIND_CLANKERS_TAIL.
         if (ev->actorId != ACTOR_2D_MUMBO_TOKEN && (ev->posX == 9823, ev->posY == 4225, ev->posZ == -19)) {
             return;
         }
@@ -159,27 +149,15 @@ void Rando::ObjectBehavior::Init() {
         position[1] = ev->posY;
         position[2] = ev->posZ;
 
-        CustomObject::AddToSpawnQueue(randoCheckId, position);
-        CustomObject::InitializeSpawnQueue();
+        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
 
-        if (nextActorSaveState) {
-            event->Cancelled = true;
-            ev->result = CustomObject::GetCustomActor(randoCheckId);
-            nextActorSaveState = false;
+        Actor* randoCustomActor = CustomObject::ShouldCreateCustomActorEX(randoCheckId, position, false);
+        if (randoCustomActor == NULL) {
             return;
         }
 
-
-        switch (ev->actorId) {
-            case ACTOR_12C_MOLEHILL:
-                event->Cancelled = true;
-                ev->result = CustomObject::GetCustomActor(randoCheckId);
-                break;
-            default:
-                event->Cancelled = true;
-                ev->result = NULL;
-                break;
-        }
+        event->Cancelled = true;
+        ev->result = randoCustomActor;
     })
 
     REGISTER_LISTENER(OnActorSaveState, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -189,7 +167,11 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        nextActorSaveState = true;
+        if (!IsActorWhitelisted(ev->actorId)) {
+            return;
+        }
+
+        event->Cancelled = true;
     })
 
     REGISTER_LISTENER(OnActorCollision, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -234,10 +216,11 @@ void Rando::ObjectBehavior::Init() {
                     break;
                 case MARKER_5F_MUSIC_NOTE:
                     randoItemId = RI_MUSIC_NOTE;
+                    marker_despawn(ev->propId->actorProp.marker);
                     coMusicPlayer_playMusic(COMUSIC_9_NOTE_COLLECTED, 16000);
                     break;
                 default:
-                    break;
+                    return;
             }
         }
 
@@ -254,17 +237,12 @@ void Rando::ObjectBehavior::Init() {
             if (randoItemId == RI_MUSIC_NOTE) {
                 event->Cancelled = true;
             }
-            CustomObject::ObjectCollected(ev->propId);
-        }
-    })
 
-    REGISTER_LISTENER(OnWarpDispatch, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        OnWarpDispatch* ev = (OnWarpDispatch*)event;
+            RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(
+                ev->propId->actorProp.x, ev->propId->actorProp.y, ev->propId->actorProp.z);
 
-        if (!IS_RANDO) {
-            return;
+            CustomObject::ObjectCollectedEX(randoCheckId);
         }
-        CustomObject::InitializeSpawnQueue();
     })
 
     REGISTER_LISTENER(OnSetJiggyList, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -274,7 +252,7 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        ClearSpawnQueue();
+        CustomObject::ClearRandoActorListEX();
     })
 
     REGISTER_LISTENER(OnFindActorFromActorId, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -290,25 +268,26 @@ void Rando::ObjectBehavior::Init() {
 
         switch (ev->actorId) {
             case ACTOR_46_JIGGY:
-                if (gsworld_getMap() == MAP_26_MMM_NAPPERS_ROOM) {
-                    randoStaticCheck = Rando::StaticData::Checks[RC_MMM_JIGGY_MANSION_TABLE];
-                    randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MMM_JIGGY_MANSION_TABLE);
-
-                    refActor = CustomObject::GetCustomActor(RC_MMM_JIGGY_MANSION_TABLE);
-                    if (!refActor) {
-                        position[0] = randoStaticCheck.posX;
-                        position[1] = randoStaticCheck.posY;
-                        position[2] = randoStaticCheck.posZ;
-
-                        refActor = CustomObject::SpawnCustomActor(
-                            (actor_e)Rando::StaticData::Checks[randoShuffledObject.shuffledCheckId].actorId, position);
-                    }
-                    if (refActor) {
-                        CustomObject::AddToCustomActorMap(RC_MMM_JIGGY_MANSION_TABLE, refActor);
-                        event->Cancelled = true;
-                        ev->result = refActor;
-                    }
-                }
+                // TODO: Reimplement using new system...
+                // if (gsworld_getMap() == MAP_26_MMM_NAPPERS_ROOM) {
+                //     randoStaticCheck = Rando::StaticData::Checks[RC_MMM_JIGGY_MANSION_TABLE];
+                //     randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MMM_JIGGY_MANSION_TABLE);
+                // 
+                //     refActor = CustomObject::GetCustomActor(RC_MMM_JIGGY_MANSION_TABLE);
+                //     if (!refActor) {
+                //         position[0] = randoStaticCheck.posX;
+                //         position[1] = randoStaticCheck.posY;
+                //         position[2] = randoStaticCheck.posZ;
+                // 
+                //         refActor = CustomObject::SpawnCustomActor(
+                //             (actor_e)Rando::StaticData::Checks[randoShuffledObject.shuffledCheckId].actorId, position);
+                //     }
+                //     if (refActor) {
+                //         CustomObject::AddToCustomActorMap(RC_MMM_JIGGY_MANSION_TABLE, refActor);
+                //         event->Cancelled = true;
+                //         ev->result = refActor;
+                //     }
+                // }
                 break;
             default:
                 break;

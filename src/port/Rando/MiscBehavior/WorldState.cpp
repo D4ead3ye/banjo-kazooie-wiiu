@@ -4,6 +4,7 @@
 #include "spdlog/spdlog.h"
 
 extern "C" {
+s32 getGameMode(void);
 void mapSpecificFlags_set(s32 i, s32 val);
 
 enum map_e gsworld_getMap(void);
@@ -14,6 +15,8 @@ void func_8034E71C(Struct73s* arg0, s32 arg1, f32 arg2);
 }
 
 #define JIGGY_OPTION_ENABLED RANDO_SAVE_OPTIONS[RO_SHUFFLE_JIGGIES].optionValue
+
+bool isPauseMenu = false;
 
 void Rando::StaticData::ModifyRandoInfFlagState(RandoCheckId randoCheckId) {
     RandoInf randoInfFlag = RANDO_INF_UNKNOWN;
@@ -112,6 +115,10 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
         }
 
         if (!JIGGY_OPTION_ENABLED) {
+            return;
+        }
+
+        if (getGameMode() == GAME_MODE_4_PAUSED) {
             return;
         }
 

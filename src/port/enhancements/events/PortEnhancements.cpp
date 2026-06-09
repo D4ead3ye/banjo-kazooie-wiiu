@@ -52,6 +52,7 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnGetLevelSpecificFlag);
 
     // Register rando events
+    REGISTER_EVENT(OnLoadFileSelect);
     REGISTER_EVENT(OnSaveLoad);
     REGISTER_EVENT(OnActorSpawn);
     REGISTER_EVENT(OnActorSaveState);

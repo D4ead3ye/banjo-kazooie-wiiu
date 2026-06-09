@@ -108,7 +108,7 @@ void RandoHelper_SpawnPosition() {
 
 void RandoHelper_UpdateCheckTracker(RandoSaveCheck randoSaveCheck) {
     if (randoSaveCheck.obtained) {
-        CustomObject::CheckObtained(randoSaveCheck.randoCheckId);
+        CustomObject::CheckObtainedEX(randoSaveCheck.randoCheckId);
     }
 
     for (auto& pool : Rando::Logic::shuffledPool) {

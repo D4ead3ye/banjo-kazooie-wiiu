@@ -7,6 +7,8 @@
 #include "prop.h"
 
 // clang-format off
+DEFINE_EVENT(OnLoadFileSelect)
+
 DEFINE_EVENT(OnSaveLoad,
 	void* saveData;
 )
@@ -19,7 +21,12 @@ DEFINE_EVENT(OnActorSpawn,
 	Actor* result;
 )
 
-DEFINE_EVENT(OnActorSaveState)
+DEFINE_EVENT(OnActorSaveState,
+	int32_t actorId;
+	int32_t posX;
+	int32_t posY;
+	int32_t posZ;
+)
 
 DEFINE_EVENT(OnActorCollision,
 	Prop* propId;

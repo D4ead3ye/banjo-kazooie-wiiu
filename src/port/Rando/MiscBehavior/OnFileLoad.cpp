@@ -41,8 +41,8 @@ void Rando::MiscBehavior::OnFileLoad() {
         }
     });
 
-    REGISTER_LISTENER(OnSaveFileLoad, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        OnSaveFileLoad* ev = (OnSaveFileLoad*)event;
+    REGISTER_LISTENER(OnLoadFileSelect, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnLoadFileSelect* ev = (OnLoadFileSelect*)event;
 
         selectedFileNum = DEFAULT_FILE_NUM;
     });
