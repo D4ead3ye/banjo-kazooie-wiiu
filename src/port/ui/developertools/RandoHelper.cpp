@@ -95,9 +95,7 @@ std::vector<int32_t> mapIdList = {
 };
 
 std::map<int32_t, std::pair<const char*, level_e>> mapSpecificFlagList = {
-    { MM_SPECIFIC_FLAG_0_CHIMPY_STUMP_RAISED, { "Chimpy Stump Raised", LEVEL_1_MUMBOS_MOUNTAIN } },
-    { MM_SPECIFIC_FLAG_2_ORANGE_HAS_BEEN_RETURNED, { "Orange Returned", LEVEL_1_MUMBOS_MOUNTAIN } },
-    { MM_SPECIFIC_FLAG_3_CHIMPY_HAS_LEFT, { "Chimpy Has Left", LEVEL_1_MUMBOS_MOUNTAIN } },
+    { MM_SPECIFIC_FLAG_0_CHIMPY_STUMP_RAISED, { "Honey Comb Switch", LEVEL_9_RUSTY_BUCKET_BAY } },
 };
 
 void RandoHelper_SpawnPosition() {
@@ -253,10 +251,36 @@ void DrawWarpList() {
     }
 
     ImGui::SeparatorText("Common Locations");
+    if (UIWidgets::Button("Banjo's House", { .color = THEME_COLOR })) {
+        func_8031D04C(MAP_1_SM_SPIRAL_MOUNTAIN, 0);
+    }
     if (UIWidgets::Button("Mumbo's Mountain Warp Pad", { .color = THEME_COLOR })) {
         func_8031D04C(MAP_2_MM_MUMBOS_MOUNTAIN, 5);
     }
-    
+    if (UIWidgets::Button("Treasure Trove Cove Warp Pad", { .color = THEME_COLOR })) {
+        func_8031D04C(MAP_7_TTC_TREASURE_TROVE_COVE, 4);
+    }
+    if (UIWidgets::Button("Clanker's Cavern Warp Pad", { .color = THEME_COLOR })) {
+        func_8031D04C(MAP_B_CC_CLANKERS_CAVERN, 5);
+    }
+    if (UIWidgets::Button("Bubblegloop Swamp Warp Pad", { .color = THEME_COLOR })) {
+        func_8031D04C(MAP_D_BGS_BUBBLEGLOOP_SWAMP, 2);
+    }
+    if (UIWidgets::Button("Freezeezy Peak Warp Pad", { .color = THEME_COLOR })) {
+        func_8031D04C(MAP_27_FP_FREEZEEZY_PEAK, 1);
+    }
+    if (UIWidgets::Button("Gobi's Valley Warp Pad", { .color = THEME_COLOR })) {
+        func_8031D04C(MAP_12_GV_GOBIS_VALLEY, 8);
+    }
+    if (UIWidgets::Button("Mad Monster Mansion Warp Pad", { .color = THEME_COLOR })) {
+        func_8031D04C(MAP_1B_MMM_MAD_MONSTER_MANSION, 20);
+    }
+    if (UIWidgets::Button("Rusty Bucket Bay Warp Pad", { .color = THEME_COLOR })) {
+        func_8031D04C(MAP_31_RBB_RUSTY_BUCKET_BAY, 16);
+    }
+    if (UIWidgets::Button("Click Clock Wood Warp Pad", { .color = THEME_COLOR })) {
+        func_8031D04C(MAP_40_CCW_HUB, 7);
+    }
 }
 
 void DrawGrantUnlocks() {

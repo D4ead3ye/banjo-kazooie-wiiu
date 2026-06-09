@@ -62,6 +62,7 @@ void Rando::ObjectBehavior::InitJiggyBehavior() {
         }
         
         CustomObject::InitializeSpawnQueue();
+        Rando::StaticData::ModifyRandoInfFlagState(randoCheckId);
         *should = true;
 	})
 }
