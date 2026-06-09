@@ -251,10 +251,36 @@ void DrawWarpList() {
     }
 
     ImGui::SeparatorText("Common Locations");
+    if (UIWidgets::Button("Banjo's House", { .color = THEME_COLOR })) {
+        func_8031D04C(MAP_1_SM_SPIRAL_MOUNTAIN, 0);
+    }
     if (UIWidgets::Button("Mumbo's Mountain Warp Pad", { .color = THEME_COLOR })) {
         func_8031D04C(MAP_2_MM_MUMBOS_MOUNTAIN, 5);
     }
-    
+    if (UIWidgets::Button("Treasure Trove Cove Warp Pad", { .color = THEME_COLOR })) {
+        func_8031D04C(MAP_7_TTC_TREASURE_TROVE_COVE, 4);
+    }
+    if (UIWidgets::Button("Clanker's Cavern Warp Pad", { .color = THEME_COLOR })) {
+        func_8031D04C(MAP_B_CC_CLANKERS_CAVERN, 5);
+    }
+    if (UIWidgets::Button("Bubblegloop Swamp Warp Pad", { .color = THEME_COLOR })) {
+        func_8031D04C(MAP_D_BGS_BUBBLEGLOOP_SWAMP, 2);
+    }
+    if (UIWidgets::Button("Freezeezy Peak Warp Pad", { .color = THEME_COLOR })) {
+        func_8031D04C(MAP_27_FP_FREEZEEZY_PEAK, 1);
+    }
+    if (UIWidgets::Button("Gobi's Valley Warp Pad", { .color = THEME_COLOR })) {
+        func_8031D04C(MAP_12_GV_GOBIS_VALLEY, 8);
+    }
+    if (UIWidgets::Button("Mad Monster Mansion Warp Pad", { .color = THEME_COLOR })) {
+        func_8031D04C(MAP_1B_MMM_MAD_MONSTER_MANSION, 20);
+    }
+    if (UIWidgets::Button("Rusty Bucket Bay Warp Pad", { .color = THEME_COLOR })) {
+        func_8031D04C(MAP_31_RBB_RUSTY_BUCKET_BAY, 16);
+    }
+    if (UIWidgets::Button("Click Clock Wood Warp Pad", { .color = THEME_COLOR })) {
+        func_8031D04C(MAP_40_CCW_HUB, 7);
+    }
 }
 
 void DrawGrantUnlocks() {
