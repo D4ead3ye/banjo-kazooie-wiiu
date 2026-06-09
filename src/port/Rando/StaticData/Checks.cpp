@@ -818,12 +818,12 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_MMM_JIGGY_CELLAR,                                                     RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_5E_MMM_CELLAR,                                                    -516, 30, 477),
     RC(RC_MMM_JIGGY_CEMETARY_POTS,                                              RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_63_MMM_FLOWER_POTS,                                               0, 0, 0),
     RC(RC_MMM_JIGGY_CLOCKTOWER_TOP,                                             RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_5F_MMM_CHURCH_ROOF,                                               -2800, 3175, -1601),
-    RC(RC_MMM_JIGGY_JINJO_JIGGY,                                                RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_5B_MMM_JINJO,                                                     0, 0, 0),
+    RC(RC_MMM_JIGGY_JINJO,                                                      RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_5B_MMM_JINJO,                                                     0, 0, 0),
     RC(RC_MMM_JIGGY_MANSION_TABLE,                                              RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_5D_MMM_NAPPER,                                                    2, 459, 28),
     RC(RC_MMM_JIGGY_MOTZAND,                                                    RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_60_MMM_MOTZHAND,                                                  0, 3050, -3200),
     RC(RC_MMM_JIGGY_INSIDE_LOGGO,                                               RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_64_MMM_LOGGO,                                                     -518, 295, -468),
     RC(RC_MMM_JIGGY_INSIDE_THE_WELLS_BUCKET,                                    RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_5C_MMM_WELL,                                                      1, 179, 0),
-    RC(RC_MMM_JIGGY_TUMBLARS_PUZZLE,                                            RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_62_MMM_TUMBLAR,                                                   0, 0, 0),
+    RC(RC_MMM_JIGGY_TUMBLARS_PUZZLE,                                            RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_62_MMM_TUMBLAR,                                                   48, 0, -58),
     RC(RC_MMM_JINJO_BLUE,                                                       RCTYPE_JINJO,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_60_JINJO_BLUE,        NULL,                                                                   5900, 300, 1050),
     RC(RC_MMM_JINJO_GREEN,                                                      RCTYPE_JINJO,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_62_JINJO_GREEN,       NULL,                                                                   1437, 2100, 248),
     RC(RC_MMM_JINJO_ORANGE,                                                     RCTYPE_JINJO,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_5F_JINJO_ORANGE,      NULL,                                                                   -4265, 0, 2668),
@@ -1231,6 +1231,7 @@ std::map<RandoCheckId, std::tuple<int32_t, int32_t, int32_t>> multiSpawnCheckMap
     { RC_MM_NOTE_HUT_BUNDLE_3,                      { 3804, 2154, -2619 } },
     { RC_MM_NOTE_HUT_BUNDLE_4,                      { 4062, 2154, -2322 } },
     { RC_MM_NOTE_HUT_BUNDLE_5,                      { 4425, 2154, -2476 } },
+    { RC_RBB_JIGGY_SNORKEL,                         { -5100, -2550, 1470 } },
 };
 // clang-format on
 

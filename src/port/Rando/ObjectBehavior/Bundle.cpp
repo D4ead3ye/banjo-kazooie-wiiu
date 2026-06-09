@@ -189,6 +189,8 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                     case BUNDLE_10__JIGGY:
                         randoCheckId = Rando::StaticData::GetCheckByPosition(spawnPosition[0], spawnPosition[1], spawnPosition[2]);
                         break;
+                    case BUNDLE_D__EMPTY_HONEYCOMB:
+                        shuffledObject = Rando::Logic::GetShuffledObject(RC_GV_EMPTY_HONEYCOMB_GOBI);
                     default:
                         break;
                 }

@@ -183,7 +183,7 @@ static RegisterShipInitFunc initFunc([]() {
     };
     Regions[RR_TREASURE_TROVE_COVE_LIGHTHOUSE_TOP] = RandoRegion{ .regionName = "Top of the Lighthouse", .mapId = MAP_7_TTC_TREASURE_TROVE_COVE,
         .checks = {
-            CHECK(RC_TTC_JIGGY_LIGHTHOUSE, 							CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
+            CHECK(RC_TTC_JIGGY_LIGHTHOUSE, 							CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
             CHECK(RC_TTC_NOTE_LIGHTHOUSE_TOP_1, 					true),
             CHECK(RC_TTC_NOTE_LIGHTHOUSE_TOP_2, 					true),
             CHECK(RC_TTC_NOTE_LIGHTHOUSE_TOP_3, 					true),

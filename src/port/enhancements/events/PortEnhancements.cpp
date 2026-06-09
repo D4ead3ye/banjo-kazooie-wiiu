@@ -62,6 +62,7 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnIsJiggyScoreCollected);
     REGISTER_EVENT(OnIsJiggyScoreSpawned);
     REGISTER_EVENT(SetRandoInfFlag);
+    REGISTER_EVENT(OnIsHoneycombScoreCollected);
 
     Rando::Init();
 }

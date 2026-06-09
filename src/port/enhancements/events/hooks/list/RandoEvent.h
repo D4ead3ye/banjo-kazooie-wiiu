@@ -51,4 +51,9 @@ DEFINE_EVENT(SetRandoInfFlag,
 	int32_t flagId;
 	int32_t flagState;
 )
+
+DEFINE_EVENT(OnIsHoneycombScoreCollected,
+	int32_t honeycombId;
+	int32_t result;
+)
 // clang-format on
