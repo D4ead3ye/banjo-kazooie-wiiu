@@ -13,6 +13,7 @@ int port_getDemoViCount(void);
 void port_setDemoViCount(int viCount);
 int port_getDemoDisplayViCount(int rawViCount);
 int port_getCutsceneExtraVis(void);
+int port_getInterpolationFpsCap(void);
 
 // Framebuffer (FramebufferPatches.cpp)
 
@@ -51,7 +52,7 @@ float port_getRumbleScale(void);
 // Graphics (GraphicsPatches.cpp)
 
 int port_getDrawDistanceLevel(void);
-int port_shouldForceHighPolyBanjo(void);
+int port_shouldDisableLOD(void);
 
 // Mirror (MirrorPatches.cpp)
 
@@ -68,11 +69,6 @@ void port_mirror_setExclude(void);
 void port_mirror_clearExclude(void);
 int port_mirror_bakeCounterScale(void);
 void port_mirror_patchTextActors(void);
-
-// Fixes (GameFixes.cpp)
-
-int port_fixMumboTokenId(int ret, int pos[3], int map_id);
-int port_shouldAllowAllHoneycombExtensions(void);
 
 // Localization (LocalizedText.cpp)
 

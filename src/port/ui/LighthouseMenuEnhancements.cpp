@@ -53,14 +53,14 @@ void LighthouseMenu::AddMenuEnhancements() {
                      })
                      .DefaultIndex(0));
 
-    AddWidget(path, "Always High Poly Banjo", WIDGET_CVAR_CHECKBOX)
-        .CVar(CVAR_ENHANCEMENT("Graphics.AlwaysHighPolyBanjo"))
+    AddWidget(path, "Disable LOD", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Graphics.DisableLOD"))
         .RaceDisable(false)
-        .Options(CheckboxOptions().Tooltip("Makes Banjo always use the high-polygon model, even in low-detail modes."));
+        .Options(CheckboxOptions().Tooltip("Forces maximum model detail everywhere."));
 
     AddWidget(path, "Original Aspect Ratio In Cutscenes", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Graphics.CutsceneAspect"))
-        .Options(CheckboxOptions().Tooltip("Force game to show original aspect ratio during cutscenes to avoid seeing "
+        .Options(CheckboxOptions().Tooltip("Forces game to show original aspect ratio during cutscenes to avoid seeing "
                                            "unfinished edges of scene geometry."));
 
     // Enhancements -> Modes
@@ -120,6 +120,44 @@ void LighthouseMenu::AddMenuEnhancements() {
         .Options(CheckboxOptions().Tooltip("Delays the Grunty Defeated flag until after the Jinjonator attacks, "
                                            "preventing a false win if the player dies before the hit lands."));
 
+    AddWidget(path, "Fix CCW Gnawty Rock (Spring)", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.GnawtySpringRock"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Makes Gnawty's rock indestructible in CCW Spring."));
+
+    AddWidget(path, "Fix CCW Flower Replant Softlock", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.CCWFlowerReplant"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip(
+            "Prevents re-planting the CCW Spring flower after it's already planted."));
+
+    AddWidget(path, "Fix Termite Mound Slopes", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.TermiteMoundSlopes"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Makes slopes in the Mumbo's Mountain termite mound slide instantly."));
+
+    AddWidget(path, "Fix Early Claw Swipe During Slide", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.ClawSwipeSlide"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Prevents a claw swipe from triggering mid-slide."));
+
+    AddWidget(path, "Fix Boggy Race Game Over", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.BoggyRaceGameOver"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip(
+            "Losing Boggy's race with no extra lives reloads the race instead of "
+            "triggering a game over."));
+
+    AddWidget(path, "Fix Grunty Jinjo Charge Sound", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.JinjoChargeSound"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Stops the Jinjo charge-up sound the instant it hits Grunty."));
+
+    AddWidget(path, "Fix Conga's Name", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.CongaText"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Corrects a spelling error when meeting Conga as a termite."));
+
     AddWidget(path, "Fix Cutscene Audio Sync", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Fix.CutsceneSync"))
         .RaceDisable(false)
@@ -131,6 +169,12 @@ void LighthouseMenu::AddMenuEnhancements() {
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip("Adjusts static camera angles in widescreen to prevent skybox "
                                            "exposure at the edges of the screen."));
+
+    AddWidget(path, "Center Enemy SFX", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.CenterSfx"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip(
+            "Centers the TeeHee and Sir Slush sound effects so they sound similar to N64 at distance."));
 
     // Enhancements -> Restorations
     path = { "Enhancements", "Restorations", SECTION_COLUMN_1 };
@@ -156,13 +200,12 @@ void LighthouseMenu::AddMenuEnhancements() {
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip("Unlocks all Stop N' Swop items when loading a 100% save file."));
 
-    // TODO: All Honeycomb Extensions allows 9 honeycomb health bars instead of the 8 cap,
-    // but in 4:3 mode they overlap with the notes sprite in HUD
-    AddWidget(path, "All Honeycomb Extensions", WIDGET_CVAR_CHECKBOX)
-        .CVar(CVAR_ENHANCEMENT("AllHoneycombExtensions"))
+    AddWidget(path, "Honeyback Health Regen", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Gameplay.Honeyback"))
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip(
-            "Removes the 3-extension health cap, allowing all 24 honeycombs to grant health bars."));
+            "Backports Banjo-Tooie's Honeyback: once all 24 empty honeycombs are collected, your health "
+            "slowly refills one honeycomb at a time after a short pause when you stop taking damage."));
 
     AddWidget(path, "Extra Time For GV Water Pyramid", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Gameplay.WaterPyramidTimer"))
