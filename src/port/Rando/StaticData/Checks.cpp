@@ -1221,16 +1221,11 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
 };
 
 std::map<RandoCheckId, std::tuple<int32_t, int32_t, int32_t>> multiSpawnCheckMap = {
+    { RC_CC_JIGGY_CLANKER_RAISED,                   { 5700, 4300, 0 } },
+    { RC_CC_JIGGY_SNIPPETS,                         { 13814, 3811, 0 } },
     { RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD,    { 0, 3354, 2270 } },
     { RC_GL_JIGGY_WITCH_SWITCH_TREASURE_TROVE_COVE, { 950, 905, -1600 } },
     { RC_MM_JIGGY_CONGA,                            { -3401, -199, 4650 } },
-    { RC_MM_JIGGY_HUTS,                             { 5154, 2165, -1426 } },
-    { RC_MM_JINJO_GREEN,                            { 3778, 2154, -1045 } },
-    { RC_MM_NOTE_HUT_BUNDLE_1,                      { 4390, 2154, -2868 } },
-    { RC_MM_NOTE_HUT_BUNDLE_2,                      { 4007, 2154, -2957 } },
-    { RC_MM_NOTE_HUT_BUNDLE_3,                      { 3804, 2154, -2619 } },
-    { RC_MM_NOTE_HUT_BUNDLE_4,                      { 4062, 2154, -2322 } },
-    { RC_MM_NOTE_HUT_BUNDLE_5,                      { 4425, 2154, -2476 } },
     { RC_RBB_JIGGY_SNORKEL,                         { -5100, -2550, 1470 } },
 };
 // clang-format on

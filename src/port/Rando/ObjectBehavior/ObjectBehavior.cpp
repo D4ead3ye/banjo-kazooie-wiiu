@@ -180,8 +180,7 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        SPDLOG_INFO("Collected {} at {}, {}, {}", std::to_string(ev->propId->actorProp.marker->id),
-                    std::to_string(ev->propId->actorProp.x), std::to_string(ev->propId->actorProp.y),
+        SPDLOG_INFO("Collected at {}, {}, {}", std::to_string(ev->propId->actorProp.x), std::to_string(ev->propId->actorProp.y),
                     std::to_string(ev->propId->actorProp.z));
 
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(
@@ -196,6 +195,11 @@ void Rando::ObjectBehavior::Init() {
                 case LEVEL_2_TREASURE_TROVE_COVE:
                     break;
                 case LEVEL_3_CLANKERS_CAVERN:
+                    if (ev->propId->actorProp.y == 1536) {
+                        randoCheckId = RC_CC_JIGGY_TOOTH;
+                    } else {
+                        randoCheckId = RC_CC_JIGGY_RINGS;
+                    }
                     break;
                 case LEVEL_4_BUBBLEGLOOP_SWAMP:
                     break;
