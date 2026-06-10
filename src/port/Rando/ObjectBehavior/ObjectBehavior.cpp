@@ -180,6 +180,53 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
+        SPDLOG_INFO("Collected {} at {}, {}, {}", std::to_string(ev->propId->actorProp.marker->id),
+                    std::to_string(ev->propId->actorProp.x), std::to_string(ev->propId->actorProp.y),
+                    std::to_string(ev->propId->actorProp.z));
+
+        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(
+            ev->propId->actorProp.x, ev->propId->actorProp.y, ev->propId->actorProp.z);
+
+        if (randoCheckId == RC_UNKNOWN) {
+            level_e currentLevel = map_getLevel(gsworld_getMap());
+
+            switch (currentLevel) {
+                case LEVEL_1_MUMBOS_MOUNTAIN:
+                    break;
+                case LEVEL_2_TREASURE_TROVE_COVE:
+                    break;
+                case LEVEL_3_CLANKERS_CAVERN:
+                    break;
+                case LEVEL_4_BUBBLEGLOOP_SWAMP:
+                    break;
+                case LEVEL_5_FREEZEEZY_PEAK:
+                    break;
+                case LEVEL_6_LAIR:
+                    break;
+                case LEVEL_7_GOBIS_VALLEY:
+                    break;
+                case LEVEL_8_CLICK_CLOCK_WOOD:
+                    break;
+                case LEVEL_9_RUSTY_BUCKET_BAY:
+                    break;
+                case LEVEL_A_MAD_MONSTER_MANSION:
+                    break;
+                case LEVEL_B_SPIRAL_MOUNTAIN:
+                    if (ev->propId->actorProp.y >= 400 && ev->propId->actorProp.y <= 700) {
+                        randoCheckId = RC_SM_EMPTY_HONEYCOMB_COLLIWOBBLE;
+                    } else {
+                        randoCheckId = RC_SM_EMPTY_HONEYCOMB_QUARRIES;
+                    }
+                    break;
+                default:
+                    return;
+            }
+        }
+
+        if (randoCheckId == RC_UNKNOWN) {
+            return;
+        }
+
         RandoItemId randoItemId = RI_UNKNOWN;
         if (ev->propId->markerFlag) {
             Actor* markerActor = marker_getActor(ev->propId->actorProp.marker);
@@ -195,14 +242,6 @@ void Rando::ObjectBehavior::Init() {
                     randoItemId = RI_MUMBO_TOKEN;
                     break;
                 case MARKER_52_JIGGY:
-                    if (gsworld_getMap() == MAP_26_MMM_NAPPERS_ROOM &&
-                        ev->propId->actorProp.x != Rando::StaticData::Checks[RC_MMM_JIGGY_MANSION_TABLE].posX &&
-                        ev->propId->actorProp.y != Rando::StaticData::Checks[RC_MMM_JIGGY_MANSION_TABLE].posY &&
-                        ev->propId->actorProp.z != Rando::StaticData::Checks[RC_MMM_JIGGY_MANSION_TABLE].posZ) {
-                        marker_despawn(ev->propId->actorProp.marker);
-                        event->Cancelled = true;
-                        break;
-                    }
                     randoItemId = RI_JIGGY;
                     break;
                 case MARKER_53_EMPTY_HONEYCOMB:
@@ -227,22 +266,9 @@ void Rando::ObjectBehavior::Init() {
         }
 
         if (randoItemId != RI_UNKNOWN) {
-            if (gsworld_getMap() == MAP_26_MMM_NAPPERS_ROOM && ev->propId->actorProp.y >= 400) {
-                ev->propId->actorProp.x = Rando::StaticData::Checks[RC_MMM_JIGGY_MANSION_TABLE].posX;
-                ev->propId->actorProp.y = Rando::StaticData::Checks[RC_MMM_JIGGY_MANSION_TABLE].posY;
-                ev->propId->actorProp.z = Rando::StaticData::Checks[RC_MMM_JIGGY_MANSION_TABLE].posZ;
-                if (RANDO_SAVE_CHECKS[RC_MMM_JIGGY_MANSION_TABLE].obtained) {
-                    marker_despawn(ev->propId->actorProp.marker);
-                }
-            }
-
             if (randoItemId == RI_MUSIC_NOTE) {
                 event->Cancelled = true;
             }
-
-            RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(
-                ev->propId->actorProp.x, ev->propId->actorProp.y, ev->propId->actorProp.z);
-
             CustomObject::ObjectCollectedEX(randoCheckId);
         }
     })
