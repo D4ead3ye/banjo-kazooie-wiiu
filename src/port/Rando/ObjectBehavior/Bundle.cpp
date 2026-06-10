@@ -7,6 +7,7 @@
 #include <libultraship/bridge/consolevariablebridge.h>
 #include "port/enhancements/events/PortEnhancements.h"
 #include "port/enhancements/events/hooks/Events.h"
+#include "spdlog/spdlog.h"
 
 extern "C" {
 extern f32 gBundle_yaw;
@@ -33,7 +34,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
         spawnPosition[1] = (int32_t)position[1];
         spawnPosition[2] = (int32_t)position[2];
 
-        BK_LOG_INFO("Bundle Spawn: %i", bundleId);
+        SPDLOG_INFO("Bundle Spawn: {}", std::to_string(bundleId));
         
         RandoCheckId randoCheckId = RC_UNKNOWN;
         applyCustomPhysics = false;

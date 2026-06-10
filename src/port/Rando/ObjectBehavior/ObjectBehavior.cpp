@@ -187,6 +187,9 @@ void Rando::ObjectBehavior::Init() {
             if (markerActor->is_bundle && func_802C9C14(markerActor)) {
                 return;
             }
+            SPDLOG_INFO("Collected {} at {}, {}, {}", std::to_string(ev->propId->actorProp.marker->id),
+                        std::to_string(ev->propId->actorProp.x), std::to_string(ev->propId->actorProp.y),
+                        std::to_string(ev->propId->actorProp.z));
             switch (ev->propId->actorProp.marker->id) {
                 case MARKER_39_MUMBO_TOKEN:
                     randoItemId = RI_MUMBO_TOKEN;
