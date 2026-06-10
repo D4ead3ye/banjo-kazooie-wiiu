@@ -14,6 +14,8 @@ bool func_802C9C14(Actor* actor);
 
 void coMusicPlayer_playMusic(enum comusic_e track_id, s32 volume);
 void marker_despawn(ActorMarker* marker);
+
+s32 mm_hut_smash_count;
 }
 
 // clang-format off
@@ -180,9 +182,15 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        SPDLOG_INFO("Collected {} at {}, {}, {}", std::to_string(ev->propId->actorProp.marker->id),
+        int32_t pos[3];
+        pos[0] = ev->propId->actorProp.x;
+        pos[1] = ev->propId->actorProp.y;
+        pos[2] = ev->propId->actorProp.z;
+
+        SPDLOG_INFO("Collected at {}, {}, {}",
                     std::to_string(ev->propId->actorProp.x), std::to_string(ev->propId->actorProp.y),
                     std::to_string(ev->propId->actorProp.z));
+        SPDLOG_INFO("mm_hut_smash_count: {}", std::to_string(mm_hut_smash_count));
 
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(
             ev->propId->actorProp.x, ev->propId->actorProp.y, ev->propId->actorProp.z);
@@ -192,8 +200,24 @@ void Rando::ObjectBehavior::Init() {
 
             switch (currentLevel) {
                 case LEVEL_1_MUMBOS_MOUNTAIN:
+                    if (pos[1] < -195) {
+                        SPDLOG_INFO("Inside Orange Pad if");
+                        randoCheckId = RC_MM_JIGGY_ORANGE_PADS;
+                    } else if (pos[1] < -70) {
+                        SPDLOG_INFO("Inside Chimpy if");
+                        randoCheckId = RC_MM_JIGGY_CHIMPY;
+                    } else if (mm_hut_smash_count == 0) {
+
+                    } else if (mm_hut_smash_count == 3) {
+                        randoCheckId = RC_MM_JINJO_GREEN;
+                    } else if (mm_hut_smash_count == 5) {
+                        randoCheckId = RC_MM_JIGGY_HUTS;
+                    }
                     break;
                 case LEVEL_2_TREASURE_TROVE_COVE:
+                    if (pos[1] < 720) {
+                        randoCheckId = RC_TTC_JIGGY_RED_X;
+                    }
                     break;
                 case LEVEL_3_CLANKERS_CAVERN:
                     break;
@@ -212,7 +236,7 @@ void Rando::ObjectBehavior::Init() {
                 case LEVEL_A_MAD_MONSTER_MANSION:
                     break;
                 case LEVEL_B_SPIRAL_MOUNTAIN:
-                    if (ev->propId->actorProp.y >= 400 && ev->propId->actorProp.y <= 700) {
+                    if (pos[1] >= 400 && pos[1] <= 700) {
                         randoCheckId = RC_SM_EMPTY_HONEYCOMB_COLLIWOBBLE;
                     } else {
                         randoCheckId = RC_SM_EMPTY_HONEYCOMB_QUARRIES;
