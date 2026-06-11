@@ -28,6 +28,9 @@ void fxSparkle_musicNote(s16 position[3]);
 void player_getPosition(f32 dst[3]);
 void ml_vec3f_to_vec3h(s16 dst[3], f32 src[3]);
 
+void coMusicPlayer_playMusic(enum comusic_e track_id, s32 volume);
+Actor* marker_getActor(ActorMarker* thisx);
+void marker_despawn(ActorMarker* marker);
 Actor* actor_new(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags);
 extern ActorInfo chJinjoBlue;
 extern ActorInfo chJinjoGreen;
@@ -48,17 +51,11 @@ extern ActorInfo D_80367D48;
 typedef struct {
     int32_t position[3];
     RandoCheckId randoCheckId;
-    Actor randoActor;
-} RandoActorExtension;
-
-typedef struct {
-    int32_t position[3];
-    RandoCheckId randoCheckId;
     bool isSpawned;
 } QueuedRandoProp;
 
-std::vector<RandoActorExtension> randoActorList;
 std::vector<QueuedRandoProp> randoActorQueue;
+std::vector<RandoCheckId> randoSpawnedCheckIds;
 bool shouldRemoveEX = false;
 
 // clang-format off
@@ -82,36 +79,26 @@ std::map<actor_e, std::pair<ActorInfo, int32_t>> actorInfoMap = {
 extern int32_t GetJinjoActorMarkerId(actor_e actorId);
 int32_t currentMap = -1;
 
-bool CheckRandoActorListEX(RandoCheckId randoCheckId) {
-    for (auto& customActor : randoActorList) {
-        if (customActor.randoCheckId == randoCheckId) {
+void CustomObject::ClearRandoActorListEX() {
+    if (currentMap != gsworld_getMap()) {
+        currentMap = gsworld_getMap();
+        randoActorQueue.clear();
+        randoSpawnedCheckIds.clear();
+    }
+}
+
+bool CustomObject::CheckSpawnedIdList(RandoCheckId randoCheckId) {
+    for (auto& spawn : randoSpawnedCheckIds) {
+        if (spawn == randoCheckId) {
             return true;
         }
     }
     return false;
 }
 
-void CustomObject::ClearRandoActorListEX() {
-    if (currentMap != gsworld_getMap()) {
-        currentMap = gsworld_getMap();
-        randoActorList.clear();
-        randoActorQueue.clear();
-        SPDLOG_INFO("RandoActorList Cleared");
-    }
-}
-
-Actor* GetCustomActorByCheckEX(RandoCheckId randoCheckId) {
-    for (auto& customActor : randoActorList) {
-        if (customActor.randoCheckId == randoCheckId) {
-            return &customActor.randoActor;
-        }
-    }
-
-    return NULL;
-}
-
 Actor* CustomObject::SetCustomActorParametersEX(RandoCheckId randoCheckId, Actor* customActor) {
     RandoSaveCheck shuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
+    customActor->marker->randoCheckId = randoCheckId;
 
     switch (shuffledObject.randoItemId) {
         case RI_EMPTY_HONEYCOMB:
@@ -144,7 +131,7 @@ Actor* CustomObject::SpawnCustomActorEX(RandoCheckId randoCheckId, int32_t posit
 
     if (customActor != NULL) {
         customActor = SetCustomActorParametersEX(randoCheckId, customActor);
-        randoActorList.push_back({ { position[0], position[1], position[2] }, randoCheckId, *customActor });
+        randoSpawnedCheckIds.push_back(randoCheckId);
     }
     return customActor;
 }
@@ -156,6 +143,11 @@ void CustomObject::FlushRandoSpawnQueue() {
 
     for (auto& queue : randoActorQueue) {
         if (queue.isSpawned) {
+            continue;
+        }
+
+        if (CustomObject::CheckSpawnedIdList(queue.randoCheckId)) {
+            queue.isSpawned = true;
             continue;
         }
 
@@ -175,6 +167,10 @@ void CustomObject::FlushRandoSpawnQueue() {
                                                               &actorInfoMap.at(randoActorId).first,
                                                               actorInfoMap.at(randoActorId).second);
 
+        if (randoSaveCheck.obtained && RANDO_SAVE_OPTIONS[RO_SPAWN_JUNK].optionValue == RO_GENERIC_ON) {
+            customActor->marker->unk14_21 = true;
+            customActor->scale = 1.0f;
+        }
         queue.isSpawned = true;
     }
 }
@@ -183,7 +179,7 @@ void CustomObject::AddPropToSpawnQueueEX(int32_t position[3], RandoCheckId rando
     randoActorQueue.push_back({ { position[0], position[1], position[2] }, randoCheckId, false });
 }
 
-Actor* CustomObject::ShouldCreateCustomActorEX(RandoCheckId randoCheckId, int32_t position[3], bool isProp) {
+Actor* CustomObject::ShouldCreateCustomActorEX(RandoCheckId randoCheckId, int32_t position[3], bool isProp, Actor* refActor) {
     if (randoCheckId == RC_UNKNOWN) {
         return NULL;
     }
@@ -194,26 +190,21 @@ Actor* CustomObject::ShouldCreateCustomActorEX(RandoCheckId randoCheckId, int32_
         return NULL;
     }
 
-    if (CheckRandoActorListEX(randoCheckId)) {
-        return GetCustomActorByCheckEX(randoCheckId);
-    } else {
-        if (isProp) {
-            CustomObject::AddPropToSpawnQueueEX(position, randoCheckId);
-            return NULL;
-        }
-        
-        if (randoSaveCheck.obtained) {
-            randoActorId = GetActorIdByShuffledObjectState(randoSaveCheck);
-        }
-
-        if (randoSaveCheck.randoCheckId == RC_UNKNOWN) {
-            return NULL;
-        }
-        return CustomObject::SpawnCustomActorEX(randoCheckId, position, &actorInfoMap.at(randoActorId).first,
-                                                actorInfoMap.at(randoActorId).second);
+    if (isProp) {
+        CustomObject::AddPropToSpawnQueueEX(position, randoCheckId);
+        return NULL;
+    }
+    
+    if (randoSaveCheck.obtained) {
+        randoActorId = refActor == nullptr ? GetActorIdByShuffledObjectState(randoSaveCheck) : (actor_e)refActor->modelCacheIndex;
     }
 
-    return NULL;
+    if (randoSaveCheck.randoCheckId == RC_UNKNOWN) {
+        return NULL;
+    }
+
+    return CustomObject::SpawnCustomActorEX(randoCheckId, position, &actorInfoMap.at(randoActorId).first,
+                                                actorInfoMap.at(randoActorId).second);
 }
 
 void CustomObject::ResolveCustomActorCollisionEX(RandoCheckId randoCheckId) {
@@ -267,6 +258,7 @@ void CustomObject::ResolveCustomActorCollisionEX(RandoCheckId randoCheckId) {
 
             UpdateSaveDataNoteScores();
             fxSparkle_musicNote(playerPosI);
+            coMusicPlayer_playMusic(COMUSIC_9_NOTE_COLLECTED, 16000);
             break;
         default:
             break;
@@ -287,16 +279,16 @@ void CustomObject::CheckObtainedEX(RandoCheckId randoCheckId) {
     }
 }
 
-void CustomObject::ObjectCollectedEX(RandoCheckId randoCheckId) {
+void CustomObject::ObjectCollectedEX(Prop* prop) {
     shouldRemoveEX = false;
-    for (int i = 0; i < randoActorList.size(); i++) {
-        if (randoActorList[i].randoCheckId == randoCheckId) {
-            CustomObject::CheckObtainedEX(randoCheckId);
-            if (shouldRemoveEX) {
-                CustomObject::ResolveCustomActorCollisionEX(randoCheckId);
-                randoActorList.erase(randoActorList.begin() + i);
-            }
-            break;
+    CustomObject::CheckObtainedEX((RandoCheckId)prop->actorProp.marker->randoCheckId);
+
+    if (shouldRemoveEX) {
+        CustomObject::ResolveCustomActorCollisionEX((RandoCheckId)prop->actorProp.marker->randoCheckId);
+
+        if (Rando::Logic::GetShuffledObject((RandoCheckId)prop->actorProp.marker->randoCheckId).randoItemId ==
+            RI_MUSIC_NOTE) {
+            marker_despawn(prop->actorProp.marker);
         }
     }
 }

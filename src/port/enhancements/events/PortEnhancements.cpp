@@ -55,7 +55,8 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnLoadFileSelect);
     REGISTER_EVENT(OnSaveLoad);
     REGISTER_EVENT(OnActorSpawn);
-    REGISTER_EVENT(OnActorSaveState);
+    REGISTER_EVENT(OnLoadActorSaveState);
+    REGISTER_EVENT(OnSaveActorSaveState);
     REGISTER_EVENT(OnActorCollision);
     REGISTER_EVENT(OnFindActorFromActorId);
     REGISTER_EVENT(OnActorDestroy);

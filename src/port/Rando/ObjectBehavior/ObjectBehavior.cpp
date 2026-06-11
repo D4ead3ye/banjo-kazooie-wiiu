@@ -16,6 +16,9 @@ void coMusicPlayer_playMusic(enum comusic_e track_id, s32 volume);
 void marker_despawn(ActorMarker* marker);
 }
 
+bool isSaveState = false;
+std::map<RandoCheckId, std::tuple<int32_t, int32_t, int32_t>> randoSaveState;
+
 // clang-format off
 std::vector<int32_t> actorSpawnWhitelist = {
     ACTOR_2D_MUMBO_TOKEN,
@@ -71,10 +74,12 @@ bool IsActorWhitelisted(int32_t actorId) {
         }
     }
 
-    if (CVarGetInteger(Rando::StaticData::Options[RO_SPAWN_JUNK].cvar, 0) == RO_GENERIC_ON) {
-        for (auto& junk : junkItemList) {
-            if (junk == actorId) {
-                return true;
+    if (!isSaveState) {
+        if (CVarGetInteger(Rando::StaticData::Options[RO_SPAWN_JUNK].cvar, 0) == RO_GENERIC_ON) {
+            for (auto& junk : junkItemList) {
+                if (junk == actorId) {
+                    return true;
+                }
             }
         }
     }
@@ -139,8 +144,10 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        if (ev->actorId != ACTOR_2D_MUMBO_TOKEN && (ev->posX == 9823, ev->posY == 4225, ev->posZ == -19)) {
-            return;
+        if (gsworld_getMap() == MAP_B_CC_CLANKERS_CAVERN) {
+            if (ev->actorId != ACTOR_2D_MUMBO_TOKEN && (ev->posX == 9823, ev->posY == 4225, ev->posZ == -19)) {
+                return;
+            }
         }
 
         int32_t position[3];
@@ -159,17 +166,64 @@ void Rando::ObjectBehavior::Init() {
         ev->result = randoCustomActor;
     })
 
-    REGISTER_LISTENER(OnActorSaveState, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        OnActorSaveState* ev = (OnActorSaveState*)event;
+    REGISTER_LISTENER(OnSaveActorSaveState, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnSaveActorSaveState* ev = (OnSaveActorSaveState*)event;
 
         if (!IS_RANDO) {
             return;
         }
 
-        if (!IsActorWhitelisted(ev->actorId)) {
+        if (!IsActorWhitelisted((actor_e)ev->actor->modelCacheIndex)) {
             return;
         }
 
+        randoSaveState.insert({ (RandoCheckId)ev->actor->marker->randoCheckId, { ev->actor->marker->propPtr->x, ev->actor->marker->propPtr->y, ev->actor->marker->propPtr->z } });
+    })
+
+    REGISTER_LISTENER(OnLoadActorSaveState, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnLoadActorSaveState* ev = (OnLoadActorSaveState*)event;
+
+        if (!IS_RANDO) {
+            return;
+        }
+
+        isSaveState = true;
+        if (!IsActorWhitelisted((actor_e)ev->actor->modelCacheIndex)) {
+            event->Cancelled = true;
+            return;
+        }
+        isSaveState = false;
+
+        if (randoSaveState.empty()) {
+            return;
+        }
+
+        int32_t position[3];
+        position[0] = ev->posX;
+        position[1] = ev->posY;
+        position[2] = ev->posZ;
+
+        RandoCheckId randoCheckId = RC_UNKNOWN;
+        for (auto& [checkId, location] : randoSaveState) {
+            if (std::get<0>(location) == ev->posX && std::get<1>(location) == ev->posY &&
+                std::get<2>(location) == ev->posZ) {
+                randoCheckId = checkId;
+                break;
+            }
+        }
+
+        if (randoCheckId == RC_UNKNOWN) {
+            return;
+        }
+
+        if (CustomObject::CheckSpawnedIdList(randoCheckId)) {
+            event->Cancelled = true;
+            return;
+        }
+
+        Actor* randoCustomActor =
+            CustomObject::ShouldCreateCustomActorEX(randoCheckId, position, false, ev->actor);
+        randoSaveState.erase(randoCheckId);
         event->Cancelled = true;
     })
 
@@ -179,63 +233,12 @@ void Rando::ObjectBehavior::Init() {
         if (!IS_RANDO) {
             return;
         }
-
-        SPDLOG_INFO("Collected at {}, {}, {}", std::to_string(ev->propId->actorProp.x), std::to_string(ev->propId->actorProp.y),
-                    std::to_string(ev->propId->actorProp.z));
-
-        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(
-            ev->propId->actorProp.x, ev->propId->actorProp.y, ev->propId->actorProp.z);
-
-        if (randoCheckId == RC_UNKNOWN) {
-            level_e currentLevel = map_getLevel(gsworld_getMap());
-
-            switch (currentLevel) {
-                case LEVEL_1_MUMBOS_MOUNTAIN:
-                    break;
-                case LEVEL_2_TREASURE_TROVE_COVE:
-                    break;
-                case LEVEL_3_CLANKERS_CAVERN:
-                    if (ev->propId->actorProp.y == 1536) {
-                        randoCheckId = RC_CC_JIGGY_TOOTH;
-                    } else {
-                        randoCheckId = RC_CC_JIGGY_RINGS;
-                    }
-                    break;
-                case LEVEL_4_BUBBLEGLOOP_SWAMP:
-                    break;
-                case LEVEL_5_FREEZEEZY_PEAK:
-                    break;
-                case LEVEL_6_LAIR:
-                    break;
-                case LEVEL_7_GOBIS_VALLEY:
-                    break;
-                case LEVEL_8_CLICK_CLOCK_WOOD:
-                    break;
-                case LEVEL_9_RUSTY_BUCKET_BAY:
-                    break;
-                case LEVEL_A_MAD_MONSTER_MANSION:
-                    break;
-                case LEVEL_B_SPIRAL_MOUNTAIN:
-                    if (ev->propId->actorProp.y >= 400 && ev->propId->actorProp.y <= 700) {
-                        randoCheckId = RC_SM_EMPTY_HONEYCOMB_COLLIWOBBLE;
-                    } else {
-                        randoCheckId = RC_SM_EMPTY_HONEYCOMB_QUARRIES;
-                    }
-                    break;
-                default:
-                    return;
-            }
-        }
-
-        if (randoCheckId == RC_UNKNOWN) {
-            return;
-        }
-
         RandoItemId randoItemId = RI_UNKNOWN;
         if (ev->propId->markerFlag) {
             Actor* markerActor = marker_getActor(ev->propId->actorProp.marker);
-
+        
             if (markerActor->is_bundle && func_802C9C14(markerActor)) {
+                event->Cancelled = true;
                 return;
             }
             switch (ev->propId->actorProp.marker->id) {
@@ -258,19 +261,15 @@ void Rando::ObjectBehavior::Init() {
                     break;
                 case MARKER_5F_MUSIC_NOTE:
                     randoItemId = RI_MUSIC_NOTE;
-                    marker_despawn(ev->propId->actorProp.marker);
-                    coMusicPlayer_playMusic(COMUSIC_9_NOTE_COLLECTED, 16000);
+                    event->Cancelled = true;
                     break;
                 default:
                     return;
             }
-        }
 
-        if (randoItemId != RI_UNKNOWN) {
-            if (randoItemId == RI_MUSIC_NOTE) {
-                event->Cancelled = true;
+            if (randoItemId != RI_UNKNOWN) {
+                CustomObject::ObjectCollectedEX(ev->propId);
             }
-            CustomObject::ObjectCollectedEX(randoCheckId);
         }
     })
 
