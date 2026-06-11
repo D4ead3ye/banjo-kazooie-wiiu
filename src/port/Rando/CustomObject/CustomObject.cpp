@@ -162,6 +162,10 @@ void CustomObject::FlushRandoSpawnQueue() {
             randoActorId = GetActorIdByShuffledObjectState(randoSaveCheck);
         }
 
+        if (randoActorId == ACTOR_1_UNKNOWN) {
+            queue.isSpawned = true;
+            continue;
+        }
         
         Actor* customActor = CustomObject::SpawnCustomActorEX(randoSaveCheck.randoCheckId, queue.position,
                                                               &actorInfoMap.at(randoActorId).first,
@@ -200,6 +204,10 @@ Actor* CustomObject::ShouldCreateCustomActorEX(RandoCheckId randoCheckId, int32_
     }
 
     if (randoSaveCheck.randoCheckId == RC_UNKNOWN) {
+        return NULL;
+    }
+
+    if (randoActorId == ACTOR_1_UNKNOWN) {
         return NULL;
     }
 

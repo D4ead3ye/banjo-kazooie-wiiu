@@ -161,8 +161,8 @@ void Rando::ObjectBehavior::Init() {
         if (randoCustomActor == NULL) {
             return;
         }
-
-        event->Cancelled = true;
+        // TODO: Fix Jinjos spawning in vanilla locations when Check in collected.
+        event->Cancelled = true;        
         ev->result = randoCustomActor;
     })
 
