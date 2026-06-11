@@ -156,13 +156,17 @@ void Rando::ObjectBehavior::Init() {
         position[2] = ev->posZ;
 
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
-
-        Actor* randoCustomActor = CustomObject::ShouldCreateCustomActorEX(randoCheckId, position, false);
-        if (randoCustomActor == NULL) {
+        if (randoCheckId == RC_UNKNOWN) {
             return;
         }
+
+        event->Cancelled = true;  
+        Actor* randoCustomActor = CustomObject::ShouldCreateCustomActorEX(randoCheckId, position, false);
+        //if (randoCustomActor == NULL) {
+        //    return;
+        //}
         // TODO: Fix Jinjos spawning in vanilla locations when Check in collected.
-        event->Cancelled = true;        
+        //event->Cancelled = true;        
         ev->result = randoCustomActor;
     })
 

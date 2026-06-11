@@ -27,7 +27,7 @@ typedef struct {
     f32 yaw;
 } BundleInfo;
 
-actor_e GetActorIdByShuffledObjectState(RandoSaveCheck shuffledObject);
+actor_e GetRandomJunkActorId(RandoSaveCheck shuffledObject);
 void UpdateSaveDataNoteScores();
 void ApplyBundleActorPhysics(Actor* actor, int32_t bundle_id, BundleInfo* bundle_info, f32 bundleYaw);
 void ApplyCustomActorPhysics(RandoCheckId randoCheckId, Actor* actor, bool isJinjoJiggy);

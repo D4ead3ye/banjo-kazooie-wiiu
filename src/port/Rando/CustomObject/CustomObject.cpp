@@ -159,7 +159,7 @@ void CustomObject::FlushRandoSpawnQueue() {
 
         actor_e randoActorId = (actor_e)Rando::StaticData::Items[randoSaveCheck.randoItemId].actorId;
         if (randoSaveCheck.obtained) {
-            randoActorId = GetActorIdByShuffledObjectState(randoSaveCheck);
+            randoActorId = GetRandomJunkActorId(randoSaveCheck);
         }
 
         if (randoActorId == ACTOR_1_UNKNOWN) {
@@ -188,6 +188,10 @@ Actor* CustomObject::ShouldCreateCustomActorEX(RandoCheckId randoCheckId, int32_
         return NULL;
     }
 
+    if (CustomObject::CheckSpawnedIdList(randoCheckId)) {
+        return NULL;
+    }
+
     RandoSaveCheck randoSaveCheck = Rando::Logic::GetShuffledObject(randoCheckId);
     actor_e randoActorId = (actor_e)Rando::StaticData::Items[randoSaveCheck.randoItemId].actorId;
     if (!randoSaveCheck.isShuffled) {
@@ -200,7 +204,11 @@ Actor* CustomObject::ShouldCreateCustomActorEX(RandoCheckId randoCheckId, int32_
     }
     
     if (randoSaveCheck.obtained) {
-        randoActorId = refActor == nullptr ? GetActorIdByShuffledObjectState(randoSaveCheck) : (actor_e)refActor->modelCacheIndex;
+        if (refActor != nullptr) {
+            randoActorId = (actor_e)refActor->modelCacheIndex;
+        } else {
+            randoActorId = GetRandomJunkActorId(randoSaveCheck);
+        }
     }
 
     if (randoSaveCheck.randoCheckId == RC_UNKNOWN) {
