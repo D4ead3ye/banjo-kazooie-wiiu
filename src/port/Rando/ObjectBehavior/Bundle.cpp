@@ -219,6 +219,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
 
         *actor = CustomObject::ShouldCreateCustomActorEX(randoCheckId, spawnPosition, false);
         if (*actor == NULL) {
+            *should = true;
             return;
         }
         if (applyCustomPhysics) {

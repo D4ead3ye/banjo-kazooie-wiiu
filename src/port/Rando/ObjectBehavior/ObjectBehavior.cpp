@@ -327,4 +327,13 @@ void Rando::ObjectBehavior::Init() {
                 break;
         }
     })
+
+    COND_VB_SHOULD(VB_BUNDLE_SPAWN_SET_ACTOR_DATA, EVENT_PRIORITY_NORMAL, IS_RANDO, {
+        Actor* refActor = va_arg(args, Actor*);
+
+        if (refActor == NULL) {
+            *should = false;
+        }
+
+    })
 }
