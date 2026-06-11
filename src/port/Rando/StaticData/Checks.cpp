@@ -1226,6 +1226,8 @@ std::map<RandoCheckId, std::tuple<int32_t, int32_t, int32_t>> multiSpawnCheckMap
     { RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD,    { 0, 3354, 2270 } },
     { RC_GL_JIGGY_WITCH_SWITCH_TREASURE_TROVE_COVE, { 950, 905, -1600 } },
     { RC_MM_JIGGY_CONGA,                            { -3401, -199, 4650 } },
+    { RC_MM_JIGGY_JUJU,                             { 4309, 2354, -1487 } },
+    { RC_TTC_JIGGY_BLUBBER,                         { -389, 984, 852 } },
     { RC_RBB_JIGGY_SNORKEL,                         { -5100, -2550, 1470 } },
 };
 // clang-format on

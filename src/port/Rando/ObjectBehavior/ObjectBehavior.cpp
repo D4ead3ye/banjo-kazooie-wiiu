@@ -241,6 +241,9 @@ void Rando::ObjectBehavior::Init() {
                 event->Cancelled = true;
                 return;
             }
+            SPDLOG_INFO("Collected {} at {}, {}, {}", std::to_string(ev->propId->actorProp.marker->id),
+                        std::to_string(ev->propId->actorProp.x), std::to_string(ev->propId->actorProp.y),
+                        std::to_string(ev->propId->actorProp.z));
             switch (ev->propId->actorProp.marker->id) {
                 case MARKER_39_MUMBO_TOKEN:
                     randoItemId = RI_MUMBO_TOKEN;
