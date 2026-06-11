@@ -168,11 +168,11 @@ void DrawCheckTrackerList() {
 
     Rando::Logic::RefreshReachableRegions();
 
-    for (int i = LEVEL_1_MUMBOS_MOUNTAIN; i <= LEVEL_B_SPIRAL_MOUNTAIN; i++) {
+    if (CVAR_SHOW_COLLECTED_CHECKS && !CVAR_SHOW_SEPARATE_COLLECTED_CHECKS) {
+        DrawCheckTrackerCount();
+    }
 
-        if (CVAR_SHOW_COLLECTED_CHECKS && !CVAR_SHOW_SEPARATE_COLLECTED_CHECKS) {
-            DrawCheckTrackerCount();
-        }
+    for (int i = LEVEL_1_MUMBOS_MOUNTAIN; i <= LEVEL_B_SPIRAL_MOUNTAIN; i++) {
 
         if (CVAR_SHOW_CURRENT_LEVEL && i != map_getLevel(gsworld_getMap())) {
             continue;
