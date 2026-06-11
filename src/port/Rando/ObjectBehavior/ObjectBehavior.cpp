@@ -160,6 +160,10 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
+        if (randoCheckId == RC_TTC_NOTE_BEACH_LOCKUP_3) {
+            SPDLOG_INFO("Beach Lock Up Actor Spawn");
+        }
+
         event->Cancelled = true;  
         Actor* randoCustomActor = CustomObject::ShouldCreateCustomActorEX(randoCheckId, position, false);
         ev->result = randoCustomActor;

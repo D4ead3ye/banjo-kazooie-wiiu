@@ -125,7 +125,11 @@ Actor* CustomObject::SetCustomActorParametersEX(RandoCheckId randoCheckId, Actor
         case RI_JIGGY:
             ActorLocal_Jiggy* jiggyLocal;
             jiggyLocal = (ActorLocal_Jiggy*)&customActor->local;
-            jiggyLocal->index = shuffledObject.randoCollectionId;
+            // if (shuffledObject.randoCollectionId == JIGGY_33_LAIR_1ST_JIGGY) {
+            //     jiggyLocal->index = JIGGY_64_MMM_LOGGO + 1;
+            // } else {
+                 jiggyLocal->index = shuffledObject.randoCollectionId;
+            // }
             break;
         case RI_MUMBO_TOKEN:
             ActorLocal_MumboToken* tokenLocal;
@@ -139,6 +143,10 @@ Actor* CustomObject::SetCustomActorParametersEX(RandoCheckId randoCheckId, Actor
 }
 
 Actor* CustomObject::SpawnCustomActorEX(RandoCheckId randoCheckId, int32_t position[3], ActorInfo* actorInfo, int32_t flags) {
+    if (randoCheckId == RC_TTC_NOTE_BEACH_LOCKUP_3) {
+        SPDLOG_INFO("Beach Lock Up Custom Actor Spawning");
+    }
+
     if (randoCheckId == RC_UNKNOWN) {
         return NULL;
     }
