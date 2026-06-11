@@ -37,6 +37,7 @@ void UpdateJunkList();
 
 class CustomObject {
 public:
+    static void ResetRandoSpawnQueue();
     static void ClearRandoActorListEX();
     static bool CheckSpawnedIdList(RandoCheckId randoCheckId);
     static Actor* SetCustomActorParametersEX(RandoCheckId randoCheckId, Actor* customActor);

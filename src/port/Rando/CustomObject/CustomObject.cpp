@@ -79,7 +79,23 @@ std::map<actor_e, std::pair<ActorInfo, int32_t>> actorInfoMap = {
 extern int32_t GetJinjoActorMarkerId(actor_e actorId);
 int32_t currentMap = -1;
 
+void CustomObject::ResetRandoSpawnQueue() {
+    for (auto& queue : randoActorQueue) {
+        queue.isSpawned = false;
+        // for (int i = 0; i < randoSpawnedCheckIds.size(); i++) {
+        //     if (randoSpawnedCheckIds[i] == queue.randoCheckId) {
+        //         randoSpawnedCheckIds.erase(randoSpawnedCheckIds.begin() + i);
+        //         break;
+        //     }
+        // }
+    }
+}
+
 void CustomObject::ClearRandoActorListEX() {
+    if (gsworld_getMap() == MAP_7_TTC_TREASURE_TROVE_COVE && currentMap == gsworld_getMap()) {
+        CustomObject::ResetRandoSpawnQueue();
+        randoSpawnedCheckIds.clear();
+    }
     if (currentMap != gsworld_getMap()) {
         currentMap = gsworld_getMap();
         randoActorQueue.clear();
