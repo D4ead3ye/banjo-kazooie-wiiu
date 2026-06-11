@@ -14,8 +14,6 @@ bool func_802C9C14(Actor* actor);
 
 void coMusicPlayer_playMusic(enum comusic_e track_id, s32 volume);
 void marker_despawn(ActorMarker* marker);
-
-s32 mm_hut_smash_count;
 }
 
 bool isSaveState = false;
