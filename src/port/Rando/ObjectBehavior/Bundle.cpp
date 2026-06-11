@@ -16,6 +16,14 @@ extern f32 gBundle_yaw;
 bool applyCustomPhysics = false;
 
 void Rando::ObjectBehavior::InitBundleBehavior() {
+    COND_VB_SHOULD(VB_BUNDLE_SPAWN_SET_ACTOR_DATA, EVENT_PRIORITY_NORMAL, IS_RANDO, {
+        Actor* refActor = va_arg(args, Actor*);
+
+        if (refActor == NULL) {
+            *should = false;
+        }
+    })
+
     COND_VB_SHOULD(VB_OVERRIDE_BUNDLE_SPAWN, EVENT_PRIORITY_NORMAL, true, {
         bundle_e bundleId = va_arg(args, bundle_e);
         BundleInfo* bundleInfo = va_arg(args, BundleInfo*);
