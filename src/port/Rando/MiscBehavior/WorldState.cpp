@@ -131,17 +131,31 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             return;
         }
 
-        for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
-            if (randoStaticCheck.randoCheckType != RCTYPE_JIGGY) {
+        for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
+            RandoSaveCheck randoSaveCheck = RANDO_SAVE_CHECKS[i];
+
+            if (Rando::StaticData::Checks[randoSaveCheck.shuffledCheckId].randoCheckType != RCTYPE_JIGGY) {
                 continue;
             }
 
-            if (randoStaticCheck.collectionId == ev->jiggyId) {
+            if (randoSaveCheck.randoCollectionId == ev->jiggyId) {
                 event->Cancelled = true;
-                ev->result = RANDO_SAVE_CHECKS[randoCheckId].obtained;
+                ev->result = RANDO_SAVE_CHECKS[i].obtained;
                 return;
             }
         }
+
+        //for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
+        //    if (randoStaticCheck.randoCheckType != RCTYPE_JIGGY) {
+        //        continue;
+        //    }
+        //
+        //    if (randoStaticCheck.collectionId == ev->jiggyId) {
+        //        event->Cancelled = true;
+        //        ev->result = RANDO_SAVE_CHECKS[randoCheckId].obtained;
+        //        return;
+        //    }
+        //}
     })
 
     REGISTER_LISTENER(OnIsJiggyScoreSpawned, EVENT_PRIORITY_NORMAL, [](IEvent* event) {

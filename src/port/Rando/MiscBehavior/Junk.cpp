@@ -34,7 +34,7 @@ void UpdateJunkList() {
     }
 }
 
-actor_e GetActorIdByShuffledObjectState(RandoSaveCheck shuffledObject) {
+actor_e GetRandomJunkActorId(RandoSaveCheck shuffledObject) {
     if (CVarGetInteger(Rando::StaticData::Options[RO_SPAWN_JUNK].cvar, 0) == RO_GENERIC_ON) {
         UpdateJunkList();
         return junkItemList[(rand() % junkItemList.size())];

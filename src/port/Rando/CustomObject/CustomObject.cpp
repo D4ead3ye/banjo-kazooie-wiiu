@@ -79,7 +79,23 @@ std::map<actor_e, std::pair<ActorInfo, int32_t>> actorInfoMap = {
 extern int32_t GetJinjoActorMarkerId(actor_e actorId);
 int32_t currentMap = -1;
 
+void CustomObject::ResetRandoSpawnQueue() {
+    for (auto& queue : randoActorQueue) {
+        queue.isSpawned = false;
+        // for (int i = 0; i < randoSpawnedCheckIds.size(); i++) {
+        //     if (randoSpawnedCheckIds[i] == queue.randoCheckId) {
+        //         randoSpawnedCheckIds.erase(randoSpawnedCheckIds.begin() + i);
+        //         break;
+        //     }
+        // }
+    }
+}
+
 void CustomObject::ClearRandoActorListEX() {
+    if (gsworld_getMap() == MAP_7_TTC_TREASURE_TROVE_COVE && currentMap == gsworld_getMap()) {
+        CustomObject::ResetRandoSpawnQueue();
+        randoSpawnedCheckIds.clear();
+    }
     if (currentMap != gsworld_getMap()) {
         currentMap = gsworld_getMap();
         randoActorQueue.clear();
@@ -109,7 +125,11 @@ Actor* CustomObject::SetCustomActorParametersEX(RandoCheckId randoCheckId, Actor
         case RI_JIGGY:
             ActorLocal_Jiggy* jiggyLocal;
             jiggyLocal = (ActorLocal_Jiggy*)&customActor->local;
-            jiggyLocal->index = shuffledObject.randoCollectionId;
+            // if (shuffledObject.randoCollectionId == JIGGY_33_LAIR_1ST_JIGGY) {
+            //     jiggyLocal->index = JIGGY_64_MMM_LOGGO + 1;
+            // } else {
+                 jiggyLocal->index = shuffledObject.randoCollectionId;
+            // }
             break;
         case RI_MUMBO_TOKEN:
             ActorLocal_MumboToken* tokenLocal;
@@ -123,6 +143,10 @@ Actor* CustomObject::SetCustomActorParametersEX(RandoCheckId randoCheckId, Actor
 }
 
 Actor* CustomObject::SpawnCustomActorEX(RandoCheckId randoCheckId, int32_t position[3], ActorInfo* actorInfo, int32_t flags) {
+    if (randoCheckId == RC_TTC_NOTE_BEACH_LOCKUP_3) {
+        SPDLOG_INFO("Beach Lock Up Custom Actor Spawning");
+    }
+
     if (randoCheckId == RC_UNKNOWN) {
         return NULL;
     }
@@ -159,7 +183,7 @@ void CustomObject::FlushRandoSpawnQueue() {
 
         actor_e randoActorId = (actor_e)Rando::StaticData::Items[randoSaveCheck.randoItemId].actorId;
         if (randoSaveCheck.obtained) {
-            randoActorId = GetActorIdByShuffledObjectState(randoSaveCheck);
+            randoActorId = GetRandomJunkActorId(randoSaveCheck);
         }
 
         if (randoActorId == ACTOR_1_UNKNOWN) {
@@ -188,6 +212,10 @@ Actor* CustomObject::ShouldCreateCustomActorEX(RandoCheckId randoCheckId, int32_
         return NULL;
     }
 
+    if (CustomObject::CheckSpawnedIdList(randoCheckId)) {
+        return NULL;
+    }
+
     RandoSaveCheck randoSaveCheck = Rando::Logic::GetShuffledObject(randoCheckId);
     actor_e randoActorId = (actor_e)Rando::StaticData::Items[randoSaveCheck.randoItemId].actorId;
     if (!randoSaveCheck.isShuffled) {
@@ -200,7 +228,11 @@ Actor* CustomObject::ShouldCreateCustomActorEX(RandoCheckId randoCheckId, int32_
     }
     
     if (randoSaveCheck.obtained) {
-        randoActorId = refActor == nullptr ? GetActorIdByShuffledObjectState(randoSaveCheck) : (actor_e)refActor->modelCacheIndex;
+        if (refActor != nullptr) {
+            randoActorId = (actor_e)refActor->modelCacheIndex;
+        } else {
+            randoActorId = GetRandomJunkActorId(randoSaveCheck);
+        }
     }
 
     if (randoSaveCheck.randoCheckId == RC_UNKNOWN) {

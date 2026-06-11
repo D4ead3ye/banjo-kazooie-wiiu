@@ -444,7 +444,14 @@ Prop *__codeA5BC0_initProp2Ptr(Cube *cube) {
         cube->prop2Cnt = 1;
         cube->prop2Ptr = bk_malloc(sizeof(Prop));
     }
-    sp1C = &cube->prop2Ptr[cube->prop2Cnt-1];
+    // port - Rando manipulation of Props leads to rare errors with prop2Ptr, this ensures prop2Ptr is allocated each time if NULL
+    if (cube->prop2Ptr == NULL) {
+        cube->prop2Ptr = bk_malloc(sizeof(Prop));
+        sp1C = cube->prop2Ptr;
+    }
+    else {
+        sp1C = &cube->prop2Ptr[cube->prop2Cnt - 1];
+    }
     sp1C->markerFlag = false;
     code_A5BC0_initCubePropActorProp(cube);
     return sp1C;
@@ -472,8 +479,12 @@ s32 func_8032D9C0(Cube *cube, Prop* prop){
         if(func_80305D14()){
             func_80305CD8(func_803058C0(prop->unk4[1]), -1);
         }
-        if((prop - cube->prop2Ptr) < (cube->prop2Cnt - 1)){
-            memcpy(prop, prop + 1, (uintptr_t)(&cube->prop2Ptr[cube->prop2Cnt-1]) - (uintptr_t)(prop));
+
+        // port - Rando manipulation of prop2Ptr results in mismatched data, this corrects that.
+        ptrdiff_t index = prop - cube->prop2Ptr;
+        ptrdiff_t elementsAfter = (cube->prop2Cnt - 1) - index;
+        if (elementsAfter > 0) {
+            memmove(prop, prop + 1, elementsAfter * sizeof(Prop));
         }
         cube->prop2Cnt--;
         if(cube->prop2Cnt){

@@ -156,13 +156,16 @@ void Rando::ObjectBehavior::Init() {
         position[2] = ev->posZ;
 
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
-
-        Actor* randoCustomActor = CustomObject::ShouldCreateCustomActorEX(randoCheckId, position, false);
-        if (randoCustomActor == NULL) {
+        if (randoCheckId == RC_UNKNOWN) {
             return;
         }
-        // TODO: Fix Jinjos spawning in vanilla locations when Check in collected.
-        event->Cancelled = true;        
+
+        if (randoCheckId == RC_TTC_NOTE_BEACH_LOCKUP_3) {
+            SPDLOG_INFO("Beach Lock Up Actor Spawn");
+        }
+
+        event->Cancelled = true;  
+        Actor* randoCustomActor = CustomObject::ShouldCreateCustomActorEX(randoCheckId, position, false);
         ev->result = randoCustomActor;
     })
 
