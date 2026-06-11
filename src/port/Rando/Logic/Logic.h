@@ -72,7 +72,6 @@ void RefreshReachableRegions();
 
 inline bool IsCheckShuffled(RandoCheckId randoCheckId) {
     bool isShuffled = false;
-    const char* checkName = Rando::StaticData::Checks[randoCheckId].name;
 
     for (auto& object : shuffledPool) {
         if (object.randoCheckId == randoCheckId) {
