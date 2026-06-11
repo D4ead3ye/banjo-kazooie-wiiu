@@ -1770,6 +1770,7 @@ void *actors_appendToSavestate(void * begin, uintptr_t end){
                 && s1->unk40 == 0
             ){
                 memcpy(s0, s1, sizeof(Actor));
+                CALL_EVENT(OnSaveActorSaveState, s1);
                 s0->unk40 = 0;
                 s0->unk138_28 = 1;
                 s0->unk14C[0] =s0->unk14C[1] = NULL;
@@ -1893,8 +1894,7 @@ void func_8032A09C(s32 arg0, ActorListSaveState *arg1) {
                 sp50[1] = (s32) var_s0->position[1];
                 sp50[2] = (s32) var_s0->position[2];
                 pad = var_s0->yaw;
-                //CALL_EVENT(OnActorSaveState); // Needed for Rando to avoid double spawning Actors
-                CALL_CANCELLABLE_EVENT(OnActorSaveState, var_s0->modelCacheIndex, sp50[0], sp50[1], sp50[2]) {
+                CALL_CANCELLABLE_EVENT(OnLoadActorSaveState, var_s0, sp50[0], sp50[1], sp50[2]) {
                     temp_v0_6 = actor_spawnWithYaw_s32(var_s0->modelCacheIndex, &sp50, pad);
                     actor_copy(var_s0, temp_v0_6);
                     func_80329B68(temp_v0_6);

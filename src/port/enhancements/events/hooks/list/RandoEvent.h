@@ -21,11 +21,15 @@ DEFINE_EVENT(OnActorSpawn,
 	Actor* result;
 )
 
-DEFINE_EVENT(OnActorSaveState,
-	int32_t actorId;
+DEFINE_EVENT(OnLoadActorSaveState,
+	Actor* actor;
 	int32_t posX;
 	int32_t posY;
 	int32_t posZ;
+)
+
+DEFINE_EVENT(OnSaveActorSaveState,
+	Actor* actor;
 )
 
 DEFINE_EVENT(OnActorCollision,

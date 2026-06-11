@@ -38,14 +38,15 @@ void UpdateJunkList();
 class CustomObject {
 public:
     static void ClearRandoActorListEX();
+    static bool CheckSpawnedIdList(RandoCheckId randoCheckId);
     static Actor* SetCustomActorParametersEX(RandoCheckId randoCheckId, Actor* customActor);
     static Actor* SpawnCustomActorEX(RandoCheckId randoCheckId, int32_t position[3], ActorInfo* actorInfo, int32_t flags);
     static void FlushRandoSpawnQueue();
     static void AddPropToSpawnQueueEX(int32_t position[3], RandoCheckId randoCheckId);
-    static Actor* ShouldCreateCustomActorEX(RandoCheckId randoCheckId, int32_t position[3], bool isProp);
+    static Actor* ShouldCreateCustomActorEX(RandoCheckId randoCheckId, int32_t position[3], bool isProp, Actor* refActor = nullptr);
     static void ResolveCustomActorCollisionEX(RandoCheckId randoCheckId);
     static void CheckObtainedEX(RandoCheckId randoCheckId);
-    static void ObjectCollectedEX(RandoCheckId randoCheckId);
+    static void ObjectCollectedEX(Prop* prop);
 };
 
 #endif // CUSTOM_OBJECT_H
