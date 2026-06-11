@@ -32,9 +32,11 @@
 #define CVAR_NAME_SEPARATE_COLLECTED_CHECKS "gRando.CheckTracker.SeparateCollectedChecks"
 #define CVAR_NAME_COLLECTED_CHECKS_OPACITY "gRando.CheckTracker.CollectedChecksOpacity"
 #define CVAR_NAME_COLLECTED_CHECKS_SCALE "gRando.CheckTracker.CollectedChecksScale"
+#define CVAR_NAME_HIDE_COLLECTED "gRando.CheckTracker.HideCollected"
 #define CVAR_NAME_LOGIC_COLOR "gRando.CheckTracker.LogicColor"
 #define CVAR_NAME_COLLECTED_COLOR "gRando.CheckTracker.CollectedColor"
 #define CVAR_NAME_SKIPPED_COLOR "gRando.CheckTracker.SkippedColor"
+#define CVAR_NAME_HIDE_SKIPPED "gRando.CheckTracker.HideSkipped"
 #define CVAR_NAME_ITEM_COLOR "gRando.CheckTracker.ItemColor"
 
 #define CVAR_SHOW_CHECK_TRACKER CVarGetInteger(CVAR_NAME_SHOW_CHECK_TRACKER, 0)
@@ -47,9 +49,11 @@
 #define CVAR_SHOW_SEPARATE_COLLECTED_CHECKS CVarGetInteger(CVAR_NAME_SEPARATE_COLLECTED_CHECKS, 0)
 #define CVAR_COLLECTED_CHECKS_OPACITY CVarGetFloat(CVAR_NAME_COLLECTED_CHECKS_OPACITY, 0.5f)
 #define CVAR_COLLECTED_CHECKS_SCALE CVarGetFloat(CVAR_NAME_COLLECTED_CHECKS_SCALE, 1.0f)
+#define CVAR_HIDE_COLLECTED CVarGetInteger(CVAR_NAME_HIDE_COLLECTED, 0)
 #define CVAR_LOGIC_COLOR CVarGetColor(CVAR_NAME_LOGIC_COLOR ".Value", DEFAULT_LOGIC_COLOR)
 #define CVAR_COLLECTED_COLOR CVarGetColor(CVAR_NAME_COLLECTED_COLOR ".Value", DEFAULT_COLLECTED_COLOR)
 #define CVAR_SKIPPED_COLOR CVarGetColor(CVAR_NAME_SKIPPED_COLOR ".Value", DEFAULT_SKIPPED_COLOR)
+#define CVAR_HIDE_SKIPPED CVarGetInteger(CVAR_NAME_HIDE_SKIPPED, 0)
 #define CVAR_ITEM_COLOR CVarGetColor(CVAR_NAME_ITEM_COLOR ".Value", DEFAULT_ITEM_COLOR)
 
 extern "C" {
@@ -159,6 +163,14 @@ void DrawCheckTrackerList() {
                 ImGui::TableNextColumn();
                 for (auto& entry : Rando::Logic::shuffledPool) {
                     if (Rando::StaticData::Checks[entry.randoCheckId].worldId != i) {
+                        continue;
+                    }
+
+                    if (CVAR_HIDE_COLLECTED && entry.obtained) {
+                        continue;
+                    }
+
+                    if (CVAR_HIDE_SKIPPED && entry.skipped) {
                         continue;
                     }
 
@@ -288,6 +300,8 @@ void SettingsWindow::DrawElement() {
         ImGui::SeparatorText("Window Settings");
         UIWidgets::CVarCheckbox("Only Show Current Level", CVAR_NAME_SHOW_CURRENT_LEVEL);
         UIWidgets::CVarCheckbox("Dim Out of Logic Checks", CVAR_NAME_SHOW_LOGIC);
+        UIWidgets::CVarCheckbox("Hide Collected Checks", CVAR_NAME_HIDE_COLLECTED);
+        UIWidgets::CVarCheckbox("Hide Skipped Checks", CVAR_NAME_HIDE_SKIPPED);
         UIWidgets::CVarCheckbox("Display Total Collected Checks", CVAR_NAME_SHOW_COLLECTED_CHECKS);
 
         ImGui::BeginDisabled(!CVAR_SHOW_COLLECTED_CHECKS);
