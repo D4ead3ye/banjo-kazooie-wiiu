@@ -119,7 +119,7 @@ extern "C" void port_setWindowTitle(int map_id) {
     bool showHoneycombs = !isNonGameplay && ((int)level != hideCollLvl);
 
     s32 noteVal, noteMax, jiggyVal, jiggyMax, hcVal, hcMax;
-    //port_getLevelStats(map_id, &noteVal, &noteMax, &jiggyVal, &jiggyMax, &hcVal, &hcMax);
+    port_getLevelStats(map_id, &noteVal, &noteMax, &jiggyVal, &jiggyMax, &hcVal, &hcMax);
 
     char noteStr[16], jiggyStr[16], hcStr[16];
     if (showNotes)
