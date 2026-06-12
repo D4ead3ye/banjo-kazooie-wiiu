@@ -160,15 +160,16 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                 event->Cancelled = true;
                 ev->result = RANDO_SAVE_FLAGS[RANDO_INF_CLANKER_RAISED].flagState;
                 break;
-            case JIGGY_27_BGS_TIPTUP:
-                event->Cancelled = true;
-                ev->result = RANDO_SAVE_CHECKS[RC_BGS_JIGGY_TIPTUP].obtained;
-                break;
             case JIGGY_53_RBB_SNORKEL:
                 event->Cancelled = true;
                 ev->result = RANDO_SAVE_FLAGS[RANDO_INF_ANCHOR_RAISED].flagState;
                 break;
             default:
+                RandoCheckId randoCheckId = Rando::StaticData::GetCheckByJiggyId(ev->jiggyId);
+                if (randoCheckId != RC_UNKNOWN) {
+                    event->Cancelled = true;
+                    ev->result = RANDO_SAVE_CHECKS[randoCheckId].obtained;
+                }
                 break;
         }
 
