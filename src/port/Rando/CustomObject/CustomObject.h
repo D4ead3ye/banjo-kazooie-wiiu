@@ -32,6 +32,8 @@ void UpdateSaveDataNoteScores();
 void ApplyBundleActorPhysics(Actor* actor, int32_t bundle_id, BundleInfo* bundle_info, f32 bundleYaw);
 void ApplyCustomActorPhysics(RandoCheckId randoCheckId, Actor* actor, bool isJinjoJiggy);
 
+extern std::map<actor_e, std::pair<ActorInfo, int32_t>> actorInfoMap;
+
 extern std::vector<actor_e> junkItemList;
 void UpdateJunkList();
 

@@ -249,13 +249,6 @@ void CustomObject::ResolveCustomActorCollisionEX(RandoCheckId randoCheckId) {
     ml_vec3f_to_vec3h(playerPosI, playerPosF);
 
     switch (shuffledObject.randoItemId) {
-        case RI_JIGGY:
-            if (gsworld_getMap() == MAP_26_MMM_NAPPERS_ROOM && randoCheckId != RC_MMM_JIGGY_MANSION_TABLE) {
-                // TODO: Reimplement with new system...
-                // marker_despawn(customActorMap.at(randoCheckId).marker);
-                // customActorMap.erase(randoCheckId);
-            }
-            break;
         case RI_JINJO_BLUE:
         case RI_JINJO_GREEN:
         case RI_JINJO_ORANGE:
@@ -301,7 +294,7 @@ void CustomObject::CheckObtainedEX(RandoCheckId randoCheckId) {
             pool.obtained = true;
             shouldRemoveEX = true;
             RANDO_SAVE_CHECKS[pool.randoCheckId].obtained = true;
-            BK_LOG_INFO("(NEW) RandoCheckId %s collected!", Rando::StaticData::Checks[randoCheckId].name);
+            BK_LOG_INFO("RandoCheckId %s collected!", Rando::StaticData::Checks[randoCheckId].name);
             Rando::StaticData::SendCollisionNotification(pool.randoItemId);
             Rando::StaticData::ModifyRandoInfFlagState(randoCheckId);
             break;
