@@ -11,7 +11,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_BGS_JIGGY_ELEVATED_WALKWAY, 		        	    CAN_USE_ABILITY(ABILITY_10_TALON_TROT)),
             CHECK(RC_BGS_JIGGY_FLIBBITS,	                           	CAN_USE_TRANSFORMATION(TRANSFORM_5_CROC) || CAN_ATTACK),
             CHECK(RC_BGS_JIGGY_HUTS, 			                        CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP) && CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
-            CHECK(RC_BGS_JIGGY_JINGO,            		            	true),
+            CHECK(RC_BGS_JIGGY_JINJO,            		            	true),
             CHECK(RC_BGS_JIGGY_MAZE,                            		CAN_USE_ABILITY(ABILITY_E_WADING_BOOTS) && CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
             CHECK(RC_BGS_JIGGY_PINKEGG, 		                	    CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP) && CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) && CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP) && CAN_USE_ABILITY(ABILITY_0_BARGE)),
             CHECK(RC_BGS_JIGGY_TANKTUP,                 		    	CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
