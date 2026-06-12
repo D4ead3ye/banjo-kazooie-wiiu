@@ -131,31 +131,17 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             return;
         }
 
-        for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
-            RandoSaveCheck randoSaveCheck = RANDO_SAVE_CHECKS[i];
-
-            if (Rando::StaticData::Checks[randoSaveCheck.shuffledCheckId].randoCheckType != RCTYPE_JIGGY) {
+        for (auto& saveCheck : RANDO_SAVE_CHECKS) {
+            if (Rando::StaticData::Checks[saveCheck.shuffledCheckId].randoCheckType != RCTYPE_JIGGY) {
                 continue;
             }
-
-            if (randoSaveCheck.randoCollectionId == ev->jiggyId) {
+        
+            if (saveCheck.randoCollectionId == ev->jiggyId) {
                 event->Cancelled = true;
-                ev->result = RANDO_SAVE_CHECKS[i].obtained;
-                return;
+                ev->result = saveCheck.obtained;
+                break;
             }
         }
-
-        //for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
-        //    if (randoStaticCheck.randoCheckType != RCTYPE_JIGGY) {
-        //        continue;
-        //    }
-        //
-        //    if (randoStaticCheck.collectionId == ev->jiggyId) {
-        //        event->Cancelled = true;
-        //        ev->result = RANDO_SAVE_CHECKS[randoCheckId].obtained;
-        //        return;
-        //    }
-        //}
     })
 
     REGISTER_LISTENER(OnIsJiggyScoreSpawned, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -173,6 +159,10 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             case JIGGY_17_CC_CLANKER_RAISED:
                 event->Cancelled = true;
                 ev->result = RANDO_SAVE_FLAGS[RANDO_INF_CLANKER_RAISED].flagState;
+                break;
+            case JIGGY_27_BGS_TIPTUP:
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[RC_BGS_JIGGY_TIPTUP].obtained;
                 break;
             case JIGGY_53_RBB_SNORKEL:
                 event->Cancelled = true;

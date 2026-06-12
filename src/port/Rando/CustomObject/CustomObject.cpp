@@ -82,12 +82,6 @@ int32_t currentMap = -1;
 void CustomObject::ResetRandoSpawnQueue() {
     for (auto& queue : randoActorQueue) {
         queue.isSpawned = false;
-        // for (int i = 0; i < randoSpawnedCheckIds.size(); i++) {
-        //     if (randoSpawnedCheckIds[i] == queue.randoCheckId) {
-        //         randoSpawnedCheckIds.erase(randoSpawnedCheckIds.begin() + i);
-        //         break;
-        //     }
-        // }
     }
 }
 
@@ -125,11 +119,7 @@ Actor* CustomObject::SetCustomActorParametersEX(RandoCheckId randoCheckId, Actor
         case RI_JIGGY:
             ActorLocal_Jiggy* jiggyLocal;
             jiggyLocal = (ActorLocal_Jiggy*)&customActor->local;
-            // if (shuffledObject.randoCollectionId == JIGGY_33_LAIR_1ST_JIGGY) {
-            //     jiggyLocal->index = JIGGY_64_MMM_LOGGO + 1;
-            // } else {
-                 jiggyLocal->index = shuffledObject.randoCollectionId;
-            // }
+            jiggyLocal->index = shuffledObject.randoCollectionId;
             break;
         case RI_MUMBO_TOKEN:
             ActorLocal_MumboToken* tokenLocal;
