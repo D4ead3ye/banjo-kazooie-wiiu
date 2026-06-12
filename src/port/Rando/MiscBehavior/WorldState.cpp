@@ -131,31 +131,25 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             return;
         }
 
-        for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
-            RandoSaveCheck randoSaveCheck = RANDO_SAVE_CHECKS[i];
-
-            if (Rando::StaticData::Checks[randoSaveCheck.shuffledCheckId].randoCheckType != RCTYPE_JIGGY) {
+        for (auto& saveCheck : RANDO_SAVE_CHECKS) {
+            if (Rando::StaticData::Checks[saveCheck.shuffledCheckId].randoCheckType != RCTYPE_JIGGY) {
                 continue;
             }
+        
+            if (saveCheck.randoCollectionId == ev->jiggyId) {
+                if (ev->jiggyId == JIGGY_5D_MMM_NAPPER) {
+                    if (gsworld_getMap() == MAP_26_MMM_NAPPERS_ROOM && saveCheck.randoCheckId != RC_MMM_JIGGY_MANSION_TABLE) {
+                        event->Cancelled = true;
+                        ev->result = RANDO_SAVE_CHECKS[RC_MMM_JIGGY_MANSION_TABLE].obtained;
+                        break;
+                    }
+                }
 
-            if (randoSaveCheck.randoCollectionId == ev->jiggyId) {
                 event->Cancelled = true;
-                ev->result = RANDO_SAVE_CHECKS[i].obtained;
-                return;
+                ev->result = saveCheck.obtained;
+                break;
             }
         }
-
-        //for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
-        //    if (randoStaticCheck.randoCheckType != RCTYPE_JIGGY) {
-        //        continue;
-        //    }
-        //
-        //    if (randoStaticCheck.collectionId == ev->jiggyId) {
-        //        event->Cancelled = true;
-        //        ev->result = RANDO_SAVE_CHECKS[randoCheckId].obtained;
-        //        return;
-        //    }
-        //}
     })
 
     REGISTER_LISTENER(OnIsJiggyScoreSpawned, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -179,6 +173,11 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                 ev->result = RANDO_SAVE_FLAGS[RANDO_INF_ANCHOR_RAISED].flagState;
                 break;
             default:
+                RandoCheckId randoCheckId = Rando::StaticData::GetCheckByJiggyId(ev->jiggyId);
+                if (randoCheckId != RC_UNKNOWN) {
+                    event->Cancelled = true;
+                    ev->result = RANDO_SAVE_CHECKS[randoCheckId].obtained;
+                }
                 break;
         }
 

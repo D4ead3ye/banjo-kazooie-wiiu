@@ -24,7 +24,7 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_BGS_JIGGY_ELEVATED_WALKWAY,                                           RCTYPE_JIGGY,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_46_JIGGY,             JIGGY_20_BGS_ELEVATED_WALKWAY,                                          0, 0, 0),
     RC(RC_BGS_JIGGY_FLIBBITS,                                                   RCTYPE_JIGGY,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_46_JIGGY,             JIGGY_24_BGS_FLIBBITS,                                                  0, 0, 0),
     RC(RC_BGS_JIGGY_HUTS,                                                       RCTYPE_JIGGY,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_46_JIGGY,             JIGGY_23_BGS_HUTS,                                                      0, 0, 0),
-    RC(RC_BGS_JIGGY_JINGO,                                                      RCTYPE_JIGGY,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_46_JIGGY,             JIGGY_1F_BGS_JINGO,                                                     0, 0, 0),
+    RC(RC_BGS_JIGGY_JINJO,                                                      RCTYPE_JIGGY,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_46_JIGGY,             JIGGY_1F_BGS_JINGO,                                                     0, 0, 0),
     RC(RC_BGS_JIGGY_MAZE,                                                       RCTYPE_JIGGY,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_46_JIGGY,             JIGGY_25_BGS_MAZE,                                                      0, 0, 0),
     RC(RC_BGS_JIGGY_MR_VILE,                                                    RCTYPE_JIGGY,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_46_JIGGY,             JIGGY_28_BGS_MR_VILE,                                                   0, 0, 0),
     RC(RC_BGS_JIGGY_PINKEGG,                                                    RCTYPE_JIGGY,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_46_JIGGY,             JIGGY_21_BGS_PINKEGG,                                                   0, 0, 0),
@@ -819,7 +819,7 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_MMM_JIGGY_CEMETARY_POTS,                                              RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_63_MMM_FLOWER_POTS,                                               0, 0, 0),
     RC(RC_MMM_JIGGY_CLOCKTOWER_TOP,                                             RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_5F_MMM_CHURCH_ROOF,                                               -2800, 3175, -1601),
     RC(RC_MMM_JIGGY_JINJO,                                                      RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_5B_MMM_JINJO,                                                     0, 0, 0),
-    RC(RC_MMM_JIGGY_MANSION_TABLE,                                              RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_5D_MMM_NAPPER,                                                    2, 459, 28),
+    RC(RC_MMM_JIGGY_MANSION_TABLE,                                              RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_5D_MMM_NAPPER,                                                    1, 511, 24),
     RC(RC_MMM_JIGGY_MOTZAND,                                                    RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_60_MMM_MOTZHAND,                                                  0, 3050, -3200),
     RC(RC_MMM_JIGGY_INSIDE_LOGGO,                                               RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_64_MMM_LOGGO,                                                     -518, 295, -468),
     RC(RC_MMM_JIGGY_INSIDE_THE_WELLS_BUCKET,                                    RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_5C_MMM_WELL,                                                      1, 179, 0),
@@ -1235,6 +1235,7 @@ std::map<RandoCheckId, std::tuple<int32_t, int32_t, int32_t>> multiSpawnCheckMap
 RandoCheckId GetCheckByPosition(int32_t posX, int32_t posY, int32_t posZ) {
     for (auto& [randoCheckId, randoStaticCheck] : Checks) {
         if (randoStaticCheck.posX == posX && randoStaticCheck.posY == posY && randoStaticCheck.posZ == posZ) {
+            // BK_LOG_INFO("RC Found: %s", Rando::StaticData::Checks[randoCheckId].name);
             return randoCheckId;
         }
     }

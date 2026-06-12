@@ -9,11 +9,14 @@
 #define WIDGET_TEXT_COLOR(id) UIWidgets::ColorValues.at(id)
 
 extern "C" {
+void player_getPosition(f32 dst[3]);
 Actor* marker_getActor(ActorMarker* thisx);
 bool func_802C9C14(Actor* actor);
 
 void coMusicPlayer_playMusic(enum comusic_e track_id, s32 volume);
 void marker_despawn(ActorMarker* marker);
+
+extern ActorArray* suBaddieActorArray;
 }
 
 bool isSaveState = false;
@@ -160,10 +163,6 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        if (randoCheckId == RC_TTC_NOTE_BEACH_LOCKUP_3) {
-            SPDLOG_INFO("Beach Lock Up Actor Spawn");
-        }
-
         event->Cancelled = true;  
         Actor* randoCustomActor = CustomObject::ShouldCreateCustomActorEX(randoCheckId, position, false);
         ev->result = randoCustomActor;
@@ -236,6 +235,7 @@ void Rando::ObjectBehavior::Init() {
         if (!IS_RANDO) {
             return;
         }
+
         RandoItemId randoItemId = RI_UNKNOWN;
         if (ev->propId->markerFlag) {
             Actor* markerActor = marker_getActor(ev->propId->actorProp.marker);
@@ -244,9 +244,7 @@ void Rando::ObjectBehavior::Init() {
                 event->Cancelled = true;
                 return;
             }
-            SPDLOG_INFO("Collected {} at {}, {}, {}", std::to_string(ev->propId->actorProp.marker->id),
-                        std::to_string(ev->propId->actorProp.x), std::to_string(ev->propId->actorProp.y),
-                        std::to_string(ev->propId->actorProp.z));
+
             switch (ev->propId->actorProp.marker->id) {
                 case MARKER_39_MUMBO_TOKEN:
                     randoItemId = RI_MUMBO_TOKEN;
@@ -291,40 +289,65 @@ void Rando::ObjectBehavior::Init() {
 
     REGISTER_LISTENER(OnFindActorFromActorId, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnFindActorFromActorId* ev = (OnFindActorFromActorId*)event;
-        int32_t position[3];
-        Rando::StaticData::RandoStaticCheck randoStaticCheck;
-        RandoSaveCheck randoShuffledObject;
-        Actor* refActor;
 
         if (!IS_RANDO) {
             return;
         }
 
+        RandoCheckId randoCheckId = RC_UNKNOWN;
+        ev->result = NULL;
+
         switch (ev->actorId) {
             case ACTOR_46_JIGGY:
-                // TODO: Reimplement using new system...
-                // if (gsworld_getMap() == MAP_26_MMM_NAPPERS_ROOM) {
-                //     randoStaticCheck = Rando::StaticData::Checks[RC_MMM_JIGGY_MANSION_TABLE];
-                //     randoShuffledObject = Rando::Logic::GetShuffledObject(RC_MMM_JIGGY_MANSION_TABLE);
-                // 
-                //     refActor = CustomObject::GetCustomActor(RC_MMM_JIGGY_MANSION_TABLE);
-                //     if (!refActor) {
-                //         position[0] = randoStaticCheck.posX;
-                //         position[1] = randoStaticCheck.posY;
-                //         position[2] = randoStaticCheck.posZ;
-                // 
-                //         refActor = CustomObject::SpawnCustomActor(
-                //             (actor_e)Rando::StaticData::Checks[randoShuffledObject.shuffledCheckId].actorId, position);
-                //     }
-                //     if (refActor) {
-                //         CustomObject::AddToCustomActorMap(RC_MMM_JIGGY_MANSION_TABLE, refActor);
-                //         event->Cancelled = true;
-                //         ev->result = refActor;
-                //     }
-                // }
+                if (gsworld_getMap() == MAP_26_MMM_NAPPERS_ROOM) {
+                    randoCheckId = RC_MMM_JIGGY_MANSION_TABLE;
+                }
                 break;
             default:
                 break;
+        }
+
+        if (randoCheckId == RC_UNKNOWN) {
+            return;
+        }
+
+        if (CustomObject::CheckSpawnedIdList(randoCheckId)) {
+            Actor* start;
+            Actor* end;
+            Actor* baddieActor;
+
+            start = suBaddieActorArray->data;
+            end = start + suBaddieActorArray->cnt;
+            for (baddieActor = start; baddieActor < end; baddieActor++) {
+
+                if (baddieActor == nullptr) {
+                    continue;
+                }
+
+                if (baddieActor->marker == nullptr) {
+                    continue;
+                }
+
+                if (baddieActor->marker->randoCheckId == randoCheckId) {
+                    event->Cancelled = true;
+                    ev->result = baddieActor;
+                    return;
+                }
+            }
+        }
+
+        if (ev->result == NULL) {
+            Rando::StaticData::RandoStaticCheck randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
+            int32_t position[3];
+            position[0] = randoStaticCheck.posX;
+            position[1] = randoStaticCheck.posY + 50;
+            position[2] = randoStaticCheck.posZ;
+
+            Actor* newActor = CustomObject::SpawnCustomActorEX(randoCheckId, position, &actorInfoMap.at((actor_e)ev->actorId).first,
+                                                 actorInfoMap.at((actor_e)ev->actorId).second);
+
+            event->Cancelled = true;
+            ev->result = newActor;
         }
     })
 }

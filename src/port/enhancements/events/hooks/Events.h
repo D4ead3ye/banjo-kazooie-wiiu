@@ -21,6 +21,7 @@ typedef enum VBehaviorID {
     VB_OVERRIDE_BUNDLE_SPAWN,
     VB_SET_JINJO_COUNT,
     VB_BUNDLE_SPAWN_SET_ACTOR_DATA,
+    VB_NAPPER_SET_JIGGY_POSITION,
 } VBehaviorID;
 
 DEFINE_EVENT(VanillaBehavior, VBehaviorID id; bool* should; va_list * originalArgs;);
