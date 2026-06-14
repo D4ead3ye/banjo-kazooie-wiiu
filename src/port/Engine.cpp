@@ -28,25 +28,25 @@
 #include <ship/window/gui/Fonts.h>
 #include <ship/window/gui/resource/Font.h>
 
-#include "audio/GameAudio.h"
+#include "Audio/GameAudio.h"
 #include "build.h"
-#include "extractor/GameExtractor.h"
-#include "interpolation/AdaptiveFps.h"
-#include "interpolation/FrameInterpolation.h"
+#include "Extractor/GameExtractor.h"
+#include "Interpolation/AdaptiveFps.h"
+#include "Interpolation/FrameInterpolation.h"
 #include "Network/Anchor/Anchor.h"
-#include "port/enhancements/events/PortEnhancements.h"
-#include "port/patches/Patches.h"
-#include "port/save/SaveManager.h"
-#include "port/ui/cvar_prefixes.h"
-#include "resource/importers/AnimFactory.h"
-#include "resource/importers/DemoInputFactory.h"
-#include "resource/importers/DialogFactory.h"
-#include "resource/importers/MapFactory.h"
-#include "resource/importers/ModelFactory.h"
-#include "resource/importers/SpriteFactory.h"
+#include "port/Enhancements/Events/PortEnhancements.h"
+#include "port/Patches/Patches.h"
+#include "port/Save/SaveManager.h"
+#include "port/UI/cvar_prefixes.h"
+#include "Resource/Importers/AnimFactory.h"
+#include "Resource/Importers/DemoInputFactory.h"
+#include "Resource/Importers/DialogFactory.h"
+#include "Resource/Importers/MapFactory.h"
+#include "Resource/Importers/ModelFactory.h"
+#include "Resource/Importers/SpriteFactory.h"
 #include "src/port/enhancements/events/hooks/Events.h"
-#include "ui/LighthouseGui.hpp"
-#include "ui/LighthouseModMenuWindow.h"
+#include "UI/LighthouseGui.hpp"
+#include "UI/LighthouseModMenuWindow.h"
 
 #ifdef __SWITCH__
 #include <port/switch/SwitchImpl.h>
@@ -1375,6 +1375,18 @@ bool GameEngine::HasVersion(BKVersion ver) {
 
 extern "C" bool GameEngine_HasVersion(BKVersion ver) {
     return GameEngine::HasVersion(ver);
+}
+
+std::vector<BKVersion> GameEngine::GetAvailableVersions() {
+    static constexpr BKVersion kKnown[] = { BK_VER_US_10, BK_VER_US_11, BK_VER_PAL, BK_VER_JP };
+    auto loaded = Ship::Context::GetRawInstance()->GetResourceManager()->GetArchiveManager()->GetGameVersions();
+    std::vector<BKVersion> present;
+    for (BKVersion ver : kKnown) {
+        if (std::find(loaded.begin(), loaded.end(), static_cast<uint32_t>(ver)) != loaded.end()) {
+            present.push_back(ver);
+        }
+    }
+    return present;
 }
 
 extern "C" uint32_t GameEngine_GetSampleRate() {
