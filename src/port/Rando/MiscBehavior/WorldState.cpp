@@ -106,6 +106,13 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                     func_8034E71C((Struct73s*)func_8034C5AC(0x131), 0x190, 12.0f);
                 }
                 break;
+            // case LEVEL_4_BUBBLEGLOOP_SWAMP:
+            //     if (!RANDO_SAVE_CHECKS[RC_BGS_JIGGY_MAZE].obtained) {
+            //         mapSpecificFlags_set(0XA, 0);
+            //         mapSpecificFlags_set(0xC, 0);
+            //         mapSpecificFlags_set(8, 0);
+            //     }
+            //     break;
             case LEVEL_9_RUSTY_BUCKET_BAY:
                 if (ev->actorId == 0x18F) {
                     mapSpecificFlags_set(0, RANDO_SAVE_CHECKS[RC_RBB_EMPTY_HONEYCOMB_BOAT_HOUSE].obtained);
