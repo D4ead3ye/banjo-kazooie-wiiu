@@ -21,6 +21,15 @@ DEFINE_EVENT(OnSaveLoad,
 	void* saveData;
 )
 
+DEFINE_EVENT(OnSaveClear,
+	void* result;
+)
+
+DEFINE_EVENT(OnWarpDispatch,
+	int32_t warpId;
+	int32_t warpDest;
+)
+
 DEFINE_EVENT(OnActorSpawn,
 	int32_t actorId;
 	int32_t posX;
@@ -47,6 +56,15 @@ DEFINE_EVENT(OnActorCollision,
 DEFINE_EVENT(OnFindActorFromActorId,
 	int32_t actorId;
 	Actor* result;
+)
+
+DEFINE_EVENT(OnSetJiggyList,
+	int32_t levelId;
+)
+
+DEFINE_EVENT(OnGetLevelSpecificFlag,
+	int32_t flagId;
+	int32_t result;
 )
 
 DEFINE_EVENT(OnIsJiggyScoreCollected,
