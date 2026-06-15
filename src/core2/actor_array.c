@@ -1765,7 +1765,7 @@ void *actors_appendToSavestate(void *savestate_begin_ptr, void *savestate_end_pt
         for (actor_ptr = suBaddieActorArray->data; actor_ptr < &suBaddieActorArray->data[(u32) suBaddieActorArray->cnt]; actor_ptr++) {
             if (actor_ptr->marker && (actor_ptr->unk10_1 == 1) && (!actor_ptr->despawn_flag) && (actor_ptr->unk40 == 0)) {
                 memcpy(actor_savestate_ptr, actor_ptr, sizeof(Actor));
-                CALL_EVENT(OnSaveActorSaveState, s1);
+                CALL_EVENT(OnSaveActorSaveState, actor_ptr);
                 actor_savestate_ptr->unk40 = 0;
                 actor_savestate_ptr->unk138_28 = 1;
                 actor_savestate_ptr->unk14C[0] = actor_savestate_ptr->unk14C[1] = NULL;
@@ -1892,7 +1892,7 @@ void actors_applyFromSavestate(void *savestate_ptr, ActorListSaveState *savestat
                 sp50[1] = (s32) savestate_actor->position[1];
                 sp50[2] = (s32) savestate_actor->position[2];
                 pad = savestate_actor->yaw;
-                CALL_CANCELLABLE_EVENT(OnLoadActorSaveState, var_s0, sp50[0], sp50[1], sp50[2]) {
+                CALL_CANCELLABLE_EVENT(OnLoadActorSaveState, savestate_actor, sp50[0], sp50[1], sp50[2]) {
                     temp_v0_6 = actor_spawnWithYaw_s32(savestate_actor->modelCacheIndex, &sp50, pad);
                     actor_copy(savestate_actor, temp_v0_6);
                     func_80329B68(temp_v0_6);
