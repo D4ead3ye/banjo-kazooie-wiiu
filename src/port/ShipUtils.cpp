@@ -339,7 +339,7 @@ std::vector<file_progress_e> worldOpenFlags = {
 };
 
 std::vector<std::string> levelAbbreviations = {
-    "MM", "TTC", "CC", "BGS", "FP", "GL", "GV", "CCW", "RBB", "MMM", "SM", 
+    "MM", "TTC", "CC", "BGS", "FP", "GL", "GV", "CCW", "RBB", "MMM", "SM",
 };
 
 json Ship_RetrieveSaveFile(int32_t filenum) {
@@ -411,12 +411,12 @@ std::string Ship_ConvertEnumToReadableName(const std::string& input) {
     return result;
 }
 
-//std::array<const char*, 1> miscellaneousTextures = {
-//    "assets/sprite/Talk_GreenJinjo"
-//};
+// std::array<const char*, 1> miscellaneousTextures = {
+//     "assets/sprite/Talk_GreenJinjo"
+// };
 //
-//void LoadGuiTextures() {
-//    for (const auto entry : miscellaneousTextures) {
-//        Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(entry, entry, ImVec4(1, 1, 1, 1));
-//    }
-//}
+// void LoadGuiTextures() {
+//     for (const auto entry : miscellaneousTextures) {
+//         Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(entry, entry, ImVec4(1, 1, 1, 1));
+//     }
+// }

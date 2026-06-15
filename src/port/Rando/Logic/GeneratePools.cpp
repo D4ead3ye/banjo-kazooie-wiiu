@@ -29,7 +29,8 @@ uint32_t GetRandoSeed(const std::string& input) {
     return Ship_Hash(randoHash);
 }
 
-void Rando::Logic::ShuffleRandoItems(const std::string& input, std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& pool) {
+void Rando::Logic::ShuffleRandoItems(const std::string& input,
+                                     std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& pool) {
     uint32_t seed = GetRandoSeed(input);
 
     std::mt19937 rando(seed);
@@ -37,7 +38,6 @@ void Rando::Logic::ShuffleRandoItems(const std::string& input, std::vector<std::
 
     randoFinalSeed = seed;
 }
-
 
 void GenerateShufflePool(SaveData* saveData) {
     checkPool.clear();
@@ -69,7 +69,8 @@ void GenerateShufflePool(SaveData* saveData) {
         if (randoStaticCheck.randoCheckType == RCTYPE_MOLEHILL) {
             if (CVarGetInteger(Rando::StaticData::Options[RO_SHUFFLE_MOLEHILLS].cvar, 0) == RO_GENERIC_ON) {
                 abilityCheckPool.push_back(randoCheckId);
-                abilityItemPool.push_back({ (actor_e)randoStaticCheck.actorId, randoStaticCheck.collectionId, randoCheckId });
+                abilityItemPool.push_back(
+                    { (actor_e)randoStaticCheck.actorId, randoStaticCheck.collectionId, randoCheckId });
             }
             continue;
         }
@@ -167,7 +168,6 @@ void GeneratePoolFromSaveData(SaveData* saveData) {
         Rando::Logic::shuffledPool.push_back(shuffledObject);
     }
 }
-
 
 } // namespace Logic
 

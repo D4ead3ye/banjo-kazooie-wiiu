@@ -33,7 +33,7 @@ void Rando::MiscBehavior::OnFileLoad() {
             }
             return;
         }
-        
+
         if (CVarGetInteger("gRandoSettings.Enable", 0)) {
             Rando::Logic::InitializeSaveData(saveData);
             Rando::Logic::GenerateShufflePool(saveData);

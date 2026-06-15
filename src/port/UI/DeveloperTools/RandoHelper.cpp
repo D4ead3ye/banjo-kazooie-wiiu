@@ -63,19 +63,9 @@ int32_t mapId = 0;
 int32_t exitId = 0;
 
 const char* mapNames[] = {
-    "Mumbo's Mountain",
-    "Treasure Trove Cove",
-    "Clanker's Cavern",
-    "Bubblegloop Swamp",
-    "Freezeezy Peak",
-    "Gobi's Valley",
-    "Click Clock Wood",
-    "Rusty Bucket Bay",
-    "Mad Monster Mansion",
-    "Spiral Mountain",
-    "Cutscene",
-    "Gruntilda's Lair",
-    "Boss Arena",
+    "Mumbo's Mountain", "Treasure Trove Cove", "Clanker's Cavern", "Bubblegloop Swamp",   "Freezeezy Peak",
+    "Gobi's Valley",    "Click Clock Wood",    "Rusty Bucket Bay", "Mad Monster Mansion", "Spiral Mountain",
+    "Cutscene",         "Gruntilda's Lair",    "Boss Arena",
 };
 
 std::vector<int32_t> mapIdList = {
@@ -162,13 +152,13 @@ void RandoHelper_ObjectSpawner() {
         ImGui::Text(std::to_string(playerPosition[0]).c_str());
         ImGui::TableNextColumn();
         if (UIWidgets::SliderInt("##offsetX", &spawnOffset[0],
-            UIWidgets::IntSliderOptions()
-            .Color(THEME_COLOR)
-            .Min(0)
-            .Max(200)
-            .DefaultValue(0)
-            .Format("Offset X: %i")
-            .LabelPosition(UIWidgets::LabelPositions::None))) {
+                                 UIWidgets::IntSliderOptions()
+                                     .Color(THEME_COLOR)
+                                     .Min(0)
+                                     .Max(200)
+                                     .DefaultValue(0)
+                                     .Format("Offset X: %i")
+                                     .LabelPosition(UIWidgets::LabelPositions::None))) {
             RandoHelper_SpawnPosition();
         }
         ImGui::TableNextColumn();
@@ -178,13 +168,13 @@ void RandoHelper_ObjectSpawner() {
         ImGui::Text(std::to_string(playerPosition[1]).c_str());
         ImGui::TableNextColumn();
         if (UIWidgets::SliderInt("##offsetY", &spawnOffset[1],
-            UIWidgets::IntSliderOptions()
-            .Color(THEME_COLOR)
-            .Min(0)
-            .Max(200)
-            .DefaultValue(0)
-            .Format("Offset Y: %i")
-            .LabelPosition(UIWidgets::LabelPositions::None))) {
+                                 UIWidgets::IntSliderOptions()
+                                     .Color(THEME_COLOR)
+                                     .Min(0)
+                                     .Max(200)
+                                     .DefaultValue(0)
+                                     .Format("Offset Y: %i")
+                                     .LabelPosition(UIWidgets::LabelPositions::None))) {
             RandoHelper_SpawnPosition();
         }
         ImGui::TableNextColumn();
@@ -194,13 +184,13 @@ void RandoHelper_ObjectSpawner() {
         ImGui::Text(std::to_string(playerPosition[2]).c_str());
         ImGui::TableNextColumn();
         if (UIWidgets::SliderInt("##offsetZ", &spawnOffset[2],
-            UIWidgets::IntSliderOptions()
-            .Color(THEME_COLOR)
-            .Min(0)
-            .Max(200)
-            .DefaultValue(0)
-            .Format("Offset Z: %i")
-            .LabelPosition(UIWidgets::LabelPositions::None))) {
+                                 UIWidgets::IntSliderOptions()
+                                     .Color(THEME_COLOR)
+                                     .Min(0)
+                                     .Max(200)
+                                     .DefaultValue(0)
+                                     .Format("Offset Z: %i")
+                                     .LabelPosition(UIWidgets::LabelPositions::None))) {
             RandoHelper_SpawnPosition();
         }
 
@@ -303,14 +293,17 @@ void DrawMonitoringTools() {
     level_e currentLevel = map_getLevel(gsworld_getMap());
 
     ImGui::SeparatorText("Map Specific Flags");
-    if (ImGui::BeginChild("MapFlagChild", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionMax().y * 0.45f))) {
+    if (ImGui::BeginChild("MapFlagChild",
+                          ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionMax().y * 0.45f))) {
         if (ImGui::BeginTable("MapFlagTable", 3, ImGuiTableFlags_SizingFixedFit)) {
             ImGui::TableNextColumn();
             for (auto& [flagId, flagData] : mapSpecificFlagList) {
                 ImGui::PushID(flagId);
                 if (flagData.second == currentLevel) {
                     bool flagState = mapSpecificFlags_get(flagId);
-                    if (UIWidgets::Checkbox("state", &flagState, UIWidgets::CheckboxOptions().LabelPosition(UIWidgets::LabelPositions::None))) {
+                    if (UIWidgets::Checkbox(
+                            "state", &flagState,
+                            UIWidgets::CheckboxOptions().LabelPosition(UIWidgets::LabelPositions::None))) {
                         mapSpecificFlags_set(flagId, !mapSpecificFlags_get(flagId));
                     }
 
@@ -329,7 +322,8 @@ void DrawMonitoringTools() {
     }
 
     ImGui::SeparatorText("Rando INF Flags");
-    if (ImGui::BeginChild("RandoFlagChild", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionMax().y * 0.45f))) {
+    if (ImGui::BeginChild("RandoFlagChild",
+                          ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionMax().y * 0.45f))) {
         if (ImGui::BeginTable("RandoFlagTable", 3, ImGuiTableFlags_SizingFixedFit)) {
             ImGui::TableNextColumn();
             for (int f = RANDO_INF_UNKNOWN; f < RANDO_INF_MAX; f++) {

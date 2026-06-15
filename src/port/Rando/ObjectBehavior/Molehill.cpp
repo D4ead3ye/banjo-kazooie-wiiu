@@ -102,7 +102,7 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
         Actor* molehillActor = va_arg(args, Actor*);
         s32* textId = va_arg(args, s32*);
         s32* isLearned = va_arg(args, s32*);
-        
+
         if (OPTION_ENABLED) {
             if (molehillActor->actorTypeSpecificField == 8) {
                 return;
@@ -123,7 +123,7 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
 
                 func_80347A14(0);
                 molehillActor->has_met_before = true;
-                
+
                 switch (moleInfo.ability) {
                     case ABILITY_4_CLAW_SWIPE:
                         *textId = (s32)moleInfo.refresher_text_id;
@@ -168,18 +168,17 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
             }
         }
     })
-    
+
     COND_VB_SHOULD(VB_OVERRIDE_BOTTLES_TEXT_CALLBACK, EVENT_PRIORITY_NORMAL, true, {
         Actor* molehillActor = va_arg(args, Actor*);
 
-        
         if (OPTION_ENABLED) {
             if (CheckBridgeState() && !mapSpecificFlags_get(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED)) {
                 mapSpecificFlags_set(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, true);
-                //mapSpecificFlags_set(SM_SPECIFIC_FLAG_10, true);
+                // mapSpecificFlags_set(SM_SPECIFIC_FLAG_10, true);
                 gcdialog_showDialog(ASSET_E12_DIALOG_BOTTLES_LEARNED_TUTORIAL_MOVES, 0xe, molehillActor->position,
                                     molehillActor->marker, __chSmBottles_textCallback, NULL);
-                
+
                 *should = true;
             }
         }

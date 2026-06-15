@@ -27,14 +27,14 @@ void Rando::ObjectBehavior::InitMusicNoteBehavior() {
             if (Rando::StaticData::Checks[pool.shuffledCheckId].worldId != ev->levelId) {
                 continue;
             }
-        
+
             if (pool.randoItemId == RI_MUSIC_NOTE) {
                 if (pool.obtained) {
                     currentNotes++;
                 }
             }
         }
-        
+
         item_set(ITEM_C_NOTE, currentNotes);
     })
 }

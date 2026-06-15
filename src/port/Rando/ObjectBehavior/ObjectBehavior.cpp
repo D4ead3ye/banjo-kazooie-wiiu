@@ -104,7 +104,7 @@ void Rando::StaticData::SendCollisionNotification(RandoItemId randoItemId) {
     std::string prefix = randoItemId == RI_MOLEHILL ? "You learned " : "You collected ";
     prefix += Rando::StaticData::Items[randoItemId].article;
     std::string message = Rando::StaticData::Items[randoItemId].name;
-    
+
     Notification::Emit({ .prefix = prefix,
                          .prefixColor = WIDGET_TEXT_COLOR(UIWidgets::Colors::White),
                          .message = message,
@@ -163,7 +163,7 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        event->Cancelled = true;  
+        event->Cancelled = true;
         Actor* randoCustomActor = CustomObject::ShouldCreateCustomActorEX(randoCheckId, position, false);
         ev->result = randoCustomActor;
     })
@@ -179,7 +179,9 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        randoSaveState.insert({ (RandoCheckId)ev->actor->marker->randoCheckId, { ev->actor->marker->propPtr->x, ev->actor->marker->propPtr->y, ev->actor->marker->propPtr->z } });
+        randoSaveState.insert(
+            { (RandoCheckId)ev->actor->marker->randoCheckId,
+              { ev->actor->marker->propPtr->x, ev->actor->marker->propPtr->y, ev->actor->marker->propPtr->z } });
     })
 
     REGISTER_LISTENER(OnLoadActorSaveState, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -223,8 +225,7 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        Actor* randoCustomActor =
-            CustomObject::ShouldCreateCustomActorEX(randoCheckId, position, false, ev->actor);
+        Actor* randoCustomActor = CustomObject::ShouldCreateCustomActorEX(randoCheckId, position, false, ev->actor);
         randoSaveState.erase(randoCheckId);
         event->Cancelled = true;
     })
@@ -239,7 +240,7 @@ void Rando::ObjectBehavior::Init() {
         RandoItemId randoItemId = RI_UNKNOWN;
         if (ev->propId->markerFlag) {
             Actor* markerActor = marker_getActor(ev->propId->actorProp.marker);
-        
+
             if (markerActor->is_bundle && func_802C9C14(markerActor)) {
                 event->Cancelled = true;
                 return;
@@ -260,8 +261,8 @@ void Rando::ObjectBehavior::Init() {
                 case MARKER_5C_JINJO_ORANGE:
                 case MARKER_5D_JINJO_PINK:
                 case MARKER_5E_JINJO_YELLOW:
-                    randoItemId = Rando::StaticData::GetRandoItemByActorId(
-                        jinjoMarkerMap.at(ev->propId->actorProp.marker->id));
+                    randoItemId =
+                        Rando::StaticData::GetRandoItemByActorId(jinjoMarkerMap.at(ev->propId->actorProp.marker->id));
                     break;
                 case MARKER_5F_MUSIC_NOTE:
                     randoItemId = RI_MUSIC_NOTE;
@@ -343,7 +344,8 @@ void Rando::ObjectBehavior::Init() {
             position[1] = randoStaticCheck.posY + 50;
             position[2] = randoStaticCheck.posZ;
 
-            Actor* newActor = CustomObject::SpawnCustomActorEX(randoCheckId, position, &actorInfoMap.at((actor_e)ev->actorId).first,
+            Actor* newActor =
+                CustomObject::SpawnCustomActorEX(randoCheckId, position, &actorInfoMap.at((actor_e)ev->actorId).first,
                                                  actorInfoMap.at((actor_e)ev->actorId).second);
 
             event->Cancelled = true;

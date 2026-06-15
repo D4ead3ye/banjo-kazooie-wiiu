@@ -11,7 +11,7 @@ namespace CheckTracker {
 void Init();
 
 class CheckTrackerWindow : public Ship::GuiWindow {
-  public:
+public:
     using GuiWindow::GuiWindow;
 
     void InitElement() override{};
@@ -21,7 +21,7 @@ class CheckTrackerWindow : public Ship::GuiWindow {
 };
 
 class SettingsWindow : public Ship::GuiWindow {
-  public:
+public:
     using GuiWindow::GuiWindow;
 
     void InitElement() override{};

@@ -68,12 +68,8 @@ static void BitfieldSetNBits(uint8_t* array, int startIndex, int numBits, int va
 }
 
 void RandoSaveCheck_to_json(nlohmann::json& j, const RandoSaveCheck& randoSaveCheck) {
-    j = nlohmann::json::array({ randoSaveCheck.randoCheckId,
-                                randoSaveCheck.randoItemId,
-                                randoSaveCheck.shuffledCheckId,
-                                randoSaveCheck.randoCollectionId,
-                                randoSaveCheck.isShuffled,
-                                randoSaveCheck.obtained,
+    j = nlohmann::json::array({ randoSaveCheck.randoCheckId, randoSaveCheck.randoItemId, randoSaveCheck.shuffledCheckId,
+                                randoSaveCheck.randoCollectionId, randoSaveCheck.isShuffled, randoSaveCheck.obtained,
                                 randoSaveCheck.skipped });
 }
 
@@ -300,26 +296,25 @@ ordered_json Convert_SaveDataToJSON(SaveData* saveData, int32_t fileNum) {
     ordered_json ship = ordered_json::object();
     ordered_json shipRando = ordered_json::object();
 
-    
-
     ship["fileType"] = static_cast<int>(saveData->shipSaveData.fileType);
 
     if (saveData->shipSaveData.fileType == FILE_TYPE_SAVE_RANDO) {
         Rando::Logic::GenerateSaveData(saveData);
         shipRando["seedId"] = saveData->shipSaveData.randoSaveData.seedId;
-    
+
         for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
             json jsonSaveChecks = nlohmann::json::object();
             RandoSaveCheck randoSaveCheck = saveData->shipSaveData.randoSaveData.randoSaveCheck[i];
             RandoSaveCheck_to_json(jsonSaveChecks, randoSaveCheck);
-    
+
             shipRando["randoSaveCheck"][Rando::StaticData::Checks[(RandoCheckId)i].name] = jsonSaveChecks;
         }
 
         for (int o = RO_LOGIC; o < RO_MAX; o++) {
             RandoSaveOption randoSaveOption = saveData->shipSaveData.randoSaveData.randoSaveOption[o];
 
-            shipRando["randoSaveOption"][Rando::StaticData::Options[(RandoOptionId)o].name] = randoSaveOption.optionValue;
+            shipRando["randoSaveOption"][Rando::StaticData::Options[(RandoOptionId)o].name] =
+                randoSaveOption.optionValue;
         }
 
         nlohmann::json randoInfArray = nlohmann::json::array();
@@ -528,11 +523,11 @@ SaveData* Convert_JSONToSaveData(int32_t fileNum) {
     if (j["ship"]["fileType"].get<int>() == FILE_TYPE_SAVE_RANDO) {
         json rando = j["ship"]["rando"];
         saveData->shipSaveData.randoSaveData.seedId = rando["seedId"];
-    
+
         for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
             json jsonSaveChecks = rando["randoSaveCheck"][Rando::StaticData::Checks[(RandoCheckId)i].name];
             RandoSaveCheck randoSaveCheck = RandoSaveCheck_from_json(jsonSaveChecks, randoSaveCheck);
-    
+
             saveData->shipSaveData.randoSaveData.randoSaveCheck[i] = randoSaveCheck;
         }
 

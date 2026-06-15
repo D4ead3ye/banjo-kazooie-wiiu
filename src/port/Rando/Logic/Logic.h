@@ -325,7 +325,7 @@ inline bool CanBreakObject(RandoAccessId objectType) {
         default:
             break;
     }
-    
+
     return canBreakObject;
 }
 
@@ -339,7 +339,8 @@ inline bool CanKillEnemy(actor_e enemyType) {
             }
             break;
         case ACTOR_29B_ZUBBA:
-            if (ability_isUnlocked(ABILITY_0_BARGE) || ability_isUnlocked(ABILITY_12_WONDERWING) || ability_isUnlocked(ABILITY_B_RATATAT_RAP)) {
+            if (ability_isUnlocked(ABILITY_0_BARGE) || ability_isUnlocked(ABILITY_12_WONDERWING) ||
+                ability_isUnlocked(ABILITY_B_RATATAT_RAP)) {
                 canKillEnemy = true;
             }
             break;
@@ -362,12 +363,11 @@ inline bool CanKillEnemy(actor_e enemyType) {
 #define CAN_BREAK_OBJECT(objectType) CanBreakObject(objectType)
 #define CAN_COLLECT_JINJOS(levelId) CanCollectWorldJinjos(levelId)
 #define CAN_KILL_ENEMY(enemyType) CanKillEnemy(enemyType)
-#define CAN_UNLOCK_NOTE_DOOR(noteCount) item_getCount(ITEM_C_NOTE) >= noteCount && CAN_ACCESS(RA_NOTE_DOOR_##noteCount)
+#define CAN_UNLOCK_NOTE_DOOR(noteCount) item_getCount(ITEM_C_NOTE) >= noteCount&& CAN_ACCESS(RA_NOTE_DOOR_##noteCount)
 #define CAN_UNLOCK_WORLD(levelId) CanOpenWorld(levelId)
 #define CAN_USE_ABILITY(abilityId) ability_isUnlocked(abilityId)
 #define CAN_USE_TRANSFORMATION(transId) CanUseTransformation(transId)
 #define GET_CURRENT_TRANSFORMATION(transId) player_getTransformation() == transId
-
 
 } // namespace Logic
 
