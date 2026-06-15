@@ -1,4 +1,4 @@
-#include "RandoHelper.h"
+#include "GameplayTools.h"
 #include "port/Rando/Rando.h"
 #include "port/Rando/Logic/Logic.h"
 #include "port/Rando/CustomObject/CustomObject.h"
@@ -62,6 +62,11 @@ int32_t spawnPosition[3];
 int32_t mapId = 0;
 int32_t exitId = 0;
 
+actor_e selectedJinjo = ACTOR_60_JINJO_BLUE;
+int32_t selectedJiggy = JIGGY_01_MM_JINJO;
+int32_t selectedHoneycomb = HONEYCOMB_1_MM_HILL;
+int32_t selectedToken = MUMBOTOKEN_01_MM_STUMP_NEAR_CONGA;
+
 const char* mapNames[] = {
     "Mumbo's Mountain", "Treasure Trove Cove", "Clanker's Cavern", "Bubblegloop Swamp",   "Freezeezy Peak",
     "Gobi's Valley",    "Click Clock Wood",    "Rusty Bucket Bay", "Mad Monster Mansion", "Spiral Mountain",
@@ -84,17 +89,47 @@ std::vector<int32_t> mapIdList = {
     MAP_90_GL_BATTLEMENTS,
 };
 
-std::map<int32_t, std::pair<const char*, level_e>> mapSpecificFlagList = {
-    { MM_SPECIFIC_FLAG_0_CHIMPY_STUMP_RAISED, { "Honey Comb Switch", LEVEL_9_RUSTY_BUCKET_BAY } },
+std::map<actor_e, std::tuple<const char*, UIWidgets::Colors, bool>> jinjoDataMap = {
+    { ACTOR_5E_JINJO_YELLOW, { "Yellow Jinjo", UIWidgets::Colors::Yellow, false } },
+    { ACTOR_5F_JINJO_ORANGE, { "Orange Jinjo", UIWidgets::Colors::Orange, false } },
+    { ACTOR_60_JINJO_BLUE, { "Blue Jinjo", UIWidgets::Colors::SkyBlue, false } },
+    { ACTOR_61_JINJO_PINK, { "Pink Jinjo", UIWidgets::Colors::Pink, false } },
+    { ACTOR_62_JINJO_GREEN, { "Green Jinjo", UIWidgets::Colors::Green, false } },
 };
 
-void RandoHelper_SpawnPosition() {
+std::map<map_e, std::pair<const char*, int32_t>> commonWarpMap = {
+    { MAP_1_SM_SPIRAL_MOUNTAIN, { "Outside Banjo's House", 0 } },
+    { MAP_2_MM_MUMBOS_MOUNTAIN, { "Mumbo's Mountain Warp Pad", 5 } },
+    { MAP_7_TTC_TREASURE_TROVE_COVE, { "Treasure Trove Cove Warp Pad", 4 } },
+    { MAP_B_CC_CLANKERS_CAVERN, { "Clanker's Cavern Warp Pad", 5 } },
+    { MAP_D_BGS_BUBBLEGLOOP_SWAMP, { "Bubblegloop Swamp Warp Pad", 2 } },
+    { MAP_27_FP_FREEZEEZY_PEAK, { "Freezeezy Peak Warp Pad", 1 } },
+    { MAP_12_GV_GOBIS_VALLEY, { "Gobi's Valley Warp Pad", 8 } },
+    { MAP_1B_MMM_MAD_MONSTER_MANSION, { "Mad Monster Mansion Warp Pad", 20 } },
+    { MAP_31_RBB_RUSTY_BUCKET_BAY, { "Rusty Bucket Bay Warp Pad", 16 } },
+    { MAP_40_CCW_HUB, { "Click Clock Wood Warp Pad", 7 } },
+};
+
+std::map<int32_t, std::pair<const char*, level_e>> mapSpecificFlagList;
+
+void GameplayTools_UpdateJinjoCheckboxes(actor_e selectedJinjoId) {
+    selectedJinjo = selectedJinjoId;
+    for (auto& [jinjoId, jinjoData] : jinjoDataMap) {
+        if (jinjoId == selectedJinjoId) {
+            std::get<2>(jinjoData) = true;
+        } else {
+            std::get<2>(jinjoData) = false;
+        }
+    }
+}
+
+void GameplayTools_SpawnPosition() {
     for (int i = 0; i < 2; i++) {
         spawnPosition[i] = playerPosition[i] + spawnOffset[i];
     }
 }
 
-void RandoHelper_UpdateCheckTracker(RandoSaveCheck randoSaveCheck) {
+void GameplayTools_UpdateCheckTracker(RandoSaveCheck randoSaveCheck) {
     if (randoSaveCheck.obtained) {
         CustomObject::CheckObtainedEX(randoSaveCheck.randoCheckId);
     }
@@ -134,11 +169,11 @@ void RandoHelper_UpdateCheckTracker(RandoSaveCheck randoSaveCheck) {
     }
 }
 
-void RandoHelper_ObjectSpawner() {
+void GameplayTools_ObjectSpawner() {
     player_getPosition_s32(playerPosition);
-    RandoHelper_SpawnPosition();
+    GameplayTools_SpawnPosition();
 
-    ImGui::SeparatorText("Spawn Data");
+    ImGui::SeparatorText("Player Position");
     ImGui::Text("Map ID: %i", gsworld_getMap());
 
     if (ImGui::BeginTable("SpawnInfoTable", 3)) {
@@ -159,7 +194,7 @@ void RandoHelper_ObjectSpawner() {
                                      .DefaultValue(0)
                                      .Format("Offset X: %i")
                                      .LabelPosition(UIWidgets::LabelPositions::None))) {
-            RandoHelper_SpawnPosition();
+            GameplayTools_SpawnPosition();
         }
         ImGui::TableNextColumn();
 
@@ -175,7 +210,7 @@ void RandoHelper_ObjectSpawner() {
                                      .DefaultValue(0)
                                      .Format("Offset Y: %i")
                                      .LabelPosition(UIWidgets::LabelPositions::None))) {
-            RandoHelper_SpawnPosition();
+            GameplayTools_SpawnPosition();
         }
         ImGui::TableNextColumn();
 
@@ -191,85 +226,135 @@ void RandoHelper_ObjectSpawner() {
                                      .DefaultValue(0)
                                      .Format("Offset Z: %i")
                                      .LabelPosition(UIWidgets::LabelPositions::None))) {
-            RandoHelper_SpawnPosition();
+            GameplayTools_SpawnPosition();
         }
 
         ImGui::EndTable();
     }
 
-    if (UIWidgets::Button("Spawn Jinjo", { .color = THEME_COLOR })) {
-        Actor* newActor = actor_spawnWithYaw_s32(ACTOR_60_JINJO_BLUE, &spawnPosition, 0);
-    }
+    if (ImGui::BeginTable("ObjectSpawner", 2, ImGuiTableFlags_SizingStretchSame)) {
+        ImGui::TableNextColumn();
+        if (UIWidgets::Button("Spawn Jinjo", { .color = THEME_COLOR })) {
+            Actor* newActor = actor_new(spawnPosition, 0, &actorInfoMap.at(selectedJinjo).first,
+                                        actorInfoMap.at(selectedJinjo).second);
+        }
+        ImGui::TableNextColumn();
+        for (auto& [jinjoId, jinjoData] : jinjoDataMap) {
+            bool isChecked = std::get<2>(jinjoData);
+            if (UIWidgets::Checkbox(std::get<0>(jinjoData), &isChecked,
+                UIWidgets::CheckboxOptions()
+                .Color(std::get<1>(jinjoData))
+                .LabelPosition(UIWidgets::LabelPositions::None))) {
+                GameplayTools_UpdateJinjoCheckboxes(jinjoId);
+            }
+            ImGui::SameLine();
+        }
 
-    if (UIWidgets::Button("Spawn Jiggy", { .color = THEME_COLOR })) {
-        Actor* newActor = actor_spawnWithYaw_s32(ACTOR_46_JIGGY, &spawnPosition, 0);
-        ActorLocal_Jiggy* actorLocal = (ActorLocal_Jiggy*)&newActor->local;
-        actorLocal->index = JIGGY_03_MM_MUMBOS_SKULL;
-    }
+        ImGui::TableNextColumn();
+        if (UIWidgets::Button("Spawn Jiggy", { .color = THEME_COLOR })) {
+            Actor* newActor = actor_new(spawnPosition, 0, &actorInfoMap.at(ACTOR_46_JIGGY).first,
+                                        actorInfoMap.at(ACTOR_46_JIGGY).second);
+            ActorLocal_Jiggy* actorLocal = (ActorLocal_Jiggy*)&newActor->local;
+            actorLocal->index = selectedJiggy;
+        }
+        ImGui::TableNextColumn();
+        RandoCheckId jiggyCheckId = Rando::StaticData::GetCheckByJiggyId(selectedJiggy);
+        std::string jiggyText = Ship_ConvertEnumToReadableName(Rando::StaticData::Checks[jiggyCheckId].name);
+        jiggyText += ": " + std::to_string(selectedJiggy);
 
-    if (UIWidgets::Button("Spawn Honeycomb", { .color = THEME_COLOR })) {
-        Actor* newActor = actor_spawnWithYaw_s32(ACTOR_47_EMPTY_HONEYCOMB, &spawnPosition, 0);
-        ActorLocal_EmptyHoneycomb* actorLocal = (ActorLocal_EmptyHoneycomb*)&newActor->local;
-        actorLocal->uid = HONEYCOMB_1_MM_HILL;
-    }
+        UIWidgets::SliderInt("##jiggyIndex", &selectedJiggy,
+                                 UIWidgets::IntSliderOptions()
+                                     .Color(THEME_COLOR)
+                                     .Min(JIGGY_01_MM_JINJO)
+                                     .Max(JIGGY_64_MMM_LOGGO)
+                                     .DefaultValue(JIGGY_01_MM_JINJO)
+                                     .Format(jiggyText.c_str())
+                                     .LabelPosition(UIWidgets::LabelPositions::None));
+        
+        ImGui::TableNextColumn();
+        if (UIWidgets::Button("Spawn Honeycomb", { .color = THEME_COLOR })) {
+            Actor* newActor = actor_new(spawnPosition, 0, &actorInfoMap.at(ACTOR_47_EMPTY_HONEYCOMB).first,
+                                        actorInfoMap.at(ACTOR_47_EMPTY_HONEYCOMB).second);
+            ActorLocal_EmptyHoneycomb* actorLocal = (ActorLocal_EmptyHoneycomb*)&newActor->local;
+            actorLocal->uid = (honeycomb_e)selectedHoneycomb;
+        }
+        ImGui::TableNextColumn();
+        RandoCheckId honeycombCheckId = Rando::StaticData::GetCheckByHoneycombId((honeycomb_e)selectedHoneycomb);
+        std::string honeycombText = Ship_ConvertEnumToReadableName(Rando::StaticData::Checks[honeycombCheckId].name);
+        honeycombText += ": " + std::to_string(selectedHoneycomb);
 
-    if (UIWidgets::Button("Spawn Mumbo Token", { .color = THEME_COLOR })) {
-        Actor* newActor = actor_spawnWithYaw_s32(ACTOR_2D_MUMBO_TOKEN, &spawnPosition, 0);
-        ActorLocal_MumboToken* actorLocal = (ActorLocal_MumboToken*)&newActor->local;
-        actorLocal->uid = MUMBOTOKEN_01_MM_STUMP_NEAR_CONGA;
-    }
+        UIWidgets::SliderInt("##honeycombIndex", &selectedHoneycomb,
+                             UIWidgets::IntSliderOptions()
+                                 .Color(THEME_COLOR)
+                                 .Min(HONEYCOMB_1_MM_HILL)
+                                 .Max(JIGGY_64_MMM_LOGGO)
+                                 .DefaultValue(HONEYCOMB_1_MM_HILL)
+                                 .Format(honeycombText.c_str())
+                                 .LabelPosition(UIWidgets::LabelPositions::None));
 
-    if (UIWidgets::Button("Spawn Note", { .color = THEME_COLOR })) {
-        Actor* newActor = actor_spawnWithYaw_s32(ACTOR_51_MUSIC_NOTE, &spawnPosition, 0);
+        ImGui::TableNextColumn();
+        if (UIWidgets::Button("Spawn Mumbo Token", { .color = THEME_COLOR })) {
+            Actor* newActor = actor_new(spawnPosition, 0, &actorInfoMap.at(ACTOR_2D_MUMBO_TOKEN).first,
+                                        actorInfoMap.at(ACTOR_2D_MUMBO_TOKEN).second);
+            ActorLocal_MumboToken* actorLocal = (ActorLocal_MumboToken*)&newActor->local;
+            actorLocal->uid = (mumbotoken_e)selectedToken;
+        }
+        ImGui::TableNextColumn();
+        RandoCheckId tokenCheckId = Rando::StaticData::GetCheckByMumboTokenId((mumbotoken_e)selectedToken);
+        std::string tokenText = Ship_ConvertEnumToReadableName(Rando::StaticData::Checks[tokenCheckId].name);
+        tokenText += ": " + std::to_string(selectedToken);
+
+        UIWidgets::SliderInt("##tokenIndex", &selectedToken,
+                             UIWidgets::IntSliderOptions()
+                                 .Color(THEME_COLOR)
+                                 .Min(MUMBOTOKEN_01_MM_STUMP_NEAR_CONGA)
+                                 .Max(MUMBOTOKEN_73_CCW_WINTER_SIR_SLUSH_BETWEEN_BIG_FLOWER_AND_MUMBOS_SKULL)
+                                 .DefaultValue(MUMBOTOKEN_01_MM_STUMP_NEAR_CONGA)
+                                 .Format(tokenText.c_str())
+                                 .LabelPosition(UIWidgets::LabelPositions::None));
+
+        ImGui::TableNextColumn();
+        if (UIWidgets::Button("Spawn Note", { .color = THEME_COLOR })) {
+            Actor* newActor = actor_new(spawnPosition, 0, &actorInfoMap.at(ACTOR_51_MUSIC_NOTE).first,
+                                        actorInfoMap.at(ACTOR_51_MUSIC_NOTE).second);
+        }
+
+        ImGui::EndTable();
     }
 }
 
 void DrawWarpList() {
     ImGui::SeparatorText("Custom Warp Selector");
-    UIWidgets::Combobox("Map Select", &mapId, mapNames, { .color = THEME_COLOR });
-    UIWidgets::SliderInt("Exit ID", &exitId,
-                         {
-                             .format = "Exit: %i",
-                             .min = 0,
-                             .max = 20,
-                             .clamp = true,
-                             .labelPosition = UIWidgets::LabelPositions::None,
-                             .color = THEME_COLOR,
-                         });
-    if (UIWidgets::Button(mapNames[mapId], { .color = THEME_COLOR })) {
-        func_8031D04C((map_e)mapIdList[mapId], exitId);
-    }
+    if (ImGui::BeginChild("WarpChild")) {
+        ImGui::Text("Map Select ");
+        ImGui::SameLine();
+        UIWidgets::Combobox("##mapSelect", &mapId, mapNames,
+                            { .labelPosition = UIWidgets::LabelPositions::None, .color = THEME_COLOR });
+        UIWidgets::SliderInt("Exit ID", &exitId,
+                             {
+                                 .format = "Exit: %i",
+                                 .min = 0,
+                                 .max = 20,
+                                 .clamp = true,
+                                 .labelPosition = UIWidgets::LabelPositions::None,
+                                 .color = THEME_COLOR,
+                             });
+        if (UIWidgets::Button(mapNames[mapId], { .color = THEME_COLOR })) {
+            func_8031D04C((map_e)mapIdList[mapId], exitId);
+        }
 
-    ImGui::SeparatorText("Common Locations");
-    if (UIWidgets::Button("Banjo's House", { .color = THEME_COLOR })) {
-        func_8031D04C(MAP_1_SM_SPIRAL_MOUNTAIN, 0);
-    }
-    if (UIWidgets::Button("Mumbo's Mountain Warp Pad", { .color = THEME_COLOR })) {
-        func_8031D04C(MAP_2_MM_MUMBOS_MOUNTAIN, 5);
-    }
-    if (UIWidgets::Button("Treasure Trove Cove Warp Pad", { .color = THEME_COLOR })) {
-        func_8031D04C(MAP_7_TTC_TREASURE_TROVE_COVE, 4);
-    }
-    if (UIWidgets::Button("Clanker's Cavern Warp Pad", { .color = THEME_COLOR })) {
-        func_8031D04C(MAP_B_CC_CLANKERS_CAVERN, 5);
-    }
-    if (UIWidgets::Button("Bubblegloop Swamp Warp Pad", { .color = THEME_COLOR })) {
-        func_8031D04C(MAP_D_BGS_BUBBLEGLOOP_SWAMP, 2);
-    }
-    if (UIWidgets::Button("Freezeezy Peak Warp Pad", { .color = THEME_COLOR })) {
-        func_8031D04C(MAP_27_FP_FREEZEEZY_PEAK, 1);
-    }
-    if (UIWidgets::Button("Gobi's Valley Warp Pad", { .color = THEME_COLOR })) {
-        func_8031D04C(MAP_12_GV_GOBIS_VALLEY, 8);
-    }
-    if (UIWidgets::Button("Mad Monster Mansion Warp Pad", { .color = THEME_COLOR })) {
-        func_8031D04C(MAP_1B_MMM_MAD_MONSTER_MANSION, 20);
-    }
-    if (UIWidgets::Button("Rusty Bucket Bay Warp Pad", { .color = THEME_COLOR })) {
-        func_8031D04C(MAP_31_RBB_RUSTY_BUCKET_BAY, 16);
-    }
-    if (UIWidgets::Button("Click Clock Wood Warp Pad", { .color = THEME_COLOR })) {
-        func_8031D04C(MAP_40_CCW_HUB, 7);
+        ImGui::SeparatorText("Common Locations");
+        if (ImGui::BeginTable("CommonWarps", 2, ImGuiTableFlags_SizingStretchSame)) {
+            ImGui::TableNextColumn();
+            for (auto& [mapId, mapData] : commonWarpMap) {
+                if (UIWidgets::Button(mapData.first, { .color = THEME_COLOR })) {
+                    func_8031D04C(mapId, mapData.second);
+                }
+                ImGui::TableNextColumn();
+            }
+            ImGui::EndTable();
+        }
+        ImGui::EndChild();
     }
 }
 
@@ -283,9 +368,6 @@ void DrawGrantUnlocks() {
         item_set(ITEM_F_RED_FEATHER, 50);
         item_set(ITEM_10_GOLD_FEATHER, 10);
         item_set(ITEM_1C_MUMBO_TOKEN, 25);
-    }
-    if (UIWidgets::Button("Add Notes", { .color = THEME_COLOR })) {
-        item_setMaxCount(ITEM_C_NOTE);
     }
 }
 
@@ -385,7 +467,7 @@ void DrawRandoSaveEditor() {
                 }
 
                 if (isChanged) {
-                    RandoHelper_UpdateCheckTracker(check);
+                    GameplayTools_UpdateCheckTracker(check);
                 }
                 ImGui::TableNextColumn();
 
@@ -414,11 +496,11 @@ void DrawRandoSaveEditor() {
     }
 }
 
-void RandoHelper_DrawTabBar() {
+void GameplayTools_DrawTabBar() {
     UIWidgets::PushStyleTabs(THEME_COLOR);
-    if (ImGui::BeginTabBar("RandoHelperTabBar")) {
+    if (ImGui::BeginTabBar("GameplayToolsTabBar")) {
         if (ImGui::BeginTabItem("Spawn Object")) {
-            RandoHelper_ObjectSpawner();
+            GameplayTools_ObjectSpawner();
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Warp")) {
@@ -446,6 +528,10 @@ void RandoHelper_DrawTabBar() {
     UIWidgets::PopStyleTabs();
 }
 
-void RandoHelperWindow::DrawElement() {
-    RandoHelper_DrawTabBar();
+void GameplayToolsWindow::DrawElement() {
+    GameplayTools_DrawTabBar();
+}
+
+void GameplayToolsWindow::InitElement() {
+    std::get<2>(jinjoDataMap.at(ACTOR_60_JINJO_BLUE)) = true;
 }

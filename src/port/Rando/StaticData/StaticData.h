@@ -33,6 +33,8 @@ struct RandoStaticCheck {
 };
 
 RandoCheckId GetCheckByPosition(int32_t posX, int32_t posY, int32_t posZ);
+RandoCheckId GetCheckByMumboTokenId(mumbotoken_e tokenId);
+RandoCheckId GetCheckByHoneycombId(honeycomb_e honeycombId);
 RandoCheckId GetCheckByJiggyId(int32_t jiggyId);
 RandoCheckId GetJinjoJiggyCheckByLevelId(int16_t levelId);
 RandoCheckId GetCheckByAbilityId(int32_t abilityId);

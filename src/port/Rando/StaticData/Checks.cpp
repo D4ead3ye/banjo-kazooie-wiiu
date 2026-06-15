@@ -1249,6 +1249,34 @@ RandoCheckId GetCheckByPosition(int32_t posX, int32_t posY, int32_t posZ) {
     return RC_UNKNOWN;
 }
 
+RandoCheckId GetCheckByMumboTokenId(mumbotoken_e tokenId) {
+    for (auto& [randoCheckId, randoStaticCheck] : Checks) {
+        if (randoStaticCheck.randoCheckType != RCTYPE_MUMBO_TOKEN) {
+            continue;
+        }
+
+        if (randoStaticCheck.collectionId == tokenId) {
+            return randoCheckId;
+        }
+    }
+
+    return RC_UNKNOWN;
+}
+
+RandoCheckId GetCheckByHoneycombId(honeycomb_e honeycombId) {
+    for (auto& [randoCheckId, randoStaticCheck] : Checks) {
+        if (randoStaticCheck.randoCheckType != RCTYPE_EMPTY_HONEYCOMB) {
+            continue;
+        }
+
+        if (randoStaticCheck.collectionId == honeycombId) {
+            return randoCheckId;
+        }
+    }
+
+    return RC_UNKNOWN;
+}
+
 RandoCheckId GetCheckByJiggyId(int32_t jiggyId) {
     for (auto& [randoCheckId, randoStaticCheck] : Checks) {
         if (randoStaticCheck.randoCheckType != RCTYPE_JIGGY) {
