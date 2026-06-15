@@ -8,7 +8,8 @@
 #include <libultra/convert.h>
 #include <libultra/gu.h>
 
-#include "port/patches/Patches.h"
+#include "port/Patches/Patches.h"
+#include "port/Interpolation/FrameInterpolation.h"
 
 extern void guPerspective(Mtx *, u16*, f32, f32, f32, f32, f32);
 
@@ -26,8 +27,8 @@ f32 sViewportUnused1; // debug?
 f32 sViewportFrustumPlanes[4][4];
 Vp sViewportStack[VIEWPORT_STACK_SIZE];
 int sViewportUnused2; // debug?
-BKMtxF sViewportMatrix;
-BKMtxF sViewportDefaultMatrix;
+MtxF sViewportMatrix;
+MtxF sViewportDefaultMatrix;
 s32 sViewportStackIndex;
 
 void viewport_moveAlongZAxis(f32 offset) {
@@ -112,14 +113,25 @@ void viewport_setRenderPerspectiveMatrix(Gfx **gfx, Mtx **mtx, f32 near, f32 far
 
     port_viewport_applyMirror(gfx, mtx);
 
+    // [port] Capture each rotation's Mtx* + raw angle so interpolation can
+    // angle-lerp and rebuild clean matrices — a matrix lerp on fast spins
+    // folds these into non-rotations.
+    Mtx* rollMtx = *mtx;
     guRotate(*mtx, -sViewportRotation[2], 0.0f, 0.0f, -1.0f);
     gSPMatrix((*gfx)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
 
+    Mtx* pitchMtx = *mtx;
     guRotate(*mtx, -sViewportRotation[0], 1.0f, 0.0f, 0.0f);
     gSPMatrix((*gfx)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
 
+    Mtx* yawMtx = *mtx;
     guRotate(*mtx, -sViewportRotation[1], 0.0f, 1.0f, 0.0f);
     gSPMatrix((*gfx)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
+
+    FrameInterpolation_RecordCameraProjectionRotation(rollMtx, -sViewportRotation[2], pitchMtx, -sViewportRotation[0],
+                                                      yawMtx, -sViewportRotation[1]);
+    // [port] Feeds the cut-detection heuristic in Interpolate().
+    FrameInterpolation_RecordCameraPosition(sViewportPosition);
 
     guTranslate(*mtx, 0.0f, 0.0f, 0.0f);
     gSPMatrix((*gfx)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
@@ -182,6 +194,8 @@ void viewport_setPosition_f3(f32 x, f32 y, f32 z) {
 
 void viewport_setRotation_vec3f(f32 src[3]) {
     ml_vec3f_copy(sViewportRotation, src);
+    // [port] Nudge static-camera yaw on configured maps when in widescreen.
+    port_camera_applyWsYawFix(sViewportRotation);
 }
 
 void viewport_setRotation_f3(f32 pitch, f32 yaw, f32 roll) {
@@ -488,7 +502,7 @@ f32 sViewportBackupPosition[3];
 f32 sViewportBackupRotation[3];
 f32 sViewportBackupFrustumPlanes[4][4];
 f32 sViewportBackupLookbk_vector[3];
-BKMtxF sViewportBackupMatrix;
+MtxF sViewportBackupMatrix;
 
 // ??
 bool viewport_func_8024E030(f32 pos[3], f32 *arg1)
@@ -538,7 +552,7 @@ void viewport_backupState(void) {
 
     for(i = 0; i < 4; i++){
         for(j = 0; j < 4; j++){
-            sViewportBackupMatrix.m[i][j] = sViewportMatrix.m[i][j];
+            sViewportBackupMatrix.mf[i][j] = sViewportMatrix.mf[i][j];
         }
     }
 }
@@ -553,7 +567,7 @@ void viewport_restoreState(void) {
 
     for(i = 0; i < 4; i++){
         for(j = 0; j < 4; j++){
-            sViewportMatrix.m[i][j] = sViewportBackupMatrix.m[i][j];
+            sViewportMatrix.mf[i][j] = sViewportBackupMatrix.mf[i][j];
         }
     }
 }

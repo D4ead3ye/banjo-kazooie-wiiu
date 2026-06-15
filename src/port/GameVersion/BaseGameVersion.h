@@ -1,0 +1,13 @@
+#pragma once
+
+#include "../Engine.h" // BKVersion
+
+namespace Lighthouse {
+
+// The ROM CRC that Torch inserts into the o2r version file
+BKVersion GetBaseVersion();
+
+// Romhacks are generally only supported by US 1.0
+bool BaseGameSupportsRomhacks();
+
+} // namespace Lighthouse

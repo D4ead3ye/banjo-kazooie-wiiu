@@ -6,14 +6,13 @@
 #include "core2/ba/physics.h"
 #include "bk_math.h"
 
-void func_80254008(void);
 void assetcache_release(void *); //assetcache_free
-void func_8033A280(f32);
+void modelRender_func_8033A280(f32);
 
 extern s32 osCicId;
 
 /* .data */
-struct5Bs *D_80363780 = NULL;
+Vec3fArray *D_80363780 = NULL;
 
 /* .bss */
 void *baModelBin; //baModelPtr
@@ -53,7 +52,7 @@ static void _baModel_updateModelYaw(void){
 }
 
 void baModel_80291A50(s32 arg0, f32 dst[3]){
-    func_8034A174(D_80363780, arg0, dst);
+    vec3fArray_get_vec3f(D_80363780, arg0, dst);
     if(ml_isZero_vec3f(dst)){
         _player_getPosition(dst);
     }
@@ -97,9 +96,9 @@ void baModel_draw(Gfx **gfx, Mtx **mtx, Vtx **vtx){
         baanim_80289F30();
         func_8029DD6C();
         modelRender_setEnvColor(env_color[0], env_color[1], env_color[2], baModelEnvAlpha);
-        func_8033A280(2.0f);
-        modelRender_preDraw((GenFunction_1)_baModel_preDraw, 0);
-        func_8033A450(D_80363780);
+        modelRender_func_8033A280(2.0f);
+        modelRender_setPreDrawCallback((model_render_pre_draw_callback_f)_baModel_preDraw, 0);
+        modelRender_setRefPoints(D_80363780);
         modelRender_setDepthMode(MODEL_RENDER_DEPTH_FULL);
         if(D_8037C150.unk0){
             D_8037C150.unk0 = 0;
@@ -130,8 +129,8 @@ void baModel_reset(void){
     baModelBin = NULL;
     baModelId = 0;
     baModelPostDrawMethod = NULL;
-    D_80363780 = func_8034A2C8();
-    func_8034A130(D_80363780);
+    D_80363780 = vec3fArray_new();
+    vec3fArray_clearValues(D_80363780);
     ml_vec3f_clear(D_8037C100);
     ml_vec3f_clear(D_8037C110);
     ml_vec3f_clear(baModelDisplacement);
@@ -156,7 +155,7 @@ void baModel_free(void){
     assetcache_release(baModelBin);
     baModelBin = NULL;
     baModelId = 0;
-    func_8034A2A8(D_80363780);
+    vec3fArray_free(D_80363780);
     D_80363780 = NULL;
 }
 
@@ -200,7 +199,7 @@ void baModel_setEnvAlpha(s32 alpha){
 void baModel_set(enum asset_e asset_id){
     if(asset_id != baModelId){
         if(baModelBin){
-            func_80254008();
+            core1_15B30_sendMesg3ToRenderThread();
             assetcache_release(baModelBin);
             baModelBin = NULL;
         }
@@ -303,7 +302,7 @@ void baModel_80292284(f32 arg0[3], s32 arg1){
             case ASSET_362_MODEL_BANJO_BEE:
             case ASSET_36F_MODEL_BANJO_PUMPKIN:
             case ASSET_374_MODEL_BANJO_CROC:
-                func_8034A174(D_80363780, arg1 + 1, arg0);
+                vec3fArray_get_vec3f(D_80363780, arg1 + 1, arg0);
                 if(ml_isZero_vec3f(arg0)){
                     _player_getPosition(arg0);
                 }
@@ -381,6 +380,6 @@ void baModel_80292578(f32 arg0[3]){
 
 void baModel_defrag(void){
     if(D_80363780){
-        D_80363780 = func_8034A348(D_80363780);
+        D_80363780 = vec3fArray_defrag(D_80363780);
     }
 }

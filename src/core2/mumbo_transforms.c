@@ -2,7 +2,6 @@
 #include "functions.h"
 #include "variables.h"
 
-extern void dustEmitter_emit(f32[3], f32[3], s32[4], s32, f32, f32, s32, s32, s32);
 extern void func_803255FC(Actor *);
 extern void func_80325760(Actor *);
 
@@ -10,7 +9,7 @@ extern void func_80325760(Actor *);
 Actor *chMumbo_draw(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx);
 void chMumbo_update(Actor *this);
 
-#include "port/GameConfig.h"
+#include "port/Romhack/RomhackConfig.h"
 
 /* .data */
 ActorAnimationInfo D_80367490[] = {
@@ -502,7 +501,7 @@ Actor *chMumbo_draw(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx) {
             || actor_animationIsAt(out, 0.28f)
             || actor_animationIsAt(out, 0.36f)
          ){
-            func_8034A174(func_80329934(), 9, sp44);
+            vec3fArray_get_vec3f(func_80329934(), 9, sp44);
             dustEmitter_emit(sp44, sp38, D_8036751C, 0, 0.9f, 0.0f, 0x46, 0x14, 0);
         }
     }

@@ -7,7 +7,7 @@
 
 #include "version.h"
 
-#include "port/patches/Patches.h"
+#include "port/Patches/Patches.h"
 
 #define PFSMANAGER_THREAD_STACK_SIZE 0x200
 
@@ -364,7 +364,7 @@ void pfsManager_init(void) {
     osContInit(&pfsManagerContPollingMsqQ, &pfsManagerBitPattern, &pfsManagerContStatus);
     osContSetCh(1);
     func_8024F224();
-    func_802476DC();
+    thread5_enableControllerTimer();
     osStartThread(&sPfsManagerThread);
 }
 

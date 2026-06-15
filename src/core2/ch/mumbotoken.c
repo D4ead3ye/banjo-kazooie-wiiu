@@ -1,7 +1,7 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
-#include "port/patches/Patches.h"
+#include "port/Patches/Patches.h"
 
 typedef struct {
     enum mumbotoken_e uid;
@@ -51,7 +51,7 @@ enum mumbotoken_e func_802E0A90(Actor *this){
     else{
         ret = func_80306DBC(id) - 199;
         // [port] Fix duplicate mumbo token IDs (from BanjoRecomp)
-        ret = port_fixMumboTokenId(ret, pos, map_id);
+        CALL_EVENT(OnMumboTokenIdResolve, &ret, pos, map_id);
         return ret;
     }
 }

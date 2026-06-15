@@ -1,0 +1,341 @@
+#include "LighthouseMenu.h"
+
+#define CVAR_INT_SHIP_INIT(cvar, val) \
+    CVarSetInteger(cvar, val);        \
+    ShipInit::Init(cvar);
+
+namespace LighthouseGui {
+
+extern std::shared_ptr<LighthouseMenu> mLighthouseMenu;
+using namespace UIWidgets;
+
+void LighthouseMenu::AddMenuEnhancements() {
+    // Add Enhancements Menu
+    AddMenuEntry("Enhancements", CVAR_SETTING("Menu.EnhancementsSidebarSection"));
+
+    // Enhancements -> Cutscenes
+    WidgetPath path = { "Enhancements", "Cutscenes", SECTION_COLUMN_1 };
+    AddSidebarEntry("Enhancements", path.sidebarName, 1);
+    path.column = SECTION_COLUMN_1;
+
+    AddWidget(path, "Allow Start to Skip Boot Logos", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cutscenes.SkipBootLogos"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Press Start to skip the Rareware and Nintendo logos on boot."));
+
+    AddWidget(path, "Allow Start to Skip Intro Cutscenes", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cutscenes.StartSkipIntro"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Press Start to Skip Intro Cutscenes."));
+
+    AddWidget(path, "Allow Start to Skip Misc Cutscenes", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cutscenes.SkipMiscCutscenes"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Press Start to skip the Gruntilda's Lair and Game Over cutscenes."));
+
+    AddWidget(path, "Skip Jiggy Dance", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cutscenes.SkipJiggyDance"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip(
+            "Skips the jiggy collection dance, collecting the jiggy immediately like underwater pickups."));
+
+    // Enhancements -> Graphics
+    path = { "Enhancements", "Graphics", SECTION_COLUMN_1 };
+    AddSidebarEntry("Enhancements", path.sidebarName, 1);
+    path.column = SECTION_COLUMN_1;
+
+    AddWidget(path, "Extended Draw Distance", WIDGET_CVAR_COMBOBOX)
+        .CVar(CVAR_ENHANCEMENT("Graphics.DrawDistance"))
+        .RaceDisable(false)
+        .Options(ComboboxOptions()
+                     .Tooltip("Extends the draw distance for objects.\nHigher values render more but cost performance.")
+                     .ComboMap({
+                         { 0, "Off" },
+                         { 1, "25%" },
+                         { 2, "50%" },
+                         { 3, "75%" },
+                         { 4, "100%" },
+                     })
+                     .DefaultIndex(0));
+
+    AddWidget(path, "Disable LOD", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Graphics.DisableLOD"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Forces maximum model detail everywhere."));
+
+    AddWidget(path, "Original Aspect Ratio In Cutscenes", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Graphics.CutsceneAspect"))
+        .Options(CheckboxOptions().Tooltip("Forces game to show original aspect ratio during cutscenes to avoid seeing "
+                                           "unfinished edges of scene geometry."));
+
+    // Enhancements -> Modes
+    path = { "Enhancements", "Modes", SECTION_COLUMN_1 };
+    AddSidebarEntry("Enhancements", path.sidebarName, 1);
+    path.column = SECTION_COLUMN_1;
+
+    AddWidget(path, "Mirrored World", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Modes.MirroredWorld.Mode"))
+        .Callback([](WidgetInfo& info) {
+            if (CVarGetInteger(CVAR_ENHANCEMENT("Modes.MirroredWorld.Mode"), 0)) {
+                CVarSetInteger(CVAR_ENHANCEMENT("Modes.MirroredWorld.State"), 1);
+            } else {
+                CVarClear(CVAR_ENHANCEMENT("Modes.MirroredWorld.State"));
+            }
+        })
+        .Options(CheckboxOptions().Tooltip("Mirrors the world horizontally. Inverts left/right controls to match."));
+
+    // Enhancements -> Fixes
+    path = { "Enhancements", "Fixes", SECTION_COLUMN_1 };
+    AddSidebarEntry("Enhancements", path.sidebarName, 1);
+    path.column = SECTION_COLUMN_1;
+
+    AddWidget(path, "Fix Furnace Fun Game Over Dialog", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.FurnaceFunDialog"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Fixes the skull panel game over warning in Furnace Fun to trigger when you "
+                                           "have zero extra lives instead of one."));
+
+    AddWidget(path, "Fix Void-Out Game Over", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.VoidOutGameOver"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip(
+            "Prevents a game over when voiding out with zero extra lives, since void-outs don't cost a life."));
+
+    AddWidget(path, "Fix Mumbo Token: GV Water Pyramid", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.MumboTokenGV"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Lowers the mumbo token in the water pyramid to ground level after the "
+                                           "water drains, making it reachable."));
+
+    AddWidget(path, "Fix Mumbo Token: MMM Loggo", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.MumboTokenMMM"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Fixes the MMM Inside Loggo token sharing a collection bitfield index with "
+                                           "another token, causing one to despawn."));
+
+    AddWidget(path, "Fix Mumbo Token: CCW Spring", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.MumboTokenCCW"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Fixes the CCW Spring token sharing a collection bitfield index with "
+                                           "another token, causing one to despawn."));
+
+    AddWidget(path, "Fix Grunty Defeated Flag Placement", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.GruntyDefeatedFlag"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Delays the Grunty Defeated flag until after the Jinjonator attacks, "
+                                           "preventing a false win if the player dies before the hit lands."));
+
+    AddWidget(path, "Fix CCW Gnawty Rock (Spring)", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.GnawtySpringRock"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Makes Gnawty's rock indestructible in CCW Spring."));
+
+    AddWidget(path, "Fix CCW Flower Replant Softlock", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.CCWFlowerReplant"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip(
+            "Prevents re-planting the CCW Spring flower after it's already planted."));
+
+    AddWidget(path, "Fix Termite Mound Slopes", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.TermiteMoundSlopes"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Makes slopes in the Mumbo's Mountain termite mound slide instantly."));
+
+    AddWidget(path, "Fix Early Claw Swipe During Slide", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.ClawSwipeSlide"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Prevents a claw swipe from triggering mid-slide."));
+
+    AddWidget(path, "Fix Boggy Race Game Over", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.BoggyRaceGameOver"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip(
+            "Losing Boggy's race with no extra lives reloads the race instead of "
+            "triggering a game over."));
+
+    AddWidget(path, "Fix Grunty Jinjo Charge Sound", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.JinjoChargeSound"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Stops the Jinjo charge-up sound the instant it hits Grunty."));
+
+    AddWidget(path, "Fix Conga's Name", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.CongaText"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Corrects a spelling error when meeting Conga as a termite."));
+
+    AddWidget(path, "Fix Cutscene Audio Sync", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fix.CutsceneSync"))
+        .RaceDisable(false)
+        .Options(
+            CheckboxOptions().Tooltip("Compensates for N64 frame stutters during cutscenes so audio stays in sync."));
+
+    AddWidget(path, "Fix Widescreen Camera", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fix.WidescreenCamera"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Adjusts static camera angles in widescreen to prevent skybox "
+                                           "exposure at the edges of the screen."));
+
+    AddWidget(path, "Center Enemy SFX", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.CenterSfx"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip(
+            "Centers the TeeHee and Sir Slush sound effects so they sound similar to N64 at distance."));
+
+    // Enhancements -> Restorations
+    path = { "Enhancements", "Restorations", SECTION_COLUMN_1 };
+    AddSidebarEntry("Enhancements", path.sidebarName, 1);
+    path.column = SECTION_COLUMN_1;
+
+    AddWidget(path, "Restore Return to Lair", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Restorations.ReturnToLair"))
+        .PreFunc([](WidgetInfo& info) {
+            if (mLighthouseMenu->disabledMap.at(DISABLE_FOR_ROMHACK).active) {
+                info.activeDisables.push_back(DISABLE_FOR_ROMHACK);
+            }
+        })
+        .Options(CheckboxOptions().Tooltip("Restores the unused Return to Lair option when in Worlds."));
+
+    // Enhancements -> Gameplay
+    path = { "Enhancements", "Gameplay", SECTION_COLUMN_1 };
+    AddSidebarEntry("Enhancements", path.sidebarName, 1);
+    path.column = SECTION_COLUMN_1;
+
+    AddWidget(path, "Stop N' Swop at 100%", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Gameplay.StopNSwop100"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Unlocks all Stop N' Swop items when loading a 100% save file."));
+
+    AddWidget(path, "Honeyback Health Regen", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Gameplay.Honeyback"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip(
+            "Backports Banjo-Tooie's Honeyback: once all 24 empty honeycombs are collected, your health "
+            "slowly refills one honeycomb at a time after a short pause when you stop taking damage."));
+
+    AddWidget(path, "Extra Time For GV Water Pyramid", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Gameplay.WaterPyramidTimer"))
+        .RaceDisable(false)
+        .PreFunc([](WidgetInfo& info) {
+            if (mLighthouseMenu->disabledMap.at(DISABLE_FOR_ROMHACK).active) {
+                info.activeDisables.push_back(DISABLE_FOR_ROMHACK);
+            }
+        })
+        .Options(CheckboxOptions().Tooltip("Adds 4 extra seconds to the GV water pyramid hatch timer."));
+
+    AddWidget(path, "Easier Boggy Races", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("EasierBoggyRaces"))
+        .RaceDisable(false)
+        .PreFunc([](WidgetInfo& info) {
+            if (mLighthouseMenu->disabledMap.at(DISABLE_FOR_ROMHACK).active) {
+                info.activeDisables.push_back(DISABLE_FOR_ROMHACK);
+            }
+        })
+        .Options(CheckboxOptions().Tooltip("Reduces Boggy's max speed during both sled races in Freezeezy Peak."));
+
+    AddWidget(path, "Fast Swimming", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Gameplay.FastSwim"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip(
+            "Hold A+B while underwater to combine Banjo's kick with Kazooie's wing stroke for faster swimming."));
+
+    // Enhancements -> Saving
+    path = { "Enhancements", "Saving", SECTION_COLUMN_1 };
+    AddSidebarEntry("Enhancements", path.sidebarName, 1);
+    path.column = SECTION_COLUMN_1;
+
+    AddWidget(path, "Persist Bottles Bonus", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Saving.PersistBottlesBonus"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Persists Bottle Bonus progress through the save file."));
+    AddWidget(path, "Persist Extra Lives", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Saving.PersistExtraLives"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Persists Extra Lives through the save file."));
+
+    // Enhancements -> Cheats
+    path = { "Enhancements", "Cheats", SECTION_COLUMN_1 };
+    AddSidebarEntry("Enhancements", path.sidebarName, 2);
+    path.column = SECTION_COLUMN_1;
+
+    // Column 1: Stats & Consumables
+
+    // Stats Section
+    AddWidget(path, "Player Stats", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Infinite Health", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cheats.InfiniteHealth"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Prevents health from decreasing."));
+
+    AddWidget(path, "Infinite Air", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cheats.InfiniteAir"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Prevents air from decreasing while underwater."));
+
+    AddWidget(path, "Infinite Lives", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cheats.InfiniteLives"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Keeps lives at 9 (max displayable)."));
+
+    // Consumables Section
+    AddWidget(path, "Consumables", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Infinite Eggs", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cheats.InfiniteEggs"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Refills eggs to your current max capacity when below max."));
+
+    AddWidget(path, "Infinite Red Feathers", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cheats.InfiniteRedFeathers"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Refills red feathers to your current max capacity when below max."));
+
+    AddWidget(path, "Infinite Gold Feathers", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cheats.InfiniteGoldFeathers"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Refills gold feathers to your current max capacity when below max."));
+
+    AddWidget(path, "Infinite Boots & Sneakers", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cheats.InfiniteBootsSneakers"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Wading Boots and Turbo Talon Sneakers timers never expire."));
+
+    // Column 2: Movement & Transformations
+    path.column = SECTION_COLUMN_2;
+
+    // Movement Section
+    AddWidget(path, "Movement", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Hold L to Levitate", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cheats.Levitate"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Hold L to levitate upward with gravity disabled."));
+
+    AddWidget(path, "D-pad Talon Trot Cycling", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cheats.TalonTrotCycle"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip(
+            "While in Talon Trot: D-pad Right cycles forward (Normal→Boots→Sneakers), D-pad Left cycles backward."));
+
+    // Transformations Section
+    AddWidget(path, "Transformations", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Fast Transformation", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cheats.FastTransform"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Speeds up Mumbo transformation animation by 3x."));
+
+    AddWidget(path, "D-pad Cycle Transform", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cheats.CycleTransform"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Press D-pad Up/Down to cycle through transformation forms.\nUp: Forward "
+                                           "(Banjo→Mumbo→...→Wishy→Banjo), Down: Backward."));
+
+    AddWidget(path, "No Mumbo Untransform", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cheats.NoMumboUntransform"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip(
+            "Disables Mumbo untransforming you when going too far and skips his warning dialog."));
+}
+
+} // namespace LighthouseGui

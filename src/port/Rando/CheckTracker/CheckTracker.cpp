@@ -425,7 +425,7 @@ void SettingsWindow::DrawElement() {
             ImGui::SameLine();
             if (UIWidgets::Button(ICON_FA_REFRESH, { .size = ImVec2(32.0f, 32.0f), .color = WIDGET_COLOR })) {
                 CVarSetColor(cvarText.c_str(), color);
-                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+                Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
             }
             ImGui::SameLine();
             ImGui::Text(colorText.c_str());

@@ -1,17 +1,24 @@
-#include <libultraship.h>
+#include "Engine.h"
 #include <cstring>
+#include <cstdlib>
+#include <filesystem>
 
 #include <fast/interpreter.h>
-#include "Engine.h"
-#include "ShipUtils.h"
-#include "patches/Patches.h"
-#include "src/port/enhancements/events/hooks/Events.h"
-
+#include <libultraship.h>
 #ifdef _WIN32
 #include <windows.h>
 #include <timeapi.h>
 #pragma comment(lib, "winmm.lib")
 #endif
+#include <SDL2/SDL.h>
+
+#include "GameStatus.h"
+#include "Interpolation/FrameInterpolation.h"
+#include "Network/Anchor/Anchor.h"
+#include "Patches/Patches.h"
+#include "ShipUtils.h"
+#include "src/port/enhancements/events/hooks/Events.h"
+#include "UI/LighthouseModMenuWindow.h"
 
 extern "C" {
 #include "enums.h"
@@ -19,24 +26,33 @@ extern "C" {
 #include "core1/main.h"
 }
 
+// Tracks whether mainLoop actually fed the renderer this iteration.
+// BK's gameloop conditionally skips game_draw during scene transitions.
+static bool sFrameRendered = false;
+
 extern "C" void Graphics_PushFrame(Gfx* data) {
+    sFrameRendered = true;
     GameEngine::ProcessGfxCommands(data);
 }
 
-// [port] BK game logic runs at 30fps (N64: 2 VI per game frame at 60Hz).
-// The main loop must tick at exactly 30fps regardless of render rate.
-// Without this, gGlobalTimer increments too fast, time_getDelta() returns
-// tiny values, and all tick-based timing (animations, cutscenes, AI) breaks.
-static constexpr double GAME_LOGIC_FPS = 30.0;
-static constexpr double GAME_LOGIC_FRAME_TIME = 1.0 / GAME_LOGIC_FPS;
-
-extern "C" int gsworld_getMap(void);
-extern "C" void port_setWindowTitle(int map_id);
-
 void push_frame() {
     static int sTitleCounter = 0;
+    sFrameRendered = false;
+
+    // While an inline mod extraction runs on its worker thread, freeze the game
+    // and render only the GUI so the progress modal stays live and the extractor
+    // gets the machine instead of fighting a full-speed game loop. The delay
+    // keeps the otherwise-idle main thread from busy-spinning a core.
+    if (IsInlineModExtractionBusy()) {
+        GameEngine::Instance->RenderGuiFrame();
+        SDL_Delay(16);
+        return;
+    }
+
     GameEngine::Instance->StartFrame();
+    FrameInterpolation_StartRecord();
     mainLoop();
+    FrameInterpolation_StopRecord();
     GameEngine::StartAudioFrame();
     GameEngine::EndAudioFrame();
 
@@ -45,6 +61,10 @@ void push_frame() {
         sTitleCounter = 0;
         port_setWindowTitle(gsworld_getMap());
     }
+
+    if (!sFrameRendered) {
+        SDL_Delay(33);
+    }
 }
 
 /* Rename SDL_main to main for SDL compatibility */
@@ -52,50 +72,38 @@ void push_frame() {
 #define SDL_main main
 #endif
 
-// [port] Precise sleep: SDL_Delay for the bulk, then spin-wait the remainder.
-static void preciseSleep(double seconds) {
-    if (seconds <= 0) {
-        return;
-    }
-    double freq = (double)SDL_GetPerformanceFrequency();
-    uint64_t target = SDL_GetPerformanceCounter() + (uint64_t)(seconds * freq);
-
-    // Sleep the bulk (leave 1.5ms margin for spin)
-    double sleepMs = (seconds * 1000.0) - 1.5;
-    if (sleepMs > 0.5) {
-        SDL_Delay((uint32_t)sleepMs);
-    }
-
-    // Spin-wait the remainder for precise timing
-    while (SDL_GetPerformanceCounter() < target) {
-        // busy-wait
-    }
-}
-
 int SDL_main(int argc, char* argv[]) {
 #ifdef _WIN32
-    timeBeginPeriod(1); // [port] Improve Sleep precision from ~15.6ms to ~1ms
+    timeBeginPeriod(1);
 #endif
+
+    // Anchor relative paths to the executable instead of cwd
+    // when SHIP_HOME is not in use
+    std::error_code ec;
+    const char* shipHome = std::getenv("SHIP_HOME");
+    if (shipHome != nullptr && shipHome[0] != '\0') {
+        std::filesystem::current_path(shipHome, ec);
+    } else {
+        std::string base = Ship::Context::GetAppBundlePath();
+        if (!base.empty() && base != ".") {
+            std::filesystem::current_path(base, ec);
+        }
+    }
+
     GameEngine::Create(argc, argv);
     core1_init();
 
-    double freq = (double)SDL_GetPerformanceFrequency();
-
     while (WindowIsRunning()) {
-        uint64_t frameStart = SDL_GetPerformanceCounter();
         push_frame();
-        uint64_t frameEnd = SDL_GetPerformanceCounter();
-        double frameDuration = (double)(frameEnd - frameStart) / freq;
-
-        double targetFrameTime = port_getTargetFrameTime();
-
-        if (frameDuration < targetFrameTime) {
-            preciseSleep(targetFrameTime - frameDuration);
-        }
     }
+#ifdef USE_NETWORKING
+    Anchor::GetInstance()->Disable();
+    SDLNet_Quit();
+#endif
 #ifdef _WIN32
     timeEndPeriod(1);
 #endif
     GameEngine::Instance->Destroy();
+    GameEngine::RelaunchIfRequested(argc, argv);
     return 0;
 }

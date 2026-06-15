@@ -5,8 +5,8 @@
 #include "enums.h"
 
 #include <core2/file.h>
-#include "port/FrameInterpolation.h"
-#include "port/patches/Patches.h"
+#include "port/Patches/Patches.h"
+#include "port/Interpolation/FrameInterpolation.h"
 
 extern int ResourceMgr_IsModelAsset(uint32_t assetId);
 
@@ -17,14 +17,14 @@ extern int ResourceMgr_IsModelAsset(uint32_t assetId);
 #define MARKER_BITMAP_BYTES (MARKER_POOL_SIZE / 8)
 
 extern bool func_802E74A0(f32[3], f32, f32[3], f32[3]);
-extern BKCollisionTri *func_802E9118(BKCollisionList * collision_list, BKVertexList *vtx_list, f32 arg2[3], f32 arg3[3], f32 arg4, f32 arg5[3], f32 arg6[3], f32 arg7, f32 arg8[3], s32 arg9, s32 argA);
+extern BKCollisionTriangle *func_802E9118(BKCollisionList * collision_list, BKVertexList *vtx_list, f32 arg2[3], f32 arg3[3], f32 arg4, f32 arg5[3], f32 arg6[3], f32 arg7, f32 arg8[3], s32 arg9, s32 argA);
 extern f32 vtxList_getGlobalNorm(BKVertexList *);
 extern void spawnQueue_func_802C39D4(void);
 extern bool func_80340020(Struct83s *, f32[3], f32[3], f32, f32 *, BKVertexList *, f32[3], f32[3]);
 extern void func_80340200(Struct83s *, f32[3], f32[3], f32, f32[3], s16[3], BKVertexList *, f32[3]);
-extern BKCollisionTri *func_802E9DD8(BKCollisionList *collisionList, BKVertexList *vtxList, f32 arg2[3], f32 *arg3, f32 arg4, f32 arg5[3], f32 arg6, f32 arg7[3], s32 arg8);
-extern s32 func_802EBAE0(BKModelUnk14List *arg0, f32 position[3], f32 rotation[3], f32 scale, f32 arg4[3], AnimMtxList *arg5, f32 arg6[3], f32 arg7, f32 arg8[3]);
-extern BKCollisionTri *func_802E805C(BKCollisionList *, BKVertexList *, f32[3], f32[3], f32, f32[3], f32[3], f32[3], u32);
+extern BKCollisionTriangle *func_802E9DD8(BKCollisionList *collisionList, BKVertexList *vtxList, f32 arg2[3], f32 *arg3, f32 arg4, f32 arg5[3], f32 arg6, f32 arg7[3], s32 arg8);
+extern s32 bkmodelunk14list_func_802EBAE0(BKModelUnk14List *arg0, f32 position[3], f32 rotation[3], f32 scale, f32 arg4[3], AnimMtxList *arg5, f32 arg6[3], f32 arg7, f32 arg8[3]);
+extern BKCollisionTriangle *collisionList_func_802E805C(BKCollisionList *, BKVertexList *, f32[3], f32[3], f32, f32[3], f32[3], f32[3], u32);
 extern NodeProp *func_803080C8(s32 arg0);
 extern Cube *func_80308224(void);
 extern Cube *func_8030364C(void);
@@ -61,7 +61,7 @@ typedef union{
 typedef bool( *Method_Core2_A5BC0)(NodeProp *, s32);
 
 s32 func_80330974(ActorMarker *marker, f32 arg1[3], f32 arg2, f32 arg3[3], s32 arg4_unused);
-BKCollisionTri *func_80320DB0(f32[3], f32, f32[3], u32);
+BKCollisionTriangle *func_80320DB0(f32[3], f32, f32[3], u32);
 BKModelBin *func_80330DE4(ActorMarker *this);
 
 extern ActorProp * func_80320EB0(ActorMarker *, f32, s32);
@@ -69,7 +69,7 @@ extern int func_80320ED8(ActorMarker *, f32, s32);
 f32 func_8033229C(ActorMarker *marker);
 s32 func_803327A8(s32 arg0);
 void func_8032CD60(Prop *);
-f32 func_8033A244(f32);
+f32 modelRender_func_8033A244(f32);
 void func_8032F64C(f32 *pos, ActorMarker * marker);
 BKSprite *func_80330F50(ActorMarker * marker);
 
@@ -80,6 +80,28 @@ u8 pad_8036E7B4[0xC] = {0}; //PROBABLY INDICATES FILE BREAK
 ModelCache *modelCache = NULL; //D_8036E7C0 //model pointer array pointer
 u8 *D_8036E7C4 = NULL;
 ActorMarker *D_8036E7C8 = NULL;
+
+enum Prop1Category {
+    PROP_1_CATEGORY_0_UNK,
+    PROP_1_CATEGORY_1_UNK,
+    PROP_1_CATEGORY_2_WARP_OR_TRIGGER,
+    PROP_1_CATEGORY_3_CAMERA_CONTROLLER,
+    PROP_1_CATEGORY_4_UNK,
+    PROP_1_CATEGORY_5_UNK,
+    PROP_1_CATEGORY_6_ACTOR,
+    PROP_1_CATEGORY_7_ENEMY_BOUNDARY,
+    PROP_1_CATEGORY_8_PATH,
+    PROP_1_CATEGORY_9_CAMERA_TRIGGER,
+    PROP_1_CATEGORY_A_FLAG
+};
+
+#define CUBE_PROP_1_INDICATOR                     0x0A
+#define CUBE_PROP_1_OTHER_INDICATOR               0x06
+#define CUBE_DIVIDER_INDICATOR                    0x01
+#define CUBE_PROP_1_LIST_START_INDICATOR          0x0B
+#define CUBE_PROP_1_OTHER_LIST_START_INDICATOR    0x07
+#define CUBE_PROP_1_LIST_END_INDICATOR            0x08
+#define CUBE_PROP_2_LIST_START_INDICATOR          0x09
 
 /* .bss */
 s32 D_803833F0[3];
@@ -92,7 +114,7 @@ s32 D_8038340C;
 //BREAK???
 f32 D_80383410[3];
 ActorMarker *D_8038341C;
-BKCollisionTri *D_80383420;
+BKCollisionTriangle *D_80383420;
 u8  D_80383428[MARKER_BITMAP_BYTES];
 s32 D_80383444;
 int D_80383448;
@@ -292,18 +314,17 @@ static void __marker_draw(ActorMarker *this, Gfx **gfx, Mtx **mtx, Vtx **vtx){
     f32 draw_dist_f;
     f32 percentage;
 
-    // [port] Record which Mtx buffer range this actor produces for scoped interpolation.
-    FrameInterpolation_ScopeBegin(this, this->actrArrayIdx, *mtx);
+    FrameInterpolation_RecordOpenChild(this, this->actrArrayIdx);
 
     if(!this->unk3E_0){
         this->drawFunc(this, gfx, mtx, vtx);
-        FrameInterpolation_ScopeEnd(*mtx);
+        FrameInterpolation_RecordCloseChild();
         return;
     }
     actor =  marker_getActor(this);
-    func_8033A28C(actor->unk58_2);
+    modelRender_func_8033A28C(actor->unk58_2);
     if( actor->unk58_2 && !this->unk40_23 && !this->unk40_21 && !D_8036E7B0){
-        func_8033A244(3700.0f);
+        modelRender_func_8033A244(3700.0f);
     }
 
     if(actor->unk124_7 && !actor->despawn_flag && actor->unk58_0){
@@ -317,13 +338,13 @@ static void __marker_draw(ActorMarker *this, Gfx **gfx, Mtx **mtx, Vtx **vtx){
         else{
             percentage = 1.0f;
         }
-        func_8033A280(percentage);
+        modelRender_func_8033A280(percentage);
         this->drawFunc(this, gfx, mtx, vtx);
     }//L8032D300
-    func_8033A244(30000.0f);
-    func_8033A280(1.0f);
+    modelRender_func_8033A244(30000.0f);
+    modelRender_func_8033A280(1.0f);
 
-    FrameInterpolation_ScopeEnd(*mtx);
+    FrameInterpolation_RecordCloseChild();
 }
 
 void func_8032D330(){
@@ -411,15 +432,28 @@ void func_8032D510(Cube *cube, Gfx **gfx, Mtx **mtx, Vtx **vtx){
                 sp94[1] = (f32)iProp->modelProp.unk4[1];
                 sp94[2] = (f32)iProp->modelProp.unk4[2];
                 if(iProp->unk8_1){
+                    // [port] __cube_sort reorders prop2Ptr per frame, so
+                    // slot index is useless for pairing. Hash (modelId, pos)
+                    // — those are fixed by the map's prop data.
+                    FrameInterpolation_RecordOpenChildHash3("prop_model",
+                        iProp->modelProp.modelId,
+                        ((uint64_t)(u16)iProp->modelProp.unk4[0] << 32) | (u16)iProp->modelProp.unk4[1],
+                        (u16)iProp->modelProp.unk4[2]);
                     sp88[0] = 0.0f;
                     sp88[1] = (f32)((s32)iProp->modelProp.yaw*2);
                     sp88[2] = (f32)((s32)iProp->modelProp.roll*2);
-                    propModelList_drawModel(gfx, mtx, vtx, 
+                    propModelList_drawModel(gfx, mtx, vtx,
                         sp94, sp88, (f32)iProp->modelProp.scale/100.0,
                         iProp->modelProp.modelId, cube
                     );
+                    FrameInterpolation_RecordCloseChild();
                 }
                 else{//L8032D72C
+                    // [port] Same story as prop_model above.
+                    FrameInterpolation_RecordOpenChildHash3("prop_sprite",
+                        iProp->spriteProp.spriteId,
+                        ((uint64_t)(u16)iProp->spriteProp.unk4[0] << 32) | (u16)iProp->spriteProp.unk4[1],
+                        (u16)iProp->spriteProp.unk4[2]);
                     // [port] Fire one tick event per static sprite prop. Asset id
                     // is the raw sprite index offset (+ 0x572 is the asset base).
                     CALL_EVENT(OnSpritePropTick, (s32)iProp->spriteProp.spriteId + 0x572, sp94);
@@ -428,6 +462,7 @@ void func_8032D510(Cube *cube, Gfx **gfx, Mtx **mtx, Vtx **vtx){
                         iProp->spriteProp.rgb_remove_red, iProp->spriteProp.rgb_remove_green, iProp->spriteProp.rgb_remove_blue,
                         iProp->spriteProp.isMirrored, iProp->spriteProp.frame
                     );
+                    FrameInterpolation_RecordCloseChild();
                 }
             }//L8032D7C4
         }
@@ -703,7 +738,7 @@ bool __codeA5BC0_pad_func_8032E178(Cube *arg0, s32 *arg1, s32 arg2) {
             if( ((node_ptr->bit0 == true)
                     || ((node_ptr->bit0 == false) && (node_ptr->unk10_6 == true))
                 ) 
-                && (node_ptr->bit6 == 6) 
+                && (node_ptr->bit6 == PROP_1_CATEGORY_6_ACTOR) 
                 && (arg2 == node_ptr->unk8)
             ) {
                 *arg1 = node_ptr->radius;
@@ -723,7 +758,7 @@ NodeProp *cube_findNodePropByActorId(Cube *cube, enum actor_e actor_id) {
             if( ( (i_ptr->bit0 == true) 
                   || ( (i_ptr->bit0 == false) && (i_ptr->unk10_6 == true))
                 )
-                && (i_ptr->bit6 == 6) 
+                && (i_ptr->bit6 == PROP_1_CATEGORY_6_ACTOR) 
                 && (actor_id == i_ptr->unk8)
             ) {
                 return i_ptr;
@@ -744,7 +779,7 @@ bool func_8032E2D4(Cube *arg0, s32 arg1[3], s32 arg2) {
             if( ((var_v1->bit0 == true)
                     || ((var_v1->bit0 == false) && (var_v1->unk10_6 == true))
                 ) 
-                && (var_v1->bit6 == 6) 
+                && (var_v1->bit6 == PROP_1_CATEGORY_6_ACTOR) 
                 && (arg2 == var_v1->unk8)
             ) {
                 arg1[0] = var_v1->x;
@@ -803,7 +838,7 @@ s32 func_8032E49C(Cube *cube, enum actor_e *actor_id_list, NodeProp **node_list,
             i_node = cube->prop1Ptr;
             end_node = cube->prop1Ptr + cube->prop1Cnt;
             while((i_node < end_node) && (found_cnt < node_list_capacity)) {
-                if (((i_node->bit0 == true) || ((i_node->bit0 == false) && (i_node->unk10_6 == true))) && (i_node->bit6 == 6)) {
+                if (((i_node->bit0 == true) || ((i_node->bit0 == false) && (i_node->unk10_6 == true))) && (i_node->bit6 == PROP_1_CATEGORY_6_ACTOR)) {
                     i_actor = actor_id_list;
                     for(i_actor = actor_id_list; *i_actor != -1; i_actor++){
                         if (i_node->unk8 == *i_actor) {
@@ -833,7 +868,7 @@ s32 func_8032E5A8(Cube *cube, s32 arg1, f32 (*arg2)[3], s32 capacity) {
                 if( ( (i_node->bit0 == true) 
                       || ((i_node->bit0 == false) && (i_node->unk10_6 == true))
                     ) 
-                    && (i_node->bit6 == 6) && (arg1 == i_node->unk8)
+                    && (i_node->bit6 == PROP_1_CATEGORY_6_ACTOR) && (arg1 == i_node->unk8)
                 ) {
                     arg2[count][0] = (f32) i_node->x;
                     arg2[count][1] = (f32) i_node->y;
@@ -859,7 +894,7 @@ bool func_8032E6CC(Cube *cube, s32 *arg1, s32 arg2) {
                 if( ( (i_node->bit0 == true) 
                       || ((i_node->bit0 == false) && (i_node->unk10_6 == true))
                     ) 
-                    && (i_node->bit6 == 6) && (arg2 == i_node->unk8)
+                    && (i_node->bit6 == PROP_1_CATEGORY_6_ACTOR) && (arg2 == i_node->unk8)
                 ) {
                     *arg1 = i_node->yaw;
                     return true;
@@ -889,11 +924,11 @@ static void __codeA5BC0_initPropPointerForCube(NodeProp *node, Cube *cube, s32 c
     cube_ptr_idx = cnt - 1;
     for(i = 0; i < cnt; i++){
         iPtr = node + i;
-        if( (iPtr->bit6 == 6) 
-            || (iPtr->bit6 == 8)
-            || (iPtr->bit6 == 7) 
-            || (iPtr->bit6 == 9) 
-            || (iPtr->bit6 == 0xA) 
+        if( (iPtr->bit6 == PROP_1_CATEGORY_6_ACTOR) 
+            || (iPtr->bit6 == PROP_1_CATEGORY_8_PATH)
+            || (iPtr->bit6 == PROP_1_CATEGORY_7_ENEMY_BOUNDARY) 
+            || (iPtr->bit6 == PROP_1_CATEGORY_9_CAMERA_TRIGGER) 
+            || (iPtr->bit6 == PROP_1_CATEGORY_A_FLAG) 
             || (iPtr->bit0 == 1)
         ){
             memcpy(&cube->prop1Ptr[cube_ptr_idx], &node[i], sizeof(NodeProp));
@@ -924,17 +959,17 @@ void code7AF80_initCubeFromFile(File *file_ptr, Cube *cube) {
     s32 temp_v0_5;
 
     cube_free(cube);
-    if (file_getByte_ifExpected(file_ptr, 0xA, &cube1_count)) {
+    if (file_getByte_ifExpected(file_ptr, CUBE_PROP_1_INDICATOR, &cube1_count)) {
         __codeA5BC0_freeCube1Pointer(cube, cube1_count);
         cube->prop1Ptr = (NodeProp*) bk_malloc(cube1_count * sizeof(NodeProp));
         node_prop_ptr = (NodeProp*) bk_malloc(cube1_count * sizeof(NodeProp));
-        file_getNBytes_ifExpected(file_ptr, 0xB, (u8*)node_prop_ptr, cube->prop1Cnt * sizeof(NodeProp));
+        file_getNBytes_ifExpected(file_ptr, CUBE_PROP_1_LIST_START_INDICATOR, (u8*)node_prop_ptr, cube->prop1Cnt * sizeof(NodeProp));
         __codeA5BC0_initPropPointerForCube(node_prop_ptr, cube, cube1_count);
-    } else if (file_getByte_ifExpected(file_ptr, 6, &cube1_count)) {
+    } else if (file_getByte_ifExpected(file_ptr, CUBE_PROP_1_OTHER_INDICATOR, &cube1_count)) {
         __codeA5BC0_freeCube1Pointer(cube, cube1_count);
         cube->prop1Ptr = (NodeProp*) bk_malloc(cube1_count * sizeof(OtherNode));
         node_prop_ptr = (NodeProp*) bk_malloc(cube1_count * sizeof(OtherNode));
-        file_getNBytes_ifExpected(file_ptr, 7, (u8*)node_prop_ptr, cube->prop1Cnt * sizeof(OtherNode));
+        file_getNBytes_ifExpected(file_ptr, CUBE_PROP_1_OTHER_LIST_START_INDICATOR, (u8*)node_prop_ptr, cube->prop1Cnt * sizeof(OtherNode));
         for(other_prop_ptr = (OtherNode*)node_prop_ptr; other_prop_ptr < (OtherNode*)&node_prop_ptr[cube1_count]; other_prop_ptr++){
             if(other_prop_ptr->unk4_0 && !other_prop_ptr->unkC_0){
                 other_prop_ptr->unk4_17 = 0;
@@ -944,7 +979,7 @@ void code7AF80_initCubeFromFile(File *file_ptr, Cube *cube) {
         __codeA5BC0_initPropPointerForCube(node_prop_ptr, cube, cube1_count);
     }
 
-    if (file_getByte_ifExpected(file_ptr, 8, &sp47)) {
+    if (file_getByte_ifExpected(file_ptr, CUBE_PROP_1_LIST_END_INDICATOR, &sp47)) {
         sp34 = volatileFlag_get(VOLATILE_FLAG_1) +  volatileFlag_get(VOLATILE_FLAG_2_FF_IN_MINIGAME) + volatileFlag_get(VOLATILE_FLAG_1F_IN_CHARACTER_PARADE);
         
         if ((sp34) && gcparade_8031B4CC()) {
@@ -962,7 +997,7 @@ void code7AF80_initCubeFromFile(File *file_ptr, Cube *cube) {
         // compiler handles platform-native bitfield placement. This follows
         // the Shipwright/libultraship pattern: never memcpy raw bytes into
         // bitfield structs across endianness boundaries.
-        if (file_isNextByteExpected(file_ptr, 9)) {
+        if (file_isNextByteExpected(file_ptr, CUBE_PROP_2_LIST_START_INDICATOR)) {
             s32 i;
             memset(cube->prop2Ptr, 0, sp47 * sizeof(Prop));
             for (i = 0; i < sp47; i++) {
@@ -1450,7 +1485,7 @@ void func_80330208(Cube *cube) {
         end_prop = cube->prop1Ptr + cube->prop1Cnt;
         func_80326C24(1);
         while(i_prop < end_prop){
-            if (i_prop->bit6 == 6) {
+            if (i_prop->bit6 == PROP_1_CATEGORY_6_ACTOR) {
                 position[0] = (s32) i_prop->x;
                 position[1] = (s32) i_prop->y;
                 position[2] = (s32) i_prop->z;
@@ -1477,17 +1512,17 @@ void func_803303B8(Cube *cube) {
         current_node_ptr = cube->prop1Ptr;
         last_node_prop_ptr = cube->prop1Ptr + cube->prop1Cnt;
         while (current_node_ptr < last_node_prop_ptr) {
-            if (current_node_ptr->bit6 == 7) {
+            if (current_node_ptr->bit6 == PROP_1_CATEGORY_7_ENEMY_BOUNDARY) {
                 position[0] = (s32) current_node_ptr->x;
                 position[1] = (s32) current_node_ptr->y;
                 position[2] = (s32) current_node_ptr->z;
                 func_803065E4(current_node_ptr->unk8, position, current_node_ptr->radius, current_node_ptr->unk10_31, current_node_ptr->pad10_7);
-            } else if (current_node_ptr->bit6 == 9) {
+            } else if (current_node_ptr->bit6 == PROP_1_CATEGORY_9_CAMERA_TRIGGER) {
                 position[0] = (s32) current_node_ptr->x;
                 position[1] = (s32) current_node_ptr->y;
                 position[2] = (s32) current_node_ptr->z;
                 func_8030688C(current_node_ptr->unk8, position, current_node_ptr->radius, current_node_ptr->unk10_0);
-            } else if (current_node_ptr->bit6 == 0xA) {
+            } else if (current_node_ptr->bit6 == PROP_1_CATEGORY_A_FLAG) {
                 position[0] = (s32) current_node_ptr->x;
                 position[1] = (s32) current_node_ptr->y;
                 position[2] = (s32) current_node_ptr->z;
@@ -1611,7 +1646,7 @@ s32 func_80330974(ActorMarker *marker, f32 arg1[3], f32 arg2, f32 arg3[3], s32 a
     if (model == NULL) {
        return 0;
     }
-    sp58 = func_8033A12C(model);
+    sp58 = modelbin_getUnk14List(model);
     position[0] = (f32) marker->propPtr->x;
     position[1] = (f32) marker->propPtr->y;
     position[2] = (f32) marker->propPtr->z;
@@ -1621,8 +1656,8 @@ s32 func_80330974(ActorMarker *marker, f32 arg1[3], f32 arg2, f32 arg3[3], s32 a
     rotation[2] = (f32)marker->roll;
 
     scale = (marker->unk3E_0) ? marker_getActor(marker)->scale : 1.0f;
-    if (animMtxList_len(marker->unk20)) {
-        return func_802EBAE0(sp58, position, rotation, scale, 0, marker->unk20, arg1, arg2, arg3);
+    if (animMtxList_getLength(marker->unk20)) {
+        return bkmodelunk14list_func_802EBAE0(sp58, position, rotation, scale, 0, marker->unk20, arg1, arg2, arg3);
     }
     return 0;
 }
@@ -1651,14 +1686,14 @@ BKModelBin *marker_loadModelBin(ActorMarker *this){
             return NULL;
         }
         modelInfo->modelPtr = model;
-        if(model_getAnimTextureList(model)){
+        if(modelbin_getAnimTextureList(model)){
             modelInfo->animated_texture_cache_id = AnimTextureListCache_newList();
-            AnimTextureListCache_at(modelInfo->animated_texture_cache_id, model_getAnimTextureList(modelInfo->modelPtr));
+            AnimTextureListCache_setAnimTextureList(modelInfo->animated_texture_cache_id, modelbin_getAnimTextureList(modelInfo->modelPtr));
         }
         func_8032ACA8(thisActor);
     }
     func_8032AB84(thisActor);
-    if(!this->unk18 && this->propPtr->isModelProp && modelInfo->modelPtr && func_8033A12C(modelInfo->modelPtr)){
+    if(!this->unk18 && this->propPtr->isModelProp && modelInfo->modelPtr && modelbin_getUnk14List(modelInfo->modelPtr)){
         this->unk18 = func_80330B10();
     }
     modelInfo->unk10 = globalTimer_getTime();
@@ -1676,14 +1711,14 @@ BKVertexList *func_80330C74(Actor *actor){
     if(model_cache_ptr->modelPtr == NULL)
         return NULL;
     // [port] On N64, sprite binary data could be read as model data. On PC they're different structs.
-    // Return NULL for sprite assets to prevent model_getVtxList from reading garbage offsets.
+    // Return NULL for sprite assets to prevent modelbin_getVtxList from reading garbage offsets.
     if (!ResourceMgr_IsModelAsset(actor->marker->modelId))
         return NULL;
 
     if(actor->unkF4_30 && actor->unk14C[actor->unkF4_29]){
         return actor->unk14C[actor->unkF4_29];
     }else{
-        return model_getVtxList(model_cache_ptr->modelPtr);
+        return modelbin_getVtxList(model_cache_ptr->modelPtr);
     }
 }
 
@@ -1698,7 +1733,7 @@ BKVertexList *func_80330CFC(Actor *this, s32 arg1){
         return NULL;
     if(this->unkF4_30 && this->unk14C[this->unkF4_29 ^ arg1] != NULL)
         return this->unk14C[this->unkF4_29 ^ arg1];
-    return model_getVtxList(model_cache_ptr->modelPtr);
+    return modelbin_getVtxList(model_cache_ptr->modelPtr);
 }
 
 BKVertexList * func_80330DA4(Actor *this){
@@ -1836,7 +1871,7 @@ bool func_80331158(ActorMarker *arg0, f32 *arg1, f32 *arg2) {
     return false;
 }
 
-BKCollisionTri *func_803311D4(Cube *arg0, f32 *arg1, f32 *arg2, f32 *arg3, u32 arg4) {
+BKCollisionTriangle *func_803311D4(Cube *arg0, f32 *arg1, f32 *arg2, f32 *arg3, u32 arg4) {
    Actor *temp_s2_2;
     ActorMarker *temp_a0;
     BKModelBin *var_a0;
@@ -1846,14 +1881,14 @@ BKCollisionTri *func_803311D4(Cube *arg0, f32 *arg1, f32 *arg2, f32 *arg3, u32 a
     f32 spAC[3];
     f32 spA0[3];
     BKCollisionList *temp_s0;
-    BKCollisionTri *temp_s0_2;
+    BKCollisionTriangle *temp_s0_2;
     BKCollisionList *temp_s2;
     
     f32 sp88[3];
     f32 sp7C[3];
 
-    BKCollisionTri *var_s6;
-    BKCollisionTri *var_v0;
+    BKCollisionTriangle *var_s6;
+    BKCollisionTriangle *var_v0;
     u32 var_s5;
 
     var_s6 = NULL;
@@ -1863,7 +1898,7 @@ BKCollisionTri *func_803311D4(Cube *arg0, f32 *arg1, f32 *arg2, f32 *arg3, u32 a
         if (!var_s1->markerFlag && var_s1->unk8_1 && var_s1->unk8_4) { //ModelProp
             var_s0 = propModelList_getModelIfActive(var_s1->modelProp.modelId);
             if ((var_s0 != NULL) || (func_8028F280() && ((var_s0 = propModelList_getModel(var_s1->modelProp.modelId)) != NULL))) {
-                temp_s2 = model_getCollisionList(var_s0);
+                temp_s2 = modelbin_getCollisionList(var_s0);
                 if (temp_s2 != 0) {
                     spAC[0] = (f32) var_s1->modelProp.unk4[0];
                     spAC[1] = (f32) var_s1->modelProp.unk4[1];
@@ -1871,7 +1906,7 @@ BKCollisionTri *func_803311D4(Cube *arg0, f32 *arg1, f32 *arg2, f32 *arg3, u32 a
                     spA0[0] = 0.0f;
                     spA0[1] = (f32) (var_s1->modelProp.yaw * 2);
                     spA0[2] = (f32) (var_s1->modelProp.roll * 2);
-                    var_v0 = func_802E805C(temp_s2, model_getVtxList(var_s0), spAC, spA0, (f32)var_s1->modelProp.scale / 100.0, arg1, arg2, arg3, arg4);
+                    var_v0 = collisionList_func_802E805C(temp_s2, modelbin_getVtxList(var_s0), spAC, spA0, (f32)var_s1->modelProp.scale / 100.0, arg1, arg2, arg3, arg4);
                     if (var_v0 != NULL) {
                         var_s6 = var_v0;
                     }
@@ -1884,7 +1919,7 @@ BKCollisionTri *func_803311D4(Cube *arg0, f32 *arg1, f32 *arg2, f32 *arg3, u32 a
                 var_a0 = marker_loadModelBin(var_s1->actorProp.marker);
             }
             if(var_a0 != NULL || (func_8028F280() && (var_a0 = marker_loadModelBin(var_s1->actorProp.marker), true))){
-                temp_s0 = model_getCollisionList(var_a0);
+                temp_s0 = modelbin_getCollisionList(var_a0);
                 if (temp_s0 != 0) {
                     temp_s2_2 = marker_getActor(var_s1->actorProp.marker);
                     temp_a1 = func_80330C74(temp_s2_2);
@@ -1894,7 +1929,7 @@ BKCollisionTri *func_803311D4(Cube *arg0, f32 *arg1, f32 *arg2, f32 *arg3, u32 a
                     sp7C[0] = (f32) var_s1->actorProp.marker->pitch;
                     sp7C[1] = (f32) var_s1->actorProp.marker->yaw;
                     sp7C[2] = (f32) var_s1->actorProp.marker->roll;
-                    temp_s0_2 = func_802E805C(temp_s0, temp_a1, sp88, sp7C, temp_s2_2->scale, arg1, arg2, arg3, arg4);
+                    temp_s0_2 = collisionList_func_802E805C(temp_s0, temp_a1, sp88, sp7C, temp_s2_2->scale, arg1, arg2, arg3, arg4);
                     if ((temp_s0_2 != NULL) && (func_8029453C())) {
                         marker_loadModelBin(var_s1->actorProp.marker);
                         if (var_s1->actorProp.marker->unk50 != 0) {
@@ -1927,10 +1962,10 @@ BKCollisionTri *func_803311D4(Cube *arg0, f32 *arg1, f32 *arg2, f32 *arg3, u32 a
     return var_s6;
 }
 
-BKCollisionTri *func_80331638(Cube *cube, f32 arg1[3], f32 arg2[3], f32 arg3, f32 arg4[3], s32 arg5, u32 flags)
+BKCollisionTriangle *func_80331638(Cube *cube, f32 arg1[3], f32 arg2[3], f32 arg3, f32 arg4[3], s32 arg5, u32 flags)
 {
   f32 *new_var2;
-  BKCollisionTri *spD8;
+  BKCollisionTriangle *spD8;
   Actor *temp_v0_6;
   BKModelBin *model_bin;
   BKVertexList *temp_a1;
@@ -1942,7 +1977,7 @@ BKCollisionTri *func_80331638(Cube *cube, f32 arg1[3], f32 arg2[3], f32 arg3, f3
   BKModelBin *pad9C;
   f32 sp98[3];
   f32 sp8C[3];
-  BKCollisionTri *var_v0;
+  BKCollisionTriangle *var_v0;
   ActorMarker *temp_a0;
   Struct6Cs *temp_v0_7;
   Prop *var_s0;
@@ -1960,7 +1995,7 @@ BKCollisionTri *func_80331638(Cube *cube, f32 arg1[3], f32 arg2[3], f32 arg3, f3
       {
         continue;
       }
-      model_collision_list = model_getCollisionList(model_bin);
+      model_collision_list = modelbin_getCollisionList(model_bin);
       if (model_collision_list == 0)
       {
         continue;
@@ -1972,7 +2007,7 @@ BKCollisionTri *func_80331638(Cube *cube, f32 arg1[3], f32 arg2[3], f32 arg3, f3
       spB0[1] = (f32) (var_s0->modelProp.yaw * 2);
       new_var = spB0;
       spB0[2] = (f32) (var_s0->modelProp.roll * 2);
-      var_v0 = func_802E9118(model_collision_list, model_getVtxList(model_bin), 
+      var_v0 = func_802E9118(model_collision_list, modelbin_getVtxList(model_bin), 
         spBC, new_var, (f32) (((f32) var_s0->modelProp.scale) / 100.0), 
         arg1, arg2, arg3, arg4, arg5, flags
     );
@@ -1990,7 +2025,7 @@ BKCollisionTri *func_80331638(Cube *cube, f32 arg1[3], f32 arg2[3], f32 arg3, f3
       {
         continue;
       }
-      model_bin = (BKModelBin *)model_getCollisionList(pad9C);
+      model_bin = (BKModelBin *)modelbin_getCollisionList(pad9C);
       if (model_bin == 0)
       {
         continue;
@@ -2034,9 +2069,9 @@ BKCollisionTri *func_80331638(Cube *cube, f32 arg1[3], f32 arg2[3], f32 arg3, f3
   return spD8;
 }
 
-BKCollisionTri *func_803319C0(Cube *cube, f32 position[3], f32 radius, f32 arg3[3], u32 arg4){
-    BKCollisionTri *var_s7;
-    BKCollisionTri *var_v0;
+BKCollisionTriangle *func_803319C0(Cube *cube, f32 position[3], f32 radius, f32 arg3[3], u32 arg4){
+    BKCollisionTriangle *var_s7;
+    BKCollisionTriangle *var_v0;
     s32 var_s3;
     Prop *var_s0;
     BKCollisionList *model_collision_list;
@@ -2061,7 +2096,7 @@ BKCollisionTri *func_803319C0(Cube *cube, f32 position[3], f32 radius, f32 arg3[
             if (1) { } if (1) { } if (1) { }
             model_bin = new_var;
             if (model_bin != 0){
-                model_collision_list = model_getCollisionList(model_bin);
+                model_collision_list = modelbin_getCollisionList(model_bin);
                 if (model_collision_list != 0){
                     spAC[0] = (f32) mProp->unk4[0];
                     spAC[1] = (f32) mProp->unk4[1];
@@ -2070,7 +2105,7 @@ BKCollisionTri *func_803319C0(Cube *cube, f32 position[3], f32 radius, f32 arg3[
                     spA0[1] = (f32) (mProp->yaw * 2);
                     model_bin = model_bin;
                     spA0[2] = (f32) (mProp->roll * 2);
-                    var_v0 = func_802E9DD8(model_collision_list, model_getVtxList(model_bin), spAC, spA0, ((f32) mProp->scale) / 100.0, position, radius, arg3, arg4);
+                    var_v0 = func_802E9DD8(model_collision_list, modelbin_getVtxList(model_bin), spAC, spA0, ((f32) mProp->scale) / 100.0, position, radius, arg3, arg4);
                     if (var_v0 != 0)
                         var_s7 = var_v0;
                 }
@@ -2081,7 +2116,7 @@ BKCollisionTri *func_803319C0(Cube *cube, f32 position[3], f32 radius, f32 arg3[
             {
             model_bin = func_80330DE4(aProp->marker);
             if (model_bin != 0) {
-            new_var = (BKModelBin *)model_getCollisionList(model_bin);
+            new_var = (BKModelBin *)modelbin_getCollisionList(model_bin);
             if (new_var != 0)
             {
             temp_v0_6 = marker_getActor(aProp->marker);
@@ -2166,9 +2201,9 @@ f32 func_80331F1C(Prop *arg0){
     if (idx < 0 || idx >= 0x2A2) return 0.0f;
     BKModelBin *model = propModelList_getModel(idx);
     if (model == NULL) return 0.0f;
-    // [port] model_getVtxList offsets into the model blob; if vtx_list_offset is 0 it returns the header itself
-    if (model->vtx_list_offset_10 == 0) return 0.0f;
-    BKVertexList *vtx = model_getVtxList(model);
+    // [port] modelbin_getVtxList offsets into the model blob; if vtx_list_offset is 0 it returns the header itself
+    if (model->vtx_list_offset == 0) return 0.0f;
+    BKVertexList *vtx = modelbin_getVtxList(model);
     if (vtx == NULL) return 0.0f;
     return vtxList_getGlobalNorm(vtx);
 }
@@ -2191,7 +2226,7 @@ f32 func_80331F54(ActorMarker *marker) {
     if (!ResourceMgr_IsModelAsset(marker->modelId)) {
         return func_80331E64(marker);
     }
-    vtxList_getCenterAndNorm(model_getVtxList(model), model_center, &sp34);
+    vtxList_getCenterAndNorm(modelbin_getVtxList(model), model_center, &sp34);
     if (marker->unk3E_0) {
         model_center[0] = model_center[0] * marker_getActor(marker)->scale;\
         model_center[1] = model_center[1] * marker_getActor(marker)->scale;\

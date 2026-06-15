@@ -206,7 +206,7 @@ Actor*  chflotsam_draw(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
     ActorLocal_Core2_D50F0 *local = (ActorLocal_Core2_D50F0 *)&this->local; //sp60
     BoneTransformList *sp5C;
     s32 pad58;
-    f32 sp4C[3];
+    f32 sp4C[4]; // quaternion: passed to func_80345C78 which writes 4 floats
     f32 sp40[3];
     f32 sp34[3];
     f32 sp28[3];
@@ -229,13 +229,13 @@ Actor*  chflotsam_draw(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
     }
 
     if(local->pCtrl_8){
-        func_8033A450(func_80329934());
+        modelRender_setRefPoints(func_80329934());
     }
     
     actor_draw(marker, gfx, mtx, vtx);
 
     if(local->pCtrl_8 && this->marker->unk14_21){
-        func_8034A174(func_80329934(), 5, sp28);
+        vec3fArray_get_vec3f(func_80329934(), 5, sp28);
         particleEmitter_setPosition(local->pCtrl_8, sp28);
         particleEmitter_draw(local->pCtrl_8, gfx, mtx, vtx);
     }

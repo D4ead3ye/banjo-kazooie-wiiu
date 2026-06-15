@@ -88,4 +88,5 @@ logs/
 CLAUDE.md
 /saves
 /build-arm64
+x64
 /x64/Debug

@@ -5,6 +5,7 @@
 #include "variables.h"
 #include "core2/gc/zoombox.h"
 #include "port/Engine.h"
+#include "port/Interpolation/FrameInterpolation.h"
 
 #include "bk_time.h"
 
@@ -588,6 +589,11 @@ static int __get_str_print_len(u8 *arg0, s32 len){
 
 static s32 _gczoombox_findLineBreak(char *string, s32 line_length){
      s32 i;
+     // [port] JP (func_8031ba04): a font-2 string (0xFD 0x6A prefix) is already pre-split to fit, 
+     // so it is never auto-wrapped.
+     if((u8)string[0] == 0xFD && (u8)string[1] == 0x6A){
+          return gczoombox_strlen(string);
+     }
      for(i = gczoombox_strlen(string); (line_length < (__get_str_print_len(string, i)) || (' ' != string[i] )); i--);
      return i;
 }
@@ -831,7 +837,7 @@ void func_803163A8(GcZoombox *this, Gfx **gfx, Mtx **mtx) {
     }
     sp38[0] = 0.0f; sp38[1] = 0.0f; sp38[2] = 0.0f;
     sp44[0] = 0.0f; sp44[1] = 0.0f; sp44[2] = 0.0f;
-    func_8033A308(sp44);
+    modelRender_func_8033A308(sp44);
     modelRender_setDepthMode(MODEL_RENDER_DEPTH_NONE);
     if (this->anim_ctrl != NULL) {
         anctrl_drawSetup(this->anim_ctrl, sp50, 1);
@@ -983,9 +989,15 @@ void gczoombox_draw(GcZoombox *this, Gfx **gdl, Mtx ** mptr, void *vptr){
      if(getGameMode() == GAME_MODE_9_BANJO_AND_KAZOOIE)
           sfx_rand_sync_to_rand();
      //L80316BCC
+     // [port] Stable scope. The crossfade branch below toggles 1↔2 sprite
+     // draws, which would otherwise shift indices and ghost sprites
+     // between zoomboxes.
+     FrameInterpolation_RecordOpenChild("zoombox", (uintptr_t)this);
      if(this->unk1A4_28 && this->state && this->model){
+          FrameInterpolation_RecordOpenChild("zb_model", 0);
           func_803162B4(this);
           func_803163A8(this, gdl, mptr);
+          FrameInterpolation_RecordCloseChild();
           if( this->unk139 == 2
                || ( getGameMode() != GAME_MODE_3_NORMAL
                     && getGameMode() != GAME_MODE_8_BOTTLES_BONUS
@@ -999,10 +1011,18 @@ void gczoombox_draw(GcZoombox *this, Gfx **gdl, Mtx ** mptr, void *vptr){
           }//L80316C8C
 
           if(!this->unk1A4_13){
+               FrameInterpolation_RecordOpenChild("zb_sprite_a", 0);
                func_803164B0(this, gdl, mptr, this->unk176, this->unk177, this->unkFC, 1.0f);
+               FrameInterpolation_RecordCloseChild();
           }else{
+               // Crossfade fork: distinct keys so a↔a and b↔b pair across
+               // frames whether or not the crossfade was active last tick.
+               FrameInterpolation_RecordOpenChild("zb_sprite_a", 0);
                func_803164B0(this, gdl, mptr, this->unk176, this->unk177, this->unkFC, 1.0 - this->unk17C);
+               FrameInterpolation_RecordCloseChild();
+               FrameInterpolation_RecordOpenChild("zb_sprite_b", 0);
                func_803164B0(this, gdl, mptr, this->unk178, this->unk179, this->unk104, this->unk17C);
+               FrameInterpolation_RecordCloseChild();
           }//L80316D40
 
           if( !this->highlighted && !(this->unk168 < 0x81)
@@ -1016,11 +1036,12 @@ void gczoombox_draw(GcZoombox *this, Gfx **gdl, Mtx ** mptr, void *vptr){
                this->unk168 = MIN(this->unk168, 0xff);
           }
      }//L80316DD8
+     FrameInterpolation_RecordCloseChild();
      if(getGameMode() == GAME_MODE_9_BANJO_AND_KAZOOIE){
           rand_sync_to_sfx_rand();
      }
 
-     
+
 }
 
 void func_80316E08(GcZoombox *this) {
@@ -1085,8 +1106,10 @@ void gczoombox_update(GcZoombox *this){
                }
                this->unk15C = gczoombox_strlen(this->unk160);
                if(this->unk15C >= 24){
-                    this->unk15C = _gczoombox_findLineBreak(this->unk160, 24);
-                    this->unk15D = 1;
+                    s32 lineBreak = _gczoombox_findLineBreak(this->unk160, 24);
+                    // [port] JP returns a "continues" flag
+                    this->unk15D = (lineBreak < this->unk15C);
+                    this->unk15C = lineBreak;
                }
                else{
                     this->unk15D = 0;

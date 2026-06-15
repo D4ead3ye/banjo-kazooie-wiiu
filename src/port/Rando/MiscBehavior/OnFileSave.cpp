@@ -8,7 +8,6 @@
 void Rando::MiscBehavior::OnFileSave() {
     REGISTER_LISTENER(OnGameSave, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnGameSave* ev = (OnGameSave*)event;
-        SaveData* saveData = (SaveData*)ev->saveData;
 
         if (!IS_RANDO) {
             return;

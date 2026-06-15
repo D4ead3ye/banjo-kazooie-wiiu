@@ -146,7 +146,7 @@ void LighthouseMenu::AddMenuRando() {
                     }
                     CVarSetInteger(abilityInfo.second, true);
                 }
-                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+                Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
             }
             ImGui::SameLine();
             if (UIWidgets::Button("Disable All", UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Red))) {
@@ -156,7 +156,7 @@ void LighthouseMenu::AddMenuRando() {
                     }
                     CVarSetInteger(abilityInfo.second, false);
                 }
-                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+                Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
             }
             ImGui::PopID();
 
@@ -196,14 +196,14 @@ void LighthouseMenu::AddMenuRando() {
             for (auto& [itemId, itemInfo] : itemLoadoutMap) {
                 CVarSetInteger(itemInfo.second, true);
             }
-            Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+            Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
         }
         ImGui::SameLine();
         if (UIWidgets::Button("Disable All", UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Red))) {
             for (auto& [itemId, itemInfo] : itemLoadoutMap) {
                 CVarSetInteger(itemInfo.second, false);
             }
-            Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+            Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
         }
         ImGui::PopID();
 
