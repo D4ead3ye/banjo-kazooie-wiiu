@@ -38,6 +38,16 @@ void Rando::ObjectBehavior::InitJinjoBehavior() {
         }
     })
 
+    COND_VB_SHOULD(VB_UPDATE_JINJO_HUD, EVENT_PRIORITY_NORMAL, OPTION_ENABLED, {
+        f32* position = va_arg(args, f32*);
+
+        if (!IS_RANDO && !OPTION_ENABLED) {
+            return;
+        }
+
+        *should = false;
+    })
+
     COND_VB_SHOULD(VB_SET_JINJO_COUNT, EVENT_PRIORITY_NORMAL, OPTION_ENABLED, {
         f32* position = va_arg(args, f32*);
 
