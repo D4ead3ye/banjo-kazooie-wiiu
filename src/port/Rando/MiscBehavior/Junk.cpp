@@ -34,16 +34,11 @@ void UpdateJunkList() {
     }
 }
 
-actor_e GetActorIdByShuffledObjectState(Rando::StaticData::RandoShuffledPool shuffledObject) {
-    actor_e randoActorId = (actor_e)Rando::StaticData::Items[shuffledObject.randoItemId].actorId;
-
+actor_e GetRandomJunkActorId(RandoSaveCheck shuffledObject) {
     if (CVarGetInteger(Rando::StaticData::Options[RO_SPAWN_JUNK].cvar, 0) == RO_GENERIC_ON) {
-        randoActorId = shuffledObject.obtained ? junkItemList[(rand() % junkItemList.size())]
-                                               : (actor_e)Rando::StaticData::Items[shuffledObject.randoItemId].actorId;
-    } else {
-        randoActorId = shuffledObject.obtained ? ACTOR_1_UNKNOWN
-                                               : (actor_e)Rando::StaticData::Items[shuffledObject.randoItemId].actorId;
+        UpdateJunkList();
+        return junkItemList[(rand() % junkItemList.size())];
     }
 
-    return randoActorId;
+    return ACTOR_1_UNKNOWN;
 }

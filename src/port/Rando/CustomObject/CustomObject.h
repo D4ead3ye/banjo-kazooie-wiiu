@@ -2,15 +2,11 @@
 #define CUSTOM_OBJECT_H
 
 #include <stdint.h>
+#include <vector>
 #include "port/Rando/Types.h"
 #include "port/Rando/StaticData/StaticData.h"
 
 #include "prop.h"
-
-typedef struct {
-    RandoCheckId randoCheckId;
-    int32_t location[3];
-} CustomActor;
 
 typedef struct {
     s16 flags;
@@ -31,27 +27,29 @@ typedef struct {
     f32 yaw;
 } BundleInfo;
 
-CustomActor CreateCustomActor(RandoCheckId randoCheckId, int32_t position[3]);
-actor_e GetActorIdByShuffledObjectState(Rando::StaticData::RandoShuffledPool shuffledObject);
+actor_e GetRandomJunkActorId(RandoSaveCheck shuffledObject);
+void UpdateSaveDataNoteScores();
 void ApplyBundleActorPhysics(Actor* actor, int32_t bundle_id, BundleInfo* bundle_info, f32 bundleYaw);
 void ApplyCustomActorPhysics(RandoCheckId randoCheckId, Actor* actor, bool isJinjoJiggy);
-void ClearSpawnQueue();
 
+extern std::map<actor_e, std::pair<ActorInfo, int32_t>> actorInfoMap;
+
+extern std::vector<actor_e> junkItemList;
 void UpdateJunkList();
 
 class CustomObject {
 public:
-    static bool CheckSpawnQueue(RandoCheckId randoCheckId);
-    static Actor* SetCustomActorParameters(Actor* actor, RandoCheckId randoCheckId);
-    static Actor* SpawnCustomActor(actor_e actorId, int32_t position[3]);
-    static Actor* GetCustomActor(RandoCheckId randoCheckId);
-    static void SpawnJinjoJiggy(int16_t levelId, int16_t position[3]);
-    static void AddToCustomActorMap(RandoCheckId randoCheckId, Actor* actor);
-    static void AddToSpawnQueue(RandoCheckId randoCheckId, int32_t position[3]);
-    static void InitializeSpawnQueue();
-    static void ResolveCustomActorCollision(RandoCheckId randoCheckId, Actor* customActor);
-    static void CheckObtained(RandoCheckId randoCheckId);
-    static void ObjectCollected(Prop* prop);
+    static void ResetRandoSpawnQueue();
+    static void ClearRandoActorListEX();
+    static bool CheckSpawnedIdList(RandoCheckId randoCheckId);
+    static Actor* SetCustomActorParametersEX(RandoCheckId randoCheckId, Actor* customActor);
+    static Actor* SpawnCustomActorEX(RandoCheckId randoCheckId, int32_t position[3], ActorInfo* actorInfo, int32_t flags);
+    static void FlushRandoSpawnQueue();
+    static void AddPropToSpawnQueueEX(int32_t position[3], RandoCheckId randoCheckId);
+    static Actor* ShouldCreateCustomActorEX(RandoCheckId randoCheckId, int32_t position[3], bool isProp, Actor* refActor = nullptr);
+    static void ResolveCustomActorCollisionEX(RandoCheckId randoCheckId);
+    static void CheckObtainedEX(RandoCheckId randoCheckId);
+    static void ObjectCollectedEX(Prop* prop);
 };
 
 #endif // CUSTOM_OBJECT_H

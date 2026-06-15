@@ -1,5 +1,12 @@
 #include "CustomObject.h"
+#include "port/Rando/Rando.h"
+#include "port/ShipUtils.h"
+#include "port/save/Types.h"
 #include <map>
+
+#include "save.h"
+
+#include "spdlog/spdlog.h"
 
 #define BUNDLE_STATE_DEFAULT 1
 
@@ -30,6 +37,8 @@ typedef struct {
 } BundlePhysics;
 
 extern "C" {
+extern SaveData gameFile_saveData[4];
+extern u8 D_80385FF0[0xE];
 void ml_vec3f_copy(f32 dst[3], f32 src[3]);
 f32 gBundle_randomVelocity;
 f32 gBundle_yaw;
@@ -43,11 +52,12 @@ static f32 baseSpeed = 400.0f;
 // clang-format off
 std::map<RandoCheckId, BundlePhysics> customActorPhysicsMap = {
     { RC_UNKNOWN,                                   { 0, 0, 0, 0, 0, 0, 0, 0 } },
+    { RC_BGS_JIGGY_TANKTUP,                         { 0, 100.0f, 300.0f, 0, 0, 0, 0, 0x1 } },
     { RC_GL_JIGGY_WITCH_SWITCH_TREASURE_TROVE_COVE, { 0, 100.0f, 2800.0f, 0, 0, 0, 0, 0x1 } },
     { RC_MM_JIGGY_CHIMPY,                           { 0, 800.0f, 0, 0, 10.0f, 0, 0, 0x1 } },
-    { RC_MM_JIGGY_CONGA,                            { 150.0f, 175.0f, 0, 0, 10.0f, 0, 0, 0x1 } },
-    { RC_MM_JIGGY_HUTS,                             { 200.0f, 300.0f, 0, 0, 10.0f, 0, 0, 0x1 } },
+    { RC_MM_JIGGY_CONGA,                            { 350.0f, 275.0f, 0, 0, 0, 0, 0, 0x1 } },
     { RC_MM_JIGGY_JUJU,                             { 0, 300.0f, 0, 0, 10.0f, 0, 0, 0x1 } },
+    { RC_MM_NOTE_HUT_BUNDLE_1,                      { 125.0f, 725.0f, 125.0f, 0, 0, 0, 0, 0x1 } },
 };
 // clang-format on
 
@@ -61,6 +71,29 @@ BundlePhysics GetPhysicsByCheckId(RandoCheckId randoCheckId) {
     }
 
     return customActorPhysicsMap.at(RC_UNKNOWN);
+}
+
+void UpdateSaveDataNoteScores() {
+    u64* noteData = (u64*)&gameFile_saveData[selectedFileNum].data[NOTE_OFFSET];
+    u64 currentSaveData;
+    u64 packed_notes = 0;
+    int8_t level_id = (int8_t)LEVEL_A_MAD_MONSTER_MANSION;
+
+    for (int i = 0; i <= LEVEL_A_MAD_MONSTER_MANSION; i++) {
+        packed_notes <<= 7;
+        packed_notes |= (D_80385FF0[level_id] & 0x7F);
+
+        level_id--;
+        if (level_id == LEVEL_6_LAIR) {
+            level_id--;
+        }
+    }
+
+    currentSaveData = *noteData;
+    currentSaveData &= ~((u64)0x7FFFFFFFFFFFFFFF);
+    currentSaveData |= (packed_notes & 0x7FFFFFFFFFFFFFFF);
+
+    *noteData = currentSaveData;
 }
 
 void ApplyBundleActorPhysics(Actor* actor, int32_t bundle_id, BundleInfo* bundle_info, f32 bundleYaw) {
@@ -109,7 +142,13 @@ void ApplyCustomActorPhysics(RandoCheckId randoCheckId, Actor* actor, bool isJin
     }
 
     float bundleYaw = gBundle_yaw;
-    BundlePhysics physicsData = isJinjoJiggy ? jinjoJiggySpawnPhysics : GetPhysicsByCheckId(randoCheckId);
+    BundlePhysics physicsData;
+
+    if ((randoCheckId >= RC_MM_NOTE_HUT_BUNDLE_1 && randoCheckId <= RC_MM_NOTE_HUT_BUNDLE_5) || randoCheckId == RC_MM_JINJO_GREEN || randoCheckId == RC_MM_JIGGY_HUTS) {
+        physicsData = GetPhysicsByCheckId(RC_MM_NOTE_HUT_BUNDLE_1);
+    } else {
+        physicsData = isJinjoJiggy ? jinjoJiggySpawnPhysics : GetPhysicsByCheckId(randoCheckId);
+    }
 
     actor->is_bundle = true;
     Bundle* bundle = (Bundle*)&actor->unkBC;

@@ -68,21 +68,23 @@ static void BitfieldSetNBits(uint8_t* array, int startIndex, int numBits, int va
 }
 
 void RandoSaveCheck_to_json(nlohmann::json& j, const RandoSaveCheck& randoSaveCheck) {
-    j["randoItemId"] = randoSaveCheck.randoItemId;
-    j["shuffledCheckId"] = randoSaveCheck.shuffledCheckId;
-    j["randoCollectionId"] = randoSaveCheck.randoCollectionId;
-    j["shuffled"] = randoSaveCheck.isShuffled;
-    j["obtained"] = randoSaveCheck.obtained;
-    j["skipped"] = randoSaveCheck.skipped;
+    j = nlohmann::json::array({ randoSaveCheck.randoCheckId,
+                                randoSaveCheck.randoItemId,
+                                randoSaveCheck.shuffledCheckId,
+                                randoSaveCheck.randoCollectionId,
+                                randoSaveCheck.isShuffled,
+                                randoSaveCheck.obtained,
+                                randoSaveCheck.skipped });
 }
 
-RandoSaveCheck RandoSaveCheck_from_json(const json& j, RandoSaveCheck& randoSaveCheck) {
-    j.at("randoItemId").get_to(randoSaveCheck.randoItemId);
-    j.at("shuffledCheckId").get_to(randoSaveCheck.shuffledCheckId);
-    j.at("randoCollectionId").get_to(randoSaveCheck.randoCollectionId);
-    j.at("shuffled").get_to(randoSaveCheck.isShuffled);
-    j.at("obtained").get_to(randoSaveCheck.obtained);
-    j.at("skipped").get_to(randoSaveCheck.skipped);
+RandoSaveCheck RandoSaveCheck_from_json(const nlohmann::json& j, RandoSaveCheck& randoSaveCheck) {
+    j.at(0).get_to(randoSaveCheck.randoCheckId);
+    j.at(1).get_to(randoSaveCheck.randoItemId);
+    j.at(2).get_to(randoSaveCheck.shuffledCheckId);
+    j.at(3).get_to(randoSaveCheck.randoCollectionId);
+    j.at(4).get_to(randoSaveCheck.isShuffled);
+    j.at(5).get_to(randoSaveCheck.obtained);
+    j.at(6).get_to(randoSaveCheck.skipped);
 
     return randoSaveCheck;
 }
@@ -304,20 +306,27 @@ ordered_json Convert_SaveDataToJSON(SaveData* saveData, int32_t fileNum) {
 
     if (saveData->shipSaveData.fileType == FILE_TYPE_SAVE_RANDO) {
         Rando::Logic::GenerateSaveData(saveData);
+        shipRando["seedId"] = saveData->shipSaveData.randoSaveData.seedId;
     
         for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
             json jsonSaveChecks = nlohmann::json::object();
             RandoSaveCheck randoSaveCheck = saveData->shipSaveData.randoSaveData.randoSaveCheck[i];
             RandoSaveCheck_to_json(jsonSaveChecks, randoSaveCheck);
     
-            shipRando["randoSaveCheck"][randoSaveCheck.name] = jsonSaveChecks;
+            shipRando["randoSaveCheck"][Rando::StaticData::Checks[(RandoCheckId)i].name] = jsonSaveChecks;
         }
 
         for (int o = RO_LOGIC; o < RO_MAX; o++) {
             RandoSaveOption randoSaveOption = saveData->shipSaveData.randoSaveData.randoSaveOption[o];
 
-            shipRando["randoSaveOption"][randoSaveOption.name] = randoSaveOption.optionValue;
+            shipRando["randoSaveOption"][Rando::StaticData::Options[(RandoOptionId)o].name] = randoSaveOption.optionValue;
         }
+
+        nlohmann::json randoInfArray = nlohmann::json::array();
+        for (int f = RANDO_INF_UNKNOWN; f < RANDO_INF_MAX; f++) {
+            randoInfArray.push_back(saveData->shipSaveData.randoSaveData.randoSaveFlag[f].flagState);
+        }
+        shipRando["randoSaveFlag"] = randoInfArray;
 
         ship["rando"] = shipRando;
     }
@@ -518,6 +527,7 @@ SaveData* Convert_JSONToSaveData(int32_t fileNum) {
 
     if (j["ship"]["fileType"].get<int>() == FILE_TYPE_SAVE_RANDO) {
         json rando = j["ship"]["rando"];
+        saveData->shipSaveData.randoSaveData.seedId = rando["seedId"];
     
         for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
             json jsonSaveChecks = rando["randoSaveCheck"][Rando::StaticData::Checks[(RandoCheckId)i].name];
@@ -533,6 +543,10 @@ SaveData* Convert_JSONToSaveData(int32_t fileNum) {
             };
 
             saveData->shipSaveData.randoSaveData.randoSaveOption[o] = randoSaveOption;
+        }
+
+        for (int f = RANDO_INF_UNKNOWN; f < RANDO_INF_MAX; f++) {
+            saveData->shipSaveData.randoSaveData.randoSaveFlag[f].flagState = rando["randoSaveFlag"][f];
         }
     }
 

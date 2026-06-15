@@ -32,19 +32,14 @@ u32 jiggyscore_isCollected(enum jiggy_e jiggy_id);
 void jiggyscore_setCollected(s32 indx, s32 val);
 bool honeycombscore_get(enum honeycomb_e indx);
 void honeycombscore_set(enum honeycomb_e indx, bool val);
+
+extern struct {
+    u8 D_803832C0[0xD];
+    u8 D_803832CD[0xD];
+} jiggyscore;
+
+extern u8 sHoneycombScore[3];
 }
-
-std::vector<std::string> worldNameList = {
-    "Mumbo's Mountain", "Treasure Trove Cove", "Clanker's Cavern", "Bubblegloop Swamp",
-    "Freezeezy Peak",   "Gruntilda's Lair",    "Gobi's Valley",    "Click Clock Wood",
-    "Rusty Bucket Bay", "Mad Monster Mansion", "Spiral Mountain",
-};
-
-std::vector<std::string> abilityNameList = {
-    "Beak Barge",    "Beak Bomb", "Beak Buster", "Camera Control", "Claw Swipe",  "Climb", "Eggs",
-    "Feathery Flap", "Flap Flip", "Flight",      "Jump Higher",    "Ratatat Rap", "Roll",  "Shock Jump",
-    "Wading Boots",  "Dive",      "Talon Trot",  "Turbo Talon",    "Wonderwing",
-};
 
 std::vector<std::string> warpCauldronList = {
     "Lower Pink Cauldron",
@@ -72,6 +67,14 @@ std::unordered_map<int32_t, int32_t> progressToLevelMap = {
     { FILEPROG_37_MMM_OPEN, LEVEL_A_MAD_MONSTER_MANSION }, { FILEPROG_38_RBB_OPEN, LEVEL_9_RUSTY_BUCKET_BAY },
     { FILEPROG_39_CCW_OPEN, LEVEL_8_CLICK_CLOCK_WOOD },
 };
+
+bool SaveEditor_IsJiggyCollected(jiggy_e jiggyId) {
+    return (jiggyscore.D_803832C0[(jiggyId - 1) / 8] & (1 << (jiggyId & 7))) != 0;
+}
+
+bool SaveEditor_IsHoneycombCollected(honeycomb_e honeycombId) {
+    return (sHoneycombScore[(honeycombId - 1) / 8] & (1 << (honeycombId & 7))) != 0;
+}
 
 void SaveEditor_DrawUnlocks() {
     if (ImGui::BeginChild("UnlockChild")) {
@@ -251,13 +254,13 @@ void SaveEditor_DrawProgressTab() {
                     ImGui::TableNextColumn();
                     for (int i = jiggyId; i <= (jiggyId + 9); i++) {
                         std::string labelStr = "##jiggy" + std::to_string(i);
-                        bool isCollected = jiggyscore_isCollected((jiggy_e)i);
+                        bool isCollected = SaveEditor_IsJiggyCollected((jiggy_e)i);
                         int32_t curJiggyCount = item_getCount(ITEM_26_JIGGY_TOTAL);
 
                         ImGui::SameLine();
                         if (UIWidgets::Checkbox(labelStr.c_str(), &isCollected,
                                                 { .labelPosition = UIWidgets::LabelPositions::None })) {
-                            if (jiggyscore_isCollected((jiggy_e)i)) {
+                            if (SaveEditor_IsJiggyCollected((jiggy_e)i)) {
                                 jiggyscore_setCollected(i, false);
                                 item_set(ITEM_26_JIGGY_TOTAL, (curJiggyCount - 1));
                             } else {
@@ -277,12 +280,12 @@ void SaveEditor_DrawProgressTab() {
                     int32_t maxHoneycombs = l == LEVEL_B_SPIRAL_MOUNTAIN ? 6 : 2;
                     for (int i = 1; i <= (maxHoneycombs); i++) {
                         std::string labelStr = "##comb" + std::to_string(combId);
-                        bool isCollected = honeycombscore_get((honeycomb_e)combId);
+                        bool isCollected = SaveEditor_IsHoneycombCollected((honeycomb_e)combId);
 
                         ImGui::SameLine();
                         if (UIWidgets::Checkbox(labelStr.c_str(), &isCollected,
                                                 { .labelPosition = UIWidgets::LabelPositions::None })) {
-                            if (honeycombscore_get((honeycomb_e)combId)) {
+                            if (SaveEditor_IsHoneycombCollected((honeycomb_e)combId)) {
                                 honeycombscore_set((honeycomb_e)combId, false);
                             } else {
                                 honeycombscore_set((honeycomb_e)combId, true);

@@ -24,11 +24,40 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
+std::vector<std::string> worldNameList = {
+    "Mumbo's Mountain", "Treasure Trove Cove", "Clanker's Cavern", "Bubblegloop Swamp",
+    "Freezeezy Peak",   "Gruntilda's Lair",    "Gobi's Valley",    "Click Clock Wood",
+    "Rusty Bucket Bay", "Mad Monster Mansion", "Spiral Mountain",
+};
+
+std::vector<std::string> abilityNameList = {
+    "Beak Barge",    "Beak Bomb", "Beak Buster", "Camera Control", "Claw Swipe",  "Climb", "Eggs",
+    "Feathery Flap", "Flap Flip", "Flight",      "Jump Higher",    "Ratatat Rap", "Roll",  "Shock Jump",
+    "Wading Boots",  "Dive",      "Talon Trot",  "Turbo Talon",    "Wonderwing",
+};
+
 // Helper for C-style variadic log functions
 static void bk_log_vfmt(spdlog::level::level_enum level, const char* fmt, va_list args) {
     char buf[512];
     vsnprintf(buf, sizeof(buf), fmt, args);
     spdlog::default_logger_raw()->log(spdlog::source_loc{}, level, buf);
+}
+
+void TableCellCenteredText(const char* text) {
+    float textHeight = ImGui::GetTextLineHeight();
+    float offsetY = (32.0f - textHeight + 5.0f) * 0.5f;
+    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + offsetY);
+    ImGui::Text("%s", text);
+}
+
+extern uint32_t Ship_Hash(std::string str) {
+    const size_t len = str.size();
+    uint32_t hval = 0x811c9dc5;
+    for (size_t pos = 0; pos < len; pos++) {
+        hval ^= (uint32_t)str[pos];
+        hval *= 0x01000193;
+    }
+    return hval;
 }
 
 extern "C" {
@@ -310,7 +339,7 @@ std::vector<file_progress_e> worldOpenFlags = {
 };
 
 std::vector<std::string> levelAbbreviations = {
-    "MM", "TTC", "CC", "BGS", "FP", "Lair", "GV", "CCW", "RBB", "MMM", "SM", 
+    "MM", "TTC", "CC", "BGS", "FP", "GL", "GV", "CCW", "RBB", "MMM", "SM", 
 };
 
 json Ship_RetrieveSaveFile(int32_t filenum) {

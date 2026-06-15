@@ -19,3 +19,5 @@ DEFINE_EVENT(OnWaterPyramidTimer, s32* timer;)
 DEFINE_EVENT(OnBootLogosCheck, bool* skipLogos;)
 
 DEFINE_EVENT(OnIntroCutsceneCheck, bool* skipIntro;)
+
+DEFINE_EVENT(OnMiscCutscenesCheck, bool* skipMiscCutscenes;)

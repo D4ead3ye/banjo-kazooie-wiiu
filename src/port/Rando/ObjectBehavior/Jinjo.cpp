@@ -9,9 +9,6 @@
 #include "port/enhancements/events/hooks/Events.h"
 
 extern "C" {
-enum map_e gsworld_getMap(void);
-enum level_e map_getLevel(enum map_e map);
-
 s32 item_adjustByDiffWithHud(enum item_e item, s32 diff);
 }
 
@@ -30,7 +27,7 @@ void Rando::ObjectBehavior::InitJinjoBehavior() {
                 continue;
             }
         
-            if (Rando::StaticData::Checks[pool.shuffleCheckId].worldId != ev->levelId) {
+            if (Rando::StaticData::Checks[pool.shuffledCheckId].worldId != ev->levelId) {
                 continue;
             }
         
@@ -39,6 +36,16 @@ void Rando::ObjectBehavior::InitJinjoBehavior() {
                 item_adjustByDiffWithHud(ITEM_12_JINJOS, (1 << ((jinjoMarkerId + 6) & 0x1F)));
             }
         }
+    })
+
+    COND_VB_SHOULD(VB_UPDATE_JINJO_HUD, EVENT_PRIORITY_NORMAL, OPTION_ENABLED, {
+        f32* position = va_arg(args, f32*);
+
+        if (!IS_RANDO && !OPTION_ENABLED) {
+            return;
+        }
+
+        *should = false;
     })
 
     COND_VB_SHOULD(VB_SET_JINJO_COUNT, EVENT_PRIORITY_NORMAL, OPTION_ENABLED, {

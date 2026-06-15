@@ -18,6 +18,7 @@ void Rando::MiscBehavior::OnFileLoad() {
     REGISTER_LISTENER(OnGameLoad, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnGameLoad* ev = (OnGameLoad*)event;
         selectedFileNum = ev->fileNum;
+        Rando::Logic::shuffledPool.clear();
     });
 
     REGISTER_LISTENER(OnSaveLoad, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -35,14 +36,14 @@ void Rando::MiscBehavior::OnFileLoad() {
         
         if (CVarGetInteger("gRandoSettings.Enable", 0)) {
             Rando::Logic::InitializeSaveData(saveData);
-            Rando::Logic::GenerateShufflePool();
+            Rando::Logic::GenerateShufflePool(saveData);
             Rando::Logic::GrantStartingLoadout();
             saveData->shipSaveData.fileType = FILE_TYPE_SAVE_RANDO;
         }
     });
 
-    REGISTER_LISTENER(OnSaveFileLoad, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        OnSaveFileLoad* ev = (OnSaveFileLoad*)event;
+    REGISTER_LISTENER(OnLoadFileSelect, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnLoadFileSelect* ev = (OnLoadFileSelect*)event;
 
         selectedFileNum = DEFAULT_FILE_NUM;
     });

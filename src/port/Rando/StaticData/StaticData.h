@@ -11,20 +11,13 @@
 namespace Rando {
 
 namespace StaticData {
+void SendCollisionNotification(RandoItemId randoItemId);
 
 struct RandoLogicData {
-    bool canAccess;
-};
-
-struct RandoShuffledPool {
     const char* name;
-    RandoCheckId randoCheckId;
-    RandoCheckId shuffleCheckId;
-    RandoItemId randoItemId;
-    int32_t randoCollectionId;
+    bool canAccess;
+    bool isFilled;
     bool isShuffled;
-    bool obtained;
-    bool skipped;
 };
 
 struct RandoStaticCheck {
@@ -42,8 +35,11 @@ struct RandoStaticCheck {
 RandoCheckId GetCheckByPosition(int32_t posX, int32_t posY, int32_t posZ);
 RandoCheckId GetCheckByJiggyId(int32_t jiggyId);
 RandoCheckId GetJinjoJiggyCheckByLevelId(int16_t levelId);
+RandoCheckId GetCheckByAbilityId(int32_t abilityId);
+RandoCheckId GetCheckByName(const char* checkName);
 
 extern std::map<RandoCheckId, RandoStaticCheck> Checks;
+extern std::map<RandoCheckId, std::tuple<int32_t, int32_t, int32_t>> multiSpawnCheckMap;
 
 struct RandoStaticItem {
     RandoItemId randoItemId;
@@ -81,6 +77,8 @@ struct RandoStaticOption {
 extern std::map<RandoOptionId, RandoStaticOption> Options;
 
 RandoOptionId GetOptionIdFromName(const char* name);
+
+void ModifyRandoInfFlagState(RandoCheckId randoCheckId);
 
 // TODO: Add Logic and Regions
 // struct RandoStaticRegion {

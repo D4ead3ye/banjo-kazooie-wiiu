@@ -9,36 +9,32 @@
 #include "port/enhancements/events/hooks/Events.h"
 
 extern "C" {
-enum map_e gsworld_getMap(void);
-enum level_e map_getLevel(enum map_e map);
-
 void item_inc(enum item_e item);
 }
 
-// TODO: SWAP TO RANDO_SAVE_OPTIONS
-#define CVAR_NAME Rando::StaticData::Options[RO_SHUFFLE_MUSIC_NOTES].cvar
-#define CVAR CVarGetInteger(CVAR_NAME, 0)
+#define OPTION_ENABLED RANDO_SAVE_OPTIONS[RO_SHUFFLE_MUSIC_NOTES].optionValue
 
 void Rando::ObjectBehavior::InitMusicNoteBehavior() {
     REGISTER_LISTENER(OnSetJiggyList, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnSetJiggyList* ev = (OnSetJiggyList*)event;
 
-        if (!IS_RANDO) {
+        if (!IS_RANDO && !OPTION_ENABLED) {
             return;
         }
 
-        if (CVAR) {
-            for (auto& pool : Rando::Logic::shuffledPool) {
-                if (Rando::StaticData::Checks[pool.shuffleCheckId].worldId != ev->levelId) {
-                    continue;
-                }
-            
-                if (pool.randoItemId == RI_MUSIC_NOTE) {
-                    if (pool.obtained) {
-                        item_inc(ITEM_C_NOTE);
-                    }
+        int32_t currentNotes = 0;
+        for (auto& pool : Rando::Logic::shuffledPool) {
+            if (Rando::StaticData::Checks[pool.shuffledCheckId].worldId != ev->levelId) {
+                continue;
+            }
+        
+            if (pool.randoItemId == RI_MUSIC_NOTE) {
+                if (pool.obtained) {
+                    currentNotes++;
                 }
             }
         }
+        
+        item_set(ITEM_C_NOTE, currentNotes);
     })
 }

@@ -7,11 +7,17 @@
 #include <unordered_set>
 
 extern "C" {
+void item_set(s32 item, s32 val);
+void item_adjustByDiffWithoutHud(enum item_e item, s32 diff);
 s32 item_getCount(enum item_e item);
-s32 itemscore_noteScores_getTotal(void);
+void itemscore_noteScores_clear(void);
 
+void ability_unlock(enum ability_e);
 int ability_isUnlocked(enum ability_e uid);
+void ability_setLearned(s32 move, s32 val);
+void __chSmBottles_skipIntroTutorial(void);
 
+void fileProgressFlag_set(enum file_progress_e index, s32 set);
 bool fileProgressFlag_get(enum file_progress_e index);
 s32 __transformation_getCost(enum transformation_e trans_id);
 s32 _puzzleCost(s32 index);
@@ -22,6 +28,8 @@ enum level_e map_getLevel(enum map_e map);
 enum map_e gsworld_getMap(void);
 }
 
+extern int32_t randoFinalSeed;
+
 extern std::map<ability_e, std::pair<const char*, const char*>> abilityLoadoutMap;
 extern std::map<item_e, std::pair<const char*, const char*>> itemLoadoutMap;
 
@@ -29,22 +37,32 @@ extern Rando::StaticData::RandoLogicData reachableRegions[RR_MAX];
 extern Rando::StaticData::RandoLogicData reachableEvents[RA_MAX];
 extern Rando::StaticData::RandoLogicData reachableChecks[RC_MAX];
 
+void DrawSeedMetrics();
+void RefreshMetrics(std::string text);
+
 namespace Rando {
 
 namespace Logic {
-extern std::vector<Rando::StaticData::RandoShuffledPool> shuffledPool;
+extern std::vector<RandoCheckId> checkPool;
+extern std::vector<std::tuple<actor_e, int32_t, RandoCheckId>> itemPool;
+
+extern std::vector<RandoCheckId> abilityCheckPool;
+extern std::vector<std::tuple<actor_e, int32_t, RandoCheckId>> abilityItemPool;
+
+extern std::vector<RandoSaveCheck> shuffledPool;
 
 void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
                                  std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& itemPool,
                                  std::vector<RandoCheckId>& abilityCheckPool,
-                                 std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& abilityItemPool);
+                                 std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& abilityItemPool,
+                                 SaveData* saveData);
 
 void GenerateNoLogicPool(std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& itemPool,
                          std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& abilityItemPool);
 
 void ShuffleRandoItems(const std::string& input, std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& pool);
 
-void GenerateShufflePool();
+void GenerateShufflePool(SaveData* saveData);
 void GeneratePoolFromSaveData(SaveData* saveData);
 void InitializeSaveData(SaveData* saveData);
 void GenerateSaveData(SaveData* saveData);
@@ -65,8 +83,8 @@ inline bool IsCheckShuffled(RandoCheckId randoCheckId) {
     return isShuffled;
 }
 
-inline Rando::StaticData::RandoShuffledPool GetShuffledObject(RandoCheckId randoCheckId) {
-    Rando::StaticData::RandoShuffledPool shuffledObject;
+inline RandoSaveCheck GetShuffledObject(RandoCheckId randoCheckId) {
+    RandoSaveCheck shuffledObject;
     shuffledObject.randoCheckId = RC_UNKNOWN;
 
     if (!IsCheckShuffled(randoCheckId)) {
@@ -105,7 +123,7 @@ inline bool ShouldSpawnJinjoJiggy(int16_t levelId) {
             continue;
         }
 
-        if (Rando::StaticData::Checks[pool.shuffleCheckId].worldId != levelId) {
+        if (Rando::StaticData::Checks[pool.shuffledCheckId].worldId != levelId) {
             continue;
         }
 
@@ -175,12 +193,12 @@ inline bool CanCollectWorldJinjos(level_e levelId) {
     int32_t accessibleJinjos = 0;
 
     for (auto& entry : Rando::Logic::shuffledPool) {
-        if (Rando::StaticData::Checks[entry.shuffleCheckId].worldId != levelId) {
+        if (Rando::StaticData::Checks[entry.shuffledCheckId].worldId != levelId) {
             continue;
         }
 
         if (entry.randoItemId >= RI_JINJO_BLUE && entry.randoItemId <= RI_JINJO_YELLOW) {
-            if (CanAccessCheck(entry.shuffleCheckId)) {
+            if (CanAccessCheck(entry.shuffledCheckId)) {
                 accessibleJinjos++;
             }
         }
@@ -203,10 +221,6 @@ inline bool CanUseTransformation(transformation_e transId) {
 }
 
 inline bool CanOpenWorld(level_e levelId) {
-    if (levelId == LEVEL_6_LAIR) {
-        return false;
-    }
-
     int32_t levelNum = levelId;
 
     if (levelNum > LEVEL_6_LAIR) {
@@ -218,7 +232,7 @@ inline bool CanOpenWorld(level_e levelId) {
     }
 
     int32_t puzzleCost = levelId == LEVEL_6_LAIR ? 25 : _puzzleCost(levelNum - 1);
-    int32_t jiggyCount = item_getCount(ITEM_26_JIGGY_TOTAL);
+    int32_t jiggyCount = item_getCount(ITEM_E_JIGGY);
 
     if (jiggyCount >= puzzleCost) {
         RandoAccessId puzzleBoardAccessID = RA_MAX;
@@ -348,7 +362,7 @@ inline bool CanKillEnemy(actor_e enemyType) {
 #define CAN_BREAK_OBJECT(objectType) CanBreakObject(objectType)
 #define CAN_COLLECT_JINJOS(levelId) CanCollectWorldJinjos(levelId)
 #define CAN_KILL_ENEMY(enemyType) CanKillEnemy(enemyType)
-#define CAN_UNLOCK_NOTE_DOOR(noteCount) item_getCount(ITEM_C_NOTE) >= noteCount&& CAN_ACCESS(RA_NOTE_DOOR_##noteCount)
+#define CAN_UNLOCK_NOTE_DOOR(noteCount) item_getCount(ITEM_C_NOTE) >= noteCount && CAN_ACCESS(RA_NOTE_DOOR_##noteCount)
 #define CAN_UNLOCK_WORLD(levelId) CanOpenWorld(levelId)
 #define CAN_USE_ABILITY(abilityId) ability_isUnlocked(abilityId)
 #define CAN_USE_TRANSFORMATION(transId) CanUseTransformation(transId)

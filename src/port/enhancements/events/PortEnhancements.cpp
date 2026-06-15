@@ -32,6 +32,7 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnFurnaceFunDialog);
     REGISTER_EVENT(OnGruntyJinjonatorComplete);
     REGISTER_EVENT(OnIntroCutsceneCheck);
+    REGISTER_EVENT(OnMiscCutscenesCheck);
     REGISTER_EVENT(OnMumboTokenUpdate);
     REGISTER_EVENT(OnWaterPyramidTimer);
     REGISTER_EVENT(OnNametagDraw);
@@ -48,13 +49,21 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(MapTransitionEnd);
     REGISTER_EVENT(OnWarpDispatch);
     REGISTER_EVENT(OnSetJiggyList);
+    REGISTER_EVENT(OnGetLevelSpecificFlag);
 
     // Register rando events
+    REGISTER_EVENT(OnLoadFileSelect);
     REGISTER_EVENT(OnSaveLoad);
     REGISTER_EVENT(OnActorSpawn);
-    REGISTER_EVENT(OnActorSaveState);
+    REGISTER_EVENT(OnLoadActorSaveState);
+    REGISTER_EVENT(OnSaveActorSaveState);
     REGISTER_EVENT(OnActorCollision);
+    REGISTER_EVENT(OnFindActorFromActorId);
     REGISTER_EVENT(OnActorDestroy);
+    REGISTER_EVENT(OnIsJiggyScoreCollected);
+    REGISTER_EVENT(OnIsJiggyScoreSpawned);
+    REGISTER_EVENT(SetRandoInfFlag);
+    REGISTER_EVENT(OnIsHoneycombScoreCollected);
 
     Rando::Init();
 }

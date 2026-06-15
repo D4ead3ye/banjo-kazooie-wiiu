@@ -24,7 +24,7 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_BGS_JIGGY_ELEVATED_WALKWAY,                                           RCTYPE_JIGGY,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_46_JIGGY,             JIGGY_20_BGS_ELEVATED_WALKWAY,                                          0, 0, 0),
     RC(RC_BGS_JIGGY_FLIBBITS,                                                   RCTYPE_JIGGY,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_46_JIGGY,             JIGGY_24_BGS_FLIBBITS,                                                  0, 0, 0),
     RC(RC_BGS_JIGGY_HUTS,                                                       RCTYPE_JIGGY,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_46_JIGGY,             JIGGY_23_BGS_HUTS,                                                      0, 0, 0),
-    RC(RC_BGS_JIGGY_JINGO,                                                      RCTYPE_JIGGY,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_46_JIGGY,             JIGGY_1F_BGS_JINGO,                                                     0, 0, 0),
+    RC(RC_BGS_JIGGY_JINJO,                                                      RCTYPE_JIGGY,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_46_JIGGY,             JIGGY_1F_BGS_JINGO,                                                     0, 0, 0),
     RC(RC_BGS_JIGGY_MAZE,                                                       RCTYPE_JIGGY,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_46_JIGGY,             JIGGY_25_BGS_MAZE,                                                      0, 0, 0),
     RC(RC_BGS_JIGGY_MR_VILE,                                                    RCTYPE_JIGGY,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_46_JIGGY,             JIGGY_28_BGS_MR_VILE,                                                   0, 0, 0),
     RC(RC_BGS_JIGGY_PINKEGG,                                                    RCTYPE_JIGGY,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_46_JIGGY,             JIGGY_21_BGS_PINKEGG,                                                   0, 0, 0),
@@ -35,6 +35,7 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_BGS_JINJO_ORANGE,                                                     RCTYPE_JINJO,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_5F_JINJO_ORANGE,      NULL,                                                                   5472, 0, 2853),
     RC(RC_BGS_JINJO_PINK,                                                       RCTYPE_JINJO,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_61_JINJO_PINK,        NULL,                                                                   5670, 0, -4158),
     RC(RC_BGS_JINJO_YELLOW,                                                     RCTYPE_JINJO,           LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_5E_JINJO_YELLOW,      NULL,                                                                   -1606, 500, 2797),
+    RC(RC_BGS_MOLEHILL_WADING_BOOTS,                                            RCTYPE_MOLEHILL,        LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_12C_MOLEHILL,         ABILITY_E_WADING_BOOTS,                                                 4297, 100, 6286),
     RC(RC_BGS_MUMBO_TOKEN_ALCOVE_ABOVE_YELLOW_FLIBBITS,                         RCTYPE_MUMBO_TOKEN,     LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_2D_MUMBO_TOKEN,       MUMBOTOKEN_1B_BGS_ALCOVE_ABOVE_YELLOW_FLIBBITS,                         4278, 1400, -1302), 
     RC(RC_BGS_MUMBO_TOKEN_BEHIND_MUMBOS_SKULL,                                  RCTYPE_MUMBO_TOKEN,     LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_2D_MUMBO_TOKEN,       MUMBOTOKEN_1A_BGS_BEHIND_MUMBOS_SKULL,                                  -6940, 1000, -5838), 
     RC(RC_BGS_MUMBO_TOKEN_BEHIND_TIPTUP,                                        RCTYPE_MUMBO_TOKEN,     LEVEL_4_BUBBLEGLOOP_SWAMP,      ACTOR_2D_MUMBO_TOKEN,       MUMBOTOKEN_1C_BGS_BEHIND_TIPTUP,                                        0, 0, -1829), 
@@ -157,11 +158,11 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_CC_JIGGY_TAIL,                                                        RCTYPE_JIGGY,           LEVEL_3_CLANKERS_CAVERN,        ACTOR_46_JIGGY,             JIGGY_19_CC_TAIL,                                                       10061, 5112, 3),
     RC(RC_CC_JIGGY_TOOTH,                                                       RCTYPE_JIGGY,           LEVEL_3_CLANKERS_CAVERN,        ACTOR_46_JIGGY,             JIGGY_1B_CC_TOOTH,                                                      0, 0, 0),
     RC(RC_CC_JIGGY_SNIPPETS,                                                    RCTYPE_JIGGY,           LEVEL_3_CLANKERS_CAVERN,        ACTOR_46_JIGGY,             JIGGY_16_CC_SNIPPETS,                                                   0, 0, 0),
-    RC(RC_CC_JINJO_BLUE,                                                        RCTYPE_JINJO,           LEVEL_3_CLANKERS_CAVERN,        ACTOR_60_JINJO_BLUE,        NULL,                                                                   -4726, 5337, -110),
-    RC(RC_CC_JINJO_GREEN,                                                       RCTYPE_JINJO,           LEVEL_3_CLANKERS_CAVERN,        ACTOR_62_JINJO_GREEN,       NULL,                                                                   6138, 5087, 2637),
-    RC(RC_CC_JINJO_ORANGE,                                                      RCTYPE_JINJO,           LEVEL_3_CLANKERS_CAVERN,        ACTOR_5F_JINJO_ORANGE,      NULL,                                                                   4326, 2146, -4080),
+    RC(RC_CC_JINJO_BLUE,                                                        RCTYPE_JINJO,           LEVEL_3_CLANKERS_CAVERN,        ACTOR_60_JINJO_BLUE,        NULL,                                                                   4326, 2146, -4080),
+    RC(RC_CC_JINJO_GREEN,                                                       RCTYPE_JINJO,           LEVEL_3_CLANKERS_CAVERN,        ACTOR_62_JINJO_GREEN,       NULL,                                                                   5017, -3085, -13),
+    RC(RC_CC_JINJO_ORANGE,                                                      RCTYPE_JINJO,           LEVEL_3_CLANKERS_CAVERN,        ACTOR_5F_JINJO_ORANGE,      NULL,                                                                   6138, 5087, 2637),
     RC(RC_CC_JINJO_PINK,                                                        RCTYPE_JINJO,           LEVEL_3_CLANKERS_CAVERN,        ACTOR_61_JINJO_PINK,        NULL,                                                                   3644, -474, 48),
-    RC(RC_CC_JINJO_YELLOW,                                                      RCTYPE_JINJO,           LEVEL_3_CLANKERS_CAVERN,        ACTOR_5E_JINJO_YELLOW,      NULL,                                                                   5017, -3085, -13),
+    RC(RC_CC_JINJO_YELLOW,                                                      RCTYPE_JINJO,           LEVEL_3_CLANKERS_CAVERN,        ACTOR_5E_JINJO_YELLOW,      NULL,                                                                   -4726, 5337, -110),
     RC(RC_CC_MOLEHILL_WONDERWING,                                               RCTYPE_MOLEHILL,        LEVEL_3_CLANKERS_CAVERN,        ACTOR_12C_MOLEHILL,         ABILITY_12_WONDERWING,                                                  -259, -500, 1413),
     RC(RC_CC_MUMBO_TOKEN_CHOMPA_BEHIND_CLANKERS_TAIL,                           RCTYPE_MUMBO_TOKEN,     LEVEL_3_CLANKERS_CAVERN,        ACTOR_2D_MUMBO_TOKEN,       MUMBOTOKEN_10_CC_CHOMPA_BEHIND_CLANKERS_TAIL,                           9823, 4225, -19),
     RC(RC_CC_MUMBO_TOKEN_ABOVE_LEVEL_ENTRANCE,                                  RCTYPE_MUMBO_TOKEN,     LEVEL_3_CLANKERS_CAVERN,        ACTOR_2D_MUMBO_TOKEN,       MUMBOTOKEN_11_CC_ABOVE_LEVEL_ENTRANCE,                                  -9694, 5272, 1607),
@@ -688,8 +689,8 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_GV_NOTE_WATER_PYRAMID_TOP_4,                                          RCTYPE_MUSIC_NOTE,      LEVEL_7_GOBIS_VALLEY,           ACTOR_51_MUSIC_NOTE,        NULL,                                                                   -489, 4316, -4946),
     RC(RC_MM_EMPTY_HONEYCOMB_HILL,                                              RCTYPE_EMPTY_HONEYCOMB, LEVEL_1_MUMBOS_MOUNTAIN,        ACTOR_47_EMPTY_HONEYCOMB,   HONEYCOMB_1_MM_HILL,                                                    985, 484, 1681),
     RC(RC_MM_EMPTY_HONEYCOMB_JUJU,                                              RCTYPE_EMPTY_HONEYCOMB, LEVEL_1_MUMBOS_MOUNTAIN,        ACTOR_47_EMPTY_HONEYCOMB,   HONEYCOMB_2_MM_JUJU,                                                    4302, 2900, -1490),
-    RC(RC_MM_JIGGY_CHIMPY,                                                      RCTYPE_JIGGY,           LEVEL_1_MUMBOS_MOUNTAIN,        ACTOR_46_JIGGY,             JIGGY_9_MM_CHIMPY,                                                      -5599, -20, 5599),
-    RC(RC_MM_JIGGY_CONGA,                                                       RCTYPE_JIGGY,           LEVEL_1_MUMBOS_MOUNTAIN,        ACTOR_46_JIGGY,             JIGGY_A_MM_CONGA,                                                       -3758, -172, 5028),
+    RC(RC_MM_JIGGY_CHIMPY,                                                      RCTYPE_JIGGY,           LEVEL_1_MUMBOS_MOUNTAIN,        ACTOR_46_JIGGY,             JIGGY_9_MM_CHIMPY,                                                      0, 0, 0),
+    RC(RC_MM_JIGGY_CONGA,                                                       RCTYPE_JIGGY,           LEVEL_1_MUMBOS_MOUNTAIN,        ACTOR_46_JIGGY,             JIGGY_A_MM_CONGA,                                                       0, 0, 0),
     RC(RC_MM_JIGGY_HILL,                                                        RCTYPE_JIGGY,           LEVEL_1_MUMBOS_MOUNTAIN,        ACTOR_46_JIGGY,             JIGGY_07_MM_HILL,                                                       4335, 1485, 794),
     RC(RC_MM_JIGGY_HUTS,                                                        RCTYPE_JIGGY,           LEVEL_1_MUMBOS_MOUNTAIN,        ACTOR_46_JIGGY,             JIGGY_5_MM_HUTS,                                                        0, 0, 0),
     RC(RC_MM_JIGGY_JINJO,                                                       RCTYPE_JIGGY,           LEVEL_1_MUMBOS_MOUNTAIN,        ACTOR_46_JIGGY,             JIGGY_01_MM_JINJO,                                                      1702, -41, 2941),
@@ -817,12 +818,12 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_MMM_JIGGY_CELLAR,                                                     RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_5E_MMM_CELLAR,                                                    -516, 30, 477),
     RC(RC_MMM_JIGGY_CEMETARY_POTS,                                              RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_63_MMM_FLOWER_POTS,                                               0, 0, 0),
     RC(RC_MMM_JIGGY_CLOCKTOWER_TOP,                                             RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_5F_MMM_CHURCH_ROOF,                                               -2800, 3175, -1601),
-    RC(RC_MMM_JIGGY_JINJO_JIGGY,                                                RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_5B_MMM_JINJO,                                                     0, 0, 0),
-    RC(RC_MMM_JIGGY_MANSION_TABLE,                                              RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_5D_MMM_NAPPER,                                                    2, 459, 28),
+    RC(RC_MMM_JIGGY_JINJO,                                                      RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_5B_MMM_JINJO,                                                     0, 0, 0),
+    RC(RC_MMM_JIGGY_MANSION_TABLE,                                              RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_5D_MMM_NAPPER,                                                    1, 511, 24),
     RC(RC_MMM_JIGGY_MOTZAND,                                                    RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_60_MMM_MOTZHAND,                                                  0, 3050, -3200),
     RC(RC_MMM_JIGGY_INSIDE_LOGGO,                                               RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_64_MMM_LOGGO,                                                     -518, 295, -468),
     RC(RC_MMM_JIGGY_INSIDE_THE_WELLS_BUCKET,                                    RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_5C_MMM_WELL,                                                      1, 179, 0),
-    RC(RC_MMM_JIGGY_TUMBLARS_PUZZLE,                                            RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_62_MMM_TUMBLAR,                                                   0, 0, 0),
+    RC(RC_MMM_JIGGY_TUMBLARS_PUZZLE,                                            RCTYPE_JIGGY,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_46_JIGGY,             JIGGY_62_MMM_TUMBLAR,                                                   48, 0, -58),
     RC(RC_MMM_JINJO_BLUE,                                                       RCTYPE_JINJO,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_60_JINJO_BLUE,        NULL,                                                                   5900, 300, 1050),
     RC(RC_MMM_JINJO_GREEN,                                                      RCTYPE_JINJO,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_62_JINJO_GREEN,       NULL,                                                                   1437, 2100, 248),
     RC(RC_MMM_JINJO_ORANGE,                                                     RCTYPE_JINJO,           LEVEL_A_MAD_MONSTER_MANSION,    ACTOR_5F_JINJO_ORANGE,      NULL,                                                                   -4265, 0, 2668),
@@ -1087,9 +1088,9 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_SM_MOLEHILL_CAMERA_CONTROL,                                           RCTYPE_MOLEHILL,        LEVEL_B_SPIRAL_MOUNTAIN,        ACTOR_12C_MOLEHILL,         ABILITY_3_CAMERA_CONTROL,                                               2250, -34, 2774	),
     RC(RC_SM_MOLEHILL_CLIMB,                                                    RCTYPE_MOLEHILL,        LEVEL_B_SPIRAL_MOUNTAIN,        ACTOR_12C_MOLEHILL,         ABILITY_5_CLIMB,                                                        -1999, 342, -2545),
     RC(RC_SM_MOLEHILL_DIVE,                                                     RCTYPE_MOLEHILL,        LEVEL_B_SPIRAL_MOUNTAIN,        ACTOR_12C_MOLEHILL,         ABILITY_F_DIVE,                                                         -2336, 302, 973),
-    RC(RC_SM_MOLEHILL_JUMP,                                                     RCTYPE_MOLEHILL,        LEVEL_B_SPIRAL_MOUNTAIN,        ACTOR_12C_MOLEHILL,         ABILITY_A_HOLD_A_JUMP_HIGHER,                                           -164, -190, 3313),
-    RC(RC_TTC_EMPTY_HONEYCOMB_FLOATING_BOX,                                     RCTYPE_EMPTY_HONEYCOMB, LEVEL_2_TREASURE_TROVE_COVE,    ACTOR_47_EMPTY_HONEYCOMB,   HONEYCOMB_4_TTC_FLOATING_BOX,                                           8473, 844, -2674),
-    RC(RC_TTC_EMPTY_HONEYCOMB_UNDERWATER,                                       RCTYPE_EMPTY_HONEYCOMB, LEVEL_2_TREASURE_TROVE_COVE,    ACTOR_47_EMPTY_HONEYCOMB,   HONEYCOMB_3_TTC_UNDERWATER,                                             8473, 844, -2674),
+    RC(RC_SM_MOLEHILL_JUMP,                                                     RCTYPE_MOLEHILL,        LEVEL_B_SPIRAL_MOUNTAIN,        ACTOR_12C_MOLEHILL,         ABILITY_8_FLAP_FLIP,                                                    -164, -190, 3313),
+    RC(RC_TTC_EMPTY_HONEYCOMB_FLOATING_BOX,                                     RCTYPE_EMPTY_HONEYCOMB, LEVEL_2_TREASURE_TROVE_COVE,    ACTOR_47_EMPTY_HONEYCOMB,   HONEYCOMB_4_TTC_FLOATING_BOX,                                           8473, 844, -2684),
+    RC(RC_TTC_EMPTY_HONEYCOMB_UNDERWATER,                                       RCTYPE_EMPTY_HONEYCOMB, LEVEL_2_TREASURE_TROVE_COVE,    ACTOR_47_EMPTY_HONEYCOMB,   HONEYCOMB_3_TTC_UNDERWATER,                                             -4303, 46, 115),
     RC(RC_TTC_JIGGY_ALCOVE1,                                                    RCTYPE_JIGGY,           LEVEL_2_TREASURE_TROVE_COVE,    ACTOR_46_JIGGY,             JIGGY_0D_TTC_ALCOVE_1,                                                  2832, 2152, -1797),
     RC(RC_TTC_JIGGY_ALCOVE2,                                                    RCTYPE_JIGGY,           LEVEL_2_TREASURE_TROVE_COVE,    ACTOR_46_JIGGY,             JIGGY_0E_TTC_ALCOVE_2,                                                  -5116, 1417, -3915),
     RC(RC_TTC_JIGGY_BLUBBER,                                                    RCTYPE_JIGGY,           LEVEL_2_TREASURE_TROVE_COVE,    ACTOR_46_JIGGY,             JIGGY_14_TTC_BLUBBER,                                                   0, 0, 0),
@@ -1218,12 +1219,30 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_TTC_NOTE_UPPERLEVEL_POOL_2,                                           RCTYPE_MUSIC_NOTE,      LEVEL_2_TREASURE_TROVE_COVE,    ACTOR_51_MUSIC_NOTE,         NULL,                                                                   -3001, 1840, -2007),
     RC(RC_TTC_NOTE_UPPERLEVEL_POOL_3,                                           RCTYPE_MUSIC_NOTE,      LEVEL_2_TREASURE_TROVE_COVE,    ACTOR_51_MUSIC_NOTE,         NULL,                                                                   -2906, 1840, -2329),
 };
+
+std::map<RandoCheckId, std::tuple<int32_t, int32_t, int32_t>> multiSpawnCheckMap = {
+    { RC_CC_JIGGY_CLANKER_RAISED,                   { 5700, 4300, 0 } },
+    { RC_CC_JIGGY_SNIPPETS,                         { 13814, 3811, 0 } },
+    { RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD,    { 0, 3354, 2270 } },
+    { RC_GL_JIGGY_WITCH_SWITCH_TREASURE_TROVE_COVE, { 950, 905, -1600 } },
+    { RC_MM_JIGGY_CONGA,                            { -3401, -199, 4650 } },
+    { RC_MM_JIGGY_JUJU,                             { 4309, 2354, -1487 } },
+    { RC_TTC_JIGGY_BLUBBER,                         { -389, 984, 852 } },
+    { RC_RBB_JIGGY_SNORKEL,                         { -5100, -2550, 1470 } },
+};
 // clang-format on
 
 RandoCheckId GetCheckByPosition(int32_t posX, int32_t posY, int32_t posZ) {
     for (auto& [randoCheckId, randoStaticCheck] : Checks) {
         if (randoStaticCheck.posX == posX && randoStaticCheck.posY == posY && randoStaticCheck.posZ == posZ) {
+            // BK_LOG_INFO("RC Found: %s", Rando::StaticData::Checks[randoCheckId].name);
             return randoCheckId;
+        }
+    }
+
+    for (auto& [checkId, spawnPos] : multiSpawnCheckMap) {
+        if (std::get<0>(spawnPos) == posX && std::get<1>(spawnPos) == posY && std::get<2>(spawnPos) == posZ) {
+            return checkId;
         }
     }
 
@@ -1251,6 +1270,30 @@ RandoCheckId GetJinjoJiggyCheckByLevelId(int16_t levelId) {
         }
 
         if (randoStaticCheck.collectionId == (10 * levelId) - 9) {
+            return randoCheckId;
+        }
+    }
+
+    return RC_UNKNOWN;
+}
+
+RandoCheckId GetCheckByAbilityId(int32_t abilityId) {
+    for (auto& [randoCheckId, randoStaticCheck] : Checks) {
+        if (randoStaticCheck.randoCheckType != RCTYPE_MOLEHILL) {
+            continue;
+        }
+
+        if (randoStaticCheck.collectionId == abilityId) {
+            return randoCheckId;
+        }
+    }
+
+    return RC_UNKNOWN;
+}
+
+RandoCheckId GetCheckByName(const char* checkName) {
+    for (auto& [randoCheckId, randoStaticCheck] : Checks) {
+        if (std::string_view(randoStaticCheck.name) == std::string_view(checkName)) {
             return randoCheckId;
         }
     }

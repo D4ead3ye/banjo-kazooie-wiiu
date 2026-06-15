@@ -43,6 +43,11 @@ bool cutscene_skipIntroCutsceneCheck(void) {
 
 // cutscene_skipEnterLairCutsceneCheck
 bool cutscene_skipEnterLairCutsceneCheck(void) {
+    // [port] Skip lair cutscene
+    bool skipMiscCutscenes = false;
+    CALL_EVENT(OnMiscCutscenesCheck, &skipMiscCutscenes);
+    if (skipMiscCutscenes && func_8024E698(0) == 1) { return true; }
+
     if ((func_8024E698(0) == 1)
         && ((D_8037DCCE[0] != 0)
             || (D_8037DCCE[1] != 0)
@@ -60,6 +65,10 @@ bool cutscene_skipGameOverCutsceneCheck(void) {
     if (mapSpecificFlags_get(0) != 0) {
         fileProgressFlag_set(FILEPROG_E1_UNKNOWN, 1);
     }
+    bool skipMiscCutscenes = false;
+    CALL_EVENT(OnMiscCutscenesCheck, &skipMiscCutscenes);
+    if (skipMiscCutscenes && func_8024E698(0) == 1) { return true; }
+
     if ((sp24 == 1) && fileProgressFlag_get(FILEPROG_E1_UNKNOWN) && !gctransition_8030BDC0()) {
         if (!mapSpecificFlags_get(0xC)) {
             mapSpecificFlags_set(0xC, true);

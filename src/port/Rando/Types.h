@@ -27,7 +27,7 @@ typedef enum {
     RC_BGS_JIGGY_ELEVATED_WALKWAY,
     RC_BGS_JIGGY_FLIBBITS,
     RC_BGS_JIGGY_HUTS,
-    RC_BGS_JIGGY_JINGO,
+    RC_BGS_JIGGY_JINJO,
     RC_BGS_JIGGY_MAZE,
     RC_BGS_JIGGY_MR_VILE,
     RC_BGS_JIGGY_PINKEGG,
@@ -38,6 +38,7 @@ typedef enum {
     RC_BGS_JINJO_ORANGE,
     RC_BGS_JINJO_PINK,
     RC_BGS_JINJO_YELLOW,
+    RC_BGS_MOLEHILL_WADING_BOOTS,
     RC_BGS_MUMBO_TOKEN_ALCOVE_ABOVE_YELLOW_FLIBBITS,
     RC_BGS_MUMBO_TOKEN_BEHIND_MUMBOS_SKULL,
     RC_BGS_MUMBO_TOKEN_BEHIND_TIPTUP,
@@ -820,7 +821,7 @@ typedef enum {
     RC_MMM_JIGGY_CELLAR,
     RC_MMM_JIGGY_CEMETARY_POTS,
     RC_MMM_JIGGY_CLOCKTOWER_TOP,
-    RC_MMM_JIGGY_JINJO_JIGGY,
+    RC_MMM_JIGGY_JINJO,
     RC_MMM_JIGGY_MANSION_TABLE,
     RC_MMM_JIGGY_MOTZAND,
     RC_MMM_JIGGY_INSIDE_LOGGO,
@@ -1108,8 +1109,8 @@ typedef enum {
     RC_TTC_JINJO_ORANGE,
     RC_TTC_JINJO_PINK,
     RC_TTC_JINJO_YELLOW,
-    RC_TTC_MOLEHILL_SHOCK_JUMP,
     RC_TTC_MOLEHILL_FLIGHT,
+    RC_TTC_MOLEHILL_SHOCK_JUMP,
     RC_TTC_MUMBO_TOKEN_BEHIND_PILLAR_UNDERWATER,
     RC_TTC_MUMBO_TOKEN_BEHIND_LIGHTHOUSE_DOOR,
     RC_TTC_MUMBO_TOKEN_BEHIND_NIPPER,
@@ -1380,6 +1381,7 @@ typedef enum {
 typedef enum {
     RA_UNKNOWN,
     RA_DRAIN_WATER_PYRAMID,
+    RA_DRAIN_WATER_SANDCASTLE,
     RA_BREAK_OBJECT_BOULDER,
     RA_BREAK_OBJECT_BRICK_WALL,
     RA_BREAK_OBJECT_CELLAR_CASK,
@@ -1471,12 +1473,17 @@ typedef enum {
     RO_LOGIC_NO_LOGIC,
 } RandoOptionLogic;
 
-// typedef enum {
-//     RANDO_INF_MAX,
-// } RandoInf;
+typedef enum {
+    RANDO_INF_UNKNOWN,
+    RANDO_INF_ANCHOR_RAISED,
+    RANDO_INF_CLANKER_RAISED,
+    RANDO_INF_MINIGAME_RINGS_COMPLETED,
+    RANDO_INF_MAX,
+} RandoInf;
 
 typedef struct RandoSaveCheck {
     const char* name;
+    RandoCheckId randoCheckId;
     RandoItemId randoItemId;
     RandoCheckId shuffledCheckId;
     int32_t randoCollectionId;
@@ -1489,5 +1496,9 @@ typedef struct RandoSaveOption {
     const char* name;
     int32_t optionValue;
 } RandoSaveOption;
+
+typedef struct RandoSaveFlag {
+    int32_t flagState;
+} RandoSaveFlag;
 
 #endif // RANDO_TYPES_H

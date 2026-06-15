@@ -32,14 +32,18 @@ u8* jiggyscore_getPtr(void){
 }
 
 int jiggyscore_isSpawned(enum jiggy_e jiggy_id) {
-    return ((jiggyscore.D_803832CD[(jiggy_id - 1) / 8] & (1 << (jiggy_id & 7))) != 0) 
-           || (jiggyscore_isCollected(jiggy_id) != 0);
+    CALL_CANCELLABLE_RETURN_EVENT(OnIsJiggyScoreSpawned, jiggy_id) {
+        return ((jiggyscore.D_803832CD[(jiggy_id - 1) / 8] & (1 << (jiggy_id & 7))) != 0)
+            || (jiggyscore_isCollected(jiggy_id) != 0);
+    }
 }
 
 u32 jiggyscore_isCollected(enum jiggy_e jiggy_id){
     if( jiggy_id <= 0 || jiggy_id >= 0x65)
         return 0;
-    return (jiggyscore.D_803832C0[(jiggy_id - 1) / 8] & (1 << (jiggy_id & 7))) != 0;
+    CALL_CANCELLABLE_RETURN_EVENT(OnIsJiggyScoreCollected, jiggy_id) {
+        return (jiggyscore.D_803832C0[(jiggy_id - 1) / 8] & (1 << (jiggy_id & 7))) != 0;
+    }
 }
 
 void jiggyscore_debug(void){}

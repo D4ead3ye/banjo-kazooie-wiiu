@@ -39,7 +39,7 @@ ChMoleDescription moleDialogTable[MOLETABLE_SIZE] = {
     { ASSET_DFB_DIALOG_BOTTLES_DIVE_LEARN,              ASSET_DFE_DIALOG_BOTTLES_DIVE_REFRESHER,            0x5, ABILITY_F_DIVE },
     { -1,                                               ASSET_E00_DIALOG_BOTTLES_ATTACK_REFRESHER,          0x6, ABILITY_4_CLAW_SWIPE },
     { ASSET_E04_DIALOG_BOTTLES_BEAK_BARGE_LEARN,        ASSET_E06_DIALOG_BOTTLES_BEAK_BARGE_REFRESHER,      0x8, ABILITY_0_BARGE },
-    { -1,                                               ASSET_DFA_DIALOG_BOTTLES_JUMP_REFRESHER,            0x4, ABILITY_A_HOLD_A_JUMP_HIGHER },
+    { -1,                                               ASSET_DFA_DIALOG_BOTTLES_JUMP_REFRESHER,            0x4, ABILITY_8_FLAP_FLIP },
     { ASSET_E01_DIALOG_BOTTLES_CLIMB_LEARN,             ASSET_E03_DIALOG_BOTTLES_CLIMB_REFRESHER,           0x7, ABILITY_5_CLIMB },
     //{ ASSET_E10_DIALOG_BOTTLES_BRIDGE_BROKEN,           ASSET_E11_DIALOG_BOTTLES_BRIDGE_STILL_BROKEN,       0x11, -1 },
     { ASSET_C23_DIALOG_BEAKBOMB_LEARN,                  ASSET_C24_DIALOG_BEAKBOMB_REFRESHER,                0x0F, ABILITY_1_BEAK_BOMB },
@@ -66,9 +66,7 @@ std::vector<RandoCheckId> spiralMountainBridge = {
 
 ChMoleDescription result;
 
-// TODO: SWAP TO RANDO_SAVE_OPTIONS
-#define CVAR_NAME Rando::StaticData::Options[RO_SHUFFLE_MOLEHILLS].cvar
-#define CVAR CVarGetInteger(CVAR_NAME, 0)
+#define OPTION_ENABLED RANDO_SAVE_OPTIONS[RO_SHUFFLE_MOLEHILLS].optionValue
 
 ChMoleDescription GetMoleDescriptionByAbility(int16_t abilityId) {
     result.ability = -1;
@@ -104,25 +102,23 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
         Actor* molehillActor = va_arg(args, Actor*);
         s32* textId = va_arg(args, s32*);
         s32* isLearned = va_arg(args, s32*);
-
-        if (CVAR) {
+        
+        if (OPTION_ENABLED) {
             if (molehillActor->actorTypeSpecificField == 8) {
-
+                return;
             }
 
             RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(
                 molehillActor->position_x, molehillActor->position_y, molehillActor->position_z);
 
-            //BK_LOG_INFO("RandoCheckId: %i", randoCheckId);
             if (randoCheckId == RC_UNKNOWN) {
                 return;
             }
 
-            Rando::StaticData::RandoShuffledPool shuffledMolehill = Rando::Logic::GetShuffledObject(randoCheckId);
+            RandoSaveCheck shuffledMolehill = Rando::Logic::GetShuffledObject(randoCheckId);
             ChMoleDescription moleInfo = GetMoleDescriptionByAbility(shuffledMolehill.randoCollectionId);
 
             if (moleInfo.ability >= ABILITY_0_BARGE) {
-                //BK_LOG_INFO("Ability ID: %i", moleInfo.ability);
                 *should = true;
 
                 func_80347A14(0);
@@ -135,11 +131,26 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
                         ability_unlock(ABILITY_C_ROLL);
                         ability_unlock(ABILITY_B_RATATAT_RAP);
                         break;
-                    case ABILITY_A_HOLD_A_JUMP_HIGHER:
+                    case ABILITY_6_EGGS:
+                        *textId = (s32)moleInfo.refresher_text_id;
+                        ability_unlock((ability_e)moleInfo.ability);
+                        item_adjustByDiffWithoutHud(ITEM_D_EGGS, 50);
+                        break;
+                    case ABILITY_8_FLAP_FLIP:
                         *textId = (s32)moleInfo.refresher_text_id;
                         ability_unlock(ABILITY_A_HOLD_A_JUMP_HIGHER);
                         ability_unlock(ABILITY_7_FEATHERY_FLAP);
                         ability_unlock(ABILITY_8_FLAP_FLIP);
+                        break;
+                    case ABILITY_9_FLIGHT:
+                        *textId = (s32)moleInfo.refresher_text_id;
+                        ability_unlock((ability_e)moleInfo.ability);
+                        item_adjustByDiffWithoutHud(ITEM_F_RED_FEATHER, 25);
+                        break;
+                    case ABILITY_12_WONDERWING:
+                        *textId = (s32)moleInfo.refresher_text_id;
+                        ability_unlock((ability_e)moleInfo.ability);
+                        item_adjustByDiffWithoutHud(ITEM_10_GOLD_FEATHER, 5);
                         break;
                     default:
                         *textId = (s32)moleInfo.refresher_text_id;
@@ -147,10 +158,12 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
                         break;
                 }
 
-                CustomObject::CheckObtained(shuffledMolehill.randoCheckId);
+                CustomObject::CheckObtainedEX(shuffledMolehill.randoCheckId);
 
-                if (CheckBridgeState()) {
-                    SetSpiralMountainFlags();
+                if (map_getLevel(gsworld_getMap()) == LEVEL_B_SPIRAL_MOUNTAIN) {
+                    if (CheckBridgeState()) {
+                        SetSpiralMountainFlags();
+                    }
                 }
             }
         }
@@ -160,7 +173,7 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
         Actor* molehillActor = va_arg(args, Actor*);
 
         
-        if (CVAR) {
+        if (OPTION_ENABLED) {
             if (CheckBridgeState() && !mapSpecificFlags_get(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED)) {
                 mapSpecificFlags_set(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, true);
                 //mapSpecificFlags_set(SM_SPECIFIC_FLAG_10, true);
@@ -173,7 +186,7 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
     })
 
     COND_VB_SHOULD(VB_OVERRIDE_SM_BRIDGE_STATE, EVENT_PRIORITY_NORMAL, true, {
-        if (CVAR) {
+        if (OPTION_ENABLED) {
             if (CheckBridgeState()) {
                 *should = true;
             }

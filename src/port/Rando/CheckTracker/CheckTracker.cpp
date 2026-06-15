@@ -23,18 +23,22 @@
     }
 
 #define CVAR_NAME_SHOW_CHECK_TRACKER "gWindows.CheckTracker"
-#define CVAR_NAME_ENABLE_FLOATING_WINDOW "gWindows.CheckTracker.Floating"
+#define CVAR_NAME_ENABLE_FLOATING_WINDOW "gRando.CheckTracker.Floating"
 #define CVAR_NAME_CHECK_TRACKER_OPACITY "gRando.CheckTracker.Opacity"
 #define CVAR_NAME_CHECK_TRACKER_SCALE "gRando.CheckTracker.Scale"
 #define CVAR_NAME_SHOW_CURRENT_LEVEL "gRando.CheckTracker.ShowCurrentLevel"
+#define CVAR_NAME_HIDE_COMPLETED_WORLD "gRando.CheckTracker.HideCompletedWorld"
 #define CVAR_NAME_SHOW_COLLECTED_CHECKS "gRando.CheckTracker.ShowCollectedChecks"
+#define CVAR_NAME_SHOW_WORLD_CHECKS "gRando.CheckTracker.ShowWorldChecks"
 #define CVAR_NAME_SHOW_LOGIC "gRando.CheckTracker.ShowLogic"
 #define CVAR_NAME_SEPARATE_COLLECTED_CHECKS "gRando.CheckTracker.SeparateCollectedChecks"
 #define CVAR_NAME_COLLECTED_CHECKS_OPACITY "gRando.CheckTracker.CollectedChecksOpacity"
 #define CVAR_NAME_COLLECTED_CHECKS_SCALE "gRando.CheckTracker.CollectedChecksScale"
+#define CVAR_NAME_HIDE_COLLECTED "gRando.CheckTracker.HideCollected"
 #define CVAR_NAME_LOGIC_COLOR "gRando.CheckTracker.LogicColor"
 #define CVAR_NAME_COLLECTED_COLOR "gRando.CheckTracker.CollectedColor"
 #define CVAR_NAME_SKIPPED_COLOR "gRando.CheckTracker.SkippedColor"
+#define CVAR_NAME_HIDE_SKIPPED "gRando.CheckTracker.HideSkipped"
 #define CVAR_NAME_ITEM_COLOR "gRando.CheckTracker.ItemColor"
 
 #define CVAR_SHOW_CHECK_TRACKER CVarGetInteger(CVAR_NAME_SHOW_CHECK_TRACKER, 0)
@@ -42,14 +46,18 @@
 #define CVAR_CHECK_TRACKER_OPACITY CVarGetFloat(CVAR_NAME_CHECK_TRACKER_OPACITY, 0.5f)
 #define CVAR_CHECK_TRACKER_SCALE CVarGetFloat(CVAR_NAME_CHECK_TRACKER_SCALE, 1.0f)
 #define CVAR_SHOW_CURRENT_LEVEL CVarGetInteger(CVAR_NAME_SHOW_CURRENT_LEVEL, 0)
+#define CVAR_HIDE_COMPLETED_WORLD CVarGetInteger(CVAR_NAME_HIDE_COMPLETED_WORLD, 0)
 #define CVAR_SHOW_COLLECTED_CHECKS CVarGetInteger(CVAR_NAME_SHOW_COLLECTED_CHECKS, 0)
+#define CVAR_SHOW_WORLD_CHECKS CVarGetInteger(CVAR_NAME_SHOW_WORLD_CHECKS, 0)
 #define CVAR_SHOW_LOGIC CVarGetInteger(CVAR_NAME_SHOW_LOGIC, 0)
 #define CVAR_SHOW_SEPARATE_COLLECTED_CHECKS CVarGetInteger(CVAR_NAME_SEPARATE_COLLECTED_CHECKS, 0)
 #define CVAR_COLLECTED_CHECKS_OPACITY CVarGetFloat(CVAR_NAME_COLLECTED_CHECKS_OPACITY, 0.5f)
 #define CVAR_COLLECTED_CHECKS_SCALE CVarGetFloat(CVAR_NAME_COLLECTED_CHECKS_SCALE, 1.0f)
+#define CVAR_HIDE_COLLECTED CVarGetInteger(CVAR_NAME_HIDE_COLLECTED, 0)
 #define CVAR_LOGIC_COLOR CVarGetColor(CVAR_NAME_LOGIC_COLOR ".Value", DEFAULT_LOGIC_COLOR)
 #define CVAR_COLLECTED_COLOR CVarGetColor(CVAR_NAME_COLLECTED_COLOR ".Value", DEFAULT_COLLECTED_COLOR)
 #define CVAR_SKIPPED_COLOR CVarGetColor(CVAR_NAME_SKIPPED_COLOR ".Value", DEFAULT_SKIPPED_COLOR)
+#define CVAR_HIDE_SKIPPED CVarGetInteger(CVAR_NAME_HIDE_SKIPPED, 0)
 #define CVAR_ITEM_COLOR CVarGetColor(CVAR_NAME_ITEM_COLOR ".Value", DEFAULT_ITEM_COLOR)
 
 extern "C" {
@@ -80,6 +88,8 @@ float checkTrackerScale = 1.0f;
 float collectedChecksScale = 1.0f;
 
 std::string totalCheckCount;
+int32_t worldCollected = 0;
+int32_t worldTotalShuffled = 0;
 
 bool expandToggle = true;
 bool expandState = true;
@@ -102,6 +112,32 @@ std::string GetTotalCheckCount() {
     totalChecks += " of ";
     totalChecks += std::to_string(totalShuffled);
     return totalChecks;
+}
+
+void UpdateWorldCheckCount(level_e world) {
+    worldCollected = 0;
+    worldTotalShuffled = 0;
+
+    for (auto& entry : Rando::Logic::shuffledPool) {
+        if (Rando::StaticData::Checks[entry.randoCheckId].worldId != world) {
+            continue;
+        }
+        if (entry.obtained || entry.skipped) {
+            worldCollected++;
+        }
+        if (entry.isShuffled) {
+            worldTotalShuffled++;
+        }
+    }
+}
+
+std::string GetWorldCheckString(level_e world) {
+    std::string worldCheckString;
+
+    worldCheckString = std::to_string(worldCollected);
+    worldCheckString += " / ";
+    worldCheckString += std::to_string(worldTotalShuffled);
+    return worldCheckString;
 }
 
 void DrawCheckTrackerCount() {
@@ -142,7 +178,16 @@ void DrawCheckTrackerList() {
             continue;
         }
 
+        UpdateWorldCheckCount((level_e)i);
+        if (CVAR_HIDE_COMPLETED_WORLD && worldTotalShuffled == worldCollected) {
+            continue;
+        }
+
         std::string headerName = port_mapName(level_get_main_map((level_e)i));
+        if (CVAR_SHOW_WORLD_CHECKS) {
+            headerName += " ";
+            headerName += GetWorldCheckString((level_e)i);
+        }
 
         ImGui::PushID(i);
         ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0, 0, 0, 0));
@@ -162,6 +207,14 @@ void DrawCheckTrackerList() {
                         continue;
                     }
 
+                    if (CVAR_HIDE_COLLECTED && entry.obtained) {
+                        continue;
+                    }
+
+                    if (CVAR_HIDE_SKIPPED && entry.skipped) {
+                        continue;
+                    }
+
                     ImVec4 checkTextColor = entry.obtained ? VecFromRGBA8(CVAR_COLLECTED_COLOR)
                                                            : UIWidgets::ColorValues.at(UIWidgets::Colors::White);
 
@@ -178,13 +231,15 @@ void DrawCheckTrackerList() {
                     }
 
                     ImGui::BeginGroup();
-                    ImGui::TextColored(
-                        checkTextColor,
-                        Ship_ConvertEnumToReadableName(Rando::StaticData::Checks[entry.randoCheckId].name).c_str());
+                    ImGui::TextColored(checkTextColor, Ship_ConvertEnumToReadableName(entry.name).c_str());
                     if (entry.obtained) {
                         ImGui::SameLine();
                         RandoItemId randoItemId = Rando::Logic::GetShuffledObject(entry.randoCheckId).randoItemId;
-                        ImGui::TextColored(itemTextColor, "(%s)", Rando::StaticData::Items[randoItemId].name);
+                        const std::string& randoItemName =
+                            Rando::StaticData::Checks[entry.randoCheckId].randoCheckType == RCTYPE_MOLEHILL
+                                ? abilityNameList[entry.randoCollectionId]
+                                : Rando::StaticData::Items[randoItemId].name;
+                        ImGui::TextColored(itemTextColor, "(%s)", randoItemName.c_str());
                     } else if (entry.skipped) {
                         ImGui::SameLine();
                         ImGui::TextColored(itemTextColor, "(Skipped)");
@@ -252,7 +307,7 @@ void CheckTrackerWindow::Draw() {
 
 void SettingsWindow::DrawElement() {
     windowFlags = ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoFocusOnAppearing;
-    if (CVAR_NAME_ENABLE_FLOATING_WINDOW) {
+    if (CVAR_ENABLE_FLOATING_WINDOW) {
         windowFlags |= ImGuiWindowFlags_NoTitleBar;
     }
 
@@ -285,12 +340,17 @@ void SettingsWindow::DrawElement() {
         ImGui::TableNextColumn();
         ImGui::SeparatorText("Window Settings");
         UIWidgets::CVarCheckbox("Only Show Current Level", CVAR_NAME_SHOW_CURRENT_LEVEL);
-        UIWidgets::CVarCheckbox("Display Total Collected Checks", CVAR_NAME_SHOW_COLLECTED_CHECKS);
         UIWidgets::CVarCheckbox("Dim Out of Logic Checks", CVAR_NAME_SHOW_LOGIC);
+        UIWidgets::CVarCheckbox("Hide Completed Worlds", CVAR_NAME_HIDE_COMPLETED_WORLD);
+        UIWidgets::CVarCheckbox("Hide Collected Checks", CVAR_NAME_HIDE_COLLECTED);
+        UIWidgets::CVarCheckbox("Hide Skipped Checks", CVAR_NAME_HIDE_SKIPPED);
+        UIWidgets::CVarCheckbox("Display Total Collected Checks", CVAR_NAME_SHOW_COLLECTED_CHECKS);
+        UIWidgets::CVarCheckbox("Display Total World Checks", CVAR_NAME_SHOW_WORLD_CHECKS);
 
         ImGui::BeginDisabled(!CVAR_SHOW_COLLECTED_CHECKS);
         UIWidgets::CVarCheckbox("Separate Total Collected Checks", CVAR_NAME_SEPARATE_COLLECTED_CHECKS);
-
+        ImGui::EndDisabled();
+        ImGui::BeginDisabled(!CVAR_SHOW_SEPARATE_COLLECTED_CHECKS || !CVAR_SHOW_COLLECTED_CHECKS);
         if (UIWidgets::CVarSliderFloat("  ", CVAR_NAME_COLLECTED_CHECKS_OPACITY,
                                        {
                                            .format = "Opacity: %.1f",
