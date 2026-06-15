@@ -243,10 +243,12 @@ void CustomObject::ResolveCustomActorCollisionEX(RandoCheckId randoCheckId) {
         return;
     }
 
-    int16_t playerPosI[3];
+    int32_t spawnPosition[3];
     f32 playerPosF[3];
     player_getPosition(playerPosF);
-    ml_vec3f_to_vec3h(playerPosI, playerPosF);
+    spawnPosition[0] = (int32_t)playerPosF[0];
+    spawnPosition[1] = (int32_t)playerPosF[1];
+    spawnPosition[2] = (int32_t)playerPosF[2];
 
     switch (shuffledObject.randoItemId) {
         case RI_JINJO_BLUE:
@@ -265,7 +267,7 @@ void CustomObject::ResolveCustomActorCollisionEX(RandoCheckId randoCheckId) {
                         Rando::StaticData::Checks[shuffledObject.shuffledCheckId].worldId);
 
                     if (jiggyCheckId != RC_UNKNOWN) {
-                        Actor* customActor = ShouldCreateCustomActorEX(jiggyCheckId, (int32_t*)playerPosI, false);
+                        Actor* customActor = ShouldCreateCustomActorEX(jiggyCheckId, spawnPosition, false);
                         if (customActor != NULL) {
                             ApplyCustomActorPhysics(jiggyCheckId, customActor, true);
                         }
@@ -280,7 +282,7 @@ void CustomObject::ResolveCustomActorCollisionEX(RandoCheckId randoCheckId) {
             }
 
             UpdateSaveDataNoteScores();
-            fxSparkle_musicNote(playerPosI);
+            fxSparkle_musicNote((int16_t*)spawnPosition);
             coMusicPlayer_playMusic(COMUSIC_9_NOTE_COLLECTED, 16000);
             break;
         default:
