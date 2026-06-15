@@ -18,6 +18,7 @@ void Rando::MiscBehavior::OnFileLoad() {
     REGISTER_LISTENER(OnGameLoad, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnGameLoad* ev = (OnGameLoad*)event;
         selectedFileNum = ev->fileNum;
+        Rando::Logic::shuffledPool.clear();
     });
 
     REGISTER_LISTENER(OnSaveLoad, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
