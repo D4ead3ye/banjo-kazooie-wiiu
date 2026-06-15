@@ -103,6 +103,10 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
         s32* textId = va_arg(args, s32*);
         s32* isLearned = va_arg(args, s32*);
 
+        if (!IS_RANDO) {
+            return;
+        }
+
         if (OPTION_ENABLED) {
             if (molehillActor->actorTypeSpecificField == 8) {
                 return;
@@ -175,7 +179,6 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
         if (OPTION_ENABLED) {
             if (CheckBridgeState() && !mapSpecificFlags_get(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED)) {
                 mapSpecificFlags_set(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, true);
-                // mapSpecificFlags_set(SM_SPECIFIC_FLAG_10, true);
                 gcdialog_showDialog(ASSET_E12_DIALOG_BOTTLES_LEARNED_TUTORIAL_MOVES, 0xe, molehillActor->position,
                                     molehillActor->marker, __chSmBottles_textCallback, NULL);
 
