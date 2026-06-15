@@ -82,17 +82,6 @@ RandoOptionId GetOptionIdFromName(const char* name);
 
 void ModifyRandoInfFlagState(RandoCheckId randoCheckId);
 
-// TODO: Add Logic and Regions
-// struct RandoStaticRegion {
-//     RandoRegionId randoRegionId;
-//     const char* name;
-//     int16_t levelId;
-//     std::map<RandoCheckId, std::function<bool()>> checks;
-//     std::map<RandoRegionId, std::function<bool()>> regions;
-// };
-
-// extern std::map<RandoRegionId, RandoStaticRegion> Regions;
-
 } // namespace StaticData
 
 } // namespace Rando
