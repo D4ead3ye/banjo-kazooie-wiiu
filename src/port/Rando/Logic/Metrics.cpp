@@ -56,7 +56,7 @@ void Metrics_DrawSeedData() {
         }
 
         ImGui::SeparatorText("Seed Data");
-        
+
         ImGui::TextColored(statusColor, statusText.c_str());
         ImGui::Separator();
         ImGui::Text("Seed ID: %i", randoFinalSeed);
@@ -87,7 +87,7 @@ void Metrics_DrawSeedData() {
 
             ImGui::EndTable();
         }
-        
+
         ImGui::EndChild();
     }
 }
@@ -118,7 +118,7 @@ void Metrics_DrawTabBar() {
 
 void RefreshMetrics(std::string text) {
     statusText = text.c_str();
-    
+
     checksInPool = Rando::Logic::checkPool.size() + Rando::Logic::abilityCheckPool.size() - 1;
     itemsInPool = Rando::Logic::itemPool.size() + Rando::Logic::abilityItemPool.size() - 1;
 

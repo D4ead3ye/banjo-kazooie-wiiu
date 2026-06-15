@@ -99,7 +99,7 @@ void UpdateSaveDataNoteScores() {
 void ApplyBundleActorPhysics(Actor* actor, int32_t bundle_id, BundleInfo* bundle_info, f32 bundleYaw) {
     actor->is_bundle = true;
     Bundle* bundle = (Bundle*)&actor->unkBC;
-    
+
     bundle->index = bundle_id;
     bundle->state = BUNDLE_STATE_DEFAULT;
     bundle->unk6 = 1;
@@ -119,7 +119,7 @@ void ApplyBundleActorPhysics(Actor* actor, int32_t bundle_id, BundleInfo* bundle
     }
 
     ml_vec3f_yaw_rotate_copy(bundle->velocity, bundle->velocity, bundleYaw);
-    
+
     bundle->yaw_speed = (baseSpeed *= -1.0f);
 
     float targetYaw = (bundle_info->flags & 0x20) ? bundle_info->yaw : randf2(0.0f, 360.0f);
@@ -144,7 +144,8 @@ void ApplyCustomActorPhysics(RandoCheckId randoCheckId, Actor* actor, bool isJin
     float bundleYaw = gBundle_yaw;
     BundlePhysics physicsData;
 
-    if ((randoCheckId >= RC_MM_NOTE_HUT_BUNDLE_1 && randoCheckId <= RC_MM_NOTE_HUT_BUNDLE_5) || randoCheckId == RC_MM_JINJO_GREEN || randoCheckId == RC_MM_JIGGY_HUTS) {
+    if ((randoCheckId >= RC_MM_NOTE_HUT_BUNDLE_1 && randoCheckId <= RC_MM_NOTE_HUT_BUNDLE_5) ||
+        randoCheckId == RC_MM_JINJO_GREEN || randoCheckId == RC_MM_JIGGY_HUTS) {
         physicsData = GetPhysicsByCheckId(RC_MM_NOTE_HUT_BUNDLE_1);
     } else {
         physicsData = isJinjoJiggy ? jinjoJiggySpawnPhysics : GetPhysicsByCheckId(randoCheckId);

@@ -104,7 +104,8 @@ void UpdateSaveDataItemCounts(PlacedItemCounts itemCounts) {
     }
 }
 
-int32_t GetRandomCheckIndexS(Rando::StaticData::RandoLogicData (&checks)[RC_MAX], RandoCheckType checkType, bool shouldExclude, bool shouldRestrict, bool gameComplete) {
+int32_t GetRandomCheckIndexS(Rando::StaticData::RandoLogicData (&checks)[RC_MAX], RandoCheckType checkType,
+                             bool shouldExclude, bool shouldRestrict, bool gameComplete) {
     std::vector<int32_t> availableIndex;
     availableIndex.reserve(RC_MAX);
 
@@ -112,7 +113,7 @@ int32_t GetRandomCheckIndexS(Rando::StaticData::RandoLogicData (&checks)[RC_MAX]
         if (i == RC_UNKNOWN) {
             continue;
         }
-        
+
         if (checks[i].canAccess || gameComplete) {
             if (!checks[i].isFilled && checks[i].isShuffled) {
                 if (shouldExclude) {
@@ -144,7 +145,7 @@ int32_t GetRandomCheckIndexS(Rando::StaticData::RandoLogicData (&checks)[RC_MAX]
 int32_t GetRandomItemIndexS(std::vector<std::tuple<actor_e, int32_t, RandoCheckId>> items, actor_e actorId) {
     std::vector<int32_t> availableIndex;
     availableIndex.reserve(items.size());
-    
+
     for (int i = 0; i < items.size(); ++i) {
         if (std::get<2>(items[i]) == RC_UNKNOWN) {
             continue;
@@ -301,7 +302,8 @@ namespace Logic {
 void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
                                  std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& itemPool,
                                  std::vector<RandoCheckId>& abilityCheckPool,
-                                 std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& abilityItemPool, SaveData* saveData) {
+                                 std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& abilityItemPool,
+                                 SaveData* saveData) {
     bool isGameComplete = false;
     int32_t checkIndex = 0;
     int32_t itemPoolIndex = 0;
@@ -340,7 +342,8 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
             auto it = std::find(abilityCheckPool.begin(), abilityCheckPool.end(), abilityCheck);
             if (it != abilityCheckPool.end()) {
                 abilityCheckPool.erase(it);
-                UpdateAccessibility(RR_SPIRAL_MOUNTAIN_ENTRANCE, reachableRegions[RR_SPIRAL_MOUNTAIN_ENTRANCE].canAccess);
+                UpdateAccessibility(RR_SPIRAL_MOUNTAIN_ENTRANCE,
+                                    reachableRegions[RR_SPIRAL_MOUNTAIN_ENTRANCE].canAccess);
                 continue;
             }
         }
@@ -381,11 +384,12 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
             abilityItemPool.clear();
             for (auto& check : checkPool) {
                 itemPool.push_back({ (actor_e)placedCheckItems[check].actorId, placedCheckItems[check].collectionId,
-                                        placedCheckItems[check].shuffledCheckId });
+                                     placedCheckItems[check].shuffledCheckId });
             }
             for (auto& mole : abilityCheckPool) {
-                abilityItemPool.push_back({ (actor_e)placedCheckItems[mole].actorId, placedCheckItems[mole].collectionId,
-                                        placedCheckItems[mole].shuffledCheckId });
+                abilityItemPool.push_back({ (actor_e)placedCheckItems[mole].actorId,
+                                            placedCheckItems[mole].collectionId,
+                                            placedCheckItems[mole].shuffledCheckId });
             }
 
             RefreshMetrics("Generation Complete");
@@ -406,7 +410,8 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
 
                 for (int a = 0; a < abilityItemPool.size(); a++) {
                     if (std::get<1>(abilityItemPool[a]) == abilityId) {
-                        checkIndex = GetRandomCheckIndexS(reachableChecks, RCTYPE_MOLEHILL, false, true, isGameComplete);
+                        checkIndex =
+                            GetRandomCheckIndexS(reachableChecks, RCTYPE_MOLEHILL, false, true, isGameComplete);
 
                         SetPlacedItem(checkIndex, a, placedItems, placedCheckItems, abilityItemPool);
 
@@ -525,7 +530,8 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
                 failSafeTrigger = true;
                 for (int a = 0; a < abilityItemPool.size(); a++) {
                     if (!ability_isUnlocked((ability_e)std::get<1>(abilityItemPool[a]))) {
-                        checkIndex = GetRandomCheckIndexS(reachableChecks, RCTYPE_MOLEHILL, false, true, isGameComplete);
+                        checkIndex =
+                            GetRandomCheckIndexS(reachableChecks, RCTYPE_MOLEHILL, false, true, isGameComplete);
                         SetPlacedItem(checkIndex, a, placedItems, placedCheckItems, abilityItemPool);
                         if (checkIndex >= 0) {
                             a = 0;

@@ -101,7 +101,7 @@ std::vector<file_progress_e> progressLoadout = {
     //FILEPROG_F4_ENTER_FF_CUTSCENE,
 
 };
-    // clang-format on
+// clang-format on
 
 void Rando::Logic::InitializeSaveData(SaveData* saveData) {
     // RandoSaveCheck - Initialize
@@ -145,7 +145,8 @@ void Rando::Logic::GenerateSaveData(SaveData* saveData) {
 
 void Rando::Logic::GrantStartingLoadout() {
     for (auto& [ability, abilityInfo] : abilityLoadoutMap) {
-        if (ability == ABILITY_A_HOLD_A_JUMP_HIGHER || ability == ABILITY_13_1ST_NOTEDOOR || CVarGetInteger(abilityInfo.second, 0)) {
+        if (ability == ABILITY_A_HOLD_A_JUMP_HIGHER || ability == ABILITY_13_1ST_NOTEDOOR ||
+            CVarGetInteger(abilityInfo.second, 0)) {
             ability_setLearned(ability, true);
             ability_setHasUsed(ability);
         }

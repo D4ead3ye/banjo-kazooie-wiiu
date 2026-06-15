@@ -28,7 +28,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
         bundle_e bundleId = va_arg(args, bundle_e);
         BundleInfo* bundleInfo = va_arg(args, BundleInfo*);
         s32 bundleCount = va_arg(args, s32);
-		f32* position = va_arg(args, f32*);
+        f32* position = va_arg(args, f32*);
         Actor** actor = va_arg(args, Actor**);
 
         if (!IS_RANDO) {
@@ -43,7 +43,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
         spawnPosition[2] = (int32_t)position[2];
 
         SPDLOG_INFO("Bundle Spawn: {}", std::to_string(bundleId));
-        
+
         RandoCheckId randoCheckId = RC_UNKNOWN;
         applyCustomPhysics = false;
 
@@ -187,7 +187,8 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                         break;
                     case BUNDLE_10__JIGGY:
                         applyCustomPhysics = true;
-                        randoCheckId = Rando::StaticData::GetCheckByPosition(spawnPosition[0], spawnPosition[1], spawnPosition[2]);
+                        randoCheckId =
+                            Rando::StaticData::GetCheckByPosition(spawnPosition[0], spawnPosition[1], spawnPosition[2]);
                         break;
                     default:
                         break;
@@ -196,7 +197,8 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             case LEVEL_7_GOBIS_VALLEY:
                 switch (bundleId) {
                     case BUNDLE_10__JIGGY:
-                        randoCheckId = Rando::StaticData::GetCheckByPosition(spawnPosition[0], spawnPosition[1], spawnPosition[2]);
+                        randoCheckId =
+                            Rando::StaticData::GetCheckByPosition(spawnPosition[0], spawnPosition[1], spawnPosition[2]);
                         break;
                     case BUNDLE_D__EMPTY_HONEYCOMB:
                         randoCheckId = RC_GV_EMPTY_HONEYCOMB_GOBI;
@@ -237,5 +239,5 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
         }
 
         *should = true;
-	})
+    })
 }

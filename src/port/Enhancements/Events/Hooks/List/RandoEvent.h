@@ -14,76 +14,32 @@ extern "C" {
 }
 #endif
 
-// clang-format off
 DEFINE_EVENT(OnLoadFileSelect)
 
-DEFINE_EVENT(OnSaveLoad,
-	void* saveData;
-)
+DEFINE_EVENT(OnSaveLoad, void* saveData;)
 
-DEFINE_EVENT(OnSaveClear,
-	void* result;
-)
+DEFINE_EVENT(OnSaveClear, void* result;)
 
-DEFINE_EVENT(OnWarpDispatch,
-	int32_t warpId;
-	int32_t warpDest;
-)
+DEFINE_EVENT(OnWarpDispatch, int32_t warpId; int32_t warpDest;)
 
-DEFINE_EVENT(OnActorSpawn,
-	int32_t actorId;
-	int32_t posX;
-	int32_t posY;
-	int32_t posZ;
-	Actor* result;
-)
+DEFINE_EVENT(OnActorSpawn, int32_t actorId; int32_t posX; int32_t posY; int32_t posZ; Actor * result;)
 
-DEFINE_EVENT(OnLoadActorSaveState,
-	Actor* actor;
-	int32_t posX;
-	int32_t posY;
-	int32_t posZ;
-)
+DEFINE_EVENT(OnLoadActorSaveState, Actor* actor; int32_t posX; int32_t posY; int32_t posZ;)
 
-DEFINE_EVENT(OnSaveActorSaveState,
-	Actor* actor;
-)
+DEFINE_EVENT(OnSaveActorSaveState, Actor* actor;)
 
-DEFINE_EVENT(OnActorCollision,
-	Prop* propId;
-)
+DEFINE_EVENT(OnActorCollision, Prop* propId;)
 
-DEFINE_EVENT(OnFindActorFromActorId,
-	int32_t actorId;
-	Actor* result;
-)
+DEFINE_EVENT(OnFindActorFromActorId, int32_t actorId; Actor * result;)
 
-DEFINE_EVENT(OnSetJiggyList,
-	int32_t levelId;
-)
+DEFINE_EVENT(OnSetJiggyList, int32_t levelId;)
 
-DEFINE_EVENT(OnGetLevelSpecificFlag,
-	int32_t flagId;
-	int32_t result;
-)
+DEFINE_EVENT(OnGetLevelSpecificFlag, int32_t flagId; int32_t result;)
 
-DEFINE_EVENT(OnIsJiggyScoreCollected,
-	int32_t jiggyId;
-	int32_t result;
-)
+DEFINE_EVENT(OnIsJiggyScoreCollected, int32_t jiggyId; int32_t result;)
 
-DEFINE_EVENT(OnIsJiggyScoreSpawned,
-	int32_t jiggyId;
-	int32_t result;
-)
+DEFINE_EVENT(OnIsJiggyScoreSpawned, int32_t jiggyId; int32_t result;)
 
-DEFINE_EVENT(SetRandoInfFlag,
-	int32_t flagId;
-	int32_t flagState;
-)
+DEFINE_EVENT(SetRandoInfFlag, int32_t flagId; int32_t flagState;)
 
-DEFINE_EVENT(OnIsHoneycombScoreCollected,
-	int32_t honeycombId;
-	int32_t result;
-)
-// clang-format on
+DEFINE_EVENT(OnIsHoneycombScoreCollected, int32_t honeycombId; int32_t result;)

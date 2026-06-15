@@ -132,7 +132,8 @@ Actor* CustomObject::SetCustomActorParametersEX(RandoCheckId randoCheckId, Actor
     return customActor;
 }
 
-Actor* CustomObject::SpawnCustomActorEX(RandoCheckId randoCheckId, int32_t position[3], ActorInfo* actorInfo, int32_t flags) {
+Actor* CustomObject::SpawnCustomActorEX(RandoCheckId randoCheckId, int32_t position[3], ActorInfo* actorInfo,
+                                        int32_t flags) {
     if (randoCheckId == RC_TTC_NOTE_BEACH_LOCKUP_3) {
         SPDLOG_INFO("Beach Lock Up Custom Actor Spawning");
     }
@@ -180,7 +181,7 @@ void CustomObject::FlushRandoSpawnQueue() {
             queue.isSpawned = true;
             continue;
         }
-        
+
         Actor* customActor = CustomObject::SpawnCustomActorEX(randoSaveCheck.randoCheckId, queue.position,
                                                               &actorInfoMap.at(randoActorId).first,
                                                               actorInfoMap.at(randoActorId).second);
@@ -197,7 +198,8 @@ void CustomObject::AddPropToSpawnQueueEX(int32_t position[3], RandoCheckId rando
     randoActorQueue.push_back({ { position[0], position[1], position[2] }, randoCheckId, false });
 }
 
-Actor* CustomObject::ShouldCreateCustomActorEX(RandoCheckId randoCheckId, int32_t position[3], bool isProp, Actor* refActor) {
+Actor* CustomObject::ShouldCreateCustomActorEX(RandoCheckId randoCheckId, int32_t position[3], bool isProp,
+                                               Actor* refActor) {
     if (randoCheckId == RC_UNKNOWN) {
         return NULL;
     }
@@ -216,7 +218,7 @@ Actor* CustomObject::ShouldCreateCustomActorEX(RandoCheckId randoCheckId, int32_
         CustomObject::AddPropToSpawnQueueEX(position, randoCheckId);
         return NULL;
     }
-    
+
     if (randoSaveCheck.obtained) {
         if (refActor != nullptr) {
             randoActorId = (actor_e)refActor->modelCacheIndex;
@@ -234,7 +236,7 @@ Actor* CustomObject::ShouldCreateCustomActorEX(RandoCheckId randoCheckId, int32_
     }
 
     return CustomObject::SpawnCustomActorEX(randoCheckId, position, &actorInfoMap.at(randoActorId).first,
-                                                actorInfoMap.at(randoActorId).second);
+                                            actorInfoMap.at(randoActorId).second);
 }
 
 void CustomObject::ResolveCustomActorCollisionEX(RandoCheckId randoCheckId) {

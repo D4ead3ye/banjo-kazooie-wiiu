@@ -36,13 +36,13 @@ void LighthouseMenu::AddMenuRando() {
 
     // Add Rando Menu
     AddMenuEntry("Rando", CVAR_SETTING("Menu.RandoSidebarSection"));
-    
+
     // Rando - General
     AddSidebarEntry("Rando", "General", 1);
     WidgetPath path = { "Rando", "General", SECTION_COLUMN_1 };
-    
+
     AddWidget(path, "Settings", WIDGET_SEPARATOR_TEXT);
-    
+
     AddWidget(path, "Enable Rando", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_RANDOMIZER_SETTING("Enable"))
         .Options(CheckboxOptions().Tooltip("Enables Randomizer on the next new save file."));
@@ -58,7 +58,7 @@ void LighthouseMenu::AddMenuRando() {
 
                 if (ImGui::Selectable(logicModes[i], isSelected)) {
                     CVarSetInteger(Rando::StaticData::Options[RO_LOGIC].cvar, i);
-        }
+                }
 
                 if (isSelected) {
                     ImGui::SetItemDefaultFocus();
@@ -101,13 +101,13 @@ void LighthouseMenu::AddMenuRando() {
     AddWidget(path, "Seed Metrics", WIDGET_SEPARATOR_TEXT);
 
     AddWidget(path, "Metrics", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) { DrawSeedMetrics(); });
-    
+
     // Rando - Shuffle Options
     AddSidebarEntry("Rando", "Shuffle Options", 1);
     path = { "Rando", "Shuffle Options", SECTION_COLUMN_1 };
-    
+
     AddWidget(path, "Shuffle Collectables", WIDGET_SEPARATOR_TEXT);
-    
+
     AddWidget(path, "Shuffle Empty Honeycombs", WIDGET_CVAR_CHECKBOX)
         .CVar(Rando::StaticData::Options[RO_SHUFFLE_EMPTY_HONEYCOMBS].cvar)
         .Options(CheckboxOptions().Tooltip("Shuffles Empty Honeycombs into the Pool."));
@@ -133,55 +133,54 @@ void LighthouseMenu::AddMenuRando() {
 
     AddWidget(path, "Starting Abilities", WIDGET_SEPARATOR_TEXT);
 
-    AddWidget(path, "Abilities", WIDGET_CUSTOM)
-        .CustomFunction([](WidgetInfo& info) {
-            std::string abilityToolTip;
-            bool defaultValue = false;
+    AddWidget(path, "Abilities", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
+        std::string abilityToolTip;
+        bool defaultValue = false;
 
-            ImGui::PushID(SECTION_COLUMN_1);
-            if (UIWidgets::Button("Enable All", UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Green).Size(ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 0)))) {
-                for (auto& [abilityId, abilityInfo] : abilityLoadoutMap) {
-                    if (abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER || abilityId == ABILITY_13_1ST_NOTEDOOR) {
-                        continue;
-                    }
-                    CVarSetInteger(abilityInfo.second, true);
+        ImGui::PushID(SECTION_COLUMN_1);
+        if (UIWidgets::Button("Enable All", UIWidgets::ButtonOptions()
+                                                .Color(UIWidgets::Colors::Green)
+                                                .Size(ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 0)))) {
+            for (auto& [abilityId, abilityInfo] : abilityLoadoutMap) {
+                if (abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER || abilityId == ABILITY_13_1ST_NOTEDOOR) {
+                    continue;
                 }
-                Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+                CVarSetInteger(abilityInfo.second, true);
             }
-            ImGui::SameLine();
-            if (UIWidgets::Button("Disable All", UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Red))) {
-                for (auto& [abilityId, abilityInfo] : abilityLoadoutMap) {
-                    if (abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER || abilityId == ABILITY_13_1ST_NOTEDOOR) {
-                        continue;
-                    }
-                    CVarSetInteger(abilityInfo.second, false);
+            Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+        }
+        ImGui::SameLine();
+        if (UIWidgets::Button("Disable All", UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Red))) {
+            for (auto& [abilityId, abilityInfo] : abilityLoadoutMap) {
+                if (abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER || abilityId == ABILITY_13_1ST_NOTEDOOR) {
+                    continue;
                 }
-                Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+                CVarSetInteger(abilityInfo.second, false);
             }
-            ImGui::PopID();
+            Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+        }
+        ImGui::PopID();
 
-            if (ImGui::BeginTable("Abilities Table", 3, ImGuiTableFlags_SizingStretchSame)) {
+        if (ImGui::BeginTable("Abilities Table", 3, ImGuiTableFlags_SizingStretchSame)) {
+            ImGui::TableNextColumn();
+
+            for (auto& [abilityId, abilityInfo] : abilityLoadoutMap) {
+                abilityToolTip = std::format("Start with {} unlocked.", abilityInfo.first);
+                defaultValue =
+                    abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER || abilityId == ABILITY_13_1ST_NOTEDOOR ? true : false;
+
+                ImGui::BeginDisabled(abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER || abilityId == ABILITY_13_1ST_NOTEDOOR);
+                UIWidgets::CVarCheckbox(abilityInfo.first, abilityInfo.second,
+                                        UIWidgets::CheckboxOptions()
+                                            .Color(WIDGET_COLOR)
+                                            .Tooltip(abilityToolTip.c_str())
+                                            .DefaultValue(defaultValue));
+                ImGui::EndDisabled();
                 ImGui::TableNextColumn();
-
-                for (auto& [abilityId, abilityInfo] : abilityLoadoutMap) {
-                    abilityToolTip = std::format("Start with {} unlocked.", abilityInfo.first);
-                    defaultValue = abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER || abilityId == ABILITY_13_1ST_NOTEDOOR
-                                       ? true
-                                       : false;
-
-                    ImGui::BeginDisabled(abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER ||
-                                         abilityId == ABILITY_13_1ST_NOTEDOOR);
-                    UIWidgets::CVarCheckbox(abilityInfo.first, abilityInfo.second,
-                                            UIWidgets::CheckboxOptions()
-                                                .Color(WIDGET_COLOR)
-                                                .Tooltip(abilityToolTip.c_str())
-                                                .DefaultValue(defaultValue));
-                    ImGui::EndDisabled();
-                    ImGui::TableNextColumn();
-                }
-                ImGui::EndTable();
             }
-        });
+            ImGui::EndTable();
+        }
+    });
 
     AddWidget(path, "Starting Consumables", WIDGET_SEPARATOR_TEXT);
 
@@ -219,22 +218,21 @@ void LighthouseMenu::AddMenuRando() {
             }
             ImGui::EndTable();
         }
-
     });
 
     // Rando - Junk Options
     AddSidebarEntry("Rando", "Junk Options", 1);
     path = { "Rando", "Junk Options", SECTION_COLUMN_1 };
-    
+
     AddWidget(path, "Enable Junk", WIDGET_SEPARATOR_TEXT);
-    
+
     AddWidget(path, "Spawn Junk For Obtained Checks", WIDGET_CVAR_CHECKBOX)
         .CVar(Rando::StaticData::Options[RO_SPAWN_JUNK].cvar)
         .Options(CheckboxOptions().Tooltip("Spawns a junk item in place of an object that has already been collected."))
         .Callback([](WidgetInfo& info) { UpdateJunkList(); });
-    
+
     AddWidget(path, "Junk Selection", WIDGET_SEPARATOR_TEXT);
-    
+
     AddWidget(path, "Honeycomb Refills", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_RANDOMIZER_SETTING("Junk.HealthRefill"))
         .Options(CheckboxOptions().Tooltip("Adds Health Refills to the Junk List."))

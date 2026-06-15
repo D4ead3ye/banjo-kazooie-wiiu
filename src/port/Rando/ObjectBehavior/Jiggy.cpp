@@ -19,7 +19,7 @@ void Rando::ObjectBehavior::InitJiggyBehavior() {
     })
 
     COND_VB_SHOULD(VB_OVERRIDE_JIGGY_SPAWN, EVENT_PRIORITY_NORMAL, true, {
-		jiggy_e jiggyId = va_arg(args, jiggy_e);
+        jiggy_e jiggyId = va_arg(args, jiggy_e);
         f32* position = va_arg(args, f32*);
 
         if (!IS_RANDO && !OPTION_ENABLED) {
@@ -27,7 +27,7 @@ void Rando::ObjectBehavior::InitJiggyBehavior() {
         }
 
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByJiggyId(jiggyId);
-        
+
         if (randoCheckId == RC_UNKNOWN) {
             return;
         }
@@ -48,5 +48,5 @@ void Rando::ObjectBehavior::InitJiggyBehavior() {
             ApplyCustomActorPhysics(randoCheckId, randoCustomActor, false);
         }
         *should = true;
-	})
+    })
 }

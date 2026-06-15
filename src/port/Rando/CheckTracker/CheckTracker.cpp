@@ -4,7 +4,6 @@
 #include "port/ui/UIWidgets.hpp"
 #include <cstring>
 
-
 #define DEFAULT_LOGIC_COLOR \
     Color_RGBA8 {           \
         200, 200, 200, 255  \
@@ -13,13 +12,13 @@
     Color_RGBA8 {               \
         100, 255, 100, 255      \
     }
-#define DEFAULT_SKIPPED_COLOR   \
-    Color_RGBA8 {               \
-        255, 100, 255, 255      \
+#define DEFAULT_SKIPPED_COLOR \
+    Color_RGBA8 {             \
+        255, 100, 255, 255    \
     }
-#define DEFAULT_ITEM_COLOR  \
-    Color_RGBA8 {           \
-        79, 0, 221, 255     \
+#define DEFAULT_ITEM_COLOR \
+    Color_RGBA8 {          \
+        79, 0, 221, 255    \
     }
 
 #define CVAR_NAME_SHOW_CHECK_TRACKER "gWindows.CheckTracker"
@@ -71,9 +70,9 @@ extern std::shared_ptr<Rando::CheckTracker::CheckTrackerWindow> mRandoCheckTrack
 }
 
 std::vector<std::tuple<const char*, Color_RGBA8, const char*>> defaultCheckColorList = {
-    { CVAR_NAME_LOGIC_COLOR, DEFAULT_LOGIC_COLOR, "Out of Logic"},
+    { CVAR_NAME_LOGIC_COLOR, DEFAULT_LOGIC_COLOR, "Out of Logic" },
     { CVAR_NAME_COLLECTED_COLOR, DEFAULT_COLLECTED_COLOR, "Check Collected" },
-    { CVAR_NAME_SKIPPED_COLOR, DEFAULT_SKIPPED_COLOR, "Check Skipped"},
+    { CVAR_NAME_SKIPPED_COLOR, DEFAULT_SKIPPED_COLOR, "Check Skipped" },
     { CVAR_NAME_ITEM_COLOR, DEFAULT_ITEM_COLOR, "Obtained Item" },
 };
 
@@ -382,32 +381,34 @@ void SettingsWindow::DrawElement() {
         UIWidgets::CVarCheckbox("Toggle Floating Window", CVAR_NAME_ENABLE_FLOATING_WINDOW);
 
         if (UIWidgets::Button(
-            "Expand/Collapse All Levels",
+                "Expand/Collapse All Levels",
                 UIWidgets::ButtonOptions{}.Color(WIDGET_COLOR).Size(ImVec2(ImGui::GetContentRegionAvail().x, 0)))) {
             expandToggle = !expandToggle;
         }
 
         if (UIWidgets::CVarSliderFloat("", CVAR_NAME_CHECK_TRACKER_OPACITY,
-            { .format = "Opacity: %.1f",
-            .step = 0.01f,
-            .min = 0.0f,
-            .max = 1.0f,
-            .defaultValue = 0.5f,
-            .labelPosition = UIWidgets::LabelPositions::None,
-            .color = WIDGET_COLOR,
-            })) {
+                                       {
+                                           .format = "Opacity: %.1f",
+                                           .step = 0.01f,
+                                           .min = 0.0f,
+                                           .max = 1.0f,
+                                           .defaultValue = 0.5f,
+                                           .labelPosition = UIWidgets::LabelPositions::None,
+                                           .color = WIDGET_COLOR,
+                                       })) {
             checkTrackerBG.w = CVAR_CHECK_TRACKER_OPACITY;
         }
 
         if (UIWidgets::CVarSliderFloat(" ", CVAR_NAME_CHECK_TRACKER_SCALE,
-            { .format = "Scale: %.1f",
-            .step = 0.10f,
-            .min = 0.7f,
-            .max = 2.5f,
-            .defaultValue = 1.0f,
-            .labelPosition = UIWidgets::LabelPositions::None,
-            .color = WIDGET_COLOR,
-            })) {
+                                       {
+                                           .format = "Scale: %.1f",
+                                           .step = 0.10f,
+                                           .min = 0.7f,
+                                           .max = 2.5f,
+                                           .defaultValue = 1.0f,
+                                           .labelPosition = UIWidgets::LabelPositions::None,
+                                           .color = WIDGET_COLOR,
+                                       })) {
             checkTrackerScale = CVAR_CHECK_TRACKER_SCALE;
         }
 

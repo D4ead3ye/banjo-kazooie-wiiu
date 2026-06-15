@@ -142,10 +142,11 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             if (Rando::StaticData::Checks[saveCheck.shuffledCheckId].randoCheckType != RCTYPE_JIGGY) {
                 continue;
             }
-        
+
             if (saveCheck.randoCollectionId == ev->jiggyId) {
                 if (ev->jiggyId == JIGGY_5D_MMM_NAPPER) {
-                    if (gsworld_getMap() == MAP_26_MMM_NAPPERS_ROOM && saveCheck.randoCheckId != RC_MMM_JIGGY_MANSION_TABLE) {
+                    if (gsworld_getMap() == MAP_26_MMM_NAPPERS_ROOM &&
+                        saveCheck.randoCheckId != RC_MMM_JIGGY_MANSION_TABLE) {
                         event->Cancelled = true;
                         ev->result = RANDO_SAVE_CHECKS[RC_MMM_JIGGY_MANSION_TABLE].obtained;
                         break;
@@ -187,7 +188,6 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                 }
                 break;
         }
-
     })
 
     REGISTER_LISTENER(OnIsHoneycombScoreCollected, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
