@@ -41,12 +41,36 @@ void Anchor::SendPacket_PlayerSubRangeChange(f32 duration, f32 end) {
     SendToCurrentMapPlayers(payload);
 }
 
+void Anchor::SendPacket_PlayerTransformChange(Transformation tf_id, uint32_t targetClientId) {
+    if (!IsSaveLoaded()) {
+        return;
+    }
+
+    nlohmann::json payload;
+    payload["type"] = PLAYER_TRANSFORM;
+    payload["id"] = tf_id;
+    if (targetClientId != 0) {
+        payload["targetClientId"] = targetClientId;
+    }
+    SendJsonToRemote(payload);
+}
+
 void Anchor::HandlePacket_PlayerSubRangeChange(nlohmann::json& payload) {
     uint32_t clientId = payload["clientId"].get<uint32_t>();
 
     if (clients.contains(clientId)) {
         auto& client = clients[clientId];
         client.dummy->dummyAnim_setEndAndDuration(payload.value("end", 1.0f), payload.value("duration", 0.0f));
+    }
+}
+
+void Anchor::HandlePacket_PlayerTransformChange(nlohmann::json& payload) {
+    uint32_t clientId = payload["clientId"].get<uint32_t>();
+
+    if (clients.contains(clientId)) {
+        auto& client = clients[clientId];
+        client.dummy->dummy_setTransformation(payload.value("id", TRANSFORM_1_BANJO));
+        client.dummy->dummy_updateModel();
     }
 }
 
@@ -95,8 +119,11 @@ bool Anchor::GetCurrentMapPlayers() {
     return currentPlayerCount;
 }
 
-void Anchor::SendPacket_PlayerUpdate(bool full) {
-    if (!IsSaveLoaded() || GetCurrentMapPlayers() == 0) {
+void Anchor::SendPacket_PlayerUpdate(bool full, uint32_t targetClientId) {
+    // A targeted update is a join-time snapshot for one specific client, so it bypasses
+    // the "is anyone else in my map?" gate — the recipient was just added and may be the
+    // only other player here.
+    if (!IsSaveLoaded() || (targetClientId == 0 && GetCurrentMapPlayers() == 0)) {
         return;
     }
 
@@ -148,7 +175,12 @@ void Anchor::SendPacket_PlayerUpdate(bool full) {
     }
     payload["type"] = full ? PLAYER_UPDATE_FULL : PLAYER_UPDATE;
 
-    SendToCurrentMapPlayers(payload);
+    if (targetClientId != 0) {
+        payload["targetClientId"] = targetClientId;
+        SendJsonToRemote(payload);
+    } else {
+        SendToCurrentMapPlayers(payload);
+    }
 }
 
 void Anchor::HandlePacket_PlayerUpdate(nlohmann::json& payload) {
@@ -162,6 +194,10 @@ void Anchor::HandlePacket_PlayerUpdate(nlohmann::json& payload) {
 
         client.map = payload.value("map", MAP_0_UNKNOWN);
         client.exit = payload.value("exit", (s32)0);
+        // Self-heal: a missed MAP_LOAD (e.g. it arrived while we were still in the
+        // previous map) would otherwise leave this client's dummy unregistered
+        // forever, since single-map levels produce no further map loads.
+        EvaluateDummyForClient(clientId);
         std::vector<f32> pos = payload["pos"].get<std::vector<f32>>();
         client.dummy->dummy_setPoisition(pos.data());
         std::vector<f32> rot = payload["rot"].get<std::vector<f32>>();
