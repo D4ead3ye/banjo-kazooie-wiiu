@@ -19,7 +19,7 @@ ActorInfo chXmasTree = {
 Actor *chXmasTree_draw(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
     Actor *this = marker_getActor(marker);
     func_8033A45C(5, this->unk38_31);
-    func_8033A45C(6, fileProgressFlag_get(FILEPROG_13_COMPLETED_TWINKLIES_MINIGAME) && !func_8033A0F0(5));
+    func_8033A45C(6, fileProgressFlag_get(FILEPROG_13_COMPLETED_TWINKLIES_MINIGAME) && !modelRender_func_8033A0F0(5));
     return actor_draw(marker, gfx, mtx, vtx);
 }
 
@@ -44,7 +44,7 @@ void __chXmasTree_80386F3C(void){
     levelSpecificFlags_set(LEVEL_FLAG_29_FP_XMAS_TREE_COMPLETE, true);
     musicKeepsPlaying();
     volatileFlag_set(VOLATILE_FLAG_E, 1);
-    transitionToMap(MAP_53_FP_CHRISTMAS_TREE, 1, 0);
+    transitionToMap(MAP_53_FP_CHRISTMAS_TREE, WARP_FP_CHRISTMAS_TREE_1_ENTRANCE, 0);
 }
 
 void __chXmasTree_80386F84(Actor * this){

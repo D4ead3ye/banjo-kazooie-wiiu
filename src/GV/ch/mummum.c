@@ -82,8 +82,8 @@ void chMumMum_initialize(Actor *this) {
     local->exitInvulnerableStateSampleRate = 20000;
     local->exitInvulnerableStateVolume = 1.0f;
     local->unkC_28 = true;
-    local->hitFunction = chMumMum_setInvulnerableState;
-    local->dieFunction = chMumMum_die;
+    local->hitFunction = (void (*)(ActorMarker *, ActorMarker *)) chMumMum_setInvulnerableState;
+    local->dieFunction = (void (*)(ActorMarker *, ActorMarker *)) chMumMum_die;
     this->unk154 |= 0x08000000;
 }
 
@@ -123,7 +123,7 @@ void func_8035D4F0(ActorMarker *marker, s32 arg1){
     if(gsworld_getMap() == MAP_13_GV_MEMORY_GAME){
         actor = marker_getActor(marker);
         if(actor->state != 9){
-            if (func_8033F3E8(mapModel_getModel(0), actor->position, 0x190, 0x1A0) == arg1) {
+            if (model_func_8033F3E8(mapModel_getModel(0), actor->position, 0x190, 0x1A0) == arg1) {
                 __bundle_spawnFromFirstActor(BUNDLE_1C__HONEYCOMB, actor);
                 chMumMum_setInvulnerableState(marker, 0);
             }

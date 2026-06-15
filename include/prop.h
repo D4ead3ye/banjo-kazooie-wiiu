@@ -5,8 +5,14 @@
 
 #include "structs.h"
 #include "core2/anctrl.h"
+#include "core2/animmtxlist.h"
 #include "core2/modelRender.h"
 #include "core2/skeletalanim.h"
+#include "core2/code_C31A0.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct sprite_prop_s{
     u32 spriteId:0xC;
@@ -96,7 +102,7 @@ typedef struct actorMarker_s{
     u32         unk14_10:11; //used in ch/jiggy
     Struct6Cs   *unk18;
     MarkerCollisionFunc dieFunc;
-    struct AnimMtxList_s *unk20;
+    AnimMtxList *unk20;
     ActorUpdateFunc actorUpdateFunc;
     s32         commonParticleIndex;
     u32         actrArrayIdx:11; //unk2C
@@ -120,7 +126,7 @@ typedef struct actorMarker_s{
     u32         unk40_20:1;
     u32         unk40_19:1;
     u32         pad40_18:19;
-    struct5Bs * unk44;
+    Vec3fArray * unk44;
     BKModel *   unk48;
     bk_vector(Struct70s) * unk4C;
     void        *unk50;
@@ -413,8 +419,12 @@ typedef struct actor_array{
 #pragma pack(push, 4)
 typedef struct {
     u32 cnt;
-    Actor actor_save_state[];
+    Actor data[];
 }ActorListSaveState;
 #pragma pack(pop)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

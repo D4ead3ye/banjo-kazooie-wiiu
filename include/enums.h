@@ -476,7 +476,7 @@ enum level_flags_e
     LEVEL_FLAG_3F_LAIR_GRUNTY_DOOR_OPEN
 };
 
-enum transformation_e
+typedef enum transformation_e
 {
     unknown,
     TRANSFORM_1_BANJO,
@@ -486,7 +486,7 @@ enum transformation_e
     TRANSFORM_5_CROC,
     TRANSFORM_6_BEE,
     TRANSFORM_7_WISHWASHY
-};
+} Transformation;
 
 enum ability_e
 {
@@ -539,6 +539,7 @@ enum joystick_e{
 
 typedef enum map_e
 {
+    MAP_0_UNKNOWN,
     MAP_1_SM_SPIRAL_MOUNTAIN = 0x01,
     MAP_2_MM_MUMBOS_MOUNTAIN,
     MAP_3_UNUSED,
@@ -691,7 +692,8 @@ typedef enum map_e
     MAP_96_CS_END_BEACH_1,
     MAP_97_CS_END_BEACH_2,
     MAP_98_CS_END_SPIRAL_MOUNTAIN_1,
-    MAP_99_CS_END_SPIRAL_MOUNTAIN_2
+    MAP_99_CS_END_SPIRAL_MOUNTAIN_2,
+    MAP_NUM_MAPS
 } GameMap;
 
 enum comusic_e
@@ -1758,7 +1760,7 @@ enum mumbotoken_e
     MUMBOTOKEN_73_CCW_WINTER_SIR_SLUSH_BETWEEN_BIG_FLOWER_AND_MUMBOS_SKULL
 };
 
-enum actor_e
+typedef enum actor_e
 {
     ACTOR_1_UNKNOWN         = 0x1,
     ACTOR_2_UNKNOWN,
@@ -2387,8 +2389,10 @@ enum actor_e
     ACTOR_3C8_FF_PRIZE_TOOTY,
     ACTOR_3C9_FURNACE_FUN_PICK_PRICE,
     ACTOR_3CA_ROCK_TRAPPING_GRUNTY = 0x3CA,
-    ACTOR_3CB_UNKNOWN
-};
+    ACTOR_3CB_UNKNOWN,
+
+    ACTOR_3CC_DUMMY_PLAYER_ANCHOR = 0x3CC,
+} ActorID;
 
 enum bundle_e {
     BUNDLE_0_MM_HUT_MUSIC_NOTE,
@@ -2747,7 +2751,7 @@ enum anctrl_direction_e
     mvmt_dir_forwards = 1
 };
 
-enum game_mode_e
+typedef enum game_mode_e
 {
     GAME_MODE_1_UNKNOWN = 1,
     GAME_MODE_2_UNKNOWN,
@@ -2759,10 +2763,11 @@ enum game_mode_e
     GAME_MODE_8_BOTTLES_BONUS,
     GAME_MODE_9_BANJO_AND_KAZOOIE,
     GAME_MODE_A_SNS_PICTURE
-};
+} GameMode;
 
-enum asset_e
+typedef enum asset_e
 {
+    ASSET_0_NONE = 0,
     ASSET_1_ANIM_BSCROUCH_ENTER = 0x1,
     ASSET_2_ANIM_BSWALK_CREEP = 0x2,
     ASSET_3_ANIM_BSWALK = 0x3,
@@ -4251,6 +4256,7 @@ enum asset_e
     SPRITE_BOLD_FONT_PURPLE_SPHERE_TEXTURE,
     SPRITE_BOLD_FONT_PINK_SPHERE_TEXTURE,
 
+    SPRITE_JP_DIALOG_FONT_ALPHAMASK = 0x6ea, // [port] JP-exclusive font sprite (256 I4 glyphs)
     SPRITE_DIALOG_FONT_ALPHAMASK = 0x6eb,
     SPRITE_BOLD_FONT_LETTERS_ALPHAMASK,
     SPRITE_BOLD_FONT_NUMBERS_ALPHAMASK,
@@ -5277,24 +5283,39 @@ enum asset_e
     ASSET_1512_MODEL_GL_TTC_LOBBY_XLU = 0x1512,
     ASSET_1513_MODEL_CS_KLUNGOS_LAB_XLU = 0x1513,
     ASSET_1514_MODEL_GL_FF_ENTRANCE_XLU = 0x1514,
-    ASSET_1515_MODEL_GL_BATTLEMENTS_XLU
-};
+    ASSET_1515_MODEL_GL_BATTLEMENTS_XLU,
 
-enum overlay_e{
-    OVERLAY_1_COSHOW   = 0x1,
-    OVERLAY_2_WHALE    = 0x2,
-    OVERLAY_3_HAUNTED  = 0x3,
-    OVERLAY_4_DESERT   = 0x4,
-    OVERLAY_5_BEACH    = 0x5,
-    OVERLAY_6_JUNGLE   = 0x6,
-    OVERLAY_7_SWAMP    = 0x7,
-    OVERLAY_8_SHIP     = 0x8,
-    OVERLAY_9_SNOW     = 0x9,
-    OVERLAY_A_TREE     = 0xA,
-    OVERLAY_B_TRAINING = 0xB,
-    OVERLAY_C_INTRO    = 0xC,
-    OVERLAY_D_WITCH    = 0xD,
-    OVERLAY_E_BATTLE   = 0xE
+    SPRITE_JP_WORLD_NAME_TOTAL = 0x1600,
+    SPRITE_JP_WORLD_NAME_SPIRAL_MOUNTAIN,
+    SPRITE_JP_WORLD_NAME_GRUNTILDAS_LAIR,
+    SPRITE_JP_WORLD_NAME_MUMBOS_MOUNTAIN,
+    SPRITE_JP_WORLD_NAME_TREASURE_TROVE_COVE,
+    SPRITE_JP_WORLD_NAME_CLANKERS_CAVERN,
+    SPRITE_JP_WORLD_NAME_BUBBLEGLOOP_SWAMP,
+    SPRITE_JP_WORLD_NAME_FREEZEEZY_PEAK,
+    SPRITE_JP_WORLD_NAME_GOBIS_VALLEY,
+    SPRITE_JP_WORLD_NAME_MAD_MONSTER_MANSION,
+    SPRITE_JP_WORLD_NAME_RUSTY_BUCKET_BAY,
+    SPRITE_JP_WORLD_NAME_CLICK_CLOCK_WOOD,
+    SPRITE_JP_BOLD_FONT_FILL_TEXTURE
+} AssetID;
+
+enum overlay_e {
+    OVERLAY_0_CORE2,
+    OVERLAY_1_COSHOW,
+    OVERLAY_2_WHALE,
+    OVERLAY_3_HAUNTED,
+    OVERLAY_4_DESERT,
+    OVERLAY_5_BEACH,
+    OVERLAY_6_JUNGLE,
+    OVERLAY_7_SWAMP,
+    OVERLAY_8_SHIP,
+    OVERLAY_9_SNOW,
+    OVERLAY_A_TREE,
+    OVERLAY_B_TRAINING,
+    OVERLAY_C_INTRO,
+    OVERLAY_D_WITCH,
+    OVERLAY_E_BATTLE
 };
 
 enum marker_e{
@@ -5805,7 +5826,9 @@ enum marker_e{
 
     MARKER_29C_FURNACE_FUN_PICK_PRICE = 0x29C,
     MARKER_29D_ROCK_TRAPPING_GRUNTY,
-    MARKER_29E_BIGBUTT_KNOCKED_DOWN
+    MARKER_29E_BIGBUTT_KNOCKED_DOWN,
+
+    MARKER_29F_DUMMY_PLAYER_ANCHOR,
 };
 
 enum hitbox_e{
@@ -5996,6 +6019,676 @@ enum ch_mole_ids
     CH_MOLE_ID_11_TURBO_TALON_TROT,
     CH_MOLE_ID_12_OPEN_NOTEDOORS,
     CH_MOLE_ID_13_EMPTY
+};
+
+enum map_warp_SM_spiral_mountain
+{
+    // unclear which one is house exit
+    WARP_SM_SPIRAL_MOUNTAIN_13_LAIR_ENTRANCE = 0x13
+};
+
+enum map_warp_SM_banjos_house
+{
+    WARP_SM_BANJOS_HOUSE_1_ENTRANCE = 0x1,
+    WARP_SM_BANJOS_HOUSE_2_BOTTLES
+};
+
+enum map_warp_GL_mm_lobby
+{
+    WARP_GL_MM_LOBBY_1_NOTE_DOOR = 0x1,
+    WARP_GL_MM_LOBBY_2_MM_ENTRANCE,
+
+    WARP_GL_MM_LOBBY_A_PUZZLE = 0xA,
+
+    WARP_GL_MM_LOBBY_12_ENTRANCE = 0x12
+};
+
+enum map_warp_GL_ttc_puzzle
+{
+    WARP_GL_TTC_PUZZLE_1_LOWER_ENTRANCE = 0x1,
+    WARP_GL_TTC_PUZZLE_2_HIGHER_EXIT,
+
+    WARP_GL_TTC_PUZZLE_8_CAULDRON = 0x8,
+
+    WARP_GL_TTC_PUZZLE_A_CC_PUZZLE = 0xA,
+    WARP_GL_TTC_PUZZLE_B_TTC_PUZZLE
+};
+
+enum map_warp_GL_ccw_puzzle
+{
+    WARP_GL_CCW_PUZZLE_1_LOWER_ENTRANCE = 0x1,
+    WARP_GL_CCW_PUZZLE_2_PIPE_ROOM,
+    WARP_GL_CCW_PUZZLE_3_TO_TTC,
+    WARP_GL_CCW_PUZZLE_4_TO_CC,
+    WARP_GL_CCW_PUZZLE_5_HIGHER_EXIT,
+
+    WARP_GL_CCW_PUZZLE_A_WATERFALL = 0xA, //unused?
+    WARP_GL_CCW_PUZZLE_B_PUZZLE
+};
+
+enum map_warp_GL_ttc_lobby
+{
+    WARP_GL_TTC_LOBBY_1_ENTRANCE = 0x1,
+
+    WARP_GL_TTC_LOBBY_4_TTC_ENTRANCE = 0x4
+};
+
+enum map_warp_GL_cc_lobby
+{
+    WARP_GL_CC_LOBBY_1_ENTRANCE = 0x1,
+    WARP_GL_CC_LOBBY_2_CC_ENTRANCE,
+
+    WARP_GL_CC_LOBBY_B_PUZZLE = 0xB
+};
+
+enum map_warp_GL_pipe_room
+{
+    WARP_GL_PIPE_ROOM_1_ENTRANCE = 0x1,
+
+    WARP_GL_PIPE_ROOM_8_CAULDRON = 0x8
+};
+
+enum map_warp_GL_statue_room
+{
+    WARP_GL_STATUE_ROOM_1_HIGHER_EXIT = 0x1,
+    WARP_GL_STATUE_ROOM_2_LOWER_ENTRANCE,
+    WARP_GL_STATUE_ROOM_3_TO_BGS,
+    WARP_GL_STATUE_ROOM_4_CEILING_EXIT
+};
+
+enum map_warp_GL_bgs_lobby
+{
+    WARP_GL_BGS_LOBBY_1_ENTRANCE = 0x1,
+    WARP_GL_BGS_LOBBY_2_BGS_ENTRANCE,
+
+    WARP_GL_BGS_LOBBY_A_PUZZLE = 0xA
+};
+
+enum map_warp_GL_gv_lobby
+{
+    WARP_GL_GV_LOBBY_1_LOWER_ENTRANCE = 0x1,
+    WARP_GL_GV_LOBBY_2_HIGHER_EXIT,
+    WARP_GL_GV_LOBBY_3_GV_ENTRANCE
+};
+
+enum map_warp_GL_fp_lobby
+{
+    WARP_GL_FP_LOBBY_1_LOWER_ENTRANCE = 0x1,
+    WARP_GL_FP_LOBBY_2_HIGHEST_EXIT,
+
+    WARP_GL_FP_LOBBY_5_MOUTH_EXIT = 0x5,
+    WARP_GL_FP_LOBBY_6_FP_ENTRANCE,
+
+    WARP_GL_FP_LOBBY_8_LOWER_CAULDRON = 0x8,
+    WARP_GL_FP_LOBBY_9_HIGHER_CAULDRON
+};
+
+enum map_warp_GL_gv_puzzle
+{
+    WARP_GL_GV_PUZZLE_1_TO_MMM = 0x1,
+    WARP_GL_GV_PUZZLE_2_ENTRANCE,
+
+    WARP_GL_GV_PUZZLE_A_PUZZLE = 0xA
+};
+
+enum map_warp_GL_mmm_lobby
+{
+    WARP_GL_MMM_LOBBY_1_ENTRANCE = 0x1,
+    WARP_GL_MMM_LOBBY_2_MM_ENTRANCE,
+    WARP_GL_MMM_LOBBY_3_COFFIN
+};
+
+enum map_warp_GL_coffin_room
+{
+    WARP_GL_COFFIN_ROOM_1_ENTRANCE = 0x1,
+
+    WARP_GL_COFFIN_ROOM_A_SWITCH = 0xA
+};
+
+enum map_warp_GL_water_switch_room
+{
+    WARP_GL_WATER_SWITCH_ROOM_1_LOWER_ENTRANCE = 0x1,
+    WARP_GL_WATER_SWITCH_ROOM_2_MUMBO_TOKEN_EXIT,
+    WARP_GL_WATER_SWITCH_ROOM_3_HIGHER_EXIT,
+    WARP_GL_WATER_SWITCH_ROOM_4_UNDERWATER_EXIT
+};
+
+enum map_warp_GL_rbb_lobby
+{
+    WARP_GL_RBB_LOBBY_1_LOWER_ENTRANCE = 0x1,
+    WARP_GL_RBB_LOBBY_2_RBB_ENTRANCE,
+    WARP_GL_RBB_LOBBY_3_UNDERWATER_EXIT,
+    WARP_GL_RBB_LOBBY_4_HIGHER_EXIT,
+
+    WARP_GL_RBB_LOBBY_8_CAULDRON = 0x8,
+
+    WARP_GL_RBB_LOBBY_A_SWITCH = 0xA
+};
+
+enum map_warp_GL_mmm_puzzle
+{
+    WARP_GL_MMM_PUZZLE_1_UNDERWATER_ENTRANCE = 0x1,
+    WARP_GL_MMM_PUZZLE_2_HIGHER_ENTRANCE,
+
+    WARP_GL_MMM_PUZZLE_5_RBB_PUZZLE = 0x5,
+    WARP_GL_MMM_PUZZLE_6_MMM_PUZZLE
+};
+
+enum map_warp_GL_ccw_lobby
+{
+    WARP_GL_CCW_LOBBY_1_WHIPCRACK_ENTRANCE = 0x1,
+    WARP_GL_CCW_LOBBY_2_HIGHER_ENTRANCE,
+    WARP_GL_CCW_LOBBY_3_FURNACE_EXIT,
+
+    WARP_GL_CCW_LOBBY_6_CCW_ENTRANCE = 0x6,
+
+    WARP_GL_CCW_LOBBY_8_CAULDRON = 0x8,
+
+    WARP_GL_CCW_LOBBY_12_SWITCH = 0x12
+};
+
+enum map_warp_GL_furnace_fun_path
+{
+    WARP_GL_FURNACE_FUN_PATH_1_ENTRANCE = 0x1,
+    WARP_GL_FURNACE_FUN_PATH_2_EXIT
+};
+
+enum map_warp_GL_furnace_fun
+{
+    WARP_GL_FURNACE_FUN_1_AFTER_PAD = 0x1,
+    WARP_GL_FURNACE_FUN_2_ENTRANCE_PAD,
+
+    WARP_GL_FURNACE_FUN_4_AFTER_BOARD = 0x3,
+    WARP_GL_FURNACE_FUN_5_TO_TOWER,
+
+    WARP_GL_FURNACE_FUN_8_CAULDRON = 0x8
+};
+
+enum map_warp_GL_tower
+{
+    WARP_GL_TOWER_2_DINGPOT = 0x2,
+
+    WARP_GL_TOWER_5_ENTRANCE = 0x5,
+
+    WARP_GL_TOWER_8_CAULDRON = 0x8,
+
+    WARP_GL_TOWER_A_GRUNTY_PUZZLE = 0xA
+};
+
+// map_warp_GL_boss - one entrance, unclear which
+
+enum map_warp_MM
+{
+    WARP_MM_1_MUMBOS_HUT = 0x1,
+    WARP_MM_2_TOWER_BOTTOM,
+    WARP_MM_3_TOWER_TOP,
+    WARP_MM_4_WITCH_SWITCH,
+    WARP_MM_5_WORLD_ENTRACE
+};
+
+enum map_warp_MM_tickers_tower
+{
+    WARP_MM_TICKERS_TOWER_1_TOP = 0x1,
+    WARP_MM_TICKERS_TOWER_2_BOTTOM
+};
+
+enum map_warp_MM_mumbos_hut
+{
+    WARP_MM_MUMBOS_HUT_1_ENTRANCE = 0x1
+};
+
+enum map_warp_TTC
+{
+    WARP_TTC_1_LEAKY = 0x1,
+
+    WARP_TTC_3_SANDCASTLE = 0x3,
+    WARP_TTC_4_WORLD_ENTRANCE = 0x4,
+
+    WARP_TTC_6_SHIP_TOP_HATCH = 0x6,
+    WARP_TTC_7_SHIP_SIDE_HATCH,
+    WARP_TTC_8_LIGHTHOUSE_TOP,
+
+    WARP_TTC_A_NIPPER = 0xA,
+
+    WARP_TTC_C_LIGHTHOUSE_BOTTOM = 0xC,
+
+    WARP_TTC_E_ISLAND_TOP_STAIRS = 0xE,
+    WARP_TTC_F_CLIFFSIDE_STAIRS,
+
+    WARP_TTC_14_WITCH_SWITCH = 0x14
+};
+
+enum map_warp_TTC_blubbers_ship
+{
+    WARP_TCC_BLUBBERS_SHIP_5_TOP_HATCH = 0x5,
+    WARP_TCC_BLUBBERS_SHIP_6_SIDE_HATCH
+};
+
+enum map_warp_TTC_nippers_shell
+{
+    WARP_TCC_NIPPERS_SHELL_1_ENTRANCE = 0x1
+};
+
+enum map_warp_TTC_sandcastle
+{
+    WARP_TCC_SANDCASTLE_1_ENTRANCE = 0x1
+};
+
+enum map_warp_TTC_sharkfood_island
+{
+    WARP_TCC_SHARKFOOD_ISLAND_1_ENTRANCE = 0x1
+};
+
+enum map_warp_CC
+{
+    WARP_CC_1_RIGHT_TOOTH = 0x1,
+    WARP_CC_2_LEFT_TOOTH,
+    WARP_CC_3_RIGHT_GILLS,
+    WARP_CC_4_LEFT_GILLS,
+    WARP_CC_5_WORLD_ENTRANCE
+    // 14 slightly off angle
+    // 23-27 different angle
+    // 28-29 another angle
+    // 31 zips across map first
+};
+
+enum map_warp_CC_inside_clanker
+{
+    // 0x1 exit from witch switch room? also the default
+    WARP_CC_INSIDE_CLANKER_2_MOUTH_ROOFTOP = 0x2,
+    WARP_CC_INSIDE_CLANKER_3_GOLD_FEATHER_ENTRANCE,
+    WARP_CC_INSIDE_CLANKER_4_LEFT_GILL,
+    WARP_CC_INSIDE_CLANKER_5_RIGHT_GILL,
+    WARP_CC_INSIDE_CLANKER_6_LEFT_TOOTH,
+    WARP_CC_INSIDE_CLANKER_7_RIGHT_TOOTH
+};
+
+enum map_warp_CC_witch_switch
+{
+    WARP_CC_WITCH_SWITCH_1_TOP_ENTRANCE = 0x1,
+
+    WARP_CC_WITCH_SWITCH_14_WITCH_SWITCH = 0x14
+};
+
+// map_warp_CC_gold_feather - one exit, unclear which
+
+enum map_warp_BGS
+{
+    WARP_BGS_1_CROC_FRONT = 0x1, // unused?
+    WARP_BGS_2_WORLD_ENTRANCE,
+    WARP_BGS_3_TURTLE,
+    WARP_BGS_4_CROC_LEFT,
+    WARP_BGS_5_CROC_RIGHT,
+    WARP_BGS_6_MUMBOS_HUT,
+
+    WARP_BGS_14_WITCH_SWITCH = 0x14
+};
+
+enum map_warp_BGS_mumbos_hut
+{
+    WARP_BGS_MUMBOS_HUT_1_ENTRANCE = 0x1
+};
+
+enum map_warp_BGS_mr_vile
+{
+    WARP_BGS_MR_VILE_2_CENTER = 0x2,
+    WARP_BGS_MR_VILE_3_LEFT_ENTRANCE,
+    WARP_BGS_MR_VILE_4_RIGHT_ENTRANCE
+};
+
+enum map_warp_BGS_tiptup
+{
+    WARP_BGS_TIPTUP_1_ENTRANCE = 0x1,
+    WARP_BGS_TIPTUP_2_PODIUM
+};
+
+enum map_warp_FP
+{
+    WARP_FP_1_WORLD_ENTRANCE = 0x1,
+
+    WARP_FP_6_WOZZA_CAVE = 0x6,
+    WARP_FP_7_MUMBOS_HUT,
+    WARP_FP_8_IGLOO,
+    WARP_FP_9_TREE_BOTTOM,
+
+    WARP_FP_D_TREE_STAR = 0xD,
+
+    WARP_FP_15_WITCH_SWITCH = 0x15
+};
+
+enum map_warp_FP_mumbos_hut
+{
+    WARP_FP_MUMBOS_HUT_1_ENTRANCE = 0x1
+};
+
+enum map_warp_FP_boggys_igloo
+{
+    WARP_FP_BOGGYS_IGLOO_1_ENTRANCE = 0x1
+};
+
+enum map_warp_FP_christmas_tree
+{
+    WARP_FP_CHRISTMAS_TREE_1_ENTRANCE = 0x1
+};
+
+enum map_warp_FP_wozzas_cave
+{
+    WARP_FP_WOZZAS_CAVE_1_ENTRANCE = 0x1
+};
+
+enum map_warp_GV
+{
+    WARP_GV_2_JINXY_SPHINX = 0x2,
+    WARP_GV_3_MEMORY_PYRAMID,
+    WARP_GV_4_MAZE_PYRAMID_FRONT,
+    WARP_GV_5_WATER_PYRAMID,
+    WARP_GV_6_RUBEE_PYRAMID,
+    WARP_GV_7_MAZE_PYRAMID_BACK,
+    WARP_GV_8_WORLD_ENTRANCE,
+
+    WARP_GV_A_EGG_ROOM = 0xA
+};
+
+enum map_warp_GV_memory_pyramid
+{
+    WARP_GV_MEMORY_PYRAMID_1_ENTRANCE = 0x1,
+    WARP_GV_MEMORY_PYRAMID_2_CENTER
+};
+
+enum map_warp_GV_maze_pyramid
+{
+    WARP_GV_MAZE_PYRAMID_1_ENTRANCE = 0x1
+};
+
+enum map_warp_GV_water_pyramid
+{
+    // 0, 2-5 all start at entrance from above
+    WARP_GV_WATER_PYRAMID_1_RETURN_TO_JIGGY = 0x1,
+
+    WARP_GV_WATER_PYRAMID_6_LOWER_EXIT = 0x6
+};
+
+// map_warp_GV_rubee_pyramid - one entrance, unclear which
+// map_warp_GV_inside_jinxy - one entrance, unclear which
+
+enum map_warp_GV_egg_room
+{
+    WARP_GV_EGG_ROOM_5_ENTRANCE = 0x5
+};
+
+enum map_warp_MMM
+{
+    WARP_MMM_2_MASNION_DOOR = 0x1,
+
+    WARP_MMM_3_WELL_TOP = 0x3,
+    WARP_MMM_4_SHED,
+    WARP_MMM_5_CHURCH_DOOR,
+    WARP_MMM_6_CHURCH_WINDOW,
+    WARP_MMM_7_CHIMNEY,
+    WARP_MMM_8_DRAINPIPE_BOTTOM,
+    WARP_MMM_9_CELLAR,
+    WARP_MMM_A_F1_RED_FEATHER_WINDOW,
+    WARP_MMM_B_F1_EGG_WINDOW,
+    WARP_MMM_C_F2_BATHROOM_WINDOW,
+    WARP_MMM_D_F2_GOLD_FEATHER_WINDOW,
+    WARP_MMM_E_F3_BEDROOM_WINDOW,
+    WARP_MMM_F_F3_NOTE_WINDOW,
+    WARP_MMM_10_CHURCH_TOP,
+    WARP_MMM_11_CHURCH_CLOCK,
+    WARP_MMM_12_MUMBOS_HUT,
+    WARP_MMM_13_WELL_BOTTOM,
+    WARP_MMM_14_WORLD_ENTRANCE
+
+};
+
+enum map_warp_MMM_dining
+{
+    WARP_MMM_DINING_1_FRONT_ENTRANCE = 0x1,
+    WARP_MMM_DINING_2_CHIMNEY
+};
+
+enum map_warp_MMM_red_feather
+{
+    WARP_MMM_RED_FEATHER_1_ENTRANCE = 0x1
+};
+
+// map_warp_MMM_egg - one entrance, unclear which
+// map_warp_MMM_bathroom  - one entrance, unclear which
+// map_warp_MMM_gold_feather - one entrance, unclear which
+// map_warp_MMM_bedroom - one entrance, unclear which
+// map_warp_MMM_note - one entrance, unclear which
+
+enum map_warp_MMM_septic_tank
+{
+    WARP_MMM_SEPTIC_TANK_4_ENTRANCE = 0x4
+};
+
+// map_warp_MMM_cellar - one entrance, unclear which
+
+enum map_warp_MMM_church
+{
+    WARP_MMM_CHURCH_1_ENTRANCE = 0x1,
+
+    WARP_MMM_CHURCH_14_WITCH_SWITCH = 0x14
+};
+
+// map_warp_MMM_church_window - one entrance, unclear which
+
+enum map_warp_MMM_well
+{
+    // 0-3 both spawn from top entrance
+    WARP_MMM_WELL_4_BOTTOM_ENTRANCE = 0x4
+};
+
+enum map_warp_MMM_shed
+{
+    WARP_MMM_SHED_1_ENTRANCE = 0x1
+};
+
+enum map_warp_MMM_drainpipe
+{
+    WARP_MMM_DRAINPIPE_1_TOP_ENTRANCE = 0x1,
+    WARP_MMM_DRAINPIPE_2_BOTTOM_EXIT
+};
+
+enum map_warp_MMM_mumbos_hut
+{
+    WARP_MMM_MUMBOS_HUT_1_ENTRANCE = 0x1
+};
+
+enum map_warp_RBB
+{
+    WARP_RBB_1_CAPTAIN_ROOM_WINDOW = 0x1,
+    WARP_RBB_2_CREW_ROOM_WINDOW,
+    WARP_RBB_3_ENGINE_SWITCH_PIPE,
+    WARP_RBB_4_KITCHEN_PIPE,
+    WARP_RBB_5_NAV_ROOM_PIPE,
+    WARP_RBB_6_STORAGE_PIPE,
+    WARP_RBB_7_ENGINE_ENTRANCE,
+    WARP_RBB_8_BOAT_ROOM,
+    WARP_RBB_9_FIRST_CONTAINER,
+    WARP_RBB_A_SECOND_CONTAINER,
+    WARP_RBB_B_THIRD_CONTAINER,
+    WARP_RBB_C_AFTER_BOSS,
+    WARP_RBB_D_FISH_WAREHOUSE,
+    WARP_RBB_E_WITCH_SWITCH,
+
+    WARP_RBB_10_WORLD_ENTRANCE = 0x10,
+
+    WARP_RBB_13_ANCHOR_ROOM = 0x13
+};
+
+enum map_warp_RBB_anchor
+{
+    WARP_RBB_ANCHOR_2_ENTRANCE = 0x2,
+    WARP_RBB_ANCHOR_4_SWITCH
+};
+
+enum map_warp_RBB_engine
+{
+    WARP_RBB_ENGINE_1_ENTRANCE = 0x1,
+    WARP_RBB_ENGINE_2_LEFT_SWITCH,
+    WARP_RBB_ENGINE_3_RIGHT_SWITCH,
+    WARP_RBB_ENGINE_4_PIPE_ENTRANCE
+};
+
+enum map_warp_RBB_boat
+{
+    WARP_RBB_BOAT_1_ENTRANCE = 0x1
+};
+
+enum map_warp_RBB_warehouse
+{
+    WARP_RBB_WAREHOUSE_1_DOOR = 0x1,
+    WARP_RBB_WAREHOUSE_2_WINDOW
+};
+
+enum map_warp_RBB_crew_cabin
+{
+    WARP_RBB_CREW_CABIN_1_ENTRANCE = 0x1
+};
+
+enum map_warp_RBB_captain_cabin
+{
+    WARP_RBB_CAPTAIN_CABIN_1_ENTRANCE = 0x1
+};
+
+enum map_warp_RBB_kitchen
+{
+    WARP_RBB_KITCHEN_1_ENTRANCE = 0x1
+};
+
+enum map_warp_RBB_navigation
+{
+    WARP_RBB_NAVIGATION_1_ENTRANCE = 0x1
+};
+
+enum map_warp_RBB_storage
+{
+    WARP_RBB_STORAGE_1_ENTRANCE = 0x1
+};
+
+enum map_warp_RBB_boss
+{
+    WARP_RBB_BOSS_1_ENTRANCE = 0x1,
+    WARP_RBB_BOSS_2_REDO
+};
+
+enum map_warp_RBB_container_1
+{
+    WARP_RBB_CONTAINER_1_ENTRANCE = 0x1
+};
+
+enum map_warp_RBB_container_2
+{
+    WARP_RBB_CONTAINER_2_ENTRANCE = 0x1
+};
+
+enum map_warp_RBB_container_3
+{
+    WARP_RBB_CONTAINER_3_ENTRANCE = 0x1
+};
+
+enum map_warp_CCW
+{
+    WARP_CCW_1_WINTER = 0x1,
+    WARP_CCW_2_SPRING,
+    WARP_CCW_3_SUMMER,
+    WARP_CCW_4_AUTUMN,
+    WARP_CCW_5_SPRING_SWITCH,
+
+    WARP_CCW_7_WORLD_ENTRANCE = 0x7
+};
+
+enum map_warp_CCW_mumbos_hut_spring
+{
+    WARP_CCW_MUMBOS_HUT_SPRING_1_ENTRANCE = 0x1
+};
+
+enum map_warp_CCW_mumbos_hut_summer
+{
+    WARP_CCW_MUMBOS_HUT_SUMMER_1_ENTRANCE = 0x1
+};
+
+enum map_warp_CCW_mumbos_hut_autumn
+{
+    WARP_CCW_MUMBOS_HUT_AUTUMN_1_ENTRANCE = 0x1
+};
+
+enum map_warp_CCW_mumbos_hut_winter
+{
+    WARP_CCW_MUMBOS_HUT_WINTER_1_ENTRANCE = 0x1
+};
+
+enum map_warp_CCW_beehive_spring
+{
+    WARP_CCW_BEEHIVE_SPRING_1_ENTRANCE = 0x1
+};
+
+enum map_warp_CCW_beehive_summer
+{
+    // 0-2 spawn from top entrance
+    WARP_CCW_BEEHIVE_SUMMER_3_REDO = 0x3
+};
+
+// map_warp_CCW_beehive_autumn - one entrance, unclear which
+
+enum map_warp_CCW_nabnut_spring
+{
+    WARP_CCW_NABNUT_SPRING_1_DOOR = 0x1,
+    WARP_CCW_NABNUT_SPRING_2_WINDOW
+};
+
+enum map_warp_CCW_nabnut_summer
+{
+    WARP_CCW_NABNUT_SUMMER_1_DOOR = 0x1,
+    WARP_CCW_NABNUT_SUMMER_2_WINDOW
+};
+
+enum map_warp_CCW_nabnut_autumn
+{
+    WARP_CCW_NABNUT_AUTUMN_1_DOOR = 0x1,
+    WARP_CCW_NABNUT_AUTUMN_2_WINDOW
+};
+
+enum map_warp_CCW_nabnut_winter
+{
+    WARP_CCW_NABNUT_WINTER_1_WINDOW
+};
+
+enum map_warp_CCW_water_room_autumn
+{
+    WARP_CCW_WATER_ROOM_AUTUMN_1_ENTRANCE = 0x1
+};
+
+enum map_warp_CCW_water_room_winter
+{
+    WARP_CCW_WATER_ROOM_WINTER_1_ENTRANCE = 0x1
+};
+
+enum map_warp_CCW_attic_winter
+{
+    WARP_CCW_ATTIC_WINTER_1_ENTRANCE = 0x1
+};
+
+enum map_warp_CCW_whipcrack_spring
+{
+    WARP_CCW_WHIPCRACK_SPRING_1_ENTRANCE = 0x1
+};
+
+enum map_warp_CCW_whipcrack_summer
+{
+    WARP_CCW_WHIPCRACK_SUMMER_1_ENTRANCE = 0x1
+};
+
+enum map_warp_CCW_whipcrack_autumn
+{
+    WARP_CCW_WHIPCRACK_AUTUMN_1_ENTRANCE = 0x1
+};
+
+enum map_warp_CCW_whipcrack_winter
+{
+    WARP_CCW_WHIPCRACK_WINTER_1_ENTRANCE = 0x1
 };
 
 #endif

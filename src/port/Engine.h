@@ -5,10 +5,11 @@
                   : (GameEngine_OTRSigCheck((const char*)path) ? ResourceGetDataByName((const char*)path) : path))
 #define LOAD_ASSET_RAW(path) ResourceGetDataByName((const char*)path)
 
-// TODO: Use correct hashes for BK
 typedef enum {
-    // BK_VER_US_10 = 0xFFFFFFFF,
+    BK_VER_US_10 = 0x0693BFA4,
     BK_VER_US_11 = 0xAC5975CD,
+    BK_VER_PAL = 0xB1CC3F73,
+    BK_VER_JP = 0x20D56851,
 } BKVersion;
 
 #ifdef __cplusplus
@@ -36,7 +37,7 @@ public:
     ImFont* fontMonoLarger;
     ImFont* fontMonoLargest;
 
-    std::shared_ptr<Ship::Context> context;
+    Ship::Context* context;
 
     GameEngine();
     void StartFrame() const;
@@ -49,7 +50,20 @@ public:
     static void AudioExit();
     void FinishInit();
     void RunExtract(int argc, char* argv[]);
-    static void RunCommands(Gfx* Commands, const std::vector<std::unordered_map<Mtx*, MtxF>>& mtx_replacements);
+    // Render a GUI-only frame (no game tick). Used to keep the ImGui progress
+    // modal live while an inline mod extraction runs on a worker thread.
+    void RenderGuiFrame() const;
+
+    // Mod changes only bind at process start, so applying them needs a full
+    // relaunch rather than the soft in-game reset. UI requests it, then closes
+    // the window; the main loop re-execs the app after teardown completes.
+    static bool sRelaunchRequested;
+    static void RequestRelaunch() {
+        sRelaunchRequested = true;
+    }
+    static void RelaunchIfRequested(int argc, char* argv[]);
+    static void RunCommands(Gfx* Commands, const std::vector<std::unordered_map<Mtx*, MtxF>>& mtx_replacements,
+                            size_t frameCount);
     static void Destroy();
     static uint32_t GetInterpolationFPS();
     static uint32_t GetInterpolationFrameCount();
@@ -60,6 +74,7 @@ public:
     static int ShowYesNoBox(const char* title, const char* box);
     static void ShowMessage(const char* title, const char* message, SDL_MessageBoxFlags type = SDL_MESSAGEBOX_ERROR);
     static bool HasVersion(BKVersion ver);
+    static std::vector<BKVersion> GetAvailableVersions();
 };
 
 Fast::Interpreter* GameEngine_GetInterpreter();

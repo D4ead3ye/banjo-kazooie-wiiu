@@ -3,9 +3,10 @@
 #include "variables.h"
 
 #include "core2/quiz_storage.h"
+#include "port/Interpolation/FrameInterpolation.h"
 
 extern void func_8030DBFC(u32, f32, f32, f32);
-extern BKCollisionTri * func_80309DBC(f32[3], f32[3], f32, f32 sp54[3], s32, s32);
+extern BKCollisionTriangle * func_80309DBC(f32[3], f32[3], f32, f32 sp54[3], s32, s32);
 extern void sfxsource_set_fade_distances(u8, f32, f32);
 extern void sfxsource_set_position(u8, f32[3]);
 extern void sfxSource_func_8030E2C4(u8);
@@ -87,6 +88,9 @@ Actor *chBeeSwarm_draw(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
     local = (ActorLocal_core2_47BD0 *)&this->local;
     phi_fp = marker_loadModelBin(marker);
     for(phi_s2 = 0, phi_s0 = local->unk8; phi_s2 < local->unk0; phi_s2++){
+        // [port] Stable scope per bee; swarm count varies so flat index
+        // pairing would smear bees across positions on spawn/despawn.
+        FrameInterpolation_RecordOpenChild("bee", (uintptr_t)phi_s2);
         sp80[0] = 0.0f;
         sp80[1] = phi_s0->unk24[1] - 90.0f;
         sp80[2] = 0.0f;
@@ -98,15 +102,16 @@ Actor *chBeeSwarm_draw(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
         modelRender_setDepthMode(MODEL_RENDER_DEPTH_COMPARE);
         modelRender_setAlpha(0xFF);
         modelRender_draw(gfx, mtx, sp8C, sp80, 0.25f, NULL, phi_fp);
-        local->unk5 |= func_8033A170();
+        local->unk5 |= modelRender_func_8033A170();
         if(phi_s2 < 10){
             sp8C[1] = local->unk18 + 6.0f;
             modelRender_setAlpha(0xC0);
             modelRender_setDepthMode(MODEL_RENDER_DEPTH_COMPARE);
             modelRender_draw(gfx, mtx, sp8C, sp80, 0.1f, NULL, local->unk20);
-            local->unk5 |= func_8033A170();
+            local->unk5 |= modelRender_func_8033A170();
         }
         phi_s0++;
+        FrameInterpolation_RecordCloseChild();
     }
     return this;
 }

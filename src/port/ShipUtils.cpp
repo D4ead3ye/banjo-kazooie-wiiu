@@ -1,20 +1,20 @@
 #include "ShipUtils.h"
-#include "save/SaveManager.h"
-#include "save/Types.h"
+#include "Save/SaveManager.h"
+#include "Save/Types.h"
 #include "Engine.h"
-#include "GameConfig.h"
+#include "port/Romhack/RomhackConfig.h"
 #include <chrono>
 #include <cstdarg>
 #include <cstdio>
 #include <spdlog/spdlog.h>
 #include <libultraship/libultraship.h>
 #include <fast/Fast3dWindow.h>
-#include "ui/cvar_prefixes.h"
+#include "UI/cvar_prefixes.h"
 #ifdef _WIN32
 #include <windows.h>
 #endif
 
-#ifdef _DEBUG
+#if defined(_DEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
 
@@ -84,7 +84,7 @@ void port_audioStartThread(void) {
 }
 
 int port_checkHeap(const char* label) {
-#ifdef _DEBUG
+#if defined(_DEBUG) && defined(_MSC_VER)
     if (!_CrtCheckMemory()) {
         SPDLOG_ERROR("[port] HEAP CORRUPT at: {}", label);
         return 0;
@@ -285,7 +285,7 @@ int port_getBootSequence(void) {
 }
 
 float port_getRumbleScale(void) {
-    auto ctx = Ship::Context::GetInstance();
+    auto ctx = Ship::Context::GetRawInstance();
     if (!ctx) {
         return 0.5f;
     }
@@ -305,7 +305,7 @@ float port_getRumbleScale(void) {
 }
 
 bool port_CButtonIsAxis(void) {
-    auto ctx = Ship::Context::GetInstance();
+    auto ctx = Ship::Context::GetRawInstance();
     if (!ctx) {
         return false;
     }

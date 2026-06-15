@@ -6,7 +6,7 @@
 #include "prop.h"
 #include "functions.h"
 #include "core2/ch/snacker.h"
-#include "port/GameConfig.h"
+#include "port/Romhack/RomhackConfig.h"
 
 void spawnQueue_unlock(void);
 void spawnQueue_lock(void);
@@ -82,6 +82,7 @@ extern ActorInfo D_80367958; //witch_switch.bgs
 extern ActorInfo D_8036797C; //witch_switch.gv
 extern ActorInfo D_80367A20; //wading boots
 extern ActorInfo chBadShad; //chbadshad
+extern ActorInfo gDummyPlayerAnchorInfo; //dummy player anchor (port)
 extern ActorInfo D_80367AB0;
 extern ActorInfo D_80367AD4;
 extern ActorInfo D_80367AF8;
@@ -193,9 +194,7 @@ void spawnQueue_malloc(void){
 }
 
 void spawnQueue_reset(void){
-    s32 loaded_asm_file;
-
-    loaded_asm_file = overlayManagergetLoadedId();
+    enum overlay_e loaded_asm_file = overlayManager_getLoadedID();
     spawnQueue_lock();
     spawnQueueLength = 0;
     chmumbo_func_802D1724();
@@ -257,6 +256,7 @@ void spawnQueue_reset(void){
     spawnableActorList_add(&chExtraLife, actor_new, ACTOR_FLAG_UNKNOWN_21); //extralife
     spawnableActorList_add(&D_80365FB0, actor_new, ACTOR_FLAG_UNKNOWN_2); //shrapnel
     spawnableActorList_add(&chBadShad, actor_new, ACTOR_FLAG_UNKNOWN_2); //chbadshad
+    spawnableActorList_add(&gDummyPlayerAnchorInfo, actor_new, ACTOR_FLAG_UNKNOWN_2); //dummy player anchor
     spawnableActorList_add(&D_803685A0, actor_new, ACTOR_FLAG_UNKNOWN_6); //mumbotoken
     spawnableActorList_add(&D_80367F30, actor_new, ACTOR_FLAG_UNKNOWN_10);
     spawnableActorList_add(&chBubble, actor_new, ACTOR_FLAG_UNKNOWN_2);

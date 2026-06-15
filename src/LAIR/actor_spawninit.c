@@ -4,8 +4,8 @@
 #include "variables.h"
 #include "prop.h"
 #include "actor.h"
-#include "port/GameConfig.h"
-#include "port/patches/Patches.h"
+#include "port/Romhack/RomhackConfig.h"
+#include "port/Patches/Patches.h"
 
 extern void func_8028F918(s32);
 extern void func_802D2FB0(Actor *, s32, s32, s32, f32, s32, s32, s32);
@@ -13,7 +13,6 @@ extern void func_802D3CE8(Actor *);
 extern void func_802D3D54(Actor *);
 extern void func_802D3D74(Actor *this);
 extern void func_802D4830(Actor *, s32, f32);
-extern void dustEmitter_emit(f32[3], f32[3], s32[4], s32, f32, f32, s32, s32, s32);
 extern void func_80324CFC(f32, enum comusic_e, s32);
 extern int  actor_animationIsAt(Actor *, f32);
 extern void subaddie_set_state_with_direction(Actor *, s32, f32, s32);
@@ -562,8 +561,8 @@ void func_803870DC(Actor *this) {
             temp_s7 = (s32)((f32)this->alpha_124_19 / 5.0) - 0xC;
             if (this->marker->unk14_21 && (temp_s7 > 0)) {
                 temp_s5 = partEmitMgr_newEmitter(temp_s7);
-                func_8034A174(func_80329934(), 5, sp90);
-                func_8034A174(func_80329934(), 6, sp84);
+                vec3fArray_get_vec3f(func_80329934(), 5, sp90);
+                vec3fArray_get_vec3f(func_80329934(), 6, sp84);
                 particleEmitter_setSprite(temp_s5, ASSET_710_SPRITE_SPARKLE_PURPLE);
                 particleEmitter_setStartingScaleRange(temp_s5, 0.13f, 0.18f);
                 particleEmitter_setFinalScaleRange(temp_s5, 0.08f, 0.13f);
@@ -1661,7 +1660,7 @@ f32 func_80389AAC(Actor *this, f32 a1)
 {
     // defs
     f32   randf2(f32, f32);
-    BKCollisionTri *func_80309B48(f32 *, f32 *, f32 *, u32);
+    BKCollisionTriangle *func_80309B48(f32 *, f32 *, f32 *, u32);
 
     f32 vec3[3]; // $sp + 54
     f32 vec2[3]; // $sp + 48
@@ -1787,8 +1786,8 @@ Actor *func_80389E10(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx) {
 
     this = actor_drawFullDepth(marker, gfx, mtx, vtx);
     if (marker->unk14_21 && (this->lifetime_value != 0.0f)) {
-        func_8034A174((struct5Bs *) marker->unk44, 5, sp84);
-        func_8034A174((struct5Bs *) marker->unk44, 6, sp78);
+        vec3fArray_get_vec3f((Vec3fArray *) marker->unk44, 5, sp84);
+        vec3fArray_get_vec3f((Vec3fArray *) marker->unk44, 6, sp78);
         
         for(D_80395360 = 0; D_80395360 < 8; D_80395360++){
             sp6C[0] =sp6C[2] = 0.0f;

@@ -3,6 +3,8 @@
 #include "functions.h"
 #include "variables.h"
 
+#include "port/Interpolation/FrameInterpolation.h"
+
 typedef struct {
     u8 pad0[0xC];
     f32 unkC[3];
@@ -197,23 +199,31 @@ void func_802F962C(Gfx **gfx, Mtx **mtx, Vtx **vtx) {
     if ((D_80369280 != NULL) && (D_80369284 != 0)) {
         viewport_getPosition_vec3f(D_80381050);
         viewport_getRotation_vec3f(D_80381060);
-        D_80381090 = (Gfx*)((uintptr_t)D_80369288 + D_80369288->gfx_list_offset_C + sizeof(BKGfxList));
-        temp_s3 = (BKVertexList *)((uintptr_t)D_80369288 + D_80369288->vtx_list_offset_10);
+        D_80381090 = (Gfx*)((uintptr_t)D_80369288 + D_80369288->gfx_list_offset + sizeof(BKGfxList));
+        temp_s3 = (BKVertexList *)((uintptr_t)D_80369288 + D_80369288->vtx_list_offset);
         D_8038108C = vtxList_getGlobalNorm(temp_s3);
         func_80349AD0();
         gSPSegment((*gfx)++, 1, osVirtualToPhysical(temp_s3 + 1));
-        gSPSegment((*gfx)++, 0x02, osVirtualToPhysical((void*)((uintptr_t)D_80369288 + D_80369288->texture_list_offset_8 + sizeof(BKTextureList) + sizeof(BKTextureHeader))));
+        gSPSegment((*gfx)++, 0x02, osVirtualToPhysical((void*)((uintptr_t)D_80369288 + D_80369288->texture_list_offset + sizeof(BKTextureList) + sizeof(BKTextureInfo))));
         gSPSetGeometryMode((*gfx)++, G_ZBUFFER);
         gSPDisplayList((*gfx)++, D_80369290);
         gSPSegment((*gfx)++, 0x03, osVirtualToPhysical(&D_803692B0));
 
-        D_80381094 = (Struct_core2_72060_0 *)((uintptr_t)D_80369288 + D_80369288->geo_list_offset_4);
+        D_80381094 = (Struct_core2_72060_0 *)((uintptr_t)D_80369288 + D_80369288->geo_list_offset);
         
         for(phi_s0 = D_80369280->unk1C; phi_s0 < D_80369280->unk1C + D_80369284; phi_s0++) {
+            // [port] Scope keyed on position — array shrinks below the
+            // height threshold and frustum culls inside func_802F989C, so
+            // index-based pairing would mismatch surviving items.
+            FrameInterpolation_RecordOpenChildHash3("grass_item",
+                FrameInterpolation_FloatBits(phi_s0->unk0[0]),
+                FrameInterpolation_FloatBits(phi_s0->unk0[1]),
+                FrameInterpolation_FloatBits(phi_s0->unk0[2]));
             if ((func_802F989C(gfx, mtx, phi_s0->unk0) == 0) && (phi_s0->unk0[1] < D_8038104C)) {
                 func_802F9134(phi_s0 - D_80369280->unk1C);
                 phi_s0--;
             }
+            FrameInterpolation_RecordCloseChild();
         }
     }
 }

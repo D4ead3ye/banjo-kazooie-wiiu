@@ -6,7 +6,7 @@
 #include "core2/anim/sprite.h"
 #include <core2/file.h>
 #include "core2/particle.h"
-#include "port/FrameInterpolation.h"
+#include "port/Interpolation/FrameInterpolation.h"
 
 /* .data */
 extern u8 D_80370250 = 0;
@@ -19,6 +19,14 @@ struct {
 }sGsWorldData;
 s32 D_803835DC;
 u32 sEnableDraw;
+
+enum gsWorldStartIndicators {
+    GS_WORLD_START_INDICATOR_0_END,
+    GS_WORLD_START_INDICATOR_1_CUBES,
+    GS_WORLD_START_INDICATOR_2_UNUSED,
+    GS_WORLD_START_INDICATOR_3_CAMERAS,
+    GS_WORLD_START_INDICATOR_4_LIGHTING
+};
 
 /* public */
 void gsworld_setEnableUpdate(s32);
@@ -45,26 +53,32 @@ void gsworld_draw(Gfx** gdl, Mtx **mptr, Vtx **vptr) {
     //     eeprom_writeBlocks(0, 0, 0x80BC7230, EEPROM_MAXBLOCKS);
     // }
     spawnQueue_unlock();
+    FrameInterpolation_RecordOpenChild("sky", 0);
     sky_draw(gdl, mptr, vptr);
+    FrameInterpolation_RecordCloseChild();
     func_802BBD2C(&sp44, &sp40);
     viewport_setNearAndFar(sp44, sp40);
     viewport_setRenderViewportAndPerspectiveMatrix(gdl, mptr);
     if (mapModel_has_xlu_bin() != 0) {
+        FrameInterpolation_RecordOpenChild("map_opa", 0);
         mapModel_opa_draw(gdl, mptr, vptr);
+        FrameInterpolation_RecordCloseChild();
         if (game_is_frozen() == 0) {
-            func_80322E64(gdl, mptr, vptr);
+            leveloverlay_drawCallback(gdl, mptr, vptr);
         }
         if (game_is_frozen() == 0) {
-            // [port] Scope the player for identity-based interpolation matching.
-            FrameInterpolation_ScopeBegin((void*)"player", 0, *mptr);
+            FrameInterpolation_RecordOpenChild("player", 0);
             player_draw(gdl, mptr, vptr);
-            FrameInterpolation_ScopeEnd(*mptr);
+            FrameInterpolation_RecordCloseChild();
+            CALL_EVENT(OnPlayerDraw, gdl, mptr, vptr);
         }
         if (game_is_frozen() == 0) {
             func_80302C94(gdl, mptr, vptr);
         }
         if (game_is_frozen() == 0) {
+            FrameInterpolation_RecordOpenChild("jiggylist", 0);
             jiggylist_draw(gdl, mptr, vptr);
+            FrameInterpolation_RecordCloseChild();
         }
         if (game_is_frozen() == 0) {
             func_803500D8(gdl, mptr, vptr);
@@ -73,36 +87,48 @@ void gsworld_draw(Gfx** gdl, Mtx **mptr, Vtx **vptr) {
             func_802F2ED0(func_8032994C(), gdl, mptr, vptr);
         }
         if (game_is_frozen() == 0) {
+            FrameInterpolation_RecordOpenChild("part_pass0", 0);
             partEmitMgr_drawPass0(gdl, mptr, vptr);
+            FrameInterpolation_RecordCloseChild();
         }
         if (game_is_frozen() == 0) {
+            FrameInterpolation_RecordOpenChild("map_xlu", 0);
             mapModel_xlu_draw(gdl, mptr, vptr);
+            FrameInterpolation_RecordCloseChild();
         }
         if (game_is_frozen() == 0) {
             func_8032D3D8(gdl, mptr, vptr);
         }
         if (game_is_frozen() == 0) {
+            FrameInterpolation_RecordOpenChild("part_pass1", 0);
             partEmitMgr_drawPass1(gdl, mptr, vptr);
+            FrameInterpolation_RecordCloseChild();
         }
         if (game_is_frozen() == 0) {
             func_8034F6F0(gdl, mptr, (s32)(intptr_t)vptr);
         }
         func_802D520C(gdl, mptr, vptr);
     } else {
+        FrameInterpolation_RecordOpenChild("map_opa", 0);
         mapModel_opa_draw(gdl, mptr, vptr);
-        func_80322E64(gdl, mptr, vptr);
+        FrameInterpolation_RecordCloseChild();
+        leveloverlay_drawCallback(gdl, mptr, vptr);
         func_8034F6F0(gdl, mptr, (s32)(intptr_t)vptr);
-        // [port] Scope the player for identity-based interpolation matching.
-        FrameInterpolation_ScopeBegin((void*)"player", 0, *mptr);
+        FrameInterpolation_RecordOpenChild("player", 0);
         player_draw(gdl, mptr, vptr);
-        FrameInterpolation_ScopeEnd(*mptr);
+        FrameInterpolation_RecordCloseChild();
+        CALL_EVENT(OnPlayerDraw, gdl, mptr, vptr);
         func_80302C94(gdl, mptr, vptr);
         func_8032D3D8(gdl, mptr, vptr);
+        FrameInterpolation_RecordOpenChild("jiggylist", 0);
         jiggylist_draw(gdl, mptr, vptr);
+        FrameInterpolation_RecordCloseChild();
         func_803500D8(gdl, mptr, vptr);
         func_802F2ED0(func_8032994C(), gdl, mptr, vptr);
         func_802D520C(gdl, mptr, vptr);
+        FrameInterpolation_RecordOpenChild("part_draw", 0);
         partEmitMgr_draw(gdl, mptr, vptr);
+        FrameInterpolation_RecordCloseChild();
     }
     if (game_is_frozen() == 0) {
         func_80350818(gdl, mptr, vptr);
@@ -142,12 +168,12 @@ void gsworld_free(void) {
     func_80350BC8();
     func_8030F1D0();
     gcparade_free();//null
-    func_80322F7C();
+    leveloverlay_releaseCallback_OnlyFP();
     func_803518E8();
     func_802D48F0();
     func_803224FC();
     func_8028E644();
-    func_80322F5C();
+    leveloverlay_releaseCallback_NotFP();
     func_80341A54();
     spawnQueue_free();
     print_freeBoldLetterFont();
@@ -193,7 +219,7 @@ void gsworld_free(void) {
     }
     core1_7090_release();
     AnimTextureListCache_free();
-    func_80322FDC();
+    leveloverlay_debug();
     func_8033BD6C();
     func_80255198();//heap_flush_free_queue
     animCache_flushAll();
@@ -201,10 +227,13 @@ void gsworld_free(void) {
 
 void gsworld_set(enum map_e arg0, s32 arg1, s32 arg2) {
     sGsWorldData.unk0 = 3;
+    CALL_EVENT(OnMapLoad, sGsWorldData.map_4, arg0, arg1);
     sGsWorldData.map_4 = arg0;
-    CALL_EVENT(OnMapLoad, arg0);
+    // [port] Drop the prev tree; the next sub-frame would otherwise lerp
+    // the old map's geometry against the new one's.
+    FrameInterpolation_DontInterpolateCamera();
     sGsWorldData.unk8 = arg1;
-    overlay_init();
+    leveloverlay_init();
     gsworld_setEnableUpdate(1);
     gsworld_setEnableDraw(1);
     func_802D2CB8();
@@ -260,9 +289,9 @@ void gsworld_set(enum map_e arg0, s32 arg1, s32 arg2) {
     mapSpecificFlags_clearAll();
     func_803411B0();
     spawnQueue_reset();
-    func_80322FBC();
+    leveloverlay_initCallback_NotFP();
     func_8028E4B0();
-    func_80322F9C();
+    leveloverlay_initCallback_OnlyFP();
     func_80323120();
     func_803223AC();
     bundle_reset();
@@ -292,7 +321,7 @@ void gsworld_stub2(void) {
 }
 
 void gsworld_setUnk0(s32 arg0) {
-    func_80254008();
+    core1_15B30_sendMesg3ToRenderThread();
     func_802BC21C(sGsWorldData.unk0, arg0);
     func_8028F7F4(sGsWorldData.unk0, arg0);
     func_8030D8A8(sGsWorldData.unk0, arg0);
@@ -300,7 +329,7 @@ void gsworld_setUnk0(s32 arg0) {
     func_80323140(sGsWorldData.unk0, arg0);
     func_80351A1C(sGsWorldData.unk0, arg0);
     func_803225B0(sGsWorldData.unk0, arg0);
-    func_80323098(sGsWorldData.unk0, arg0);
+    leveloverlay_unk14Callback(sGsWorldData.unk0, arg0);
     func_802F0E80((void *)(intptr_t)sGsWorldData.unk0, arg0);
     commonParticle_setActive(sGsWorldData.unk0, arg0);
     sGsWorldData.unk0 = arg0;
@@ -334,7 +363,7 @@ s32 gsworld_update(void) {
         } else {
             phi_v1 = 0x1F;
         }
-        if (((phi_v1 & phi_v0) == 3) && (overlayManagergetLoadedId() == OVERLAY_5_BEACH)) {
+        if (((phi_v1 & phi_v0) == 3) && (overlayManager_getLoadedID() == OVERLAY_5_BEACH)) {
             if ((maCastle_isSecretCheatCodeRelatedValueEqualToScrambledAddressValue() == false) || (D_80370250 != 0)) {
                 D_80370250 = (u8)1;
                 for (phi_v0 = 0; phi_v0 != 0x8F0D180; phi_v0++){
@@ -365,7 +394,7 @@ s32 gsworld_update(void) {
         dialogBin_update();
         func_80310D2C();
         gcparade_update();
-        overlay_update();
+        leveloverlay_updateCallback();
         func_80321924();
         func_80334428();
         cutscenetrigger_update();
@@ -401,19 +430,19 @@ s32 gsworld_getEnableDraw(){
 void gsworld_load(enum map_e map_id) {
     File *fp;
 
-    func_80254008();
+    core1_15B30_sendMesg3ToRenderThread();
     fp = file_openMap(map_id); //LevelSetupFile_Open
     if (fp == NULL) {
         return; // [port] safety: file_openMap can return NULL
     }
-    while (file_isNextByteExpected(fp, 0) == 0) {
-        if (file_isNextByteExpected(fp, 2)) {
-            // tag 2: skip
-        } else if (file_isNextByteExpected(fp, 1)) {
+    while (file_isNextByteExpected(fp, GS_WORLD_START_INDICATOR_0_END) == 0) {
+        if (file_isNextByteExpected(fp, GS_WORLD_START_INDICATOR_2_UNUSED)) {
+            /* NO OP */
+        } else if (file_isNextByteExpected(fp, GS_WORLD_START_INDICATOR_1_CUBES)) {
             cubeList_fromFile(fp);
-        } else if (file_isNextByteExpected(fp, 3)) {
+        } else if (file_isNextByteExpected(fp, GS_WORLD_START_INDICATOR_3_CAMERAS)) {
             ncCameraNodeList_fromFile(fp);
-        } else if (file_isNextByteExpected(fp, 4)) {
+        } else if (file_isNextByteExpected(fp, GS_WORLD_START_INDICATOR_4_LIGHTING)) {
             lightingVectorList_fromFile(fp);
         } else {
             break; // [port] unrecognized tag, avoid infinite loop

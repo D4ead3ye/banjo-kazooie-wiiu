@@ -7,8 +7,11 @@
 #include "core2/gc/zoombox.h"
 #include "core2/quiz_storage.h"
 
-#include "port/GameConfig.h"
-#include "port/patches/Patches.h"
+#include "port/Romhack/RomhackConfig.h"
+#include "port/Patches/Patches.h"
+
+extern s32 port_setJpFileSelectInstructions(GcZoombox *zoombox);
+extern s32 port_setJpFileSelectEraseConfirm(GcZoombox *zoombox);
 
 s32 gSelectedGameNum = -1;
 
@@ -32,7 +35,7 @@ extern void gsworld_setEnableUpdate(s32);
 extern void controller_getJoystick(s32, f32*);
 
 extern char *gcpausemenu_TimeToA(int);
-extern struct5Bs *func_803097A0(void);
+extern Vec3fArray *func_803097A0(void);
 
 /* .data */
 f32 D_80365DD0[3][3] = {
@@ -262,6 +265,9 @@ void setGameInformationZoombox(s32 gamenum){
         strcat(upperTextLine, sEmptyLabel[lang]);
         strcpy(lowerTextLine, "");
     }//L802C4A68
+
+    // [port] JP rebuilds these lines in its own layout
+    CALL_EVENT(OnFileSelectInfoBuild, gamenum, (char *) upperTextLine, (char *) lowerTextLine);
     sp20[0] = upperTextLine;\
     sp20[1] = lowerTextLine;
     func_8031877C(chGameSelectBottomZoombox);
@@ -325,7 +331,7 @@ void gameSelect_update(Actor *this){
     f32 sp54[2];
     f32 sp50;
     int i; //sp4C
-    struct5Bs *sp48;
+    Vec3fArray *sp48;
     f32 sp44;
     s32 tmp_a2_2;
     f32 sp34[3];
@@ -421,7 +427,9 @@ void gameSelect_update(Actor *this){
                         }
                         subaddie_set_state(this, 2);
                         func_8031877C(chGameSelectTopZoombox);
-                        gczoombox_setStrings(chGameSelectTopZoombox, 2, (char **)&selectInstructions);
+                        if(!port_setJpFileSelectInstructions(chGameSelectTopZoombox)){
+                            gczoombox_setStrings(chGameSelectTopZoombox, 2, (char **)&selectInstructions);
+                        }
                         D_8037DD34 = 0.0f;
                     }
                     break;
@@ -464,7 +472,9 @@ void gameSelect_update(Actor *this){
                     if(sp74[0] == 1){
                         if(gameFile_isNotEmpty(sp84)){
                             func_8031877C(chGameSelectTopZoombox);
-                            func_803183A4(chGameSelectTopZoombox, D_80365DFC[code94620_func_8031B5B0()]);
+                            if(!port_setJpFileSelectEraseConfirm(chGameSelectTopZoombox)){
+                                func_803183A4(chGameSelectTopZoombox, D_80365DFC[code94620_func_8031B5B0()]);
+                            }
                             D_8037DD2C = 1;
                             subaddie_set_state(this, 5);
                         }
@@ -560,7 +570,9 @@ void gameSelect_update(Actor *this){
                         D_8037DD34 += sp50;
                         if(20.0 < D_8037DD34){
                             func_8031877C(chGameSelectTopZoombox);
-                            gczoombox_setStrings(chGameSelectTopZoombox, 2, (char **)&selectInstructions);
+                            if(!port_setJpFileSelectInstructions(chGameSelectTopZoombox)){
+                                gczoombox_setStrings(chGameSelectTopZoombox, 2, (char **)&selectInstructions);
+                            }
                             D_8037DD34 = 0.0f;
                         }
                     }
@@ -573,7 +585,7 @@ void gameSelect_update(Actor *this){
         sp48 = func_803097A0();
         if(this->marker->unk14_21){
             for(i = 0; i < 3; i++){
-                func_8034A174(sp48, i+5, sp34);
+                vec3fArray_get_vec3f(sp48, i+5, sp34);
                 ml_vec3f_copy(D_80365DD0[i], sp34);
             }
         }
@@ -603,7 +615,9 @@ void gameSelect_initAndUpdate(Actor * this){
 
         if(chGameSelectTopZoombox == NULL){
             chGameSelectTopZoombox = gczoombox_new(0xA, ZOOMBOX_SPRITE_D_KAZOOIE_1, 2, 1, topZoomboxCallback);
-            gczoombox_setStrings(chGameSelectTopZoombox, 2, (char **)&selectInstructions);
+            if(!port_setJpFileSelectInstructions(chGameSelectTopZoombox)){
+                gczoombox_setStrings(chGameSelectTopZoombox, 2, (char **)&selectInstructions);
+            }
             gczoombox_open(chGameSelectTopZoombox);
             gczoombox_maximize(chGameSelectTopZoombox);
         }//L802C5860

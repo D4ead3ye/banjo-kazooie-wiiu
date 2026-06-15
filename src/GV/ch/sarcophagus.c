@@ -3,7 +3,6 @@
 #include "functions.h"
 #include "variables.h"
 
-extern void dustEmitter_emit(f32[3], s32[4], s32[4], s32, f32, f32, s32, s32, s32);
 
 
 void chSarcophagus_update(Actor *this);
@@ -44,7 +43,7 @@ void GV_func_803894B0(Actor *this){
 }
 
 void func_80389518(Actor *this){
-    dustEmitter_emit(this->unk1C, D_80390E88, D_80390E78, 0, 
+    dustEmitter_emit(this->unk1C, (f32 *)D_80390E88, D_80390E78, 0, 
         0.55f, 50.0f, 0xDC, 0x168, 0
     );
 }
@@ -104,7 +103,7 @@ void chSarcophagus_update(Actor *this){
             if(actor_animationIsAt(this, 0.9f) && this->marker->unk14_21){
                 i = 6;
                 do{
-                    func_8034A174((struct5Bs*)this->marker->unk44, i, this->unk1C);
+                    vec3fArray_get_vec3f((Vec3fArray*)this->marker->unk44, i, this->unk1C);
                     func_80389518(this);
                     i++;
                 }while(i < 17);
