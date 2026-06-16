@@ -1,4 +1,6 @@
 #include "CustomObject.h"
+#include <libultraship/bridge/consolevariablebridge.h>
+#include "port/UI/cvar_prefixes.h"
 #include "port/Rando/Logic/Logic.h"
 #include "port/enhancements/events/hooks/Events.h"
 
@@ -246,13 +248,20 @@ void CustomObject::ResolveCustomActorCollisionEX(RandoCheckId randoCheckId) {
     }
 
     int32_t spawnPosition[3];
+    int16_t sparklePos[3];
     f32 playerPosF[3];
     player_getPosition(playerPosF);
+    ml_vec3f_to_vec3h(sparklePos, playerPosF);
     spawnPosition[0] = (int32_t)playerPosF[0];
     spawnPosition[1] = (int32_t)playerPosF[1];
     spawnPosition[2] = (int32_t)playerPosF[2];
 
     switch (shuffledObject.randoItemId) {
+        case RI_JIGGY:
+            if (CVarGetInteger(CVAR_ENHANCEMENT("Cutscenes.SkipJiggyDance"), 0)) {
+                fxSparkle_musicNote(sparklePos);
+            }
+            break;
         case RI_JINJO_BLUE:
         case RI_JINJO_GREEN:
         case RI_JINJO_ORANGE:
@@ -284,7 +293,7 @@ void CustomObject::ResolveCustomActorCollisionEX(RandoCheckId randoCheckId) {
             }
 
             UpdateSaveDataNoteScores();
-            fxSparkle_musicNote((int16_t*)spawnPosition);
+            fxSparkle_musicNote(sparklePos);
             coMusicPlayer_playMusic(COMUSIC_9_NOTE_COLLECTED, 16000);
             break;
         default:
