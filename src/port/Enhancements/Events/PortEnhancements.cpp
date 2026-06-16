@@ -55,21 +55,21 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnSaveClear);
     REGISTER_EVENT(OnPropInit);
     REGISTER_EVENT(OnWarpResolveDest);
+    REGISTER_EVENT(OnActorDestroy);
 
     REGISTER_EVENT(OnReset);
 
     // Register rando events
-    REGISTER_EVENT(OnWarpDispatch);
-    REGISTER_EVENT(OnSetJiggyList);
-    REGISTER_EVENT(OnGetLevelSpecificFlag);
     REGISTER_EVENT(OnLoadFileSelect);
     REGISTER_EVENT(OnSaveLoad);
+    REGISTER_EVENT(OnWarpDispatch);
     REGISTER_EVENT(OnActorSpawn);
     REGISTER_EVENT(OnLoadActorSaveState);
     REGISTER_EVENT(OnSaveActorSaveState);
     REGISTER_EVENT(OnActorCollision);
     REGISTER_EVENT(OnFindActorFromActorId);
-    REGISTER_EVENT(OnActorDestroy);
+    REGISTER_EVENT(OnSetJiggyList);
+    REGISTER_EVENT(OnGetLevelSpecificFlag);
     REGISTER_EVENT(OnIsJiggyScoreCollected);
     REGISTER_EVENT(OnIsJiggyScoreSpawned);
     REGISTER_EVENT(SetRandoInfFlag);

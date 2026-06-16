@@ -27,13 +27,3 @@ void Rando::Init() {
     // Rando::EntranceTracker::Init();
     // Ship::Context::GetInstance()->GetFileDropMgr()->RegisterDropHandler(Rando::Spoiler::HandleFileDropped);
 }
-
-// RandoCheckId Rando::FindItemPlacement(RandoItemId randoItemId) {
-//     for (auto& [randoCheckId, check] : Rando::StaticData::Checks) {
-//         if (RANDO_SAVE_CHECKS[randoCheckId].randoItemId == randoItemId) {
-//             return randoCheckId;
-//         }
-//     }
-//
-//     return RC_UNKNOWN;
-// }

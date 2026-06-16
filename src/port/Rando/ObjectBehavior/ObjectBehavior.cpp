@@ -7,6 +7,8 @@
 #include "port/Rando/CustomObject/CustomObject.h"
 
 #define WIDGET_TEXT_COLOR(id) UIWidgets::ColorValues.at(id)
+#define CVAR_NAME_SHOW_COLLISION_NOTIFICATIONS "gRandoSettings.RandoNotifications"
+#define CVAR_SHOW_COLLISION_NOTIFICATIONS CVarGetInteger(CVAR_NAME_SHOW_COLLISION_NOTIFICATIONS, 0)
 
 extern "C" {
 void player_getPosition(f32 dst[3]);
@@ -44,7 +46,7 @@ std::map<int32_t, UIWidgets::Colors> randoItemColors = {
     { RI_JINJO_ORANGE,      UIWidgets::Colors::Orange },
     { RI_JINJO_PINK,        UIWidgets::Colors::Pink },
     { RI_JINJO_YELLOW,      UIWidgets::Colors::Yellow },
-    { RI_MOLEHILL,          UIWidgets::Colors::Purple },
+    { RI_MOLEHILL,          UIWidgets::Colors::Cyan },
     { RI_MUMBO_TOKEN,       UIWidgets::Colors::Gray },
     { RI_MUSIC_NOTE,        UIWidgets::Colors::Yellow },
 };
@@ -100,15 +102,26 @@ int32_t GetJinjoActorMarkerId(actor_e actorId) {
     return NULL;
 }
 
-void Rando::StaticData::SendCollisionNotification(RandoItemId randoItemId) {
-    std::string prefix = randoItemId == RI_MOLEHILL ? "You learned " : "You collected ";
-    prefix += Rando::StaticData::Items[randoItemId].article;
-    std::string message = Rando::StaticData::Items[randoItemId].name;
+void Rando::StaticData::SendCollisionNotification(RandoCheckId randoCheckId) {
+    if (CVAR_SHOW_COLLISION_NOTIFICATIONS) {
+        RandoSaveCheck randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
+        std::string prefix;
+        std::string message;
 
-    Notification::Emit({ .prefix = prefix,
-                         .prefixColor = WIDGET_TEXT_COLOR(UIWidgets::Colors::White),
-                         .message = message,
-                         .messageColor = WIDGET_TEXT_COLOR(randoItemColors.at(randoItemId)) });
+        if (randoSaveCheck.randoItemId == RI_MOLEHILL) {
+            prefix = "You learned";
+            message = abilityNameList[randoSaveCheck.randoCollectionId].c_str();
+        } else {
+            prefix = "You collected ";
+            prefix += Rando::StaticData::Items[randoSaveCheck.randoItemId].article;
+            message = Rando::StaticData::Items[randoSaveCheck.randoItemId].name;
+        }
+
+        Notification::Emit({ .prefix = prefix,
+                             .prefixColor = WIDGET_TEXT_COLOR(UIWidgets::Colors::White),
+                             .message = message,
+                             .messageColor = WIDGET_TEXT_COLOR(randoItemColors.at(randoSaveCheck.randoItemId)) });
+    }
 };
 
 bool ShouldOverrideSpawn(RandoCheckId randoCheckId) {

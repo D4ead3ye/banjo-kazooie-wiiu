@@ -68,6 +68,9 @@ void LighthouseMenu::AddMenuRando() {
         }
         UIWidgets::PopStyleCombobox();
     });
+    AddWidget(path, "Send Collection Notifications", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_RANDOMIZER_SETTING("RandoNotifications"))
+        .Options(CheckboxOptions().Tooltip("Sends notifications when you collect a Rando Item."));
 
     AddWidget(path, "Manual Seed Options", WIDGET_SEPARATOR_TEXT);
 

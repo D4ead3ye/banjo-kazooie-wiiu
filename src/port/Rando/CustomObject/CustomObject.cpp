@@ -299,7 +299,7 @@ void CustomObject::CheckObtainedEX(RandoCheckId randoCheckId) {
             shouldRemoveEX = true;
             RANDO_SAVE_CHECKS[pool.randoCheckId].obtained = true;
             BK_LOG_INFO("RandoCheckId %s collected!", Rando::StaticData::Checks[randoCheckId].name);
-            Rando::StaticData::SendCollisionNotification(pool.randoItemId);
+            Rando::StaticData::SendCollisionNotification(pool.randoCheckId);
             Rando::StaticData::ModifyRandoInfFlagState(randoCheckId);
             break;
         }

@@ -21,7 +21,7 @@ static RegisterShipInitFunc initFunc([]() {
             CHECK(RC_SM_MOLEHILL_JUMP, 				    true),
 		},
         .connections = {
-            CONNECTION(RR_GRUNTILDAS_LAIR_LOBBY,    true),
+            CONNECTION(RR_GRUNTILDAS_LAIR_LOBBY, true),
         },
     };
 

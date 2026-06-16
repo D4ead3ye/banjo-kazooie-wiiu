@@ -33,7 +33,7 @@ std::vector<std::string> worldNameList = {
 std::vector<std::string> abilityNameList = {
     "Beak Barge",    "Beak Bomb", "Beak Buster", "Camera Control", "Claw Swipe",  "Climb", "Eggs",
     "Feathery Flap", "Flap Flip", "Flight",      "Jump Higher",    "Ratatat Rap", "Roll",  "Shock Jump",
-    "Wading Boots",  "Dive",      "Talon Trot",  "Turbo Talon",    "Wonderwing",
+    "Wading Boots",  "Dive",      "Talon Trot",  "Turbo Talon",    "Wonderwing",  "Note Door"
 };
 
 // Helper for C-style variadic log functions

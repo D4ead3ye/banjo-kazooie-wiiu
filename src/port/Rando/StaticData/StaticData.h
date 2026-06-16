@@ -11,7 +11,7 @@
 namespace Rando {
 
 namespace StaticData {
-void SendCollisionNotification(RandoItemId randoItemId);
+void SendCollisionNotification(RandoCheckId randoCheckId);
 
 struct RandoLogicData {
     const char* name;
@@ -33,6 +33,8 @@ struct RandoStaticCheck {
 };
 
 RandoCheckId GetCheckByPosition(int32_t posX, int32_t posY, int32_t posZ);
+RandoCheckId GetCheckByMumboTokenId(mumbotoken_e tokenId);
+RandoCheckId GetCheckByHoneycombId(honeycomb_e honeycombId);
 RandoCheckId GetCheckByJiggyId(int32_t jiggyId);
 RandoCheckId GetJinjoJiggyCheckByLevelId(int16_t levelId);
 RandoCheckId GetCheckByAbilityId(int32_t abilityId);
@@ -78,18 +80,17 @@ extern std::map<RandoOptionId, RandoStaticOption> Options;
 
 RandoOptionId GetOptionIdFromName(const char* name);
 
+struct RandoStaticFlag {
+    RandoInf randoFlagId;
+    const char* name;
+    int32_t defaultValue;
+};
+
+extern std::map<RandoInf, RandoStaticFlag> Flags;
+
+RandoInf GetFlagIdFromName(const char* name);
+
 void ModifyRandoInfFlagState(RandoCheckId randoCheckId);
-
-// TODO: Add Logic and Regions
-// struct RandoStaticRegion {
-//     RandoRegionId randoRegionId;
-//     const char* name;
-//     int16_t levelId;
-//     std::map<RandoCheckId, std::function<bool()>> checks;
-//     std::map<RandoRegionId, std::function<bool()>> regions;
-// };
-
-// extern std::map<RandoRegionId, RandoStaticRegion> Regions;
 
 } // namespace StaticData
 

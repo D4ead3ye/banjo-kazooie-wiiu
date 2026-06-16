@@ -1,8 +1,6 @@
 #ifndef RANDO_H
 #define RANDO_H
 
-// #include "port/Rando/CustomObject/CustomObject.h"
-
 #include "StaticData/StaticData.h"
 #include <libultraship/libultra/gbi.h>
 #include "save.h"
@@ -31,7 +29,7 @@ extern int16_t selectedFileNum;
 namespace Rando {
 
 void Init();
-// bool IsItemObtainable(RandoItemId randoItemId, RandoCheckId randoCheckId = RC_UNKNOWN);
+
 } // namespace Rando
 
 #endif // RANDO_H

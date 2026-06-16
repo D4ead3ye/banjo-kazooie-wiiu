@@ -6,8 +6,6 @@
 
 #include "save.h"
 
-#include "spdlog/spdlog.h"
-
 #define BUNDLE_STATE_DEFAULT 1
 
 typedef struct {

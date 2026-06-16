@@ -1,0 +1,34 @@
+#include "StaticData.h"
+
+namespace Rando {
+
+namespace StaticData {
+
+#define RF(id, defaultValue)      \
+    {                             \
+        id, {                     \
+            id, #id, defaultValue \
+        }                         \
+    }
+
+// clang-format off
+std::map<RandoInf, RandoStaticFlag> Flags = {
+    RF(RANDO_INF_UNKNOWN,                   RO_GENERIC_OFF),
+    RF(RANDO_INF_ANCHOR_RAISED,             RO_GENERIC_OFF),
+    RF(RANDO_INF_CLANKER_RAISED,            RO_GENERIC_OFF),
+    RF(RANDO_INF_MINIGAME_RINGS_COMPLETED,  RO_GENERIC_OFF),
+};
+// clang-format on
+
+RandoInf GetFlagIdFromName(const char* name) {
+    for (auto& [randoInf, randoStaticFlag] : Flags) {
+        if (strcmp(name, randoStaticFlag.name) == 0) {
+            return randoInf;
+        }
+    }
+    return RANDO_INF_MAX;
+}
+
+} // namespace StaticData
+
+} // namespace Rando

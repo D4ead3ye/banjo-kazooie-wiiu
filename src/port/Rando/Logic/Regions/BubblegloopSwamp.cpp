@@ -127,47 +127,49 @@ static RegisterShipInitFunc initFunc([]() {
             EVENT(RA_WITCH_SWITCH_BUBBLEGLOOP_SWAMP, CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER) && CAN_USE_ABILITY(ABILITY_D_SHOCK_JUMP)),
         },
     };
-Regions[RR_BUBBLEGLOOP_SWAMP_INTERIOR_MR_VILES] = RandoRegion{ .regionName = "Mr. Vile Interior", .mapId = MAP_10_BGS_MR_VILE,
-    .checks = {
-        CHECK(RC_BGS_JIGGY_MR_VILE,          	            CAN_USE_TRANSFORMATION(TRANSFORM_5_CROC) && CAN_USE_ABILITY(ABILITY_11_TURBO_TALON)),
-        CHECK(RC_BGS_MUMBO_TOKEN_INSIDE_MR_VILES,           true),
-        CHECK(RC_BGS_NOTE_INSIDE_MR_VILES_LEFT_NOSTRIL_1,   true),
-        CHECK(RC_BGS_NOTE_INSIDE_MR_VILES_LEFT_NOSTRIL_2,   true),
-        CHECK(RC_BGS_NOTE_INSIDE_MR_VILES_LEFT_NOSTRIL_3,   true),
-        CHECK(RC_BGS_NOTE_INSIDE_MR_VILES_RIGHT_NOSTRIL_1,  true),
-        CHECK(RC_BGS_NOTE_INSIDE_MR_VILES_RIGHT_NOSTRIL_2,  true),
-        CHECK(RC_BGS_NOTE_INSIDE_MR_VILES_RIGHT_NOSTRIL_3,  true),
-    },
-    .connections = {
-        CONNECTION(RR_BUBBLEGLOOP_SWAMP, true),
-    },
-};
-Regions[RR_BUBBLEGLOOP_SWAMP_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Inside Mumbo's Skull", .mapId = MAP_47_BGS_MUMBOS_SKULL,
-    .checks = {
-        CHECK(RC_BGS_EMPTY_HONEYCOMB_MUMBOS, 		    CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP) && CAN_USE_ABILITY(ABILITY_7_FEATHERY_FLAP) || CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP)),
-        CHECK(RC_BGS_MUMBO_TOKEN_INSIDE_MUMBOS_SKULL,   true),
+    Regions[RR_BUBBLEGLOOP_SWAMP_INTERIOR_MR_VILES] = RandoRegion{ .regionName = "Mr. Vile Interior", .mapId = MAP_10_BGS_MR_VILE,
+        .checks = {
+            CHECK(RC_BGS_JIGGY_MR_VILE,          	            CAN_USE_TRANSFORMATION(TRANSFORM_5_CROC) && CAN_USE_ABILITY(ABILITY_11_TURBO_TALON)),
+            CHECK(RC_BGS_MUMBO_TOKEN_INSIDE_MR_VILES,           true),
+            CHECK(RC_BGS_NOTE_INSIDE_MR_VILES_LEFT_NOSTRIL_1,   true),
+            CHECK(RC_BGS_NOTE_INSIDE_MR_VILES_LEFT_NOSTRIL_2,   true),
+            CHECK(RC_BGS_NOTE_INSIDE_MR_VILES_LEFT_NOSTRIL_3,   true),
+            CHECK(RC_BGS_NOTE_INSIDE_MR_VILES_RIGHT_NOSTRIL_1,  true),
+            CHECK(RC_BGS_NOTE_INSIDE_MR_VILES_RIGHT_NOSTRIL_2,  true),
+            CHECK(RC_BGS_NOTE_INSIDE_MR_VILES_RIGHT_NOSTRIL_3,  true),
+        },
+        .connections = {
+            CONNECTION(RR_BUBBLEGLOOP_SWAMP, true),
+        },
+    };
 
-    },
-    .connections = {
-        CONNECTION(RR_BUBBLEGLOOP_SWAMP, true),
-    },
-};
-Regions[RR_BUBBLEGLOOP_SWAMP_INTERIOR_TANKTUP] = RandoRegion{ .regionName = "Tanktup Interior", .mapId = MAP_11_BGS_TIPTUP,
-    .checks = {
-        CHECK(RC_BGS_EMPTY_HONEYCOMB_TANKTUP, 	CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
-        CHECK(RC_BGS_JIGGY_TIPTUP,              CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
-        CHECK(RC_BGS_MUMBO_TOKEN_BEHIND_TIPTUP, true),
-        CHECK(RC_BGS_NOTE_TANKTUP_INTERIOR_1,   true),
-        CHECK(RC_BGS_NOTE_TANKTUP_INTERIOR_2,   true),
-        CHECK(RC_BGS_NOTE_TANKTUP_INTERIOR_3,   true),
-        CHECK(RC_BGS_NOTE_TANKTUP_INTERIOR_4,   true),
-        CHECK(RC_BGS_NOTE_TANKTUP_INTERIOR_5,   true),
-        CHECK(RC_BGS_NOTE_TANKTUP_INTERIOR_6,   true),
-    },
-    .connections = {
-        CONNECTION(RR_BUBBLEGLOOP_SWAMP, true),
-    },
-};
+    Regions[RR_BUBBLEGLOOP_SWAMP_INTERIOR_MUMBOS_SKULL] = RandoRegion{ .regionName = "Inside Mumbo's Skull", .mapId = MAP_47_BGS_MUMBOS_SKULL,
+        .checks = {
+            CHECK(RC_BGS_EMPTY_HONEYCOMB_MUMBOS, 		    CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP) && CAN_USE_ABILITY(ABILITY_7_FEATHERY_FLAP) || CAN_USE_ABILITY(ABILITY_B_RATATAT_RAP)),
+            CHECK(RC_BGS_MUMBO_TOKEN_INSIDE_MUMBOS_SKULL,   true),
+    
+        },
+        .connections = {
+            CONNECTION(RR_BUBBLEGLOOP_SWAMP, true),
+        },
+    };
 
-    }, {});
+    Regions[RR_BUBBLEGLOOP_SWAMP_INTERIOR_TANKTUP] = RandoRegion{ .regionName = "Tanktup Interior", .mapId = MAP_11_BGS_TIPTUP,
+        .checks = {
+            CHECK(RC_BGS_EMPTY_HONEYCOMB_TANKTUP, 	CAN_USE_ABILITY(ABILITY_8_FLAP_FLIP)),
+            CHECK(RC_BGS_JIGGY_TIPTUP,              CAN_USE_ABILITY(ABILITY_2_BEAK_BUSTER)),
+            CHECK(RC_BGS_MUMBO_TOKEN_BEHIND_TIPTUP, true),
+            CHECK(RC_BGS_NOTE_TANKTUP_INTERIOR_1,   true),
+            CHECK(RC_BGS_NOTE_TANKTUP_INTERIOR_2,   true),
+            CHECK(RC_BGS_NOTE_TANKTUP_INTERIOR_3,   true),
+            CHECK(RC_BGS_NOTE_TANKTUP_INTERIOR_4,   true),
+            CHECK(RC_BGS_NOTE_TANKTUP_INTERIOR_5,   true),
+            CHECK(RC_BGS_NOTE_TANKTUP_INTERIOR_6,   true),
+        },
+        .connections = {
+            CONNECTION(RR_BUBBLEGLOOP_SWAMP, true),
+        },
+    };
+
+}, {});
 // clang-format on
