@@ -80,6 +80,16 @@ extern std::map<RandoOptionId, RandoStaticOption> Options;
 
 RandoOptionId GetOptionIdFromName(const char* name);
 
+struct RandoStaticFlag {
+    RandoInf randoFlagId;
+    const char* name;
+    int32_t defaultValue;
+};
+
+extern std::map<RandoInf, RandoStaticFlag> Flags;
+
+RandoInf GetFlagIdFromName(const char* name);
+
 void ModifyRandoInfFlagState(RandoCheckId randoCheckId);
 
 } // namespace StaticData

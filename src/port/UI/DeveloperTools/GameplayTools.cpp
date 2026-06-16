@@ -403,30 +403,20 @@ void DrawMonitoringTools() {
         ImGui::EndChild();
     }
 
-    ImGui::SeparatorText("Rando INF Flags");
-    if (ImGui::BeginChild("RandoFlagChild",
-                          ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionMax().y * 0.45f))) {
-        if (ImGui::BeginTable("RandoFlagTable", 3, ImGuiTableFlags_SizingFixedFit)) {
-            ImGui::TableNextColumn();
+    if (IS_RANDO) {
+        ImGui::SeparatorText("Rando INF Flags");
+        if (ImGui::BeginChild("RandoFlagChild",
+                              ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionMax().y * 0.45f))) {
             for (int f = RANDO_INF_UNKNOWN; f < RANDO_INF_MAX; f++) {
                 ImGui::PushID(f);
                 bool flagState = RANDO_SAVE_FLAGS[f].flagState;
-                if (UIWidgets::Checkbox("state", &flagState,
-                                        UIWidgets::CheckboxOptions().LabelPosition(UIWidgets::LabelPositions::None))) {
-                    CALL_EVENT(SetRandoInfFlag, (RandoInf)f, !RANDO_SAVE_FLAGS[f].flagState);
+                if (UIWidgets::Checkbox(Rando::StaticData::Flags[(RandoInf)f].name, &flagState)) {
+                        CALL_EVENT(SetRandoInfFlag, (RandoInf)f, !RANDO_SAVE_FLAGS[f].flagState);
                 }
-
-                ImGui::TableNextColumn();
-                ImGui::Text(std::to_string(f).c_str());
-
-                ImGui::TableNextColumn();
-                ImGui::Text(flagState == true ? "True" : "False");
-                ImGui::TableNextColumn();
                 ImGui::PopID();
             }
-            ImGui::EndTable();
+            ImGui::EndChild();
         }
-        ImGui::EndChild();
     }
 }
 
@@ -515,13 +505,15 @@ void GameplayTools_DrawTabBar() {
             DrawMonitoringTools();
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Editor")) {
-            if (Rando::Logic::shuffledPool.empty()) {
-                ImGui::Text("No Rando Save Data");
-            } else {
-                DrawRandoSaveEditor();
+        if (IS_RANDO) {
+            if (ImGui::BeginTabItem("Rando Save Editor")) {
+                if (Rando::Logic::shuffledPool.empty()) {
+                    ImGui::Text("No Rando Save Data");
+                } else {
+                    DrawRandoSaveEditor();
+                }
+                ImGui::EndTabItem();
             }
-            ImGui::EndTabItem();
         }
         ImGui::EndTabBar();
     }
