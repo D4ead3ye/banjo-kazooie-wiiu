@@ -561,8 +561,9 @@ void __baMarker_resolveCollision(Prop *other_prop){
                     if (func_8025AD7C(COMUSIC_30_5TH_JINJO_COLLECTED)) {
                         __baMarker_8028B8DC();
                     }
-
-                    __spawnQueue_add_4((GenFunction_4)__baMarker_8028B904, reinterpret_cast(u32, other_prop->actorProp.x), reinterpret_cast(u32, other_prop->actorProp.y), reinterpret_cast(u32, other_prop->actorProp.z), jiggy_id);
+                    if (EventSystem_Should(VB_PLAY_JIGGY_DANCE, true)) {
+                       __spawnQueue_add_4((GenFunction_4)__baMarker_8028B904, reinterpret_cast(u32, other_prop->actorProp.x), reinterpret_cast(u32, other_prop->actorProp.y), reinterpret_cast(u32, other_prop->actorProp.z), jiggy_id);
+                    }
                     marker_despawn(marker);
                 }
             }
