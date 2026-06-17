@@ -102,6 +102,49 @@ int32_t GetJinjoActorMarkerId(actor_e actorId) {
     return NULL;
 }
 
+Actor* FindActorByRandoCheckId(RandoCheckId randoCheckId) {
+    Actor* start;
+    Actor* end;
+    Actor* baddieActor;
+
+    if (CustomObject::CheckSpawnedIdList(randoCheckId)) {
+        start = suBaddieActorArray->data;
+        end = start + suBaddieActorArray->cnt;
+        for (baddieActor = start; baddieActor < end; baddieActor++) {
+
+            if (baddieActor == nullptr) {
+                continue;
+            }
+
+            if (baddieActor->marker == nullptr) {
+                continue;
+            }
+
+            if (baddieActor->marker->randoCheckId == randoCheckId) {
+                return baddieActor;
+            }
+        }
+    }
+
+    if (baddieActor == NULL) {
+        Rando::StaticData::RandoStaticCheck randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
+        RandoSaveCheck randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
+        actor_e actorId = (actor_e)Rando::StaticData::Items[randoSaveCheck.randoItemId].actorId;
+
+        int32_t position[3];
+        position[0] = randoStaticCheck.posX;
+        position[1] = randoStaticCheck.posY + 50;
+        position[2] = randoStaticCheck.posZ;
+
+        Actor* newActor = CustomObject::SpawnCustomActorEX(randoCheckId, position, &actorInfoMap.at(actorId).first,
+                                                           actorInfoMap.at(actorId).second);
+
+        return newActor;
+    }
+
+    return NULL;
+}
+
 void Rando::StaticData::SendCollisionNotification(RandoCheckId randoCheckId) {
     if (CVAR_SHOW_COLLISION_NOTIFICATIONS) {
         RandoSaveCheck randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
@@ -329,7 +372,7 @@ void Rando::ObjectBehavior::Init() {
                 break;
             default:
                 if (gsworld_getMap() == MAP_D_BGS_BUBBLEGLOOP_SWAMP) {
-                    if (CustomObject::CheckSpawnedIdList(RC_BGS_JIGGY_ELEVATED_WALKWAY)) { // TODO FIND RIGHT FLAGS
+                    if (CustomObject::CheckSpawnedIdList(RC_BGS_JIGGY_ELEVATED_WALKWAY)) {
                         randoCheckId = RC_BGS_JIGGY_ELEVATED_WALKWAY;
                     } else if (CustomObject::CheckSpawnedIdList(RC_BGS_JIGGY_MAZE)) {
                         randoCheckId = RC_BGS_JIGGY_MAZE;
@@ -342,45 +385,32 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        if (CustomObject::CheckSpawnedIdList(randoCheckId)) {
-            Actor* start;
-            Actor* end;
-            Actor* baddieActor;
+        ev->result = FindActorByRandoCheckId(randoCheckId);
 
-            start = suBaddieActorArray->data;
-            end = start + suBaddieActorArray->cnt;
-            for (baddieActor = start; baddieActor < end; baddieActor++) {
-
-                if (baddieActor == nullptr) {
-                    continue;
-                }
-
-                if (baddieActor->marker == nullptr) {
-                    continue;
-                }
-
-                if (baddieActor->marker->randoCheckId == randoCheckId) {
-                    event->Cancelled = true;
-                    ev->result = baddieActor;
-                    return;
-                }
-            }
-        }
-
-        if (ev->result == NULL) {
-            Rando::StaticData::RandoStaticCheck randoStaticCheck = Rando::StaticData::Checks[randoCheckId];
-            int32_t position[3];
-            position[0] = randoStaticCheck.posX;
-            position[1] = randoStaticCheck.posY + 50;
-            position[2] = randoStaticCheck.posZ;
-
-            Actor* newActor =
-                CustomObject::SpawnCustomActorEX(randoCheckId, position, &actorInfoMap.at((actor_e)ev->actorId).first,
-                                                 actorInfoMap.at((actor_e)ev->actorId).second);
-
+        if (ev->result != NULL) {
             event->Cancelled = true;
-            ev->result = newActor;
         }
+    })
+
+    REGISTER_LISTENER(OnFindActorMarkerFromJiggyId, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnFindActorMarkerFromJiggyId* ev = (OnFindActorMarkerFromJiggyId*)event;
+
+        if (!IS_RANDO) {
+            return;
+        }
+
+        switch (ev->jiggyId) {
+            case JIGGY_3E_GV_GRABBA:
+                ev->result = FindActorByRandoCheckId(RC_GV_JIGGY_GRABBA)->marker;
+                break;
+            default:
+                return;
+        }
+
+        if (ev->result != NULL) {
+            event->Cancelled = true;
+        }
+        
     })
 
     REGISTER_LISTENER(OnActorTick, EVENT_PRIORITY_NORMAL, [](IEvent* event) {

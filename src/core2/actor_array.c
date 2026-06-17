@@ -2195,18 +2195,20 @@ void actorArray_defrag(void) {
 }
 
 ActorMarker *func_8032B16C(enum jiggy_e jiggy_id) {
-    Actor *temp_s3;
-    Actor *var_s0;
+    CALL_CANCELLABLE_RETURN_EVENT(OnFindActorMarkerFromJiggyId, jiggy_id) {
+        Actor* temp_s3;
+        Actor* var_s0;
 
-    if (suBaddieActorArray != NULL) {
-        temp_s3 = &suBaddieActorArray->data[0];
-        for(var_s0 = temp_s3; (var_s0 - temp_s3) < suBaddieActorArray->cnt; var_s0++){
-            if ((var_s0->marker->id == MARKER_52_JIGGY) && (chjiggy_getJiggyId(var_s0) == jiggy_id)) {
-                return var_s0->marker;
+        if (suBaddieActorArray != NULL) {
+            temp_s3 = &suBaddieActorArray->data[0];
+            for (var_s0 = temp_s3; (var_s0 - temp_s3) < suBaddieActorArray->cnt; var_s0++) {
+                if ((var_s0->marker->id == MARKER_52_JIGGY) && (chjiggy_getJiggyId(var_s0) == jiggy_id)) {
+                    return var_s0->marker;
+                }
             }
         }
+        return NULL;
     }
-    return NULL;
 }
 
 void func_8032B258(Actor *this, enum collision_e arg1) {
