@@ -1235,7 +1235,6 @@ std::map<RandoCheckId, std::tuple<int32_t, int32_t, int32_t>> multiSpawnCheckMap
 RandoCheckId GetCheckByPosition(int32_t posX, int32_t posY, int32_t posZ) {
     for (auto& [randoCheckId, randoStaticCheck] : Checks) {
         if (randoStaticCheck.posX == posX && randoStaticCheck.posY == posY && randoStaticCheck.posZ == posZ) {
-            // BK_LOG_INFO("RC Found: %s", Rando::StaticData::Checks[randoCheckId].name);
             return randoCheckId;
         }
     }
