@@ -108,6 +108,15 @@ bool CustomObject::CheckSpawnedIdList(RandoCheckId randoCheckId) {
     return false;
 }
 
+void CustomObject::RemoveSpawnedIdFromList(RandoCheckId randoCheckId) {
+    for (int i = 0; i < randoSpawnedCheckIds.size(); i++) {
+        if (randoSpawnedCheckIds[i] == randoCheckId) {
+            randoSpawnedCheckIds.erase(randoSpawnedCheckIds.begin() + i);
+            break;
+        }
+    }
+}
+
 Actor* CustomObject::SetCustomActorParametersEX(RandoCheckId randoCheckId, Actor* customActor) {
     RandoSaveCheck shuffledObject = Rando::Logic::GetShuffledObject(randoCheckId);
     customActor->marker->randoCheckId = randoCheckId;
@@ -309,6 +318,7 @@ void CustomObject::CheckObtainedEX(RandoCheckId randoCheckId) {
             shouldRemoveEX = true;
             RANDO_SAVE_CHECKS[pool.randoCheckId].obtained = true;
             BK_LOG_INFO("RandoCheckId %s collected!", Rando::StaticData::Checks[randoCheckId].name);
+            CustomObject::RemoveSpawnedIdFromList(randoCheckId);
             Rando::StaticData::SendCollisionNotification(pool.randoCheckId);
             Rando::StaticData::ModifyRandoInfFlagState(randoCheckId);
             break;

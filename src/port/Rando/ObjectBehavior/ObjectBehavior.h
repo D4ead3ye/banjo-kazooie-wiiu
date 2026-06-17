@@ -19,6 +19,8 @@ void InitMolehillBehavior();
 void InitMusicNoteBehavior();
 void InitPropBehavior();
 
+void ModifySwitchBehavior(int32_t switchActorId);
+
 } // namespace ObjectBehavior
 
 } // namespace Rando

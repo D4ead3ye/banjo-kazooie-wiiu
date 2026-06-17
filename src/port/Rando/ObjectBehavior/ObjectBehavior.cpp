@@ -15,9 +15,9 @@ void player_getPosition(f32 dst[3]);
 Actor* marker_getActor(ActorMarker* thisx);
 bool func_802C9C14(Actor* actor);
 
-void coMusicPlayer_playMusic(enum comusic_e track_id, s32 volume);
-void marker_despawn(ActorMarker* marker);
+s32 mapSpecificFlags_get(s32 i);
 
+void coMusicPlayer_playMusic(enum comusic_e track_id, s32 volume);
 extern ActorArray* suBaddieActorArray;
 }
 
@@ -318,6 +318,13 @@ void Rando::ObjectBehavior::Init() {
                 }
                 break;
             default:
+                if (gsworld_getMap() == MAP_D_BGS_BUBBLEGLOOP_SWAMP) {
+                    if (CustomObject::CheckSpawnedIdList(RC_BGS_JIGGY_ELEVATED_WALKWAY)) { // TODO FIND RIGHT FLAGS
+                        randoCheckId = RC_BGS_JIGGY_ELEVATED_WALKWAY;
+                    } else if (CustomObject::CheckSpawnedIdList(RC_BGS_JIGGY_MAZE)) {
+                        randoCheckId = RC_BGS_JIGGY_MAZE;
+                    }
+                }
                 break;
         }
 
@@ -363,6 +370,23 @@ void Rando::ObjectBehavior::Init() {
 
             event->Cancelled = true;
             ev->result = newActor;
+        }
+    })
+
+    REGISTER_LISTENER(OnActorTick, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnActorTick* ev = (OnActorTick*)event;
+
+        if (!IS_RANDO) {
+            return;
+        }
+
+        switch (ev->actor->actor_info->actorId) {
+            case ACTOR_14E_BGS_ELEVATED_WALKWAY_SWITCH:
+            case ACTOR_1FB_BGS_MAZE_SWITCH:
+                Rando::ObjectBehavior::ModifySwitchBehavior(ev->actor->actor_info->actorId);
+                break;
+            default:
+                break;
         }
     })
 }

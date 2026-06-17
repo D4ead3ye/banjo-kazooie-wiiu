@@ -42,6 +42,7 @@ public:
     static void ResetRandoSpawnQueue();
     static void ClearRandoActorListEX();
     static bool CheckSpawnedIdList(RandoCheckId randoCheckId);
+    static void RemoveSpawnedIdFromList(RandoCheckId randoCheckId);
     static Actor* SetCustomActorParametersEX(RandoCheckId randoCheckId, Actor* customActor);
     static Actor* SpawnCustomActorEX(RandoCheckId randoCheckId, int32_t position[3], ActorInfo* actorInfo,
                                      int32_t flags);
