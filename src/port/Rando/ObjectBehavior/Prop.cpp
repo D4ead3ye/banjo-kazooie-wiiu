@@ -31,6 +31,12 @@ void Rando::ObjectBehavior::InitPropBehavior() {
 
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(position[0], position[1], position[2]);
         if (randoCheckId == RC_UNKNOWN) {
+            *should = false;
+            return;
+        }
+
+        if (!Rando::Logic::IsCheckShuffled(randoCheckId)) {
+            *should = false;
             return;
         }
 

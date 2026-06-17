@@ -227,6 +227,10 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             return;
         }
 
+        if (!Rando::Logic::IsCheckShuffled(randoCheckId)) {
+            return;
+        }
+
         *actor = CustomObject::ShouldCreateCustomActorEX(randoCheckId, spawnPosition, false);
         if (*actor == NULL) {
             *should = true;

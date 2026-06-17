@@ -125,10 +125,6 @@ void Rando::StaticData::SendCollisionNotification(RandoCheckId randoCheckId) {
 };
 
 bool ShouldOverrideSpawn(RandoCheckId randoCheckId) {
-    if (randoCheckId == RC_UNKNOWN) {
-        return false;
-    }
-
     if (Rando::Logic::IsCheckShuffled(randoCheckId)) {
         return true;
     }
@@ -173,6 +169,10 @@ void Rando::ObjectBehavior::Init() {
 
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
         if (randoCheckId == RC_UNKNOWN) {
+            return;
+        }
+
+        if (!Rando::Logic::IsCheckShuffled(randoCheckId)) {
             return;
         }
 
@@ -261,25 +261,35 @@ void Rando::ObjectBehavior::Init() {
 
             switch (ev->propId->actorProp.marker->id) {
                 case MARKER_39_MUMBO_TOKEN:
-                    randoItemId = RI_MUMBO_TOKEN;
+                    if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_MUMBO_TOKENS].optionValue == RO_GENERIC_ON) {
+                        randoItemId = RI_MUMBO_TOKEN;
+                    }
                     break;
                 case MARKER_52_JIGGY:
-                    randoItemId = RI_JIGGY;
+                    if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_JIGGIES].optionValue == RO_GENERIC_ON) {
+                        randoItemId = RI_JIGGY;
+                    }
                     break;
                 case MARKER_53_EMPTY_HONEYCOMB:
-                    randoItemId = RI_EMPTY_HONEYCOMB;
+                    if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_EMPTY_HONEYCOMBS].optionValue == RO_GENERIC_ON) {
+                        randoItemId = RI_EMPTY_HONEYCOMB;
+                    }
                     break;
                 case MARKER_5A_JINJO_BLUE:
                 case MARKER_5B_JINJO_GREEN:
                 case MARKER_5C_JINJO_ORANGE:
                 case MARKER_5D_JINJO_PINK:
                 case MARKER_5E_JINJO_YELLOW:
-                    randoItemId =
-                        Rando::StaticData::GetRandoItemByActorId(jinjoMarkerMap.at(ev->propId->actorProp.marker->id));
+                    if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_JINJOS].optionValue == RO_GENERIC_ON) {
+                        randoItemId = Rando::StaticData::GetRandoItemByActorId(
+                            jinjoMarkerMap.at(ev->propId->actorProp.marker->id));
+                    }
                     break;
                 case MARKER_5F_MUSIC_NOTE:
-                    randoItemId = RI_MUSIC_NOTE;
-                    event->Cancelled = true;
+                    if (RANDO_SAVE_OPTIONS[RO_SHUFFLE_MUSIC_NOTES].optionValue == RO_GENERIC_ON) {
+                        randoItemId = RI_MUSIC_NOTE;
+                        event->Cancelled = true;
+                    }
                     break;
                 default:
                     return;

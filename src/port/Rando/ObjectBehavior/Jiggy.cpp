@@ -32,6 +32,10 @@ void Rando::ObjectBehavior::InitJiggyBehavior() {
             return;
         }
 
+        if (!Rando::Logic::IsCheckShuffled(randoCheckId)) {
+            return;
+        }
+
         int32_t spawnPosition[3];
         spawnPosition[0] = (int32_t)position[0];
         spawnPosition[1] = (int32_t)position[1];
