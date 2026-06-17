@@ -446,7 +446,9 @@ void func_802E4214(enum map_e map_id){
     func_80322764();
     timedFuncQueue_init();
     func_802F9CD8();
-    func_8031B62C();
+    if (EventSystem_Should(VB_RESET_DIALOG_LANGUAGE, true)) {
+        func_8031B62C();
+    }
     if(!func_802E4A08())
         print_init();
     func_802E5F38();
@@ -481,16 +483,15 @@ void func_802E4384(void){
     else{
         func_8033DC18();
         // [port] Use a fixed 2-VI timestep for normal gameplay.
-        {
-            s32 viDivisor = viMgr_func_8024BFA0();
-            func_8033DC20(); // always consume wall-clock to keep last_ticks fresh
-            if (viDivisor > 2) {
-                time_setDeltaReal_frames(viDivisor);
-            } else {
-                time_setDeltaReal_frames(2);
-            }
+        s32 viDivisor = viMgr_func_8024BFA0();
+        func_8033DC20(); // always consume wall-clock to keep last_ticks fresh
+        if (viDivisor > 2) {
+            time_setDeltaReal_frames(viDivisor);
+        } else {
+            time_setDeltaReal_frames(2);
         }
     }
+
     func_8033DC10();
 
     D_8037E8E0.unk8 += time_getDelta();

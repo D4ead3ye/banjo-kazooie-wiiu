@@ -10,6 +10,7 @@ typedef enum VBehaviorID {
     VB_INIT_RETURN_TO_LAIR,
     VB_STATIC_CAMERA_SET,
     VB_STATIC_CAMERA_EXIT,
+    VB_CAMERA_LIVE_ASPECT,
     VB_GRUNTY_DEFEATED_FLAG_BOSS,
     VB_PLAY_JIGGY_DANCE,
     VB_VOID_OUT_GAME_OVER,
@@ -31,6 +32,14 @@ typedef enum VBehaviorID {
     VB_SET_JINJO_COUNT,
     VB_BUNDLE_SPAWN_SET_ACTOR_DATA,
     VB_NAPPER_SET_JIGGY_POSITION,
+    VB_RESET_DIALOG_LANGUAGE,
+    // Mr. Vile minigame (Anchor authority gating): cancelled on clients following a
+    // remote authority so local random logic yields to network state.
+    VB_VILE_YUMBLIE_EMERGE,
+    VB_VILE_YUMBLIE_HIDE,
+    VB_VILE_PLAYER_EAT_PIECE,
+    VB_VILE_GAME_UPDATE,
+    VB_VILE_CPU_AI,
 } VBehaviorID;
 
 DEFINE_EVENT(VanillaBehavior, VBehaviorID id; bool* should; va_list * originalArgs;);

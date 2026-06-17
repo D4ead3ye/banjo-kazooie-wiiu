@@ -146,8 +146,8 @@ void RegisterCameraPatches_Init() {
 
     COND_VB_SHOULD(VB_STATIC_CAMERA_SET, EVENT_PRIORITY_NORMAL, true,
                    { sLastStaticCameraNode = *va_arg(args, int32_t*); });
-
     COND_VB_SHOULD(VB_STATIC_CAMERA_EXIT, EVENT_PRIORITY_NORMAL, true, { sLastStaticCameraNode = -1; });
+    COND_VB_SHOULD(VB_CAMERA_LIVE_ASPECT, EVENT_PRIORITY_NORMAL, true, { *should = false; });
 
     // Bigger frustum — widen the side planes from the actual FOV and aspect
     // ratio, and pad the top/bottom planes to mask vertical cam pop-in.
@@ -157,7 +157,7 @@ void RegisterCameraPatches_Init() {
     REGISTER_LISTENER(ViewportFrustumUpdate, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         s32 mode = getGameMode();
         if (mode == GAME_MODE_7_ATTRACT_DEMO || mode == GAME_MODE_8_BOTTLES_BONUS || mode == GAME_MODE_A_SNS_PICTURE ||
-            GAME_MODE_9_BANJO_AND_KAZOOIE) {
+            mode == GAME_MODE_9_BANJO_AND_KAZOOIE) {
             return;
         }
         auto* ev = (ViewportFrustumUpdate*)event;

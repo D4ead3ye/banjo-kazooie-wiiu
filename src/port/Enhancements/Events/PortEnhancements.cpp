@@ -21,6 +21,7 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(VanillaBehavior);
     REGISTER_EVENT(OnMapLoad);
     REGISTER_EVENT(OnDialogLoaded);
+    REGISTER_EVENT(OnModelLoad);
     REGISTER_EVENT(ViewportFrustumUpdate);
     REGISTER_EVENT(OnActorTick);
     REGISTER_EVENT(OnPropTick);
@@ -28,6 +29,11 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(LocalizeUiString);
     REGISTER_EVENT(OnParadeNameDraw);
     REGISTER_EVENT(OnFileSelectInfoBuild);
+    REGISTER_EVENT(LocalizeFileSelectPrompt);
+    REGISTER_EVENT(OnFileSelectLanguageRefresh);
+    REGISTER_EVENT(LocalizeParade);
+    REGISTER_EVENT(ParadeCreditDialogId);
+    REGISTER_EVENT(ResolveBoldFontSlot);
     REGISTER_EVENT(OnWorldDraw);
     REGISTER_EVENT(OnPlayerDraw);
 
@@ -36,6 +42,7 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnBoggyRaceSetSpeed);
     REGISTER_EVENT(OnBootLogosCheck);
     REGISTER_EVENT(OnFurnaceFunDialog);
+    REGISTER_EVENT(OnGeoCull);
     REGISTER_EVENT(OnGruntyJinjonatorComplete);
     REGISTER_EVENT(OnIntroCutsceneCheck);
     REGISTER_EVENT(OnMiscCutscenesCheck);
@@ -45,7 +52,10 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnPlayerAnimChange);
     REGISTER_EVENT(OnPlayerAnimReset);
     REGISTER_EVENT(OnPlayerAnimSubRangeChange);
+    REGISTER_EVENT(OnPlayerTransformChange);
     REGISTER_EVENT(OnWaterPyramidTimer);
+    REGISTER_EVENT(OnVileHoleStateChange);
+    REGISTER_EVENT(OnVileGameStateChange);
 
     // Register game events
     REGISTER_EVENT(OnGameLoad);

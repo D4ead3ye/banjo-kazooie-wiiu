@@ -1,9 +1,14 @@
 #include "port/Network/Anchor/Anchor.h"
+#include "port/Network/Anchor/Authority.h"
 #include "port/Network/Anchor/JsonConversions.hpp"
 #include <nlohmann/json.hpp>
 #include <libultraship/libultraship.h>
 #include "port/Engine.h"
 #include "port/UI/Notification.h"
+
+extern "C" {
+#include "functions.h"
+}
 
 /**
  * ALL_CLIENT_STATE
@@ -59,6 +64,7 @@ void Anchor::HandlePacket_AllClientState(nlohmann::json& payload) {
         clients[client.clientId].isGameComplete = client.isGameComplete;
         clients[client.clientId].map = client.map;
         clients[client.clientId].exit = client.exit;
+        Authority_OnClientStateChanged(client.clientId, client.online, client.map);
     }
 
     // remove clients that are no longer in the list
@@ -70,6 +76,7 @@ void Anchor::HandlePacket_AllClientState(nlohmann::json& payload) {
     }
     // (separate loop to avoid iterator invalidation)
     for (auto& clientId : clientsToRemove) {
+        Authority_OnClientStateChanged(clientId, false, -1);
         if (dummies.contains(clientId)) {
             dummies.erase(clientId);
         }
@@ -80,6 +87,6 @@ void Anchor::HandlePacket_AllClientState(nlohmann::json& payload) {
         clients.erase(clientId);
     }
 
-    PopulateDummies();
+    PopulateDummies((GameMap)gsworld_getMap());
     SendPacket_PlayerUpdate(true);
 }

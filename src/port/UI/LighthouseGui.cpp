@@ -5,6 +5,7 @@
 #include <imgui_internal.h>
 #include "UIWidgets.hpp"
 #include "src/port/devtools/EventDebugger.h"
+#include "src/port/DevTools/OcclusionDebug.h"
 
 #ifdef __APPLE__
 #include <fast/backends/gfx_metal.h>
@@ -26,7 +27,8 @@
 #include "LighthouseInputEditorWindow.h"
 #include "LighthouseModMenuWindow.h"
 // #include "DeveloperTools/HookDebugger.h"
-#include "developertools/SaveEditor.h"
+#include "DeveloperTools/SaveEditor.h"
+#include "DeveloperTools/Warps.h"
 #include "developertools/GameplayTools.h"
 // #include "DeveloperTools/ActorViewer.h"
 // #include "DeveloperTools/CollisionViewer.h"
@@ -45,6 +47,7 @@ std::shared_ptr<LighthouseModMenuWindow> mModMenuWindow;
 
 // std::shared_ptr<HookDebuggerWindow> mHookDebuggerWindow;
 std::shared_ptr<SaveEditorWindow> mSaveEditorWindow;
+std::shared_ptr<WarpsWindow> mWarpsWindow;
 std::shared_ptr<GameplayToolsWindow> mGameplayToolsWindow;
 // std::shared_ptr<HudEditorWindow> mHudEditorWindow;
 // std::shared_ptr<CosmeticEditorWindow> mCosmeticEditorWindow;
@@ -67,6 +70,7 @@ std::shared_ptr<InputViewer> mInputViewer;
 std::shared_ptr<InputViewerSettingsWindow> mInputViewerSettings;
 std::shared_ptr<LighthouseModalWindow> mModalWindow;
 std::shared_ptr<EventDebuggerWindow> mEventDebuggerWindow;
+std::shared_ptr<OcclusionDebugWindow> mOcclusionDebugWindow;
 
 UIWidgets::Colors GetMenuThemeColor() {
     return mLighthouseMenu->GetMenuThemeColor();
@@ -118,6 +122,9 @@ void SetupGuiElements() {
 
     mSaveEditorWindow = std::make_shared<SaveEditorWindow>("gWindows.SaveEditor", "Save Editor", ImVec2(480, 600));
     gui->AddGuiWindow(mSaveEditorWindow);
+
+    mWarpsWindow = std::make_shared<WarpsWindow>("gWindows.Warps", "Warps", ImVec2(480, 600));
+    gui->AddGuiWindow(mWarpsWindow);
 
     mGameplayToolsWindow = std::make_shared<GameplayToolsWindow>("gWindows.GameplayTools", "Gameplay Tools", ImVec2(480, 600));
     gui->AddGuiWindow(mGameplayToolsWindow);
@@ -187,6 +194,9 @@ void SetupGuiElements() {
 
     mEventDebuggerWindow = std::make_shared<EventDebuggerWindow>(CVAR_WINDOW("EventDebugger"), "Event Debugger");
     gui->AddGuiWindow(mEventDebuggerWindow);
+
+    mOcclusionDebugWindow = std::make_shared<OcclusionDebugWindow>(CVAR_WINDOW("OcclusionDebug"), "Occlusion Debugger");
+    gui->AddGuiWindow(mOcclusionDebugWindow);
 }
 
 void Destroy() {
@@ -207,6 +217,7 @@ void Destroy() {
 
     // mHookDebuggerWindow = nullptr;
     mSaveEditorWindow = nullptr;
+    mWarpsWindow = nullptr;
     mGameplayToolsWindow = nullptr;
     // mHudEditorWindow = nullptr;
     // mCosmeticEditorWindow = nullptr;
@@ -219,6 +230,7 @@ void Destroy() {
     mInputViewer = nullptr;
     mInputViewerSettings = nullptr;
     mEventDebuggerWindow = nullptr;
+    mOcclusionDebugWindow = nullptr;
 }
 
 void RegisterPopup(std::string title, std::string message, std::string button1, std::string button2,
