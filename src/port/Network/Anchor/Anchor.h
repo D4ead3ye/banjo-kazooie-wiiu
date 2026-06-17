@@ -68,7 +68,7 @@ private:
     void SetDummyPlayerClientId(const Actor* actor, uint32_t clientId);
     void DrawDummies(OnPlayerDraw* event);
     void ClearDummies();
-    void PopulateDummies();
+    void PopulateDummies(GameMap map);
     void RegisterDummy(DummyPlayer* dummy, uint32_t clientID);
     std::unordered_map<uint32_t, DummyPlayer*>* GetDummies();
     void UpdateDummies();
@@ -77,6 +77,7 @@ private:
     void EvaluateDummyForClient(uint32_t clientId);
 
     void HandlePacket_AllClientState(nlohmann::json& payload);
+    void HandlePacket_AuthorityState(nlohmann::json& payload);
     void HandlePacket_DamagePlayer(nlohmann::json& payload);
     void HandlePacket_DisableAnchor(nlohmann::json& payload);
     void HandlePacket_EntranceDiscovered(nlohmann::json& payload);
@@ -86,6 +87,7 @@ private:
     void HandlePacket_PlayerSfx(nlohmann::json& payload);
     void HandlePacket_PlayerAnimChange(nlohmann::json& payload);
     void HandlePacket_PlayerSubRangeChange(nlohmann::json& payload);
+    void HandlePacket_PlayerTransformChange(nlohmann::json& payload);
     void HandlePacket_PlayerUpdate(nlohmann::json& payload);
     void HandlePacket_RequestTeamState(nlohmann::json& payload);
     void HandlePacket_RequestTeleport(nlohmann::json& payload);
@@ -97,6 +99,11 @@ private:
     void HandlePacket_UpdateClientState(nlohmann::json& payload);
     void HandlePacket_UpdateRoomState(nlohmann::json& payload);
     void HandlePacket_UpdateTeamState(nlohmann::json& payload);
+    void HandlePacket_VileEatRequest(nlohmann::json& payload);
+    void HandlePacket_VileEatResult(nlohmann::json& payload);
+    void HandlePacket_VileGameState(nlohmann::json& payload);
+    void HandlePacket_VileHoleState(nlohmann::json& payload);
+    void HandlePacket_VileUpdate(nlohmann::json& payload);
 
 public:
     uint32_t ownClientId;
@@ -104,6 +111,7 @@ public:
 
     // Packet types //
     inline static const std::string ALL_CLIENT_STATE = "ALL_CLIENT_STATE";
+    inline static const std::string AUTHORITY_STATE = "AUTHORITY_STATE";
     inline static const std::string DAMAGE_PLAYER = "DAMAGE_PLAYER";
     inline static const std::string DISABLE_ANCHOR = "DISABLE_ANCHOR";
     inline static const std::string ENTRANCE_DISCOVERED = "ENTRANCE_DISCOVERED";
@@ -114,6 +122,7 @@ public:
     inline static const std::string PLAYER_ANIM = "PLAYER_ANIM";
     inline static const std::string PLAYER_SFX = "PLAYER_SFX";
     inline static const std::string PLAYER_SUBRANGE = "PLAYER_SUBRANGE";
+    inline static const std::string PLAYER_TRANSFORM = "PLAYER_TRANSFORM";
     inline static const std::string PLAYER_UPDATE = "PLAYER_UPDATE";
     inline static const std::string PLAYER_UPDATE_FULL = "PLAYER_UPDATE_FULL";
     inline static const std::string REQUEST_TEAM_STATE = "REQUEST_TEAM_STATE";
@@ -126,6 +135,11 @@ public:
     inline static const std::string UPDATE_CLIENT_STATE = "UPDATE_CLIENT_STATE";
     inline static const std::string UPDATE_ROOM_STATE = "UPDATE_ROOM_STATE";
     inline static const std::string UPDATE_TEAM_STATE = "UPDATE_TEAM_STATE";
+    inline static const std::string VILE_EAT_REQUEST = "VILE_EAT_REQUEST";
+    inline static const std::string VILE_EAT_RESULT = "VILE_EAT_RESULT";
+    inline static const std::string VILE_GAME_STATE = "VILE_GAME_STATE";
+    inline static const std::string VILE_HOLE_STATE = "VILE_HOLE_STATE";
+    inline static const std::string VILE_UPDATE = "VILE_UPDATE";
 
     std::map<uint32_t, AnchorClient> clients;
     RoomState roomState;
@@ -149,6 +163,7 @@ public:
     void PrepAnimStatePayload(nlohmann::json& payload);
     void PrepAnimSubRangePayload(nlohmann::json& payload);
 
+    void SendPacket_AuthorityState(u8 activity, bool claimed);
     void SendPacket_ClearTeamState(std::string teamId);
     void SendPacket_DamagePlayer(u32 clientId, u8 damageEffect, u8 damage);
     void SendPacket_EntranceDiscovered(u16 entranceIndex);
@@ -161,7 +176,10 @@ public:
     void SendPacket_PlayerAnimReset();
     void SendPacket_PlayerSfx(u16 sfxId);
     void SendPacket_PlayerSubRangeChange(f32 duration, f32 end);
-    void SendPacket_PlayerUpdate(bool full = false);
+    // targetClientId 0 = broadcast/all current-map players; nonzero = send only to that
+    // client (used to hand a late arrival our current state directly).
+    void SendPacket_PlayerTransformChange(Transformation tf_id, uint32_t targetClientId = 0);
+    void SendPacket_PlayerUpdate(bool full = false, uint32_t targetClientId = 0);
     void SendPacket_RequestTeamState();
     void SendPacket_RequestTeleport(u32 clientId);
     void SendPacket_SetCheckStatus(/*RandomizerCheck rc*/);
@@ -171,6 +189,11 @@ public:
     void SendPacket_UpdateClientState();
     void SendPacket_UpdateRoomState();
     void SendPacket_UpdateTeamState();
+    void SendPacket_VileEatRequest(u8 holeId);
+    void SendPacket_VileEatResult(u32 eaterClientId, u8 pieceType, u8 correctType);
+    void SendPacket_VileGameState();
+    void SendPacket_VileHoleState(u8 holeId, u8 holeState, u8 pieceType, u32 eaterClientId);
+    void SendPacket_VileUpdate(const f32 position[3], f32 pitch, f32 yaw, f32 roll, u8 animMode);
     void OnActorDestroyed(Actor* actor);
     void SendToCurrentMapPlayers(nlohmann::json& payload);
 

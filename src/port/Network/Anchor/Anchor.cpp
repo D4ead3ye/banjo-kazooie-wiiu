@@ -1,4 +1,5 @@
 #include "Anchor.h"
+#include "Authority.h"
 #include <nlohmann/json.hpp>
 #include <libultraship/libultraship.h>
 #include "port/Engine.h"
@@ -35,6 +36,7 @@ void Anchor::Enable() {
 void Anchor::Disable() {
     Network::Disable();
 
+    Authority_Reset();
     dummies.clear();
     for (auto& [clientId, client] : clients) {
         if (client.dummy != nullptr) {
@@ -56,6 +58,7 @@ void Anchor::OnConnected() {
 }
 
 void Anchor::OnDisconnected() {
+    Authority_Reset();
     RegisterHooks();
 }
 
@@ -112,8 +115,10 @@ void Anchor::OnIncomingJson(nlohmann::json payload) {
 
     std::string packetType = payload["type"].get<std::string>();
 
-    // Ignore packets from mismatched clients, except for ALL_CLIENT_STATE, UPDATE_CLIENT_STATE, and PLAYER_UPDATE
-    if (packetType != ALL_CLIENT_STATE && packetType != UPDATE_CLIENT_STATE && packetType != PLAYER_UPDATE) {
+    // Ignore packets from mismatched clients, except for ALL_CLIENT_STATE, UPDATE_CLIENT_STATE, and
+    // PLAYER_UPDATE(_FULL)
+    if (packetType != ALL_CLIENT_STATE && packetType != UPDATE_CLIENT_STATE && packetType != PLAYER_UPDATE &&
+        packetType != PLAYER_UPDATE_FULL) {
         if (payload.contains("clientId")) {
             uint32_t clientId = payload["clientId"].get<uint32_t>();
             if (clients.contains(clientId) && clients[clientId].clientVersion != clientVersion) {
@@ -148,6 +153,8 @@ void Anchor::ProcessIncomingPacketQueue() {
             // packetType here is a string so we can't use a switch statement
             if (packetType == ALL_CLIENT_STATE)
                 HandlePacket_AllClientState(payload);
+            else if (packetType == AUTHORITY_STATE)
+                HandlePacket_AuthorityState(payload);
             else if (packetType == DAMAGE_PLAYER)
                 HandlePacket_DamagePlayer(payload);
             else if (packetType == DISABLE_ANCHOR)
@@ -162,7 +169,9 @@ void Anchor::ProcessIncomingPacketQueue() {
                 HandlePacket_PlayerAnimChange(payload);
             else if (packetType == PLAYER_SUBRANGE)
                 HandlePacket_PlayerSubRangeChange(payload);
-            else if (packetType == PLAYER_UPDATE)
+            else if (packetType == PLAYER_TRANSFORM)
+                HandlePacket_PlayerTransformChange(payload);
+            else if (packetType == PLAYER_UPDATE || packetType == PLAYER_UPDATE_FULL)
                 HandlePacket_PlayerUpdate(payload);
             else if (packetType == PLAYER_SFX)
                 HandlePacket_PlayerSfx(payload);
@@ -188,6 +197,16 @@ void Anchor::ProcessIncomingPacketQueue() {
                 HandlePacket_UpdateClientState(payload);
             else if (packetType == UPDATE_ROOM_STATE)
                 HandlePacket_UpdateRoomState(payload);
+            else if (packetType == VILE_EAT_REQUEST)
+                HandlePacket_VileEatRequest(payload);
+            else if (packetType == VILE_EAT_RESULT)
+                HandlePacket_VileEatResult(payload);
+            else if (packetType == VILE_GAME_STATE)
+                HandlePacket_VileGameState(payload);
+            else if (packetType == VILE_HOLE_STATE)
+                HandlePacket_VileHoleState(payload);
+            else if (packetType == VILE_UPDATE)
+                HandlePacket_VileUpdate(payload);
         } catch (const std::exception& e) {
             SPDLOG_ERROR("[Anchor] Exception while processing incoming packet {}", e.what());
             SPDLOG_ERROR("[Anchor] Packet: {}", payload.dump());
@@ -232,9 +251,12 @@ void Anchor::ClearDummies() {
     dummies.clear();
 }
 
-void Anchor::PopulateDummies() {
+// Takes the map explicitly rather than reading gsworld_getMap(): during the
+// OnMapLoad event the new map hasn't been committed yet, so gsworld_getMap()
+// still reports the map being left.
+void Anchor::PopulateDummies(GameMap map) {
     for (const auto& [clientId, client] : clients) {
-        if (client.map == gsworld_getMap() && !client.self && !dummies.contains(clientId) && client.online) {
+        if (client.map == map && !client.self && !dummies.contains(clientId) && client.online) {
             client.dummy->dummy_reset();
             RegisterDummy(client.dummy, clientId);
         }

@@ -1,4 +1,7 @@
 #include <cstring>
+#include <cstdint>
+#include <unordered_map>
+#include <unordered_set>
 
 #include <libultraship/libultraship.h>
 #include "port/Enhancements/Events/Hooks/Events.h"
@@ -8,7 +11,10 @@ typedef unsigned char u8;
 
 extern "C" {
 int ResourceMgr_IsJapanese(void);
-int ResourceMgr_GetDialogLanguage(void); // PAL only: 0=English, 1=French, 2=German
+int ResourceMgr_GetDialogLanguageCount(void); // 1 = US, 3 = PAL (EN/FR/DE)
+int ResourceMgr_GetDialogLanguage(void);      // PAL only: 0=English, 1=French, 2=German
+int ResourceMgr_GetLanguageGeneration(void);
+int ResourceMgr_IsAssetRepointed(uint32_t assetId);
 
 bool gameFile_isNotEmpty(int gamenum);
 int jiggyscore_total(void);
@@ -17,7 +23,59 @@ int itemscore_timeScores_getTotal(void);
 char* gcpausemenu_TimeToA(int time);
 void print_dialog(int x, int y, u8* string);
 int gczoombox_setStrings(void* zb, int str_cnt, char** str_ptrs);
+void setGameInformationZoombox(int gamenum); // decomp: (re)assemble the file info zoombox
+extern void* chGameSelectTopZoombox;         // GcZoombox*
+extern u8* D_80365DF4[];                     // top instruction line 0, indexed by language
+extern u8* D_80365DF8[];                     // top instruction line 1, indexed by language
+int code94620_func_8031B5B0(void);           // current dialog-language index (0=EN,1=FR,2=DE)
+int func_8031877C(void* zoombox);            // clear a zoombox's strings before re-setting
+
+// Print font internals
+extern void* D_80380AB8[];   // BKSprite*[5]: font alphamask assets (slot 2 = JP font)
+extern void* print_sFonts[]; // FontLetter*[4]: decoded glyph tables per slot
+void* print_getLettersFromFont(void* alphaMask, void* textureSprite);
+int print_getCurrentMapBoldFontTexture(void);
+void* assetcache_get(int assetId);
+void assetcache_release(void* ptr);
+void bk_free(void* ptr);
 }
+
+// Live language change reactions
+namespace {
+
+constexpr int kJpDialogFontAssetId = 0x6EA; // SPRITE_JP_DIALOG_FONT_ALPHAMASK
+constexpr int kJpFontFreeDelayFrames = 5;   // grace frames before freeing slot 2
+int sFontLanguageGen = 0;
+int sJpFontFreeDelay = 0;
+
+void FreeJpFontSlot() {
+    if (print_sFonts[2] != nullptr) {
+        bk_free(print_sFonts[2]);
+        print_sFonts[2] = nullptr;
+    }
+    if (D_80380AB8[2] != nullptr) {
+        assetcache_release(D_80380AB8[2]);
+        D_80380AB8[2] = nullptr;
+    }
+}
+
+void LoadJpFontSlot() {
+    // Bail early if print_init hasn't run to load this slot yet
+    if (D_80380AB8[0] == nullptr) {
+        return;
+    }
+    FreeJpFontSlot(); // drop any stale font first (e.g. a different pack)
+    void* tex = assetcache_get(print_getCurrentMapBoldFontTexture());
+    D_80380AB8[2] = assetcache_get(kJpDialogFontAssetId);
+    print_sFonts[2] = print_getLettersFromFont(D_80380AB8[2], tex);
+    assetcache_release(tex);
+}
+
+// Per cached-model-slot generation
+std::unordered_map<const void*, int> sModelInfoGen;
+std::unordered_set<uint32_t> sEverRepointedModels;
+
+} // namespace
 
 // JP parade subtitles
 struct ParadeKana {
@@ -238,23 +296,23 @@ static const u8 sJpFileSelectErase0[] = "\xfd\x6a\xd7\xb9\xcd\xbc\xf3\xc6\xbf\x4
 static const u8 sJpFileSelectErase1[] =
     "\xfd\x6a\x1a\x3e\xec\xb4\xc3\xbc\x0f\x1b\x3e\x56\x4b\x4f\x5d\x78"; // "Aボタン：けす Bボタン：やめる"
 
-extern "C" int port_setJpFileSelectInstructions(void* zoombox) {
+static bool SetJpFileSelectInstructions(void* zoombox) {
     if (!ResourceMgr_IsJapanese()) {
-        return 0;
+        return false;
     }
     static char* lines[4] = { (char*)sJpFileSelectInstr0, (char*)sJpFileSelectInstr1, (char*)sJpFileSelectInstr2,
                               (char*)sJpFileSelectInstr3 };
     gczoombox_setStrings(zoombox, 4, lines);
-    return 1;
+    return true;
 }
 
-extern "C" int port_setJpFileSelectEraseConfirm(void* zoombox) {
+static bool SetJpFileSelectEraseConfirm(void* zoombox) {
     if (!ResourceMgr_IsJapanese()) {
-        return 0;
+        return false;
     }
     static char* lines[2] = { (char*)sJpFileSelectErase0, (char*)sJpFileSelectErase1 };
     gczoombox_setStrings(zoombox, 2, lines);
-    return 1;
+    return true;
 }
 
 // Character Parade
@@ -269,58 +327,105 @@ extern "C" {
 extern PortParadeInfo D_8036D9A0[]; // US Furnace-Fun parade (27 entries)
 extern PortParadeInfo D_8036DAE4[]; // US final parade (58 entries)
 }
-static PortParadeInfo sJpParade0[28];
-static PortParadeInfo sJpParade1[57];
-static bool sJpParadesBuilt = false;
+static PortParadeInfo sPalJpParade0[28];
+static PortParadeInfo sPalJpParade1[57];
+static bool sPalJpParadesBuilt = false;
 
-static void buildJpParades() {
+// JP and PAL both move Motzand into the Furnace-Fun parade (parade 0, after RUBEE
+// AND TOOTS) and drop it from the post-Grunty parade (parade 1).
+static void buildPalJpParades() {
     for (int i = 0; i < 20; i++) {
-        sJpParade0[i] = D_8036D9A0[i];
+        sPalJpParade0[i] = D_8036D9A0[i];
     }
-    sJpParade0[20] = { 0x1C, 5, 90, "MOTZAND", 0 }; // MAP_1C_MMM_CHURCH, after RUBEE AND TOOTS
+    sPalJpParade0[20] = { 0x1C, 5, 90, "MOTZAND", 0 }; // MAP_1C_MMM_CHURCH, after RUBEE AND TOOTS
     for (int i = 20; i < 27; i++) {
-        sJpParade0[i + 1] = D_8036D9A0[i];
+        sPalJpParade0[i + 1] = D_8036D9A0[i];
     }
     int j = 0;
     for (int i = 0; i < 58; i++) {
-        if (i == 39) { // US final-parade MOTZAND, removed in JP
+        if (i == 39) { // US final-parade MOTZAND, moved to the Furnace-Fun parade above
             continue;
         }
-        sJpParade1[j++] = D_8036DAE4[i];
+        sPalJpParade1[j++] = D_8036DAE4[i];
     }
 }
 
-// Swap the active parade table for its JP variant
-extern "C" void port_localizeParade(int paradeId, void** table, uint8_t* count) {
-    if (!ResourceMgr_IsJapanese()) {
+// Swap the active parade table for the PAL/JP variant. JP (Japanese script) and
+// PAL (EN-UK/FR/DE, language count > 1) both move Motzand; US (English, count 1)
+// keeps the vanilla table.
+static void LocalizeParadeTable(int paradeId, void** table, uint8_t* count) {
+    if (!ResourceMgr_IsJapanese() && ResourceMgr_GetDialogLanguageCount() <= 1) {
         return;
     }
-    if (!sJpParadesBuilt) {
-        buildJpParades();
-        sJpParadesBuilt = true;
+    if (!sPalJpParadesBuilt) {
+        buildPalJpParades();
+        sPalJpParadesBuilt = true;
     }
     if (paradeId == 0) {
-        *table = sJpParade0;
+        *table = sPalJpParade0;
         *count = 28;
     } else {
-        *table = sJpParade1;
+        *table = sPalJpParade1;
         *count = 57;
     }
 }
 
-// Furnace-Fun parade credit-dialog id
-extern "C" int port_paradeDialogId(int indx) {
-    if (!ResourceMgr_IsJapanese() || indx <= 19) {
-        return 0x11AF + indx;
-    }
-    if (indx == 20) {
-        return 0x11CA; // MOTZAND credit -> JP native 3073
-    }
-    return 0x11AF + indx - 1;
-}
-
 // Event listeners
 static void RegisterLocalizedText() {
+    // Drive the JP dialog-font slot off the language generation, at a safe
+    // between-frames point: load slot 2 when Japanese becomes active, and on
+    // switch away defer the free a few frames so in-flight JP strings finish.
+    REGISTER_LISTENER(GameFrameUpdate, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        int gen = ResourceMgr_GetLanguageGeneration();
+        if (gen != sFontLanguageGen) {
+            sFontLanguageGen = gen;
+            if (ResourceMgr_IsJapanese()) {
+                sJpFontFreeDelay = 0; // cancel a pending free; ensure slot 2 is current
+                LoadJpFontSlot();
+            } else if (D_80380AB8[2] != nullptr) {
+                sJpFontFreeDelay = kJpFontFreeDelayFrames;
+            }
+        }
+        if (sJpFontFreeDelay > 0 && --sJpFontFreeDelay == 0) {
+            FreeJpFontSlot();
+        }
+    });
+
+    // Font slot fallback: the JP font (slot 2) can be momentarily unloaded for a
+    // frame across a language swap. Redirect to the base font (glyph 0) for that
+    // frame instead of letting the draw dereference a NULL slot.
+    REGISTER_LISTENER(ResolveBoldFontSlot, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        auto* ev = (ResolveBoldFontSlot*)event;
+        if (D_80380AB8[*ev->slot] == nullptr) {
+            *ev->slot = 0;
+            *ev->letterId = 0;
+        }
+    });
+
+    // Invalidate a cached model that the active language re-points, so it
+    // re-fetches the localized version on its next draw (live model swap). A model
+    // any language has re-pointed keeps reloading on every change so it can also
+    // revert to the base model; others early-out immediately.
+    REGISTER_LISTENER(OnModelLoad, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        auto* ev = (OnModelLoad*)event;
+        if (ev->reload == nullptr) {
+            return;
+        }
+        uint32_t modelId = (uint32_t)ev->modelId;
+        if (ResourceMgr_IsAssetRepointed(modelId)) {
+            sEverRepointedModels.insert(modelId);
+        } else if (sEverRepointedModels.find(modelId) == sEverRepointedModels.end()) {
+            return; // never re-pointed by any language
+        }
+        int& slotGen = sModelInfoGen[ev->modelInfo];
+        int gen = ResourceMgr_GetLanguageGeneration();
+        if (slotGen == gen) {
+            return; // already synced to the active language
+        }
+        slotGen = gen;
+        *ev->reload = 1;
+    });
+
     // Swap an English pause-menu / file-select string for its JP / PAL FR-DE translation.
     REGISTER_LISTENER(LocalizeUiString, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         auto* ev = (LocalizeUiString*)event;
@@ -356,6 +461,67 @@ static void RegisterLocalizedText() {
         buildJpFileSelectInfo(ev->upper, ev->lower, ev->gamenum, isEmpty ? 0 : itemscore_timeScores_getTotal(),
                               jiggyscore_total(), itemscore_noteScores_getTotal(), isEmpty);
     });
+
+    // JP: write the kana file-select prompts and cancel the event so the decomp
+    // skips its English ones (promptId 0 = controls, 1 = erase confirm).
+    REGISTER_LISTENER(LocalizeFileSelectPrompt, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        auto* ev = (LocalizeFileSelectPrompt*)event;
+        bool done =
+            (ev->promptId == 1) ? SetJpFileSelectEraseConfirm(ev->zoombox) : SetJpFileSelectInstructions(ev->zoombox);
+        if (done) {
+            ev->Event.Cancelled = true;
+        }
+    });
+
+    // Rebuild the file-select info zoombox once per language change.
+    REGISTER_LISTENER(OnFileSelectLanguageRefresh, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        auto* ev = (OnFileSelectLanguageRefresh*)event;
+        if (!ev->isSelected) {
+            return;
+        }
+        static int sLastGen = -1;
+        int gen = ResourceMgr_GetLanguageGeneration();
+        if (sLastGen == gen) {
+            return;
+        }
+        sLastGen = gen;
+        // Bottom info line.
+        setGameInformationZoombox(ev->gamenum);
+        // Top controls prompt: clear it, then re-push for the new language.
+        if (chGameSelectTopZoombox != nullptr) {
+            func_8031877C(chGameSelectTopZoombox);
+            if (!SetJpFileSelectInstructions(chGameSelectTopZoombox)) {
+                int lang = code94620_func_8031B5B0();
+                char* lines[2];
+                lines[0] = (char*)D_80365DF4[lang];
+                lines[1] = (char*)D_80365DF8[lang];
+                gczoombox_setStrings(chGameSelectTopZoombox, 2, lines);
+            }
+        }
+    });
+
+    // JP: swap the character-parade table for its kana variant.
+    REGISTER_LISTENER(LocalizeParade, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        auto* ev = (LocalizeParade*)event;
+        LocalizeParadeTable(ev->paradeId, ev->table, ev->count);
+    });
+
+    // JP and PAL both insert Motzand into the Furnace-Fun parade at index 20, which
+    // shifts the later credit-dialog ids by one. 0x11CA re-points to each version's
+    // Motzand credit (JP native 3073 / PAL native 3065) via the dialog override.
+    REGISTER_LISTENER(ParadeCreditDialogId, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        auto* ev = (ParadeCreditDialogId*)event;
+        if ((!ResourceMgr_IsJapanese() && ResourceMgr_GetDialogLanguageCount() <= 1) || ev->index <= 19 ||
+            ev->dialogId == nullptr) {
+            return;
+        }
+        *ev->dialogId = (ev->index == 20) ? 0x11CA : (0x11AF + ev->index - 1);
+    });
+
+    // The port owns the dialog-language index (driven by the language picker). The
+    // decomp's game-init reset (func_8031B62C) would zero it on parade/mode warps and
+    // revert the user's selection to the base language, so skip it.
+    COND_VB_SHOULD(VB_RESET_DIALOG_LANGUAGE, EVENT_PRIORITY_NORMAL, true, { *should = false; });
 }
 
 static RegisterShipInitFunc localizedTextInitFunc(RegisterLocalizedText);
