@@ -363,15 +363,18 @@ void Rando::ObjectBehavior::Init() {
 
         RandoCheckId randoCheckId = RC_UNKNOWN;
         ev->result = NULL;
+        map_e mapId = gsworld_getMap();
 
         switch (ev->actorId) {
             case ACTOR_46_JIGGY:
-                if (gsworld_getMap() == MAP_26_MMM_NAPPERS_ROOM) {
+                if (mapId == MAP_26_MMM_NAPPERS_ROOM) {
                     randoCheckId = RC_MMM_JIGGY_MANSION_TABLE;
+                } else if (mapId == MAP_5A_CCW_SUMMER_ZUBBA_HIVE) {
+                    randoCheckId = RC_CCW_JIGGY_ZUBBAS;
                 }
                 break;
             default:
-                if (gsworld_getMap() == MAP_D_BGS_BUBBLEGLOOP_SWAMP) {
+                if (mapId == MAP_D_BGS_BUBBLEGLOOP_SWAMP) {
                     if (CustomObject::CheckSpawnedIdList(RC_BGS_JIGGY_ELEVATED_WALKWAY)) {
                         randoCheckId = RC_BGS_JIGGY_ELEVATED_WALKWAY;
                     } else if (CustomObject::CheckSpawnedIdList(RC_BGS_JIGGY_MAZE)) {
