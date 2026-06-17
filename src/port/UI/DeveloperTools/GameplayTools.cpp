@@ -56,6 +56,12 @@ typedef struct {
 } ActorLocal_MumboToken;
 }
 
+typedef struct {
+    int32_t flagId;
+    const char* flagName;
+    level_e levelId;
+} GameplayToolsMapData;
+
 int32_t playerPosition[3];
 int32_t spawnOffset[3];
 int32_t spawnPosition[3];
@@ -110,7 +116,74 @@ std::map<map_e, std::pair<const char*, int32_t>> commonWarpMap = {
     { MAP_40_CCW_HUB, { "Click Clock Wood Warp Pad", 7 } },
 };
 
-std::map<int32_t, std::pair<const char*, level_e>> mapSpecificFlagList;
+// clang-format off
+std::vector<GameplayToolsMapData> mapSpecificFlagList = {
+    { MM_SPECIFIC_FLAG_0_CHIMPY_STUMP_RAISED,					"MM_SPECIFIC_FLAG_0_CHIMPY_STUMP_RAISED", 					LEVEL_1_MUMBOS_MOUNTAIN },
+    { MM_SPECIFIC_FLAG_1_ORANGE_HAS_BEEN_COLLECTED,				"MM_SPECIFIC_FLAG_1_ORANGE_HAS_BEEN_COLLECTED", 			LEVEL_1_MUMBOS_MOUNTAIN },
+    { MM_SPECIFIC_FLAG_2_ORANGE_HAS_BEEN_RETURNED,				"MM_SPECIFIC_FLAG_2_ORANGE_HAS_BEEN_RETURNED", 				LEVEL_1_MUMBOS_MOUNTAIN },
+    { MM_SPECIFIC_FLAG_3_CHIMPY_HAS_LEFT,						"MM_SPECIFIC_FLAG_3_CHIMPY_HAS_LEFT", 						LEVEL_1_MUMBOS_MOUNTAIN },
+    { MM_SPECIFIC_FLAG_4_SHAKE,									"MM_SPECIFIC_FLAG_4_SHAKE", 								LEVEL_1_MUMBOS_MOUNTAIN },
+    { MM_SPECIFIC_FLAG_CONGA_WARNED_BLOCKS,						"MM_SPECIFIC_FLAG_CONGA_WARNED_BLOCKS", 					LEVEL_1_MUMBOS_MOUNTAIN },
+    { MM_SPECIFIC_FLAG_8_HIT_WITH_ORANGE,						"MM_SPECIFIC_FLAG_8_HIT_WITH_ORANGE", 						LEVEL_1_MUMBOS_MOUNTAIN },
+    { MM_SPECIFIC_FLAG_9_JUJU_HAS_HALF_TURNED,					"MM_SPECIFIC_FLAG_9_JUJU_HAS_HALF_TURNED", 					LEVEL_1_MUMBOS_MOUNTAIN },
+    { MM_SPECIFIC_FLAG_A_UNKNOWN,								"MM_SPECIFIC_FLAG_A_UNKNOWN", 								LEVEL_1_MUMBOS_MOUNTAIN },
+    { TTC_SPECIFIC_FLAG_0_BLUBBER_UNKNOWN,						"TTC_SPECIFIC_FLAG_0_BLUBBER_UNKNOWN", 						LEVEL_2_TREASURE_TROVE_COVE },
+    { TTC_SPECIFIC_FLAG_1_UNKNOWN,								"TTC_SPECIFIC_FLAG_1_UNKNOWN", 								LEVEL_2_TREASURE_TROVE_COVE },
+    { TTC_SPECIFIC_FLAG_2_BLUBBER_JIGGY_SPAWNED_TEXT_SHOWN,		"TTC_SPECIFIC_FLAG_2_BLUBBER_JIGGY_SPAWNED_TEXT_SHOWN", 	LEVEL_2_TREASURE_TROVE_COVE },
+    { TTC_SPECIFIC_FLAG_3_BLUBBER_SHOW_JIGGY_SPAWNED_TEXT_FLAG,	"TTC_SPECIFIC_FLAG_3_BLUBBER_SHOW_JIGGY_SPAWNED_TEXT_FLAG", LEVEL_2_TREASURE_TROVE_COVE },
+    { TTC_SPECIFIC_FLAG_5_CLAM_FIRST_MEET_TEXT_SHOWN,			"TTC_SPECIFIC_FLAG_5_CLAM_FIRST_MEET_TEXT_SHOWN", 			LEVEL_2_TREASURE_TROVE_COVE },
+    { TTC_SPECIFIC_FLAG_7_NIPPER_FIRST_MEET_TEXT_SHOWN,			"TTC_SPECIFIC_FLAG_7_NIPPER_FIRST_MEET_TEXT_SHOWN", 		LEVEL_2_TREASURE_TROVE_COVE },
+    { BGS_SPECIFIC_FLAG_1,					 					"BGS_SPECIFIC_FLAG_1", 										LEVEL_4_BUBBLEGLOOP_SWAMP },
+    { BGS_SPECIFIC_FLAG_WALKWAY_JIGGY_RESET,					"BGS_SPECIFIC_FLAG_WALKWAY_JIGGY_RESET", 					LEVEL_4_BUBBLEGLOOP_SWAMP },
+    { BGS_SPECIFIC_FLAG_WALKWAY_JIGGY_TIMER_RUNNING,			"BGS_SPECIFIC_FLAG_WALKWAY_JIGGY_TIMER_RUNNING", 			LEVEL_4_BUBBLEGLOOP_SWAMP },
+    { BGS_SPECIFIC_FLAG_WALKWAY_JIGGY,					 		"BGS_SPECIFIC_FLAG_WALKWAY_JIGGY", 							LEVEL_4_BUBBLEGLOOP_SWAMP },
+    { BGS_SPECIFIC_FLAG_WALKWAY_JIGGY_SWITCH_PRESSED,			"BGS_SPECIFIC_FLAG_WALKWAY_JIGGY_SWITCH_PRESSED", 			LEVEL_4_BUBBLEGLOOP_SWAMP },
+    { BGS_SPECIFIC_FLAG_7,					 					"BGS_SPECIFIC_FLAG_7", 										LEVEL_4_BUBBLEGLOOP_SWAMP },
+    { BGS_SPECIFIC_FLAG_8,					 					"BGS_SPECIFIC_FLAG_8", 										LEVEL_4_BUBBLEGLOOP_SWAMP },
+    { BGS_SPECIFIC_FLAG_MAZE_JIGGY_SWITCH_PRESSED,				"BGS_SPECIFIC_FLAG_MAZE_JIGGY_SWITCH_PRESSED", 				LEVEL_4_BUBBLEGLOOP_SWAMP },
+    { BGS_SPECIFIC_FLAG_A,					 					"BGS_SPECIFIC_FLAG_A", 										LEVEL_4_BUBBLEGLOOP_SWAMP },
+    { BGS_SPECIFIC_FLAG_MAZE_JIGGY_RESET,					 	"BGS_SPECIFIC_FLAG_MAZE_JIGGY_RESET", 						LEVEL_4_BUBBLEGLOOP_SWAMP },
+    { BGS_SPECIFIC_FLAG_MAZE_JIGGY_TIMER_RUNNING,				"BGS_SPECIFIC_FLAG_MAZE_JIGGY_TIMER_RUNNING", 				LEVEL_4_BUBBLEGLOOP_SWAMP },
+    { BGS_SPECIFIC_FLAG_MAZE_JIGGY,					 			"BGS_SPECIFIC_FLAG_MAZE_JIGGY", 							LEVEL_4_BUBBLEGLOOP_SWAMP },
+    { FP_SPECIFIC_FLAG_0_XMAS_TREE_LIGHTS_ON,				 	"FP_SPECIFIC_FLAG_0_XMAS_TREE_LIGHTS_ON", 					LEVEL_5_FREEZEEZY_PEAK },
+    { FP_SPECIFIC_FLAG_1_UNKNOWN,				 				"FP_SPECIFIC_FLAG_1_UNKNOWN", 								LEVEL_5_FREEZEEZY_PEAK },
+    { FP_SPECIFIC_FLAG_2_XMAS_TREE_SWITCH,				 		"FP_SPECIFIC_FLAG_2_XMAS_TREE_SWITCH", 						LEVEL_5_FREEZEEZY_PEAK },
+    { FP_SPECIFIC_FLAG_3_XMAS_TREE_STAR_COMPLETE,				"FP_SPECIFIC_FLAG_3_XMAS_TREE_STAR_COMPLETE", 				LEVEL_5_FREEZEEZY_PEAK },
+    { FP_SPECIFIC_FLAG_4_UNKNOWN,				 				"FP_SPECIFIC_FLAG_4_UNKNOWN", 								LEVEL_5_FREEZEEZY_PEAK },
+    { FP_SPECIFIC_FLAG_5_WALRUS_RACE_FAILED,				 	"FP_SPECIFIC_FLAG_5_WALRUS_RACE_FAILED", 					LEVEL_5_FREEZEEZY_PEAK },
+    { FP_SPECIFIC_FLAG_6_BANJO_RACE_FAILED,				 		"FP_SPECIFIC_FLAG_6_BANJO_RACE_FAILED", 					LEVEL_5_FREEZEEZY_PEAK },
+    { FP_SPECIFIC_FLAG_7_WOZZA_FIRST_CONTACT,				 	"FP_SPECIFIC_FLAG_7_WOZZA_FIRST_CONTACT", 					LEVEL_5_FREEZEEZY_PEAK },
+    { FP_SPECIFIC_FLAG_8_WOZZA_MET_WALRUS,				 		"FP_SPECIFIC_FLAG_8_WOZZA_MET_WALRUS", 						LEVEL_5_FREEZEEZY_PEAK },
+    { FP_SPECIFIC_FLAG_9_UNKNOWN,				 				"FP_SPECIFIC_FLAG_9_UNKNOWN", 								LEVEL_5_FREEZEEZY_PEAK },
+    { FP_SPECIFIC_FLAG_A_FIRST_TWINKLY_EATEN,				 	"FP_SPECIFIC_FLAG_A_FIRST_TWINKLY_EATEN", 					LEVEL_5_FREEZEEZY_PEAK },
+    { FP_SPECIFIC_FLAG_B_UNKNOWN,				 				"FP_SPECIFIC_FLAG_B_UNKNOWN", 								LEVEL_5_FREEZEEZY_PEAK },
+    { FP_SPECIFIC_FLAG_C_UNKNOWN,				 				"FP_SPECIFIC_FLAG_C_UNKNOWN", 								LEVEL_5_FREEZEEZY_PEAK },
+    { FP_SPECIFIC_FLAG_D_UNKNOWN,				 				"FP_SPECIFIC_FLAG_D_UNKNOWN", 								LEVEL_5_FREEZEEZY_PEAK },
+    { LAIR_SPECIFIC_FLAG_7_UKNOWN, 								"LAIR_SPECIFIC_FLAG_7_UKNOWN", 								LEVEL_6_LAIR },
+    { LAIR_SPECIFIC_FLAG_9_UKNOWN, 								"LAIR_SPECIFIC_FLAG_9_UKNOWN", 								LEVEL_6_LAIR },
+    { MMM_SPECIFIC_FLAG_0_UNKNOWN, 								"MMM_SPECIFIC_FLAG_0_UNKNOWN", 								LEVEL_A_MAD_MONSTER_MANSION },
+    { MMM_SPECIFIC_FLAG_TUMBLAR_BROKEN, 						"MMM_SPECIFIC_FLAG_TUMBLAR_BROKEN", 						LEVEL_A_MAD_MONSTER_MANSION },
+    { MMM_SPECIFIC_FLAG_2_UNKNOWN, 								"MMM_SPECIFIC_FLAG_2_UNKNOWN", 								LEVEL_A_MAD_MONSTER_MANSION },
+    { MMM_SPECIFIC_FLAG_3_UNKNOWN, 								"MMM_SPECIFIC_FLAG_3_UNKNOWN", 								LEVEL_A_MAD_MONSTER_MANSION },
+    { MMM_SPECIFIC_FLAG_4_UNKNOWN, 								"MMM_SPECIFIC_FLAG_4_UNKNOWN", 								LEVEL_A_MAD_MONSTER_MANSION },
+    { MMM_SPECIFIC_FLAG_5_UNKNOWN, 								"MMM_SPECIFIC_FLAG_5_UNKNOWN", 								LEVEL_A_MAD_MONSTER_MANSION },
+    { MMM_SPECIFIC_FLAG_CONGA_WARNED_BLOCKS, 					"MMM_SPECIFIC_FLAG_CONGA_WARNED_BLOCKS", 					LEVEL_A_MAD_MONSTER_MANSION },
+    { MMM_SPECIFIC_FLAG_7_UNKNOWN, 								"MMM_SPECIFIC_FLAG_7_UNKNOWN", 								LEVEL_A_MAD_MONSTER_MANSION },
+    { SM_SPECIFIC_FLAG_1_TALKED_TO_BOTTLES, 					"SM_SPECIFIC_FLAG_1_TALKED_TO_BOTTLES", 					LEVEL_B_SPIRAL_MOUNTAIN },
+    { SM_SPECIFIC_FLAG_2, 										"SM_SPECIFIC_FLAG_2", 										LEVEL_B_SPIRAL_MOUNTAIN },
+    { SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, 				"SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED", 				LEVEL_B_SPIRAL_MOUNTAIN },
+    { SM_SPECIFIC_FLAG_4, 										"SM_SPECIFIC_FLAG_4", 										LEVEL_B_SPIRAL_MOUNTAIN },
+    { SM_SPECIFIC_FLAG_5, 										"SM_SPECIFIC_FLAG_5", 										LEVEL_B_SPIRAL_MOUNTAIN },
+    { SM_SPECIFIC_FLAG_7, 										"SM_SPECIFIC_FLAG_7", 										LEVEL_B_SPIRAL_MOUNTAIN },
+    { SM_SPECIFIC_FLAG_8_ABILITY_HOLD_A_JUMP_HIGHER_UNLOCKED, 	"SM_SPECIFIC_FLAG_8_ABILITY_HOLD_A_JUMP_HIGHER_UNLOCKED", 	LEVEL_B_SPIRAL_MOUNTAIN },
+    { SM_SPECIFIC_FLAG_9_ABILITY_FEATHERY_UNLOCKED, 			"SM_SPECIFIC_FLAG_9_ABILITY_FEATHERY_UNLOCKED", 			LEVEL_B_SPIRAL_MOUNTAIN },
+    { SM_SPECIFIC_FLAG_A_ABILITY_FLIP_UNLOCKED, 				"SM_SPECIFIC_FLAG_A_ABILITY_FLIP_UNLOCKED", 				LEVEL_B_SPIRAL_MOUNTAIN },
+    { SM_SPECIFIC_FLAG_C, 										"SM_SPECIFIC_FLAG_C", 										LEVEL_B_SPIRAL_MOUNTAIN },
+    { SM_SPECIFIC_FLAG_E, 										"SM_SPECIFIC_FLAG_E", 										LEVEL_B_SPIRAL_MOUNTAIN },
+    { SM_SPECIFIC_FLAG_F, 										"SM_SPECIFIC_FLAG_F", 										LEVEL_B_SPIRAL_MOUNTAIN },
+    { SM_SPECIFIC_FLAG_10, 										"SM_SPECIFIC_FLAG_10", 										LEVEL_B_SPIRAL_MOUNTAIN },
+};
+// clang-format on
 
 void GameplayTools_UpdateJinjoCheckboxes(actor_e selectedJinjoId) {
     selectedJinjo = selectedJinjoId;
@@ -373,116 +446,135 @@ void DrawGrantUnlocks() {
 
 void DrawMonitoringTools() {
     level_e currentLevel = map_getLevel(gsworld_getMap());
+    int32_t mapIndex = 0;
 
     ImGui::SeparatorText("Map Specific Flags");
-    if (ImGui::BeginChild("MapFlagChild",
-                          ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionMax().y * 0.45f))) {
-        if (ImGui::BeginTable("MapFlagTable", 3, ImGuiTableFlags_SizingFixedFit)) {
+    if (ImGui::BeginChild("MapFlagChild")) {
+        if (ImGui::BeginTable("MapFlagTable", 2, ImGuiTableFlags_SizingFixedFit)) {
             ImGui::TableNextColumn();
-            for (auto& [flagId, flagData] : mapSpecificFlagList) {
-                ImGui::PushID(flagId);
-                if (flagData.second == currentLevel) {
-                    bool flagState = mapSpecificFlags_get(flagId);
+            for (auto& flagData : mapSpecificFlagList) {
+                if (flagData.levelId == currentLevel) {
+                    ImGui::PushID(mapIndex);
+                    bool flagState = mapSpecificFlags_get(flagData.flagId);
                     if (UIWidgets::Checkbox(
                             "state", &flagState,
                             UIWidgets::CheckboxOptions().LabelPosition(UIWidgets::LabelPositions::None))) {
-                        mapSpecificFlags_set(flagId, !mapSpecificFlags_get(flagId));
+                        mapSpecificFlags_set(flagData.flagId, !mapSpecificFlags_get(flagData.flagId));
                     }
 
                     ImGui::TableNextColumn();
-                    ImGui::Text(flagData.first);
-
+                    ImGui::Text(flagData.flagName);
                     ImGui::TableNextColumn();
-                    ImGui::Text(std::to_string(mapSpecificFlags_get(flagId)).c_str());
-                    ImGui::TableNextColumn();
+                    ImGui::PopID();
                 }
-                ImGui::PopID();
+                
+                mapIndex++;
             }
             ImGui::EndTable();
         }
         ImGui::EndChild();
     }
+}
 
-    if (IS_RANDO) {
-        ImGui::SeparatorText("Rando INF Flags");
-        if (ImGui::BeginChild("RandoFlagChild",
-                              ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionMax().y * 0.45f))) {
-            for (int f = RANDO_INF_UNKNOWN; f < RANDO_INF_MAX; f++) {
-                ImGui::PushID(f);
-                bool flagState = RANDO_SAVE_FLAGS[f].flagState;
-                if (UIWidgets::Checkbox(Rando::StaticData::Flags[(RandoInf)f].name, &flagState)) {
-                        CALL_EVENT(SetRandoInfFlag, (RandoInf)f, !RANDO_SAVE_FLAGS[f].flagState);
+void DrawRandoFlagEditor() {
+    ImGui::SeparatorText("Rando INF Flags");
+    if (ImGui::BeginChild("RandoFlagChild")) {
+        for (int f = RANDO_INF_UNKNOWN; f < RANDO_INF_MAX; f++) {
+            ImGui::PushID(f);
+            bool flagState = RANDO_SAVE_FLAGS[f].flagState;
+            if (UIWidgets::Checkbox(Rando::StaticData::Flags[(RandoInf)f].name, &flagState)) {
+                    CALL_EVENT(SetRandoInfFlag, (RandoInf)f, !RANDO_SAVE_FLAGS[f].flagState);
+            }
+            ImGui::PopID();
+        }
+        ImGui::EndChild();
+    }
+}
+
+void DrawRandoCheckEditor() {
+    if (Rando::Logic::shuffledPool.empty()) {
+        ImGui::Text("No Rando Save Data");
+    } else {
+        if (ImGui::BeginChild("RandoToolsChild", ImVec2(ImGui::GetContentRegionAvail().x, 0))) {
+            if (ImGui::BeginTable("RandoSaveEditorTable", 6)) {
+                ImGui::TableSetupColumn("shuffled", ImGuiTableColumnFlags_WidthFixed, 34.0f);
+                ImGui::TableSetupColumn("obtained", ImGuiTableColumnFlags_WidthFixed, 34.0f);
+                ImGui::TableSetupColumn("skipped", ImGuiTableColumnFlags_WidthFixed, 34.0f);
+                ImGui::TableSetupColumn("checkName", ImGuiTableColumnFlags_WidthStretch, 3.5f);
+                ImGui::TableSetupColumn("itemName", ImGuiTableColumnFlags_WidthStretch, 1.0f);
+                ImGui::TableSetupColumn("collectionId", ImGuiTableColumnFlags_WidthStretch, 0.5f);
+                ImGui::TableNextColumn();
+
+                for (auto& check : RANDO_SAVE_CHECKS) {
+                    ImGui::PushID(check.randoCheckId);
+                    bool isChanged = false;
+                    bool isShuffled = check.isShuffled;
+                    bool obtained = check.obtained;
+                    bool skipped = check.skipped;
+
+                    if (UIWidgets::Checkbox(
+                            "isShuffled", &isShuffled,
+                            UIWidgets::CheckboxOptions().LabelPosition(UIWidgets::LabelPositions::None))) {
+                        RANDO_SAVE_CHECKS[check.randoCheckId].isShuffled = !check.isShuffled;
+                        isChanged = true;
+                    }
+                    ImGui::TableNextColumn();
+                    if (UIWidgets::Checkbox(
+                            "obtained", &obtained,
+                            UIWidgets::CheckboxOptions().LabelPosition(UIWidgets::LabelPositions::None))) {
+                        RANDO_SAVE_CHECKS[check.randoCheckId].obtained = !check.obtained;
+                        isChanged = true;
+                    }
+                    ImGui::TableNextColumn();
+                    if (UIWidgets::Checkbox(
+                            "skipped", &skipped,
+                            UIWidgets::CheckboxOptions().LabelPosition(UIWidgets::LabelPositions::None))) {
+                        RANDO_SAVE_CHECKS[check.randoCheckId].skipped = !check.skipped;
+                        isChanged = true;
+                    }
+
+                    if (isChanged) {
+                        GameplayTools_UpdateCheckTracker(check);
+                    }
+                    ImGui::TableNextColumn();
+
+                    std::string checkName = Rando::StaticData::Checks[check.randoCheckId].name;
+                    ImGui::TextWrapped(checkName.c_str());
+                    ImGui::TableNextColumn();
+
+                    if (check.randoItemId == RI_MOLEHILL) {
+                        TableCellCenteredText(abilityNameList[check.randoCollectionId].c_str());
+                    } else {
+                        TableCellCenteredText(Rando::StaticData::Items[check.randoItemId].name);
+                    }
+                    ImGui::TableNextColumn();
+
+                    if (Rando::StaticData::Checks[check.shuffledCheckId].randoCheckType != RCTYPE_JINJO &&
+                        Rando::StaticData::Checks[check.shuffledCheckId].randoCheckType != RCTYPE_MUSIC_NOTE) {
+                        TableCellCenteredText(std::to_string(check.randoCollectionId).c_str());
+                    }
+                    ImGui::TableNextColumn();
+
+                    ImGui::PopID();
                 }
-                ImGui::PopID();
+                ImGui::EndTable();
             }
             ImGui::EndChild();
         }
     }
 }
 
-void DrawRandoSaveEditor() {
-    if (ImGui::BeginChild("RandoSaveChild", ImVec2(ImGui::GetContentRegionAvail().x, 0))) {
-        if (ImGui::BeginTable("RandoSaveEditorTable", 6)) {
-            ImGui::TableSetupColumn("shuffled", ImGuiTableColumnFlags_WidthFixed, 34.0f);
-            ImGui::TableSetupColumn("obtained", ImGuiTableColumnFlags_WidthFixed, 34.0f);
-            ImGui::TableSetupColumn("skipped", ImGuiTableColumnFlags_WidthFixed, 34.0f);
-            ImGui::TableSetupColumn("checkName", ImGuiTableColumnFlags_WidthStretch, 3.5f);
-            ImGui::TableSetupColumn("itemName", ImGuiTableColumnFlags_WidthStretch, 1.0f);
-            ImGui::TableSetupColumn("collectionId", ImGuiTableColumnFlags_WidthStretch, 0.5f);
-            ImGui::TableNextColumn();
-
-            for (auto& check : RANDO_SAVE_CHECKS) {
-                ImGui::PushID(check.randoCheckId);
-                bool isChanged = false;
-                bool isShuffled = check.isShuffled;
-                bool obtained = check.obtained;
-                bool skipped = check.skipped;
-
-                if (UIWidgets::Checkbox("isShuffled", &isShuffled,
-                                        UIWidgets::CheckboxOptions().LabelPosition(UIWidgets::LabelPositions::None))) {
-                    RANDO_SAVE_CHECKS[check.randoCheckId].isShuffled = !check.isShuffled;
-                    isChanged = true;
-                }
-                ImGui::TableNextColumn();
-                if (UIWidgets::Checkbox("obtained", &obtained,
-                                        UIWidgets::CheckboxOptions().LabelPosition(UIWidgets::LabelPositions::None))) {
-                    RANDO_SAVE_CHECKS[check.randoCheckId].obtained = !check.obtained;
-                    isChanged = true;
-                }
-                ImGui::TableNextColumn();
-                if (UIWidgets::Checkbox("skipped", &skipped,
-                                        UIWidgets::CheckboxOptions().LabelPosition(UIWidgets::LabelPositions::None))) {
-                    RANDO_SAVE_CHECKS[check.randoCheckId].skipped = !check.skipped;
-                    isChanged = true;
-                }
-
-                if (isChanged) {
-                    GameplayTools_UpdateCheckTracker(check);
-                }
-                ImGui::TableNextColumn();
-
-                std::string checkName = Rando::StaticData::Checks[check.randoCheckId].name;
-                ImGui::TextWrapped(checkName.c_str());
-                ImGui::TableNextColumn();
-
-                if (check.randoItemId == RI_MOLEHILL) {
-                    TableCellCenteredText(abilityNameList[check.randoCollectionId].c_str());
-                } else {
-                    TableCellCenteredText(Rando::StaticData::Items[check.randoItemId].name);
-                }
-                ImGui::TableNextColumn();
-
-                if (Rando::StaticData::Checks[check.shuffledCheckId].randoCheckType != RCTYPE_JINJO &&
-                    Rando::StaticData::Checks[check.shuffledCheckId].randoCheckType != RCTYPE_MUSIC_NOTE) {
-                    TableCellCenteredText(std::to_string(check.randoCollectionId).c_str());
-                }
-                ImGui::TableNextColumn();
-
-                ImGui::PopID();
-            }
-            ImGui::EndTable();
+void DrawRandoTabBar() {
+    if (ImGui::BeginTabBar("RandoTabBar")) {
+        if (ImGui::BeginTabItem("Flag Editor")) {
+            DrawRandoFlagEditor();
+            ImGui::EndTabItem();
         }
-        ImGui::EndChild();
+        if (ImGui::BeginTabItem("Check Editor")) {
+            DrawRandoCheckEditor();
+            ImGui::EndTabItem();
+        }
+        ImGui::EndTabBar();
     }
 }
 
@@ -507,11 +599,7 @@ void GameplayTools_DrawTabBar() {
         }
         if (IS_RANDO) {
             if (ImGui::BeginTabItem("Rando Save Editor")) {
-                if (Rando::Logic::shuffledPool.empty()) {
-                    ImGui::Text("No Rando Save Data");
-                } else {
-                    DrawRandoSaveEditor();
-                }
+                DrawRandoTabBar();
                 ImGui::EndTabItem();
             }
         }
