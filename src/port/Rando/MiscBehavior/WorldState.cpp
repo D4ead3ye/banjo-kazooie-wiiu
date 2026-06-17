@@ -1,4 +1,5 @@
 #include "MiscBehavior.h"
+#include "port/Rando/CustomObject/CustomObject.h"
 #include "port/enhancements/events/hooks/Events.h"
 
 #include "spdlog/spdlog.h"
@@ -106,13 +107,6 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                     func_8034E71C((Struct73s*)func_8034C5AC(0x131), 0x190, 12.0f);
                 }
                 break;
-            // case LEVEL_4_BUBBLEGLOOP_SWAMP:
-            //     if (!RANDO_SAVE_CHECKS[RC_BGS_JIGGY_MAZE].obtained) {
-            //         mapSpecificFlags_set(0XA, 0);
-            //         mapSpecificFlags_set(0xC, 0);
-            //         mapSpecificFlags_set(8, 0);
-            //     }
-            //     break;
             case LEVEL_9_RUSTY_BUCKET_BAY:
                 if (ev->actorId == 0x18F) {
                     mapSpecificFlags_set(0, RANDO_SAVE_CHECKS[RC_RBB_EMPTY_HONEYCOMB_BOAT_HOUSE].obtained);
@@ -171,22 +165,10 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             return;
         }
 
-        switch (ev->jiggyId) {
-            case JIGGY_17_CC_CLANKER_RAISED:
-                event->Cancelled = true;
-                ev->result = RANDO_SAVE_FLAGS[RANDO_INF_CLANKER_RAISED].flagState;
-                break;
-            case JIGGY_53_RBB_SNORKEL:
-                event->Cancelled = true;
-                ev->result = RANDO_SAVE_FLAGS[RANDO_INF_ANCHOR_RAISED].flagState;
-                break;
-            default:
-                RandoCheckId randoCheckId = Rando::StaticData::GetCheckByJiggyId(ev->jiggyId);
-                if (randoCheckId != RC_UNKNOWN) {
-                    event->Cancelled = true;
-                    ev->result = RANDO_SAVE_CHECKS[randoCheckId].obtained;
-                }
-                break;
+        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByJiggyId(ev->jiggyId);
+        if (randoCheckId != RC_UNKNOWN) {
+            event->Cancelled = true;
+            ev->result = CustomObject::CheckSpawnedIdList(randoCheckId);
         }
     })
 

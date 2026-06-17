@@ -1,4 +1,6 @@
 #include "CustomObject.h"
+#include <libultraship/bridge/consolevariablebridge.h>
+#include "port/UI/cvar_prefixes.h"
 #include "port/Rando/Logic/Logic.h"
 #include "port/enhancements/events/hooks/Events.h"
 
@@ -104,6 +106,15 @@ bool CustomObject::CheckSpawnedIdList(RandoCheckId randoCheckId) {
         }
     }
     return false;
+}
+
+void CustomObject::RemoveSpawnedIdFromList(RandoCheckId randoCheckId) {
+    for (int i = 0; i < randoSpawnedCheckIds.size(); i++) {
+        if (randoSpawnedCheckIds[i] == randoCheckId) {
+            randoSpawnedCheckIds.erase(randoSpawnedCheckIds.begin() + i);
+            break;
+        }
+    }
 }
 
 Actor* CustomObject::SetCustomActorParametersEX(RandoCheckId randoCheckId, Actor* customActor) {
@@ -246,13 +257,21 @@ void CustomObject::ResolveCustomActorCollisionEX(RandoCheckId randoCheckId) {
     }
 
     int32_t spawnPosition[3];
+    int16_t sparklePos[3];
     f32 playerPosF[3];
     player_getPosition(playerPosF);
+    ml_vec3f_to_vec3h(sparklePos, playerPosF);
     spawnPosition[0] = (int32_t)playerPosF[0];
     spawnPosition[1] = (int32_t)playerPosF[1];
     spawnPosition[2] = (int32_t)playerPosF[2];
 
     switch (shuffledObject.randoItemId) {
+        case RI_JIGGY:
+            if (CVarGetInteger(CVAR_ENHANCEMENT("Cutscenes.SkipJiggyDance"), 0)) {
+                fxSparkle_musicNote(sparklePos);
+                coMusicPlayer_playMusic(COMUSIC_D_JINGLE_JIGGY_COLLECTED, -1);
+            }
+            break;
         case RI_JINJO_BLUE:
         case RI_JINJO_GREEN:
         case RI_JINJO_ORANGE:
@@ -284,7 +303,7 @@ void CustomObject::ResolveCustomActorCollisionEX(RandoCheckId randoCheckId) {
             }
 
             UpdateSaveDataNoteScores();
-            fxSparkle_musicNote((int16_t*)spawnPosition);
+            fxSparkle_musicNote(sparklePos);
             coMusicPlayer_playMusic(COMUSIC_9_NOTE_COLLECTED, 16000);
             break;
         default:
@@ -299,6 +318,7 @@ void CustomObject::CheckObtainedEX(RandoCheckId randoCheckId) {
             shouldRemoveEX = true;
             RANDO_SAVE_CHECKS[pool.randoCheckId].obtained = true;
             BK_LOG_INFO("RandoCheckId %s collected!", Rando::StaticData::Checks[randoCheckId].name);
+            CustomObject::RemoveSpawnedIdFromList(randoCheckId);
             Rando::StaticData::SendCollisionNotification(pool.randoCheckId);
             Rando::StaticData::ModifyRandoInfFlagState(randoCheckId);
             break;
