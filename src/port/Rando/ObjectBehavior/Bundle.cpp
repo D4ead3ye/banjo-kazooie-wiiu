@@ -25,7 +25,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
     })
 
     COND_VB_SHOULD(VB_OVERRIDE_BUNDLE_SPAWN, EVENT_PRIORITY_NORMAL, true, {
-        bundle_e bundleId = va_arg(args, bundle_e);
+        bundle_e bundleId = (bundle_e)va_arg(args, int);
         BundleInfo* bundleInfo = va_arg(args, BundleInfo*);
         s32 bundleCount = va_arg(args, s32);
         f32* position = va_arg(args, f32*);
