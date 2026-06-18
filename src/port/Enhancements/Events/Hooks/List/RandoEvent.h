@@ -34,6 +34,8 @@ DEFINE_EVENT(OnFindActorFromActorId, int32_t actorId; Actor * result;)
 
 DEFINE_EVENT(OnFindActorMarkerFromJiggyId, int32_t jiggyId; ActorMarker * result;)
 
+DEFINE_EVENT(OnFindClosestActorFromActorId, int32_t actorId; Actor * result;)
+
 DEFINE_EVENT(OnSetJiggyList, int32_t levelId;)
 
 DEFINE_EVENT(OnGetLevelSpecificFlag, int32_t flagId; int32_t result;)

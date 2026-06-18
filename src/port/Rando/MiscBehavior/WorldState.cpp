@@ -3,10 +3,12 @@
 #include "port/enhancements/events/hooks/Events.h"
 
 #include "spdlog/spdlog.h"
+#include "enums.h"
 
 extern "C" {
 s32 getGameMode(void);
 void mapSpecificFlags_set(s32 i, s32 val);
+s32 mapSpecificFlags_get(s32 i);
 
 enum map_e gsworld_getMap(void);
 enum level_e map_getLevel(enum map_e map);
@@ -161,6 +163,11 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                         break;
                     }
                 }
+                if (ev->jiggyId == JIGGY_62_MMM_TUMBLAR) {
+                    event->Cancelled = true;
+                    ev->result = RANDO_SAVE_CHECKS[RC_MMM_JIGGY_TUMBLARS_PUZZLE].obtained;
+                    break;
+                }
 
                 event->Cancelled = true;
                 ev->result = saveCheck.obtained;
@@ -183,7 +190,11 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByJiggyId(ev->jiggyId);
         if (randoCheckId != RC_UNKNOWN) {
             event->Cancelled = true;
-            ev->result = CustomObject::CheckSpawnedIdList(randoCheckId);
+            if (randoCheckId == RC_MMM_JIGGY_TUMBLARS_PUZZLE) {
+                ev->result = mapSpecificFlags_get(MMM_SPECIFIC_FLAG_TUMBLAR_BROKEN);
+            } else {
+                ev->result = CustomObject::CheckSpawnedIdList(randoCheckId);     
+            }
         }
     })
 
@@ -202,15 +213,15 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             return;
         }
 
-        for (auto& [randoCheckId, randoStaticCheck] : Rando::StaticData::Checks) {
-            if (randoStaticCheck.randoCheckType != RCTYPE_EMPTY_HONEYCOMB) {
+        for (auto& saveCheck : RANDO_SAVE_CHECKS) {
+            if (Rando::StaticData::Checks[saveCheck.shuffledCheckId].randoCheckType != RCTYPE_EMPTY_HONEYCOMB) {
                 continue;
             }
 
-            if (randoStaticCheck.collectionId == ev->honeycombId) {
+            if (saveCheck.randoCollectionId == ev->honeycombId) {
                 event->Cancelled = true;
-                ev->result = RANDO_SAVE_CHECKS[randoCheckId].obtained;
-                return;
+                ev->result = saveCheck.obtained;
+                break;
             }
         }
     })
