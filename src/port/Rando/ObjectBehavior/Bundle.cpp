@@ -35,7 +35,8 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             return;
         }
 
-        level_e levelId = map_getLevel(gsworld_getMap());
+        map_e mapId = gsworld_getMap();
+        level_e levelId = map_getLevel(mapId);
 
         int32_t spawnPosition[3];
         spawnPosition[0] = (int32_t)position[0];
@@ -44,9 +45,8 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
 
         SPDLOG_INFO("Bundle Spawn: {}", std::to_string(bundleId));
 
-        if (levelId == LEVEL_8_CLICK_CLOCK_WOOD) {
-            LogOutSpawns(ACTOR_50_HONEYCOMB, spawnPosition[0], spawnPosition[1], spawnPosition[2]);
-            if (bundleId == BUNDLE_16__HONEYCOMB) {
+        if (bundleId == BUNDLE_16__HONEYCOMB && (mapId == MAP_43_CCW_SPRING || mapId == MAP_B_CC_CLANKERS_CAVERN)) {
+            if (CheckEnemyOverlapPosition(spawnPosition)) {
                 *should = false;
                 return;
             }
