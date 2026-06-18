@@ -77,6 +77,7 @@ std::vector<ProgressionAbilityData> progressionAbilities = {
 
 bool failSafeTrigger = false;
 int32_t prevProgressionIndex = -1;
+std::vector<RandoCheckId> jinjoCheckIds;
 
 void UpdateSaveDataItemCounts(PlacedItemCounts itemCounts) {
     item_adjustByDiffWithoutHud(ITEM_C_NOTE, itemCounts.noteCount);
@@ -172,6 +173,73 @@ int32_t GetRandomItemIndexS(std::vector<std::tuple<actor_e, int32_t, RandoCheckI
     return availableIndex[randomItem];
 }
 
+int32_t GetCheckPoolJinjoJiggyIndexByLevelId(int16_t levelId) {
+    for (int i = 0; i < Rando::Logic::checkPool.size(); i++) {
+        Rando::StaticData::RandoStaticCheck randoStaticCheck = Rando::StaticData::Checks[Rando::Logic::checkPool[i]];
+
+        if (randoStaticCheck.randoCheckType != RCTYPE_JIGGY) {
+            continue;
+        }
+
+        if ((randoStaticCheck.collectionId == (10 * levelId) - 9) &&
+            (reachableChecks[Rando::Logic::checkPool[i]].canAccess &&
+             !reachableChecks[Rando::Logic::checkPool[i]].isFilled)) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+int32_t GetItemPoolIndexByJinjoCheck(RandoCheckId randoCheckId) {
+    for (int i = 0; i < Rando::Logic::itemPool.size(); i++) {
+        if (std::get<2>(Rando::Logic::itemPool[i]) == randoCheckId) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+int32_t GetCurrentAccessibleChecks() {
+    int32_t currentChecks = 0;
+
+    for (auto& check : reachableChecks) {
+        if (check.canAccess = true && check.isFilled == false) {
+            currentChecks++;
+        }
+    }
+
+    return currentChecks;
+}
+
+void UpdateJinjoChecks(std::vector<RandoCheckId>& jinjoCheckList) {
+    for (int i = 0; i < jinjoCheckList.size(); i++) {
+        for (int s = 0; s < jinjoCheckIds.size(); s++) {
+            if (jinjoCheckList[i] == jinjoCheckIds[s]) {
+                jinjoCheckIds.erase(jinjoCheckIds.begin() + s);
+                break;
+            }
+        }
+    }
+
+    jinjoCheckList.clear();
+}
+
+void PopulateJinjoCheckIds() {
+    jinjoCheckIds.clear();
+
+    for (auto& check : Rando::Logic::checkPool) {
+        Rando::StaticData::RandoStaticCheck randoStaticCheck = Rando::StaticData::Checks[check];
+
+        if (randoStaticCheck.randoCheckType != RCTYPE_JINJO) {
+            continue;
+        }
+
+        jinjoCheckIds.push_back(check);
+    }
+}
+
 void ResetSaveData() {
     for (int s = 0; s < sizeof(SaveData); s++) {
         gameFile_saveData[selectedFileNum].data[s] = 0;
@@ -235,7 +303,7 @@ void SetPlacedItem(int32_t checkIndex, int32_t itemIndex, PlacedItemCounts& plac
             SetUnlockedAbility((ability_e)std::get<1>(pool[itemIndex]));
             break;
         default:
-            break;
+            return;
     }
 
     UpdateSaveDataItemCounts(placedItems);
@@ -309,7 +377,7 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
     int32_t itemPoolIndex = 0;
     int32_t progressionIndex = 0;
 
-    PlacedItemCounts placedItems = { .noteCount = 0, .jiggyCount = 0 };
+    PlacedItemCounts placedItems = { .noteCount = 0, .jiggyCount = 0, .mumboTokenCount = 0 };
     PlacedCheckObject placedCheckItems[RC_MAX] = {};
 
     for (auto& shuffledCheck : checkPool) {
@@ -317,6 +385,10 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
     }
     for (auto& shuffledAbiity : abilityCheckPool) {
         reachableChecks[shuffledAbiity].isShuffled = true;
+    }
+
+    if (CVarGetInteger(Rando::StaticData::Options[RO_SHUFFLE_JINJOS].cvar, 0) == RO_GENERIC_ON) {
+        PopulateJinjoCheckIds();
     }
 
     // This doesn't have to exist, added strictly for better development testing.
@@ -456,17 +528,51 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
         if (reachableEvents[progressionItems[progressionIndex].progId].canAccess) {
             if (CVarGetInteger(Rando::StaticData::Options[RO_SHUFFLE_JIGGIES].cvar, 0) == RO_GENERIC_ON) {
                 while (placedItems.jiggyCount < progressionItems[progressionIndex].itemData[1].itemCount) {
-                    checkIndex = GetRandomCheckIndexS(reachableChecks, RCTYPE_MOLEHILL, true, false, isGameComplete);
-                    itemPoolIndex = GetRandomItemIndexS(itemPool, ACTOR_46_JIGGY);
+                    int32_t jinjoChance = rand() % 100;
+                    if (jinjoChance >= 45 && GetCurrentAccessibleChecks() >= 6 && !jinjoCheckIds.empty() &&
+                        GetRandomItemIndexS(itemPool, ACTOR_46_JIGGY) >= 0) {
+                        int32_t selectedIndex = rand() % jinjoCheckIds.size();
+                        int32_t selectedLevel = Rando::StaticData::Checks[jinjoCheckIds[selectedIndex]].worldId;
 
-                    SetPlacedItem(checkIndex, itemPoolIndex, placedItems, placedCheckItems, itemPool);
+                        std::vector<RandoCheckId> selectedJinjos;
+                        for (auto& jinjoCheck : jinjoCheckIds) {
+                            if (Rando::StaticData::Checks[jinjoCheck].worldId == selectedLevel) {
+                                selectedJinjos.push_back(jinjoCheck);
+                            }
+                        }
 
-                    if (checkIndex < 0 || itemPoolIndex < 0) {
-                        break;
-                    }
+                        for (auto& jinjoPlace : selectedJinjos) {
+                            checkIndex = GetRandomCheckIndexS(reachableChecks, RCTYPE_MOLEHILL, true, false, isGameComplete);
+                            itemPoolIndex = GetItemPoolIndexByJinjoCheck(jinjoPlace);
 
-                    if (checkIndex >= 0 && itemPoolIndex >= 0) {
-                        accessibilityAdded = true;
+                            SetPlacedItem(checkIndex, itemPoolIndex, placedItems, placedCheckItems, itemPool);
+                            itemPool.erase(itemPool.begin() + itemPoolIndex);
+                        }
+
+                        UpdateJinjoChecks(selectedJinjos);
+
+                        checkIndex = GetCheckPoolJinjoJiggyIndexByLevelId(selectedLevel);
+                        itemPoolIndex = GetRandomItemIndexS(itemPool, ACTOR_46_JIGGY);
+
+                        SetPlacedItem(checkIndex, itemPoolIndex, placedItems, placedCheckItems, itemPool);
+
+                        if (checkIndex >= 0 && itemPoolIndex >= 0) {
+                            accessibilityAdded = true;
+                        }
+                    } else {
+                        checkIndex =
+                            GetRandomCheckIndexS(reachableChecks, RCTYPE_MOLEHILL, true, false, isGameComplete);
+                        itemPoolIndex = GetRandomItemIndexS(itemPool, ACTOR_46_JIGGY);
+
+                        SetPlacedItem(checkIndex, itemPoolIndex, placedItems, placedCheckItems, itemPool);
+
+                        if (checkIndex < 0 || itemPoolIndex < 0) {
+                            break;
+                        }
+
+                        if (checkIndex >= 0 && itemPoolIndex >= 0) {
+                            accessibilityAdded = true;
+                        }
                     }
                 }
             } else {
