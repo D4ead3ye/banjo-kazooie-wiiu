@@ -212,6 +212,11 @@ void Rando::ObjectBehavior::Init() {
                 return;
             }
         }
+        if (currentMap == MAP_43_CCW_SPRING) {
+            if (ev->actorId != ACTOR_51_MUSIC_NOTE && (ev->posX == 0, ev->posY == 900, ev->posZ == 2750)) {
+                return;
+            }
+        }
 
         int32_t position[3];
         position[0] = ev->posX;

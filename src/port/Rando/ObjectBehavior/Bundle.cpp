@@ -44,6 +44,14 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
 
         SPDLOG_INFO("Bundle Spawn: {}", std::to_string(bundleId));
 
+        if (levelId == LEVEL_8_CLICK_CLOCK_WOOD) {
+            LogOutSpawns(ACTOR_50_HONEYCOMB, spawnPosition[0], spawnPosition[1], spawnPosition[2]);
+            if (bundleId == BUNDLE_16__HONEYCOMB) {
+                *should = false;
+                return;
+            }
+        }
+
         RandoCheckId randoCheckId = RC_UNKNOWN;
         applyCustomPhysics = false;
 
