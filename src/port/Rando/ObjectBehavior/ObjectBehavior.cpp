@@ -377,7 +377,7 @@ void Rando::ObjectBehavior::Init() {
             case ACTOR_46_JIGGY:
                 if (mapId == MAP_26_MMM_NAPPERS_ROOM) {
                     randoCheckId = RC_MMM_JIGGY_MANSION_TABLE;
-                } else if (mapId == MAP_5A_CCW_SUMMER_ZUBBA_HIVE) {
+                } else if (mapId == MAP_5A_CCW_SUMMER_ZUBBA_HIVE || mapId == MAP_5B_CCW_SPRING_ZUBBA_HIVE) {
                     randoCheckId = RC_CCW_JIGGY_ZUBBAS;
                 }
                 break;
