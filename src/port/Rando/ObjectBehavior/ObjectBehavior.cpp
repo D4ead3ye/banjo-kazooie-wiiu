@@ -194,12 +194,20 @@ void Rando::ObjectBehavior::Init() {
         }
 
         CustomObject::FlushRandoSpawnQueue();
+        map_e currentMap = gsworld_getMap();
+
+        if (currentMap == MAP_12_GV_GOBIS_VALLEY) {
+            if (ev->actorId == ACTOR_118_GRABBA) {
+                event->Cancelled = RANDO_SAVE_CHECKS[RC_GV_JIGGY_GRABBA].obtained;
+                ev->result = NULL;
+            }
+        }
 
         if (!IsActorWhitelisted(ev->actorId)) {
             return;
         }
 
-        if (gsworld_getMap() == MAP_B_CC_CLANKERS_CAVERN) {
+        if (currentMap == MAP_B_CC_CLANKERS_CAVERN) {
             if (ev->actorId != ACTOR_2D_MUMBO_TOKEN && (ev->posX == 9823, ev->posY == 4225, ev->posZ == -19)) {
                 return;
             }
