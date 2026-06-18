@@ -245,6 +245,8 @@ void CheckAndCreateModFolder() {
             std::string filePath = modsPath + "/custom_mod_files_go_here.txt";
             if (std::filesystem::create_directories(modsPath)) {
                 std::ofstream(filePath).close();
+                std::filesystem::create_directories(modsPath + "/~romhacks"); // BK romhacks go here
+                std::filesystem::create_directories(modsPath + "/shared");    // Mods usable by everything go here
             }
         }
     } catch (std::filesystem::filesystem_error const&) {
@@ -288,9 +290,10 @@ void GameEngine::FinishInit() {
     if (!patches_path.empty() && std::filesystem::is_directory(patches_path)) {
         for (const auto& p : std::filesystem::directory_iterator(patches_path)) {
             if (p.is_directory()) {
-                // Language packs live in mods/lang and are loaded separately
-                // below, not as loose mod-directory overlays.
-                if (p.path().filename() == "lang") {
+                // Ignore folders handled by the Mod Menu loader
+                const std::string dirName = p.path().filename().generic_string();
+                if (dirName == "~romhacks" || dirName == "shared" || dirName == "lang" ||
+                    IsScopedModFolderName(dirName)) {
                     continue;
                 }
                 SPDLOG_INFO("Found mod directory: {}", p.path().generic_string());
@@ -381,7 +384,7 @@ void GameEngine::FinishInit() {
 
     loader->RegisterResourceFactory(std::make_shared<Ship::ResourceFactoryBinaryBlobV0>(), RESOURCE_FORMAT_BINARY,
                                     "Blob", static_cast<uint32_t>(Ship::ResourceType::Blob), 0);
-    prevAltAssets = CVarGetInteger("gEnhancements.Mods.AlternateAssets", 1);
+    prevAltAssets = CVarGetInteger(CVAR_SETTING("Mods.AlternateAssets"), 1);
     context->GetResourceManager()->SetAltAssetsEnabled(prevAltAssets);
 
     // Build the dialog-language list from the base region plus any loaded packs.
@@ -1015,8 +1018,8 @@ void GameEngine::StartFrame() const {
     switch (dwScancode) {
         case KbScancode::LUS_KB_TAB: {
             // Toggle HD Assets
-            CVarSetInteger("gEnhancements.Mods.AlternateAssets",
-                           !CVarGetInteger("gEnhancements.Mods.AlternateAssets", 0));
+            CVarSetInteger(CVAR_SETTING("Mods.AlternateAssets"),
+                           !CVarGetInteger(CVAR_SETTING("Mods.AlternateAssets"), 0));
             break;
         }
         case KbScancode::LUS_KB_F4: {
@@ -1264,7 +1267,7 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
         interpreter->mInterpolationIndex++;
     }
 
-    bool curAltAssets = CVarGetInteger("gEnhancements.Mods.AlternateAssets", 0);
+    bool curAltAssets = CVarGetInteger(CVAR_SETTING("Mods.AlternateAssets"), 0);
     if (prevAltAssets != curAltAssets) {
         prevAltAssets = curAltAssets;
         Ship::Context::GetRawInstance()->GetResourceManager()->SetAltAssetsEnabled(curAltAssets);

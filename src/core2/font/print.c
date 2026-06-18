@@ -354,6 +354,8 @@ FontLetter *print_getLettersFromFont(BKSprite *alphaMask, BKSprite *textureSprit
                         memcpy(copy, chunkPtr, copySize);
                         print_applyTextureToBoldFontLetter(copy, (BKSpriteTextureBlock *)(sprite_getFramePtr(textureSprite, 0) + 1));
                         sp2C[i].sprite = copy;
+                        CALL_EVENT(OnBoldFontLetterBuilt, copy, chunkPtr,
+                                   (BKSpriteTextureBlock *)(sprite_getFramePtr(textureSprite, 0) + 1));
                     }
                     chunkDataPtr = (u8*)(chunkPtr + 1);
                     while((uintptr_t)chunkDataPtr % 8)
@@ -415,6 +417,7 @@ void print_clearPrintBufferStrings(void){
 
 void print_setBoldFontTexture(s32 textureId){
     s32 tmp_a2;
+    CALL_EVENT(OnBoldFontReset);
     // [port] func_802546E4 reads bk_malloc HeapHeader, but assets now come from resource manager.
     // code_B3A80_func_8033BDAC is stubbed (returns 0), so always falls through to assetcache_get.
     // tmp_a2 = func_802546E4(D_80380AB8[1]);
@@ -761,6 +764,19 @@ void _printbuffer_draw_letter(char letter, f32* xPtr, f32* yPtr, f32 arg3, Gfx *
         while(sp210 % 8){
             sp210++;
         }
+
+        // [port] Resolve alt bold fonts
+        const char* hdPath = NULL;
+        CALL_EVENT(ResolveSpriteHdPath, sp214, &hdPath);
+        if (hdPath != NULL) {
+            sp210 = (uintptr_t)hdPath;
+        }
+        const char* boldHdPath = NULL;
+        CALL_EVENT(ResolveBoldFontHd, sp214, &boldHdPath);
+        if (boldHdPath != NULL) {
+            sp210 = (uintptr_t)boldHdPath;
+        }
+
         if (sp1F4 == SPRITE_TYPE_RGBA32) {
             gDPLoadTextureTile((*gfx)++, sp210, G_IM_FMT_RGBA, G_IM_SIZ_32b, sp214->w, sp214->h, 0, 0, sp214->x-1, sp214->y - 1, 0, G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
         } else if (sp1F4 == SPRITE_TYPE_IA8) {
