@@ -245,17 +245,6 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        // if (currentMap == MAP_B_CC_CLANKERS_CAVERN) {
-        //     if (ev->actorId != ACTOR_2D_MUMBO_TOKEN && (ev->posX == 9823, ev->posY == 4225, ev->posZ == -19)) {
-        //         return;
-        //     }
-        // }
-        // if (currentMap == MAP_43_CCW_SPRING) {
-        //     if (ev->actorId != ACTOR_51_MUSIC_NOTE && (ev->posX == 0, ev->posY == 900, ev->posZ == 2750)) {
-        //         return;
-        //     }
-        // }
-
         int32_t position[3];
         position[0] = ev->posX;
         position[1] = ev->posY;

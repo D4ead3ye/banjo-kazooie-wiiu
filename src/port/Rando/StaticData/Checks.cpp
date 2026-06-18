@@ -1228,6 +1228,7 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
 std::map<RandoCheckId, std::tuple<int32_t, int32_t, int32_t>> multiSpawnCheckMap = {
     { RC_CC_JIGGY_CLANKER_RAISED,                   { 5700, 4300, 0 } },
     { RC_CC_JIGGY_SNIPPETS,                         { 13814, 3811, 0 } },
+    { RC_CCW_JIGGY_HOUSE,                           { 6037, 4244, -157 } },
     { RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD,    { 0, 3354, 2270 } },
     { RC_GL_JIGGY_WITCH_SWITCH_TREASURE_TROVE_COVE, { 950, 905, -1600 } },
     { RC_MM_JIGGY_CONGA,                            { -3401, -199, 4650 } },
