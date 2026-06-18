@@ -396,7 +396,7 @@ void GameplayTools_ObjectSpawner() {
     }
 }
 
-void DrawWarpList() {
+void DrawGameplayToolsWarpList() {
     ImGui::SeparatorText("Custom Warp Selector");
     if (ImGui::BeginChild("WarpChild")) {
         ImGui::Text("Map Select ");
@@ -586,7 +586,7 @@ void GameplayTools_DrawTabBar() {
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Warp")) {
-            DrawWarpList();
+            DrawGameplayToolsWarpList();
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Grant Unlocks")) {

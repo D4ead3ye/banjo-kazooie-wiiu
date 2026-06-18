@@ -416,6 +416,39 @@ void Rando::ObjectBehavior::Init() {
         
     })
 
+    REGISTER_LISTENER(OnFindClosestActorFromActorId, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnFindClosestActorFromActorId* ev = (OnFindClosestActorFromActorId*)event;
+
+        if (!IS_RANDO) {
+            return;
+        }
+
+        RandoCheckId randoCheckId = RC_UNKNOWN;
+        ev->result = NULL;
+        map_e mapId = gsworld_getMap();
+
+        switch (ev->actorId) {
+            case ACTOR_46_JIGGY:
+                if (mapId == MAP_24_MMM_TUMBLARS_SHED) {
+                    randoCheckId = RC_MMM_JIGGY_TUMBLARS_PUZZLE;
+                }
+                break;
+            default:
+                break;
+        }
+
+        if (randoCheckId == RC_UNKNOWN) {
+            return;
+        }
+
+        ev->result = FindActorByRandoCheckId(randoCheckId);
+
+        if (ev->result != NULL) {
+            event->Cancelled = true;
+        }
+    })
+
+
     REGISTER_LISTENER(OnActorTick, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorTick* ev = (OnActorTick*)event;
 

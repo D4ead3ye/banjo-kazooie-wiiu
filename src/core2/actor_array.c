@@ -663,36 +663,38 @@ Actor *actorArray_findActorFromMarkerId(enum marker_e marker_id) {
  * returns Actor* and distance (last arg)
  */
 Actor *actorArray_findClosestActorFromActorId(f32 position[3], enum actor_e actor_id, s32 exclude_state, f32 *min_distance_ptr) {
-    Actor *begin;
-    Actor *i_actor;
-    f32 i_dist;
-    f32 min_dist;
-    Actor *closest_actor;
+    CALL_CANCELLABLE_RETURN_EVENT(OnFindClosestActorFromActorId, actor_id) {
+        Actor* begin;
+        Actor* i_actor;
+        f32 i_dist;
+        f32 min_dist;
+        Actor* closest_actor;
 
-    if (suBaddieActorArray != NULL) {
-        begin = suBaddieActorArray->data;
-        closest_actor = NULL;
-        min_dist = 1e+10f;
-        for(i_actor = begin; (i_actor - begin) < suBaddieActorArray->cnt; i_actor++){
-            if ( ((actor_id == i_actor->modelCacheIndex) || (actor_id < 0)) 
-                 && (exclude_state != i_actor->state) 
-                 && (i_actor->modelCacheIndex != ACTOR_17_PLAYER_SHADOW) 
-                 && (i_actor->modelCacheIndex != 0x108) 
-                 && !i_actor->despawn_flag
-            ) {
-                i_dist = ml_vec3f_length(position, i_actor->position);
-                if (i_dist < min_dist) {
-                    min_dist = i_dist;
-                    closest_actor = i_actor;
+        if (suBaddieActorArray != NULL) {
+            begin = suBaddieActorArray->data;
+            closest_actor = NULL;
+            min_dist = 1e+10f;
+            for (i_actor = begin; (i_actor - begin) < suBaddieActorArray->cnt; i_actor++) {
+                if (((actor_id == i_actor->modelCacheIndex) || (actor_id < 0))
+                    && (exclude_state != i_actor->state)
+                    && (i_actor->modelCacheIndex != ACTOR_17_PLAYER_SHADOW)
+                    && (i_actor->modelCacheIndex != 0x108)
+                    && !i_actor->despawn_flag
+                    ) {
+                    i_dist = ml_vec3f_length(position, i_actor->position);
+                    if (i_dist < min_dist) {
+                        min_dist = i_dist;
+                        closest_actor = i_actor;
+                    }
                 }
             }
+            if (min_distance_ptr != NULL) {
+                *min_distance_ptr = min_dist;
+            }
+            return closest_actor;
         }
-        if (min_distance_ptr != NULL) {
-            *min_distance_ptr = min_dist;
-        }
-        return closest_actor;
+        return NULL;
     }
-    return NULL;
 }
 
 Actor *actorArray_findActorFromActorId(enum actor_e actor_id) {
