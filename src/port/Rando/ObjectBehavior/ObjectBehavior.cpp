@@ -58,6 +58,16 @@ std::map<int32_t, actor_e> jinjoMarkerMap = {
     { MARKER_5D_JINJO_PINK, 	ACTOR_61_JINJO_PINK },
     { MARKER_5E_JINJO_YELLOW, 	ACTOR_5E_JINJO_YELLOW },
 };
+
+std::vector<RandoCheckId> enemyKillOverlapList = {
+    RC_CC_MUMBO_TOKEN_CHOMPA_BEHIND_CLANKERS_TAIL,
+    RC_CCW_NOTE_SPRING_LOWER_TREE_LEDGE_1,
+    RC_CCW_NOTE_SPRING_LOWER_TREE_LEDGE_2,
+    RC_CCW_NOTE_SPRING_LOWER_TREE_LEDGE_3,
+    RC_CCW_NOTE_SPRING_LOWER_TREE_LEDGE_4,
+    RC_CCW_NOTE_SPRING_LOWER_TREE_LEDGE_5,
+    RC_CCW_NOTE_SPRING_LOWER_TREE_LEDGE_6,
+};
 // clang-format on
 
 bool nextActorSaveState = false;
@@ -175,6 +185,34 @@ bool ShouldOverrideSpawn(RandoCheckId randoCheckId) {
     return false;
 }
 
+bool CheckEnemyOverlapPosition(int32_t pos[3]) {
+    level_e levelId = map_getLevel(gsworld_getMap());
+    bool enemyOverlap = false;
+
+    for (auto& check : enemyKillOverlapList) {
+        if (Rando::StaticData::Checks[check].worldId != levelId) {
+            continue;
+        }
+
+        int32_t checkPosition[3];
+        checkPosition[0] = Rando::StaticData::Checks[check].posX;
+        checkPosition[1] = Rando::StaticData::Checks[check].posY;
+        checkPosition[2] = Rando::StaticData::Checks[check].posZ;
+
+        int32_t posMatches = 0;
+        for (int i = 0; i < 3; i++) {
+            if (pos[i] == checkPosition[i]) {
+                posMatches++;
+            }
+        }
+        if (posMatches == 3) {
+            enemyOverlap = true;
+        }
+    }
+
+    return enemyOverlap;
+}
+
 // Entry point for the module, run once on game boot
 void Rando::ObjectBehavior::Init() {
     InitBundleBehavior();
@@ -207,16 +245,16 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        if (currentMap == MAP_B_CC_CLANKERS_CAVERN) {
-            if (ev->actorId != ACTOR_2D_MUMBO_TOKEN && (ev->posX == 9823, ev->posY == 4225, ev->posZ == -19)) {
-                return;
-            }
-        }
-
         int32_t position[3];
         position[0] = ev->posX;
         position[1] = ev->posY;
         position[2] = ev->posZ;
+
+        if (currentMap == MAP_B_CC_CLANKERS_CAVERN || currentMap == MAP_43_CCW_SPRING) {
+            if (CheckEnemyOverlapPosition(position)) {
+                return;
+            }
+        }
 
         RandoCheckId randoCheckId = Rando::StaticData::GetCheckByPosition(ev->posX, ev->posY, ev->posZ);
         if (randoCheckId == RC_UNKNOWN) {

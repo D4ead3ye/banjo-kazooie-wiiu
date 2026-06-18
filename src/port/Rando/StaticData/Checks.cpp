@@ -3,6 +3,11 @@
 
 #include "prop.h"
 
+extern "C" {
+enum map_e gsworld_getMap(void);
+enum level_e map_getLevel(enum map_e map);
+}
+
 namespace Rando {
 
 namespace StaticData {
@@ -281,11 +286,11 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_CCW_JIGGY_TOP_ROOM,                                                   RCTYPE_JIGGY,           LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_46_JIGGY,             JIGGY_50_CCW_TOP_ROOM,                                                  0, 17, 225),
     RC(RC_CCW_JIGGY_TREE_TOP,                                                   RCTYPE_JIGGY,           LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_46_JIGGY,             JIGGY_4F_CCW_TREE_TOP,                                                  0, 7625, 3100),
     RC(RC_CCW_JIGGY_ZUBBAS,                                                     RCTYPE_JIGGY,           LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_46_JIGGY,             JIGGY_4C_CCW_ZUBBAS,                                                    0, 0, 125),
-    RC(RC_CCW_JINJO_BLUE,                                                       RCTYPE_JINJO,           LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_60_JINJO_BLUE,        NULL,                                                                   -3602, 0, 4266),
-    RC(RC_CCW_JINJO_GREEN,                                                      RCTYPE_JINJO,           LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_62_JINJO_GREEN,       NULL,                                                                   -1592, 900, -6073),
-    RC(RC_CCW_JINJO_ORANGE,                                                     RCTYPE_JINJO,           LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_5F_JINJO_ORANGE,      NULL,                                                                   -6775, 1301, 0),
+    RC(RC_CCW_JINJO_BLUE,                                                       RCTYPE_JINJO,           LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_60_JINJO_BLUE,        NULL,                                                                   -6775, 1301, 0),
+    RC(RC_CCW_JINJO_GREEN,                                                      RCTYPE_JINJO,           LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_62_JINJO_GREEN,       NULL,                                                                   0, 5760, -3330),
+    RC(RC_CCW_JINJO_ORANGE,                                                     RCTYPE_JINJO,           LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_5F_JINJO_ORANGE,      NULL,                                                                   -1592, 900, -6073),
     RC(RC_CCW_JINJO_PINK,                                                       RCTYPE_JINJO,           LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_61_JINJO_PINK,        NULL,                                                                   -225, 1039, -1100),
-    RC(RC_CCW_JINJO_YELLOW,                                                     RCTYPE_JINJO,           LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_5E_JINJO_YELLOW,      NULL,                                                                   0, 5760, -3330),
+    RC(RC_CCW_JINJO_YELLOW,                                                     RCTYPE_JINJO,           LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_5E_JINJO_YELLOW,      NULL,                                                                   -3602, 0, 4266),
     RC(RC_CCW_MUMBO_TOKEN_AUTUMN_FLOATING_ABOVE_BIG_CLUCKER,                    RCTYPE_MUMBO_TOKEN,     LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_2D_MUMBO_TOKEN,       MUMBOTOKEN_6A_CCW_AUTUMN_FLOATING_ABOVE_BIG_CLUCKER,                    153, 1857, 2677),
     RC(RC_CCW_MUMBO_TOKEN_AUTUMN_LEAF_NEAR_TREEHOUSE,                           RCTYPE_MUMBO_TOKEN,     LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_2D_MUMBO_TOKEN,       MUMBOTOKEN_6D_CCW_AUTUMN_LEAF_NEAR_TREEHOUSE,                           3405, 4107, 1003),
     RC(RC_CCW_MUMBO_TOKEN_AUTUMN_SNAREBEAR_NEAR_ENTRANCE,                       RCTYPE_MUMBO_TOKEN,     LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_2D_MUMBO_TOKEN,       MUMBOTOKEN_6B_CCW_AUTUMN_SNAREBEAR_NEAR_ENTRANCE,                       500, 166, 5125),
@@ -333,21 +338,15 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_CCW_NOTE_AUTUMN_INSIDE_NABNUTS_HOUSE_2,                               RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   382, 413, -296),
     RC(RC_CCW_NOTE_AUTUMN_INSIDE_NABNUTS_HOUSE_3,                               RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   471, 413, -235),
     RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_1,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   -968, 900, 2578),
-    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_2,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   0, 900, 2750),
-    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_3,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   969, 900, 2569),
-    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_4,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   1950, 900, 1950),
-    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_5,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   2569, 900, 969),
-    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_6,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   2750, 900, 0),
-    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_7,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   2570, 900, -970),
-    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_8,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   1950, 900, -1950),
-    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_9,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   970, 900, -2569),
-    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_10,                                  RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   -50, 1100, -2750),
-    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_11,                                  RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   -970, 900, -2570),
-    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_12,                                  RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   -1950, 937, -1950),
-    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_13,                                  RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   -2584, 1100, -971),
-    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_14,                                  RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   -2750, 900, 0),
-    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_15,                                  RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   -2577, 900, 972),
-    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_16,                                  RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   -1950, 1350, 1950),
+    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_2,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   969, 900, 2569),
+    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_3,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   2569, 900, 969),
+    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_4,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   2570, 900, -970),
+    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_5,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   1950, 900, -1950),
+    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_6,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   970, 900, -2569),
+    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_7,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   -50, 1100, -2750),
+    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_8,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   -970, 900, -2570),
+    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_9,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   -2584, 1100, -971),
+    RC(RC_CCW_NOTE_AUTUMN_LOWER_TREE_LEDGE_10,                                  RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   -2577, 900, 972),
     RC(RC_CCW_NOTE_AUTUMN_NEAR_BIG_FLOWER_1,                                    RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   950, 10, -6531),
     RC(RC_CCW_NOTE_AUTUMN_NEAR_BIG_FLOWER_2,                                    RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   475, 10, -6599),
     RC(RC_CCW_NOTE_AUTUMN_NEAR_BIG_FLOWER_3,                                    RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   0, 10, -6640),
@@ -375,6 +374,12 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
     RC(RC_CCW_NOTE_SPRING_LEDGE_OVER_LAKE_4,                                    RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   2826, 1275, -2825),
     RC(RC_CCW_NOTE_SPRING_LEDGE_OVER_LAKE_5,                                    RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   3025, 1275, -3025),
     RC(RC_CCW_NOTE_SPRING_LEDGE_OVER_LAKE_6,                                    RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   3225, 1275, -3225),
+    RC(RC_CCW_NOTE_SPRING_LOWER_TREE_LEDGE_1,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   0, 900, 2750),
+    RC(RC_CCW_NOTE_SPRING_LOWER_TREE_LEDGE_2,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   1950, 900, 1950),
+    RC(RC_CCW_NOTE_SPRING_LOWER_TREE_LEDGE_3,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   2750, 900, 0),
+    RC(RC_CCW_NOTE_SPRING_LOWER_TREE_LEDGE_4,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   -1950, 937, -1950),
+    RC(RC_CCW_NOTE_SPRING_LOWER_TREE_LEDGE_5,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   -2750, 900, 0),
+    RC(RC_CCW_NOTE_SPRING_LOWER_TREE_LEDGE_6,                                   RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   -1950, 1350, 1950),
     RC(RC_CCW_NOTE_SPRING_NEAR_BIG_FLOWER_1,                                    RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   500, 59, -4950),
     RC(RC_CCW_NOTE_SPRING_NEAR_BIG_FLOWER_2,                                    RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   -500, 48, -4950),
     RC(RC_CCW_NOTE_SPRING_NEAR_BIG_FLOWER_3,                                    RCTYPE_MUSIC_NOTE,      LEVEL_8_CLICK_CLOCK_WOOD,       ACTOR_51_MUSIC_NOTE,        NULL,                                                                   -500, 52, -5850),
@@ -1223,6 +1228,7 @@ std::map<RandoCheckId, RandoStaticCheck> Checks = {
 std::map<RandoCheckId, std::tuple<int32_t, int32_t, int32_t>> multiSpawnCheckMap = {
     { RC_CC_JIGGY_CLANKER_RAISED,                   { 5700, 4300, 0 } },
     { RC_CC_JIGGY_SNIPPETS,                         { 13814, 3811, 0 } },
+    { RC_CCW_JIGGY_HOUSE,                           { 6037, 4244, -157 } },
     { RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD,    { 0, 3354, 2270 } },
     { RC_GL_JIGGY_WITCH_SWITCH_TREASURE_TROVE_COVE, { 950, 905, -1600 } },
     { RC_MM_JIGGY_CONGA,                            { -3401, -199, 4650 } },
