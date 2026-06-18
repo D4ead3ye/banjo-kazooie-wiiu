@@ -33,6 +33,13 @@ void Rando::StaticData::ModifyRandoInfFlagState(RandoCheckId randoCheckId) {
         case RC_RBB_JIGGY_SNORKEL:
             randoInfFlag = RANDO_INF_ANCHOR_RAISED;
             break;
+        case RC_GV_JIGGY_WATER_PYRAMID:
+        case RC_GV_MUMBO_TOKEN_INSIDE_WATER_PYRAMID:
+            if (RANDO_SAVE_CHECKS[RC_GV_JIGGY_WATER_PYRAMID].obtained &&
+                RANDO_SAVE_CHECKS[RC_GV_MUMBO_TOKEN_INSIDE_WATER_PYRAMID].obtained) {
+                randoInfFlag = RANDO_INF_WATER_PYRAMID_DRAINED;
+            }
+            break;
         default:
             break;
     }
@@ -132,6 +139,8 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             return;
         }
 
+        map_e currentMap = gsworld_getMap();
+
         for (auto& saveCheck : RANDO_SAVE_CHECKS) {
             if (Rando::StaticData::Checks[saveCheck.shuffledCheckId].randoCheckType != RCTYPE_JIGGY) {
                 continue;
@@ -139,10 +148,16 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
 
             if (saveCheck.randoCollectionId == ev->jiggyId) {
                 if (ev->jiggyId == JIGGY_5D_MMM_NAPPER) {
-                    if (gsworld_getMap() == MAP_26_MMM_NAPPERS_ROOM &&
+                    if (currentMap == MAP_26_MMM_NAPPERS_ROOM &&
                         saveCheck.randoCheckId != RC_MMM_JIGGY_MANSION_TABLE) {
                         event->Cancelled = true;
                         ev->result = RANDO_SAVE_CHECKS[RC_MMM_JIGGY_MANSION_TABLE].obtained;
+                        break;
+                    }
+                } else if (ev->jiggyId == JIGGY_42_GV_WATER_PYRAMID) {
+                    if (currentMap == MAP_15_GV_WATER_PYRAMID) {
+                        event->Cancelled = true;
+                        ev->result = RANDO_SAVE_FLAGS[RANDO_INF_WATER_PYRAMID_DRAINED].flagState;
                         break;
                     }
                 }

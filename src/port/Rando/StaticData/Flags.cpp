@@ -17,6 +17,7 @@ std::map<RandoInf, RandoStaticFlag> Flags = {
     RF(RANDO_INF_ANCHOR_RAISED,             RO_GENERIC_OFF),
     RF(RANDO_INF_CLANKER_RAISED,            RO_GENERIC_OFF),
     RF(RANDO_INF_MINIGAME_RINGS_COMPLETED,  RO_GENERIC_OFF),
+    RF(RANDO_INF_WATER_PYRAMID_DRAINED,     RO_GENERIC_OFF),
 };
 // clang-format on
 
