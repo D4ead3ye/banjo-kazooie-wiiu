@@ -250,7 +250,7 @@ void Rando::ObjectBehavior::Init() {
         position[1] = ev->posY;
         position[2] = ev->posZ;
 
-        if (currentMap == MAP_B_CC_CLANKERS_CAVERN || currentMap == MAP_43_CCW_SPRING) {
+        if ((currentMap == MAP_B_CC_CLANKERS_CAVERN && ev->actorId != ACTOR_2D_MUMBO_TOKEN) || currentMap == MAP_43_CCW_SPRING) {
             if (CheckEnemyOverlapPosition(position)) {
                 return;
             }

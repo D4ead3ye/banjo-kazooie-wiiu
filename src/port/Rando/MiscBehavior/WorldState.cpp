@@ -93,8 +93,9 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             return;
         }
 
-        level_e levelId = map_getLevel(gsworld_getMap());
-
+        map_e mapId = gsworld_getMap();
+        level_e levelId = map_getLevel(mapId);
+        
         switch (levelId) {
             case LEVEL_1_MUMBOS_MOUNTAIN:
                 if (RANDO_SAVE_CHECKS[RC_MM_JIGGY_CHIMPY].obtained) {
@@ -111,7 +112,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                                      RANDO_SAVE_CHECKS[RC_MM_JIGGY_CHIMPY].obtained);
                 break;
             case LEVEL_3_CLANKERS_CAVERN:
-                if (gsworld_getMap() == MAP_22_CC_INSIDE_CLANKER &&
+                if (mapId == MAP_22_CC_INSIDE_CLANKER &&
                     RANDO_SAVE_FLAGS[RANDO_INF_MINIGAME_RINGS_COMPLETED].flagState) {
                     func_8034E71C((Struct73s*)func_8034C5AC(0x131), 0x190, 12.0f);
                 }
@@ -149,6 +150,11 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             }
 
             if (saveCheck.randoCollectionId == ev->jiggyId) {
+                // if (ev->jiggyId == JIGGY_17_CC_CLANKER_RAISED) {
+                //     event->Cancelled = true;
+                //     ev->result = RANDO_SAVE_CHECKS[RC_CC_JIGGY_CLANKER_RAISED].obtained;
+                //     break;
+                // }
                 if (ev->jiggyId == JIGGY_5D_MMM_NAPPER) {
                     if (currentMap == MAP_26_MMM_NAPPERS_ROOM &&
                         saveCheck.randoCheckId != RC_MMM_JIGGY_MANSION_TABLE) {
@@ -156,7 +162,8 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                         ev->result = RANDO_SAVE_CHECKS[RC_MMM_JIGGY_MANSION_TABLE].obtained;
                         break;
                     }
-                } else if (ev->jiggyId == JIGGY_42_GV_WATER_PYRAMID) {
+                }
+                if (ev->jiggyId == JIGGY_42_GV_WATER_PYRAMID) {
                     if (currentMap == MAP_15_GV_WATER_PYRAMID) {
                         event->Cancelled = true;
                         ev->result = RANDO_SAVE_FLAGS[RANDO_INF_WATER_PYRAMID_DRAINED].flagState;
@@ -192,6 +199,8 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             event->Cancelled = true;
             if (randoCheckId == RC_MMM_JIGGY_TUMBLARS_PUZZLE) {
                 ev->result = mapSpecificFlags_get(MMM_SPECIFIC_FLAG_TUMBLAR_BROKEN);
+            } else if (randoCheckId == RC_CC_JIGGY_CLANKER_RAISED) {
+                ev->result = RANDO_SAVE_FLAGS[RANDO_INF_CLANKER_RAISED].flagState;
             } else {
                 ev->result = CustomObject::CheckSpawnedIdList(randoCheckId);     
             }
