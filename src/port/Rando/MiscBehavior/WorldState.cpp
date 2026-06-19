@@ -165,14 +165,10 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                         break;
                     }
                 }
-                if (ev->jiggyId == JIGGY_62_MMM_TUMBLAR) {
-                    event->Cancelled = true;
-                    ev->result = RANDO_SAVE_CHECKS[RC_MMM_JIGGY_TUMBLARS_PUZZLE].obtained;
-                    break;
-                }
 
                 event->Cancelled = true;
-                ev->result = saveCheck.obtained;
+                ev->result = RANDO_SAVE_CHECKS[saveCheck.shuffledCheckId].obtained;
+                // SPDLOG_INFO("Jiggy {} result is {}", std::to_string(ev->jiggyId), std::to_string(ev->result));
                 break;
             }
         }
