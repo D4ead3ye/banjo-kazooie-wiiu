@@ -192,6 +192,11 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                             randoCheckId = RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD;
                             break;
                         }
+                        if (spawnPosition[1] ==
+                            Rando::StaticData::Checks[RC_GL_JIGGY_WITCH_SWITCH_CLANKERS_CAVERN].posY) {
+                            randoCheckId = RC_GL_JIGGY_WITCH_SWITCH_CLANKERS_CAVERN;
+                            break;
+                        }
                         break;
                     case BUNDLE_10__JIGGY:
                         applyCustomPhysics = true;
