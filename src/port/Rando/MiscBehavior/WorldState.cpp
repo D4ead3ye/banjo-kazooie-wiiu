@@ -71,11 +71,11 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
         OnGetLevelSpecificFlag* ev = (OnGetLevelSpecificFlag*)event;
         ev->result = 0;
 
-        level_e currentLevel = map_getLevel(gsworld_getMap());
+        map_e currentMap = gsworld_getMap();
 
         switch (ev->flagId) {
             case LEVEL_FLAG_29_FP_XMAS_TREE_COMPLETE:
-                if (currentLevel == LEVEL_5_FREEZEEZY_PEAK) {
+                if (currentMap == MAP_53_FP_CHRISTMAS_TREE) {
                     return;
                 }
                 event->Cancelled = true;
@@ -148,6 +148,31 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                 continue;
             }
 
+            if (currentMap == MAP_27_FP_FREEZEEZY_PEAK) {
+                switch (ev->jiggyId) {
+                    case JIGGY_2A_FP_BOGGY_1:
+                    case JIGGY_30_FP_BOGGY_2:
+                    case JIGGY_2C_FP_BOGGY_3:
+                        event->Cancelled = true;
+                        if (!RANDO_SAVE_CHECKS[RC_FP_JIGGY_SLED_TO_BOGGY].obtained) {
+                            ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_SLED_TO_BOGGY].obtained;
+                            return;
+                        }
+                        if (!RANDO_SAVE_CHECKS[RC_FP_JIGGY_BOGGY_RACE_1].obtained) {
+                            ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_BOGGY_RACE_1].obtained;
+                            return;
+                        }
+                        if (!RANDO_SAVE_CHECKS[RC_FP_JIGGY_BOGGY_RACE_2].obtained) {
+                            ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_BOGGY_RACE_2].obtained;
+                            return;
+                        }
+                        ev->result = false;
+                        return;
+                    default:
+                        break;
+                }
+            }
+
             if (saveCheck.randoCollectionId == ev->jiggyId) {
                 if (ev->jiggyId == JIGGY_5D_MMM_NAPPER) {
                     if (currentMap == MAP_26_MMM_NAPPERS_ROOM &&
@@ -162,12 +187,24 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                         ev->result = RANDO_SAVE_FLAGS[RANDO_INF_WATER_PYRAMID_DRAINED].flagState;
                         break;
                     }
-                }
-                if (ev->jiggyId == JIGGY_62_MMM_TUMBLAR) {
+                } else if (ev->jiggyId == JIGGY_17_CC_CLANKER_RAISED) {
+                    event->Cancelled = true;
+                    ev->result = RANDO_SAVE_CHECKS[RC_CC_JIGGY_CLANKER_RAISED].obtained;
+                    break;
+                } else if (ev->jiggyId == JIGGY_22_CROCTUS) {
+                    event->Cancelled = true;
+                    ev->result = RANDO_SAVE_CHECKS[RC_BGS_JIGGY_CROCTUS].obtained;
+                } else if (ev->jiggyId == JIGGY_2D_FP_SNOWMAN_BUTTONS) {
+                    event->Cancelled = true;
+                    ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_SNOWMANS_BUTTONS].obtained;
+                } else if (ev->jiggyId == JIGGY_31_FP_SIR_SLUSH) {
+                    event->Cancelled = true;
+                    ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_BEAT_ALL_SIR_SLUSH].obtained;
+                } else if (ev->jiggyId == JIGGY_62_MMM_TUMBLAR) {
                     event->Cancelled = true;
                     ev->result = RANDO_SAVE_CHECKS[RC_MMM_JIGGY_TUMBLARS_PUZZLE].obtained;
                     break;
-                }
+                } 
 
                 event->Cancelled = true;
                 ev->result = saveCheck.obtained;
@@ -192,6 +229,27 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             event->Cancelled = true;
             if (randoCheckId == RC_MMM_JIGGY_TUMBLARS_PUZZLE) {
                 ev->result = mapSpecificFlags_get(MMM_SPECIFIC_FLAG_TUMBLAR_BROKEN);
+            } else if (randoCheckId == JIGGY_17_CC_CLANKER_RAISED) {
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_FLAGS[RANDO_INF_CLANKER_RAISED].flagState;
+            } else if (ev->jiggyId == JIGGY_22_CROCTUS) {
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[RC_BGS_JIGGY_CROCTUS].obtained;
+            } else if (ev->jiggyId == JIGGY_2A_FP_BOGGY_1) {
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_SLED_TO_BOGGY].obtained;
+            } else if (ev->jiggyId == JIGGY_2C_FP_BOGGY_3) {
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_BOGGY_RACE_2].obtained;
+            } else if (ev->jiggyId == JIGGY_2D_FP_SNOWMAN_BUTTONS) {
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_SNOWMANS_BUTTONS].obtained;
+            } else if (ev->jiggyId == JIGGY_30_FP_BOGGY_2) {
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_BOGGY_RACE_1].obtained;
+            } else if (ev->jiggyId == JIGGY_31_FP_SIR_SLUSH) {
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_BEAT_ALL_SIR_SLUSH].obtained;
             } else {
                 ev->result = CustomObject::CheckSpawnedIdList(randoCheckId);     
             }
