@@ -165,8 +165,6 @@ void DrawCheckTrackerList() {
         return;
     }
 
-    Rando::Logic::RefreshReachableRegions();
-
     if (CVAR_SHOW_COLLECTED_CHECKS && !CVAR_SHOW_SEPARATE_COLLECTED_CHECKS) {
         DrawCheckTrackerCount();
     }

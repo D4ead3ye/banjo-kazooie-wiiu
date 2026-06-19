@@ -398,6 +398,7 @@ void Rando::ObjectBehavior::Init() {
         }
 
         CustomObject::ClearRandoActorListEX();
+        Rando::Logic::RefreshReachableRegions();
     })
 
     REGISTER_LISTENER(OnFindActorFromActorId, EVENT_PRIORITY_NORMAL, [](IEvent* event) {

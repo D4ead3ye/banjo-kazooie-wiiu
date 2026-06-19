@@ -321,6 +321,7 @@ void CustomObject::CheckObtainedEX(RandoCheckId randoCheckId) {
             CustomObject::RemoveSpawnedIdFromList(randoCheckId);
             Rando::StaticData::SendCollisionNotification(pool.randoCheckId);
             Rando::StaticData::ModifyRandoInfFlagState(randoCheckId);
+            Rando::Logic::RefreshReachableRegions();
             break;
         }
     }
