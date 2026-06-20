@@ -54,7 +54,7 @@ void RegisterReturnToLair_Init() {
                 menuData[1].portrait = ZOOMBOX_SPRITE_4_BANJO_1;
             }
         } else {
-            // Not in a world level — reset to vanilla layout
+            *should = true;
             menuData[0].y = 55;
             menuData[1].y = -100;
             menuData[2].y = 90;
@@ -63,6 +63,24 @@ void RegisterReturnToLair_Init() {
             menuData[2].delay = 0.1f;
             menuData[3].delay = 0.2f;
             menuData[1].portrait = ZOOMBOX_SPRITE_4_BANJO_1;
+        }
+    });
+
+    COND_VB_SHOULD(VB_PAUSE_MENU_PORTRAIT_DEPTH, EVENT_PRIORITY_NORMAL, CVAR, { *should = false; });
+
+    // Shrink the pause-menu zoombox text so the longer string fits at the vanilla box scale.
+    // Only sub-1.0 boxes (the pause menus) are touched; the box scale arrives as the first vararg.
+    COND_VB_SHOULD(VB_ZOOMBOX_TEXT_ADJUST, EVENT_PRIORITY_NORMAL, CVAR, {
+        double boxScale = va_arg(args, double);
+        f32* outScale = va_arg(args, f32*);
+        int* xOfs = va_arg(args, int*);
+        if (boxScale < 1.0) {
+            if (outScale != nullptr) {
+                *outScale = 0.85f;
+            }
+            if (xOfs != nullptr) {
+                *xOfs += 4;
+            }
         }
     });
 }

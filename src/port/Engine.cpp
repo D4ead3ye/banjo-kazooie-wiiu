@@ -46,7 +46,7 @@
 #include "Resource/Importers/MapFactory.h"
 #include "Resource/Importers/ModelFactory.h"
 #include "Resource/Importers/SpriteFactory.h"
-#include "src/port/enhancements/events/hooks/Events.h"
+#include "src/port/Enhancements/Events/Hooks/Events.h"
 #include "UI/LighthouseGui.hpp"
 #include "UI/LighthouseModMenuWindow.h"
 
@@ -330,7 +330,7 @@ void GameEngine::FinishInit() {
     context->InitCrashHandler();
     context->InitEventSystem();
 
-    this->context->InitAudio({ .SampleRate = 22000, .SampleLength = 736, .DesiredBuffered = 2208 });
+    this->context->InitAudio({ .SampleRate = 22000, .SampleLength = 736, .DesiredBuffered = 3800 });
 
     lhFast3dWindow->SetTargetFps(60);
     lhFast3dWindow->SetMaximumFrameLatency(1);
@@ -1275,6 +1275,10 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
     }
 }
 
+bool GameEngine::IsInterpolationEnabled() {
+    return (int)GetInterpolationFPS() > 60 / gVIsPerFrame;
+}
+
 void GameEngine::ProcessGfxCommands(Gfx* commands) {
     auto wnd = std::dynamic_pointer_cast<Fast::Fast3dWindow>(Ship::Context::GetRawInstance()->GetWindow());
 
@@ -1291,7 +1295,10 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
     // Interpolate clears entries but keeps the buckets, saving thousands
     // of node allocations per tick at high refresh rates.
     static std::vector<std::unordered_map<Mtx*, MtxF>> mtx_replacements;
-    int target_fps = (int)AdaptiveFps_Cap((uint32_t)GameEngine::Instance->GetInterpolationFPS());
+    int target_fps = (int)GameEngine::Instance->GetInterpolationFPS();
+    if (CVarGetInteger(CVAR_SETTING("AdaptiveFPS"), 1)) {
+        target_fps = (int)AdaptiveFps_Cap((uint32_t)target_fps);
+    }
 
     // [port] Some music-synced cutscenes cap interpolation at native 30
     int fpsCap = port_getInterpolationFpsCap();

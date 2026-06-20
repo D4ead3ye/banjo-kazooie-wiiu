@@ -15,6 +15,12 @@ int port_getDemoDisplayViCount(int rawViCount);
 int port_getCutsceneExtraVis(void);
 int port_getInterpolationFpsCap(void);
 
+// Localization (Localization.cpp)
+
+int port_pauseMenuNeedsRefresh(void); // language or Return-to-Lair CVar changed while menu open
+void port_pauseMenuRebuild(void);     // free + recreate + replay the main menu open
+void port_setPrintScale(float scale);
+
 // Framebuffer (FramebufferPatches.cpp)
 
 void port_setViBlack(int active);
@@ -53,6 +59,9 @@ float port_getRumbleScale(void);
 
 int port_getDrawDistanceLevel(void);
 int port_shouldDisableLOD(void);
+float port_drawDistanceMul(void);
+void port_applyModelDrawDistanceCull(int* fadeFlag, float* cullMult, float* cullDist);
+int port_spriteSizeCulled(float depth, float size, float baseThreshold, int disableFlag);
 
 // Mirror (MirrorPatches.cpp)
 
