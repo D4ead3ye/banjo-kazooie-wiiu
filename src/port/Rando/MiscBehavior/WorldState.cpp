@@ -19,6 +19,7 @@ void func_8034E71C(Struct73s* arg0, s32 arg1, f32 arg2);
 
 #define EMPTY_HONEYCOMB_OPTION_ENABLED RANDO_SAVE_OPTIONS[RO_SHUFFLE_EMPTY_HONEYCOMBS].optionValue
 #define JIGGY_OPTION_ENABLED RANDO_SAVE_OPTIONS[RO_SHUFFLE_JIGGIES].optionValue
+#define MUMBO_TOKENS_OPTION_ENABLED RANDO_SAVE_OPTIONS[RO_SHUFFLE_MUMBO_TOKENS].optionValue
 
 bool isPauseMenu = false;
 
@@ -219,6 +220,34 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             }
 
             if (saveCheck.randoCollectionId == ev->honeycombId) {
+                event->Cancelled = true;
+                ev->result = saveCheck.obtained;
+                break;
+            }
+        }
+    })
+
+    REGISTER_LISTENER(OnIsMumboTokenScoreCollected, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnIsMumboTokenScoreCollected* ev = (OnIsMumboTokenScoreCollected*)event;
+       
+        if (!IS_RANDO) {
+            return;
+        }
+
+        if (!MUMBO_TOKENS_OPTION_ENABLED) {
+            return;
+        }
+
+        if (getGameMode() == GAME_MODE_4_PAUSED) {
+            return;
+        }
+
+        for (auto& saveCheck : RANDO_SAVE_CHECKS) {
+            if (Rando::StaticData::Checks[saveCheck.shuffledCheckId].randoCheckType != RCTYPE_MUMBO_TOKEN) {
+                continue;
+            }
+
+            if (saveCheck.randoCollectionId == ev->tokenId) {
                 event->Cancelled = true;
                 ev->result = saveCheck.obtained;
                 break;
