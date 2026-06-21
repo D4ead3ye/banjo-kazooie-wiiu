@@ -232,6 +232,7 @@ void Rando::ObjectBehavior::Init() {
         }
 
         CustomObject::FlushRandoSpawnQueue();
+        DespawnCollectedBundles();
         map_e currentMap = gsworld_getMap();
 
         if (currentMap == MAP_12_GV_GOBIS_VALLEY) {
@@ -250,7 +251,7 @@ void Rando::ObjectBehavior::Init() {
         position[1] = ev->posY;
         position[2] = ev->posZ;
 
-        if (currentMap == MAP_B_CC_CLANKERS_CAVERN || currentMap == MAP_43_CCW_SPRING) {
+        if ((currentMap == MAP_B_CC_CLANKERS_CAVERN && ev->actorId != ACTOR_2D_MUMBO_TOKEN) || currentMap == MAP_43_CCW_SPRING) {
             if (CheckEnemyOverlapPosition(position)) {
                 return;
             }
@@ -398,6 +399,7 @@ void Rando::ObjectBehavior::Init() {
         }
 
         CustomObject::ClearRandoActorListEX();
+        CALL_EVENT(ClearBundleDespawnQueue);
         Rando::Logic::RefreshReachableRegions();
     })
 

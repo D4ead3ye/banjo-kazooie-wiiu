@@ -11,11 +11,37 @@
 
 extern "C" {
 extern f32 gBundle_yaw;
+
+bool fileProgressFlag_get(enum file_progress_e index);
+void marker_despawn(ActorMarker* marker);
 }
 
 bool applyCustomPhysics = false;
+std::vector<ActorMarker*> bundleDespawnQueue;
+
+void Rando::ObjectBehavior::DespawnCollectedBundles() {
+    if (bundleDespawnQueue.empty()) {
+        return;
+    }
+
+    for (auto& bundle : bundleDespawnQueue) {
+        marker_despawn(bundle);
+    }
+
+    bundleDespawnQueue.clear();
+}
 
 void Rando::ObjectBehavior::InitBundleBehavior() {
+    REGISTER_LISTENER(ClearBundleDespawnQueue, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        ClearBundleDespawnQueue* ev = (ClearBundleDespawnQueue*)event;
+
+        if (!IS_RANDO) {
+            return;
+        }
+
+        bundleDespawnQueue.clear();
+    })
+
     COND_VB_SHOULD(VB_BUNDLE_SPAWN_SET_ACTOR_DATA, EVENT_PRIORITY_NORMAL, IS_RANDO, {
         Actor* refActor = va_arg(args, Actor*);
 
@@ -192,11 +218,25 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                             randoCheckId = RC_GL_JIGGY_WITCH_SWITCH_CLICK_CLOCK_WOOD;
                             break;
                         }
+                        if (spawnPosition[1] ==
+                            Rando::StaticData::Checks[RC_GL_JIGGY_WITCH_SWITCH_CLANKERS_CAVERN].posY) {
+                            randoCheckId = RC_GL_JIGGY_WITCH_SWITCH_CLANKERS_CAVERN;
+                            break;
+                        }
                         break;
                     case BUNDLE_10__JIGGY:
-                        applyCustomPhysics = true;
-                        randoCheckId =
-                            Rando::StaticData::GetCheckByPosition(spawnPosition[0], spawnPosition[1], spawnPosition[2]);
+                        if (fileProgressFlag_get(FILEPROG_1A_TTC_WITCH_SWITCH_JIGGY_PRESSED) &&
+                            gsworld_getMap() == MAP_6D_GL_TTC_LOBBY) {
+                            randoCheckId = RC_GL_JIGGY_WITCH_SWITCH_TREASURE_TROVE_COVE;
+                            auto spawnTuple = Rando::StaticData::multiSpawnCheckMap.at(randoCheckId);
+                            spawnPosition[0] = std::get<0>(spawnTuple);
+                            spawnPosition[1] = std::get<1>(spawnTuple);
+                            spawnPosition[2] = std::get<2>(spawnTuple);
+                        } else {
+                            applyCustomPhysics = true;
+                            randoCheckId = Rando::StaticData::GetCheckByPosition(spawnPosition[0], spawnPosition[1],
+                                                                                 spawnPosition[2]);
+                        }
                         break;
                     default:
                         break;
@@ -239,17 +279,28 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
             return;
         }
 
-        *actor = CustomObject::ShouldCreateCustomActorEX(randoCheckId, spawnPosition, false);
-        if (*actor == NULL) {
-            *should = true;
-            return;
-        }
-        if (applyCustomPhysics) {
-            ApplyCustomActorPhysics(randoCheckId, *actor, false);
+        RandoSaveCheck randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
+        if (randoSaveCheck.obtained) {
+            actor_e actorId = (actor_e)Rando::StaticData::Items[randoSaveCheck.randoItemId].actorId;
+            *actor = CustomObject::SpawnCustomActorEX(
+                randoCheckId, spawnPosition, &actorInfoMap.at((actor_e)actorId).first, actorInfoMap.at((actor_e)actorId).second);
+            
+            bundleDespawnQueue.push_back((*actor)->marker);
         } else {
-            ApplyBundleActorPhysics(*actor, bundleId, (BundleInfo*)bundleInfo, gBundle_yaw);
-        }
+            *actor = CustomObject::ShouldCreateCustomActorEX(randoCheckId, spawnPosition, false);
 
+            if (*actor == NULL) {
+                *should = true;
+                return;
+            }
+
+            if (applyCustomPhysics) {
+                ApplyCustomActorPhysics(randoCheckId, *actor, false);
+            } else {
+                ApplyBundleActorPhysics(*actor, bundleId, (BundleInfo*)bundleInfo, gBundle_yaw);
+            }
+        }
+        
         *should = true;
     })
 }
