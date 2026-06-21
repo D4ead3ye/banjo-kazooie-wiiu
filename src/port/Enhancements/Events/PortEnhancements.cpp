@@ -51,6 +51,8 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnFurnaceFunDialog);
     REGISTER_EVENT(OnGeoCull);
     REGISTER_EVENT(OnGruntyJinjonatorComplete);
+    REGISTER_EVENT(OnIntroCutsceneCheck);
+    REGISTER_EVENT(OnTooieJiggyCollect);
     REGISTER_EVENT(OnMumboTokenUpdate);
     REGISTER_EVENT(OnMumboTokenIdResolve);
     REGISTER_EVENT(OnNametagDraw);
@@ -70,6 +72,7 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnPropInit);
     REGISTER_EVENT(OnWarpResolveDest);
     REGISTER_EVENT(OnNewGame);
+    REGISTER_EVENT(EggHeadSpawn);
 
     REGISTER_EVENT(OnReset);
 
