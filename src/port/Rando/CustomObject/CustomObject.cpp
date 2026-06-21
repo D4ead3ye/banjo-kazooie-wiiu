@@ -145,10 +145,6 @@ Actor* CustomObject::SetCustomActorParametersEX(RandoCheckId randoCheckId, Actor
 
 Actor* CustomObject::SpawnCustomActorEX(RandoCheckId randoCheckId, int32_t position[3], ActorInfo* actorInfo,
                                         int32_t flags) {
-    if (randoCheckId == RC_TTC_NOTE_BEACH_LOCKUP_3) {
-        SPDLOG_INFO("Beach Lock Up Custom Actor Spawning");
-    }
-
     if (randoCheckId == RC_UNKNOWN) {
         return NULL;
     }

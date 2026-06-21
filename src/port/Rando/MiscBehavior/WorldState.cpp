@@ -122,6 +122,12 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                     mapSpecificFlags_set(0, RANDO_SAVE_CHECKS[RC_RBB_EMPTY_HONEYCOMB_BOAT_HOUSE].obtained);
                 }
                 break;
+            case LEVEL_A_MAD_MONSTER_MANSION:
+                if (ev->actorId == ACTOR_39_NAPPER && RANDO_SAVE_CHECKS[RC_MMM_JIGGY_MANSION_TABLE].obtained) {
+                    event->Cancelled = true;
+                    ev->result = NULL;
+                }
+                break;
             default:
                 break;
         }
@@ -166,9 +172,41 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                     }
                 }
 
+                // TODO: Delete before converge
+                // switch (ev->jiggyId) {
+                //     case JIGGY_5_MM_HUTS:
+                //     case JIGGY_06_MM_RUINS:
+                //     case JIGGY_07_MM_HILL:
+                //     case JIGGY_8_MM_ORANGE_PADS:
+                //     case JIGGY_0C_TTC_LIGHTHOUSE:
+                //     case JIGGY_0E_TTC_ALCOVE_2:
+                //     case JIGGY_0F_TTC_POOL:
+                //     case JIGGY_10_TTC_SANDCASTLE:
+                //     case JIGGY_11_TTC_RED_X:
+                //     case JIGGY_12_TTC_NIPPER:
+                //     case JIGGY_1B_CC_TOOTH:
+                //     case JIGGY_1C_CC_RINGS:
+                //     case JIGGY_20_BGS_ELEVATED_WALKWAY:
+                //     case JIGGY_21_BGS_PINKEGG:
+                //     case JIGGY_23_BGS_HUTS:
+                //     case JIGGY_26_BGS_TANKTUP:
+                //     case JIGGY_27_BGS_TIPTUP:
+                //     case JIGGY_2B_FP_PIPE:
+                //     case JIGGY_2F_FP_XMAS_TREE:
+                //     case JIGGY_31_FP_SIR_SLUSH:
+                //     case JIGGY_33_LAIR_1ST_JIGGY:
+                //     case JIGGY_37_LAIR_BGS_WITCH_SWITCH:
+                //     event->Cancelled = true;
+                //     ev->result = saveCheck.obtained;
+                //     return;
+                //     default:
+                //         break;
+                // }              
+
                 event->Cancelled = true;
-                ev->result = RANDO_SAVE_CHECKS[saveCheck.shuffledCheckId].obtained;
-                // SPDLOG_INFO("Jiggy {} result is {}", std::to_string(ev->jiggyId), std::to_string(ev->result));
+                //ev->result = RANDO_SAVE_CHECKS[saveCheck.shuffledCheckId].obtained;
+                ev->result = saveCheck.obtained;
+                //SPDLOG_INFO("Jiggy {} result is {}", std::to_string(ev->jiggyId), std::to_string(ev->result));
                 break;
             }
         }

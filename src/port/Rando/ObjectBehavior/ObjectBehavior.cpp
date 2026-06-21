@@ -232,6 +232,7 @@ void Rando::ObjectBehavior::Init() {
         }
 
         CustomObject::FlushRandoSpawnQueue();
+        DespawnCollectedBundles();
         map_e currentMap = gsworld_getMap();
 
         if (currentMap == MAP_12_GV_GOBIS_VALLEY) {
@@ -398,6 +399,7 @@ void Rando::ObjectBehavior::Init() {
         }
 
         CustomObject::ClearRandoActorListEX();
+        CALL_EVENT(ClearBundleDespawnQueue);
         Rando::Logic::RefreshReachableRegions();
     })
 
