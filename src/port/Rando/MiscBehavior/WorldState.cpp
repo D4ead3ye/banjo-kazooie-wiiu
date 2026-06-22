@@ -150,22 +150,24 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
         }
 
         map_e currentMap = gsworld_getMap();
+        level_e currenLevel = map_getLevel(currentMap);
 
-        for (auto& [id, data] : Rando::StaticData::Checks) {
-            if (data.randoCheckType != RCTYPE_JIGGY) {
+        for (auto& randoSaveCheck : RANDO_SAVE_CHECKS) {
+            if (randoSaveCheck.randoItemId != RITYPE_JIGGY) {
                 continue;
             }
-        
-            if (data.collectionId == ev->jiggyId) {
+
+            if (randoSaveCheck.randoCollectionId == ev->jiggyId) {
                 if (ev->jiggyId == JIGGY_5D_MMM_NAPPER) {
-                    if (currentMap == MAP_26_MMM_NAPPERS_ROOM && id != RC_MMM_JIGGY_MANSION_TABLE) {
+                    if (currentMap == MAP_26_MMM_NAPPERS_ROOM &&
+                        randoSaveCheck.randoCheckId != RC_MMM_JIGGY_MANSION_TABLE) {
                         event->Cancelled = true;
                         ev->result = RANDO_SAVE_CHECKS[RC_MMM_JIGGY_MANSION_TABLE].obtained;
                         break;
                     }
                 }
                 if (ev->jiggyId == JIGGY_42_GV_WATER_PYRAMID) {
-                    if (currentMap == MAP_15_GV_WATER_PYRAMID) {
+                    if (currenLevel == LEVEL_7_GOBIS_VALLEY) {
                         event->Cancelled = true;
                         ev->result = RANDO_SAVE_FLAGS[RANDO_INF_WATER_PYRAMID_DRAINED].flagState;
                         break;
@@ -173,7 +175,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                 }
 
                 event->Cancelled = true;
-                ev->result = RANDO_SAVE_CHECKS[id].obtained;
+                ev->result = randoSaveCheck.obtained;
                 // SPDLOG_INFO("Jiggy {} result is {}", std::to_string(ev->jiggyId), std::to_string(ev->result));
                 break;
             }
