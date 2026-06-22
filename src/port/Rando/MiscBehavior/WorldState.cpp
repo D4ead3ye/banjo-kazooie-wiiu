@@ -155,7 +155,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             if (data.randoCheckType != RCTYPE_JIGGY) {
                 continue;
             }
-
+        
             if (data.collectionId == ev->jiggyId) {
                 if (ev->jiggyId == JIGGY_5D_MMM_NAPPER) {
                     if (currentMap == MAP_26_MMM_NAPPERS_ROOM && id != RC_MMM_JIGGY_MANSION_TABLE) {
@@ -171,12 +171,12 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                         break;
                     }
                 }
-            }
 
-            event->Cancelled = true;
-            ev->result = RANDO_SAVE_CHECKS[id].obtained;
-            SPDLOG_INFO("Jiggy {} result is {}", std::to_string(ev->jiggyId), std::to_string(ev->result));
-            break;
+                event->Cancelled = true;
+                ev->result = RANDO_SAVE_CHECKS[id].obtained;
+                // SPDLOG_INFO("Jiggy {} result is {}", std::to_string(ev->jiggyId), std::to_string(ev->result));
+                break;
+            }
         }
     })
 
