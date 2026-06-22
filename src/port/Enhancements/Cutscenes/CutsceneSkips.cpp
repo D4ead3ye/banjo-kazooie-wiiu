@@ -42,8 +42,7 @@ void RegisterSkipJiggyDance_Init() {
 }
 
 void RegisterSkipCluckerCutscene_Init() {
-    // Must be EVENT_PRIORITY_HIGH, or Rando::MiscBehavior::InitWorldStateBehavior will overwrite the result here.
-    COND_HOOK(OnGetLevelSpecificFlag, EVENT_PRIORITY_HIGH, CVarGetInteger(CVAR_SKIP_CLUCKER_CUTSCENE, 0),
+    COND_HOOK(OnGetLevelSpecificFlag, EVENT_PRIORITY_NORMAL, CVarGetInteger(CVAR_SKIP_CLUCKER_CUTSCENE, 0),
               [](IEvent* event) {
                   auto* ev = reinterpret_cast<OnGetLevelSpecificFlag*>(event);
                   if (ev->flagId == LEVEL_FLAG_14_TTC_UNKNOWN) {

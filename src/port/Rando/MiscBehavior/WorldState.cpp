@@ -69,7 +69,6 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
 
     REGISTER_LISTENER(OnGetLevelSpecificFlag, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnGetLevelSpecificFlag* ev = (OnGetLevelSpecificFlag*)event;
-        ev->result = 0;
 
         level_e currentLevel = map_getLevel(gsworld_getMap());
 
