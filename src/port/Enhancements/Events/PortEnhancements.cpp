@@ -87,6 +87,7 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(SetRandoInfFlag);
     REGISTER_EVENT(OnIsHoneycombScoreCollected);
     REGISTER_EVENT(ClearBundleDespawnQueue);
+    REGISTER_EVENT(OnIsMumboTokenScoreCollected);
 
     Rando::Init();
 }

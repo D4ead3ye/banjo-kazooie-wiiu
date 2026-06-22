@@ -49,3 +49,5 @@ DEFINE_EVENT(SetRandoInfFlag, int32_t flagId; int32_t flagState;)
 DEFINE_EVENT(OnIsHoneycombScoreCollected, int32_t honeycombId; int32_t result;)
 
 DEFINE_EVENT(ClearBundleDespawnQueue);
+
+DEFINE_EVENT(OnIsMumboTokenScoreCollected, int32_t tokenId; int32_t result;)
