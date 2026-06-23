@@ -16,3 +16,5 @@ typedef enum WarpId {
 } WarpId;
 
 DEFINE_EVENT(OnWarpResolveDest, int32_t warpId; int32_t defaultDest; int32_t bkcfOverride; int32_t * dest;);
+
+DEFINE_EVENT(OnGetLevelSpecificFlag, int32_t flagId; int32_t result;);
