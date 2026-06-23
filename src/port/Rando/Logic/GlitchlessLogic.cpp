@@ -80,9 +80,9 @@ int32_t prevProgressionIndex = -1;
 std::vector<RandoCheckId> jinjoCheckIds;
 
 void UpdateSaveDataItemCounts(PlacedItemCounts itemCounts) {
-    item_adjustByDiffWithoutHud(ITEM_C_NOTE, itemCounts.noteCount);
-    item_adjustByDiffWithoutHud(ITEM_E_JIGGY, itemCounts.jiggyCount);
-    item_adjustByDiffWithoutHud(ITEM_1C_MUMBO_TOKEN, itemCounts.mumboTokenCount);
+    item_adjustByDiffWithoutHud(ITEM_C_NOTE, (itemCounts.noteCount - item_getCount(ITEM_C_NOTE)));
+    item_adjustByDiffWithoutHud(ITEM_E_JIGGY, (itemCounts.jiggyCount - item_getCount(ITEM_E_JIGGY)));
+    item_adjustByDiffWithoutHud(ITEM_1C_MUMBO_TOKEN, (itemCounts.mumboTokenCount - item_getCount(ITEM_1C_MUMBO_TOKEN)));
 
     switch (itemCounts.mumboTokenCount) {
         case 5:
@@ -303,6 +303,7 @@ void SetPlacedItem(int32_t checkIndex, int32_t itemIndex, PlacedItemCounts& plac
             SetUnlockedAbility((ability_e)std::get<1>(pool[itemIndex]));
             break;
         default:
+            pool.erase(pool.begin() + itemIndex);
             return;
     }
 
@@ -546,7 +547,6 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
                             itemPoolIndex = GetItemPoolIndexByJinjoCheck(jinjoPlace);
 
                             SetPlacedItem(checkIndex, itemPoolIndex, placedItems, placedCheckItems, itemPool);
-                            itemPool.erase(itemPool.begin() + itemPoolIndex);
                         }
 
                         UpdateJinjoChecks(selectedJinjos);

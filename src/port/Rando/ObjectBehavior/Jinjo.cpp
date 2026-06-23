@@ -46,7 +46,7 @@ void Rando::ObjectBehavior::InitJinjoBehavior() {
             return;
         }
 
-        *should = false;
+        *should = true;
     })
 
     COND_VB_SHOULD(VB_SET_JINJO_COUNT, EVENT_PRIORITY_NORMAL, OPTION_ENABLED, {
@@ -56,6 +56,6 @@ void Rando::ObjectBehavior::InitJinjoBehavior() {
             return;
         }
 
-        *should = false;
+        *should = true;
     })
 }

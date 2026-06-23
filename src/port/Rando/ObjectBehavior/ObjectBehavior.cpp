@@ -232,6 +232,7 @@ void Rando::ObjectBehavior::Init() {
         }
 
         CustomObject::FlushRandoSpawnQueue();
+        DespawnCollectedBundles();
         map_e currentMap = gsworld_getMap();
 
         if (currentMap == MAP_12_GV_GOBIS_VALLEY) {
@@ -250,7 +251,7 @@ void Rando::ObjectBehavior::Init() {
         position[1] = ev->posY;
         position[2] = ev->posZ;
 
-        if (currentMap == MAP_B_CC_CLANKERS_CAVERN || currentMap == MAP_43_CCW_SPRING) {
+        if ((currentMap == MAP_B_CC_CLANKERS_CAVERN && ev->actorId != ACTOR_2D_MUMBO_TOKEN) || currentMap == MAP_43_CCW_SPRING) {
             if (CheckEnemyOverlapPosition(position)) {
                 return;
             }
@@ -398,6 +399,8 @@ void Rando::ObjectBehavior::Init() {
         }
 
         CustomObject::ClearRandoActorListEX();
+        CALL_EVENT(ClearBundleDespawnQueue);
+        Rando::Logic::RefreshReachableRegions();
     })
 
     REGISTER_LISTENER(OnFindActorFromActorId, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -502,9 +505,30 @@ void Rando::ObjectBehavior::Init() {
         }
 
         switch (ev->actor->actor_info->actorId) {
+            case ACTOR_12E_GOBI_1:
+            case ACTOR_12F_GOBI_ROPE:
+            case ACTOR_130_GOBI_ROCK:
+            case ACTOR_131_GOBI_2:
+            case ACTOR_135_GOBI_3:
+                Rando::ObjectBehavior::ModifyGobiBehavior(ev->actor);
+                break;
+            case ACTOR_160_BOGGY_1:
+            case ACTOR_181_SCARF_SLED:
+            case ACTOR_C8_BOGGY_2:
+            case 0x33D: // Actor Boggy 3
+                Rando::ObjectBehavior::ModifyBoggyBehavior(ev->actor);
+                break;
             case ACTOR_14E_BGS_ELEVATED_WALKWAY_SWITCH:
             case ACTOR_1FB_BGS_MAZE_SWITCH:
                 Rando::ObjectBehavior::ModifySwitchBehavior(ev->actor->actor_info->actorId);
+                break;
+            case ACTOR_33A_BLUE_PRESENT:
+            case ACTOR_33B_GREEN_PRESENT:
+            case ACTOR_33C_RED_PRESENT:
+            case ACTOR_1ED_BLUE_PRESENT_COLLECTIBLE:
+            case ACTOR_1EF_GREEN_PRESENT_COLLECTIBLE:
+            case ACTOR_1F1_RED_PRESENT_COLLECTIBLE:
+                Rando::ObjectBehavior::ModifyPresentBehavior(ev->actor);
                 break;
             default:
                 break;

@@ -23,6 +23,10 @@ void InitMusicNoteBehavior();
 void InitPropBehavior();
 
 void ModifySwitchBehavior(int32_t switchActorId);
+void ModifyGobiBehavior(void* gobiActor);
+void ModifyBoggyBehavior(void* boggyActor);
+void ModifyPresentBehavior(void* presentActor);
+void DespawnCollectedBundles();
 
 } // namespace ObjectBehavior
 

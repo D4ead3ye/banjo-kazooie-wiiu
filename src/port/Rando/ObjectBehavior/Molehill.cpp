@@ -190,8 +190,13 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
         if (!IS_RANDO && !OPTION_ENABLED) {
             return;
         }
+        
+        if (mapSpecificFlags_get(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED)) {
+            mapSpecificFlags_set(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, false);
+        }
 
         if (CheckBridgeState()) {
+            mapSpecificFlags_set(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, true);
             *should = true;
         }
     })
