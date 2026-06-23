@@ -45,17 +45,6 @@ void RegisterSkipMiscCutscenes_Init() {
 void RegisterSkipJiggyDance_Init() {
     COND_VB_SHOULD(VB_PLAY_JIGGY_DANCE, EVENT_PRIORITY_NORMAL, CVarGetInteger(CVAR_SKIP_JIGGY_DANCE, 0),
                    { *should = false; });
-void RegisterTriggerFFParade_Init() {
-    COND_HOOK(GameFrameUpdate, EVENT_PRIORITY_NORMAL, CVarGetInteger(CVAR_TRIGGER_FF_PARADE, 0), [](IEvent* event) {
-        if (getGameMode() != GAME_MODE_3_NORMAL || level_get() <= 0 || !func_8028F070()) {
-            return;
-        }
-        if (volatileFlag_get(VOLATILE_FLAG_1F_IN_CHARACTER_PARADE) ||
-            volatileFlag_get(VOLATILE_FLAG_20_BEGIN_CHARACTER_PARADE)) {
-            return;
-        }
-        gcparade_beginFFParade();
-    });
 }
 
 void RegisterSkipCluckerCutscene_Init() {
@@ -67,6 +56,19 @@ void RegisterSkipCluckerCutscene_Init() {
                       event->Cancelled = true;
                   }
               });
+}
+
+void RegisterTriggerFFParade_Init() {
+    COND_HOOK(GameFrameUpdate, EVENT_PRIORITY_NORMAL, CVarGetInteger(CVAR_TRIGGER_FF_PARADE, 0), [](IEvent* event) {
+        if (getGameMode() != GAME_MODE_3_NORMAL || level_get() <= 0 || !func_8028F070()) {
+            return;
+        }
+        if (volatileFlag_get(VOLATILE_FLAG_1F_IN_CHARACTER_PARADE) ||
+            volatileFlag_get(VOLATILE_FLAG_20_BEGIN_CHARACTER_PARADE)) {
+            return;
+        }
+        gcparade_beginFFParade();
+    });
 }
 
 static RegisterShipInitFunc initBootLogosFunc(RegisterSkipBootLogos_Init, { CVAR_SKIP_BOOT_LOGOS });
