@@ -462,7 +462,6 @@ void Rando::ObjectBehavior::Init() {
         if (ev->result != NULL) {
             event->Cancelled = true;
         }
-        
     })
 
     REGISTER_LISTENER(OnFindClosestActorFromActorId, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
