@@ -88,7 +88,8 @@ void CustomObject::ResetRandoSpawnQueue() {
 }
 
 void CustomObject::ClearRandoActorListEX() {
-    if (gsworld_getMap() == MAP_7_TTC_TREASURE_TROVE_COVE && currentMap == gsworld_getMap()) {
+    if ((gsworld_getMap() == MAP_7_TTC_TREASURE_TROVE_COVE && currentMap == gsworld_getMap()) ||
+        (gsworld_getMap() == MAP_1B_MMM_MAD_MONSTER_MANSION && currentMap == gsworld_getMap())) {
         CustomObject::ResetRandoSpawnQueue();
         randoSpawnedCheckIds.clear();
     }
