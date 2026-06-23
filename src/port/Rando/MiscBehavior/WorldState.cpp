@@ -79,7 +79,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
 
         switch (ev->flagId) {
             case LEVEL_FLAG_29_FP_XMAS_TREE_COMPLETE:
-                if (currentLevel == LEVEL_5_FREEZEEZY_PEAK) {
+                if (currentLevel == MAP_53_FP_CHRISTMAS_TREE) {
                     return;
                 }
                 event->Cancelled = true;
