@@ -76,10 +76,11 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
         }
 
         level_e currentLevel = map_getLevel(gsworld_getMap());
+        map_e currentMap = gsworld_getMap();
 
         switch (ev->flagId) {
             case LEVEL_FLAG_29_FP_XMAS_TREE_COMPLETE:
-                if (currentLevel == MAP_53_FP_CHRISTMAS_TREE) {
+                if (currentMap == MAP_53_FP_CHRISTMAS_TREE) {
                     return;
                 }
                 event->Cancelled = true;
