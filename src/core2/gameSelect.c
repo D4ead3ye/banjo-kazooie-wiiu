@@ -43,18 +43,18 @@ f32 D_80365DD0[3][3] = {
 };
 u8 *D_80365DF4[] = {
     "USE THE CONTROL STICK TO SELECT A GAME.",
-    "S" "\x62" "LECTIONNEZ UN FICHIER _ L'AIDE DU STICK.",
-    "W[HLE MIT DEM 3D-STICK",
+    NULL,
+    NULL,
 };
 u8 *D_80365DF8[] = {
     "PRESS A TO PLAY THE GAME OR Z TO ERASE IT!",
-    "APPUYEZ SUR A POUR JOUER OU SUR Z POUR EFFACER!",
-    "EIN SPIEL AUS. DR]CKE A, UM ZU SPIELEN, ODER DEN Z-TRIGGER, UM DEN SPIELSTAND ZU L\\SCHEN!",
+    NULL,
+    NULL,
 };
 u8 *D_80365DFC[] = {
     "ARE YOU SURE? PRESS A TO CONFIRM, OR B TO CANCEL.",
-    "dTES-VOUS SiR? APPUYEZ SUR A POUR CONFIRMER OU SUR B POUR ANNULER.",
-    "SICHER? DR]CKE A, UM ZU BEST[TIGEN, ODER B, UM ZU WIDERRUFEN.",
+    NULL,
+    NULL,
 };
 s32 D_80365E00 = -1;
 f32 D_80365E04[3][3] = {
@@ -442,13 +442,18 @@ void gameSelect_update(Actor *this){
                         gameFile_load(gSelectedGameNum);
                         port_syncBottlesBonusIndex();
                         if(!gameFile_isNotEmpty(sp84)){
-                            // [port] BB romhacks can override the new-game boot map
-                            s32 newGameMap = port_getRomhackNewGameMap();
-                            if (newGameMap < 0) {
-                                newGameMap = MAP_85_CS_SPIRAL_MOUNTAIN_3;
-                            }
-                            timedFunc_set_3(0.0f, (GenFunction_3)transitionToMap, newGameMap, 0, 1);
-                            {
+                            s32 skipIntro = 0;
+                            CALL_EVENT(OnNewGame, &skipIntro);
+                            if (skipIntro) {
+                                timedFunc_set_2(0.0f, (GenFunction_2)warp_lairEnterLairFromSMLevel, 0, 0);
+                                timedFunc_set_1(0.0f, (GenFunction_1)gsworld_setEnableUpdate, 1);
+                            } else {
+                                // [port] BB romhacks can override the new-game boot map
+                                s32 newGameMap = port_getRomhackNewGameMap();
+                                if (newGameMap < 0) {
+                                    newGameMap = MAP_85_CS_SPIRAL_MOUNTAIN_3;
+                                }
+                                timedFunc_set_3(0.0f, (GenFunction_3)transitionToMap, newGameMap, 0, 1);
                                 if (port_getRomhackKnowAllMoves() >= 0) {
                                     ability_setAllLearned(-1);
                                     ability_setAllUsed(-1);

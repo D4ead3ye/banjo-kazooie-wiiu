@@ -46,7 +46,7 @@
 #include "Resource/Importers/MapFactory.h"
 #include "Resource/Importers/ModelFactory.h"
 #include "Resource/Importers/SpriteFactory.h"
-#include "src/port/enhancements/events/hooks/Events.h"
+#include "src/port/Enhancements/Events/Hooks/Events.h"
 #include "UI/LighthouseGui.hpp"
 #include "UI/LighthouseModMenuWindow.h"
 
@@ -245,6 +245,8 @@ void CheckAndCreateModFolder() {
             std::string filePath = modsPath + "/custom_mod_files_go_here.txt";
             if (std::filesystem::create_directories(modsPath)) {
                 std::ofstream(filePath).close();
+                std::filesystem::create_directories(modsPath + "/~romhacks"); // BK romhacks go here
+                std::filesystem::create_directories(modsPath + "/shared");    // Mods usable by everything go here
             }
         }
     } catch (std::filesystem::filesystem_error const&) {
@@ -288,9 +290,10 @@ void GameEngine::FinishInit() {
     if (!patches_path.empty() && std::filesystem::is_directory(patches_path)) {
         for (const auto& p : std::filesystem::directory_iterator(patches_path)) {
             if (p.is_directory()) {
-                // Language packs live in mods/lang and are loaded separately
-                // below, not as loose mod-directory overlays.
-                if (p.path().filename() == "lang") {
+                // Ignore folders handled by the Mod Menu loader
+                const std::string dirName = p.path().filename().generic_string();
+                if (dirName == "~romhacks" || dirName == "shared" || dirName == "lang" ||
+                    IsScopedModFolderName(dirName)) {
                     continue;
                 }
                 SPDLOG_INFO("Found mod directory: {}", p.path().generic_string());
@@ -327,7 +330,7 @@ void GameEngine::FinishInit() {
     context->InitCrashHandler();
     context->InitEventSystem();
 
-    this->context->InitAudio({ .SampleRate = 22000, .SampleLength = 736, .DesiredBuffered = 2208 });
+    this->context->InitAudio({ .SampleRate = 22000, .SampleLength = 736, .DesiredBuffered = 3800 });
 
     lhFast3dWindow->SetTargetFps(60);
     lhFast3dWindow->SetMaximumFrameLatency(1);
@@ -381,7 +384,7 @@ void GameEngine::FinishInit() {
 
     loader->RegisterResourceFactory(std::make_shared<Ship::ResourceFactoryBinaryBlobV0>(), RESOURCE_FORMAT_BINARY,
                                     "Blob", static_cast<uint32_t>(Ship::ResourceType::Blob), 0);
-    prevAltAssets = CVarGetInteger("gEnhancements.Mods.AlternateAssets", 1);
+    prevAltAssets = CVarGetInteger(CVAR_SETTING("Mods.AlternateAssets"), 1);
     context->GetResourceManager()->SetAltAssetsEnabled(prevAltAssets);
 
     // Build the dialog-language list from the base region plus any loaded packs.
@@ -1015,8 +1018,8 @@ void GameEngine::StartFrame() const {
     switch (dwScancode) {
         case KbScancode::LUS_KB_TAB: {
             // Toggle HD Assets
-            CVarSetInteger("gEnhancements.Mods.AlternateAssets",
-                           !CVarGetInteger("gEnhancements.Mods.AlternateAssets", 0));
+            CVarSetInteger(CVAR_SETTING("Mods.AlternateAssets"),
+                           !CVarGetInteger(CVAR_SETTING("Mods.AlternateAssets"), 0));
             break;
         }
         case KbScancode::LUS_KB_F4: {
@@ -1264,12 +1267,16 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
         interpreter->mInterpolationIndex++;
     }
 
-    bool curAltAssets = CVarGetInteger("gEnhancements.Mods.AlternateAssets", 0);
+    bool curAltAssets = CVarGetInteger(CVAR_SETTING("Mods.AlternateAssets"), 0);
     if (prevAltAssets != curAltAssets) {
         prevAltAssets = curAltAssets;
         Ship::Context::GetRawInstance()->GetResourceManager()->SetAltAssetsEnabled(curAltAssets);
         gfx_texture_cache_clear();
     }
+}
+
+bool GameEngine::IsInterpolationEnabled() {
+    return (int)GetInterpolationFPS() > 60 / gVIsPerFrame;
 }
 
 void GameEngine::ProcessGfxCommands(Gfx* commands) {
@@ -1288,7 +1295,10 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
     // Interpolate clears entries but keeps the buckets, saving thousands
     // of node allocations per tick at high refresh rates.
     static std::vector<std::unordered_map<Mtx*, MtxF>> mtx_replacements;
-    int target_fps = (int)AdaptiveFps_Cap((uint32_t)GameEngine::Instance->GetInterpolationFPS());
+    int target_fps = (int)GameEngine::Instance->GetInterpolationFPS();
+    if (CVarGetInteger(CVAR_SETTING("AdaptiveFPS"), 1)) {
+        target_fps = (int)AdaptiveFps_Cap((uint32_t)target_fps);
+    }
 
     // [port] Some music-synced cutscenes cap interpolation at native 30
     int fpsCap = port_getInterpolationFpsCap();
@@ -1482,32 +1492,35 @@ extern "C" float OTRGetHUDAspectRatio() {
     return ((float)CVarGetInteger("gHUDAspectRatio.X", 1) / (float)CVarGetInteger("gHUDAspectRatio.Y", 1));
 }
 
+static float OTRWidescreenHalfHeight() {
+    auto interpreter = GameEngine_GetInterpreter();
+    return interpreter->mNativeDimensions.width * 3.0f / 4.0f / 2.0f;
+}
+
 extern "C" float OTRGetDimensionFromLeftEdge(float v) {
     auto interpreter = GameEngine_GetInterpreter();
     return (interpreter->mNativeDimensions.width / 2 -
-            interpreter->mNativeDimensions.height / 2 * interpreter->mCurDimensions.aspect_ratio + (v));
+            OTRWidescreenHalfHeight() * interpreter->mCurDimensions.aspect_ratio + (v));
 }
 
 extern "C" float OTRGetDimensionFromRightEdge(float v) {
     auto interpreter = GameEngine_GetInterpreter();
     return (interpreter->mNativeDimensions.width / 2 +
-            interpreter->mNativeDimensions.height / 2 * interpreter->mCurDimensions.aspect_ratio -
+            OTRWidescreenHalfHeight() * interpreter->mCurDimensions.aspect_ratio -
             (interpreter->mNativeDimensions.width - v));
 }
 
 extern "C" float OTRGetDimensionFromLeftEdgeForcedAspect(float v, float aspectRatio) {
     auto interpreter = GameEngine_GetInterpreter();
     return (interpreter->mNativeDimensions.width / 2 -
-            interpreter->mNativeDimensions.height / 2 *
-                (aspectRatio > 0 ? aspectRatio : interpreter->mCurDimensions.aspect_ratio) +
+            OTRWidescreenHalfHeight() * (aspectRatio > 0 ? aspectRatio : interpreter->mCurDimensions.aspect_ratio) +
             (v));
 }
 
 extern "C" float OTRGetDimensionFromRightEdgeForcedAspect(float v, float aspectRatio) {
     auto interpreter = GameEngine_GetInterpreter();
     return (interpreter->mNativeDimensions.width / 2 +
-            interpreter->mNativeDimensions.height / 2 *
-                (aspectRatio > 0 ? aspectRatio : interpreter->mCurDimensions.aspect_ratio) -
+            OTRWidescreenHalfHeight() * (aspectRatio > 0 ? aspectRatio : interpreter->mCurDimensions.aspect_ratio) -
             (interpreter->mNativeDimensions.width - v));
 }
 

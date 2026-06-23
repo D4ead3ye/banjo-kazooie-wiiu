@@ -7,6 +7,7 @@
 #include "LighthouseModMenuWindow.h"
 //#include <soh/GameVersions.h>
 #include "port/ResourceHelpers.h"
+#include "port/Controller/ControlSchemes.h"
 #include "port/Localization/Language.h"
 #include "UIWidgets.hpp"
 #include <spdlog/fmt/fmt.h>
@@ -55,11 +56,19 @@ static const std::unordered_map<int32_t, const char*> notificationPosition = {
     { 0, "Top Left" }, { 1, "Top Right" }, { 2, "Bottom Left" }, { 3, "Bottom Right" }, { 4, "Hidden" },
 };
 
+static const std::unordered_map<int32_t, const char*> controlSchemeLabels = {
+    { CONTROL_SCHEME_RETRO, "Retro" },
+    { CONTROL_SCHEME_MODERN, "Modern" },
+    { CONTROL_SCHEME_POCKET, "Pocket" },
+};
+
 static const std::unordered_map<int32_t, const char*> bootSequenceLabels = {
     { BOOTSEQUENCE_DEFAULT, "Default" },
     { BOOTSEQUENCE_AUTHENTIC, "Authentic" },
     { BOOTSEQUENCE_FILESELECT, "File Select" },
 };
+
+static int32_t sAppliedControlScheme = -1;
 
 void LighthouseMenu::AddMenuSettings() {
     // Add Settings Menu
@@ -351,6 +360,14 @@ void LighthouseMenu::AddMenuSettings() {
         .CVar(CVAR_SETTING("MatchRefreshRate"))
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip("Matches interpolation value to the refresh rate of your display."));
+    AddWidget(path, "Adaptive FPS", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_SETTING("AdaptiveFPS"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions()
+                     .Tooltip("Automatically lowers interpolation FPS in demanding scenes so the game logic never "
+                              "stalls, then restores it when the scene clears. Disable to always target your "
+                              "requested FPS, which may stutter on heavy scenes or weaker hardware.")
+                     .DefaultValue(true));
     AddWidget(path, "Renderer API (Needs reload)", WIDGET_VIDEO_BACKEND).RaceDisable(false);
     AddWidget(path, "Enable Vsync", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_VSYNC_ENABLED)
@@ -402,6 +419,50 @@ void LighthouseMenu::AddMenuSettings() {
                 nullptr);
         })
         .Options(ButtonOptions().Size(Sizes::Inline));
+    AddWidget(path, "Control Scheme", WIDGET_CVAR_COMBOBOX)
+        .CVar(CVAR_SETTING("Controls.Scheme"))
+        .RaceDisable(false)
+        .PreFunc([](WidgetInfo& info) {
+            if (sAppliedControlScheme < 0) {
+                sAppliedControlScheme = CVarGetInteger(CVAR_SETTING("Controls.Scheme"), CONTROL_SCHEME_RETRO);
+            }
+        })
+        .Callback([](WidgetInfo& info) {
+            int32_t selected = CVarGetInteger(CVAR_SETTING("Controls.Scheme"), CONTROL_SCHEME_RETRO);
+            if (selected == sAppliedControlScheme) {
+                return;
+            }
+            LighthouseGui::mModalWindow->RegisterPopup(
+                "Apply Control Scheme", "This overwrites your gamepad bindings with the selected preset.\nContinue?",
+                "Apply", "Cancel",
+                [selected]() {
+                    ControlSchemes_Apply(selected);
+                    sAppliedControlScheme = selected;
+                },
+                []() { CVarSetInteger(CVAR_SETTING("Controls.Scheme"), sAppliedControlScheme); });
+        })
+        .Options(ComboboxOptions()
+                     .Tooltip("Applies a preset gamepad layout (asks to confirm first).\n"
+                              "Retro: Traditional N64 controls.\n"
+                              "Modern: Xbox Live Arcade controls.\n"
+                              "Pocket: D-Pad friendly controls.\n\n"
+                              "Applying a scheme overwrites the gamepad bindings; you can still customize "
+                              "them afterwards in the bindings window.")
+                     .ComboMap(controlSchemeLabels)
+                     .DefaultIndex(CONTROL_SCHEME_RETRO));
+    AddWidget(path, "Toggle Talon Trot", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_SETTING("Controls.TalonTrotToggle"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip(
+            "Talon Trot stays active without holding crouch. Enter the trot as usual, then release "
+            "crouch and it sticks; tap crouch again to stop.\nWhen off, Talon Trot lasts only while "
+            "you hold crouch."));
+    AddWidget(path, "Pocket: Hold to Tip-toe", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_SETTING("Controls.PocketTipToeHold"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Pocket scheme only. The R2 button slows movement to a tip-toe walk.\n"
+                                           "Off: tap R2 to toggle tip-toe on/off.\nOn: tip-toe only "
+                                           "while R2 is held."));
     AddWidget(path, "Controller Bindings", WIDGET_SEPARATOR_TEXT);
     AddWidget(path, "Popout Bindings Window", WIDGET_WINDOW_BUTTON)
         .CVar(CVAR_WINDOW("ControllerConfiguration"))
@@ -479,25 +540,19 @@ void LighthouseMenu::AddMenuSettings() {
         })
         .Options(ButtonOptions().Tooltip("Displays a test notification."));
 
+    // Romhack Menu
+    path.sidebarName = "Romhack Menu";
+    AddSidebarEntry("Settings", path.sidebarName, 1);
+
+    AddWidget(path, "Popout Romhack Menu Window", WIDGET_WINDOW_BUTTON)
+        .CVar(CVAR_WINDOW("RomhackMenu"))
+        .WindowName("Romhack Menu")
+        .HideInSearch(true)
+        .Options(WindowButtonOptions().Tooltip("Enables the separate Romhack Menu Window."));
+
     // Mod Menu
     path.sidebarName = "Mod Menu";
     AddSidebarEntry("Settings", path.sidebarName, 1);
-
-    AddWidget(path, "Generate Mod from ROM", WIDGET_BUTTON)
-        .RaceDisable(false)
-        .Callback([](WidgetInfo& info) {
-            LighthouseGui::mModalWindow->RegisterPopup(
-                "Generate Mod from ROM",
-                "Select a romhack ROM to extract as a mod overlay. Torch will\n"
-                "generate a slim mod o2r in your mods folder alongside the\n"
-                "existing bk.o2r. Lighthouse closes when extraction finishes so\n"
-                "the mod loads on the next launch.",
-                "Select ROM", "Cancel", []() { RequestInlineModExtraction(); }, nullptr);
-        })
-        .Options(ButtonOptions()
-                     .Size(Sizes::Inline)
-                     .Tooltip("Pick a romhack ROM and extract it as a slim mod overlay into the mods folder. "
-                              "Lighthouse closes afterward so the mod loads on the next launch."));
 
     AddWidget(path, "Popout Mod Menu Window", WIDGET_WINDOW_BUTTON)
         .CVar(CVAR_WINDOW("ModMenu"))

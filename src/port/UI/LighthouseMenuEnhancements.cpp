@@ -259,17 +259,34 @@ void LighthouseMenu::AddMenuEnhancements() {
     AddSidebarEntry("Enhancements", path.sidebarName, 3);
     path.column = SECTION_COLUMN_1;
 
+    AddWidget(path, "Difficulty", WIDGET_CVAR_COMBOBOX)
+        .CVar(CVAR_ENHANCEMENT("Gameplay.Difficulty"))
+        .RaceDisable(false)
+        .Options(ComboboxOptions()
+                     .Tooltip("Scales the damage taken from enemies and hazards.")
+                     .ComboMap({
+                         { 1, "Normal" },
+                         { 2, "Hard" },
+                         { 3, "Brutal" },
+                         { 4, "One-Hit" },
+                     })
+                     .DefaultIndex(1));
+
+    AddWidget(path, "Skip Spiral Mountain Tutorial", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Gameplay.SkipSMTutorial"))
+        .RaceDisable(false)
+        .PreFunc([](WidgetInfo& info) {
+            if (mLighthouseMenu->disabledMap.at(DISABLE_FOR_ROMHACK).active) {
+                info.activeDisables.push_back(DISABLE_FOR_ROMHACK);
+            }
+        })
+        .Options(CheckboxOptions().Tooltip(
+            "Start in the Lair with all basic moves and the six empty honeycombs collected."));
+
     AddWidget(path, "Stop N' Swop at 100%", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Gameplay.StopNSwop100"))
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip("Unlocks all Stop N' Swop items when loading a 100% save file."));
-
-    AddWidget(path, "Honeyback Health Regen", WIDGET_CVAR_CHECKBOX)
-        .CVar(CVAR_ENHANCEMENT("Gameplay.Honeyback"))
-        .RaceDisable(false)
-        .Options(CheckboxOptions().Tooltip(
-            "Backports Banjo-Tooie's Honeyback: once all 24 empty honeycombs are collected, your health "
-            "slowly refills one honeycomb at a time after a short pause when you stop taking damage."));
 
     AddWidget(path, "Extra Time For GV Water Pyramid", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Gameplay.WaterPyramidTimer"))
@@ -291,8 +308,26 @@ void LighthouseMenu::AddMenuEnhancements() {
         })
         .Options(CheckboxOptions().Tooltip("Reduces Boggy's max speed during both sled races in Freezeezy Peak."));
 
+    // Enhancements -> Tooie Backports
+    path = { "Enhancements", "Tooie Backports", SECTION_COLUMN_1 };
+    AddSidebarEntry("Enhancements", path.sidebarName, 3);
+    path.column = SECTION_COLUMN_1;
+
+    AddWidget(path, "Tooie Jiggy Animation", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Backports.JiggyAnimation"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip(
+            "Replaces the jiggy collection dance with a Banjo-Tooie style animation."));
+
+    AddWidget(path, "Honeyback Health Regen", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Backports.Honeyback"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip(
+            "Backports Banjo-Tooie's Honeyback: once all 24 empty honeycombs are collected, your health "
+            "slowly refills one honeycomb at a time after a short pause when you stop taking damage."));
+
     AddWidget(path, "Fast Swimming", WIDGET_CVAR_CHECKBOX)
-        .CVar(CVAR_ENHANCEMENT("Gameplay.FastSwim"))
+        .CVar(CVAR_ENHANCEMENT("Backports.FastSwim"))
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip(
             "Hold A+B while underwater to combine Banjo's kick with Kazooie's wing stroke for faster swimming."));
@@ -313,6 +348,12 @@ void LighthouseMenu::AddMenuEnhancements() {
             "you enter a level, so you no longer need all five in one go. Collection is always tracked; "
             "this toggle controls whether collected jinjos are skipped on load and your progress is "
             "restored."));
+
+    AddWidget(path, "First-Person Egg Aim", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Backports.EggAim"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip(
+            "Backports Banjo-Tooie's Egg Aim to fire eggs while in first-person camera view."));
 
     // Enhancements -> Saving
     path = { "Enhancements", "Saving", SECTION_COLUMN_1 };

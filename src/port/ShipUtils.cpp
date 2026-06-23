@@ -18,8 +18,6 @@
 #include <crtdbg.h>
 #endif
 
-#include <ship/controller/controldevice/controller/mapping/sdl/SDLAxisDirectionToButtonMapping.h>
-
 #include <fstream>
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -62,10 +60,17 @@ extern uint32_t Ship_Hash(std::string str) {
 
 extern "C" {
 
+#include "enums.h" // game_mode_e
+
 // Furnace Fun active flag
 s32 volatileFlag_get(s32);
+s32 getGameMode(void);
 
 int gPortResetPending = 0;
+
+bool IsDemoMode(void) {
+    return (getGameMode() != GAME_MODE_3_NORMAL);
+}
 
 uint64_t GetUnixTimestamp() {
     auto time = std::chrono::system_clock::now();
@@ -302,32 +307,6 @@ float port_getRumbleScale(void) {
         return (low + high) * 0.5f;
     }
     return 1.0f;
-}
-
-bool port_CButtonIsAxis(void) {
-    auto ctx = Ship::Context::GetRawInstance();
-    if (!ctx) {
-        return false;
-    }
-
-    auto controller = ctx->GetControlDeck()->GetControllerByPort(0);
-    if (!controller) {
-        return false;
-    }
-
-    const CONTROLLERBUTTONS_T cButtons[] = { BTN_CLEFT, BTN_CRIGHT, BTN_CUP, BTN_CDOWN };
-    for (auto bitmask : cButtons) {
-        auto button = controller->GetButton(bitmask);
-        if (!button) {
-            continue;
-        }
-        for (auto& [id, mapping] : button->GetAllButtonMappings()) {
-            if (dynamic_cast<Ship::SDLAxisDirectionToButtonMapping*>(mapping.get())) {
-                return true;
-            }
-        }
-    }
-    return false;
 }
 
 } // extern "C"

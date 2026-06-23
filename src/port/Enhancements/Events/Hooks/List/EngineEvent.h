@@ -21,6 +21,7 @@ DEFINE_EVENT(OnDialogLoaded, s32 textId; char* text;);
 
 DEFINE_EVENT(OnModelLoad, s32 modelId; void* modelInfo; s32 * reload;);
 DEFINE_EVENT(ViewportFrustumUpdate, float* frustumX; float* frustumY;);
+DEFINE_EVENT(DrawDistanceCubeWidth, int32_t mapWidth; int32_t * width;);
 
 DEFINE_EVENT(OnActorTick, Actor* actor;);
 DEFINE_EVENT(OnPropTick, ActorMarker* marker; float* position;);
@@ -28,6 +29,11 @@ DEFINE_EVENT(OnSpritePropTick, int32_t assetId; float* position;);
 DEFINE_EVENT(OnNametagDraw, Actor* actor; const char* label; float yOffset;);
 DEFINE_EVENT(LocalizeUiString, const char** str;);
 DEFINE_EVENT(OnParadeNameDraw, const char* name; int32_t yPosition;);
+DEFINE_EVENT(OnJinjoHeadDraw, s32 jinjoId;);
+DEFINE_EVENT(OnBoldFontLetterBuilt, void* output; void* maskChunk; void* sphereChunk;);
+DEFINE_EVENT(ResolveBoldFontHd, void* output; const char** path;);
+DEFINE_EVENT(OnBoldFontReset);
+DEFINE_EVENT(ResolveSpriteHdPath, const void* chunkAddr; const char** path;);
 DEFINE_EVENT(OnFileSelectInfoBuild, int32_t gamenum; char* upper; char* lower;);
 DEFINE_EVENT(LocalizeFileSelectPrompt, int32_t promptId; void* zoombox;);
 DEFINE_EVENT(OnFileSelectLanguageRefresh, int32_t gamenum; int32_t isSelected;);

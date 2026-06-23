@@ -23,29 +23,39 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnDialogLoaded);
     REGISTER_EVENT(OnModelLoad);
     REGISTER_EVENT(ViewportFrustumUpdate);
+    REGISTER_EVENT(DrawDistanceCubeWidth);
     REGISTER_EVENT(OnActorTick);
     REGISTER_EVENT(OnPropTick);
     REGISTER_EVENT(OnSpritePropTick);
     REGISTER_EVENT(LocalizeUiString);
-    REGISTER_EVENT(OnParadeNameDraw);
     REGISTER_EVENT(OnFileSelectInfoBuild);
+
+    // Register localization events
     REGISTER_EVENT(LocalizeFileSelectPrompt);
     REGISTER_EVENT(OnFileSelectLanguageRefresh);
     REGISTER_EVENT(LocalizeParade);
     REGISTER_EVENT(ParadeCreditDialogId);
     REGISTER_EVENT(ResolveBoldFontSlot);
+
+    // Register draw events
+    REGISTER_EVENT(OnParadeNameDraw);
+    REGISTER_EVENT(OnJinjoHeadDraw);
+    REGISTER_EVENT(ResolveSpriteHdPath);
+    REGISTER_EVENT(OnBoldFontLetterBuilt);
+    REGISTER_EVENT(ResolveBoldFontHd);
+    REGISTER_EVENT(OnBoldFontReset);
     REGISTER_EVENT(OnWorldDraw);
     REGISTER_EVENT(OnPlayerDraw);
 
     // Register behavior events
     REGISTER_EVENT(OnBeakSwimVelocitySet);
     REGISTER_EVENT(OnBoggyRaceSetSpeed);
-    REGISTER_EVENT(OnBootLogosCheck);
     REGISTER_EVENT(OnFurnaceFunDialog);
     REGISTER_EVENT(OnGeoCull);
     REGISTER_EVENT(OnGruntyJinjonatorComplete);
     REGISTER_EVENT(OnIntroCutsceneCheck);
     REGISTER_EVENT(OnMiscCutscenesCheck);
+    REGISTER_EVENT(OnTooieJiggyCollect);
     REGISTER_EVENT(OnMumboTokenUpdate);
     REGISTER_EVENT(OnMumboTokenIdResolve);
     REGISTER_EVENT(OnNametagDraw);
@@ -65,6 +75,8 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnSaveClear);
     REGISTER_EVENT(OnPropInit);
     REGISTER_EVENT(OnWarpResolveDest);
+    REGISTER_EVENT(OnNewGame);
+    REGISTER_EVENT(EggHeadSpawn);
     REGISTER_EVENT(OnActorDestroy);
 
     REGISTER_EVENT(OnReset);
