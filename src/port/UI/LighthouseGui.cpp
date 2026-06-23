@@ -191,7 +191,6 @@ void SetupGuiElements() {
     gui->AddGuiWindow(mEggAimCrosshair);
     mEggAimCrosshair->Show();
 
-
     mRandoCheckTrackerSettingsWindow = std::make_shared<Rando::CheckTracker::SettingsWindow>(
         "gWindows.CheckTrackerSettings", "Check Tracker Settings");
     gui->AddGuiWindow(mRandoCheckTrackerSettingsWindow);

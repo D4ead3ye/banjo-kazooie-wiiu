@@ -83,16 +83,16 @@ int clamp255(int cur, int delta) {
 // Orbit state
 void* sMarker = nullptr;
 int sPhase;
-f32 sOffset[3];          // orbit offset from Banjo (rotated each frame)
-f32 sAngle;              // self-rotation accumulator
-f32 sV94;                // phase-specific accumulator
-f32 sV98;                // vertical climb
-f32 sV9c;                // spin/wobble accumulator
-f32 sVa8;                // phase-3 growth term
-f32 sV128;               // pop-up term (rise = (1-v128)*40)
-int sAlpha;              // 0..255
-int sFrame;              // frame counter (chime + trail cadence)
-f32 sElapsed;            // safety lifetime timer
+f32 sOffset[3]; // orbit offset from Banjo (rotated each frame)
+f32 sAngle;     // self-rotation accumulator
+f32 sV94;       // phase-specific accumulator
+f32 sV98;       // vertical climb
+f32 sV9c;       // spin/wobble accumulator
+f32 sVa8;       // phase-3 growth term
+f32 sV128;      // pop-up term (rise = (1-v128)*40)
+int sAlpha;     // 0..255
+int sFrame;     // frame counter (chime + trail cadence)
+f32 sElapsed;   // safety lifetime timer
 
 void clearOrbit() {
     if (sMarker != nullptr) {

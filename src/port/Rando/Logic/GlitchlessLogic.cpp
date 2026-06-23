@@ -543,7 +543,8 @@ void GenerateGlitchlessLogicPool(std::vector<RandoCheckId>& checkPool,
                         }
 
                         for (auto& jinjoPlace : selectedJinjos) {
-                            checkIndex = GetRandomCheckIndexS(reachableChecks, RCTYPE_MOLEHILL, true, false, isGameComplete);
+                            checkIndex =
+                                GetRandomCheckIndexS(reachableChecks, RCTYPE_MOLEHILL, true, false, isGameComplete);
                             itemPoolIndex = GetItemPoolIndexByJinjoCheck(jinjoPlace);
 
                             SetPlacedItem(checkIndex, itemPoolIndex, placedItems, placedCheckItems, itemPool);

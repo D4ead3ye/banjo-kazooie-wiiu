@@ -282,9 +282,10 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
         RandoSaveCheck randoSaveCheck = RANDO_SAVE_CHECKS[randoCheckId];
         if (randoSaveCheck.obtained) {
             actor_e actorId = (actor_e)Rando::StaticData::Items[randoSaveCheck.randoItemId].actorId;
-            *actor = CustomObject::SpawnCustomActorEX(
-                randoCheckId, spawnPosition, &actorInfoMap.at((actor_e)actorId).first, actorInfoMap.at((actor_e)actorId).second);
-            
+            *actor =
+                CustomObject::SpawnCustomActorEX(randoCheckId, spawnPosition, &actorInfoMap.at((actor_e)actorId).first,
+                                                 actorInfoMap.at((actor_e)actorId).second);
+
             bundleDespawnQueue.push_back((*actor)->marker);
         } else {
             *actor = CustomObject::ShouldCreateCustomActorEX(randoCheckId, spawnPosition, false);
@@ -300,7 +301,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                 ApplyBundleActorPhysics(*actor, bundleId, (BundleInfo*)bundleInfo, gBundle_yaw);
             }
         }
-        
+
         *should = true;
     })
 }

@@ -251,7 +251,8 @@ void Rando::ObjectBehavior::Init() {
         position[1] = ev->posY;
         position[2] = ev->posZ;
 
-        if ((currentMap == MAP_B_CC_CLANKERS_CAVERN && ev->actorId != ACTOR_2D_MUMBO_TOKEN) || currentMap == MAP_43_CCW_SPRING) {
+        if ((currentMap == MAP_B_CC_CLANKERS_CAVERN && ev->actorId != ACTOR_2D_MUMBO_TOKEN) ||
+            currentMap == MAP_43_CCW_SPRING) {
             if (CheckEnemyOverlapPosition(position)) {
                 return;
             }
@@ -495,7 +496,6 @@ void Rando::ObjectBehavior::Init() {
             event->Cancelled = true;
         }
     })
-
 
     REGISTER_LISTENER(OnActorTick, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnActorTick* ev = (OnActorTick*)event;

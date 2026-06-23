@@ -316,8 +316,7 @@ void LighthouseMenu::AddMenuEnhancements() {
     AddWidget(path, "Tooie Jiggy Animation", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Backports.JiggyAnimation"))
         .RaceDisable(false)
-        .Options(CheckboxOptions().Tooltip(
-            "Replaces the jiggy collection dance with a Banjo-Tooie style animation."));
+        .Options(CheckboxOptions().Tooltip("Replaces the jiggy collection dance with a Banjo-Tooie style animation."));
 
     AddWidget(path, "Honeyback Health Regen", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Backports.Honeyback"))

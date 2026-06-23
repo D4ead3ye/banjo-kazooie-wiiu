@@ -100,7 +100,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
 
         map_e mapId = gsworld_getMap();
         level_e levelId = map_getLevel(mapId);
-        
+
         switch (levelId) {
             case LEVEL_1_MUMBOS_MOUNTAIN:
                 if (RANDO_SAVE_CHECKS[RC_MM_JIGGY_CHIMPY].obtained) {
@@ -212,7 +212,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             } else if (randoCheckId == RC_CC_JIGGY_CLANKER_RAISED) {
                 ev->result = RANDO_SAVE_FLAGS[RANDO_INF_CLANKER_RAISED].flagState;
             } else {
-                ev->result = CustomObject::CheckSpawnedIdList(randoCheckId);     
+                ev->result = CustomObject::CheckSpawnedIdList(randoCheckId);
             }
         }
     })
@@ -253,7 +253,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
 
     REGISTER_LISTENER(OnIsMumboTokenScoreCollected, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnIsMumboTokenScoreCollected* ev = (OnIsMumboTokenScoreCollected*)event;
-       
+
         if (!IS_RANDO) {
             return;
         }
