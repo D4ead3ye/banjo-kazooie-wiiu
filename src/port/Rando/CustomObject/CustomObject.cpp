@@ -314,7 +314,6 @@ void CustomObject::CheckObtainedEX(RandoCheckId randoCheckId) {
             pool.obtained = true;
             shouldRemoveEX = true;
             RANDO_SAVE_CHECKS[pool.randoCheckId].obtained = true;
-            BK_LOG_INFO("RandoCheckId %s collected!", Rando::StaticData::Checks[randoCheckId].name);
             CustomObject::RemoveSpawnedIdFromList(randoCheckId);
             Rando::StaticData::SendCollisionNotification(pool.randoCheckId);
             Rando::StaticData::ModifyRandoInfFlagState(randoCheckId);
