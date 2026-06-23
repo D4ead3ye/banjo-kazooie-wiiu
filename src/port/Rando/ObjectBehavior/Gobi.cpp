@@ -11,7 +11,6 @@ void chGobi3_setState(Actor* thisx, s32 next_state);
 
 #define OPTION_ENABLED RANDO_SAVE_OPTIONS[RO_SHUFFLE_JIGGIES].optionValue
 
-// clang-format off
 void Rando::ObjectBehavior::ModifyGobiBehavior(void* gobiActor) {
 	if (!IS_RANDO && !OPTION_ENABLED) {
 		return;
@@ -59,4 +58,3 @@ void Rando::ObjectBehavior::ModifyGobiBehavior(void* gobiActor) {
             break;
     }
 }
-// clang-format on

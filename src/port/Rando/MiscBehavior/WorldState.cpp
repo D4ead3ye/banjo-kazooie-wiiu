@@ -70,7 +70,10 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
 
     REGISTER_LISTENER(OnGetLevelSpecificFlag, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnGetLevelSpecificFlag* ev = (OnGetLevelSpecificFlag*)event;
-        ev->result = 0;
+
+        if (!IS_RANDO) {
+            return;
+        }
 
         level_e currentLevel = map_getLevel(gsworld_getMap());
 
@@ -170,6 +173,13 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                     if (currenLevel == LEVEL_7_GOBIS_VALLEY) {
                         event->Cancelled = true;
                         ev->result = RANDO_SAVE_FLAGS[RANDO_INF_WATER_PYRAMID_DRAINED].flagState;
+                        break;
+                    }
+                }
+                if (ev->jiggyId == JIGGY_2E_FP_PRESENTS) {
+                    if (currenLevel == LEVEL_5_FREEZEEZY_PEAK) {
+                        event->Cancelled = true;
+                        ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_IGLOO].obtained;
                         break;
                     }
                 }

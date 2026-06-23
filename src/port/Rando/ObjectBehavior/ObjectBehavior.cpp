@@ -513,9 +513,23 @@ void Rando::ObjectBehavior::Init() {
             case ACTOR_135_GOBI_3:
                 Rando::ObjectBehavior::ModifyGobiBehavior(ev->actor);
                 break;
+            case ACTOR_160_BOGGY_1:
+            case ACTOR_181_SCARF_SLED:
+            case ACTOR_C8_BOGGY_2:
+            case 0x33D: // Actor Boggy 3
+                Rando::ObjectBehavior::ModifyBoggyBehavior(ev->actor);
+                break;
             case ACTOR_14E_BGS_ELEVATED_WALKWAY_SWITCH:
             case ACTOR_1FB_BGS_MAZE_SWITCH:
                 Rando::ObjectBehavior::ModifySwitchBehavior(ev->actor->actor_info->actorId);
+                break;
+            case ACTOR_33A_BLUE_PRESENT:
+            case ACTOR_33B_GREEN_PRESENT:
+            case ACTOR_33C_RED_PRESENT:
+            case ACTOR_1ED_BLUE_PRESENT_COLLECTIBLE:
+            case ACTOR_1EF_GREEN_PRESENT_COLLECTIBLE:
+            case ACTOR_1F1_RED_PRESENT_COLLECTIBLE:
+                Rando::ObjectBehavior::ModifyPresentBehavior(ev->actor);
                 break;
             default:
                 break;
