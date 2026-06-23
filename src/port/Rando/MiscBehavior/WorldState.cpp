@@ -238,7 +238,13 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
 
             if (saveCheck.randoCollectionId == ev->honeycombId) {
                 event->Cancelled = true;
-                ev->result = saveCheck.obtained;
+
+                if (ev->honeycombId == HONEYCOMB_17_SM_COLLIWOBBLE) {
+                    ev->result = false;
+                } else {
+                    ev->result = saveCheck.obtained;
+                }
+
                 break;
             }
         }
