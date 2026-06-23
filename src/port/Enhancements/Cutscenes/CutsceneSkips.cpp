@@ -12,6 +12,7 @@
 #define CVAR_SKIP_INTRO CVAR_ENHANCEMENT("Cutscenes.StartSkipIntro")
 #define CVAR_SKIP_MISC_CUTSCENES CVAR_ENHANCEMENT("Cutscenes.SkipMiscCutscenes")
 #define CVAR_SKIP_JIGGY_DANCE CVAR_ENHANCEMENT("Cutscenes.SkipJiggyDance")
+#define CVAR_SKIP_CLUCKER_CUTSCENE CVAR_ENHANCEMENT("Cutscenes.SkipCluckerCutscene")
 
 void RegisterSkipBootLogos_Init() {
     COND_HOOK(OnBootLogosCheck, EVENT_PRIORITY_NORMAL, CVarGetInteger(CVAR_SKIP_BOOT_LOGOS, 0), [](IEvent* event) {
@@ -40,7 +41,20 @@ void RegisterSkipJiggyDance_Init() {
                    { *should = false; });
 }
 
+void RegisterSkipCluckerCutscene_Init() {
+    COND_HOOK(OnGetLevelSpecificFlag, EVENT_PRIORITY_NORMAL, CVarGetInteger(CVAR_SKIP_CLUCKER_CUTSCENE, 0),
+              [](IEvent* event) {
+                  auto* ev = reinterpret_cast<OnGetLevelSpecificFlag*>(event);
+                  if (ev->flagId == LEVEL_FLAG_14_TTC_UNKNOWN) {
+                      ev->result = 1;
+                      event->Cancelled = true;
+                  }
+              });
+}
+
 static RegisterShipInitFunc initBootLogosFunc(RegisterSkipBootLogos_Init, { CVAR_SKIP_BOOT_LOGOS });
 static RegisterShipInitFunc initSkipIntroFunc(RegisterSkipIntroCutscene_Init, { CVAR_SKIP_INTRO });
 static RegisterShipInitFunc initSkipMiscCutscenesFunc(RegisterSkipMiscCutscenes_Init, { CVAR_SKIP_MISC_CUTSCENES });
 static RegisterShipInitFunc initSkipJiggyDanceFunc(RegisterSkipJiggyDance_Init, { CVAR_SKIP_JIGGY_DANCE });
+static RegisterShipInitFunc initSkipCluckerCutsceneFunc(RegisterSkipCluckerCutscene_Init,
+                                                        { CVAR_SKIP_CLUCKER_CUTSCENE });

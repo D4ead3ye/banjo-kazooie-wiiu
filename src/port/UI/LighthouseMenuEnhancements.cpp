@@ -39,6 +39,11 @@ void LighthouseMenu::AddMenuEnhancements() {
         .Options(CheckboxOptions().Tooltip(
             "Skips the jiggy collection dance, collecting the jiggy immediately like underwater pickups."));
 
+    AddWidget(path, "Skip Clucker Cutscene", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cutscenes.SkipCluckerCutscene"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Skips the cutscene that plays when first defeating a Clucker."));
+
     // Enhancements -> Graphics
     path = { "Enhancements", "Graphics", SECTION_COLUMN_1 };
     AddSidebarEntry("Enhancements", path.sidebarName, 3);
