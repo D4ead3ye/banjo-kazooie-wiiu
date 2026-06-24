@@ -185,49 +185,52 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
         }
     })
 
-    COND_HOOK(OnIsHoneycombScoreCollected, EVENT_PRIORITY_NORMAL, IS_RANDO && EMPTY_HONEYCOMB_OPTION_ENABLED, [](IEvent* event) {
-        OnIsHoneycombScoreCollected* ev = (OnIsHoneycombScoreCollected*)event;
+    COND_HOOK(OnIsHoneycombScoreCollected, EVENT_PRIORITY_NORMAL, IS_RANDO && EMPTY_HONEYCOMB_OPTION_ENABLED,
+              [](IEvent* event) {
+                  OnIsHoneycombScoreCollected* ev = (OnIsHoneycombScoreCollected*)event;
 
-        if (getGameMode() == GAME_MODE_4_PAUSED) {
-            return;
-        }
+                  if (getGameMode() == GAME_MODE_4_PAUSED) {
+                      return;
+                  }
 
-        for (auto& saveCheck : RANDO_SAVE_CHECKS) {
-            if (Rando::StaticData::Checks[saveCheck.shuffledCheckId].randoCheckType != RCTYPE_EMPTY_HONEYCOMB) {
-                continue;
-            }
+                  for (auto& saveCheck : RANDO_SAVE_CHECKS) {
+                      if (Rando::StaticData::Checks[saveCheck.shuffledCheckId].randoCheckType !=
+                          RCTYPE_EMPTY_HONEYCOMB) {
+                          continue;
+                      }
 
-            if (saveCheck.randoCollectionId == ev->honeycombId) {
-                event->Cancelled = true;
+                      if (saveCheck.randoCollectionId == ev->honeycombId) {
+                          event->Cancelled = true;
 
-                if (ev->honeycombId == HONEYCOMB_17_SM_COLLIWOBBLE) {
-                    ev->result = false;
-                } else {
-                    ev->result = saveCheck.obtained;
-                }
+                          if (ev->honeycombId == HONEYCOMB_17_SM_COLLIWOBBLE) {
+                              ev->result = false;
+                          } else {
+                              ev->result = saveCheck.obtained;
+                          }
 
-                break;
-            }
-        }
-    })
+                          break;
+                      }
+                  }
+              })
 
-    COND_HOOK(OnIsMumboTokenScoreCollected, EVENT_PRIORITY_NORMAL, IS_RANDO && MUMBO_TOKENS_OPTION_ENABLED, [](IEvent* event) {
-        OnIsMumboTokenScoreCollected* ev = (OnIsMumboTokenScoreCollected*)event;
+    COND_HOOK(OnIsMumboTokenScoreCollected, EVENT_PRIORITY_NORMAL, IS_RANDO && MUMBO_TOKENS_OPTION_ENABLED,
+              [](IEvent* event) {
+                  OnIsMumboTokenScoreCollected* ev = (OnIsMumboTokenScoreCollected*)event;
 
-        if (getGameMode() == GAME_MODE_4_PAUSED) {
-            return;
-        }
+                  if (getGameMode() == GAME_MODE_4_PAUSED) {
+                      return;
+                  }
 
-        for (auto& saveCheck : RANDO_SAVE_CHECKS) {
-            if (Rando::StaticData::Checks[saveCheck.shuffledCheckId].randoCheckType != RCTYPE_MUMBO_TOKEN) {
-                continue;
-            }
+                  for (auto& saveCheck : RANDO_SAVE_CHECKS) {
+                      if (Rando::StaticData::Checks[saveCheck.shuffledCheckId].randoCheckType != RCTYPE_MUMBO_TOKEN) {
+                          continue;
+                      }
 
-            if (saveCheck.randoCollectionId == ev->tokenId) {
-                event->Cancelled = true;
-                ev->result = saveCheck.obtained;
-                break;
-            }
-        }
-    })
+                      if (saveCheck.randoCollectionId == ev->tokenId) {
+                          event->Cancelled = true;
+                          ev->result = saveCheck.obtained;
+                          break;
+                      }
+                  }
+              })
 }

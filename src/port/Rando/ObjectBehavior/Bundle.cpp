@@ -32,9 +32,8 @@ void Rando::ObjectBehavior::DespawnCollectedBundles() {
 }
 
 void Rando::ObjectBehavior::InitBundleBehavior() {
-    COND_HOOK(ClearBundleDespawnQueue, EVENT_PRIORITY_NORMAL, IS_RANDO, [](IEvent* event) {
-        bundleDespawnQueue.clear();
-    })
+    COND_HOOK(ClearBundleDespawnQueue, EVENT_PRIORITY_NORMAL, IS_RANDO,
+              [](IEvent* event) { bundleDespawnQueue.clear(); })
 
     COND_VB_SHOULD(VB_BUNDLE_SPAWN_SET_ACTOR_DATA, EVENT_PRIORITY_NORMAL, IS_RANDO, {
         Actor* refActor = va_arg(args, Actor*);
@@ -61,7 +60,8 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
 
         SPDLOG_INFO("Bundle Spawn: {}", std::to_string(bundleId));
 
-        if (bundleId == BUNDLE_16__HONEYCOMB && (currentMap == MAP_43_CCW_SPRING || currentMap == MAP_B_CC_CLANKERS_CAVERN)) {
+        if (bundleId == BUNDLE_16__HONEYCOMB &&
+            (currentMap == MAP_43_CCW_SPRING || currentMap == MAP_B_CC_CLANKERS_CAVERN)) {
             if (CheckEnemyOverlapPosition(spawnPosition)) {
                 *should = false;
                 return;
