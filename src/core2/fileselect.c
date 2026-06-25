@@ -15,13 +15,14 @@ int __gameFile_8033CD90(s32 filenum){
     s32 tmp_v1;
     void *save_data_ptr;
     save_data_ptr = &gameFile_saveData[filenum];
-    i = 3;
-    do{
-        tmp_v1 = savedata_8033CA2C(filenum, save_data_ptr);
-        if(!tmp_v1)
-            break;
-        i--;
-    }while(i != 0);
+    tmp_v1 = savedata_8033CA2C(filenum, save_data_ptr);
+    // i = 3;
+    // do{
+    //     tmp_v1 = savedata_8033CA2C(filenum, save_data_ptr);
+    //     if(!tmp_v1)
+    //         break;
+    //     i--;
+    // }while(i != 0);
     if(tmp_v1)
         savedata_clear(save_data_ptr);
     return tmp_v1;
@@ -80,7 +81,7 @@ s32 gameFile_8033CFD4(s32 gamenum){
     filenum = D_80383F04;
     next = gameFile_GameIdToFileIdMap[gamenum];
     gameFile_GameIdToFileIdMap[gamenum] = D_80383F04;
-    bcopy(&gameFile_saveData[next], &gameFile_saveData[filenum], 0xF*8);
+    bcopy(&gameFile_saveData[next], &gameFile_saveData[filenum], sizeof(SaveData));
     save_data = gameFile_saveData + filenum;
     save_data->slotIndex = gamenum + 1;
     savedata_update_crc(save_data, sizeof(SaveData));
@@ -119,13 +120,14 @@ void gameFile_clear(s32 gamenum){
 
 void gameFile_load(s32 gamenum){
     s32 filenum = gameFile_GameIdToFileIdMap[gamenum];
-    saveData_load(&gameFile_saveData[filenum]);
     CALL_EVENT(OnGameLoad, filenum);
+    saveData_load(&gameFile_saveData[filenum]);
 }
 
 void gameFile_save(s32 gamenum){
     s32 filenum = gameFile_GameIdToFileIdMap[gamenum];
     saveData_create(&gameFile_saveData[filenum]);
+    CALL_EVENT(OnGameSave, filenum);
 }
 
 bool gameFile_isNotEmpty(s32 gamenum){

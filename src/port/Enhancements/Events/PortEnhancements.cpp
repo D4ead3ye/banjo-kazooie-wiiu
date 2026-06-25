@@ -1,5 +1,7 @@
 #include "PortEnhancements.h"
 #include "port/Save/SaveManager.h"
+#include "port/Rando/Rando.h"
+#include "port/ShipUtils.h"
 
 #include <stdarg.h>
 
@@ -52,6 +54,7 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnGeoCull);
     REGISTER_EVENT(OnGruntyJinjonatorComplete);
     REGISTER_EVENT(OnIntroCutsceneCheck);
+    REGISTER_EVENT(OnMiscCutscenesCheck);
     REGISTER_EVENT(OnTooieJiggyCollect);
     REGISTER_EVENT(OnMumboTokenUpdate);
     REGISTER_EVENT(OnMumboTokenIdResolve);
@@ -69,17 +72,38 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnGameSave);
     REGISTER_EVENT(OnSaveFileLoad);
     REGISTER_EVENT(OnSaveFileSave);
+    REGISTER_EVENT(OnSaveClear);
     REGISTER_EVENT(OnPropInit);
     REGISTER_EVENT(OnWarpResolveDest);
     REGISTER_EVENT(OnNewGame);
     REGISTER_EVENT(EggHeadSpawn);
+    REGISTER_EVENT(OnActorDestroy);
+    REGISTER_EVENT(OnCheckSpiralMountainAbilities);
 
     REGISTER_EVENT(OnReset);
 
     // Register rando events
+    REGISTER_EVENT(InitRandoEvents);
+    REGISTER_EVENT(OnLoadFileSelect);
+    REGISTER_EVENT(OnSaveLoad);
+    REGISTER_EVENT(OnWarpDispatch);
     REGISTER_EVENT(OnActorSpawn);
+    REGISTER_EVENT(OnLoadActorSaveState);
+    REGISTER_EVENT(OnSaveActorSaveState);
     REGISTER_EVENT(OnActorCollision);
-    REGISTER_EVENT(OnActorDestroy);
+    REGISTER_EVENT(OnFindActorFromActorId);
+    REGISTER_EVENT(OnFindActorMarkerFromJiggyId);
+    REGISTER_EVENT(OnFindClosestActorFromActorId);
+    REGISTER_EVENT(OnSetJiggyList);
+    REGISTER_EVENT(OnGetLevelSpecificFlag);
+    REGISTER_EVENT(OnIsJiggyScoreCollected);
+    REGISTER_EVENT(OnIsJiggyScoreSpawned);
+    REGISTER_EVENT(SetRandoInfFlag);
+    REGISTER_EVENT(OnIsHoneycombScoreCollected);
+    REGISTER_EVENT(ClearBundleDespawnQueue);
+    REGISTER_EVENT(OnIsMumboTokenScoreCollected);
+
+    Rando::Init();
 }
 
 void PortEnhancements_Exit() {

@@ -138,6 +138,15 @@ void LighthouseMenu::AddMenuDevTools() {
         .HideInSearch(true)
         .Options(WindowButtonOptions().Tooltip("Enables the separate Warps Window."));
 
+    // Gameplay Tools
+    path.sidebarName = "Gameplay Tools";
+    AddSidebarEntry("Dev Tools", path.sidebarName, 1);
+    AddWidget(path, "Popout Gameplay Tools", WIDGET_WINDOW_BUTTON)
+        .CVar(CVAR_WINDOW("GameplayTools"))
+        .WindowName("Gameplay Tools")
+        .HideInSearch(true)
+        .Options(WindowButtonOptions().Tooltip("Enables the separate Gameplay Tools Window."));
+
     // Console
     // path.sidebarName = "Console";
     // AddSidebarEntry("Dev Tools", path.sidebarName, 1);

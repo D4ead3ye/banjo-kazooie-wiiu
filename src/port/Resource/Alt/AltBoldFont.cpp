@@ -13,7 +13,7 @@
 // base output chunk. At draw time the decomp fires ResolveBoldFontHd and we hand back that path; the
 // glyph then loads through the exact same code path the (working) HD dialog font uses — base-size
 // gDPLoadTextureTile + the interpreter's scale-aware LOAD_AS_RAW upload — so the letter keeps its
-// on-screen size with more detail. With alt assets off, or when the pack ships no HD sphere/mask, 
+// on-screen size with more detail. With alt assets off, or when the pack ships no HD sphere/mask,
 // nothing is cached and the draw uses the native composite exactly as before.
 
 #include <libultraship.h>
@@ -234,12 +234,12 @@ void reset() {
 
 static void RegisterBoldFontHd() {
     REGISTER_LISTENER(OnBoldFontLetterBuilt, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        auto* ev = (OnBoldFontLetterBuilt*) event;
+        auto* ev = (OnBoldFontLetterBuilt*)event;
         buildHd(ev->output, ev->maskChunk, ev->sphereChunk);
     });
 
     REGISTER_LISTENER(ResolveBoldFontHd, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        auto* ev = (ResolveBoldFontHd*) event;
+        auto* ev = (ResolveBoldFontHd*)event;
         resolveHd(ev->output, ev->path);
     });
 

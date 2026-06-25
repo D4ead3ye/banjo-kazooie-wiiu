@@ -133,6 +133,7 @@ typedef struct actorMarker_s{
     void        (*unk54)(struct actorMarker_s *, struct actorMarker_s *, u16*);
     s32         (*unk58)(struct actorMarker_s *, struct actorMarker_s *);
     s32         unk5C;
+    u32         randoCheckId; // TODO: NOT THIS..
 } ActorMarker;
 
 typedef struct ch_bgs_6730_s{

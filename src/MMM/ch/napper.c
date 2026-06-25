@@ -157,15 +157,17 @@ void chnapper_update(Actor *this){
     }//L80386DF4
 
     if(this->state != 4){
-        viewport_getPosition_vec3f(viewport);
-        sp4C[0] = this->position_x - viewport[0];
-        sp4C[1] = this->position_y - viewport[1];
-        sp4C[2] = this->position_z - viewport[2];
-        ml_vec3f_set_length(sp4C, 5.0f);
-        jiggy = marker_getActor(local->jiggy_marker);
-        jiggy->position_x = sp4C[0] + this->position_x;
-        jiggy->position_y = sp4C[1] + this->position_y;
-        jiggy->position_z = sp4C[2] + this->position_z;
+        if (EventSystem_Should(VB_NAPPER_SET_JIGGY_POSITION, true)) {
+            viewport_getPosition_vec3f(viewport);
+            sp4C[0] = this->position_x - viewport[0];
+            sp4C[1] = this->position_y - viewport[1];
+            sp4C[2] = this->position_z - viewport[2];
+            ml_vec3f_set_length(sp4C, 5.0f);
+            jiggy = marker_getActor(local->jiggy_marker);
+            jiggy->position_x = sp4C[0] + this->position_x;
+            jiggy->position_y = sp4C[1] + this->position_y;
+            jiggy->position_z = sp4C[2] + this->position_z;
+        }
     }//L80386E98
 
     if(this->state == 1){

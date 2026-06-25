@@ -28,6 +28,22 @@ void LighthouseMenu::AddMenuEnhancements() {
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip("Press Start to Skip Intro Cutscenes."));
 
+    AddWidget(path, "Allow Start to Skip Misc Cutscenes", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cutscenes.SkipMiscCutscenes"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Press Start to skip the Gruntilda's Lair and Game Over cutscenes."));
+
+    AddWidget(path, "Skip Jiggy Dance", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cutscenes.SkipJiggyDance"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip(
+            "Skips the jiggy collection dance, collecting the jiggy immediately like underwater pickups."));
+
+    AddWidget(path, "Skip Clucker Cutscene", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Cutscenes.SkipCluckerCutscene"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Skips the cutscene that plays when first defeating a Clucker."));
+
     // Enhancements -> Graphics
     path = { "Enhancements", "Graphics", SECTION_COLUMN_1 };
     AddSidebarEntry("Enhancements", path.sidebarName, 3);
@@ -300,8 +316,7 @@ void LighthouseMenu::AddMenuEnhancements() {
     AddWidget(path, "Tooie Jiggy Animation", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Backports.JiggyAnimation"))
         .RaceDisable(false)
-        .Options(CheckboxOptions().Tooltip(
-            "Replaces the jiggy collection dance with a Banjo-Tooie style animation."));
+        .Options(CheckboxOptions().Tooltip("Replaces the jiggy collection dance with a Banjo-Tooie style animation."));
 
     AddWidget(path, "Honeyback Health Regen", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Backports.Honeyback"))
@@ -315,6 +330,23 @@ void LighthouseMenu::AddMenuEnhancements() {
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip(
             "Hold A+B while underwater to combine Banjo's kick with Kazooie's wing stroke for faster swimming."));
+
+    AddWidget(path, "Note Collection Retention", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Gameplay.NoteRetention"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip(
+            "Notes you've already collected stay collected and don't respawn when you revisit a level. "
+            "Collection is always tracked; this toggle controls whether collected notes are skipped on "
+            "load. Note-door totals still use the vanilla per-level high score."));
+
+    AddWidget(path, "Jinjo Collection Retention", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Gameplay.JinjoRetention"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip(
+            "Jinjos you've already collected stay collected across visits instead of resetting each time "
+            "you enter a level, so you no longer need all five in one go. Collection is always tracked; "
+            "this toggle controls whether collected jinjos are skipped on load and your progress is "
+            "restored."));
 
     AddWidget(path, "First-Person Egg Aim", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Backports.EggAim"))

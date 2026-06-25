@@ -22,11 +22,40 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
+std::vector<std::string> worldNameList = {
+    "Mumbo's Mountain", "Treasure Trove Cove", "Clanker's Cavern", "Bubblegloop Swamp",
+    "Freezeezy Peak",   "Gruntilda's Lair",    "Gobi's Valley",    "Click Clock Wood",
+    "Rusty Bucket Bay", "Mad Monster Mansion", "Spiral Mountain",
+};
+
+std::vector<std::string> abilityNameList = { "Beak Barge", "Beak Bomb",   "Beak Buster",  "Camera Control",
+                                             "Claw Swipe", "Climb",       "Eggs",         "Feathery Flap",
+                                             "Flap Flip",  "Flight",      "Jump Higher",  "Ratatat Rap",
+                                             "Roll",       "Shock Jump",  "Wading Boots", "Dive",
+                                             "Talon Trot", "Turbo Talon", "Wonderwing",   "Note Door" };
+
 // Helper for C-style variadic log functions
 static void bk_log_vfmt(spdlog::level::level_enum level, const char* fmt, va_list args) {
     char buf[512];
     vsnprintf(buf, sizeof(buf), fmt, args);
     spdlog::default_logger_raw()->log(spdlog::source_loc{}, level, buf);
+}
+
+void TableCellCenteredText(const char* text) {
+    float textHeight = ImGui::GetTextLineHeight();
+    float offsetY = (32.0f - textHeight + 5.0f) * 0.5f;
+    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + offsetY);
+    ImGui::Text("%s", text);
+}
+
+extern uint32_t Ship_Hash(std::string str) {
+    const size_t len = str.size();
+    uint32_t hval = 0x811c9dc5;
+    for (size_t pos = 0; pos < len; pos++) {
+        hval ^= (uint32_t)str[pos];
+        hval *= 0x01000193;
+    }
+    return hval;
 }
 
 extern "C" {
@@ -282,6 +311,16 @@ float port_getRumbleScale(void) {
 
 } // extern "C"
 
+std::vector<file_progress_e> worldOpenFlags = {
+    FILEPROG_5D_MM_PUZZLE_PIECES_PLACED,  FILEPROG_5E_TTC_PUZZLE_PIECES_PLACED, FILEPROG_60_CC_PUZZLE_PIECES_PLACED,
+    FILEPROG_63_BGS_PUZZLE_PIECES_PLACED, FILEPROG_66_FP_PUZZLE_PIECES_PLACED,  FILEPROG_6A_GV_PUZZLE_PIECES_PLACED,
+    FILEPROG_6E_MMM_PUZZLE_PIECES_PLACED, FILEPROG_72_RBB_PUZZLE_PIECES_PLACED, FILEPROG_76_CCW_PUZZLE_PIECES_PLACED,
+};
+
+std::vector<std::string> levelAbbreviations = {
+    "MM", "TTC", "CC", "BGS", "FP", "GL", "GV", "CCW", "RBB", "MMM", "SM",
+};
+
 json Ship_RetrieveSaveFile(int32_t filenum) {
     if (filenum < 0 || filenum > 2) {
         return json::object();
@@ -300,3 +339,63 @@ json Ship_RetrieveSaveFile(int32_t filenum) {
 
     return jsonSave;
 }
+
+std::string Ship_ConvertEnumToReadableName(const std::string& input) {
+    std::string result;
+    std::string content = input;
+
+    // Step 1: Remove "RC_" prefix if present
+    const std::string prefix = "RC_";
+    if (content.rfind(prefix, 0) == 0) {
+        content = content.substr(prefix.size());
+    }
+
+    // Step 2: Remove level abbreviation if present
+    for (auto& abbr : levelAbbreviations) {
+        std::string prefix = abbr + "_";
+        if (content.rfind(prefix, 0) == 0) {
+            content = content.substr(prefix.size());
+            break;
+        }
+    }
+
+    // Step 3: Split the string by '_'
+    std::vector<std::string> words;
+    std::string word;
+    std::istringstream stream(content);
+    while (std::getline(stream, word, '_')) {
+        words.push_back(word);
+    }
+
+    // Step 4: Capitalize the first letter of each word
+    for (auto& w : words) {
+        std::transform(w.begin(), w.end(), w.begin(), [](unsigned char c) { return std::tolower(c); });
+        if (!w.empty()) {
+            if (w == "hp") {
+                w = "HP";
+            } else {
+                w[0] = std::toupper(w[0]);
+            }
+        }
+    }
+
+    // Step 5: Join the words with spaces
+    for (size_t i = 0; i < words.size(); ++i) {
+        result += words[i];
+        if (i < words.size() - 1) {
+            result += " ";
+        }
+    }
+
+    return result;
+}
+
+// std::array<const char*, 1> miscellaneousTextures = {
+//     "assets/sprite/Talk_GreenJinjo"
+// };
+//
+// void LoadGuiTextures() {
+//     for (const auto entry : miscellaneousTextures) {
+//         Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(entry, entry, ImVec4(1, 1, 1, 1));
+//     }
+// }

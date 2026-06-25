@@ -5,6 +5,7 @@
 #include "actor.h"
 
 #include "prop.h"
+#include "port/Enhancements/NoteRetention/NoteRetention.h"
 
 extern s32 D_80370990;
 extern f32 GameEngine_GetAspectRatio(void);
@@ -433,6 +434,10 @@ void func_80325FE8(Actor *this) {
 void actorArray_free(void) {
     Actor *var_s0;
 
+    // [port] Note retention: every note actor is about to be freed, so drop our
+    // live-actor tracking (markers are being released here).
+    port_noteRetention_onActorsFreed();
+
     if (suBaddieActorArray != NULL) {
         for(var_s0 = suBaddieActorArray->data; var_s0 < &suBaddieActorArray->data[suBaddieActorArray->cnt]; var_s0++){
             func_80325FE8(var_s0);
@@ -663,51 +668,55 @@ Actor *actorArray_findActorFromMarkerId(enum marker_e marker_id) {
  * returns Actor* and distance (last arg)
  */
 Actor *actorArray_findClosestActorFromActorId(f32 position[3], enum actor_e actor_id, s32 exclude_state, f32 *min_distance_ptr) {
-    Actor *begin;
-    Actor *i_actor;
-    f32 i_dist;
-    f32 min_dist;
-    Actor *closest_actor;
+    CALL_CANCELLABLE_RETURN_EVENT(OnFindClosestActorFromActorId, actor_id) {
+        Actor* begin;
+        Actor* i_actor;
+        f32 i_dist;
+        f32 min_dist;
+        Actor* closest_actor;
 
-    if (suBaddieActorArray != NULL) {
-        begin = suBaddieActorArray->data;
-        closest_actor = NULL;
-        min_dist = 1e+10f;
-        for(i_actor = begin; (i_actor - begin) < suBaddieActorArray->cnt; i_actor++){
-            if ( ((actor_id == i_actor->modelCacheIndex) || (actor_id < 0)) 
-                 && (exclude_state != i_actor->state) 
-                 && (i_actor->modelCacheIndex != ACTOR_17_PLAYER_SHADOW) 
-                 && (i_actor->modelCacheIndex != 0x108) 
-                 && !i_actor->despawn_flag
-            ) {
-                i_dist = ml_vec3f_length(position, i_actor->position);
-                if (i_dist < min_dist) {
-                    min_dist = i_dist;
-                    closest_actor = i_actor;
+        if (suBaddieActorArray != NULL) {
+            begin = suBaddieActorArray->data;
+            closest_actor = NULL;
+            min_dist = 1e+10f;
+            for (i_actor = begin; (i_actor - begin) < suBaddieActorArray->cnt; i_actor++) {
+                if (((actor_id == i_actor->modelCacheIndex) || (actor_id < 0))
+                    && (exclude_state != i_actor->state)
+                    && (i_actor->modelCacheIndex != ACTOR_17_PLAYER_SHADOW)
+                    && (i_actor->modelCacheIndex != 0x108)
+                    && !i_actor->despawn_flag
+                    ) {
+                    i_dist = ml_vec3f_length(position, i_actor->position);
+                    if (i_dist < min_dist) {
+                        min_dist = i_dist;
+                        closest_actor = i_actor;
+                    }
                 }
             }
+            if (min_distance_ptr != NULL) {
+                *min_distance_ptr = min_dist;
+            }
+            return closest_actor;
         }
-        if (min_distance_ptr != NULL) {
-            *min_distance_ptr = min_dist;
-        }
-        return closest_actor;
+        return NULL;
     }
-    return NULL;
 }
 
 Actor *actorArray_findActorFromActorId(enum actor_e actor_id) {
-    Actor *begin;
-    Actor *end;
-    Actor *i_actor;
+    CALL_CANCELLABLE_RETURN_EVENT(OnFindActorFromActorId, actor_id) {
+        Actor* begin;
+        Actor* end;
+        Actor* i_actor;
 
-    begin = suBaddieActorArray->data;
-    end = begin + suBaddieActorArray->cnt;
-    for(i_actor = begin; i_actor < end; i_actor++){
-        if ((actor_id == i_actor->modelCacheIndex) && !i_actor->despawn_flag) {
-            return i_actor;
+        begin = suBaddieActorArray->data;
+        end = begin + suBaddieActorArray->cnt;
+        for (i_actor = begin; i_actor < end; i_actor++) {
+            if ((actor_id == i_actor->modelCacheIndex) && !i_actor->despawn_flag) {
+                return i_actor;
+            }
         }
+        return NULL;
     }
-    return NULL;
 }
 
 s32 actorArray_actorCount(enum actor_e actor_id) {
@@ -1763,6 +1772,7 @@ void *actors_appendToSavestate(void *savestate_begin_ptr, void *savestate_end_pt
         for (actor_ptr = suBaddieActorArray->data; actor_ptr < &suBaddieActorArray->data[(u32) suBaddieActorArray->cnt]; actor_ptr++) {
             if (actor_ptr->marker && (actor_ptr->unk10_1 == 1) && (!actor_ptr->despawn_flag) && (actor_ptr->unk40 == 0)) {
                 memcpy(actor_savestate_ptr, actor_ptr, sizeof(Actor));
+                CALL_EVENT(OnSaveActorSaveState, actor_ptr);
                 actor_savestate_ptr->unk40 = 0;
                 actor_savestate_ptr->unk138_28 = 1;
                 actor_savestate_ptr->unk14C[0] = actor_savestate_ptr->unk14C[1] = NULL;
@@ -1889,10 +1899,12 @@ void actors_applyFromSavestate(void *savestate_ptr, ActorListSaveState *savestat
                 sp50[1] = (s32) savestate_actor->position[1];
                 sp50[2] = (s32) savestate_actor->position[2];
                 pad = savestate_actor->yaw;
-                temp_v0_6 = actor_spawnWithYaw_s32(savestate_actor->modelCacheIndex, &sp50, pad);
-                actor_copy(savestate_actor, temp_v0_6);
-                func_80329B68(temp_v0_6);
-                func_803299B4(temp_v0_6);
+                CALL_CANCELLABLE_EVENT(OnLoadActorSaveState, savestate_actor, sp50[0], sp50[1], sp50[2]) {
+                    temp_v0_6 = actor_spawnWithYaw_s32(savestate_actor->modelCacheIndex, &sp50, pad);
+                    actor_copy(savestate_actor, temp_v0_6);
+                    func_80329B68(temp_v0_6);
+                    func_803299B4(temp_v0_6);
+                }
             }
             savestate_actor++;
         }
@@ -2190,18 +2202,20 @@ void actorArray_defrag(void) {
 }
 
 ActorMarker *func_8032B16C(enum jiggy_e jiggy_id) {
-    Actor *temp_s3;
-    Actor *var_s0;
+    CALL_CANCELLABLE_RETURN_EVENT(OnFindActorMarkerFromJiggyId, jiggy_id) {
+        Actor* temp_s3;
+        Actor* var_s0;
 
-    if (suBaddieActorArray != NULL) {
-        temp_s3 = &suBaddieActorArray->data[0];
-        for(var_s0 = temp_s3; (var_s0 - temp_s3) < suBaddieActorArray->cnt; var_s0++){
-            if ((var_s0->marker->id == MARKER_52_JIGGY) && (chjiggy_getJiggyId(var_s0) == jiggy_id)) {
-                return var_s0->marker;
+        if (suBaddieActorArray != NULL) {
+            temp_s3 = &suBaddieActorArray->data[0];
+            for (var_s0 = temp_s3; (var_s0 - temp_s3) < suBaddieActorArray->cnt; var_s0++) {
+                if ((var_s0->marker->id == MARKER_52_JIGGY) && (chjiggy_getJiggyId(var_s0) == jiggy_id)) {
+                    return var_s0->marker;
+                }
             }
         }
+        return NULL;
     }
-    return NULL;
 }
 
 void func_8032B258(Actor *this, enum collision_e arg1) {

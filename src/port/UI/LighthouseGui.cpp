@@ -20,6 +20,7 @@
 // #include "Enhancements/Trackers/DisplayOverlay.h"
 // #include "Enhancements/Trackers//TimeSplits/Timesplits.h"
 // #include "Enhancements/Trackers/TimeSplits/TimesplitsSettings.h"
+#include "port/Rando/CheckTracker/CheckTracker.h"
 
 #include "Notification.h"
 #include "port/Enhancements/Backports/EggAim.h"
@@ -29,6 +30,7 @@
 // #include "DeveloperTools/HookDebugger.h"
 #include "DeveloperTools/SaveEditor.h"
 #include "DeveloperTools/Warps.h"
+#include "DeveloperTools/GameplayTools.h"
 // #include "DeveloperTools/ActorViewer.h"
 // #include "DeveloperTools/CollisionViewer.h"
 // #include "DeveloperTools/EventLog.h"
@@ -48,6 +50,7 @@ std::shared_ptr<LighthouseRomhackMenuWindow> mRomhackMenuWindow;
 // std::shared_ptr<HookDebuggerWindow> mHookDebuggerWindow;
 std::shared_ptr<SaveEditorWindow> mSaveEditorWindow;
 std::shared_ptr<WarpsWindow> mWarpsWindow;
+std::shared_ptr<GameplayToolsWindow> mGameplayToolsWindow;
 // std::shared_ptr<HudEditorWindow> mHudEditorWindow;
 // std::shared_ptr<CosmeticEditorWindow> mCosmeticEditorWindow;
 // std::shared_ptr<ActorViewerWindow> mActorViewerWindow;
@@ -58,8 +61,8 @@ std::shared_ptr<WarpsWindow> mWarpsWindow;
 // std::shared_ptr<AudioEditor> mAudioEditorWindow;
 std::shared_ptr<LighthouseMenu> mLighthouseMenu;
 std::shared_ptr<Notification::Window> mNotificationWindow;
-// std::shared_ptr<Rando::CheckTracker::CheckTrackerWindow> mRandoCheckTrackerWindow;
-// std::shared_ptr<Rando::CheckTracker::SettingsWindow> mRandoCheckTrackerSettingsWindow;
+std::shared_ptr<Rando::CheckTracker::CheckTrackerWindow> mRandoCheckTrackerWindow;
+std::shared_ptr<Rando::CheckTracker::SettingsWindow> mRandoCheckTrackerSettingsWindow;
 // std::shared_ptr<ItemTrackerWindow> mItemTrackerWindow;
 // std::shared_ptr<ItemTrackerSettingsWindow> mItemTrackerSettingsWindow;
 // std::shared_ptr<DisplayOverlayWindow> mDisplayOverlayWindow;
@@ -129,6 +132,10 @@ void SetupGuiElements() {
     mWarpsWindow = std::make_shared<WarpsWindow>("gWindows.Warps", "Warps", ImVec2(480, 600));
     gui->AddGuiWindow(mWarpsWindow);
 
+    mGameplayToolsWindow =
+        std::make_shared<GameplayToolsWindow>("gWindows.GameplayTools", "Gameplay Tools", ImVec2(480, 600));
+    gui->AddGuiWindow(mGameplayToolsWindow);
+
     // mHudEditorWindow = std::make_shared<HudEditorWindow>("gWindows.HudEditor", "HUD Editor", ImVec2(480, 600));
     // gui->AddGuiWindow(mHudEditorWindow);
 
@@ -177,17 +184,16 @@ void SetupGuiElements() {
     gui->AddGuiWindow(mNotificationWindow);
     mNotificationWindow->Show();
 
+    mRandoCheckTrackerWindow = std::make_shared<Rando::CheckTracker::CheckTrackerWindow>(
+        "gWindows.CheckTracker", "Check Tracker", ImVec2(375, 460));
+    gui->AddGuiWindow(mRandoCheckTrackerWindow);
     mEggAimCrosshair = std::make_shared<EggAimCrosshairWindow>("gWindows.EggAimCrosshair", "Egg Aim Crosshair");
     gui->AddGuiWindow(mEggAimCrosshair);
     mEggAimCrosshair->Show();
 
-    // mRandoCheckTrackerWindow = std::make_shared<Rando::CheckTracker::CheckTrackerWindow>(
-    //     "gWindows.CheckTracker", "Check Tracker", ImVec2(375, 460));
-    // gui->AddGuiWindow(mRandoCheckTrackerWindow);
-
-    // mRandoCheckTrackerSettingsWindow = std::make_shared<Rando::CheckTracker::SettingsWindow>(
-    //     "gWindows.CheckTrackerSettings", "Check Tracker Settings");
-    // gui->AddGuiWindow(mRandoCheckTrackerSettingsWindow);
+    mRandoCheckTrackerSettingsWindow = std::make_shared<Rando::CheckTracker::SettingsWindow>(
+        "gWindows.CheckTrackerSettings", "Check Tracker Settings");
+    gui->AddGuiWindow(mRandoCheckTrackerSettingsWindow);
 
     mInputViewer = std::make_shared<InputViewer>("gWindows.InputViewer", "Input Viewer");
     gui->AddGuiWindow(mInputViewer);
@@ -216,12 +222,13 @@ void Destroy() {
     // mCollisionViewerWindow = nullptr;
     // mEventLogWindow = nullptr;
     mNotificationWindow = nullptr;
-    // mRandoCheckTrackerWindow = nullptr;
-    // mRandoCheckTrackerSettingsWindow = nullptr;
+    mRandoCheckTrackerWindow = nullptr;
+    mRandoCheckTrackerSettingsWindow = nullptr;
 
     // mHookDebuggerWindow = nullptr;
     mSaveEditorWindow = nullptr;
     mWarpsWindow = nullptr;
+    mGameplayToolsWindow = nullptr;
     // mHudEditorWindow = nullptr;
     // mCosmeticEditorWindow = nullptr;
     // mActorViewerWindow = nullptr;

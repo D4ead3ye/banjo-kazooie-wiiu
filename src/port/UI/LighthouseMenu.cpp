@@ -130,6 +130,7 @@ void LighthouseMenu::InitElement() {
     AddMenuEnhancements();
     AddMenuNetwork();
     AddMenuDevTools();
+    AddMenuRando();
 
     if (CVarGetInteger(CVAR_SETTING("Menu.SidebarSearch"), 0)) {
         InsertSidebarSearch();

@@ -12,6 +12,8 @@
 #include "save.h"
 #include "Types.h"
 
+#include "port/Rando/Logic/Logic.h"
+
 extern "C" {
 #include "core1/sns.h"
 
@@ -65,13 +67,62 @@ static void BitfieldSetNBits(uint8_t* array, int startIndex, int numBits, int va
     }
 }
 
-std::string CollapsedJSONArray(ordered_json jsonFile) {
-    std::string jsonString = jsonFile.dump(4);
-    jsonString = std::regex_replace(jsonString, std::regex(R"(\[\s+([01,\s]+?)\s+\])"), "[$1]");
-    jsonString = std::regex_replace(jsonString, std::regex(R"(\s+([01]))"), " $1");
-    jsonString = std::regex_replace(jsonString, std::regex(R"(\s+\])"), "]");
+void RandoSaveCheck_to_json(nlohmann::json& j, const RandoSaveCheck& randoSaveCheck) {
+    j = nlohmann::json::array({ randoSaveCheck.randoCheckId, randoSaveCheck.randoItemId, randoSaveCheck.shuffledCheckId,
+                                randoSaveCheck.randoCollectionId, randoSaveCheck.isShuffled, randoSaveCheck.obtained,
+                                randoSaveCheck.skipped });
+}
 
-    return jsonString;
+RandoSaveCheck RandoSaveCheck_from_json(const nlohmann::json& j, RandoSaveCheck& randoSaveCheck) {
+    j.at(0).get_to(randoSaveCheck.randoCheckId);
+    j.at(1).get_to(randoSaveCheck.randoItemId);
+    j.at(2).get_to(randoSaveCheck.shuffledCheckId);
+    j.at(3).get_to(randoSaveCheck.randoCollectionId);
+    j.at(4).get_to(randoSaveCheck.isShuffled);
+    j.at(5).get_to(randoSaveCheck.obtained);
+    j.at(6).get_to(randoSaveCheck.skipped);
+
+    return randoSaveCheck;
+}
+
+std::string CollapsedJSONArray(const nlohmann::ordered_json& jsonFile) {
+    std::string source = jsonFile.dump(4);
+    std::string result;
+    result.reserve(source.length());
+
+    bool isCollapsed = false;
+
+    for (size_t i = 0; i < source.length(); ++i) {
+        char c = source[i];
+
+        if (c == '[') {
+            size_t next = source.find_first_not_of(" \n\r\t", i + 1);
+            if (next != std::string::npos && (isdigit(source[next]) || source[next] == ']')) {
+                isCollapsed = true;
+                result += c;
+                continue;
+            }
+        }
+
+        if (isCollapsed) {
+            if (isspace(c)) {
+                continue;
+            }
+
+            if (c == ']') {
+                isCollapsed = false;
+                result += c;
+            } else if (c == ',') {
+                result += ", ";
+            } else {
+                result += c;
+            }
+        } else {
+            result += c;
+        }
+    }
+
+    return result;
 }
 
 ordered_json Convert_SaveDataToJSON(SaveData* saveData, int32_t fileNum) {
@@ -245,8 +296,66 @@ ordered_json Convert_SaveDataToJSON(SaveData* saveData, int32_t fileNum) {
     ordered_json ship = ordered_json::object();
     ordered_json shipRando = ordered_json::object();
 
-    ship["fileType"] = FILE_TYPE_SAVE_VANILLA;
-    ship["randoSaveData"] = shipRando;
+    ship["fileType"] = static_cast<int>(saveData->shipSaveData.fileType);
+
+    // Note retention (all files): sparse per-map collected bitfields.
+    ordered_json noteRetention = ordered_json::object();
+    for (int m = 0; m < NOTE_RETENTION_MAP_SLOTS; m++) {
+        bool any = false;
+        for (int b = 0; b < NOTE_RETENTION_BYTES_PER_MAP; b++) {
+            if (saveData->shipSaveData.noteRetention.collected[m][b]) {
+                any = true;
+                break;
+            }
+        }
+        if (!any) {
+            continue;
+        }
+        ordered_json bytes = ordered_json::array();
+        for (int b = 0; b < NOTE_RETENTION_BYTES_PER_MAP; b++) {
+            bytes.push_back(saveData->shipSaveData.noteRetention.collected[m][b]);
+        }
+        noteRetention[std::to_string(m)] = bytes;
+    }
+    ship["noteRetention"] = noteRetention;
+
+    // Jinjo retention (all files): sparse per-level collected colour bitmasks.
+    ordered_json jinjoRetention = ordered_json::object();
+    for (int l = 0; l < JINJO_RETENTION_LEVEL_SLOTS; l++) {
+        if (!saveData->shipSaveData.jinjoRetention.collected[l]) {
+            continue;
+        }
+        jinjoRetention[std::to_string(l)] = saveData->shipSaveData.jinjoRetention.collected[l];
+    }
+    ship["jinjoRetention"] = jinjoRetention;
+
+    if (saveData->shipSaveData.fileType == FILE_TYPE_SAVE_RANDO) {
+        Rando::Logic::GenerateSaveData(saveData);
+        shipRando["seedId"] = saveData->shipSaveData.randoSaveData.seedId;
+
+        for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
+            json jsonSaveChecks = nlohmann::json::object();
+            RandoSaveCheck randoSaveCheck = saveData->shipSaveData.randoSaveData.randoSaveCheck[i];
+            RandoSaveCheck_to_json(jsonSaveChecks, randoSaveCheck);
+
+            shipRando["randoSaveCheck"][Rando::StaticData::Checks[(RandoCheckId)i].name] = jsonSaveChecks;
+        }
+
+        for (int o = RO_LOGIC; o < RO_MAX; o++) {
+            RandoSaveOption randoSaveOption = saveData->shipSaveData.randoSaveData.randoSaveOption[o];
+
+            shipRando["randoSaveOption"][Rando::StaticData::Options[(RandoOptionId)o].name] =
+                randoSaveOption.optionValue;
+        }
+
+        nlohmann::json randoInfArray = nlohmann::json::array();
+        for (int f = RANDO_INF_UNKNOWN; f < RANDO_INF_MAX; f++) {
+            randoInfArray.push_back(saveData->shipSaveData.randoSaveData.randoSaveFlag[f].flagState);
+        }
+        shipRando["randoSaveFlag"] = randoInfArray;
+
+        ship["rando"] = shipRando;
+    }
 
     j["ship"] = ship;
 
@@ -442,6 +551,63 @@ SaveData* Convert_JSONToSaveData(int32_t fileNum) {
     // Ship Save Data
     saveData->shipSaveData.fileType = j["ship"]["fileType"];
 
+    // Note retention (all files): clear then load sparse per-map bitfields.
+    for (int m = 0; m < NOTE_RETENTION_MAP_SLOTS; m++) {
+        for (int b = 0; b < NOTE_RETENTION_BYTES_PER_MAP; b++) {
+            saveData->shipSaveData.noteRetention.collected[m][b] = 0;
+        }
+    }
+    if (j.contains("ship") && j["ship"].contains("noteRetention")) {
+        for (auto& [key, bytes] : j["ship"]["noteRetention"].items()) {
+            int m = std::stoi(key);
+            if (m < 0 || m >= NOTE_RETENTION_MAP_SLOTS) {
+                continue;
+            }
+            for (int b = 0; b < NOTE_RETENTION_BYTES_PER_MAP && b < (int)bytes.size(); b++) {
+                saveData->shipSaveData.noteRetention.collected[m][b] = bytes[b].get<uint8_t>();
+            }
+        }
+    }
+
+    // Jinjo retention (all files): clear then load sparse per-level bitmasks.
+    for (int l = 0; l < JINJO_RETENTION_LEVEL_SLOTS; l++) {
+        saveData->shipSaveData.jinjoRetention.collected[l] = 0;
+    }
+    if (j.contains("ship") && j["ship"].contains("jinjoRetention")) {
+        for (auto& [key, bits] : j["ship"]["jinjoRetention"].items()) {
+            int l = std::stoi(key);
+            if (l < 0 || l >= JINJO_RETENTION_LEVEL_SLOTS) {
+                continue;
+            }
+            saveData->shipSaveData.jinjoRetention.collected[l] = bits.get<uint8_t>();
+        }
+    }
+
+    if (j["ship"]["fileType"].get<int>() == FILE_TYPE_SAVE_RANDO) {
+        json rando = j["ship"]["rando"];
+        saveData->shipSaveData.randoSaveData.seedId = rando["seedId"];
+
+        for (int i = RC_UNKNOWN; i < RC_MAX; i++) {
+            json jsonSaveChecks = rando["randoSaveCheck"][Rando::StaticData::Checks[(RandoCheckId)i].name];
+            RandoSaveCheck randoSaveCheck = RandoSaveCheck_from_json(jsonSaveChecks, randoSaveCheck);
+
+            saveData->shipSaveData.randoSaveData.randoSaveCheck[i] = randoSaveCheck;
+        }
+
+        for (int o = RO_LOGIC; o < RO_MAX; o++) {
+            RandoSaveOption randoSaveOption = {
+                .name = Rando::StaticData::Options[(RandoOptionId)o].name,
+                .optionValue = rando["randoSaveOption"][Rando::StaticData::Options[(RandoOptionId)o].name],
+            };
+
+            saveData->shipSaveData.randoSaveData.randoSaveOption[o] = randoSaveOption;
+        }
+
+        for (int f = RANDO_INF_UNKNOWN; f < RANDO_INF_MAX; f++) {
+            saveData->shipSaveData.randoSaveData.randoSaveFlag[f].flagState = rando["randoSaveFlag"][f];
+        }
+    }
+
     return saveData;
 }
 
@@ -487,19 +653,6 @@ static void LoadGlobalData() {
     }
 }
 
-void SaveManager_LoadAll() {
-    for (int i = 0; i < 3; i++) {
-        SaveData* loadSave = Convert_JSONToSaveData(i);
-        if (loadSave->slotIndex != 0) {
-            loadSave->magic = SAVE_MAGIC;
-        }
-        gameFile_saveData[i] = *(loadSave);
-        delete loadSave;
-    }
-
-    LoadGlobalData();
-}
-
 static void SaveGlobalData() {
     ordered_json j = ordered_json::object();
 
@@ -531,7 +684,7 @@ static void SaveGlobalData() {
 }
 
 void SaveManager_Init() {
-    SaveManager_LoadAll();
+    LoadGlobalData();
 
     // Ensure global.json exists
     std::string globalPath = SaveManager_GetSavePath("global.json");
@@ -573,6 +726,24 @@ void SaveManager_Init() {
         }
 
         SaveGlobalData();
+        event->Cancelled = true;
+    });
+
+    REGISTER_LISTENER(OnSaveClear, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnSaveClear* ev = (OnSaveClear*)event;
+        SaveData* saveData = (SaveData*)ev->result;
+
+        ShipSaveData ship = saveData->shipSaveData; // Retain ShipSaveData during Save Process
+
+        u8* savedata = (u8*)saveData;
+        int i;
+        for (i = 0; i < sizeof(SaveData); i++) {
+            savedata[i] = 0;
+        }
+
+        saveData = (SaveData*)savedata;
+        saveData->shipSaveData = ship;
+
         event->Cancelled = true;
     });
 

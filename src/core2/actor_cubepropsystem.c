@@ -12,6 +12,10 @@ extern int ResourceMgr_IsModelAsset(uint32_t assetId);
 
 #define AssetCacheSize 0x3D5
 
+// Port Expand Marker Pool for Rando Allocation
+#define MARKER_POOL_SIZE 0x1C0
+#define MARKER_BITMAP_BYTES (MARKER_POOL_SIZE / 8)
+
 extern bool func_802E74A0(f32[3], f32, f32[3], f32[3]);
 extern BKCollisionTriangle *func_802E9118(BKCollisionList * collision_list, BKVertexList *vtx_list, f32 arg2[3], f32 arg3[3], f32 arg4, f32 arg5[3], f32 arg6[3], f32 arg7, f32 arg8[3], s32 arg9, s32 argA);
 extern f32 vtxList_getGlobalNorm(BKVertexList *);
@@ -111,7 +115,7 @@ s32 D_8038340C;
 f32 D_80383410[3];
 ActorMarker *D_8038341C;
 BKCollisionTriangle *D_80383420;
-u8  D_80383428[0x1C];
+u8  D_80383428[MARKER_BITMAP_BYTES];
 s32 D_80383444;
 int D_80383448;
 s32 D_80383450[0x40];
@@ -475,7 +479,14 @@ Prop *__codeA5BC0_initProp2Ptr(Cube *cube) {
         cube->prop2Cnt = 1;
         cube->prop2Ptr = bk_malloc(sizeof(Prop));
     }
-    sp1C = &cube->prop2Ptr[cube->prop2Cnt-1];
+    // port - Rando manipulation of Props leads to rare errors with prop2Ptr, this ensures prop2Ptr is allocated each time if NULL
+    if (cube->prop2Ptr == NULL) {
+        cube->prop2Ptr = bk_malloc(sizeof(Prop));
+        sp1C = cube->prop2Ptr;
+    }
+    else {
+        sp1C = &cube->prop2Ptr[cube->prop2Cnt - 1];
+    }
     sp1C->markerFlag = false;
     code_A5BC0_initCubePropActorProp(cube);
     return sp1C;
@@ -503,8 +514,12 @@ s32 func_8032D9C0(Cube *cube, Prop* prop){
         if(func_80305D14()){
             func_80305CD8(func_803058C0(prop->unk4[1]), -1);
         }
-        if((prop - cube->prop2Ptr) < (cube->prop2Cnt - 1)){
-            memcpy(prop, prop + 1, (uintptr_t)(&cube->prop2Ptr[cube->prop2Cnt-1]) - (uintptr_t)(prop));
+
+        // port - Rando manipulation of prop2Ptr results in mismatched data, this corrects that.
+        ptrdiff_t index = prop - cube->prop2Ptr;
+        ptrdiff_t elementsAfter = (cube->prop2Cnt - 1) - index;
+        if (elementsAfter > 0) {
+            memmove(prop, prop + 1, elementsAfter * sizeof(Prop));
         }
         cube->prop2Cnt--;
         if(cube->prop2Cnt){
@@ -997,57 +1012,68 @@ void code7AF80_initCubeFromFile(File *file_ptr, Cube *cube) {
                 memcpy(&pos[1], raw + 6, 2);
                 memcpy(&pos[2], raw + 8, 2);
                 memcpy(&flags, raw + 10, 2);
+                // [port] Expose the sprite asset id (or -1 for marker/model props) so
+                // override handlers can identify props by type (e.g. music notes) without
+                // relying on position, which differs in romhacks.
+                s32 propSpriteAsset = -1;
+                if (!(flags & 1) && !((flags >> 1) & 1)) {
+                    propSpriteAsset = ((s32)((word0 >> 20) & 0xFFF)) + 0x572;
+                }
+                if (!EventSystem_Should(VB_OVERRIDE_PROP_SPAWN, false, pos, propSpriteAsset)) {
                 // Extract flag bits using N64 BE bit positions within the u16
-                {
-                    bool mf  = flags & 1;            // markerFlag (BE bit 0)
-                    bool b1  = (flags >> 1) & 1;     // unk8_1
-                    bool b2  = (flags >> 2) & 1;     // unk8_2
-                    bool b3  = (flags >> 3) & 1;     // unk8_3
-                    bool b4  = (flags >> 4) & 1;     // unk8_4
-                    bool b5  = (flags >> 5) & 1;     // unk8_5
-                    // Set position and flags via anonymous struct
-                    cube->prop2Ptr[i].unk4[0] = pos[0];
-                    cube->prop2Ptr[i].unk4[1] = pos[1];
-                    cube->prop2Ptr[i].unk4[2] = pos[2];
-                    cube->prop2Ptr[i].markerFlag = mf;
-                    cube->prop2Ptr[i].unk8_1 = b1;
-                    cube->prop2Ptr[i].unk8_2 = b2;
-                    cube->prop2Ptr[i].unk8_3 = b3;
-                    cube->prop2Ptr[i].unk8_4 = b4;
-                    cube->prop2Ptr[i].unk8_5 = b5;
-                    if (mf) {
-                        // ActorProp: marker=NULL (set at actor spawn), position
-                        cube->prop2Ptr[i].actorProp.marker = NULL;
-                        cube->prop2Ptr[i].actorProp.x = pos[0];
-                        cube->prop2Ptr[i].actorProp.y = pos[1];
-                        cube->prop2Ptr[i].actorProp.z = pos[2];
-                        // SpriteProp unk8_10/unk8_15 overlap anonymous pad8_15
-                        cube->prop2Ptr[i].actorProp.frame = (flags >> 11) & 0x1F;
-                        cube->prop2Ptr[i].actorProp.unk8_10 = (flags >> 6) & 0x1F;
-                    } else if (b1) {
-                        // ModelProp: word0 = { u16 unk0, u8 unk0_15, u8 unk0_7 }
-                        // [port] Set through bitfield accessor, not raw u16, for LE correctness
-                        cube->prop2Ptr[i].modelProp.modelId = (word0 >> 20) & 0xFFF;
-                        cube->prop2Ptr[i].modelProp.pad0_19 = (word0 >> 16) & 0xF;
-                        cube->prop2Ptr[i].modelProp.yaw = (u8)(word0 >> 8);
-                        cube->prop2Ptr[i].modelProp.roll = (u8)(word0);
-                        // ModelProp flags at offset 10-11
-                        cube->prop2Ptr[i].modelProp.scale = (u8)(flags >> 8);
-                        cube->prop2Ptr[i].modelProp.unkB_5 = (flags >> 5) & 1;
-                        cube->prop2Ptr[i].modelProp.unkB_4 = (flags >> 4) & 1;
-                    } else {
-                        // SpriteProp: word0 is a u32 with bitfields
-                        cube->prop2Ptr[i].spriteProp.spriteId = (word0 >> 20) & 0xFFF;
-                        cube->prop2Ptr[i].spriteProp.unk0_19 = (word0 >> 19) & 1;
-                        cube->prop2Ptr[i].spriteProp.rgb_remove_red = (word0 >> 16) & 7;
-                        cube->prop2Ptr[i].spriteProp.rgb_remove_green = (word0 >> 13) & 7;
-                        cube->prop2Ptr[i].spriteProp.rgb_remove_blue = (word0 >> 10) & 7;
-                        cube->prop2Ptr[i].spriteProp.scale  = (word0 >> 2) & 0xFF;
-                        cube->prop2Ptr[i].spriteProp.isMirrored  = (word0 >> 1) & 1;
-                        cube->prop2Ptr[i].spriteProp.pad0_0  = word0 & 1;
-                        // SpriteProp flags
-                        cube->prop2Ptr[i].spriteProp.frame = (flags >> 11) & 0x1F;
-                        cube->prop2Ptr[i].spriteProp.unk8_10 = (flags >> 6) & 0x1F;
+                    {
+                        bool mf = flags & 1;            // markerFlag (BE bit 0)
+                        bool b1 = (flags >> 1) & 1;     // unk8_1
+                        bool b2 = (flags >> 2) & 1;     // unk8_2
+                        bool b3 = (flags >> 3) & 1;     // unk8_3
+                        bool b4 = (flags >> 4) & 1;     // unk8_4
+                        bool b5 = (flags >> 5) & 1;     // unk8_5
+                        // Set position and flags via anonymous struct
+                        cube->prop2Ptr[i].unk4[0] = pos[0];
+                        cube->prop2Ptr[i].unk4[1] = pos[1];
+                        cube->prop2Ptr[i].unk4[2] = pos[2];
+                        cube->prop2Ptr[i].markerFlag = mf;
+                        cube->prop2Ptr[i].unk8_1 = b1;
+                        cube->prop2Ptr[i].unk8_2 = b2;
+                        cube->prop2Ptr[i].unk8_3 = b3;
+                        cube->prop2Ptr[i].unk8_4 = b4;
+                        cube->prop2Ptr[i].unk8_5 = b5;
+                        if (mf) {
+                            // ActorProp: marker=NULL (set at actor spawn), position
+                            cube->prop2Ptr[i].actorProp.marker = NULL;
+                            cube->prop2Ptr[i].actorProp.x = pos[0];
+                            cube->prop2Ptr[i].actorProp.y = pos[1];
+                            cube->prop2Ptr[i].actorProp.z = pos[2];
+                            // SpriteProp unk8_10/unk8_15 overlap anonymous pad8_15
+                            cube->prop2Ptr[i].actorProp.frame = (flags >> 11) & 0x1F;
+                            cube->prop2Ptr[i].actorProp.unk8_10 = (flags >> 6) & 0x1F;
+                        }
+                        else if (b1) {
+                            // ModelProp: word0 = { u16 unk0, u8 unk0_15, u8 unk0_7 }
+                            // [port] Set through bitfield accessor, not raw u16, for LE correctness
+                            cube->prop2Ptr[i].modelProp.modelId = (word0 >> 20) & 0xFFF;
+                            cube->prop2Ptr[i].modelProp.pad0_19 = (word0 >> 16) & 0xF;
+                            cube->prop2Ptr[i].modelProp.yaw = (u8)(word0 >> 8);
+                            cube->prop2Ptr[i].modelProp.roll = (u8)(word0);
+                            // ModelProp flags at offset 10-11
+                            cube->prop2Ptr[i].modelProp.scale = (u8)(flags >> 8);
+                            cube->prop2Ptr[i].modelProp.unkB_5 = (flags >> 5) & 1;
+                            cube->prop2Ptr[i].modelProp.unkB_4 = (flags >> 4) & 1;
+                        }
+                        else {
+                            // SpriteProp: word0 is a u32 with bitfields
+                            cube->prop2Ptr[i].spriteProp.spriteId = (word0 >> 20) & 0xFFF;
+                            cube->prop2Ptr[i].spriteProp.unk0_19 = (word0 >> 19) & 1;
+                            cube->prop2Ptr[i].spriteProp.rgb_remove_red = (word0 >> 16) & 7;
+                            cube->prop2Ptr[i].spriteProp.rgb_remove_green = (word0 >> 13) & 7;
+                            cube->prop2Ptr[i].spriteProp.rgb_remove_blue = (word0 >> 10) & 7;
+                            cube->prop2Ptr[i].spriteProp.scale = (word0 >> 2) & 0xFF;
+                            cube->prop2Ptr[i].spriteProp.isMirrored = (word0 >> 1) & 1;
+                            cube->prop2Ptr[i].spriteProp.pad0_0 = word0 & 1;
+                            // SpriteProp flags
+                            cube->prop2Ptr[i].spriteProp.frame = (flags >> 11) & 0x1F;
+                            cube->prop2Ptr[i].spriteProp.unk8_10 = (flags >> 6) & 0x1F;
+                        }
                     }
                     //Prop* ptr = cube->prop2Ptr + i * sizeof(Prop);
                     CALL_EVENT(OnPropInit, &cube->prop2Ptr[i]);
@@ -2424,13 +2450,13 @@ void func_8033297C(void){
 void func_803329AC(void){
     s32 i;
     
-    D_8036E7C8 = (ActorMarker *)bk_malloc(0xE0*sizeof(ActorMarker));
+    D_8036E7C8 = (ActorMarker *)bk_malloc(MARKER_POOL_SIZE * sizeof(ActorMarker));
 
-    for( i = 0; i < 0x1C; i++){
+    for( i = 0; i < MARKER_BITMAP_BYTES; i++){
         D_80383428[i] = 0;
     }
        
-    for(i =0; i<0xE0; i++){
+    for(i =0; i< MARKER_POOL_SIZE; i++){
         D_8036E7C8[i].unk5C = 0;
     }
 }
@@ -2448,8 +2474,8 @@ ActorMarker * func_80332A60(void){
     int tmp_a2;
     ActorMarker *marker;
 
-    for(i = 0; i < 0x1C && D_80383428[i] == 0xff; i++);
-    if(i == 0x1C)
+    for(i = 0; i < MARKER_BITMAP_BYTES && D_80383428[i] == 0xff; i++);
+    if(i == MARKER_BITMAP_BYTES)
         return NULL;
 
     tmp_a2 = 0x80;

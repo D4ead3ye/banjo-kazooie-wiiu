@@ -881,11 +881,7 @@ s32 func_8029CA94(s32 arg0){
         arg0 = BS_53_TIMEOUT;
 
     if(baflag_isTrue(BA_FLAG_7_TOUCHING_JIGGY)) {
-        if (EventSystem_Should(VB_PLAY_JIGGY_DANCE, true)) {
-            arg0 = BS_44_JIG_JIGGY;
-        } else {
-            func_8029CCC4();
-        }
+        arg0 = BS_44_JIG_JIGGY;
     }
 
     if(baflag_isTrue(BA_FLAG_14_LOSE_BOGGY_RACE))
@@ -914,11 +910,8 @@ void func_8029CBF4(void){
         if( jiggyscore_total() == 100 && fileProgressFlag_get(FILEPROG_FC_DEFEAT_GRUNTY)){
             timedFunc_set_3(4.1f, (GenFunction_3)transitionToMap, MAP_95_CS_END_ALL_100, 0, 1);
         }//L8029CC58
-        if (EventSystem_Should(VB_PLAY_JIGGY_DANCE, true)) {
-            timedFunc_set_0(4.0f, func_8029CBC4);
-        } else {
-            func_8029CBC4();
-        }
+
+        timedFunc_set_0(4.0f, func_8029CBC4);
         coMusicPlayer_playMusic(COMUSIC_42_NOTEDOOR_OPENING_FANFARE, -1);
     }//L8029CC7C
     else{
@@ -943,17 +936,6 @@ void func_8029CCC4(void){
     item_inc(ITEM_E_JIGGY);
     if(jiggyscore_total() == 100 && fileProgressFlag_get(FILEPROG_FC_DEFEAT_GRUNTY)){
         func_8028F918(2);
-    }
-    // [port] When skipping the jiggy dance:
-    // - Restore camera type (set to 0xC by __baMarker_8028B848 for first/10th jiggy dialog)
-    // - Don't touch the ambience counter or music fade — the jinjo or other spawner
-    //   may have already decremented the counter, and the timed restore would cause
-    //   a double-increment. Just play the jingle and let the spawner handle cleanup.
-    if (!EventSystem_Should(VB_PLAY_JIGGY_DANCE, true)) {
-        func_80291548();
-        coMusicPlayer_playMusic(COMUSIC_D_JINGLE_JIGGY_COLLECTED, -1);
-        timedFunc_set_0(4.0f, func_8029CBF4);
-        return;
     }
     core1_ce60_incOrDecCounter(false);
     func_8025A55C(0, 4000, 0xC);

@@ -49,8 +49,10 @@ void __chJinjo_802CDBA8(ActorMarker *this, ActorMarker *other){
             fileProgressFlag_set(FILEPROG_E_JINJO_TEXT, 1);
         }
         subaddie_set_state_with_direction(actorPtr, 6, 0.0f , -1);
-        if(item_adjustByDiffWithHud(ITEM_12_JINJOS, 1 << ((this->id + 6) & 0x1F) ) == 0x1f) // [port] MIPS SLL uses low 5 bits; mask to avoid UB
-            localPtr->unk4 = 1;
+        if (!EventSystem_Should(VB_UPDATE_JINJO_HUD, false, actorPtr->position)) {
+            if (item_adjustByDiffWithHud(ITEM_12_JINJOS, 1 << ((this->id + 6) & 0x1F)) == 0x1f) // [port] MIPS SLL uses low 5 bits; mask to avoid UB
+                localPtr->unk4 = 1;
+        }
         actor_loopAnimation(actorPtr);
         this->collidable = false;
     }
@@ -247,7 +249,9 @@ void chJinjo_update(Actor * this){
                     func_80326310(this);
                     if(local->unk4 == 0){
                         func_8032BB88(this, -1, 4000);
-                        core1_ce60_incOrDecCounter(true);
+                        if (EventSystem_Should(VB_SET_JINJO_COUNT, true)) {
+                            core1_ce60_incOrDecCounter(true);
+                        }
                     }
                 }//L802CE518
 
@@ -262,7 +266,9 @@ void chJinjo_update(Actor * this){
 
                 if(local->unk4 && actor_animationIsAt(this,0.95f)){
                     func_8032BB88(this, -1, 4000);
-                    core1_ce60_incOrDecCounter(true);
+                    if (EventSystem_Should(VB_SET_JINJO_COUNT, true)) {
+                        core1_ce60_incOrDecCounter(true);
+                    }
                 }
             }//L802CE598
 

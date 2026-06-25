@@ -50,7 +50,7 @@ ParticleScaleAndLifetimeRanges D_80394830 = {
 };
 
 /* .code */
-static s32 _puzzleCost(s32 index) {
+s32 _puzzleCost(s32 index) {
     s32 override = port_getRomhackJiggyPuzzleCost(index);
     return (override >= 0) ? override : D_803947F8[index].cost;
 }

@@ -1,11 +1,24 @@
 #pragma once
 
 #include "libultraship/libultra/types.h"
+#include "enums.h"
+
+void LoadGuiTextures();
 
 #ifdef __cplusplus
 #include <nlohmann/json.hpp>
+#define WIDGET_COLOR UIWidgets::Colors(CVarGetInteger("gSettings.Menu.Theme", 5))
+
 using nlohmann::json;
 json Ship_RetrieveSaveFile(int32_t filenum);
+extern std::string Ship_ConvertEnumToReadableName(const std::string& input);
+extern std::vector<file_progress_e> worldOpenFlags;
+
+extern std::vector<std::string> worldNameList;
+extern std::vector<std::string> abilityNameList;
+
+void TableCellCenteredText(const char* text);
+uint32_t Ship_Hash(std::string str);
 
 extern "C" {
 #endif

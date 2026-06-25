@@ -1,0 +1,257 @@
+#include "port/UI/LighthouseMenu.h"
+#include "port/Engine.h"
+#include "port/UI/Notification.h"
+#include "port/UI/LighthouseModals.h"
+#include "port/ResourceHelpers.h"
+#include "port/UI/UIWidgets.hpp"
+
+#include "port/Rando/CustomObject/CustomObject.h"
+#include "port/Rando/Logic/Logic.h"
+
+#include <spdlog/fmt/fmt.h>
+
+extern "C" {
+#include "variables.h"
+}
+
+const char* logicModes[2] = {
+    "Glitchless",
+    "No Logic",
+};
+
+namespace LighthouseGui {
+
+extern std::shared_ptr<LighthouseMenu> mLighthouseMenu;
+extern std::shared_ptr<LighthouseModalWindow> mModalWindow;
+using namespace UIWidgets;
+
+void LighthouseMenu::AddMenuRando() {
+
+    // Add Rando Menu
+    AddMenuEntry("Rando", CVAR_SETTING("Menu.RandoSidebarSection"));
+
+    // Rando - General
+    AddSidebarEntry("Rando", "General", 1);
+    WidgetPath path = { "Rando", "General", SECTION_COLUMN_1 };
+
+    AddWidget(path, "Settings", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Enable Rando", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_RANDOMIZER_SETTING("Enable"))
+        .Options(CheckboxOptions().Tooltip("Enables Randomizer on the next new save file."));
+    AddWidget(path, "Logic Mode", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
+        int32_t currentIndex = CVarGetInteger(Rando::StaticData::Options[RO_LOGIC].cvar, 0);
+        const char* widgetLabel = logicModes[currentIndex];
+
+        ImGui::SetNextItemWidth(ImGui::GetContentRegionMax().x * 0.5f);
+        UIWidgets::PushStyleCombobox(WIDGET_COLOR);
+        if (ImGui::BeginCombo("##randoLogicMode", widgetLabel)) {
+            for (int i = 0; i < IM_ARRAYSIZE(logicModes); i++) {
+                const bool isSelected = (currentIndex == i);
+
+                if (ImGui::Selectable(logicModes[i], isSelected)) {
+                    CVarSetInteger(Rando::StaticData::Options[RO_LOGIC].cvar, i);
+                }
+
+                if (isSelected) {
+                    ImGui::SetItemDefaultFocus();
+                }
+            }
+            ImGui::EndCombo();
+        }
+        UIWidgets::PopStyleCombobox();
+    });
+    AddWidget(path, "Send Collection Notifications", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_RANDOMIZER_SETTING("RandoNotifications"))
+        .Options(CheckboxOptions().Tooltip("Sends notifications when you collect a Rando Item."));
+
+    AddWidget(path, "Manual Seed Options", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Manual Seed ID", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
+        // TODO: Seeded Glitchless Generation
+        ImGui::BeginDisabled(true);
+        UIWidgets::CVarCheckbox("Use Manual Seed Input", CVAR_RANDOMIZER_SETTING("ManualInput"),
+                                UIWidgets::CheckboxOptions().Color(WIDGET_COLOR));
+
+        UIWidgets::PushStyleSlider();
+        static char seed[256];
+        std::string stringSeed = CVarGetString(CVAR_RANDOMIZER_SETTING("InputSeed"), "");
+        strcpy(seed, stringSeed.c_str());
+
+        // ImGui::BeginDisabled(!CVarGetInteger(CVAR_RANDOMIZER_SETTING("ManualInput"), 0));
+        ImGui::InputText("##Seed", seed, sizeof(seed), ImGuiInputTextFlags_CallbackAlways,
+                         [](ImGuiInputTextCallbackData* data) {
+                             CVarSetString(CVAR_RANDOMIZER_SETTING("InputSeed"), data->Buf);
+                             return 0;
+                         });
+        if (stringSeed.length() < 1) {
+            ImGui::SameLine(17.0f);
+            ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 0.4f), "Leave blank for random seed");
+        }
+        // ImGui::EndDisabled();
+        ImGui::EndDisabled();
+
+        UIWidgets::PopStyleSlider();
+    });
+
+    AddWidget(path, "Seed Metrics", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Metrics", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) { DrawSeedMetrics(); });
+
+    // Rando - Shuffle Options
+    AddSidebarEntry("Rando", "Shuffle Options", 1);
+    path = { "Rando", "Shuffle Options", SECTION_COLUMN_1 };
+
+    AddWidget(path, "Shuffle Collectables", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Shuffle Empty Honeycombs", WIDGET_CVAR_CHECKBOX)
+        .CVar(Rando::StaticData::Options[RO_SHUFFLE_EMPTY_HONEYCOMBS].cvar)
+        .Options(CheckboxOptions().Tooltip("Shuffles Empty Honeycombs into the Pool."));
+    AddWidget(path, "Shuffle Jiggies", WIDGET_CVAR_CHECKBOX)
+        .CVar(Rando::StaticData::Options[RO_SHUFFLE_JIGGIES].cvar)
+        .Options(CheckboxOptions().Tooltip("Shuffles Jiggies into the Pool."));
+    AddWidget(path, "Shuffle Jinjos", WIDGET_CVAR_CHECKBOX)
+        .CVar(Rando::StaticData::Options[RO_SHUFFLE_JINJOS].cvar)
+        .Options(CheckboxOptions().Tooltip("Shuffles Jinjos into the Pool."));
+    AddWidget(path, "Shuffle Molehills", WIDGET_CVAR_CHECKBOX)
+        .CVar(Rando::StaticData::Options[RO_SHUFFLE_MOLEHILLS].cvar)
+        .Options(CheckboxOptions().Tooltip("Shuffles which abilities each Molehill unlocks."));
+    AddWidget(path, "Shuffle Mumbo Tokens", WIDGET_CVAR_CHECKBOX)
+        .CVar(Rando::StaticData::Options[RO_SHUFFLE_MUMBO_TOKENS].cvar)
+        .Options(CheckboxOptions().Tooltip("Shuffles Mumbo Tokens into the Pool."));
+    AddWidget(path, "Shuffle Music Notes", WIDGET_CVAR_CHECKBOX)
+        .CVar(Rando::StaticData::Options[RO_SHUFFLE_MUSIC_NOTES].cvar)
+        .Options(CheckboxOptions().Tooltip("Shuffles Music Notes into the Pool."));
+
+    // Rando - Starting Loadout
+    AddSidebarEntry("Rando", "Starting Loadout", 1);
+    path = { "Rando", "Starting Loadout", SECTION_COLUMN_1 };
+
+    AddWidget(path, "Starting Abilities", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Abilities", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
+        std::string abilityToolTip;
+        bool defaultValue = false;
+
+        ImGui::PushID(SECTION_COLUMN_1);
+        if (UIWidgets::Button("Enable All", UIWidgets::ButtonOptions()
+                                                .Color(UIWidgets::Colors::Green)
+                                                .Size(ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 0)))) {
+            for (auto& [abilityId, abilityInfo] : abilityLoadoutMap) {
+                if (abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER || abilityId == ABILITY_13_1ST_NOTEDOOR) {
+                    continue;
+                }
+                CVarSetInteger(abilityInfo.second, true);
+            }
+            Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+        }
+        ImGui::SameLine();
+        if (UIWidgets::Button("Disable All", UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Red))) {
+            for (auto& [abilityId, abilityInfo] : abilityLoadoutMap) {
+                if (abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER || abilityId == ABILITY_13_1ST_NOTEDOOR) {
+                    continue;
+                }
+                CVarSetInteger(abilityInfo.second, false);
+            }
+            Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+        }
+        ImGui::PopID();
+
+        if (ImGui::BeginTable("Abilities Table", 3, ImGuiTableFlags_SizingStretchSame)) {
+            ImGui::TableNextColumn();
+
+            for (auto& [abilityId, abilityInfo] : abilityLoadoutMap) {
+                abilityToolTip = fmt::format("Start with {} unlocked.", abilityInfo.first);
+                defaultValue =
+                    abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER || abilityId == ABILITY_13_1ST_NOTEDOOR ? true : false;
+
+                ImGui::BeginDisabled(abilityId == ABILITY_A_HOLD_A_JUMP_HIGHER || abilityId == ABILITY_13_1ST_NOTEDOOR);
+                UIWidgets::CVarCheckbox(abilityInfo.first, abilityInfo.second,
+                                        UIWidgets::CheckboxOptions()
+                                            .Color(WIDGET_COLOR)
+                                            .Tooltip(abilityToolTip.c_str())
+                                            .DefaultValue(defaultValue));
+                ImGui::EndDisabled();
+                ImGui::TableNextColumn();
+            }
+            ImGui::EndTable();
+        }
+    });
+
+    AddWidget(path, "Starting Consumables", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Consumables", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
+        std::string itemToolTip;
+        bool defaultValue = false;
+
+        ImGui::PushID(SECTION_COLUMN_2);
+        if (UIWidgets::Button("Enable All", UIWidgets::ButtonOptions()
+                                                .Color(UIWidgets::Colors::Green)
+                                                .Size(ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 0)))) {
+            for (auto& [itemId, itemInfo] : itemLoadoutMap) {
+                CVarSetInteger(itemInfo.second, true);
+            }
+            Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+        }
+        ImGui::SameLine();
+        if (UIWidgets::Button("Disable All", UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Red))) {
+            for (auto& [itemId, itemInfo] : itemLoadoutMap) {
+                CVarSetInteger(itemInfo.second, false);
+            }
+            Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+        }
+        ImGui::PopID();
+
+        if (ImGui::BeginTable("Items Table", 3, ImGuiTableFlags_SizingStretchSame)) {
+            ImGui::TableNextColumn();
+
+            for (auto& [itemId, itemInfo] : itemLoadoutMap) {
+                itemToolTip = fmt::format("Start with max {}.", itemInfo.first);
+
+                UIWidgets::CVarCheckbox(itemInfo.first, itemInfo.second,
+                                        UIWidgets::CheckboxOptions().Color(WIDGET_COLOR).Tooltip(itemToolTip.c_str()));
+                ImGui::TableNextColumn();
+            }
+            ImGui::EndTable();
+        }
+    });
+
+    // Rando - Junk Options
+    AddSidebarEntry("Rando", "Junk Options", 1);
+    path = { "Rando", "Junk Options", SECTION_COLUMN_1 };
+
+    AddWidget(path, "Enable Junk", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Spawn Junk For Obtained Checks", WIDGET_CVAR_CHECKBOX)
+        .CVar(Rando::StaticData::Options[RO_SPAWN_JUNK].cvar)
+        .Options(CheckboxOptions().Tooltip("Spawns a junk item in place of an object that has already been collected."))
+        .Callback([](WidgetInfo& info) { UpdateJunkList(); });
+
+    AddWidget(path, "Junk Selection", WIDGET_SEPARATOR_TEXT);
+
+    AddWidget(path, "Honeycomb Refills", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_RANDOMIZER_SETTING("Junk.HealthRefill"))
+        .Options(CheckboxOptions().Tooltip("Adds Health Refills to the Junk List."))
+        .Callback([](WidgetInfo& info) { UpdateJunkList(); });
+    AddWidget(path, "Blue Eggs", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_RANDOMIZER_SETTING("Junk.BlueEggs"))
+        .Options(CheckboxOptions().Tooltip("Adds Blue Eggs to the Junk List."))
+        .Callback([](WidgetInfo& info) { UpdateJunkList(); });
+    AddWidget(path, "Red Feathers", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_RANDOMIZER_SETTING("Junk.RedFeathers"))
+        .Options(CheckboxOptions().Tooltip("Adds Red Feathers to the Junk List."))
+        .Callback([](WidgetInfo& info) { UpdateJunkList(); });
+    AddWidget(path, "Gold Feathers", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_RANDOMIZER_SETTING("Junk.GoldFeathers"))
+        .Options(CheckboxOptions().Tooltip("Adds Gold Feathers to the Junk List."))
+        .Callback([](WidgetInfo& info) { UpdateJunkList(); });
+
+    // Rando - Check Tracker
+    path.sidebarName = "Check Tracker";
+    AddSidebarEntry("Rando", path.sidebarName, 1);
+    AddWidget(path, "Popout Settings", WIDGET_WINDOW_BUTTON)
+        .CVar("gWindows.CheckTrackerSettings")
+        .WindowName("Check Tracker Settings");
+}
+
+} // namespace LighthouseGui
