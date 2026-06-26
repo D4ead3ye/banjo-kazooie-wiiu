@@ -20,16 +20,10 @@ typedef struct {
 
 extern "C" {
 void func_80347A14(s32 arg0);
-int ability_isUnlocked(enum ability_e uid);
+s32 item_adjustByDiffWithHud(enum item_e item, s32 diff);
 void ability_unlock(enum ability_e);
 s32 mapSpecificFlags_get(s32 i);
 void mapSpecificFlags_set(s32 i, s32 val);
-
-bool gcdialog_showDialog(s32 text_id, s32 arg1, f32* pos, ActorMarker* marker,
-                         void (*callback)(ActorMarker*, enum asset_e, s32),
-                         void (*arg5)(ActorMarker*, enum asset_e, s32));
-
-void __chSmBottles_textCallback(ActorMarker* marker, enum asset_e text_id, s32 arg2);
 }
 
 // clang-format off
@@ -137,7 +131,7 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
                 case ABILITY_6_EGGS:
                     *textId = (s32)moleInfo.refresher_text_id;
                     ability_unlock((ability_e)moleInfo.ability);
-                    item_adjustByDiffWithoutHud(ITEM_D_EGGS, 50);
+                    item_adjustByDiffWithHud(ITEM_D_EGGS, 50);
                     break;
                 case ABILITY_8_FLAP_FLIP:
                     *textId = (s32)moleInfo.refresher_text_id;
@@ -148,12 +142,12 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
                 case ABILITY_9_FLIGHT:
                     *textId = (s32)moleInfo.refresher_text_id;
                     ability_unlock((ability_e)moleInfo.ability);
-                    item_adjustByDiffWithoutHud(ITEM_F_RED_FEATHER, 25);
+                    item_adjustByDiffWithHud(ITEM_F_RED_FEATHER, 25);
                     break;
                 case ABILITY_12_WONDERWING:
                     *textId = (s32)moleInfo.refresher_text_id;
                     ability_unlock((ability_e)moleInfo.ability);
-                    item_adjustByDiffWithoutHud(ITEM_10_GOLD_FEATHER, 5);
+                    item_adjustByDiffWithHud(ITEM_10_GOLD_FEATHER, 5);
                     break;
                 default:
                     *textId = (s32)moleInfo.refresher_text_id;
