@@ -37,7 +37,8 @@ void LighthouseMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCEMENT("Cutscenes.SkipJiggyDance"))
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip(
-            "Skips the jiggy collection dance, collecting the jiggy immediately like underwater pickups."));
+            "Skips the jiggy collection dance, collecting the jiggy immediately. "
+            "Takes priority over the Tooie Jiggy Animation backport."));
 
     AddWidget(path, "Skip Clucker Cutscene", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Cutscenes.SkipCluckerCutscene"))
@@ -114,18 +115,6 @@ void LighthouseMenu::AddMenuEnhancements() {
         .Options(FloatSliderOptions().Min(8.0f).Max(60.0f).DefaultValue(40.0f).Step(1.0f).Format("%.0f").Tooltip(
             "How quickly the camera settles when sliding along geometry. "
             "Lower is smoother but floatier; higher is snappier but can hitch on walls."));
-
-    AddWidget(path, "Free Look Min Distance", WIDGET_CVAR_SLIDER_FLOAT)
-        .CVar(CVAR_ENHANCEMENT("Camera.FreeLook.MinDistance"))
-        .RaceDisable(false)
-        .Options(FloatSliderOptions().Min(50.0f).Max(500.0f).DefaultValue(120.0f).Step(1.0f).Format("%.0f").Tooltip(
-            "Closest the camera may sit from Banjo when entering free look."));
-
-    AddWidget(path, "Free Look Max Distance", WIDGET_CVAR_SLIDER_FLOAT)
-        .CVar(CVAR_ENHANCEMENT("Camera.FreeLook.MaxDistance"))
-        .RaceDisable(false)
-        .Options(FloatSliderOptions().Min(200.0f).Max(1500.0f).DefaultValue(1200.0f).Step(1.0f).Format("%.0f").Tooltip(
-            "Farthest the camera may sit from Banjo when entering free look."));
 
     // Enhancements -> Modes
     path = { "Enhancements", "Modes", SECTION_COLUMN_1 };
@@ -345,7 +334,9 @@ void LighthouseMenu::AddMenuEnhancements() {
     AddWidget(path, "Tooie Jiggy Animation", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Backports.JiggyAnimation"))
         .RaceDisable(false)
-        .Options(CheckboxOptions().Tooltip("Replaces the jiggy collection dance with a Banjo-Tooie style animation."));
+        .Options(CheckboxOptions().Tooltip(
+            "Replaces the jiggy collection dance with a Banjo-Tooie style animation. Has no effect while "
+            "Skip Jiggy Dance (under Cutscenes) is on."));
 
     AddWidget(path, "Honeyback Health Regen", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Backports.Honeyback"))
