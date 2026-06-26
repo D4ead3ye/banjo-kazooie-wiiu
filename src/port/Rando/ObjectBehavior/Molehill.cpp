@@ -178,10 +178,7 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
             return;
         }
 
-        if (CheckBridgeState() && !mapSpecificFlags_get(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED)) {
-            mapSpecificFlags_set(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, true);
-            gcdialog_showDialog(ASSET_E12_DIALOG_BOTTLES_LEARNED_TUTORIAL_MOVES, 0xe, molehillActor->position,
-                                molehillActor->marker, __chSmBottles_textCallback, NULL);
+        if (CheckBridgeState() && !RANDO_SAVE_FLAGS[RANDO_INF_BRIDGE_REPAIRED_DIALOG_COMPLETE].flagState) {
             *should = true;
         }
     })
@@ -198,6 +195,9 @@ void Rando::ObjectBehavior::InitMolehillBehavior() {
 
         if (CheckBridgeState()) {
             mapSpecificFlags_set(SM_SPECIFIC_FLAG_3_ALL_SM_ABILITIES_LEARNED, true);
+            if (!RANDO_SAVE_FLAGS[RANDO_INF_BRIDGE_REPAIRED_DIALOG_COMPLETE].flagState) {
+                CALL_EVENT(SetRandoInfFlag, RANDO_INF_BRIDGE_REPAIRED_DIALOG_COMPLETE, true);
+            }
             event->Cancelled = true;
             ev->result = true;
         }
