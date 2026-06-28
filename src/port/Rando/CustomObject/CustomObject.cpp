@@ -311,14 +311,16 @@ void CustomObject::ResolveCustomActorCollisionEX(RandoCheckId randoCheckId) {
     }
 }
 
-void CustomObject::CheckObtainedEX(RandoCheckId randoCheckId) {
+void CustomObject::CheckObtainedEX(RandoCheckId randoCheckId, bool isInit) {
     for (auto& pool : Rando::Logic::shuffledPool) {
         if (pool.randoCheckId == randoCheckId && !pool.obtained) {
             pool.obtained = true;
             shouldRemoveEX = true;
             RANDO_SAVE_CHECKS[pool.randoCheckId].obtained = true;
             CustomObject::RemoveSpawnedIdFromList(randoCheckId);
-            Rando::StaticData::SendCollisionNotification(pool.randoCheckId);
+            if (!isInit) {
+                Rando::StaticData::SendCollisionNotification(pool.randoCheckId);
+            }
             Rando::StaticData::ModifyRandoInfFlagState(randoCheckId);
             Rando::Logic::RefreshReachableRegions();
             break;
