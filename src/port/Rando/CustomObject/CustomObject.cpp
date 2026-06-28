@@ -160,6 +160,10 @@ Actor* CustomObject::SpawnCustomActorEX(RandoCheckId randoCheckId, int32_t posit
 }
 
 void CustomObject::FlushRandoSpawnQueue() {
+    if (gsworld_getMap() == MAP_91_FILE_SELECT) {
+        return;
+    }
+
     if (randoActorQueue.empty()) {
         return;
     }
