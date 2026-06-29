@@ -367,6 +367,27 @@ void LighthouseMenu::AddMenuEnhancements() {
         .Options(CheckboxOptions().Tooltip(
             "Hold A+B while underwater to combine Banjo's kick with Kazooie's wing stroke for faster swimming."));
 
+    AddWidget(path, "First-Person Egg Aim", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Backports.EggAim"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip(
+            "Backports Banjo-Tooie's Egg Aim to fire eggs while in first-person camera view."));
+
+    // Enhancements -> Saving
+    path = { "Enhancements", "Saving", SECTION_COLUMN_1 };
+    AddSidebarEntry("Enhancements", path.sidebarName, 1);
+    path.column = SECTION_COLUMN_1;
+
+    AddWidget(path, "Persist Bottles Bonus", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Saving.PersistBottlesBonus"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Persists Bottle Bonus progress through the save file."));
+
+    AddWidget(path, "Persist Extra Lives", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Saving.PersistExtraLives"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Persists Extra Lives through the save file."));
+
     AddWidget(path, "Note Collection Retention", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Gameplay.NoteRetention"))
         .RaceDisable(false)
@@ -383,26 +404,6 @@ void LighthouseMenu::AddMenuEnhancements() {
             "you enter a level, so you no longer need all five in one go. Collection is always tracked; "
             "this toggle controls whether collected jinjos are skipped on load and your progress is "
             "restored."));
-
-    AddWidget(path, "First-Person Egg Aim", WIDGET_CVAR_CHECKBOX)
-        .CVar(CVAR_ENHANCEMENT("Backports.EggAim"))
-        .RaceDisable(false)
-        .Options(CheckboxOptions().Tooltip(
-            "Backports Banjo-Tooie's Egg Aim to fire eggs while in first-person camera view."));
-
-    // Enhancements -> Saving
-    path = { "Enhancements", "Saving", SECTION_COLUMN_1 };
-    AddSidebarEntry("Enhancements", path.sidebarName, 1);
-    path.column = SECTION_COLUMN_1;
-
-    AddWidget(path, "Persist Bottles Bonus", WIDGET_CVAR_CHECKBOX)
-        .CVar(CVAR_ENHANCEMENT("Saving.PersistBottlesBonus"))
-        .RaceDisable(false)
-        .Options(CheckboxOptions().Tooltip("Persists Bottle Bonus progress through the save file."));
-    AddWidget(path, "Persist Extra Lives", WIDGET_CVAR_CHECKBOX)
-        .CVar(CVAR_ENHANCEMENT("Saving.PersistExtraLives"))
-        .RaceDisable(false)
-        .Options(CheckboxOptions().Tooltip("Persists Extra Lives through the save file."));
 
     // Enhancements -> Cheats
     path = { "Enhancements", "Cheats", SECTION_COLUMN_1 };
