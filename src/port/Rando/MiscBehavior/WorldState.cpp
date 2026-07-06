@@ -237,7 +237,9 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
         }
 
         for (auto& saveCheck : RANDO_SAVE_CHECKS) {
-            if (Rando::StaticData::Checks[saveCheck.shuffledCheckId].randoCheckType != RCTYPE_EMPTY_HONEYCOMB) {
+            Rando::StaticData::RandoStaticItem randoItem = Rando::StaticData::Items[saveCheck.randoItemId];
+
+            if (randoItem.randoItemType != RITYPE_EMPTY_HONEYCOMB) {
                 continue;
             }
 
@@ -267,7 +269,9 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
         }
 
         for (auto& saveCheck : RANDO_SAVE_CHECKS) {
-            if (Rando::StaticData::Checks[saveCheck.shuffledCheckId].randoCheckType != RCTYPE_MUMBO_TOKEN) {
+            Rando::StaticData::RandoStaticItem randoItem = Rando::StaticData::Items[saveCheck.randoItemId];
+
+            if (randoItem.randoItemType != RITYPE_MUMBO_TOKEN) {
                 continue;
             }
 
