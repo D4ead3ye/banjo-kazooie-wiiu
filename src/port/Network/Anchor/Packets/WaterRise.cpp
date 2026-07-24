@@ -34,10 +34,14 @@ static std::map<int32_t, int32_t> sLairPendingLevel;
 
 static int32_t lairLevelForFlag(int32_t levelFlag) {
     switch (levelFlag) {
-        case FILEPROG_23_LAIR_WATER_LEVEL_1: return 1;
-        case FILEPROG_25_LAIR_WATER_LEVEL_2: return 2;
-        case FILEPROG_27_LAIR_WATER_LEVEL_3: return 3;
-        default:                             return 0;
+        case FILEPROG_23_LAIR_WATER_LEVEL_1:
+            return 1;
+        case FILEPROG_25_LAIR_WATER_LEVEL_2:
+            return 2;
+        case FILEPROG_27_LAIR_WATER_LEVEL_3:
+            return 3;
+        default:
+            return 0;
     }
 }
 

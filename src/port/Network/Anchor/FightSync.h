@@ -15,16 +15,16 @@
 // FIGHT_EVENT ids ('ev' field).
 enum FightSyncEvent {
     // authority -> followers
-    FIGHT_EV_SPELL = 0,       // a = kind (0 fireball, 1 final fireball, 2 green blast); p/v/w = spawn vectors
-    FIGHT_EV_PAD_SPAWN,       // flight pad appears (end of phase 2)
-    FIGHT_EV_PAD_DESPAWN,     // flight pad removed (during phase 3 barrier cast)
-    FIGHT_EV_BARRIER,         // spell barrier spawns on Grunty
-    FIGHT_EV_STATUE_SPAWN,    // a = ch_bossjinjo_e statue id (1-4 jinjos, 5 jinjonator)
-    FIGHT_EV_EGG_FED,         // a = statue id (1-4 jinjos, 5 jinjonator), b = jinjonator pad index
-    FIGHT_EV_JINJO_ATTACK,    // a = jinjo statue id whose jinjo just slammed Grunty
+    FIGHT_EV_SPELL = 0,    // a = kind (0 fireball, 1 final fireball, 2 green blast); p/v/w = spawn vectors
+    FIGHT_EV_PAD_SPAWN,    // flight pad appears (end of phase 2)
+    FIGHT_EV_PAD_DESPAWN,  // flight pad removed (during phase 3 barrier cast)
+    FIGHT_EV_BARRIER,      // spell barrier spawns on Grunty
+    FIGHT_EV_STATUE_SPAWN, // a = ch_bossjinjo_e statue id (1-4 jinjos, 5 jinjonator)
+    FIGHT_EV_EGG_FED,      // a = statue id (1-4 jinjos, 5 jinjonator), b = jinjonator pad index
+    FIGHT_EV_JINJO_ATTACK, // a = jinjo statue id whose jinjo just slammed Grunty
     // followers -> authority
-    FIGHT_EV_BOSS_HIT,        // a = the phase the hitting client believed Grunty was in
-    FIGHT_EV_EGG,             // a = statue id, b = jinjonator pad index
+    FIGHT_EV_BOSS_HIT, // a = the phase the hitting client believed Grunty was in
+    FIGHT_EV_EGG,      // a = statue id, b = jinjonator pad index
 };
 
 // FIGHT_STATE catch-up snapshot for a client joining mid-fight.
@@ -70,11 +70,9 @@ bool chjinjonatorbase_netGetPads(uint8_t pads[4]);
 
 // --- C -> network (bridges implemented in the packet .cpp files) -----------------------
 
-void FightSync_SendUpdate(const float pos[3], float yaw, int32_t state, int32_t phase, int32_t mirror,
-                          int32_t vuln);
+void FightSync_SendUpdate(const float pos[3], float yaw, int32_t state, int32_t phase, int32_t mirror, int32_t vuln);
 // v0/v1/v2 may be NULL for events that carry no vectors.
-void FightSync_SendEvent(int32_t ev, int32_t a, int32_t b, const float v0[3], const float v1[3],
-                         const float v2[3]);
+void FightSync_SendEvent(int32_t ev, int32_t a, int32_t b, const float v0[3], const float v1[3], const float v2[3]);
 void FightSync_SendSnapshot(uint32_t clientId);
 
 uint32_t FightSyncSeq_Next(void);
@@ -86,13 +84,10 @@ void FightSyncSeq_Reset(void);
 void FightSync_OnAuthorityChanged(void);
 
 // Fill the stream fields from the live boss; false if there's no boss to stream.
-bool FightSync_GatherUpdate(float pos[3], float* yaw, int32_t* state, int32_t* phase, int32_t* mirror,
-                            int32_t* vuln);
+bool FightSync_GatherUpdate(float pos[3], float* yaw, int32_t* state, int32_t* phase, int32_t* mirror, int32_t* vuln);
 
-void FightSync_ApplyUpdate(const float pos[3], float yaw, int32_t state, int32_t phase, int32_t mirror,
-                           int32_t vuln);
-void FightSync_ApplyEvent(int32_t ev, int32_t a, int32_t b, const float v0[3], const float v1[3],
-                          const float v2[3]);
+void FightSync_ApplyUpdate(const float pos[3], float yaw, int32_t state, int32_t phase, int32_t mirror, int32_t vuln);
+void FightSync_ApplyEvent(int32_t ev, int32_t a, int32_t b, const float v0[3], const float v1[3], const float v2[3]);
 
 // Gather on the authority (false = nothing to send) / apply on a joining follower.
 bool FightSync_GatherWorld(FightWorldSnapshot* snap);

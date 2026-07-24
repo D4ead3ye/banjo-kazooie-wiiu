@@ -79,7 +79,9 @@ public:
     // eye/mouth
     void dummy_setEyeState(bool squint, bool wink, bool isHat);
     AnimCtrl* dummy_getAnimCtrl();
-    ActorMarker* dummy_getMarker() const { return dummyMarker; }
+    ActorMarker* dummy_getMarker() const {
+        return dummyMarker;
+    }
     void dummy_despawnActor(void);
 
 private:

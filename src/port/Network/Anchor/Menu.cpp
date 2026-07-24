@@ -219,7 +219,8 @@ void AnchorAdminMenu(WidgetInfo& info) {
                                 UIWidgets::CheckboxOptions().DefaultValue(true).Color(THEME_COLOR))) {
         anchor->SendPacket_UpdateRoomState();
     }
-    if (UIWidgets::CVarCheckbox("Share Consumables (Eggs/Feathers)", CVAR_REMOTE_ANCHOR("RoomSettings.ShareConsumables"),
+    if (UIWidgets::CVarCheckbox("Share Consumables (Eggs/Feathers)",
+                                CVAR_REMOTE_ANCHOR("RoomSettings.ShareConsumables"),
                                 UIWidgets::CheckboxOptions().DefaultValue(false).Color(THEME_COLOR))) {
         anchor->SendPacket_UpdateRoomState();
     }

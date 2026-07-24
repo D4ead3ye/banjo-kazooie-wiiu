@@ -10,9 +10,8 @@ extern "C" {
 }
 
 static const char* const kJiggyLevelNames[10] = {
-    "Mumbo's Mountain", "Treasure Trove Cove", "Clanker's Cavern",   "Bubblegloop Swamp",
-    "Freezeezy Peak",   "Gruntilda's Lair",    "Gobi's Valley",      "Click Clock Wood",
-    "Rusty Bucket Bay", "Mad Monster Mansion",
+    "Mumbo's Mountain", "Treasure Trove Cove", "Clanker's Cavern", "Bubblegloop Swamp", "Freezeezy Peak",
+    "Gruntilda's Lair", "Gobi's Valley",       "Click Clock Wood", "Rusty Bucket Bay",  "Mad Monster Mansion",
 };
 
 /**
@@ -57,9 +56,9 @@ void Anchor::HandlePacket_CollectItem(nlohmann::json& payload) {
                 }
                 if (!IS_RANDO && ShouldShowNotifications()) {
                     size_t levelIdx = (size_t)(id - 1) / 10;
-                    const char* where =
-                        levelIdx < (sizeof(kJiggyLevelNames) / sizeof(kJiggyLevelNames[0])) ? kJiggyLevelNames[levelIdx]
-                                                                                             : "an unknown level";
+                    const char* where = levelIdx < (sizeof(kJiggyLevelNames) / sizeof(kJiggyLevelNames[0]))
+                                            ? kJiggyLevelNames[levelIdx]
+                                            : "an unknown level";
                     Notification::Emit({
                         .prefix = GetClientName(payload.value("clientId", 0u)),
                         .message = "collected Jiggy #" + std::to_string(((id - 1) % 10) + 1) + " in " + where,
@@ -117,13 +116,27 @@ void Anchor::HandlePacket_CollectItem(nlohmann::json& payload) {
         case ANCHOR_COLLECTIBLE_ORANGE: {
             enum item_e item;
             switch (kind) {
-                case ANCHOR_COLLECTIBLE_WORM:          item = ITEM_22_CATERPILLAR;  break;
-                case ANCHOR_COLLECTIBLE_ACORN:         item = ITEM_23_ACORNS;       break;
-                case ANCHOR_COLLECTIBLE_PRESENT_BLUE:  item = ITEM_20_BLUE_PRESENT;  break;
-                case ANCHOR_COLLECTIBLE_PRESENT_GREEN: item = ITEM_1F_GREEN_PRESENT; break;
-                case ANCHOR_COLLECTIBLE_PRESENT_RED:   item = ITEM_21_RED_PRESENT;   break;
-                case ANCHOR_COLLECTIBLE_ORANGE:        item = ITEM_19_ORANGE;        break;
-                default:                               item = ITEM_18_GOLD_BULLIONS; break;
+                case ANCHOR_COLLECTIBLE_WORM:
+                    item = ITEM_22_CATERPILLAR;
+                    break;
+                case ANCHOR_COLLECTIBLE_ACORN:
+                    item = ITEM_23_ACORNS;
+                    break;
+                case ANCHOR_COLLECTIBLE_PRESENT_BLUE:
+                    item = ITEM_20_BLUE_PRESENT;
+                    break;
+                case ANCHOR_COLLECTIBLE_PRESENT_GREEN:
+                    item = ITEM_1F_GREEN_PRESENT;
+                    break;
+                case ANCHOR_COLLECTIBLE_PRESENT_RED:
+                    item = ITEM_21_RED_PRESENT;
+                    break;
+                case ANCHOR_COLLECTIBLE_ORANGE:
+                    item = ITEM_19_ORANGE;
+                    break;
+                default:
+                    item = ITEM_18_GOLD_BULLIONS;
+                    break;
             }
             bool noHud = (kind == ANCHOR_COLLECTIBLE_ORANGE) && !sameMap;
             s32 delta = (id < 0) ? -1 : 1;

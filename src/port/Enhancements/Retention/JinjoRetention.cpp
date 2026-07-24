@@ -108,12 +108,18 @@ static u8 jinjoBitFromActor(int32_t actorId) {
 
 static int32_t jinjoActorFromBit(u8 bit) {
     switch (bit) {
-        case 1 << 0: return ACTOR_60_JINJO_BLUE;
-        case 1 << 1: return ACTOR_62_JINJO_GREEN;
-        case 1 << 2: return ACTOR_5F_JINJO_ORANGE;
-        case 1 << 3: return ACTOR_61_JINJO_PINK;
-        case 1 << 4: return ACTOR_5E_JINJO_YELLOW;
-        default: return 0;
+        case 1 << 0:
+            return ACTOR_60_JINJO_BLUE;
+        case 1 << 1:
+            return ACTOR_62_JINJO_GREEN;
+        case 1 << 2:
+            return ACTOR_5F_JINJO_ORANGE;
+        case 1 << 3:
+            return ACTOR_61_JINJO_PINK;
+        case 1 << 4:
+            return ACTOR_5E_JINJO_YELLOW;
+        default:
+            return 0;
     }
 }
 

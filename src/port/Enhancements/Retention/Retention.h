@@ -47,8 +47,7 @@ void port_carriedSync_beginMapLoad(int32_t mapId);
 
 // Registers a world object, attaching spawn-position identity to the marker. Sets *suppress
 // non-zero if a teammate already collected it.
-void port_carriedSync_register(int32_t kind, void* marker, int32_t x, int32_t y, int32_t z,
-                               int32_t* suppress);
+void port_carriedSync_register(int32_t kind, void* marker, int32_t x, int32_t y, int32_t z, int32_t* suppress);
 
 void port_carriedSync_onLocalCollect(int32_t kind, void* marker);
 

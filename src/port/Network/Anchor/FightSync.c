@@ -12,12 +12,12 @@ extern f32 D_80392758[3];
 extern f32 D_80392768[3];
 extern f32 D_80392778[3];
 extern f32 __chFinalBossFireballFlightTime;
-extern ActorMarker *__chFinalBossFlightPadMarker;
+extern ActorMarker* __chFinalBossFlightPadMarker;
 extern u8 __chFinalBossSpellBarrierActive;
-extern ActorArray *suBaddieActorArray;
+extern ActorArray* suBaddieActorArray;
 extern u8 sFinalBossJinjoStatueActivated;
 // Collision radius for the jinjo-into-Grunty test.
-extern f32 func_8033229C(ActorMarker *marker);
+extern f32 func_8033229C(ActorMarker* marker);
 
 // Set once the ending script takes over (chfinalboss_setBossDefeated).
 static u8 sFightNetCinematic = 0;
@@ -38,8 +38,8 @@ static bool FightSync_IsLiveAuthority(void) {
     return NetAuthority_IsClaimed(NET_ACTIVITY_FINAL_BOSS) && NetAuthority_IsSelf(NET_ACTIVITY_FINAL_BOSS);
 }
 
-static Actor *FightSync_FindBoss(void) {
-    Actor *boss = actorArray_findActorFromActorId(ACTOR_38B_GRUNTILDA_FINAL_BOSS);
+static Actor* FightSync_FindBoss(void) {
+    Actor* boss = actorArray_findActorFromActorId(ACTOR_38B_GRUNTILDA_FINAL_BOSS);
 
     if (boss == NULL || !boss->volatile_initialized || boss->despawn_flag) {
         return NULL;
@@ -48,14 +48,14 @@ static Actor *FightSync_FindBoss(void) {
 }
 
 // The jinjo statue bases share one actor id, so find by their statue id (1-4).
-static Actor *FightSync_FindStatueBase(s32 statue_id) {
+static Actor* FightSync_FindStatueBase(s32 statue_id) {
     s32 i;
 
     if (suBaddieActorArray == NULL) {
         return NULL;
     }
     for (i = 0; i < suBaddieActorArray->cnt; i++) {
-        Actor *actor = &suBaddieActorArray->data[i];
+        Actor* actor = &suBaddieActorArray->data[i];
         if (actor->marker == NULL || actor->marker->id != MARKER_27A_JINJO_STATUE_BASE) {
             continue;
         }
@@ -69,7 +69,7 @@ static Actor *FightSync_FindStatueBase(s32 statue_id) {
 
 // Apply a networked egg via getHitByEgg(other == NULL), the counting path.
 static void FightSync_ApplyJinjoStatueEgg(s32 statue_id) {
-    Actor *base = FightSync_FindStatueBase(statue_id);
+    Actor* base = FightSync_FindStatueBase(statue_id);
 
     if (base != NULL) {
         chBossJinjoBase_getHitByEgg(base->marker, NULL);
@@ -171,9 +171,9 @@ bool FightSync_ForwardEgg(s32 statue_id, s32 pad_index) {
 
 // --- stream: gather (authority) / apply (follower) ---------------------------------------------
 
-bool FightSync_GatherUpdate(f32 pos[3], f32 *yaw, s32 *state, s32 *phase, s32 *mirror, s32 *vuln) {
-    Actor *boss;
-    ActorLocal_FinalBoss *local;
+bool FightSync_GatherUpdate(f32 pos[3], f32* yaw, s32* state, s32* phase, s32* mirror, s32* vuln) {
+    Actor* boss;
+    ActorLocal_FinalBoss* local;
 
     if (sFightNetCinematic) {
         return false;
@@ -182,7 +182,7 @@ bool FightSync_GatherUpdate(f32 pos[3], f32 *yaw, s32 *state, s32 *phase, s32 *m
     if (boss == NULL) {
         return false;
     }
-    local = (ActorLocal_FinalBoss *)&boss->local;
+    local = (ActorLocal_FinalBoss*)&boss->local;
     pos[0] = boss->position[0];
     pos[1] = boss->position[1];
     pos[2] = boss->position[2];
@@ -195,8 +195,8 @@ bool FightSync_GatherUpdate(f32 pos[3], f32 *yaw, s32 *state, s32 *phase, s32 *m
     return true;
 }
 
-static void FightSync_ApplyBossState(Actor *this, s32 phase, s32 state) {
-    ActorLocal_FinalBoss *local = (ActorLocal_FinalBoss *)&this->local;
+static void FightSync_ApplyBossState(Actor* this, s32 phase, s32 state) {
+    ActorLocal_FinalBoss* local = (ActorLocal_FinalBoss*)&this->local;
 
     // unk44_31 = broomstick motor sfx source.
     if (this->unk44_31 != 0 && phase != FINALBOSS_PHASE_1_BROOMSTICK) {
@@ -226,8 +226,8 @@ static void FightSync_ApplyBossState(Actor *this, s32 phase, s32 state) {
 }
 
 void FightSync_ApplyUpdate(const f32 pos[3], f32 yaw, s32 state, s32 phase, s32 mirror, s32 vuln) {
-    Actor *boss;
-    ActorLocal_FinalBoss *local;
+    Actor* boss;
+    ActorLocal_FinalBoss* local;
 
     if (!FightSync_IsFollower() || sFightNetCinematic) {
         return;
@@ -237,7 +237,7 @@ void FightSync_ApplyUpdate(const f32 pos[3], f32 yaw, s32 state, s32 phase, s32 
         return;
     }
     sFightNetWasFollower = 1;
-    local = (ActorLocal_FinalBoss *)&boss->local;
+    local = (ActorLocal_FinalBoss*)&boss->local;
     boss->position[0] = pos[0];
     boss->position[1] = pos[1];
     boss->position[2] = pos[2];
@@ -253,8 +253,8 @@ void FightSync_ApplyUpdate(const f32 pos[3], f32 yaw, s32 state, s32 phase, s32 
 
 // --- latecomer world snapshot -------------------------------------------------------------------
 
-bool FightSync_GatherWorld(FightWorldSnapshot *snap) {
-    Actor *base;
+bool FightSync_GatherWorld(FightWorldSnapshot* snap) {
+    Actor* base;
     s32 i;
 
     if (sFightNetCinematic || !FightSync_IsLiveAuthority() || FightSync_FindBoss() == NULL) {
@@ -279,7 +279,7 @@ bool FightSync_GatherWorld(FightWorldSnapshot *snap) {
     return true;
 }
 
-void FightSync_ApplyWorld(const FightWorldSnapshot *snap) {
+void FightSync_ApplyWorld(const FightWorldSnapshot* snap) {
     s32 i;
 
     if (!FightSync_IsFollower() || sFightNetCinematic) {
@@ -296,9 +296,9 @@ void FightSync_ApplyWorld(const FightWorldSnapshot *snap) {
     }
 }
 
-static void FightSync_CatchupTick(Actor *boss) {
-    Actor *base;
-    Actor *jinjo;
+static void FightSync_CatchupTick(Actor* boss) {
+    Actor* base;
+    Actor* jinjo;
     u8 pads[4];
     s32 i;
     s32 done = 1;
@@ -369,8 +369,8 @@ static void FightSync_CatchupTick(Actor *boss) {
     }
 }
 
-bool FightSync_BossFollowerTick(void *bossPtr) {
-    Actor *boss = (Actor *)bossPtr;
+bool FightSync_BossFollowerTick(void* bossPtr) {
+    Actor* boss = (Actor*)bossPtr;
 
     if (!FightSync_IsFollower() || sFightNetCinematic) {
         return false;
@@ -378,13 +378,12 @@ bool FightSync_BossFollowerTick(void *bossPtr) {
     FightSync_CatchupTick(boss);
 
     // Detect a jinjo-into-Grunty collision locally (display-only) ahead of the authority's slam event.
-    if (((ActorLocal_FinalBoss *)&boss->local)->phase == FINALBOSS_PHASE_4_JINJOS) {
-        ActorMarker *jinjoMarker = chfinalboss_findCollidingJinjo(boss, func_8033229C(boss->marker));
+    if (((ActorLocal_FinalBoss*)&boss->local)->phase == FINALBOSS_PHASE_4_JINJOS) {
+        ActorMarker* jinjoMarker = chfinalboss_findCollidingJinjo(boss, func_8033229C(boss->marker));
         if (jinjoMarker != NULL) {
-            Actor *jinjo = marker_getActor(jinjoMarker);
+            Actor* jinjo = marker_getActor(jinjoMarker);
             s32 sid = (jinjo != NULL) ? jinjo->actorTypeSpecificField : 0;
-            if (sid >= BOSSJINJO_1_ORANGE && sid <= BOSSJINJO_4_YELLOW &&
-                (sFightNetJinjoSlammed & (1 << sid))) {
+            if (sid >= BOSSJINJO_1_ORANGE && sid <= BOSSJINJO_4_YELLOW && (sFightNetJinjoSlammed & (1 << sid))) {
                 marker_despawn(jinjoMarker);
             } else {
                 if (sid >= BOSSJINJO_1_ORANGE && sid <= BOSSJINJO_4_YELLOW) {
@@ -415,7 +414,7 @@ bool FightSync_BossFollowerTick(void *bossPtr) {
 // --- one-shot event dispatch --------------------------------------------------------------------
 
 void FightSync_ApplyEvent(s32 ev, s32 a, s32 b, const f32 v0[3], const f32 v1[3], const f32 v2[3]) {
-    Actor *boss = FightSync_FindBoss();
+    Actor* boss = FightSync_FindBoss();
     s32 i;
 
     switch (ev) {
@@ -488,7 +487,7 @@ void FightSync_ApplyEvent(s32 ev, s32 a, s32 b, const f32 v0[3], const f32 v1[3]
             break;
 
         case FIGHT_EV_JINJO_ATTACK: {
-            Actor *jinjo;
+            Actor* jinjo;
             if (!FightSync_IsFollower() || a < BOSSJINJO_1_ORANGE || a > BOSSJINJO_4_YELLOW) {
                 return;
             }
@@ -508,7 +507,7 @@ void FightSync_ApplyEvent(s32 ev, s32 a, s32 b, const f32 v0[3], const f32 v1[3]
             if (getGameMode() == GAME_MODE_4_PAUSED) {
                 return;
             }
-            if (((ActorLocal_FinalBoss *)&boss->local)->phase != (u8)a) {
+            if (((ActorLocal_FinalBoss*)&boss->local)->phase != (u8)a) {
                 return;
             }
             chfinalboss_collisionPassive(boss->marker, NULL);
@@ -534,8 +533,8 @@ void FightSync_ApplyEvent(s32 ev, s32 a, s32 b, const f32 v0[3], const f32 v1[3]
 }
 
 void FightSync_OnAuthorityChanged(void) {
-    Actor *boss;
-    ActorLocal_FinalBoss *local;
+    Actor* boss;
+    ActorLocal_FinalBoss* local;
 
     FightSyncSeq_Reset();
     if (sFightNetCinematic) {
@@ -547,7 +546,7 @@ void FightSync_OnAuthorityChanged(void) {
     }
     if (sFightNetWasFollower && FightSync_IsLiveAuthority()) {
         sFightNetWasFollower = 0;
-        local = (ActorLocal_FinalBoss *)&boss->local;
+        local = (ActorLocal_FinalBoss*)&boss->local;
         if (local->phase != FINALBOSS_PHASE_0_INTRO) {
             chfinalboss_setPhase(boss->marker, local->phase);
         }

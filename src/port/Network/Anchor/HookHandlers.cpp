@@ -79,14 +79,10 @@ static void Anchor_UpdateFightSync() {
 
 static bool Anchor_ShouldBroadcastVolatileFlag(s32 index) {
     static const std::unordered_set<s32> syncList = {
-        VOLATILE_FLAG_B6_WITCH_SWITCH_PRESSED_MM,
-        VOLATILE_FLAG_B7_WITCH_SWITCH_PRESSED_MMM,
-        VOLATILE_FLAG_B8_WITCH_SWITCH_PRESSED_TTC,
-        VOLATILE_FLAG_B9_WITCH_SWITCH_PRESSED_RBB,
-        VOLATILE_FLAG_BA_WITCH_SWITCH_PRESSED_CCW,
-        VOLATILE_FLAG_BB_WITCH_SWITCH_PRESSED_FP,
-        VOLATILE_FLAG_BC_WITCH_SWITCH_PRESSED_CC,
-        VOLATILE_FLAG_BD_WITCH_SWITCH_PRESSED_BGS,
+        VOLATILE_FLAG_B6_WITCH_SWITCH_PRESSED_MM,  VOLATILE_FLAG_B7_WITCH_SWITCH_PRESSED_MMM,
+        VOLATILE_FLAG_B8_WITCH_SWITCH_PRESSED_TTC, VOLATILE_FLAG_B9_WITCH_SWITCH_PRESSED_RBB,
+        VOLATILE_FLAG_BA_WITCH_SWITCH_PRESSED_CCW, VOLATILE_FLAG_BB_WITCH_SWITCH_PRESSED_FP,
+        VOLATILE_FLAG_BC_WITCH_SWITCH_PRESSED_CC,  VOLATILE_FLAG_BD_WITCH_SWITCH_PRESSED_BGS,
         VOLATILE_FLAG_BE_WITCH_SWITCH_PRESSED_GV,
     };
     return syncList.contains(index);
@@ -96,7 +92,7 @@ bool Anchor_ScopedFlagExcluded(s32 space, s32 index) {
     static const std::unordered_set<s32> excluded = {
         (ANCHOR_FLAGSPACE_LEVEL_SPECIFIC << 16) | LEVEL_FLAG_5_TTC_UNKNOWN,            // TTC sandcastle drain
         (ANCHOR_FLAGSPACE_LEVEL_SPECIFIC << 16) | LEVEL_FLAG_29_FP_XMAS_TREE_COMPLETE, // FP xmas-tree ice shatter
-        (ANCHOR_FLAGSPACE_LEVEL_SPECIFIC << 16) | LEVEL_FLAG_30_RBB_UNKNOWN,           // RBB anchor/Snorkel chain cutscene
+        (ANCHOR_FLAGSPACE_LEVEL_SPECIFIC << 16) | LEVEL_FLAG_30_RBB_UNKNOWN, // RBB anchor/Snorkel chain cutscene
         // GV water-pyramid rise: reapplied live from JIGGY_42 in water_pyramidrot.c.
         (ANCHOR_FLAGSPACE_LEVEL_SPECIFIC << 16) | LEVEL_FLAG_6_GV_UNKNOWN,
         (ANCHOR_FLAGSPACE_MAP_SPECIFIC << 16) | MM_SPECIFIC_FLAG_2_ORANGE_HAS_BEEN_RETURNED,
@@ -131,8 +127,7 @@ bool Anchor_ScopedFlagExcluded(s32 space, s32 index) {
     // FP bear cubs' presents-received flags: kept local; ANCHOR_PUZZLE_FP_PRESENTS syncs the result.
     if (space == ANCHOR_FLAGSPACE_LEVEL_SPECIFIC &&
         (s32)map_getLevel(gsworld_getMap()) == (s32)LEVEL_5_FREEZEEZY_PEAK &&
-        (index == LEVEL_FLAG_11_FP_UNKNOWN || index == LEVEL_FLAG_12_FP_UNKNOWN ||
-         index == LEVEL_FLAG_13_FP_UNKNOWN)) {
+        (index == LEVEL_FLAG_11_FP_UNKNOWN || index == LEVEL_FLAG_12_FP_UNKNOWN || index == LEVEL_FLAG_13_FP_UNKNOWN)) {
         return true;
     }
     // SM_SPECIFIC_FLAG_10: Bottles-conversation position lock; kept local.
@@ -182,23 +177,41 @@ void Anchor::RegisterHooks() {
         // Anchor::GetInstance()->SendPacket_PlayerUpdate(true);
 
         auto* anchor = Anchor::GetInstance();
-        if (anchor->isConnected && anchor->roomState.syncItemsAndFlags &&
-            ev->nextMap != MAP_91_FILE_SELECT && ev->nextMap != MAP_1E_CS_START_NINTENDO &&
-            ev->nextMap != MAP_1F_CS_START_RAREWARE) {
+        if (anchor->isConnected && anchor->roomState.syncItemsAndFlags && ev->nextMap != MAP_91_FILE_SELECT &&
+            ev->nextMap != MAP_1E_CS_START_NINTENDO && ev->nextMap != MAP_1F_CS_START_RAREWARE) {
             anchor->SendPacket_RequestScopedState((GameMap)ev->nextMap);
 
             s32 enteredFlag = -1;
             switch (ev->nextMap) {
-                case MAP_2_MM_MUMBOS_MOUNTAIN:      enteredFlag = FILEPROG_B0_HAS_ENTERED_MM;  break;
-                case MAP_7_TTC_TREASURE_TROVE_COVE: enteredFlag = FILEPROG_B2_HAS_ENTERED_TTC; break;
-                case MAP_B_CC_CLANKERS_CAVERN:      enteredFlag = FILEPROG_B8_HAS_ENTERED_CC;  break;
-                case MAP_D_BGS_BUBBLEGLOOP_SWAMP:   enteredFlag = FILEPROG_B1_HAS_ENTERED_BGS; break;
-                case MAP_12_GV_GOBIS_VALLEY:        enteredFlag = FILEPROG_B3_HAS_ENTERED_GV;  break;
-                case MAP_1B_MMM_MAD_MONSTER_MANSION:enteredFlag = FILEPROG_B7_HAS_ENTERED_MMM; break;
-                case MAP_27_FP_FREEZEEZY_PEAK:      enteredFlag = FILEPROG_B6_HAS_ENTERED_FP;  break;
-                case MAP_31_RBB_RUSTY_BUCKET_BAY:   enteredFlag = FILEPROG_B4_HAS_ENTERED_RBB; break;
-                case MAP_40_CCW_HUB:                enteredFlag = FILEPROG_B5_HAS_ENTERED_CCW; break;
-                default:                            break;
+                case MAP_2_MM_MUMBOS_MOUNTAIN:
+                    enteredFlag = FILEPROG_B0_HAS_ENTERED_MM;
+                    break;
+                case MAP_7_TTC_TREASURE_TROVE_COVE:
+                    enteredFlag = FILEPROG_B2_HAS_ENTERED_TTC;
+                    break;
+                case MAP_B_CC_CLANKERS_CAVERN:
+                    enteredFlag = FILEPROG_B8_HAS_ENTERED_CC;
+                    break;
+                case MAP_D_BGS_BUBBLEGLOOP_SWAMP:
+                    enteredFlag = FILEPROG_B1_HAS_ENTERED_BGS;
+                    break;
+                case MAP_12_GV_GOBIS_VALLEY:
+                    enteredFlag = FILEPROG_B3_HAS_ENTERED_GV;
+                    break;
+                case MAP_1B_MMM_MAD_MONSTER_MANSION:
+                    enteredFlag = FILEPROG_B7_HAS_ENTERED_MMM;
+                    break;
+                case MAP_27_FP_FREEZEEZY_PEAK:
+                    enteredFlag = FILEPROG_B6_HAS_ENTERED_FP;
+                    break;
+                case MAP_31_RBB_RUSTY_BUCKET_BAY:
+                    enteredFlag = FILEPROG_B4_HAS_ENTERED_RBB;
+                    break;
+                case MAP_40_CCW_HUB:
+                    enteredFlag = FILEPROG_B5_HAS_ENTERED_CCW;
+                    break;
+                default:
+                    break;
             }
             if (enteredFlag >= 0 && fileProgressFlag_get((enum file_progress_e)enteredFlag)) {
                 anchor->SendPacket_SetFlag((u8)ANCHOR_FLAGSPACE_FILE_PROGRESS, (s16)enteredFlag);
@@ -399,7 +412,8 @@ void Anchor::RegisterHooks() {
                 if (Anchor_ScopedFlagExcluded(ev->flagSpace, index)) {
                     continue;
                 }
-                anchor->SendPacket_ScopedFlag((u8)ev->flagSpace, (s16)index, (u8)(levelSpecificFlags_get(index) ? 1 : 0));
+                anchor->SendPacket_ScopedFlag((u8)ev->flagSpace, (s16)index,
+                                              (u8)(levelSpecificFlags_get(index) ? 1 : 0));
                 continue;
             }
             if (ev->flagSpace == ANCHOR_FLAGSPACE_MAP_SPECIFIC) {
@@ -497,9 +511,8 @@ void Anchor::RegisterHooks() {
         port_jiggySpawn_remove(ev->jiggyId);
     });
 
-    COND_HOOK(OnSaveFileSave, EVENT_PRIORITY_NORMAL, isConnected, [](IEvent* event) {
-        Anchor::GetInstance()->SendPacket_UpdateTeamState();
-    });
+    COND_HOOK(OnSaveFileSave, EVENT_PRIORITY_NORMAL, isConnected,
+              [](IEvent* event) { Anchor::GetInstance()->SendPacket_UpdateTeamState(); });
 
     // #endregion
 

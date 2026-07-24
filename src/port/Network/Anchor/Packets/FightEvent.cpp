@@ -68,6 +68,5 @@ void Anchor::HandlePacket_FightEvent(nlohmann::json& payload) {
         }
     }
 
-    FightSync_ApplyEvent(ev, a, b, hasVectors ? p : nullptr, hasVectors ? v : nullptr,
-                              hasVectors ? w : nullptr);
+    FightSync_ApplyEvent(ev, a, b, hasVectors ? p : nullptr, hasVectors ? v : nullptr, hasVectors ? w : nullptr);
 }

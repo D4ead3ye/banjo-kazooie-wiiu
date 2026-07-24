@@ -173,8 +173,7 @@ static void EmitCheckNotification(RandoCheckId randoCheckId, const std::string& 
     if (randoSaveCheck.randoItemId == RI_MOLEHILL) {
         prefix = subject + " learned";
         message = abilityNameList[randoSaveCheck.randoCollectionId].c_str();
-    } else if (randoSaveCheck.randoItemId == RI_STOP_N_SWOP_EGG ||
-               randoSaveCheck.randoItemId == RI_STOP_N_SWOP_KEY) {
+    } else if (randoSaveCheck.randoItemId == RI_STOP_N_SWOP_EGG || randoSaveCheck.randoItemId == RI_STOP_N_SWOP_KEY) {
         int32_t totalsnsItems = Rando::Logic::GetTotalSnsItemsCollected();
         prefix = subject + " collected ";
         prefix += Rando::StaticData::Items[randoSaveCheck.randoItemId].article;

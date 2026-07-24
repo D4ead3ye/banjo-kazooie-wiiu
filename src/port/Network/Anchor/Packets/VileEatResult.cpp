@@ -11,7 +11,7 @@ extern "C" {
 /**
  * VILE_EAT_RESULT
  *
- * Sent by the minigame authority to confirm a successful VILE_EAT_REQUEST. 
+ * Sent by the minigame authority to confirm a successful VILE_EAT_REQUEST.
  * Catches up on animations and sounds as necessary
  */
 

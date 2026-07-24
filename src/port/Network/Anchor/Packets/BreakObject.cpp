@@ -42,8 +42,9 @@ void port_breakable_restoreBroken(const std::vector<int32_t>& flat) {
 }
 
 void port_breakable_clearForLevel(int32_t levelId) {
-    std::erase_if(sBrokenObjects,
-                  [levelId](const std::array<int32_t, 5>& e) { return (int32_t)map_getLevel((enum map_e)e[0]) == levelId; });
+    std::erase_if(sBrokenObjects, [levelId](const std::array<int32_t, 5>& e) {
+        return (int32_t)map_getLevel((enum map_e)e[0]) == levelId;
+    });
 }
 
 void Anchor::SendPacket_BreakObject(s16 markerId, s32 x, s32 y, s32 z, s32 map, bool replay) {

@@ -37,12 +37,18 @@ bool sPreferNote = true; // alternate note/jinjo across successful ticks
 
 const char* jinjoColorName(int32_t bit) {
     switch (bit) {
-        case 1 << 0: return "blue";
-        case 1 << 1: return "green";
-        case 1 << 2: return "orange";
-        case 1 << 3: return "pink";
-        case 1 << 4: return "yellow";
-        default: return "?";
+        case 1 << 0:
+            return "blue";
+        case 1 << 1:
+            return "green";
+        case 1 << 2:
+            return "orange";
+        case 1 << 3:
+            return "pink";
+        case 1 << 4:
+            return "yellow";
+        default:
+            return "?";
     }
 }
 

@@ -18,17 +18,28 @@ extern "C" {
 
 static const char* LevelOpenSeenFlagName(s16 flag) {
     switch (flag) {
-        case 0x28:                            return "Mumbo's Mountain";
-        case 0x29:                            return "Treasure Trove Cove";
-        case 0x2A:                            return "Clanker's Cavern";
-        case 0x2B:                            return "Bubblegloop Swamp";
-        case 0x2C:                            return "Freezeezy Peak";
-        case 0x2D:                            return "Gobi's Valley";
-        case 0x2E:                            return "Mad Monster Mansion";
-        case 0x2F:                            return "Rusty Bucket Bay";
-        case 0x30:                            return "Click Clock Wood";
-        case FILEPROG_E2_DOOR_OF_GRUNTY_OPEN: return "the door to Gruntilda";
-        default:                              return nullptr;
+        case 0x28:
+            return "Mumbo's Mountain";
+        case 0x29:
+            return "Treasure Trove Cove";
+        case 0x2A:
+            return "Clanker's Cavern";
+        case 0x2B:
+            return "Bubblegloop Swamp";
+        case 0x2C:
+            return "Freezeezy Peak";
+        case 0x2D:
+            return "Gobi's Valley";
+        case 0x2E:
+            return "Mad Monster Mansion";
+        case 0x2F:
+            return "Rusty Bucket Bay";
+        case 0x30:
+            return "Click Clock Wood";
+        case FILEPROG_E2_DOOR_OF_GRUNTY_OPEN:
+            return "the door to Gruntilda";
+        default:
+            return nullptr;
     }
 }
 

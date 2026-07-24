@@ -27,4 +27,5 @@ void Anchor::SendPacket_PlayerSfx(u16 sfxId) {
     payload["quiet"] = true;
 }
 
-void Anchor::HandlePacket_PlayerSfx(nlohmann::json& payload) {}
+void Anchor::HandlePacket_PlayerSfx(nlohmann::json& payload) {
+}

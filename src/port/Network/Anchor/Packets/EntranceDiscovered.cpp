@@ -4,7 +4,7 @@
 
 /**
  * ENTRANCE_DISCOVERED
- * 
+ *
  * currently unimplemented
  */
 

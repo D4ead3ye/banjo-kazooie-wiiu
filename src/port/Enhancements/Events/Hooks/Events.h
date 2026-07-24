@@ -64,11 +64,11 @@ typedef enum VBehaviorID {
 } VBehaviorID;
 
 typedef enum DoorCameraId {
-    GV_DOOR_CAM_SUN,      // sun switch (flag 3)
-    GV_DOOR_CAM_STAR,     // star switch / trapdoor (flag 5)
-    GV_DOOR_CAM_KAZOOIE,  // beak-bomb door (flag 6)
-    GV_DOOR_CAM_JINXY,    // Jinxy sneeze (flags 0, 1)
-    MMM_DOOR_CAM_CHURCH,  // church door, Tumblar challenge (flag 0)
+    GV_DOOR_CAM_SUN,     // sun switch (flag 3)
+    GV_DOOR_CAM_STAR,    // star switch / trapdoor (flag 5)
+    GV_DOOR_CAM_KAZOOIE, // beak-bomb door (flag 6)
+    GV_DOOR_CAM_JINXY,   // Jinxy sneeze (flags 0, 1)
+    MMM_DOOR_CAM_CHURCH, // church door, Tumblar challenge (flag 0)
 } DoorCameraId;
 
 DEFINE_EVENT(VanillaBehavior, VBehaviorID id; bool* should; va_list * originalArgs;);

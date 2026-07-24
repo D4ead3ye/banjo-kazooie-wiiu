@@ -71,6 +71,5 @@ void Anchor::HandlePacket_FightUpdate(nlohmann::json& payload) {
     }
 
     FightSync_ApplyUpdate(pos.data(), payload.value("yaw", 0.0f), payload.value("st", (s32)1),
-                               payload.value("ph", (s32)0), payload.value("mir", (s32)0),
-                               payload.value("vuln", (s32)0));
+                          payload.value("ph", (s32)0), payload.value("mir", (s32)0), payload.value("vuln", (s32)0));
 }

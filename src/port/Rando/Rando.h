@@ -23,10 +23,8 @@ extern int16_t selectedFileNum;
 #define RANDO_SAVE_FLAGS gameFile_saveData[selectedFileNum].shipSaveData.randoSaveData.randoSaveFlag
 
 // Loaded rando file's seed id, or 0 if none.
-#define RANDO_SEED                       \
-    (selectedFileNum == DEFAULT_FILE_NUM \
-         ? 0                             \
-         : gameFile_saveData[selectedFileNum].shipSaveData.randoSaveData.seedId)
+#define RANDO_SEED \
+    (selectedFileNum == DEFAULT_FILE_NUM ? 0 : gameFile_saveData[selectedFileNum].shipSaveData.randoSaveData.seedId)
 
 // #define RANDO_SAVE_ENTRANCES(fileNum) gSaveBuffer.files[fileNum]->shipSaveData.randoSaveData.randoSaveEntrances
 // #define RANDO_EVENTS gSaveContext.save.shipSaveInfo.rando.randoEvents
