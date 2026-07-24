@@ -2,6 +2,7 @@
 #include <libultraship/bridge/consolevariablebridge.h>
 #include "port/UI/cvar_prefixes.h"
 #include "port/Rando/Logic/Logic.h"
+#include "port/Rando/ObjectBehavior/ObjectBehavior.h"
 #include "port/Enhancements/Events/Hooks/Events.h"
 
 #include "actor.h"
@@ -34,7 +35,6 @@ void ml_vec3f_to_vec3h(s16 dst[3], f32 src[3]);
 void gcparade_beginFinalParade(void);
 
 void coMusicPlayer_playMusic(enum comusic_e track_id, s32 volume);
-Actor* marker_getActor(ActorMarker* thisx);
 void marker_despawn(ActorMarker* marker);
 Actor* actor_new(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags);
 extern ActorInfo chJinjoBlue;
@@ -86,7 +86,6 @@ std::map<actor_e, std::pair<ActorInfo, int32_t>> actorInfoMap = {
 };
 // clang-format on
 
-extern int32_t GetJinjoActorMarkerId(actor_e actorId);
 int32_t currentMap = -1;
 
 void CustomObject::ResetRandoSpawnQueue() {

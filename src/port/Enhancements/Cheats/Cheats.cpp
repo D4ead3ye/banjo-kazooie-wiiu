@@ -5,20 +5,15 @@
 #include <libultraship/bridge.h>
 #include "port/UI/cvar_prefixes.h"
 #include "port/Enhancements/Events/Hooks/Events.h"
+#include "port/Romhack/RomhackConfig.h"
 #include "port/ShipInit.hpp"
 #include "port/ShipUtils.h"
 
-extern "C" {
 #include "enums.h"
 #include "core2/statetimer.h"
 #include "core2/ba/physics.h"
 #include "bs_funcs.h"
 #include "functions.h"
-
-s32 port_getRomhackMaxEggs(void);
-s32 port_getRomhackMaxGoldFeathers(void);
-s32 port_getRomhackMaxRedFeathers(void);
-}
 
 // ============================================================================
 // CVAR DEFINITIONS
@@ -142,7 +137,7 @@ void RegisterTalonTrotCycle_Init() {
         // D-pad cycling - only works while Talon Trot is active
         if (bakey_pressed(BUTTON_D_RIGHT) || bakey_pressed(BUTTON_D_LEFT)) {
             s32 currentState = bs_getState();
-            bool inTalonTrot = bsbtrot_inSet((enum bs_e)currentState) || bslongleg_inSet(0); // Also in longleg state
+            bool inTalonTrot = bsbtrot_inSet(currentState) || bslongleg_inSet(currentState);
 
             if (inTalonTrot) {
                 bool inBoots = stateTimer_isActive(STATE_TIMER_2_LONGLEG);
@@ -190,8 +185,9 @@ void RegisterLevitate_Init() {
     static const f32 LEVITATE_VELOCITY = 500.0f;
     static bool levitateActive = false;
     COND_HOOK(GameFrameUpdate, EVENT_PRIORITY_NORMAL, CVarGetInteger(CVAR_LEVITATE, 0), [](IEvent* event) {
-        if (bakey_held(BUTTON_L)) {
-            // Cancel fall damage and the tumble/splat animation if pressed mid-fall.
+        // Suspend levitation while dialog is up.
+        // Cancel fall damage and the tumble/splat animation if pressed mid-fall.
+        if (bakey_held(BUTTON_L) && !gcdialog_hasCurrentTextId()) {
             if (bakey_pressed(BUTTON_L) && !player_isStable()) {
                 s32 fallDamage = 0;
                 if (bafalldamage_get_damage(&fallDamage) != 0) {
@@ -214,9 +210,14 @@ void RegisterLevitate_Init() {
 // TRANSFORMATION CHEATS
 // ============================================================================
 
+static const s32 BAANIM_WISHYWASHY = 0x80;
+static bool isWishyWashyUnlocked() {
+    return (baanim_getActiveBottlesBonusMask() & BAANIM_WISHYWASHY) != 0;
+}
+
 // Transformation cycling with D-pad Up/Down
-// D-pad Up: Cycle forward through transformations (Banjo -> Mumbo -> Termite -> ... -> Wishy -> Banjo)
-// D-pad Down: Cycle backward through transformations (Banjo -> Wishy -> ... -> Termite -> Mumbo -> Banjo)
+// D-pad Up: Cycle forward through transformations (Banjo -> Termite -> ... -> Bee -> [Wishy] -> Banjo)
+// D-pad Down: Cycle backward through transformations (Banjo -> [Wishy] -> Bee -> ... -> Termite -> Banjo)
 void RegisterCycleTransform_Init() {
     COND_HOOK(GameFrameUpdate, EVENT_PRIORITY_NORMAL, CVarGetInteger(CVAR_CYCLE_TRANSFORM, 0), [](IEvent* event) {
         s32 currentTransform = (s32)player_getTransformation();
@@ -227,6 +228,9 @@ void RegisterCycleTransform_Init() {
             if (currentTransform > TRANSFORM_7_WISHWASHY) {
                 currentTransform = TRANSFORM_1_BANJO;
             }
+            if (currentTransform == TRANSFORM_7_WISHWASHY && !isWishyWashyUnlocked()) {
+                currentTransform = TRANSFORM_1_BANJO; // skip Wishy Washy -> wrap to Banjo
+            }
             func_8028FB88((enum transformation_e)currentTransform);
         }
         // D-pad Down: Cycle backward through transformations
@@ -234,6 +238,9 @@ void RegisterCycleTransform_Init() {
             currentTransform--;
             if (currentTransform < TRANSFORM_1_BANJO) {
                 currentTransform = TRANSFORM_7_WISHWASHY;
+            }
+            if (currentTransform == TRANSFORM_7_WISHWASHY && !isWishyWashyUnlocked()) {
+                currentTransform = TRANSFORM_6_BEE; // skip Wishy Washy -> step to Bee
             }
             func_8028FB88((enum transformation_e)currentTransform);
         }

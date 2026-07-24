@@ -20,23 +20,6 @@
 #include "include/core1/sns.h"
 
 extern "C" {
-void sns_set_item_state(enum StopNSwop_Item item, s32 set, s32 state);
-void jiggy_spawn(enum jiggy_e jiggy_id, f32 pos[3]);
-void player_getPosition(f32 dst[3]);
-void player_getPosition_s32(s32 arg0[3]);
-enum map_e gsworld_getMap(void);
-Actor* actor_new(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags);
-void func_8031D04C(enum map_e arg0, s32 exit_id);
-
-void item_set(s32 item, s32 val);
-void ability_setAllLearned(s32 val);
-void ability_setAllUsed(s32 val);
-
-s32 mapSpecificFlags_get(s32 i);
-void mapSpecificFlags_set(s32 i, s32 val);
-enum map_e gsworld_getMap(void);
-enum level_e map_getLevel(enum map_e map);
-
 typedef struct {
     enum honeycomb_e uid;
     s32 unk4;

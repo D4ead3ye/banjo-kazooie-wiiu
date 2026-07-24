@@ -1,5 +1,6 @@
 #include <libultraship/bridge.h>
 #include "port/UI/cvar_prefixes.h"
+#include "port/Engine.h"
 #include "port/Enhancements/Events/Hooks/Events.h"
 #include "port/ShipInit.hpp"
 #include "port/ShipUtils.h"
@@ -16,13 +17,12 @@ static int sDrawDistanceCubeWidth(int mul) {
 static int sDrawDistanceLevel = 0;
 static int sDisableLOD = 0;
 
+#include "functions.h"
 extern "C" {
 #include "enums.h"
-#include "functions.h"
 
 extern s32 gFramebufferWidth;
 extern s32 gFramebufferHeight;
-float GameEngine_GetAspectRatio(void);
 
 // Widescreen HUD edge anchoring (centered-ortho HUD geometry).
 float port_hudOrthoShift(float refX) {
@@ -40,7 +40,7 @@ float port_hudOrthoShift(float refX) {
     return 0.0f; // centered
 }
 
-int port_getDrawDistanceLevel(void) {
+int port_getDrawDistanceSetting(void) {
     int mul = CVarGetInteger(CVAR_ENHANCEMENT("Graphics.DrawDistance"), 1);
     if (mul < 1) {
         mul = 1;
@@ -48,6 +48,11 @@ int port_getDrawDistanceLevel(void) {
     if (mul > kMaxDrawDistanceMul) {
         mul = kMaxDrawDistanceMul;
     }
+    return mul;
+}
+
+int port_getDrawDistanceLevel(void) {
+    int mul = port_getDrawDistanceSetting();
     if (IsDemoMode() && getGameMode() != GAME_MODE_4_PAUSED) {
         mul = 1;
     }

@@ -27,12 +27,8 @@
 #include "GameVersion/AssetVersionRemap.h"
 #include "GameVersion/BaseGameVersion.h"
 
-extern "C" {
 #include "enums.h"
-}
 
-extern "C" uint16_t ResourceMgr_LoadTexWidthByName(char* texPath);
-extern "C" uint16_t ResourceMgr_LoadTexHeightByName(char* texPath);
 extern "C" void func_8031B5C4(int32_t lang); // decomp: set dialog language index
 
 // Dialog language state — detected at boot from o2r version
@@ -169,6 +165,11 @@ bool IsKnownEmptyAssetSlot(uint32_t assetId) {
 
 extern "C" int ResourceMgr_GetDialogLanguageCount(void) {
     return sDialogLanguageCount;
+}
+
+// PAL is the only base that carries more than one dialog language (EN/FR/DE).
+extern "C" int ResourceMgr_IsPal(void) {
+    return sDialogLanguageCount > 1 ? 1 : 0;
 }
 
 extern "C" int ResourceMgr_IsJapanese(void) {

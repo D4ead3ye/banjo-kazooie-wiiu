@@ -5,17 +5,15 @@
 
 #include <libultraship.h>
 
+#include "port/Engine.h"
+
 extern "C" {
 
 #include "core1/core1.h"
 #include "model.h"
 
-int gfx_create_framebuffer(unsigned int width, unsigned int height, unsigned int native_width,
-                           unsigned int native_height, unsigned char resize, unsigned char force_fixed_aspect);
 void gfx_register_fb_texture(const void* cpuAddr, int fbId);
 BKGfxList* modelbin_getGfxList(BKModelBin* arg0);
-unsigned int OTRGetGameRenderWidth(void);
-unsigned int OTRGetGameRenderHeight(void);
 
 // During FADE_IN, the game disables scene drawing one frame before
 // capturing gFramebuffers. Without freezing, the readback would overwrite
@@ -197,9 +195,6 @@ void port_readAuxFbToCpu(Gfx** gfx) {
 
 // Picture model patching (Bottles Bonus / SNS pictures)
 
-#define TILE_SIZE 32
-#define IMAGE_WIDTH (TILE_SIZE * 5)
-#define IMAGE_HEIGHT (TILE_SIZE * 4)
 #define SEG4_TAGGED ((uintptr_t)0x04000000 | 1)
 #define FROM_XZ 0
 #define FROM_YZ 1
