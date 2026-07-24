@@ -117,6 +117,10 @@ void chClankerKey_update(Actor *this){
         }
     }
     else{//L80386C40
+        // Anchor: teammate raised Clanker — snap the key to finished (state 5).
+        if(this->state == 1 && jiggyscore_isSpawned(JIGGY_17_CC_CLANKER_RAISED)){
+            CC_func_80386920(this, 5);
+        }
         local->unk14 += tick;
         player_getPosition(sp58);
         if(local->unk1 && ! local->unk2){

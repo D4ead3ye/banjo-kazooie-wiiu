@@ -185,6 +185,11 @@ void func_8038CC98(Actor *this){
         local->unk14 = actorArray_findActorFromActorId(ACTOR_31D_SANDYBUTT_PYRAMID)->marker;
     }
 
+    if(this->state != 8 && fileProgressFlag_getN(FILEPROG_F8_KING_SANDYBUTT_PYRAMID_STATE, 2) > *local->unk8){
+        func_8038C8A0(this, 8);
+        return;
+    }
+
     if(this->state == 1){
         if(fileProgressFlag_getN(FILEPROG_F8_KING_SANDYBUTT_PYRAMID_STATE, 2) == *local->unk8){
             func_8038C8A0(this, 2);

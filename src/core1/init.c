@@ -210,10 +210,12 @@ void mainLoop(void){
     }//L8023DF70
 #endif
 
+    port_actorDespawn_beginDefer();
     CALL_EVENT(GameFrameUpdate);
+    port_actorDespawn_endDefer();
 }
 
-void mainThread_entry(void *arg) { 
+void mainThread_entry(void *arg) {
     core1_init();
     sns_write_payload_over_heap();
 

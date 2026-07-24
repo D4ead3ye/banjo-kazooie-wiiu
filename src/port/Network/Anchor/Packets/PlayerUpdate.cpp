@@ -7,7 +7,10 @@ extern "C" {
 #include "functions.h"
 #include "macros.h"
 #include "variables.h"
+ActorMarker* bacarry_get_marker(void);
 }
+
+#include "port/Patches/Patches.h"
 
 /**
  * PLAYER_UPDATE
@@ -22,6 +25,17 @@ extern "C" {
 void Anchor::SendToCurrentMapPlayers(nlohmann::json& payload) {
     for (auto& [clientId, client] : clients) {
         if (client.map == gsworld_getMap() && client.online && client.isSaveLoaded && !client.self) {
+            payload["targetClientId"] = clientId;
+            SendJsonToRemote(payload);
+        }
+    }
+}
+
+void Anchor::SendToCurrentLevelPlayers(nlohmann::json& payload) {
+    enum level_e myLevel = map_getLevel(gsworld_getMap());
+    for (auto& [clientId, client] : clients) {
+        if (client.online && client.isSaveLoaded && !client.self &&
+            map_getLevel((enum map_e)client.map) == myLevel) {
             payload["targetClientId"] = clientId;
             SendJsonToRemote(payload);
         }
@@ -168,12 +182,29 @@ void Anchor::SendPacket_PlayerUpdate(bool full, uint32_t targetClientId) {
     payload["modelMouth2"] = func_8029DFEC();        // mouth 2
     payload["modelEyeBlendUpper"] = func_8029DFC8(); // eye blend upper
     payload["modelEyeBlendLower"] = func_8029DFD4(); // eye blend lower
+    payload["bottlesBonus"] = baanim_getActiveBottlesBonusMask();
+    {
+        // Carried-collectible marker id (0 = none); skipped once thrown (unk138_21 = in flight).
+        s32 carryId = 0;
+        ActorMarker* carryMarker = bacarry_get_marker();
+        if (carryMarker != nullptr) {
+            Actor* carried = marker_getActor(carryMarker);
+            if (carried != nullptr && !carried->unk138_21) {
+                carryId = carryMarker->id;
+                payload["carryOff"] = { carried->position[0] - pos[0], carried->position[1] - pos[1],
+                                        carried->position[2] - pos[2] };
+                payload["carryYaw"] = mlNormalizeAngle(carried->yaw - player_getYaw());
+            }
+        }
+        payload["carry"] = carryId;
+    }
 
     if (full) {
         payload["anim_id"] = anctrl_getIndex(baanim_getAnimCtrlPtr());
         payload["anim_control"] = anctrl_getPlaybackType(baanim_getAnimCtrlPtr());
     }
     payload["type"] = full ? PLAYER_UPDATE_FULL : PLAYER_UPDATE;
+    payload["quiet"] = true;
 
     if (targetClientId != 0) {
         payload["targetClientId"] = targetClientId;
@@ -238,5 +269,20 @@ void Anchor::HandlePacket_PlayerUpdate(nlohmann::json& payload) {
                                         payload.value("modelWink", false), payload.value("modelMouth1", false),
                                         payload.value("modelMouth2", false), payload.value("modelEyeBlendUpper", 0.0f),
                                         payload.value("modelEyeBlendLower", 0.0f));
+        client.dummy->dummy_setBottlesBonus(payload.value("bottlesBonus", 0));
+        {
+            f32 carryOff[3] = { 0.0f, 0.0f, 0.0f };
+            f32 carryYaw = 0.0f;
+            if (payload.contains("carryOff")) {
+                std::vector<f32> off = payload["carryOff"].get<std::vector<f32>>();
+                if (off.size() >= 3) {
+                    carryOff[0] = off[0];
+                    carryOff[1] = off[1];
+                    carryOff[2] = off[2];
+                }
+                carryYaw = payload.value("carryYaw", 0.0f);
+            }
+            port_remoteCarry_setCarried(clientId, payload.value("carry", 0), carryOff, carryYaw);
+        }
     }
 }

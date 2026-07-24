@@ -1,6 +1,8 @@
 #include "port/Network/Anchor/Authority.h"
 #include "port/Network/Anchor/Anchor.h"
+#include "port/Network/Anchor/JigsawPedestal.h"
 #include "port/Network/Anchor/VileSync.h"
+#include "port/Network/Anchor/FightSync.h"
 #include <libultraship/libultraship.h>
 
 extern "C" {
@@ -16,7 +18,9 @@ static ActivityState sActivities[NET_ACTIVITY_COUNT];
 
 // The map each activity lives in. A claim is only valid while its owner is in this map.
 static const int32_t sActivityMap[NET_ACTIVITY_COUNT] = {
-    MAP_10_BGS_MR_VILE, // NET_ACTIVITY_VILE_MINIGAME
+    MAP_10_BGS_MR_VILE,        // NET_ACTIVITY_VILE_MINIGAME
+    MAP_90_GL_BATTLEMENTS,     // NET_ACTIVITY_FINAL_BOSS
+    MAP_27_FP_FREEZEEZY_PEAK,  // NET_ACTIVITY_FP_TWINKLY
 };
 
 static bool Authority_IsValidActivity(NetworkActivityId activity) {
@@ -28,6 +32,9 @@ static void Authority_OnOwnerChanged(NetworkActivityId activity) {
     switch (activity) {
         case NET_ACTIVITY_VILE_MINIGAME:
             VileSync_OnAuthorityChanged();
+            break;
+        case NET_ACTIVITY_FINAL_BOSS:
+            FightSync_OnAuthorityChanged();
             break;
         default:
             break;
@@ -116,6 +123,9 @@ void Authority_ApplyRemote(NetworkActivityId activity, uint32_t clientId, bool c
 }
 
 void Authority_OnClientStateChanged(uint32_t clientId, bool online, int32_t map) {
+    if (!online) {
+        JigsawPedestal_ClearClient(clientId);
+    }
     for (int32_t i = 0; i < NET_ACTIVITY_COUNT; i++) {
         ActivityState& state = sActivities[i];
         if (state.claimed && state.owner == clientId && (!online || map != sActivityMap[i])) {
@@ -125,6 +135,7 @@ void Authority_OnClientStateChanged(uint32_t clientId, bool online, int32_t map)
 }
 
 void Authority_OnPeerMapLoad(uint32_t clientId, int32_t map) {
+    JigsawPedestal_ClearClient(clientId);
     Anchor* anchor = Anchor::GetInstance();
     for (int32_t i = 0; i < NET_ACTIVITY_COUNT; i++) {
         ActivityState& state = sActivities[i];
@@ -137,11 +148,15 @@ void Authority_OnPeerMapLoad(uint32_t clientId, int32_t map) {
         } else if (anchor != nullptr && state.owner == anchor->ownClientId && map == sActivityMap[i]) {
             // A peer just entered the map of an activity we own; make sure they know.
             anchor->SendPacket_AuthorityState((uint8_t)i, true);
+            if (i == NET_ACTIVITY_FINAL_BOSS) {
+                FightSync_SendSnapshot(clientId);
+            }
         }
     }
 }
 
 void Authority_OnSelfMapChanged(int32_t map) {
+    JigsawPedestal_ReleaseAllSelf();
     Anchor* anchor = Anchor::GetInstance();
     if (anchor == nullptr) {
         return;
@@ -155,6 +170,7 @@ void Authority_OnSelfMapChanged(int32_t map) {
 }
 
 void Authority_Reset() {
+    JigsawPedestal_Reset();
     for (int32_t i = 0; i < NET_ACTIVITY_COUNT; i++) {
         Authority_ClearClaim((NetworkActivityId)i);
     }

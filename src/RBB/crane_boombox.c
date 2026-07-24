@@ -243,4 +243,11 @@ void RBB_func_803882F4(Actor *this){
             func_803881E8(this, 1);
         }
     }
+    // Anchor: teammate opened the entrance (LEVEL_FLAG_2D) - snap to opened state.
+    else if (this->state == 1 && levelSpecificFlags_get(LEVEL_FLAG_2D_RBB_UNKNOWN)) {
+        func_80387AC0();
+        RBB_func_80387960(0.0f);
+        func_80387B24();
+        func_803881E8(this, 3);
+    }
 }

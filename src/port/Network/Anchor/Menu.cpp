@@ -3,6 +3,9 @@
 #include "port/UI/LighthouseGui.hpp"
 #include "port/UI/LighthouseMenu.h"
 #include "port/ShipUtils.h"
+#include "port/Romhack/RomhackConfig.h"
+#include "port/Romhack/RomhackCompat.h"
+#include "port/Rando/Rando.h"
 
 namespace LighthouseGui {
 extern std::shared_ptr<LighthouseMenu> mLighthouseMenu;
@@ -84,12 +87,13 @@ void AnchorMainMenu(WidgetInfo& info) {
 
     if (UIWidgets::Button("Global Room", UIWidgets::ButtonOptions()
                                              .Color(UIWidgets::Colors::Blue)
-                                             .Tooltip("Always-online public room so you don't have to experience "
-                                                      "Hyrule alone. PVP and syncing are disabled."))) {
+                                             .Tooltip("Always-online public room so you don't have to explore alone. "
+                                                      "You'll see other players' characters, but nothing is synced — "
+                                                      "no items, flags, PvP, or teleporting."))) {
         CVarSetString(CVAR_REMOTE_ANCHOR("Host"), "anchor.hm64.org");
         CVarSetInteger(CVAR_REMOTE_ANCHOR("Port"), 43383);
         CVarSetString(CVAR_REMOTE_ANCHOR("TeamId"), "default");
-        CVarSetString(CVAR_REMOTE_ANCHOR("RoomId"), "soh-global");
+        CVarSetString(CVAR_REMOTE_ANCHOR("RoomId"), "lh-global");
         Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
     }
 
@@ -116,6 +120,17 @@ void AnchorMainMenu(WidgetInfo& info) {
     ImGui::EndDisabled();
     ImGui::Spacing();
 
+    UIWidgets::CVarCheckbox(
+        "Show Teammate Notifications", CVAR_REMOTE_ANCHOR("Notifications"),
+        UIWidgets::CheckboxOptions()
+            .DefaultValue(true)
+            .Color(THEME_COLOR)
+            .Tooltip("Show a notification when a teammate collects a jiggy, opens a level, or (in a "
+                     "randomizer) obtains a shuffled check. Randomizer check notifications also require "
+                     "\"Send Collection Notifications\" to be enabled in the Randomizer settings."));
+
+    ImGui::Spacing();
+
     if (!anchor->isEnabled) {
         return;
     }
@@ -128,45 +143,32 @@ void AnchorMainMenu(WidgetInfo& info) {
     ImGui::SeparatorText("Current Room");
     ImGui::Text("%s Connected", ICON_FA_CHECK);
 
-    UIWidgets::PushStyleButton(THEME_COLOR);
-    if (ImGui::Button("Request Team State")) {
-        anchor->SendPacket_RequestTeamState();
+    if (!anchor->IsGlobalRoom()) {
+        UIWidgets::PushStyleButton(THEME_COLOR);
+        if (ImGui::Button("Request Team State")) {
+            anchor->SendPacket_RequestTeamState();
+            anchor->reloadMapOnTeamState = true;
+        }
+        UIWidgets::Tooltip("Try this if you are missing items or flags that your team members have collected");
+        UIWidgets::PopStyleButton();
+
+        ImGui::SameLine();
     }
-    UIWidgets::Tooltip("Try this if you are missing items or flags that your team members have collected");
-    UIWidgets::PopStyleButton();
 
-    ImGui::SameLine();
-
-    // UIWidgets::WindowButton("Toggle Anchor Room Window", CVAR_WINDOW("AnchorRoom"), SohGui::mAnchorRoomWindow);
+    UIWidgets::WindowButton("Toggle Anchor Room Window", CVAR_WINDOW("AnchorRoom"), LighthouseGui::mAnchorRoomWindow);
 
     ImGui::Spacing();
 
-    bool hideLocations = Anchor::GetInstance()->roomState.showLocationsMode == 0;
-    ImGui::BeginDisabled(hideLocations);
-    UIWidgets::CVarCheckbox(
-        "Show Other Players on Minimap", CVAR_REMOTE_ANCHOR("ShowOtherPlayersOnMinimap"),
-        UIWidgets::CheckboxOptions()
-            .Color(THEME_COLOR)
-            .DefaultValue(true)
-            .Tooltip(!hideLocations
-                         ? "Other players will appear on the minimap in areas where you have the compass. "
-                           "Visibility is restricted according to the Show Locations mode for the room."
-                         : "Cannot show other players because the room's Show Locations mode is set to None."));
-    ImGui::EndDisabled();
-
-    ImGui::Spacing();
-
-    /*if (!SohGui::mAnchorRoomWindow->IsVisible()) {
-        SohGui::mAnchorRoomWindow->DrawElement();
-    }*/
+    if (!LighthouseGui::mAnchorRoomWindow->IsVisible()) {
+        LighthouseGui::mAnchorRoomWindow->DrawElement();
+    }
 }
 
 void AnchorAdminMenu(WidgetInfo& info) {
     auto anchor = Anchor::GetInstance();
-    bool isGlobalRoom = (std::string("soh-global") == CVarGetString(CVAR_REMOTE_ANCHOR("RoomId"), ""));
 
     if (!anchor->isEnabled || !anchor->isConnected || anchor->roomState.ownerClientId != anchor->ownClientId ||
-        isGlobalRoom) {
+        anchor->IsGlobalRoom()) {
         return;
     }
 
@@ -181,6 +183,13 @@ void AnchorAdminMenu(WidgetInfo& info) {
         for (auto& team : teams) {
             anchor->SendPacket_ClearTeamState(team);
         }
+        anchor->roomState.isRomhack = port_isRomhack();
+        anchor->roomState.romhackName = Lighthouse::CurrentRomhackLabel();
+        anchor->roomState.isRando = IS_RANDO;
+        anchor->roomState.seed = IS_RANDO ? (int32_t)RANDO_SEED : 0;
+        anchor->lastWarnedRomhackLabel.clear();
+        anchor->lastWarnedRandoState.clear();
+        anchor->SendPacket_UpdateRoomState();
     }
     UIWidgets::PopStyleButton();
 
@@ -208,6 +217,10 @@ void AnchorAdminMenu(WidgetInfo& info) {
     }
     if (UIWidgets::CVarCheckbox("Sync Items & Flags", CVAR_REMOTE_ANCHOR("RoomSettings.SyncItemsAndFlags"),
                                 UIWidgets::CheckboxOptions().DefaultValue(true).Color(THEME_COLOR))) {
+        anchor->SendPacket_UpdateRoomState();
+    }
+    if (UIWidgets::CVarCheckbox("Share Consumables (Eggs/Feathers)", CVAR_REMOTE_ANCHOR("RoomSettings.ShareConsumables"),
+                                UIWidgets::CheckboxOptions().DefaultValue(false).Color(THEME_COLOR))) {
         anchor->SendPacket_UpdateRoomState();
     }
 }

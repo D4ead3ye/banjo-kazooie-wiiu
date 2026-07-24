@@ -17,6 +17,7 @@ extern void func_80324CFC(f32, enum comusic_e, s32);
 extern int  actor_animationIsAt(Actor *, f32);
 extern void subaddie_set_state_with_direction(Actor *, s32, f32, s32);
 extern void func_8033A45C(s32, s32);
+extern ActorArray *suBaddieActorArray;
 
 
 
@@ -216,11 +217,26 @@ s32 D_80393504[4] = {0x87, 0x87, 0x87, 0xB4};
 //chcobweb
 void chFloorCobweb_update(Actor *this)
 {
+    enum file_progress_e brokenFlag = (this->actorTypeSpecificField == 1)
+                                          ? FILEPROG_CB_LAIR_COBWEB_OVER_FLIGHTPAD_BROKEN
+                                          : FILEPROG_CC_LAIR_COBWEB_OVER_GREEN_CAULDRON_BROKEN;
+
     if(!this->initialized)
     {
         func_802D3CE8(this);
 
-        if (fileProgressFlag_get(this->actorTypeSpecificField == 1 ? FILEPROG_CB_LAIR_COBWEB_OVER_FLIGHTPAD_BROKEN : FILEPROG_CC_LAIR_COBWEB_OVER_GREEN_CAULDRON_BROKEN))
+        if (fileProgressFlag_get(brokenFlag))
+        {
+            marker_despawn(this->marker);
+            return;
+        }
+    }
+
+    // Anchor: re-check on scene-return restore, which resets volatile_initialized but not initialized.
+    if (!this->volatile_initialized)
+    {
+        this->volatile_initialized = true;
+        if (fileProgressFlag_get(brokenFlag))
         {
             marker_despawn(this->marker);
             return;
@@ -251,6 +267,17 @@ void chWallCobweb_update(Actor *this)
         }
     }
 
+    // [port] Re-check on scene-return restore (see chFloorCobweb_update).
+    if (!this->volatile_initialized)
+    {
+        this->volatile_initialized = true;
+        if (fileProgressFlag_get(FILEPROG_CA_COBWEB_BLOCKING_PURPLE_CAULDRON_BROKEN))
+        {
+            marker_despawn(this->marker);
+            return;
+        }
+    }
+
     if (this->state == 0xF)
     {
         if (actor_animationIsAt(this, 0.9f))
@@ -263,11 +290,26 @@ void chWallCobweb_update(Actor *this)
 
 void lair_func_80386550(Actor *this)
 {
+    enum file_progress_e brokenFlag = (this->actorTypeSpecificField == 1)
+                                          ? FILEPROG_C8_LAIR_BRICKWALL_TO_WADINGBOOTS_BROKEN
+                                          : FILEPROG_C9_LAIR_BRICKWALL_TO_SHOCKJUMP_PAD_BROKEN;
+
     if (!this->initialized)
     {
         func_802D3CE8(this);
 
-        if (fileProgressFlag_get(this->actorTypeSpecificField == 1 ? FILEPROG_C8_LAIR_BRICKWALL_TO_WADINGBOOTS_BROKEN : FILEPROG_C9_LAIR_BRICKWALL_TO_SHOCKJUMP_PAD_BROKEN))
+        if (fileProgressFlag_get(brokenFlag))
+        {
+            marker_despawn(this->marker);
+            return;
+        }
+    }
+
+    // [port] Re-check on scene-return restore (see chFloorCobweb_update).
+    if (!this->volatile_initialized)
+    {
+        this->volatile_initialized = true;
+        if (fileProgressFlag_get(brokenFlag))
         {
             marker_despawn(this->marker);
             return;
@@ -658,6 +700,7 @@ void func_80387730(Actor *this) {
     s32 phi_s4;
     s32 sp6C[3];
     f32 sp60[3];
+    s32 forceOpen;
 
     func_802D3D74(this);
     if (!this->volatile_initialized) {
@@ -684,15 +727,18 @@ void func_80387730(Actor *this) {
         this->unk1C[1] = 0.0f;
         this->unk1C[2] = 3.5f;
     }
-    if (!fileProgressFlag_get(this->actorTypeSpecificField + FILEPROG_39_CCW_OPEN) && ability_isUnlocked(ABILITY_13_1ST_NOTEDOOR)) {
+    // Anchor: unk1C[0] set by port_notedoor_remoteOpen = a teammate opened this door.
+    forceOpen = (this->unk1C[0] != 0.0f);
+    if (forceOpen ||
+        (!fileProgressFlag_get(this->actorTypeSpecificField + FILEPROG_39_CCW_OPEN) && ability_isUnlocked(ABILITY_13_1ST_NOTEDOOR))) {
         player_getPosition(spAC);
-        if ((ml_vec3f_distance(spAC, this->position) < 500.0f) && (gcdialog_getCurrentTextId() != 0xF64)) {
+        if (!forceOpen && (ml_vec3f_distance(spAC, this->position) < 500.0f) && (gcdialog_getCurrentTextId() != 0xF64)) {
             code_73640_printItemCount(0xC);
         }
         doorIdx = this->actorTypeSpecificField - 1;
         noteThreshold = port_getRomhackNoteDoor(doorIdx);
         if (noteThreshold < 0) { noteThreshold = D_8039347C[doorIdx]; }
-        if (itemscore_noteScores_getTotal() >= noteThreshold) {
+        if (forceOpen || itemscore_noteScores_getTotal() >= noteThreshold) {
             if (this->marker->unk14_21) {
                 func_8032BC60(this, 5, sp90);
                 func_8032BC60(this, 6, sp84);
@@ -705,11 +751,13 @@ void func_80387730(Actor *this) {
                 phi_f20 = 290.0f;
             }
             sp9C[1] = this->position[1];
-            if ((ml_vec3f_distance(spAC, sp9C) < phi_f20) || (this->alpha_124_19 != 0xFF)) {
+            if (forceOpen || (ml_vec3f_distance(spAC, sp9C) < phi_f20) || (this->alpha_124_19 != 0xFF)) {
                 if (this->alpha_124_19 == 0xFF) {
                     func_80324CFC(0.0f, COMUSIC_43_ENTER_LEVEL_GLITTER, 32700);
                     func_80324D2C(2.4f, COMUSIC_43_ENTER_LEVEL_GLITTER);
-                    func_8028F918(2);
+                    if (!forceOpen) {
+                        func_8028F918(2);
+                    }
                 }
                 if (this->alpha_124_19 < 7U) {
                     this->alpha_124_19 = 0;
@@ -717,10 +765,14 @@ void func_80387730(Actor *this) {
                     this->alpha_124_19 -= 7;
                 }
                 if (this->alpha_124_19 == 0) {
-                    fileProgressFlag_set(this->actorTypeSpecificField + FILEPROG_39_CCW_OPEN, true);
+                    if (!forceOpen) {
+                        fileProgressFlag_set(this->actorTypeSpecificField + FILEPROG_39_CCW_OPEN, true);
+                    }
                     marker_despawn(this->marker);
-                    func_8028F918(0);
-                    func_8028F66C(BS_INTR_35);
+                    if (!forceOpen) {
+                        func_8028F918(0);
+                        func_8028F66C(BS_INTR_35);
+                    }
                     return;
                 }
                 if (this->marker->unk14_21) {
@@ -748,6 +800,27 @@ void func_80387730(Actor *this) {
             }
         } else if ((this->actorTypeSpecificField >= 2) && (ml_vec3f_distance(spAC, this->position) < 290.0f)) {
             volatileFlag_setAndTriggerDialog_0(VOLATILE_FLAG_B0_NOT_ENOUGH_NOTES);
+        }
+    }
+}
+
+void port_notedoor_remoteOpen(s32 progressFlag) {
+    s32 field;
+    s32 i;
+
+    if (progressFlag < FILEPROG_3A_NOTE_DOOR_50_OPEN || progressFlag > FILEPROG_45_NOTE_DOOR_882_OPEN) {
+        return;
+    }
+    if (suBaddieActorArray == NULL) {
+        return;
+    }
+    field = progressFlag - FILEPROG_39_CCW_OPEN;
+    for (i = 0; i < suBaddieActorArray->cnt; i++) {
+        Actor *actor = &suBaddieActorArray->data[i];
+        if (actor->marker != NULL && actor->modelCacheIndex == ACTOR_203_NOTE_DOOR &&
+            actor->actorTypeSpecificField == field) {
+            actor->unk1C[0] = 1.0f; // picked up by func_80387730 next update
+            return;
         }
     }
 }
@@ -950,7 +1023,10 @@ void func_803882B0(Actor *this)
         this->lifetime_value = 0;
     }
 
-    if (this->pitch == 90.f || !volatileFlag_get(VOLATILE_FLAG_BB_WITCH_SWITCH_PRESSED_FP))
+    // Anchor: also honor persistent FILEPROG_47; VOLATILE_FLAG_BB is transient.
+    if (this->pitch == 90.f
+        || !(volatileFlag_get(VOLATILE_FLAG_BB_WITCH_SWITCH_PRESSED_FP)
+             || fileProgressFlag_get(FILEPROG_47_FP_WITCH_SWITCH_JIGGY_PRESSED)))
         return;
 
     if (this->pitch == 0)
@@ -978,6 +1054,40 @@ void func_80388404(enum file_progress_e progress_flag, enum sfx_e sfx, f32 a2, s
         gcsfx_playWithPitch(sfx, a2, a3);
 
     fileProgressFlag_set(progress_flag, true);
+}
+
+static s32 sRemoteOpenDoorActor = 0;
+
+static enum file_progress_e __leveldoor_persistentFlag(s32 actorId) {
+    switch (actorId) {
+        case ACTOR_20E_MM_ENTRANCE_DOOR:       return FILEPROG_31_MM_OPEN;
+        case ACTOR_211_TTC_ENTRANCE_CHEST_LID: return FILEPROG_32_TTC_OPEN;
+        case ACTOR_212_CC_ENTRANCE_BARS:       return FILEPROG_33_CC_OPEN;
+        case ACTOR_210_BGS_ENTRANCE_DOOR:      return FILEPROG_34_BGS_OPEN;
+        case ACTOR_235_FP_ENTRANCE_DOOR_LEFT:  return FILEPROG_35_FP_OPEN;
+        case ACTOR_226_GV_ENTRANCE:            return FILEPROG_36_GV_OPEN;
+        case ACTOR_228_MMM_ENTRANCE_DOOR:      return FILEPROG_37_MMM_OPEN;
+        case ACTOR_20F_RBB_ENTRANCE_DOOR:      return FILEPROG_38_RBB_OPEN;
+        case ACTOR_234_CCW_ENTRANCE_DOOR:      return FILEPROG_39_CCW_OPEN;
+        case ACTOR_2E5_DOOR_OF_GRUNTY:         return FILEPROG_E2_DOOR_OF_GRUNTY_OPEN;
+        default:                               return 0;
+    }
+}
+
+void port_leveldoor_remoteOpen(s32 progressFlag) {
+    switch (progressFlag) {
+        case 0x28: sRemoteOpenDoorActor = ACTOR_20E_MM_ENTRANCE_DOOR; break;
+        case 0x29: sRemoteOpenDoorActor = ACTOR_211_TTC_ENTRANCE_CHEST_LID; break;
+        case 0x2A: sRemoteOpenDoorActor = ACTOR_212_CC_ENTRANCE_BARS; break;
+        case 0x2B: sRemoteOpenDoorActor = ACTOR_210_BGS_ENTRANCE_DOOR; break;
+        case 0x2C: sRemoteOpenDoorActor = ACTOR_235_FP_ENTRANCE_DOOR_LEFT; break;
+        case 0x2D: sRemoteOpenDoorActor = ACTOR_226_GV_ENTRANCE; break;
+        case 0x2E: sRemoteOpenDoorActor = ACTOR_228_MMM_ENTRANCE_DOOR; break;
+        case 0x2F: sRemoteOpenDoorActor = ACTOR_20F_RBB_ENTRANCE_DOOR; break;
+        case 0x30: sRemoteOpenDoorActor = ACTOR_234_CCW_ENTRANCE_DOOR; break;
+        case 0xE2: sRemoteOpenDoorActor = ACTOR_2E5_DOOR_OF_GRUNTY; break;
+        default: break;
+    }
 }
 
 void func_80388450(Actor *actor1, Actor *actor2)
@@ -1009,12 +1119,23 @@ void func_80388524(Actor *this) {
     ParticleEmitter *sp2C;
     Actor *sp28;
 
-    sp34 = func_802D677C(-1) 
+    sp34 = func_802D677C(-1)
              && (func_802D677C(-1) == gsworld_getMap())
              && (func_802D67AC(-1) >= 8)
              && (func_802D67AC(-1) < 0x12)
              && (func_802D67DC(-1) == this->modelCacheIndex)
              ;
+
+    if (!sp34 && this->modelCacheIndex == sRemoteOpenDoorActor) {
+        bool alreadyOpen = EventSystem_Should(VB_LEVELDOOR_REMOTE_OPEN_DONE,
+                                              fileProgressFlag_get(__leveldoor_persistentFlag(this->modelCacheIndex)) != 0,
+                                              this->modelCacheIndex, this->state);
+        if (alreadyOpen) {
+            sRemoteOpenDoorActor = 0;
+        } else {
+            sp34 = true;
+        }
+    }
 
     func_802D3D74(this);
     if (!this->initialized) {
@@ -1809,6 +1930,15 @@ void func_80389FA8(Actor *this, enum file_progress_e flag)
     if (!this->initialized)
     {
         func_802D3D54(this);
+
+        if (fileProgressFlag_get(flag))
+            marker_despawn(this->marker);
+    }
+
+    // Anchor: re-check on scene-return restore (see chFloorCobweb_update).
+    if (!this->volatile_initialized)
+    {
+        this->volatile_initialized = true;
 
         if (fileProgressFlag_get(flag))
             marker_despawn(this->marker);

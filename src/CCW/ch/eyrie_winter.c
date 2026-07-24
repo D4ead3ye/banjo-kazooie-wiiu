@@ -95,7 +95,7 @@ void func_8038AEBC(Actor *this) {
     if (this->state == 3) {
         actor_update_func_80326224(this);
         skeletalAnim_getProgressRange(this->unk148, &sp30, &sp2C);
-        if ((sp30 <= 0.5) && (sp2C >= 0.5)) {
+        if ((sp30 <= 0.5) && (sp2C >= 0.5) && !jiggyscore_isCollected(JIGGY_49_CCW_EYRIE)) {
             jiggy_spawn(JIGGY_49_CCW_EYRIE, this->position);
         }
         if (skeletalAnim_getLoopCount(this->unk148) > 0) {

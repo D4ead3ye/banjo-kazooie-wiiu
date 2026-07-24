@@ -6,11 +6,11 @@
 #include "port/Nametag/Nametag.h"
 #include "port/Interpolation/FrameInterpolation.h"
 #include "port/ObjectExtension/ObjectExtension.h"
+#include "port/Enhancements/Retention/Retention.h"
 
 extern "C" {
 #include "variables.h"
 #include "functions.h"
-// extern PlayState* gPlayState;
 }
 
 // MARK: - Overrides
@@ -30,7 +30,11 @@ void Anchor::Enable() {
     Network::Enable(CVarGetString(CVAR_REMOTE_ANCHOR("Host"), "anchor.hm64.org"),
                     CVarGetInteger(CVAR_REMOTE_ANCHOR("Port"), 43383));
     ownClientId = CVarGetInteger(CVAR_REMOTE_ANCHOR("LastClientId"), 0);
-    roomState.ownerClientId = 0;
+    roomState = RoomState{};
+}
+
+bool Anchor::IsGlobalRoom() {
+    return std::string("lh-global") == CVarGetString(CVAR_REMOTE_ANCHOR("RoomId"), "");
 }
 
 void Anchor::Disable() {
@@ -52,14 +56,22 @@ void Anchor::OnConnected() {
     SendPacket_Handshake();
     RegisterHooks();
 
+    port_noteRetention_setForced(1);
+    port_jinjoRetention_setForced(1);
+
     if (IsSaveLoaded()) {
         SendPacket_RequestTeamState();
+        hasRequestedTeamState = true;
+        reloadMapOnTeamState = true;
     }
 }
 
 void Anchor::OnDisconnected() {
     Authority_Reset();
     RegisterHooks();
+
+    port_noteRetention_setForced(0);
+    port_jinjoRetention_setForced(0);
 }
 
 void Anchor::ProcessOutgoingPackets() {
@@ -187,6 +199,38 @@ void Anchor::ProcessIncomingPacketQueue() {
                 HandlePacket_SetCheckStatus(payload);
             else if (packetType == SET_FLAG)
                 HandlePacket_SetFlag(payload);
+            else if (packetType == ITEM_COUNT)
+                HandlePacket_SetItemCount(payload);
+            else if (packetType == SET_ABILITY)
+                HandlePacket_SetAbility(payload);
+            else if (packetType == SCOPED_FLAG)
+                HandlePacket_ScopedFlag(payload);
+            else if (packetType == REQUEST_SCOPED_STATE)
+                HandlePacket_RequestScopedState(payload);
+            else if (packetType == SCOPED_STATE)
+                HandlePacket_ScopedState(payload);
+            else if (packetType == COLLECT_ITEM)
+                HandlePacket_CollectItem(payload);
+            else if (packetType == CARRY_THROW)
+                HandlePacket_CarryThrow(payload);
+            else if (packetType == BREAK_OBJECT)
+                HandlePacket_BreakObject(payload);
+            else if (packetType == EGG_TOLL)
+                HandlePacket_EggToll(payload);
+            else if (packetType == PUZZLE_STEP)
+                HandlePacket_PuzzleStep(payload);
+            else if (packetType == WATER_RISE)
+                HandlePacket_WaterRise(payload);
+            else if (packetType == PUZZLE_COUNT)
+                HandlePacket_PuzzleCount(payload);
+            else if (packetType == HUT_SMASH)
+                HandlePacket_HutSmash(payload);
+            else if (packetType == JIGGY_CRANE)
+                HandlePacket_JiggyCrane(payload);
+            else if (packetType == PEDESTAL_OWNER)
+                HandlePacket_PedestalOwner(payload);
+            else if (packetType == JIGGY_SPAWN)
+                HandlePacket_SpawnJiggy(payload);
             else if (packetType == TELEPORT_TO)
                 HandlePacket_TeleportTo(payload);
             else if (packetType == UNSET_FLAG)
@@ -207,6 +251,12 @@ void Anchor::ProcessIncomingPacketQueue() {
                 HandlePacket_VileHoleState(payload);
             else if (packetType == VILE_UPDATE)
                 HandlePacket_VileUpdate(payload);
+            else if (packetType == FIGHT_UPDATE)
+                HandlePacket_FightUpdate(payload);
+            else if (packetType == FIGHT_EVENT)
+                HandlePacket_FightEvent(payload);
+            else if (packetType == FIGHT_STATE)
+                HandlePacket_FightState(payload);
         } catch (const std::exception& e) {
             SPDLOG_ERROR("[Anchor] Exception while processing incoming packet {}", e.what());
             SPDLOG_ERROR("[Anchor] Packet: {}", payload.dump());
@@ -246,14 +296,24 @@ void Anchor::DrawDummies(OnPlayerDraw* event) {
 
 void Anchor::ClearDummies() {
     for (auto& [id, dummy] : dummies) {
-        dummy->dummy_detachActor();
+        dummy->dummy_despawnActor(); // skips if already detached by map teardown
     }
     dummies.clear();
 }
 
-// Takes the map explicitly rather than reading gsworld_getMap(): during the
-// OnMapLoad event the new map hasn't been committed yet, so gsworld_getMap()
-// still reports the map being left.
+// actorArray_free tears down actors/markers without firing OnActorDestroy; forget them all.
+extern "C" void port_anchorDummies_onActorsFreed(void) {
+    Anchor* anchor = Anchor::GetInstance();
+    if (anchor == nullptr) {
+        return;
+    }
+    for (auto& [clientId, client] : anchor->clients) {
+        if (client.dummy != nullptr) {
+            client.dummy->dummy_detachActor();
+        }
+    }
+}
+
 void Anchor::PopulateDummies(GameMap map) {
     for (const auto& [clientId, client] : clients) {
         if (client.map == map && !client.self && !dummies.contains(clientId) && client.online) {
@@ -276,18 +336,56 @@ void Anchor::UpdateDummies() {
 }
 
 void Anchor::OnActorDestroyed(Actor* actor) {
-    // for (auto& [clientId, client] : clients) {
-    //     if (client.dummy != nullptr && client.dummy->getDummyActor() == actor) {
-    //         client.dummy->dummy_detachActor();
-    //         RemoveDummy(clientId);
-    //         return;
-    //     }
-    // }
+    // Stand-in was destroyed externally; forget its marker, dummy stays registered.
+    if (actor == nullptr || actor->marker == nullptr) {
+        return;
+    }
+    for (auto& [clientId, client] : clients) {
+        if (client.dummy != nullptr && client.dummy->dummy_getMarker() == actor->marker) {
+            client.dummy->dummy_detachActor();
+            return;
+        }
+    }
 }
 
 void Anchor::RemoveDummy(uint32_t clientId) {
     if (dummies.contains(clientId)) {
+        dummies[clientId]->dummy_despawnActor();
         dummies.erase(clientId);
+    }
+}
+
+extern void port_breakable_clearForLevel(int32_t levelId);
+extern void port_hutSmash_clearForLevel(int32_t levelId);
+extern void port_eggToll_clearForLevel(int32_t levelId);
+extern void port_puzzleStep_clearForLevel(int32_t levelId);
+extern void port_carriedSync_clearForLevel(int32_t levelId);
+
+void Anchor::SweepUnoccupiedLevelState(GameMap selfMap) {
+    bool occupied[0x20] = { false }; // level_e ids are small; matches jinjo retention slot count
+    auto markOccupied = [&occupied](s32 map) {
+        if (map <= 0 || map >= MAP_NUM_MAPS) {
+            return;
+        }
+        s32 level = (s32)map_getLevel((enum map_e)map);
+        if (level > 0 && level < 0x20) {
+            occupied[level] = true;
+        }
+    };
+    markOccupied((s32)selfMap);
+    for (auto& [clientId, client] : clients) {
+        if (!client.self && client.online && client.isSaveLoaded) {
+            markOccupied((s32)client.map);
+        }
+    }
+    for (s32 level = 1; level < 0x20; level++) {
+        if (!occupied[level]) {
+            port_breakable_clearForLevel(level);
+            port_hutSmash_clearForLevel(level);
+            port_eggToll_clearForLevel(level);
+            port_puzzleStep_clearForLevel(level);
+            port_carriedSync_clearForLevel(level);
+        }
     }
 }
 
@@ -323,23 +421,22 @@ void Anchor::RefreshClientActors() {
 }
 
 bool Anchor::IsSaveLoaded() {
+    s32 gameMode = getGameMode();
+    if (gameMode == GAME_MODE_6_FILE_PLAYBACK || gameMode == GAME_MODE_7_ATTRACT_DEMO) {
+        return false;
+    }
     auto map = gsworld_getMap();
     return map != MAP_1E_CS_START_NINTENDO && map != MAP_1F_CS_START_RAREWARE && map != MAP_91_FILE_SELECT;
-    /* if (gPlayState == nullptr) {
-         return false;
-     }
+}
 
-     if (GET_PLAYER(gPlayState) == nullptr) {
-         return false;
-     }
+bool Anchor::ShouldShowNotifications() {
+    return CVarGetInteger(CVAR_REMOTE_ANCHOR("Notifications"), 1) != 0;
+}
 
-     if (gSaveContext.fileNum < 0 || gSaveContext.fileNum > 2) {
-         return false;
-     }
-
-     if (gSaveContext.gameMode != GAMEMODE_NORMAL) {
-         return false;
-     }*/
-
-    // return true;
+std::string Anchor::GetClientName(uint32_t clientId) {
+    auto it = clients.find(clientId);
+    if (it != clients.end() && !it->second.name.empty()) {
+        return it->second.name;
+    }
+    return "A teammate";
 }

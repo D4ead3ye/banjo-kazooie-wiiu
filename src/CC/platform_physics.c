@@ -330,6 +330,10 @@ void CC_func_80388F4C(void){
 
     CC_func_80387D4C();
     if(D_80389FA0.unk21 != 0 && gsworld_getUnk0() == 2){
+        // Anchor: teammate raised Clanker — play the physical raise (no cutscene).
+        if(D_80389FA0.unk21 == 1 && jiggyscore_isSpawned(JIGGY_17_CC_CLANKER_RAISED)){
+            func_80388EA4();
+        }
         player_getPosition(sp6C);
         D_80389FA0.unk20 = (ml_vec3f_distance(sp6C, D_80389FA0.unkC) < 200.0f);
 

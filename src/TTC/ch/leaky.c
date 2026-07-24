@@ -57,10 +57,20 @@ static void __chLeaky_updateFunc(Actor *this) {
         }
     }
 
-    if( this->state == 1 
+    // Anchor: teammate finished feeding Leaky (LEVEL_FLAG_2) - lower water here too.
+    if (this->state == 1 && this->unk38_31 < 2 && levelSpecificFlags_get(LEVEL_FLAG_2_TTC_UNKNOWN)) {
+        Struct70s *water = func_8034C5AC(300);
+        if (water != NULL) {
+            func_8034E7B8(&water->type_73, -600, 4.0f, 2, 10.0f);
+        }
+        timedFunc_set_0(1.0f, __func_80388F88);
+        subaddie_set_state(this, 2);
+    }
+
+    if( this->state == 1
         && !this->has_met_before
         && subaddie_playerIsWithinSphereAndActive(this, 250) && !subaddie_playerIsWithinSphereAndActive(this, 160)
-        && !player_movementGroup() 
+        && !player_movementGroup()
         && gcdialog_showDialog(ASSET_A1A_DIALOG_LEAKY_FIRST_MEET, 0, NULL, NULL, NULL, NULL)
     ){
         this->has_met_before = true;

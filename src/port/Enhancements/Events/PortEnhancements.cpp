@@ -72,8 +72,15 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnVileGameStateChange);
 
     // Register game events
+    REGISTER_EVENT(OnGameFlagSet);
+    REGISTER_EVENT(OnItemCountChanged);
+    REGISTER_EVENT(OnCollectibleCollected);
+    REGISTER_EVENT(OnAbilityLearned);
+    REGISTER_EVENT(OnJiggySpawned);
+    REGISTER_EVENT(OnTimedJiggyExpired);
     REGISTER_EVENT(OnGameLoad);
     REGISTER_EVENT(OnGameSave);
+    REGISTER_EVENT(OnGameErase);
     REGISTER_EVENT(OnBottlesBonusComplete);
     REGISTER_EVENT(OnSaveFileLoad);
     REGISTER_EVENT(OnSaveFileSave);
@@ -104,6 +111,7 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnIsJiggyScoreCollected);
     REGISTER_EVENT(OnIsJiggyScoreSpawned);
     REGISTER_EVENT(SetRandoInfFlag);
+    REGISTER_EVENT(OnRandoCheckObtained);
     REGISTER_EVENT(OnIsHoneycombScoreCollected);
     REGISTER_EVENT(ClearBundleDespawnQueue);
     REGISTER_EVENT(OnIsMumboTokenScoreCollected);

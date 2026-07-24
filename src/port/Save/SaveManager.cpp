@@ -21,6 +21,7 @@ extern "C" {
 #include "core1/sns.h"
 
 extern SaveData gameFile_saveData[4];
+extern s8 gameFile_GameIdToFileIdMap[4];
 void savedata_update_crc(void* buffer, s32 size);
 s32 item_getCount(enum item_e item);
 extern u8 gCompletedBottlesBonusGames[7];
@@ -767,6 +768,21 @@ void SaveManager_Init() {
 
         SaveGlobalData();
         event->Cancelled = true;
+    });
+
+    REGISTER_LISTENER(OnGameErase, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
+        OnGameErase* ev = (OnGameErase*)event;
+        std::string fileName = createFileName(ev->gameNum);
+        std::error_code ec;
+        if (fs::remove(SaveManager_GetSavePath(fileName), ec)) {
+            SPDLOG_INFO("SaveManager: deleted erased save file \"{}\"", fileName);
+        } else if (ec) {
+            SPDLOG_ERROR("SaveManager: failed to delete erased save file \"{}\": {}", fileName, ec.message());
+        }
+        // Drop retention data too.
+        if (ev->gameNum >= 0 && ev->gameNum < 4) {
+            gameFile_saveData[gameFile_GameIdToFileIdMap[ev->gameNum]].shipSaveData = {};
+        }
     });
 
     REGISTER_LISTENER(OnSaveClear, EVENT_PRIORITY_NORMAL, [](IEvent* event) {

@@ -20,7 +20,7 @@ extern "C" {
 
 void Anchor::HandlePacket_AllClientState(nlohmann::json& payload) {
     std::vector<AnchorClient> newClients = payload["state"].get<std::vector<AnchorClient>>();
-    bool isGlobalRoom = (std::string("lh-global") == CVarGetString(CVAR_REMOTE_ANCHOR("RoomId"), ""));
+    bool isGlobalRoom = IsGlobalRoom();
 
     std::vector<uint32_t> clientsToRemove;
     // add new clients
@@ -88,5 +88,6 @@ void Anchor::HandlePacket_AllClientState(nlohmann::json& payload) {
     }
 
     PopulateDummies((GameMap)gsworld_getMap());
+    SweepUnoccupiedLevelState((GameMap)gsworld_getMap());
     SendPacket_PlayerUpdate(true);
 }

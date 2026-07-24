@@ -120,20 +120,43 @@ void chAncientOne_update(Actor *this){
         }
     }
     if(!this->initialized){
-        if(D_80390C28[this->actorTypeSpecificField - 1])
+        if(D_80390C28[this->actorTypeSpecificField - 1] == NULL){
+            LOCAL_CH_ANCIENT_ONE(this)->unk1C = this->position_y;
+            this->position_y -= 1100.0f;
+            D_80390C28[this->actorTypeSpecificField - 1] = this->marker;
+            if(this->actorTypeSpecificField != 1){
+                this->marker->propPtr->isNotFeatherEggOrNote = false;
+            }
+            this->marker->propPtr->unk8_3 = true;
+            actor_collisionOff(this);
+            func_80386620(this);
             return;
-
-        LOCAL_CH_ANCIENT_ONE(this)->unk1C = this->position_y;
-        this->position_y -= 1100.0f;
-        D_80390C28[this->actorTypeSpecificField - 1] = this->marker;
-        if(this->actorTypeSpecificField != 1){
-            this->marker->propPtr->isNotFeatherEggOrNote = false;
         }
-        this->marker->propPtr->unk8_3 = true;
-        actor_collisionOff(this);
-        func_80386620(this);
+        {
+            s32 fc = 0, fi;
+            for(fi = 7; fi < 0xC && mapSpecificFlags_get(fi); fi++) fc++;
+            if(fc == 0){
+                return;
+            }
+        }
     }
-    else{//L803869B4
+    {//L803869B4
+        if(jiggyscore_isSpawned(JIGGY_46_GV_ANCIENT_ONES)){
+            marker_despawn(this->marker);
+            return;
+        }
+        // Anchor: ring order is randomized per-client; advance by synced-flag count.
+        {
+            s32 fc = 0, fi;
+            for(fi = 7; fi < 0xC && mapSpecificFlags_get(fi); fi++) fc++;
+            if(this->state == 1 && this->actorTypeSpecificField <= fc){
+                subaddie_set_state_with_direction(this, 2, 0.0f, 1);
+                actor_playAnimationOnce(this);
+                if(this->actorTypeSpecificField < 5 && D_80390C28[this->actorTypeSpecificField]){
+                    D_80390C28[this->actorTypeSpecificField]->propPtr->isNotFeatherEggOrNote = true;
+                }
+            }
+        }
         switch(this->state){
             case 1: //L803869E4
                 player_getPosition(sp44);

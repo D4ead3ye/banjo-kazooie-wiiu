@@ -11,10 +11,20 @@ void func_802D729C(Actor* actor, f32 arg1);
 #include "bk_math.h"
 #include "port/Patches/Patches.h"
 
+static s32 sActiveDummyBottlesBonus = 0;
+
+static void dummy_applyBottlesBonus(uintptr_t boneList, uintptr_t arg1) {
+    baanim_applyBottlesBonusMask(boneList, sActiveDummyBottlesBonus);
+}
+
 DummyPlayer::DummyPlayer(){};
 
 void DummyPlayer::dummy_setTransformation(Transformation transform) {
     dummy_transformation = transform;
+}
+
+void DummyPlayer::dummy_setBottlesBonus(s32 mask) {
+    dummyBottlesBonus = mask;
 }
 
 Transformation DummyPlayer::dummy_getTransformation() {
@@ -179,7 +189,10 @@ void DummyPlayer::Draw(Gfx** gfx, Mtx** mtx, Vtx** vtx) {
     sp38[2] += dummyDisplacement[2];
 
     if (dummyBin) {
+        // anctrl_drawSetup re-runs anim_update, which invokes the bonus-mask callback.
+        sActiveDummyBottlesBonus = dummyBottlesBonus;
         anctrl_drawSetup(dummyAnimCtrl, dummyPosition, 1);
+        sActiveDummyBottlesBonus = 0;
         func_8029DD6C();
         modelRender_setEnvColor(env_color[0], env_color[1], env_color[2], dummyEnvAlpha);
         modelRender_func_8033A280(2.0f);
@@ -227,9 +240,7 @@ void DummyPlayer::dummy_updateModel(void) {
 }
 
 void DummyPlayer::dummy_reset(void) {
-    // Clear stale actor reference — the game engine owns actor lifetime and may have
-    // already freed it (e.g. after a map transition). Don't dereference the old pointer.
-    // dummyActor = NULL;
+    dummy_despawnActor(); // skips if already detached
     if (dummyAnimCtrl) {
         dummyAnim_free();
         dummyAnimCtrl = NULL;
@@ -266,23 +277,31 @@ void DummyPlayer::dummy_reset(void) {
     dummyAnim_reset();
 }
 
+// Forget the stand-in without despawning it.
 void DummyPlayer::dummy_detachActor(void) {
-    // dummyActor = nullptr;
+    dummyMarker = nullptr;
+}
+
+void DummyPlayer::dummy_despawnActor(void) {
+    if (dummyMarker == nullptr) {
+        return;
+    }
+    Actor* actor = marker_getActor(dummyMarker);
+    if (actor != nullptr && actor->unk104 != nullptr) {
+        ActorMarker* shadowMarker = actor->unk104;
+        Actor* shadow = marker_getActor(shadowMarker);
+        if (shadow != nullptr) {
+            shadow->unk104 = nullptr;
+        }
+        actor->unk104 = nullptr;
+        marker_despawn(shadowMarker);
+    }
+    marker_despawn(dummyMarker);
+    dummyMarker = nullptr;
 }
 
 void DummyPlayer::dummy_free(void) {
-    /*if (dummyActor) {
-        if (dummyActor->unk104) {
-            Actor *shadow = marker_getActor(dummyActor->unk104);
-            shadow->unk104 = NULL;
-            shadow->despawn_flag = true;
-            dummyActor->unk104 = NULL;
-        }
-        if (dummyActor->marker) {
-            marker_despawn(dummyActor->marker);
-        }
-        dummyActor = NULL;
-    }*/
+    dummy_despawnActor();
     if (dummyBin) {
         assetcache_release(dummyBin);
         dummyBin = NULL;
@@ -311,15 +330,31 @@ void DummyPlayer::dummyAnim_reset() {
     dummy_D_8037D23A = 0;
 }
 
+// func_802D7124 (core2/fx/enemy_shadow.c): distance-gated drop-shadow attach + keep-alive.
+extern "C" void func_802D7124(Actor* actor, f32 scale);
+
 void DummyPlayer::dummy_update(void) {
     dummyAnim_update();
 
-    // if (dummyActor && !dummyActor->despawn_flag) {
-    //     dummyActor->position[0] = dummyPosition[0];
-    //     dummyActor->position[1] = dummyPosition[1];
-    //     dummyActor->position[2] = dummyPosition[2];
-    //     func_802D729C(dummyActor, 1.0f);
-    // }
+    if (dummyMarker == nullptr) {
+        Actor* spawned = actor_spawnWithYaw_f32(ACTOR_3CC_DUMMY_PLAYER_ANCHOR, dummyPosition, (s32)dummyYaw);
+        if (spawned == nullptr) {
+            return;
+        }
+        dummyMarker = spawned->marker;
+    }
+
+    Actor* actor = marker_getActor(dummyMarker);
+    if (actor == nullptr || actor->despawn_flag) {
+        return;
+    }
+    actor->position[0] = dummyPosition[0];
+    actor->position[1] = dummyPosition[1];
+    actor->position[2] = dummyPosition[2];
+    actor->yaw = dummyYaw;
+    if (dummyIsVisible) {
+        func_802D7124(actor, 1.0f);
+    }
 }
 
 BKModelBin* DummyPlayer::dummy_getModelBin(void) {
@@ -459,8 +494,7 @@ void DummyPlayer::dummyAnim_init(void) {
     dummyAnimCtrl = anctrl_new(1);
     func_80287784(dummyAnimCtrl, 0);
     anctrl_setSmoothTransition(dummyAnimCtrl, false);
-    // func_8028746C(dummyAnimCtrl, __baanim_applyBottlesBonus);
-    // AnimModifyFunction = NULL;
+    func_8028746C(dummyAnimCtrl, dummy_applyBottlesBonus);
     anctrl_drawSetup(dummyAnimCtrl, dummyPosition, 1);
     dummyAnimUpdateType = BAANIM_UPDATE_0_NONE;
     //__baanim_setUpdateType(BAANIM_UPDATE_1_NORMAL);
@@ -503,7 +537,9 @@ void DummyPlayer::dummyAnim_update(void) {
         default:
             break;
     }
+    sActiveDummyBottlesBonus = dummyBottlesBonus;
     anctrl_update(dummyAnimCtrl);
+    sActiveDummyBottlesBonus = 0;
 }
 
 void DummyPlayer::setModelSubStates(bool kazooie, bool squint, bool wink, bool mouth1, bool mouth2, f32 eyeBlendUpper,

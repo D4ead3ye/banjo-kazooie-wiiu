@@ -6,6 +6,8 @@
 
 #include <bk_math.h>
 
+#include "port/Network/Anchor/FightSync.h"
+
 extern bool func_8028F4B8(f32[3], f32, f32);
 extern int func_80320ED8(ActorMarker *, f32, s32);
 s32 subaddie_getYawToPosition(Actor*, f32*);
@@ -20,6 +22,8 @@ extern void player_setIdealRotation(f32[3]);
 extern f32 func_8033229C(ActorMarker *);
 void func_8034DF30(Struct6Ds *, f32[3], f32[3], f32);
 
+// ActorLocal_FinalBoss moved to fight.h for the Anchor fight-sync layer.
+#if 0
 typedef struct chfinalboss_s {
     u8 phase;
     u8 hits;
@@ -46,6 +50,7 @@ typedef struct chfinalboss_s {
     f32 unk28;
     f32 unk2C;
 } ActorLocal_FinalBoss;
+#endif
 
 f32 fight_D_80391380[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 f32 fight_D_80391390[4] = { 0.33f, 0.33f, 0.33f, 1.0f };
@@ -140,6 +145,8 @@ f32 D_80392750;
 f32 D_80392758[3];
 f32 D_80392768[3];
 f32 D_80392778[3];
+// Anchor: lead time from the last local aim; followers reuse it to re-aim at their own player.
+f32 __chFinalBossFireballFlightTime;
 f32 chFinalBossPlayerPosition[3];
 f32 chFinalBossPosition[3];
 ActorMarker *__chFinalBossShadowMarker;
@@ -360,8 +367,13 @@ void __chfinalboss_dropHealth(ActorMarker *marker) {
 }
 
 void chfinalboss_despawnFlightPad(void) {
+    // Anchor: a follower that joined late never spawned one.
+    if (__chFinalBossFlightPadMarker == NULL) {
+        return;
+    }
     marker_despawn(__chFinalBossFlightPadMarker);
     __chFinalBossFlightPadMarker = NULL;
+    FightSync_OnFlightPadDespawned();
 }
 
 void chfinalboss_spawnFlightPad(s32 arg0) {
@@ -372,6 +384,7 @@ void chfinalboss_spawnFlightPad(s32 arg0) {
     flight_pad->alpha_124_19 = 0;
     flight_pad->unk38_31 = 6;
     __chFinalBossFlightPadMarker = flight_pad->marker;
+    FightSync_OnFlightPadSpawned();
 }
 
 void chfinalboss_func_80386EC0(s32 arg0) {
@@ -380,6 +393,8 @@ void chfinalboss_func_80386EC0(s32 arg0) {
     marker = actor_spawnWithYaw_f32(0x38A, D_80392758, 0)->marker;
     func_8030E878(SFX_147_GRUNTY_SPELL_ATTACK_2, randf2(0.95f, 1.05f), 32000, D_80392758, 5000.0f, 12000.0f);
     chGreenBlast_func_803900DC(marker, D_80392758, D_80392768[1], D_80392768[2]);
+    // Anchor: replay this green blast on followers with the exact same vectors.
+    FightSync_OnSpellSpawned(2);
 }
 
 void chfinalboss_func_80386F5C(ActorMarker * arg0, f32 arg1[3], f32 arg2, f32 arg3) {
@@ -398,6 +413,8 @@ void chfinalboss_func_80386FD8(s32 arg0) {
     marker = actor_spawnWithYaw_f32(0x389, D_80392758, 0)->marker;
     func_8030E878(SFX_146_GRUNTY_SPELL_ATTACK_1, randf2(0.95f, 1.05f), 32000, D_80392758, 5000.0f, 12000.0f);
     chSpellFireball_func_8038FB84(marker, D_80392758, D_80392768, D_80392778);
+    // Anchor: replay this fireball on followers with the exact same vectors.
+    FightSync_OnSpellSpawned(0);
 }
 
 void chfinalboss_func_80387074(s32 arg0) {
@@ -406,6 +423,8 @@ void chfinalboss_func_80387074(s32 arg0) {
     marker = actor_spawnWithYaw_f32(0x3AA, D_80392758, 0)->marker;
     func_8030E878(SFX_146_GRUNTY_SPELL_ATTACK_1, randf2(0.95f, 1.05f), 32000, D_80392758, 5000.0f, 12000.0f);
     chSpellFireball_func_8038FB84(marker, D_80392758, D_80392768, D_80392778);
+    // Anchor: replay this final-spell fireball on followers with the exact same vectors.
+    FightSync_OnSpellSpawned(1);
 }
 
 void chfinalboss_func_80387110(ActorMarker *marker, f32 arg1[3], f32 arg2, s32 arg3) {
@@ -441,6 +460,7 @@ void chfinalboss_func_80387110(ActorMarker *marker, f32 arg1[3], f32 arg2, s32 a
         D_80392768[i] = (sp2C[i] - arg1[i]) / arg2 - (D_80392778[i] * arg2 / 2);
     }
     if (arg3 == 0) {
+        __chFinalBossFireballFlightTime = arg2;
         SPAWNQUEUE_ADD_1(chfinalboss_func_80386FD8, marker);
     }
     else{
@@ -1220,6 +1240,7 @@ void __chfinalboss_spawnStatue(enum ch_bossjinjo_e statue_id) {
     }
     sp1C->lifetime_value = (statue_id == BOSSJINJO_5_JINJONATOR) ? 5.25f : 1.54f;
     sp1C->actorTypeSpecificField = statue_id;
+    FightSync_OnStatueSpawned(statue_id);
 }
 
 void chfinalboss_spawnStatue(s32 statue_id) {
@@ -1232,6 +1253,7 @@ void __chfinalboss_spawnSpellBarrier(ActorMarker *marker) {
     actor = marker_getActor(marker);
     actor->partnerActor = spawn_child_actor(ACTOR_3AB_GRUNTY_SPELL_BARRIER, &actor)->marker;
     __chFinalBossSpellBarrierActive = true;
+    FightSync_OnBarrierSpawned();
 }
 
 void chfinalboss_spawnSpellBarrier(ActorMarker *arg0) {
@@ -1546,6 +1568,8 @@ void chfinalboss_phase4_update(ActorMarker *marker) {
     sp70 = local->hits;
     sp6C = chfinalboss_findCollidingJinjo(this, func_8033229C(this->marker));
     if (sp6C != NULL) {
+        // Anchor: only the authority detects the slam; despawn followers' copy of this jinjo too.
+        FightSync_OnJinjoSlam(marker_getActor(sp6C)->actorTypeSpecificField);
         chbossjinjo_attack(sp6C);
         if (!fileProgressFlag_get(FILEPROG_D1_HAS_ACTIVATED_A_JINJO_STATUE_IN_FINAL_FIGHT)) {
             fileProgressFlag_set(FILEPROG_D1_HAS_ACTIVATED_A_JINJO_STATUE_IN_FINAL_FIGHT, true);
@@ -2020,6 +2044,10 @@ void chfinalboss_collisionPassive(ActorMarker *marker, ActorMarker *other_marker
 
     this = marker_getActor(marker);
     local = (ActorLocal_FinalBoss *)&this->local;
+    // Anchor: follower's hit is forwarded to the authority (with phase).
+    if (other_marker != NULL && FightSync_ForwardBossHit(local->phase)) {
+        return;
+    }
     switch (local->phase) {
     case 1:
         if (local->hits == 0) {
@@ -2123,6 +2151,7 @@ void chfinalboss_update(Actor *this){
         local->unk8 = 0;
         local->unk9 = 0;
         local->unkB = 0;
+        FightSync_OnBossSpawned();
 
         for(i = 0; i < 4; i++){ 
             __chFinalBossJinjoStatueMarker[i] = NULL;
@@ -2148,6 +2177,8 @@ void chfinalboss_update(Actor *this){
         timed_playSfx(2.0f, SFX_7F_HEAVYDOOR_SLAM, 1.0f, 32000);
     }//L8038BF0C
 
+    // Anchor: followers skip the boss brain - state rides FIGHT_UPDATE/FIGHT_EVENT instead.
+    if (!FightSync_BossFollowerTick(this))
     switch(local->phase) {
         case FINALBOSS_PHASE_0_INTRO:
             chfinalboss_phase0_update(this->marker);
@@ -2241,6 +2272,7 @@ void chfinalboss_setBossDefeated(void) {
 
     sp4C = actorArray_findActorFromActorId(ACTOR_38B_GRUNTILDA_FINAL_BOSS);
     sp48 = (ActorLocal_FinalBoss *)&sp4C->local;
+    FightSync_OnBossDefeated();
     sp34 = chstonejinjo_getBreakUpTime();
     temp_f20 = sp34 + chjinjonator_80391234();
     sp40 = chjinjonator_80391240();

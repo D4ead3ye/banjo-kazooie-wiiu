@@ -96,8 +96,16 @@ void func_80388FD4(Actor *this) {
         this->unk38_0 = false;
         this->volatile_initialized = true;
     }
+    // Anchor: teammate pressed this switch (flag synced) — drop it to match; unk38_0 stays false.
+    if( this->state != 4
+        && fileProgressFlag_get(this->unk10_12 + FILEPROG_8B_CCW_SPRING_OPEN)
+    ){
+        actor_playAnimationOnce(this);
+        subaddie_set_state_with_direction(this, 4, 0.999f, 1);
+        actor_collisionOff(this);
+    }
     if( (this->state == 4)
-        && this->unk38_0 
+        && this->unk38_0
         && actor_animationIsAt(this, 0.999f)
     ){
         func_802D6264(1.1f, 0x40, this->unk10_12 + 0x3C, 0x2B, D_8038ED10[this->unk10_12].unk3, this->unk10_12 + 0x8B);

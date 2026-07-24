@@ -51,7 +51,25 @@ typedef enum VBehaviorID {
     VB_VILE_PLAYER_EAT_PIECE,
     VB_VILE_GAME_UPDATE,
     VB_VILE_CPU_AI,
+    // Anchor: lets a remotely-watered CCW flower grow without local camera/fanfare/jiggy.
+    VB_CCW_FLOWER_REMOTE_GROW,
+    // Anchor: gates FP twinkly minigame start so only one client owns a run at a time.
+    VB_FP_TWINKLY_START,
+    // Anchor: suppresses door-open camera lock when the flag came from a teammate, not us.
+    VB_DOOR_OPEN_CAMERA,
+    // CC rings water snap on run teardown (Anchor): suppressed when a teammate finished the rings.
+    VB_CC_RINGS_SNAP_WATER,
+    // Lair door remote-open "already handled" test (Anchor). Args: (s32 doorActorId, s32 doorState).
+    VB_LEVELDOOR_REMOTE_OPEN_DONE,
 } VBehaviorID;
+
+typedef enum DoorCameraId {
+    GV_DOOR_CAM_SUN,      // sun switch (flag 3)
+    GV_DOOR_CAM_STAR,     // star switch / trapdoor (flag 5)
+    GV_DOOR_CAM_KAZOOIE,  // beak-bomb door (flag 6)
+    GV_DOOR_CAM_JINXY,    // Jinxy sneeze (flags 0, 1)
+    MMM_DOOR_CAM_CHURCH,  // church door, Tumblar challenge (flag 0)
+} DoorCameraId;
 
 DEFINE_EVENT(VanillaBehavior, VBehaviorID id; bool* should; va_list * originalArgs;);
 

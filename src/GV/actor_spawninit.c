@@ -7,6 +7,8 @@
 
 #include <libultra/r4300.h>
 
+#include "port/Patches/Patches.h"
+
 extern void core1_7090_initSfxSource(s32, s32, s32, f32);
 extern void func_802D3D54(Actor *this);
 extern void func_802D3D74(Actor *this);
@@ -175,12 +177,23 @@ void func_8038E430(Actor *this){
 
 void func_8038E460(Actor *this){//banjo_door
     func_802D3D74(this);
+    // Anchor: flag 0x10 is transient, doesn't survive reload.
+    if(mapSpecificFlags_get(0x10)){
+        if(!(port_puzzleStep_get(ANCHOR_PUZZLE_GV_JINXY_DOOR) & 1)){
+            port_puzzleStep_orBits(ANCHOR_PUZZLE_GV_JINXY_DOOR, 1);
+        }
+    } else if(port_puzzleStep_get(ANCHOR_PUZZLE_GV_JINXY_DOOR) & 1){
+        mapSpecificFlags_set(0x10, true);
+        mapSpecificFlags_set(2, true);
+    }
     if(mapSpecificFlags_get(0x10)){
         func_8038E430(this);
         if(!mapSpecificFlags_get(2)){
             mapSpecificFlags_set(2, true);
-            func_8028F918(0);
-            func_80324DBC(4.0f, ASSET_A7D_DIALOG_JINXY_HELPED, 4, NULL, NULL, NULL, NULL);
+            if(EventSystem_Should(VB_DOOR_OPEN_CAMERA, true, GV_DOOR_CAM_JINXY)){
+                func_8028F918(0);
+                func_80324DBC(4.0f, ASSET_A7D_DIALOG_JINXY_HELPED, 4, NULL, NULL, NULL, NULL);
+            }
         }
     }
 }
@@ -218,7 +231,8 @@ void func_8038E4DC(Actor *this){
     else{
         if(!mapSpecificFlags_get(4)){
             mapSpecificFlags_set(4, true);
-            gcStaticCamera_activate(1);
+            if(EventSystem_Should(VB_DOOR_OPEN_CAMERA, true, GV_DOOR_CAM_SUN))
+                gcStaticCamera_activate(1);
         }
     }
 }
@@ -231,7 +245,8 @@ void func_8038E648(Actor *this){
         case 1: //L8038E690
             this->pitch = 0.0f;
             if(mapSpecificFlags_get(5)){
-                gcStaticCamera_activate(2);
+                if(EventSystem_Should(VB_DOOR_OPEN_CAMERA, true, GV_DOOR_CAM_STAR))
+                    gcStaticCamera_activate(2);
                 subaddie_set_state(this, 6);
                 core1_7090_initSfxSource(0, 0x6A, 0x7ff8, 0.3f);
                 s32 pyramidTimer = 25;
@@ -333,7 +348,8 @@ void chKazooieDoor_update(Actor *this){
         case 1: //L8038EB98
             if(mapSpecificFlags_get(6)){
                 coMusicPlayer_playMusic(COMUSIC_2B_DING_B, -1);
-                gcStaticCamera_activate(3);
+                if(EventSystem_Should(VB_DOOR_OPEN_CAMERA, true, GV_DOOR_CAM_KAZOOIE))
+                    gcStaticCamera_activate(3);
                 subaddie_set_state(this, 6);
                 core1_7090_initSfxSource(1, 0x6a, 0x7ff8, 0.3f);
                 this->unk1C[1] = this->position_y + 210.0f;

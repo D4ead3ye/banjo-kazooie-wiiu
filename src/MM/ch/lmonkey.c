@@ -104,14 +104,15 @@ void chlmonkey_update(Actor *this) {
 
         switch (this->state) {
             case LMONKEY_STATE_1_IDLE://L80388690
-                if (mapSpecificFlags_get(MM_SPECIFIC_FLAG_2_ORANGE_HAS_BEEN_RETURNED)) {
+                if (mapSpecificFlags_get(MM_SPECIFIC_FLAG_2_ORANGE_HAS_BEEN_RETURNED) || jiggyscore_isSpawned(JIGGY_9_MM_CHIMPY)) {
                     subaddie_set_state(this, LMONKEY_STATE_4_LEAVING);
 
-                    if (!jiggyscore_isCollected(JIGGY_9_MM_CHIMPY)) {
-                        gcdialog_showDialog(ASSET_B40_DIALOG_CHIMPY_COMPLETE, 0xE, this->position, this->marker, __chlmonkey_complete, NULL);
+                    if (jiggyscore_isSpawned(JIGGY_9_MM_CHIMPY)) {
+                        mapSpecificFlags_set(MM_SPECIFIC_FLAG_4_SHAKE, true);
+                        subaddie_set_state(this, LMONKEY_STATE_3_WALKING);
                     }
                     else {//L803886E8
-                        __chlmonkey_complete(this->marker, ASSET_B40_DIALOG_CHIMPY_COMPLETE, -1);
+                        gcdialog_showDialog(ASSET_B40_DIALOG_CHIMPY_COMPLETE, 0xE, this->position, this->marker, __chlmonkey_complete, NULL);
                     }//L80388898
                 }
                 else {

@@ -12,6 +12,9 @@ extern void func_802F9D38(s32);
 extern void func_802EE2E8(Actor *arg0, s32 arg1, s32 cnt, s32 arg3, f32 arg4, f32 arg5, f32 arg6);
 extern void gcquiz_func_80319EA4(void);
 
+extern void port_lairWater_onRiseTrigger(int32_t waterMap, int32_t levelFlag);
+extern int32_t port_lairWater_targetLevel(int32_t map, int32_t flagLevel);
+
 void func_802D3D54(Actor *this);
 void func_802D3DA4(Actor *this);
 Actor *func_802D3F48(ActorMarker *this, Gfx **gdl, Mtx **mptr, Vtx **arg3);
@@ -159,6 +162,9 @@ void func_802D317C(ActorMarker *marker, enum file_progress_e prog_flag_id) {
     marker_despawn(marker);
 }
 
+extern void port_breakable_broadcastBreak(s32 markerId, s32 x, s32 y, s32 z);
+extern s32 port_breakable_isBroken(s32 map, s32 markerId, s32 x, s32 y, s32 z);
+
 // collision die function for several objects in Lair
 void func_802D31AC(ActorMarker *arg0, ActorMarker * arg1) {
     Actor *sp2C;
@@ -171,6 +177,7 @@ void func_802D31AC(ActorMarker *arg0, ActorMarker * arg1) {
         case 0xFF:
             gcsfx_playAtSampleRate(SFX_82_METAL_BREAK);
             subaddie_set_state(sp2C, 4);
+            port_breakable_broadcastBreak(arg0->id, (s32)sp2C->position[0], (s32)sp2C->position[1], (s32)sp2C->position[2]);
             break;
 
         case 0x17D:
@@ -191,6 +198,7 @@ void func_802D31AC(ActorMarker *arg0, ActorMarker * arg1) {
         case 0x107:
             gcsfx_playAtSampleRate(SFX_82_METAL_BREAK);
             func_802EE278(sp2C, 0xE, 0xF, 0x46, 0.8f, 0.7f);
+            port_breakable_broadcastBreak(arg0->id, (s32)sp2C->position[0], (s32)sp2C->position[1], (s32)sp2C->position[2]);
             marker_despawn(arg0);
             break;
 
@@ -266,6 +274,7 @@ void func_802D31AC(ActorMarker *arg0, ActorMarker * arg1) {
                     func_802EE278(sp2C, 7, 0x19, 0x82, 0.17f, 0.8f);
                     break;
             }
+            port_breakable_broadcastBreak(arg0->id, (s32)sp2C->position[0], (s32)sp2C->position[1], (s32)sp2C->position[2]);
             marker_despawn(arg0);
             break;
 
@@ -303,6 +312,7 @@ void func_802D31AC(ActorMarker *arg0, ActorMarker * arg1) {
             gcsfx_playAtSampleRate(SFX_82_METAL_BREAK);
             gcsfx_playAtSampleRate(SFX_B6_GLASS_BREAKING_1);
             func_802EE278(sp2C, 4, 0x23, 0x1E, 0.7f, 0.6f);
+            port_breakable_broadcastBreak(arg0->id, (s32)sp2C->position[0], (s32)sp2C->position[1], (s32)sp2C->position[2]);
             marker_despawn(arg0);
             break;
 
@@ -319,6 +329,7 @@ void func_802D31AC(ActorMarker *arg0, ActorMarker * arg1) {
             if (arg0->id == 0x1F3) {
                 func_802EE278(sp2C, 4, 0x2D, 0x104, 1.0f, 1.0f);
             }
+            port_breakable_broadcastBreak(arg0->id, (s32)sp2C->position[0], (s32)sp2C->position[1], (s32)sp2C->position[2]);
             marker_despawn(arg0);
             break;
 
@@ -364,6 +375,101 @@ void func_802D3CE8(Actor *this){
         marker_setCollisionScripts(this->marker, NULL, func_802D3138, func_802D31AC);
         this->marker->propPtr->unk8_3 = true;
         this->initialized = true;
+        if (port_breakable_isBroken((s32)gsworld_getMap(), this->marker->id, (s32)this->position[0],
+                                    (s32)this->position[1], (s32)this->position[2])) {
+            marker_despawn(this->marker);
+        }
+    }
+}
+
+extern ActorArray *suBaddieActorArray;
+
+// fieldSel picks between two markers sharing an id: 0 = any, 1 = actorTypeSpecificField==1, 2 = !=1.
+typedef struct {
+    s16 flag;
+    s16 markerId;
+    s8  fieldSel;
+} LairBreakable;
+
+static const LairBreakable D_lairBreakables[] = {
+    { FILEPROG_A5_LAIR_CRYPT_GATE_OPEN,                   0x17D,                            0 },
+    { FILEPROG_C2_GRATE_TO_RBB_PUZZLE_OPEN,              0x11A,                            0 },
+    { FILEPROG_C3_ICE_BALL_TO_CHEATO_BROKEN,             0x11E,                            0 },
+    { FILEPROG_C4_STATUE_EYE_BROKEN,                      MARKER_121_GLASS_EYE,             0 },
+    { FILEPROG_C5_RAREWARE_BOX_BROKEN,                    0x11F,                            0 },
+    { FILEPROG_C8_LAIR_BRICKWALL_TO_WADINGBOOTS_BROKEN,   MARKER_109_BREAKABLE_BRICK_WALL,  1 },
+    { FILEPROG_C9_LAIR_BRICKWALL_TO_SHOCKJUMP_PAD_BROKEN, MARKER_109_BREAKABLE_BRICK_WALL,  2 },
+    { FILEPROG_CA_COBWEB_BLOCKING_PURPLE_CAULDRON_BROKEN, MARKER_225_BREAKABLE_WALL_COBWEB, 0 },
+    { FILEPROG_CB_LAIR_COBWEB_OVER_FLIGHTPAD_BROKEN,      MARKER_224_BREAKABLE_FLOOR_COBWEB, 1 },
+    { FILEPROG_CC_LAIR_COBWEB_OVER_GREEN_CAULDRON_BROKEN, MARKER_224_BREAKABLE_FLOOR_COBWEB, 2 },
+    { FILEPROG_CD_GRATE_TO_WATER_SWITCH_3_OPEN,          0x118,                            0 },
+    { FILEPROG_CE_GRATE_TO_MMM_PUZZLE_OPEN,             0x119,                            0 },
+};
+
+void port_breakable_remoteBreak(s32 progressFlag) {
+    s32 i;
+    s16 markerId = -1;
+    s8 fieldSel = 0;
+
+    for (i = 0; i < (s32) (sizeof(D_lairBreakables) / sizeof(D_lairBreakables[0])); i++) {
+        if (D_lairBreakables[i].flag == progressFlag) {
+            markerId = D_lairBreakables[i].markerId;
+            fieldSel = D_lairBreakables[i].fieldSel;
+            break;
+        }
+    }
+    if (markerId < 0 || suBaddieActorArray == NULL) {
+        return;
+    }
+    for (i = 0; i < suBaddieActorArray->cnt; i++) {
+        Actor *actor = &suBaddieActorArray->data[i];
+        if (actor->marker == NULL || actor->marker->id != markerId) {
+            continue;
+        }
+        if ((fieldSel == 1 && actor->actorTypeSpecificField != 1) ||
+            (fieldSel == 2 && actor->actorTypeSpecificField == 1)) {
+            continue;
+        }
+        func_802D31AC(actor->marker, NULL);
+        return;
+    }
+}
+
+void port_breakable_remoteBreakAt(s32 markerId, s32 x, s32 y, s32 z) {
+    s32 i;
+
+    if (suBaddieActorArray == NULL) {
+        return;
+    }
+    for (i = 0; i < suBaddieActorArray->cnt; i++) {
+        Actor *actor = &suBaddieActorArray->data[i];
+        if (actor->marker == NULL || actor->marker->id != markerId) {
+            continue;
+        }
+        if ((s32)actor->position[0] != x || (s32)actor->position[1] != y || (s32)actor->position[2] != z) {
+            continue;
+        }
+        func_802D31AC(actor->marker, NULL);
+        return;
+    }
+}
+
+// [port] Iterates backward: despawn swap-removes from the end.
+void port_breakable_despawnBrokenRestores(s32 map) {
+    s32 i;
+
+    if (suBaddieActorArray == NULL) {
+        return;
+    }
+    for (i = suBaddieActorArray->cnt - 1; i >= 0; i--) {
+        Actor *actor = &suBaddieActorArray->data[i];
+        if (actor->marker == NULL || actor->despawn_flag) {
+            continue;
+        }
+        if (port_breakable_isBroken(map, actor->marker->id, (s32)actor->position[0], (s32)actor->position[1],
+                                    (s32)actor->position[2])) {
+            marker_despawn(actor->marker);
+        }
     }
 }
 
@@ -881,14 +987,28 @@ void func_802D5260(void) {
         if (levelSpecificFlags_get(LEVEL_FLAG_3C_LAIR_UNKNOWN) != false) {
             sp34 = D_803679C8[sp3C].unk6 + D_803676A4;
         } else {
-            sp34 = ((s16 *)&D_803679C8[sp3C])[(fileProgressFlag_get(FILEPROG_27_LAIR_WATER_LEVEL_3)) ? 3 
-                     : (fileProgressFlag_get(FILEPROG_25_LAIR_WATER_LEVEL_2)) ? 2
-                     : (fileProgressFlag_get(FILEPROG_23_LAIR_WATER_LEVEL_1)) ? 1
-                     : 0];
+            s32 lvl = (fileProgressFlag_get(FILEPROG_27_LAIR_WATER_LEVEL_3)) ? 3
+                    : (fileProgressFlag_get(FILEPROG_25_LAIR_WATER_LEVEL_2)) ? 2
+                    : (fileProgressFlag_get(FILEPROG_23_LAIR_WATER_LEVEL_1)) ? 1
+                    : 0;
+            lvl = port_lairWater_targetLevel(gsworld_getMap(), lvl);
+            sp34 = ((s16 *)&D_803679C8[sp3C])[lvl];
+        }
+        static s32 sLairWaterMap = -1;
+        s32 curMap = gsworld_getMap();
+        if (sLairWaterMap != curMap || levelSpecificFlags_get(LEVEL_FLAG_3C_LAIR_UNKNOWN)) {
+            sLairWaterMap = curMap;
+        } else {
+            f32 curY = sp38->type_6D.unk8;
+            f32 step = 240.0f * time_getDelta();
+            f32 diff = sp34 - curY;
+            if (diff > step)       sp34 = curY + step;
+            else if (diff < -step) sp34 = curY - step;
+            // within a step of the target: let sp34 stand.
         }
         func_8034DEB4(&sp38->type_6D, sp34);
         player_getPosition(sp28);
-        
+
         fxRipple_802F363C(sp34 + ((sp3C != -1) ? (D_803679E0[sp3C] + ((sp3C == 2) ? (6600.0f < sp28[0]) ? -200 : 0 : 0)) : 0));
     }
 }
@@ -1121,11 +1241,13 @@ int func_802D60C4(void){
 }
 
 void func_802D6114(void){
-    s32 sp24; 
+    s32 sp24;
     s32 sp20;
+    s32 camScript;
 
     sp24 =  D_80367694;\
     sp20 =  D_80367698;
+    camScript = D_80367688;
     if(D_8036769C)
         fileProgressFlag_set(D_8036769C, true);
     func_802D6344();
@@ -1142,6 +1264,10 @@ void func_802D6114(void){
     else{//L802D61DC
         func_80347A14(1);
         gcpausemenu_80314AC8(1);
+        // [port] Anchor: exit the camera manually; 0x30 (MM) and 0x40 (Door of Grunty) schedule their own exit.
+        if (camScript != 0x30 && camScript != 0x40) {
+            ncStaticCamera_exit();
+        }
     }
 }
 
@@ -1163,6 +1289,8 @@ void func_802D6264(f32 delay, enum map_e map_id, s32 arg2, s32 arg3, s32 arg4, e
     D_80367698 = arg4;
     D_8036769C = arg5;
     D_803676A0 = 0;
+
+    port_lairWater_onRiseTrigger(map_id, arg5);
 
     if(map_id != D_80367694){
         timedFunc_set_1(delay, (GenFunction_1) func_802D61FC, map_id);

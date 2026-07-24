@@ -5,7 +5,8 @@
 #include "actor.h"
 
 #include "prop.h"
-#include "port/Enhancements/NoteRetention/NoteRetention.h"
+#include "port/Enhancements/Retention/Retention.h"
+#include "port/Patches/Patches.h"
 
 extern s32 D_80370990;
 extern f32 GameEngine_GetAspectRatio(void);
@@ -52,6 +53,10 @@ typedef struct {
     s16 unkC;
     s16 unkE;
 }Actorlocal_Core2_9E370;
+
+// [port] Sized ahead of demand so actor_new never bk_reallocs (relocates) the array mid-map.
+#define ACTOR_ARRAY_INITIAL_CAP 512
+#define ACTOR_ARRAY_GROW_CHUNK  128
 
 /* .data */
 ActorArray *suBaddieActorArray = NULL; //actorArrayPtr
@@ -437,6 +442,8 @@ void actorArray_free(void) {
     // [port] Note retention: every note actor is about to be freed, so drop our
     // live-actor tracking (markers are being released here).
     port_noteRetention_onActorsFreed();
+    port_remoteCarry_reset();
+    port_anchorDummies_onActorsFreed();
 
     if (suBaddieActorArray != NULL) {
         for(var_s0 = suBaddieActorArray->data; var_s0 < &suBaddieActorArray->data[suBaddieActorArray->cnt]; var_s0++){
@@ -568,12 +575,15 @@ void func_803268B4(void) {
                 if (!actor->despawn_flag) {
                     if (marker->unk2C_2) {
                         marker->actorUpdate2Func(actor);
+                        // [port] Update may have spawned actors, reallocating the array; re-fetch the slot.
+                        actor = &suBaddieActorArray->data[temp_v1];
                         if (anim_ctrl != NULL) {
                                 actor->sound_timer = anctrl_getAnimTimer(anim_ctrl);
                         }
                     } else if (!temp_s1 || (temp_s1 && func_803296D8(actor, temp_s1))) {
                         if ( marker->actorUpdateFunc != NULL) {
                              marker->actorUpdateFunc(actor);
+                            actor = &suBaddieActorArray->data[temp_v1]; // [port] re-fetch: see above
                             if (anim_ctrl != NULL) {
                                     actor->sound_timer = anctrl_getAnimTimer(anim_ctrl);
                             }
@@ -801,13 +811,13 @@ Actor *actor_new(s32 position[3], s32 yaw, ActorInfo* actorInfo, u32 flags){
     s32 pos_copy[3] = { pos_x, pos_y, pos_z };
 
     if(suBaddieActorArray == NULL){
-        suBaddieActorArray = (ActorArray *)bk_malloc(sizeof(ActorArray) + 20*sizeof(Actor));
+        suBaddieActorArray = (ActorArray *)bk_malloc(sizeof(ActorArray) + ACTOR_ARRAY_INITIAL_CAP*sizeof(Actor));
         suBaddieActorArray->cnt = 0;
-        suBaddieActorArray->max_cnt = 20;
+        suBaddieActorArray->max_cnt = ACTOR_ARRAY_INITIAL_CAP;
     }
 
     if(suBaddieActorArray->cnt + 1 > suBaddieActorArray->max_cnt){
-        suBaddieActorArray->max_cnt = suBaddieActorArray->cnt + 5;
+        suBaddieActorArray->max_cnt = suBaddieActorArray->cnt + ACTOR_ARRAY_GROW_CHUNK;
         suBaddieActorArray = (ActorArray *)bk_realloc(suBaddieActorArray, sizeof(ActorArray) + suBaddieActorArray->max_cnt*sizeof(Actor));
     }
 
@@ -1084,11 +1094,7 @@ static void __actor_free(ActorMarker *arg0, Actor *arg1){
     //remove last actor from actor array
     suBaddieActorArray->cnt--;
 
-    //shrink actor array capacity
-    if(suBaddieActorArray->cnt + 8 <= suBaddieActorArray->max_cnt){
-        suBaddieActorArray->max_cnt = suBaddieActorArray->cnt + 4;
-        suBaddieActorArray = (ActorArray *)bk_realloc(suBaddieActorArray, suBaddieActorArray->max_cnt*sizeof(Actor) + sizeof(ActorArray));
-    }
+    // [port] Never shrink the array; keeps the pre-sized headroom from actor_new so pointers stay stable.
 
     marker_free(arg0);
 }
@@ -1158,13 +1164,38 @@ void marker_despawn(ActorMarker *marker){
         }
     }
     else{
+        // [port] Shadow-link cleanup for immediate-mode despawns.
+        if(actor->unk104){
+            if(actor->modelCacheIndex != 0x108){
+                // Freeing a shadow-owner: unlink and free its shadow too.
+                ActorMarker *shadowMarker = actor->unk104;
+                Actor *shadow = marker_getActor(shadowMarker);
+                shadow->unk104 = NULL;
+                actor->unk104 = NULL;
+                __actor_free(shadowMarker, shadow);
+                // Swap-remove may have relocated this actor; re-fetch through the marker.
+                actor = marker_getActor(marker);
+            }
+            else{
+                // Freeing a shadow directly: sever the owner's link too.
+                marker_getActor(actor->unk104)->unk104 = NULL;
+                actor->unk104 = NULL;
+            }
+        }
         __actor_free(marker, actor);
     }
 }
 
 void func_803283BC(void){
     D_8036E574 = 1;
-    D_8036E578 = 0;
+}
+
+void port_actorDespawn_beginDefer(void){
+    D_8036E574 = 1;
+}
+
+void port_actorDespawn_endDefer(void){
+    D_8036E574 = 0;
 }
 
 //actorArray_flushDespawns
@@ -2216,6 +2247,36 @@ ActorMarker *func_8032B16C(enum jiggy_e jiggy_id) {
         }
         return NULL;
     }
+}
+
+ActorMarker *actorArray_findHoneycombMarkerById(enum honeycomb_e id) {
+    Actor* base;
+    Actor* var_s0;
+
+    if (suBaddieActorArray != NULL) {
+        base = &suBaddieActorArray->data[0];
+        for (var_s0 = base; (var_s0 - base) < suBaddieActorArray->cnt; var_s0++) {
+            if ((var_s0->marker->id == MARKER_53_EMPTY_HONEYCOMB) && (func_802CA1C4(var_s0) == id)) {
+                return var_s0->marker;
+            }
+        }
+    }
+    return NULL;
+}
+
+ActorMarker *actorArray_findMumboTokenMarkerById(enum mumbotoken_e id) {
+    Actor* base;
+    Actor* var_s0;
+
+    if (suBaddieActorArray != NULL) {
+        base = &suBaddieActorArray->data[0];
+        for (var_s0 = base; (var_s0 - base) < suBaddieActorArray->cnt; var_s0++) {
+            if ((var_s0->marker->id == MARKER_39_MUMBO_TOKEN) && (func_802E0CB0(var_s0) == id)) {
+                return var_s0->marker;
+            }
+        }
+    }
+    return NULL;
 }
 
 void func_8032B258(Actor *this, enum collision_e arg1) {

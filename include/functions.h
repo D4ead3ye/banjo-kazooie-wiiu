@@ -154,6 +154,8 @@ Actor *marker_getActor(ActorMarker *);
 Actor *marker_getActorAndRotation(ActorMarker *marker, f32 rotation[3]);
 Actor *subaddie_getLinkedActor(Actor *);
 ActorMarker *func_8032B16C(enum jiggy_e jiggy_id);
+ActorMarker *actorArray_findHoneycombMarkerById(enum honeycomb_e id);
+ActorMarker *actorArray_findMumboTokenMarkerById(enum mumbotoken_e id);
 bool  func_80329078(Actor *, s32, s32);
 bool  func_80329480(Actor *);
 bool subaddie_maybe_set_state_position_direction(Actor *, s32, f32, s32, f32 );
@@ -323,10 +325,13 @@ bool honeycombscore_get(enum honeycomb_e indx);
 // --- core2/map/specificflags.c ---
 s32 mapSpecificFlags_get(s32 i);
 void mapSpecificFlags_set(s32, s32);
+void mapSpecificFlags_setEx(s32 i, s32 val, s32 triggerEvent);
 
 // --- core2/level/specificflags.c ---
 s32 levelSpecificFlags_get(s32 i);
 void levelSpecificFlags_set(s32, s32);
+void levelSpecificFlags_setEx(s32 index, s32 val, s32 triggerEvent);
+void levelSpecificFlags_getSizeAndPtr(s32 *size, u8 **addr);
 
 // --- core2/gameloop.c ---
 s32 getGameMode(void);
@@ -335,8 +340,30 @@ void transitionToMap(enum map_e map, s32 exit, s32 transition);
 // --- core2/gamestate.c (item system) ---
 s32 item_empty(enum item_e item);
 void item_set(s32 item, s32 val);
+void item_setEx(s32 item, s32 val, s32 triggerEvent);
 
 // --- core2/game_complete.c ---
+enum AnchorFlagSpace {
+    ANCHOR_FLAGSPACE_FILE_PROGRESS = 0,
+    ANCHOR_FLAGSPACE_VOLATILE = 1,
+    ANCHOR_FLAGSPACE_LEVEL_SPECIFIC = 2,
+    ANCHOR_FLAGSPACE_MAP_SPECIFIC = 3,
+    ANCHOR_FLAGSPACE_RANDO_INF = 4,
+};
+enum AnchorCollectibleSpace {
+    ANCHOR_COLLECTIBLE_JIGGY = 0,
+    ANCHOR_COLLECTIBLE_HONEYCOMB = 1,
+    ANCHOR_COLLECTIBLE_MUMBO = 2,
+    ANCHOR_COLLECTIBLE_NOTE = 3,
+    ANCHOR_COLLECTIBLE_JINJO = 4,
+    ANCHOR_COLLECTIBLE_WORM = 5,
+    ANCHOR_COLLECTIBLE_ACORN = 6,
+    ANCHOR_COLLECTIBLE_PRESENT_BLUE = 7,
+    ANCHOR_COLLECTIBLE_PRESENT_GREEN = 8,
+    ANCHOR_COLLECTIBLE_PRESENT_RED = 9,
+    ANCHOR_COLLECTIBLE_GOLD = 10,
+    ANCHOR_COLLECTIBLE_ORANGE = 11,
+};
 bool fileProgressFlag_get(enum file_progress_e index);
 s32 fileProgressFlag_getN(enum file_progress_e offset, s32 numBits);
 s32 volatileFlag_get(enum volatile_flags_e index);
@@ -345,6 +372,8 @@ s32 volatileFlag_getN(enum volatile_flags_e index, s32 numBits);
 void fileProgressFlag_setN(enum file_progress_e, s32, s32);
 void volatileFlag_set(enum volatile_flags_e index, s32 set);
 void volatileFlag_setN(enum volatile_flags_e startIndex, s32 set, s32 length);
+void fileProgressFlag_setEx(enum file_progress_e index, s32 set, s32 triggerEvent);
+void volatileFlag_setEx(enum volatile_flags_e index, s32 set, s32 triggerEvent);
 
 // --- core2/dialog/progress_dialogs.c ---
 void volatileFlag_setAndTriggerDialog_0(enum volatile_flags_e arg0);
@@ -1067,6 +1096,7 @@ void ability_setAllLearned(s32 val);
 void ability_setAllUsed(s32 val);
 void ability_setHasUsed(enum ability_e move);
 void ability_setLearned(s32 move, s32 val);
+void ability_setLearnedEx(s32 move, s32 val, s32 triggerEvent);
 void ability_use(s32 arg0);
 
 // --- core2/actor_array.c ---
@@ -1100,6 +1130,8 @@ void func_803268B4(void);
 void func_80326C24(s32 arg0);
 void func_803283BC(void);
 void func_803283D4(void);
+void port_actorDespawn_beginDefer(void);
+void port_actorDespawn_endDefer(void);
 void func_80328CA8(Actor *self, s32 angle);
 void func_803297FC(Actor *arg0, f32 *o1, f32 *o2);
 s32 func_80329904(ActorMarker *arg0, s32 arg1, f32 *arg2);
@@ -1299,6 +1331,8 @@ void baAnim_init(void);
 void baAnim_update(void);
 void baanim_80289F30(void);
 enum baanim_update_type_e baanim_getUpdateType(void);
+void baanim_applyBottlesBonusMask(uintptr_t arg0, s32 mask);
+s32 baanim_getActiveBottlesBonusMask(void);
 void baanim_setModifyMethod(void (*arg0)(uintptr_t, uintptr_t));
 void baanim_setUpdateType(enum baanim_update_type_e arg0);
 
@@ -1576,6 +1610,7 @@ void playerPosition_getOffset(f32 arg0[3]);
 void playerPosition_setOffset(f32 arg0[3]);
 void playerPosition_applyOffset(void);
 void player_setPosition(f32 arg0[3]);
+void player_setWarpDestination(f32 position[3], f32 yaw, s32 exit_id);
 
 // --- core2/ba/ba_recoil.c ---
 enum asset_e func_80294974(void);
@@ -1988,6 +2023,7 @@ void func_802D8BE4(bool gold_feather);
 
 // --- core2/ch/honeycomb.c ---
 enum honeycomb_e func_802CA1C4(Actor *self);
+enum mumbotoken_e func_802E0CB0(Actor *self);
 void func_802CA1CC(enum honeycomb_e id);
 
 // --- core2/ch/jiggy.c ---
@@ -2348,6 +2384,8 @@ void jiggyscore_setSpawned(s32, s32);
 
 // --- core2/fx/score_jiggylist.c ---
 void codeABC00_spawnJiggyAtLocation(enum jiggy_e, f32[3]);
+void codeABC00_spawnJiggyAtLocationEx(enum jiggy_e, f32[3], s32 triggerEvent);
+s32 jiggylist_hasSpawnedObject(enum jiggy_e jiggy_id);
 void func_80332E08(void);
 void func_8033301C(void);
 void func_80333270(enum jiggy_e jiggy_id, f32 position[3], void (*method)(Actor *, ActorMarker *), ActorMarker *other_marker);
@@ -2397,6 +2435,7 @@ s32 func_80320708(void);
 void bitfield_set_bit(u8 *array, s32 index, s32 set);
 void bitfield_set_n_bits(u8 *array, s32 startIndex, s32 set, s32 length);
 void fileProgressFlag_getSizeAndPtr(s32 *size, u8 **addr);
+void volatileFlag_getSizeAndPtr(s32 *size, u8 **addr);
 void fileProgressFlag_set(enum file_progress_e index, s32 set);
 void volatileFlag_backupAll(void);
 void volatileFlag_clear(void);
@@ -2975,6 +3014,8 @@ void item_setMaxCount(s32 item);
 void itemscore_highNoteScores_fromSaveData(u8 *savedata);
 void itemscore_levelReset(enum level_e level);
 void notescore_getSizeAndPtr(s32 *size, void **ptr);
+void itemscore_noteScores_getSizeAndPtr(s32 *size, u8 **addr);
+void itemscore_noteScores_setLevel(enum level_e level, s32 score);
 void saveditem_getSizeAndPtr(s32 *size, u8 **buffer);
 void timeScores_getSizeAndPtr(s32 *size, void **ptr);
 

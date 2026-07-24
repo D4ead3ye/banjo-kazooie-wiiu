@@ -7,7 +7,7 @@
 #include <core2/file.h>
 #include "core2/particle.h"
 #include "port/Interpolation/FrameInterpolation.h"
-#include "port/Enhancements/NoteRetention/NoteRetention.h"
+#include "port/Enhancements/Retention/Retention.h"
 
 /* .data */
 extern u8 D_80370250 = 0;
@@ -432,6 +432,7 @@ void gsworld_load(enum map_e map_id) {
     File *fp;
 
     port_noteRetention_beginMapLoad((int32_t)map_id);
+    port_carriedSync_beginMapLoad((int32_t)map_id);
 
     core1_15B30_sendMesg3ToRenderThread();
     fp = file_openMap(map_id); //LevelSetupFile_Open

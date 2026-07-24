@@ -2,9 +2,12 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include "port/Enhancements/Retention/Retention.h"
 
 extern ActorMarker *func_8028E86C(void);
 extern void func_8028F7D4(f32, f32);
+extern s32 port_remoteCarry_displayUpdate(Actor *this);
+extern void port_anchor_onCarryThrow(s32 markerId, f32 start[3], f32 target[3]);
 
 typedef struct {
     f32 unk0[3];
@@ -86,6 +89,10 @@ void chcaterpillar_update(Actor *this){
     f32 sp54[3];
     int i;
 
+    if (port_remoteCarry_displayUpdate(this)) {
+        return;
+    }
+
     sp8C = func_8028E86C() == this->marker;
     sp84 = time_getDelta();
 
@@ -104,12 +111,23 @@ void chcaterpillar_update(Actor *this){
             ) {
                 chcaterpillar_setState(this, 5);
             } else {
+                s32 wormSuppress;
+                port_carriedSync_register(ANCHOR_COLLECTIBLE_WORM, this->marker, (s32)this->position[0],
+                                          (s32)this->position[1], (s32)this->position[2], &wormSuppress);
+                if (wormSuppress) {
+                    marker_despawn(this->marker);
+                    return;
+                }
                 chcaterpillar_setState(this, 1);
             }//L8038A45C
         }
     }//L8038A45C
 
     if(this->state == 1){
+        if(port_carriedSync_consumeRemoteDespawn(ANCHOR_COLLECTIBLE_WORM, this->marker)){
+            marker_despawn(this->marker);
+            return;
+        }
         skeletalAnim_getProgressRange(this->unk148, &sp64, &sp60);
         player_getPosition(sp74);
         if(ml_vec3f_distance(this->position, local->unk0) < 10.0f){
@@ -158,13 +176,18 @@ void chcaterpillar_update(Actor *this){
                 volatileFlag_set(VOLATILE_FLAG_B2_HAS_COLLECTED_CATERPILLAR, true);
             }
             sfx_playFadeShorthandDefault(SFX_C5_TWINKLY_POP, 1.0f, 25000, this->position, 0x1f4, 0x9c4);
+            port_carriedSync_onLocalCollect(ANCHOR_COLLECTIBLE_WORM, this->marker);
             marker_despawn(this->marker);
         }
     }//L8038A794
 
     if(this->state == 2){
         if(this->unk138_21){
+            f32 throwTarget[3];
+            func_80389BD8(throwTarget);
+            port_anchor_onCarryThrow(this->marker->id, this->position, throwTarget);
             func_8028F010(ACTOR_2A2_CATERPILLAR);
+            port_carriedSync_onLocalSpend(ANCHOR_COLLECTIBLE_WORM);
             chcaterpillar_setState(this, 3);
         }
         else if(!sp8C){

@@ -3,6 +3,8 @@
 #include "functions.h"
 #include "variables.h"
 
+#include "port/Patches/Patches.h"
+
 extern f32 mapModel_getFloorY(f32[3]);
 // func_8028F45C declared in port_prototypes.h (returns bool)
 
@@ -124,6 +126,7 @@ static void __chTreasurehunt_checkStepProgress(s32 currentStep){
         }
 
         CH_TREASUREHUNT_PUZZLE_CURRENT_STEP++;
+        port_puzzleStep_orBits(ANCHOR_PUZZLE_TTC_XHUNT, (1 << CH_TREASUREHUNT_PUZZLE_CURRENT_STEP) - 1);
         __spawnQueue_add_0(__chTreasurehunt_spawnActorForNextStep);
         __spawnQueue_add_0(__chTreasurehunt_spawnRedXForNextStep);
     }
@@ -173,11 +176,46 @@ void chTreasurehunt_checkStepProgress5(NodeProp *this, ActorMarker *arg1){
         timedFunc_set_1(0.1f, (GenFunction_1) gcpausemenu_80314AC8, 1);
         gcdialog_showDialog(ASSET_A17_DIALOG_BURIED_TREASURE_SPAWNED, 4, NULL, NULL, NULL, NULL);
         CH_TREASUREHUNT_PUZZLE_CURRENT_STEP++;
+        port_puzzleStep_orBits(ANCHOR_PUZZLE_TTC_XHUNT, 0x3F);
     }
 }
 
 void chTreasurehunt_resetProgress(void){
     CH_TREASUREHUNT_PUZZLE_CURRENT_STEP = 0;
+}
+
+// Anchor: replay teammates' hunt steps, one per frame; called each frame in TTC (PuzzleStep.cpp).
+void chTreasurehunt_netTick(void){
+    static f32 sNetTreasurePosition[3];
+    s32 bits = port_puzzleStep_get(ANCHOR_PUZZLE_TTC_XHUNT) & 0x3F;
+    s32 sharedStep = 0;
+
+    while(bits & 1){
+        sharedStep++;
+        bits >>= 1;
+    }
+    if((s32)CH_TREASUREHUNT_PUZZLE_CURRENT_STEP >= sharedStep){
+        return;
+    }
+
+    if(CH_TREASUREHUNT_PUZZLE_CURRENT_STEP < 5){
+        CH_TREASUREHUNT_PUZZLE_CURRENT_STEP++;
+        __spawnQueue_add_0(__chTreasurehunt_spawnActorForNextStep);
+        __spawnQueue_add_0(__chTreasurehunt_spawnRedXForNextStep);
+    }
+    else{
+        CH_TREASUREHUNT_PUZZLE_CURRENT_STEP++;
+        if(!jiggyscore_isSpawned(JIGGY_11_TTC_RED_X) && !jiggyscore_isCollected(JIGGY_11_TTC_RED_X)){
+            sNetTreasurePosition[0] = sChTreasurehunt_stepPositions[5][0];
+            sNetTreasurePosition[1] = sChTreasurehunt_stepPositions[5][1];
+            sNetTreasurePosition[2] = sChTreasurehunt_stepPositions[5][2];
+            sNetTreasurePosition[1] = mapModel_getFloorY(sNetTreasurePosition);
+            __spawnQueue_add_4((GenFunction_4)spawnQueue_actor_f32, ACTOR_F4_BURIED_TREASURE,
+                reinterpret_cast(s32, sNetTreasurePosition[0]),
+                reinterpret_cast(s32, sNetTreasurePosition[1]),
+                reinterpret_cast(s32, sNetTreasurePosition[2]));
+        }
+    }
 }
 
 static void __chTreasurehunt_updateFunc(Actor *this){

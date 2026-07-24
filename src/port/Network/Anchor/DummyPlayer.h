@@ -49,6 +49,8 @@ public:
     void dummy_setScale(f32 scale);
     void dummy_setTransformation(Transformation transform);
     Transformation dummy_getTransformation();
+    // Bottles-bonus effect mask (D_803635EC bitfield).
+    void dummy_setBottlesBonus(s32 mask);
     void dummy_setVisible(s32 arg0);
     void dummy_setYDisplacement(f32 arg0);
     void dummy_setYaw(f32 yaw);
@@ -77,7 +79,8 @@ public:
     // eye/mouth
     void dummy_setEyeState(bool squint, bool wink, bool isHat);
     AnimCtrl* dummy_getAnimCtrl();
-    // Actor* getDummyActor() const { return dummyActor; }
+    ActorMarker* dummy_getMarker() const { return dummyMarker; }
+    void dummy_despawnActor(void);
 
 private:
     uint32_t PlayerID;
@@ -112,8 +115,7 @@ private:
     } dummyAnimScale;
     AnimCtrl* dummyAnimCtrl = nullptr;
     f32 dummyVelocity[3];
-    ActorMarker* dummyMarker;
-    Actor* dummyActor = nullptr;
+    ActorMarker* dummyMarker = nullptr;
     f32 dummy_D_8037C100[3];
     f32 dummy_D_8037C110[3];
     f32 dummyDisplacement[3];
@@ -135,4 +137,5 @@ private:
     f32 dummy_modelEyeBlendUpper;
     f32 dummy_modelEyeBlendLower;
     Transformation dummy_transformation;
+    s32 dummyBottlesBonus = 0;
 };

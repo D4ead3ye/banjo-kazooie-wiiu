@@ -115,12 +115,20 @@ void ability_clearAll(void){
     abilityprogress_usedAbilities = 0;
 }
 
-void ability_setLearned(s32 move, s32 val){
+void ability_setLearnedEx(s32 move, s32 val, s32 triggerEvent){
+    s32 prev = (abilityprogress_learnedAbilities >> move) & 1;
     if(val){
         abilityprogress_learnedAbilities |= (1 << move);
     }else{
         abilityprogress_learnedAbilities &= ~(1 << move);
     }
+    if(triggerEvent && prev != (val ? 1 : 0)){
+        CALL_EVENT(OnAbilityLearned, move, val ? 1 : 0);
+    }
+}
+
+void ability_setLearned(s32 move, s32 val){
+    ability_setLearnedEx(move, val, 1);
 }
 
 void ability_setAllLearned(s32 val){

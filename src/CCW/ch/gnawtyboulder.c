@@ -120,7 +120,14 @@ void chGnawtyBoulder_update(Actor *this) {
             marker_despawn(this->marker);
         }
         return;
-    } 
+    }
+    // Anchor: teammate broke the boulder — despawn live (no break cutscene).
+    if (this->state == 1
+        && levelSpecificFlags_get(LEVEL_FLAG_25_CCW_UNKNOWN)
+        && gsworld_getMap() != MAP_43_CCW_SPRING) {
+        marker_despawn(this->marker);
+        return;
+    }
     if(this->state == 2){
         if (ml_timer_update(&local->unk0, tick) ) {
             chGnawtyBoulder_setNextState(this, 3);

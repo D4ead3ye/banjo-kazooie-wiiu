@@ -3,6 +3,7 @@
 #include "functions.h"
 #include "variables.h"
 
+#include "port/Patches/Patches.h"
 
 void timed_exitStaticCamera(f32);
 void func_8028E668(f32[3], f32, f32, f32);
@@ -77,6 +78,7 @@ void BGS_func_8038FB84(ActorMarker *this, ActorMarker *other_marker){
     timedFunc_set_2(0.65f, (GenFunction_2) func_8038FB40, (uintptr_t) this, (uintptr_t) other_marker);
     func_8038F51C(thisActor);
     this->collidable = false;
+    port_puzzleStep_orBits(ANCHOR_PUZZLE_BGS_TANKTUP, 1 << thisActor->unk10_12);
 }
 
 void chTanktupLeg_update(Actor *this){
@@ -84,6 +86,11 @@ void chTanktupLeg_update(Actor *this){
         this->initialized = true;
         this->marker->propPtr->unk8_3 = 1;
         marker_setCollisionScripts(this->marker, NULL, NULL, BGS_func_8038FB84);
+    }
+    // Anchor: teammate hit this leg remotely — replay the pull-in.
+    if(this->state == 1 && this->marker->collidable
+        && (port_puzzleStep_get(ANCHOR_PUZZLE_BGS_TANKTUP) & (1 << this->unk10_12))){
+        BGS_func_8038FB84(this->marker, NULL);
     }
     if(this->state == 2){
         if(anctrl_isAt(this->anctrl, 0.65f)){

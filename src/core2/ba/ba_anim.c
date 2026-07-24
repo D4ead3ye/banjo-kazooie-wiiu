@@ -74,60 +74,67 @@ void __baanim_oscillateScale(f32 dst[3], f32 x, f32 min, f32 osc_size) {
     };
 }
 
-void __baanim_applyBottlesBonus(uintptr_t arg0, uintptr_t arg1) {
+void baanim_applyBottlesBonusMask(uintptr_t arg0, s32 mask) {
     f32 scale[3];
-    f32 sp28;
-    s32 phi_s0;
-    static s32 D_8037BF4C;
- 
+    f32 sp28 = func_802E4B38();
 
-    sp28 = func_802E4B38();
-    if (volatileFlag_get(VOLATILE_FLAG_78_SANDCASTLE_NO_BONUS) == 0) {
-        D_8037BF4C = 0;
-    } else {
-        for(phi_s0 = 0; phi_s0 < 7; phi_s0++){
-            if (volatileFlag_get(phi_s0 + VOLATILE_FLAG_97_SANDCASTLE_BOTTLES_BONUS_1)) {
-                D_8037BF4C = D_803635EC[phi_s0];
-            }
-        }
-    }
-    if ((D_8037BF4C & 1)) {//either big hands or big feet
+    if (mask & 1) {//either big hands or big feet
         __baanim_oscillateScale(scale, sp28, 2.0f, 1.0f);
         boneTransformList_setBoneScale((BoneTransformList *)arg0, 6, scale);
         boneTransformList_setBoneScale((BoneTransformList *)arg0, 0x14, scale);
     }
-    if (D_8037BF4C & 2) {//either big hands or big feet
+    if (mask & 2) {//either big hands or big feet
         __baanim_oscillateScale(scale, sp28, 2.0f, 1.0f);
         boneTransformList_setBoneScale((BoneTransformList *)arg0, 0x10, scale);
         boneTransformList_setBoneScale((BoneTransformList *)arg0, 0x1E, scale);
     }
-    if (D_8037BF4C & BAANIM_BIGHEAD) {
+    if (mask & BAANIM_BIGHEAD) {
         __baanim_oscillateScale(scale, sp28, 2.0f, 1.0f);
         boneTransformList_setBoneScale((BoneTransformList *)arg0, 0x12, scale);
     }
-    if (D_8037BF4C & BAANIM_SMALLHEAD) {
+    if (mask & BAANIM_SMALLHEAD) {
         __baanim_oscillateScale(scale, sp28, 0.2f, 0.5f);
         boneTransformList_setBoneScale((BoneTransformList *)arg0, 0x12, scale);
     }
-    if (D_8037BF4C & BAANIM_LONGBODY) {
+    if (mask & BAANIM_LONGBODY) {
         func_8033A968((BoneTransformList *)arg0, 1, D_803635E0);
     }
-    if (D_8037BF4C & BAANIM_BIGKAZOOIEHEAD) {
+    if (mask & BAANIM_BIGKAZOOIEHEAD) {
         __baanim_oscillateScale(scale, sp28, 2.0f, 1.0f);
         boneTransformList_setBoneScale((BoneTransformList *)arg0, 0x6C, scale);
     }
-    if (D_8037BF4C & BAANIM_BIGWINGS) {
+    if (mask & BAANIM_BIGWINGS) {
         __baanim_oscillateScale(scale, sp28, 2.0f, 1.0f);
         boneTransformList_setBoneScale((BoneTransformList *)arg0, 0x64, scale);
         boneTransformList_setBoneScale((BoneTransformList *)arg0, 0x67, scale);
     }
-    if (gsworld_getMap() == MAP_A_TTC_SANDCASTLE) {
-        if ((D_8037BF4C & BAANIM_WISHYWASHY) && (player_getTransformation() != TRANSFORM_7_WISHWASHY)) {
-            func_8028FB88(TRANSFORM_7_WISHWASHY);
+}
+
+s32 baanim_getActiveBottlesBonusMask(void) {
+    s32 mask = 0;
+    s32 i;
+
+    if (volatileFlag_get(VOLATILE_FLAG_78_SANDCASTLE_NO_BONUS) == 0) {
+        return 0;
+    }
+    for (i = 0; i < 7; i++) {
+        if (volatileFlag_get(i + VOLATILE_FLAG_97_SANDCASTLE_BOTTLES_BONUS_1)) {
+            mask = D_803635EC[i];
         }
-        if (!(D_8037BF4C & BAANIM_WISHYWASHY) && (player_getTransformation() == TRANSFORM_7_WISHWASHY)) {
-            func_8028FB88(TRANSFORM_1_BANJO);
-        }
+    }
+    return mask;
+}
+
+void __baanim_applyBottlesBonus(uintptr_t arg0, uintptr_t arg1) {
+    s32 mask = baanim_getActiveBottlesBonusMask();
+
+    baanim_applyBottlesBonusMask(arg0, mask);
+
+    if ((mask & BAANIM_WISHYWASHY) && (player_getTransformation() == TRANSFORM_1_BANJO)) {
+        func_8028FB88(TRANSFORM_7_WISHWASHY);
+    }
+    if (!(mask & BAANIM_WISHYWASHY) && (player_getTransformation() == TRANSFORM_7_WISHWASHY)) {
+        func_8028FB88(TRANSFORM_1_BANJO);
     }
     if (baAnimModifyFunction != NULL) {
         baAnimModifyFunction(arg0, arg1);

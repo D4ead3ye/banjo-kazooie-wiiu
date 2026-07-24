@@ -1,11 +1,66 @@
 #include "LighthouseMenu.h"
 #include "port/Enhancements/Trackers/DisplayOverlay.h"
+#include "port/Network/Anchor/Anchor.h"
+
+extern "C" {
+#include "functions.h"
+#include "variables.h"
+extern u8 gCompletedBottlesBonusGames[7];
+}
 
 #define CVAR_INT_SHIP_INIT(cvar, val) \
     CVarSetInteger(cvar, val);        \
     ShipInit::Init(cvar);
 
 namespace LighthouseGui {
+
+// Live toggle state for the Bottles' Bonus gags (non-cvar checkboxes). Order matches
+// D_803635EC in ba_anim.c and gCompletedBottlesBonusGames.
+static bool sBottlesBonusState[7] = { false };
+
+static const char* kBottlesBonusNames[7] = {
+    "Big Head",
+    "Big Hands & Feet",
+    "Big Kazooie",
+    "Tall Body & Small Head",
+    "Tall Body, Small Head, Big Hands & Feet",
+    "Big Everything",
+    "Wishy-Washy Banjo",
+};
+
+static const char* kBottlesBonusTooltips[7] = {
+    "Bottles' Bonus: enlarges Banjo's head.",
+    "Bottles' Bonus: enlarges Banjo's hands and feet.",
+    "Bottles' Bonus: enlarges Kazooie's head and wings.",
+    "Bottles' Bonus: stretches Banjo's body and shrinks his head.",
+    "Bottles' Bonus: stretched body, shrunken head, and big hands and feet.",
+    "The 'Big Bottles Bonus': big head, big hands and feet, and big Kazooie.",
+    "Bottles' Bonus: turns Banjo into Wishy-Washy.",
+};
+
+static const char* kBottlesBonusLockedTooltip =
+    "Complete this Bottles' Bonus puzzle to unlock it. (Always available while connected to Anchor.)";
+
+static bool IsBottlesBonusUnlocked(int i) {
+    Anchor* anchor = Anchor::GetInstance();
+    if (anchor != nullptr && anchor->isConnected) {
+        return true;
+    }
+    return gCompletedBottlesBonusGames[i] != 0;
+}
+
+static void ApplyBottlesBonusState() {
+    bool any = false;
+    for (int i = 0; i < 7; i++) {
+        volatileFlag_setEx((enum volatile_flags_e)(VOLATILE_FLAG_97_SANDCASTLE_BOTTLES_BONUS_1 + i),
+                           sBottlesBonusState[i] ? 1 : 0, 0);
+        if (sBottlesBonusState[i]) {
+            any = true;
+        }
+    }
+    // Master gate read by __baanim_applyBottlesBonus / baanim_getActiveBottlesBonusMask.
+    volatileFlag_setEx(VOLATILE_FLAG_78_SANDCASTLE_NO_BONUS, any ? 1 : 0, 0);
+}
 
 extern std::shared_ptr<LighthouseMenu> mLighthouseMenu;
 using namespace UIWidgets;
@@ -64,6 +119,25 @@ void LighthouseMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCEMENT("Graphics.CutsceneAspect"))
         .Options(CheckboxOptions().Tooltip("Forces game to show original aspect ratio during cutscenes to avoid seeing "
                                            "unfinished edges of scene geometry."));
+
+    path.column = SECTION_COLUMN_2;
+
+    AddWidget(path, "Bottles' Bonuses", WIDGET_SEPARATOR_TEXT);
+
+    for (int i = 0; i < 7; i++) {
+        AddWidget(path, kBottlesBonusNames[i], WIDGET_CHECKBOX)
+            .ValuePointer(&sBottlesBonusState[i])
+            .Callback([](WidgetInfo& info) { ApplyBottlesBonusState(); })
+            .PreFunc([i](WidgetInfo& info) {
+                if (!IsBottlesBonusUnlocked(i)) {
+                    info.options->disabled = true;
+                    info.options->disabledTooltip = kBottlesBonusLockedTooltip;
+                }
+            })
+            .Options(CheckboxOptions().Tooltip(kBottlesBonusTooltips[i]));
+    }
+
+    path.column = SECTION_COLUMN_1;
 
     AddWidget(path, "Extended Draw Distance: %dx", WIDGET_CVAR_SLIDER_INT)
         .CVar(CVAR_ENHANCEMENT("Graphics.DrawDistance"))
@@ -427,6 +501,11 @@ void LighthouseMenu::AddMenuEnhancements() {
     AddWidget(path, "Note Collection Retention", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Gameplay.NoteRetention"))
         .RaceDisable(false)
+        .PreFunc([](WidgetInfo& info) {
+            if (mLighthouseMenu->disabledMap.at(FORCED_ON_FOR_ANCHOR_CONNECTED).active) {
+                info.activeDisables.push_back(FORCED_ON_FOR_ANCHOR_CONNECTED);
+            }
+        })
         .Options(CheckboxOptions().Tooltip(
             "Notes you've already collected stay collected and don't respawn when you revisit a level. "
             "Collection is always tracked; this toggle controls whether collected notes are skipped on "
@@ -435,6 +514,11 @@ void LighthouseMenu::AddMenuEnhancements() {
     AddWidget(path, "Jinjo Collection Retention", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Gameplay.JinjoRetention"))
         .RaceDisable(false)
+        .PreFunc([](WidgetInfo& info) {
+            if (mLighthouseMenu->disabledMap.at(FORCED_ON_FOR_ANCHOR_CONNECTED).active) {
+                info.activeDisables.push_back(FORCED_ON_FOR_ANCHOR_CONNECTED);
+            }
+        })
         .Options(CheckboxOptions().Tooltip(
             "Jinjos you've already collected stay collected across visits instead of resetting each time "
             "you enter a level, so you no longer need all five in one go. Collection is always tracked; "

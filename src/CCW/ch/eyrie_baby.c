@@ -2,6 +2,7 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include "port/Patches/Patches.h"
 
 typedef struct {
     f32 unk0;
@@ -223,7 +224,7 @@ void CCW_func_80389BFC(Actor *this) {
         D_8038FDE0[1] = this->position[1];
         D_8038FDE0[2] = this->position[2];
         if (this->state == 0) {
-            local->unk4 = 0U;
+            local->unk4 = (u32)port_puzzleCount_get(ANCHOR_COUNT_CCW_EYRIE_FED);
         }
         local->unk0 = &D_8038F080[0];
         while(local->unk0->map_id != 0 && gsworld_getMap() != local->unk0->map_id){
@@ -277,7 +278,8 @@ void CCW_func_80389BFC(Actor *this) {
                 if ((local->unk0->map_id == MAP_44_CCW_SUMMER) && (local->unk4 == 0)) {
                     gcdialog_showDialog(0xCD8, 4, NULL, NULL, NULL, NULL);
                 }
-                local->unk4++;
+                port_puzzleCount_add(ANCHOR_COUNT_CCW_EYRIE_FED, 1);
+                local->unk4 = (u32)port_puzzleCount_get(ANCHOR_COUNT_CCW_EYRIE_FED);
                 if (local->unk4 < local->unk0->unk25) {
                     func_803897B8(this, 5);
                 } else {
@@ -285,8 +287,19 @@ void CCW_func_80389BFC(Actor *this) {
                 }
             }
         }
-        if (fileProgressFlag_get(local->unk0->unk4)) {
-            func_803897B8(this, local->unk0->unkC);
+        // Anchor: teammate fed a worm — play the interim eat animation; final feed handled below.
+        if (this->state == 1) {
+            s32 sharedFed = port_puzzleCount_get(ANCHOR_COUNT_CCW_EYRIE_FED);
+            if (sharedFed > (s32)local->unk4) {
+                local->unk4 = (u32)sharedFed;
+                if ((s32)local->unk4 < (s32)local->unk0->unk25) {
+                    func_803897B8(this, 5);
+                }
+            }
+        }
+        if (this->state == 1 && fileProgressFlag_get(local->unk0->unk4)) {
+            // Anchor: fed flag synced from a teammate — skip to sleep state (spring keeps its hatch cutscene).
+            func_803897B8(this, (local->unk0->map_id == MAP_43_CCW_SPRING) ? local->unk0->unkC : 4);
         }
     }
     if ((this->state == 2) && (skeletalAnim_getLoopCount(this->unk148) > 0)) {

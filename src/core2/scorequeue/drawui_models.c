@@ -4,6 +4,7 @@
 #include "port/Patches/Patches.h"
 #include "variables.h"
 #include "port/Engine.h"
+#include "port/Interpolation/FrameInterpolation.h"
 
 
 extern f32 vtxList_getGlobalNorm(BKVertexList *);
@@ -192,6 +193,7 @@ void fxcommon3score_draw(enum item_e item_id, void *arg1, Gfx **gfx, Mtx **mtx, 
 
     sp40 = func_802FB0E4(arg1)*a1->unk54 + a1->unk34;
     if(a1->model != NULL && func_802FB0D4(arg1)){
+        FrameInterpolation_RecordOpenChild("score_model", (uintptr_t)item_id);
         draw_x = a1->unk30 + port_hudOrthoShift(a1->unk30);
         a1->value_string[0] = '\0';
         strIToA(a1->value_string, itemPrint_getValue(item_id));
@@ -216,6 +218,7 @@ void fxcommon3score_draw(enum item_e item_id, void *arg1, Gfx **gfx, Mtx **mtx, 
             anctrl_drawSetup(a1->anim_ctrl, sp5C, 1);
         }
         modelRender_draw(gfx, mtx, sp5C, sp68, a1->unk3C*sp3C, sp44, a1->model);
+        FrameInterpolation_RecordCloseChild();
     }//L80300BA4
 }
 

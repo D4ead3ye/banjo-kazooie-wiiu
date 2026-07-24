@@ -4,6 +4,8 @@
 #include "variables.h"
 #include "CC.h"
 
+extern void port_ccWater_broadcastRise(int32_t map, int32_t waterId, int32_t targetDy, f32 duration);
+
 /* .data */
 f32 D_80389BF0[3] = {0.0f, 1300.0f, -2800.0f}; 
 
@@ -82,6 +84,15 @@ void func_8038817C(void){
     Struct70s *tmp_v0;
 
     if(D_80389F90.unk0 != 0){
+        if(jiggyscore_isSpawned(JIGGY_1C_CC_RINGS) && D_80389F90.unk0 < 9){
+            func_80387FE8();
+            // func_80387F80 snaps water to risen height; VB listener suppresses it when connected (rise already animating).
+            if(EventSystem_Should(VB_CC_RINGS_SNAP_WATER, true)){
+                func_80387F80();
+            }
+            D_80389F90.unk0 = 0;
+            return;
+        }
         D_80389F90.unk4 += sp20;
         player_getPosition(sp24);
         if(ml_timer_update(&D_80389F90.unk8, sp20)){
@@ -95,6 +106,7 @@ void func_8038817C(void){
             if(tmp_v0){
                 func_8034E78C((Struct73s *)tmp_v0, 0x190, 12.0f);
             }
+            port_ccWater_broadcastRise(MAP_22_CC_INSIDE_CLANKER, 0x131, 0x190, 12.0f);
             D_80389F90.unk4 = 0.0f;
         }//L80388264
         if(!(D_80389F90.unk0 < 2) && D_80389F90.unk1 != 0){

@@ -3,6 +3,11 @@
 #include "functions.h"
 #include "variables.h"
 
+#include "port/Patches/Patches.h"
+
+// Anchor: set while replaying a teammate's feed; suppresses camera/dialog + rebroadcast.
+static s32 sCroctusRemote = 0;
+
 extern s32 func_80328748(AnimCtrl *, f32, f32);
 extern void func_8028F94C(s32, f32[3]);
 extern void func_80324CFC(f32, enum comusic_e, s32);
@@ -97,8 +102,10 @@ void func_80387E68(ActorMarker *caller, enum asset_e text_id, s32 arg2){
         func_80326310(this); //did not disappear when moved, after cutscene still there with collision but broken
         bgs_D_803907B8[this->actorTypeSpecificField]->propPtr->isNotFeatherEggOrNote = true;
         timedFunc_set_1(1.1f, (GenFunction_1)func_80387E00, (uintptr_t)bgs_D_803907B8[this->actorTypeSpecificField]);
-        timed_setStaticCameraToNode(0.8f, 9);
-        func_80324DBC(3.4f, 0xC87, 0xE, NULL, NULL, func_80387E68, NULL);
+        if(!sCroctusRemote){
+            timed_setStaticCameraToNode(0.8f, 9);
+            func_80324DBC(3.4f, 0xC87, 0xE, NULL, NULL, func_80387E68, NULL);
+        }
         __spawnQueue_add_2((void (*)(void))func_80387D18, (uintptr_t)this->marker, 0x46);
     }
     else{
@@ -139,16 +146,40 @@ void chCroctus_updat(Actor *this){
         return;
     }//L80388160
 
+    // Anchor: teammate finished the chain — despawn our heads unless mid-cutscene (state 5/6).
+    if(jiggyscore_isSpawned(JIGGY_22_CROCTUS) && this->state != 5 && this->state != 6){
+        marker_despawn(this->marker);
+        return;
+    }
+
+    // Anchor: replay a teammate's feed of the active head (field 5 handled by the despawn above).
+    if (this->actorTypeSpecificField < 5 && this->state != 5 && this->state != 6 && !this->unk38_31
+        && this->marker->propPtr->isNotFeatherEggOrNote
+        && (port_puzzleStep_get(ANCHOR_PUZZLE_BGS_CROCTUS) & (1 << (this->actorTypeSpecificField - 1)))) {
+        sCroctusRemote = 1;
+        this->unk38_31 = 1;
+    }
+
     if(this->unk38_31){
         if ((this->state != 5) && (this->state != 6)) {
+            if (!sCroctusRemote) {
+                port_puzzleStep_orBits(ANCHOR_PUZZLE_BGS_CROCTUS, 1 << (this->actorTypeSpecificField - 1));
+            }
             coMusicPlayer_playMusic(COMUSIC_2B_DING_B, 28000); //TODO ISSUE HERE
             if (this->actorTypeSpecificField == 1) {
-                func_8028F94C(2, this->position);
-                gcdialog_showDialog(ASSET_C86_DIALOG_CROCTUS_FIRST_SUCCESS, 0xE, this->position, this->marker, func_80387E68, NULL);
+                // Anchor: func_8028F94C = look-at, released only by the dialog we skip; don't push when replaying.
+                if (!sCroctusRemote) {
+                    func_8028F94C(2, this->position);
+                }
+                if (sCroctusRemote) {
+                    func_80387E68(this->marker, ASSET_C86_DIALOG_CROCTUS_FIRST_SUCCESS, 0);
+                } else {
+                    gcdialog_showDialog(ASSET_C86_DIALOG_CROCTUS_FIRST_SUCCESS, 0xE, this->position, this->marker, func_80387E68, NULL);
+                }
                 subaddie_set_state_with_direction(this, 6, 0.79f, 1);
             } else {
-                timed_playSfx(0.4f, SFX_C9_PAUSEMENU_ENTER, 1.0f, 32000); //0.4f
-                timed_playSfx(1.4f, SFX_C9_PAUSEMENU_ENTER, 1.0f, 32000); //1.4f
+                timed_playSfx(0.4f, SFX_C9_PAUSEMENU_ENTER, 1.0f, 32000);
+                timed_playSfx(1.4f, SFX_C9_PAUSEMENU_ENTER, 1.0f, 32000);
                 func_80324CFC(0.4f, COMUSIC_43_ENTER_LEVEL_GLITTER, 22000);
                 func_80324D2C(4.5f, COMUSIC_43_ENTER_LEVEL_GLITTER);
                 subaddie_set_state_with_direction(this, 5, 0.79f, 1);
@@ -160,7 +191,7 @@ void chCroctus_updat(Actor *this){
                 if (this->actorTypeSpecificField < 5) {
                     bgs_D_803907B8[this->actorTypeSpecificField]->propPtr->isNotFeatherEggOrNote = true;
                     timedFunc_set_1(1.1f, (GenFunction_1)func_80387E00, (uintptr_t)bgs_D_803907B8[this->actorTypeSpecificField]);
-                    gcStaticCamera_activate(D_803907B0[this->actorTypeSpecificField-1]);
+                    if (!sCroctusRemote) gcStaticCamera_activate(D_803907B0[this->actorTypeSpecificField-1]);
                 } else {
                     timedFunc_set_1(0.8f, (GenFunction_1)chCroctus_jiggySpawn, (uintptr_t)this->marker);
                 }
@@ -168,6 +199,7 @@ void chCroctus_updat(Actor *this){
             }
         }
     }//L80388348
+    sCroctusRemote = 0;
 
     switch(this->state){
     case 1:// L80388370

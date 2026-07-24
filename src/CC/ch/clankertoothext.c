@@ -5,6 +5,8 @@
 
 #include <bk_math.h>
 
+#include "port/Patches/Patches.h"
+
 typedef struct{
     s32 unk0;
     s32 egg_count;
@@ -90,6 +92,19 @@ void chClankerTooth_update(Actor *this){
             chClankerTooth_setNextState(this, 3);
         }
     }//L803871D8
+    if(this->state == 1){
+        s32 base = (local->unk0 - 1) * 3;
+        s32 bits = (port_puzzleStep_get(ANCHOR_PUZZLE_CC_CLANKER_TEETH) >> base) & 0x7;
+        s32 shared = (bits & 1) + ((bits >> 1) & 1) + ((bits >> 2) & 1);
+        while(this->state == 1 && local->egg_count < shared){
+            local->egg_count++;
+            if(local->egg_count == 3){
+                chClankerTooth_setNextState(this, 2);
+            }else{
+                coMusicPlayer_playMusic(COMUSIC_2B_DING_B, 28000);
+            }
+        }
+    }
     player_getPosition(sp70);
     local->unk8 += sp68;
     if(this->state == 2){
@@ -121,6 +136,9 @@ void chClankerTooth_update(Actor *this){
     if(this->state == 1 && D_80389F80 == local->unk0){
         D_80389F80 = 0;
         local->egg_count++;
+        // Anchor: broadcast cumulative egg progress.
+        port_puzzleStep_orBits(ANCHOR_PUZZLE_CC_CLANKER_TEETH,
+                               ((1 << local->egg_count) - 1) << ((local->unk0 - 1) * 3));
         if(local->egg_count == 3){
             chClankerTooth_setNextState(this, 2);
         }else{

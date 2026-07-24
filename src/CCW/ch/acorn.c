@@ -2,8 +2,11 @@
 #include <ultra64.h>
 #include "functions.h"
 #include "variables.h"
+#include "port/Enhancements/Retention/Retention.h"
 
 extern ActorMarker *func_8028E86C(void);
+extern s32 port_remoteCarry_displayUpdate(Actor *this);
+extern void port_anchor_onCarryThrow(s32 markerId, f32 start[3], f32 target[3]);
 
 typedef struct {
     f32 unk0[3];
@@ -62,6 +65,11 @@ void func_8038C7A8(Actor *this) {
 
     local = (ActorLocal_CCW_61E0 *)&this->local;
     sp44 = time_getDelta();
+
+    if (port_remoteCarry_displayUpdate(this)) {
+        return;
+    }
+
     if (!this->volatile_initialized) {
         this->volatile_initialized = true;
         return;
@@ -69,20 +77,40 @@ void func_8038C7A8(Actor *this) {
 
     sp4C = (func_8028E86C() == this->marker);
     if (this->state == 0) {
-        CCW_func_8038C6A0(this, sp4C ? 2 : 1);
+        if (sp4C) {
+            CCW_func_8038C6A0(this, 2);
+        } else {
+            s32 acornSuppress;
+            port_carriedSync_register(ANCHOR_COLLECTIBLE_ACORN, this->marker, (s32)this->position[0],
+                                      (s32)this->position[1], (s32)this->position[2], &acornSuppress);
+            if (acornSuppress) {
+                CCW_func_8038C6A0(this, 5);
+                return;
+            }
+            CCW_func_8038C6A0(this, 1);
+        }
     }
 
     if (this->state == 1) {
+        if (port_carriedSync_consumeRemoteDespawn(ANCHOR_COLLECTIBLE_ACORN, this->marker)) {
+            CCW_func_8038C6A0(this, 5);
+            return;
+        }
         player_getPosition(sp38);
         if (ml_vec3f_distance(this->position, sp38) < 50.0f) {
             func_8028F030(0x2A9);
             sfx_playFadeShorthandDefault(SFX_C5_TWINKLY_POP, 1.0f, 25000, this->position, 500, 2500);
+            port_carriedSync_onLocalCollect(ANCHOR_COLLECTIBLE_ACORN, this->marker);
             CCW_func_8038C6A0(this, 5);
         }
     }
     if (this->state == 2) {
         if (this->unk138_21) {
+            f32 throwTarget[3];
+            func_8038BC50(throwTarget);
+            port_anchor_onCarryThrow(this->marker->id, this->position, throwTarget);
             func_8028F010(0x2A9);
+            port_carriedSync_onLocalSpend(ANCHOR_COLLECTIBLE_ACORN);
             CCW_func_8038C6A0(this, 3);
         } else if (!sp4C) {
             func_8028F050(0x2A9);

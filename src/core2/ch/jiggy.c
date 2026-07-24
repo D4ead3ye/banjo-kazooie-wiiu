@@ -2,6 +2,7 @@
 #include "functions.h"
 #include "variables.h"
 #include "enums.h"
+#include "port/Enhancements/Events/Hooks/Events.h"
 
 extern void func_802BE720(void);
 extern f32 modelRender_func_8033A244(f32);
@@ -76,6 +77,7 @@ void destroyJiggy(Actor *this, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5,
         && mapSpecificFlags_get(arg2)
         && item_getCount(ITEM_0_HOURGLASS_TIMER) == 0
     ){
+        CALL_EVENT(OnTimedJiggyExpired, (s32)chjiggy_getJiggyId(this));
         player_setModelVisible(1);
         actor_collisionOff(this);
         gcStaticCamera_activate(arg3);
