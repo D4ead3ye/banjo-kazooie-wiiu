@@ -66,7 +66,7 @@ static void __chBlubber_showTextCallback(ActorMarker *caller, enum asset_e text_
     Actor *this = marker_getActor(caller);
     ActorLocal_Blubber *local =  (ActorLocal_Blubber*)&this->local;
 
-    if(text_id == ASSET_A0D_DIALOG_BLUBBER_COMPLETE || text_id == ASSET_A2A_DIALOG_BLUBBER_COMPLETE_JIGGY_COLLECTED){
+    if(text_id == VER_SELECT(ASSET_A0D_DIALOG_BLUBBER_COMPLETE, 0x90D, 0, 0) || text_id == ASSET_A2A_DIALOG_BLUBBER_COMPLETE_JIGGY_COLLECTED){
         local->unk24 = 0;
     }
     else{
@@ -92,7 +92,7 @@ static void __chBlubber_showJiggySpawnedText(ActorMarker *marker){
     this->actor_specific_1_f = 0.0f;
 
     if(!mapSpecificFlags_get(TTC_SPECIFIC_FLAG_2_BLUBBER_JIGGY_SPAWNED_TEXT_SHOWN)) {
-        text_id = jiggyscore_isCollected(JIGGY_14_TTC_BLUBBER) ? ASSET_A2A_DIALOG_BLUBBER_COMPLETE_JIGGY_COLLECTED : ASSET_A0D_DIALOG_BLUBBER_COMPLETE;
+        text_id = jiggyscore_isCollected(JIGGY_14_TTC_BLUBBER) ? ASSET_A2A_DIALOG_BLUBBER_COMPLETE_JIGGY_COLLECTED : VER_SELECT(ASSET_A0D_DIALOG_BLUBBER_COMPLETE, 0x90D, 0, 0);
         gcdialog_showDialog(text_id, 0xf, this->position, this->marker, __chBlubber_showTextCallback, __chBlubber_showTextCallback2);
         mapSpecificFlags_set(TTC_SPECIFIC_FLAG_2_BLUBBER_JIGGY_SPAWNED_TEXT_SHOWN, true);
     }
@@ -124,7 +124,7 @@ static void __func_80387774(Actor **this_ptr){
 
     player_setCarryObjectPoseInCylinder(local->throw_target_position, local->throw_target_radius, 100.0f, ACTOR_2A_GOLD_BULLION, this_ptr);
     if( subaddie_playerIsWithinSphereAndActive(*this_ptr, 200)
-        && bacarry_get_markerId() == MARKER_37_GOLD_BULLION
+        && bacarry_getMarkerId() == MARKER_37_GOLD_BULLION
         && player_throwCarriedObject()
     ) {
         func_8028FA34(!mapSpecificFlags_get(TTC_SPECIFIC_FLAG_0_BLUBBER_UNKNOWN) ? ACTOR_149_TTC_BLUBBER_UNKNOWN : ACTOR_14A_TTC_BLUBBER_UNKNOWN, *this_ptr);
@@ -196,8 +196,8 @@ static void __chBlubber_updateFunc(Actor *this){
         && !this->has_met_before
         && item_getCount(ITEM_18_GOLD_BULLIONS) == 0
     ){
-        gcdialog_showDialog(ASSET_A0B_DIALOG_BLUBBER_FIRST_MEET, 0xe, this->position, this->marker, __chBlubber_showTextCallback, NULL);
-        this->has_met_before = true;
+        gcdialog_showDialog(VER_SELECT(ASSET_A0B_DIALOG_BLUBBER_FIRST_MEET, 0x90B, 0, 0), 0xe, this->position, this->marker, __chBlubber_showTextCallback, NULL);
+        this->has_met_before = TRUE;
         subaddie_set_state_forward(this, CH_BLUBBER_STATE_3_UNKNOWN);
     }
 
@@ -205,7 +205,7 @@ static void __chBlubber_updateFunc(Actor *this){
         && !this->unk138_23
     ){
         if (item_getCount(ITEM_18_GOLD_BULLIONS) == 0) {
-            gcdialog_showDialog(ASSET_A0C_DIALOG_BLUBBER_HALF_GOLD, 4, NULL, NULL, NULL, NULL);
+            gcdialog_showDialog(VER_SELECT(ASSET_A0C_DIALOG_BLUBBER_HALF_GOLD, 0x90C, 0, 0), 4, NULL, NULL, NULL, NULL);
         }
         
         this->unk138_23 = true;
@@ -295,6 +295,6 @@ static void __chBlubber_update2Func(Actor *this){
 }
 
 static Actor *__chBlubber_drawFunc(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx){
-    func_8033A45C(4, 0);
+    modelRender_setAppendageVisibility(4, 0);
     return actor_draw(marker, gfx, mtx, vtx);
 }

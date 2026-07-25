@@ -179,16 +179,16 @@ static void patchModelDL(BKModelBin* model_bin, uintptr_t seg_start, uintptr_t s
 
 // Aux picture FB readback (Bottles Bonus / SNS pictures)
 
-extern s16* D_80382450; // aux picture CPU buffer (picturebuffer.c)
-extern s32 sAuxGpuFbId; // aux picture GPU FB id (picturebuffer.c)
+extern s16* sPictureBoxColorBuffer; // aux picture CPU buffer (auxbuffer.c)
+extern s32 sAuxGpuFbId;             // aux picture GPU FB id (picturebuffer.c)
 
 s32 port_getAuxGpuFbId(void) {
     return sAuxGpuFbId;
 }
 
 void port_readAuxFbToCpu(Gfx** gfx) {
-    if (sAuxGpuFbId >= 0 && D_80382450 != NULL) {
-        gDPReadFB((*gfx)++, sAuxGpuFbId, (u16*)D_80382450, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, 1);
+    if (sAuxGpuFbId >= 0 && sPictureBoxColorBuffer != NULL) {
+        gDPReadFB((*gfx)++, sAuxGpuFbId, (u16*)sPictureBoxColorBuffer, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, 1);
         __gSPInvalidateTexCache((*gfx)++, 0);
     }
 }

@@ -1,3 +1,4 @@
+// BanjoDecomp: core2/code_71820.c
 #include "core1/core1.h"
 #include "functions.h"
 #include "variables.h"
@@ -22,7 +23,7 @@ void func_802F87B0(struct6s *this){
         return;
     
     player_getPosition(plyrPos);
-    viewport_getLookbk_vector(camNorm);
+    viewport_getLookVector(camNorm);
     viewport_getRotation_vec3f(camRot);
     ptr = bk_vector_pushBackNew(&this->unk1C);
     f20 = randf2(50.0f, 1200.0f);

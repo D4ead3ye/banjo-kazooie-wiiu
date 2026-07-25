@@ -13,20 +13,20 @@ typedef struct{
     f32 unk8;
 }ActorLocal_CC_BF0;
 
-void chClankerTooth_update(Actor *this);
+void maClankerTooth_update(Actor *this);
 
 /* .data */
 extern ActorInfo D_80389B00 = {
     MARKER_4C_CLANKER_TOKEN_TOOTH_EXT, ACTOR_44_CLANKER_TOKEN_TOOTH_EXTERIOR, ASSET_309_MODEL_CLANKER_TOKEN_TOOTH_EXTERIOR, 
     0, NULL,
-    chClankerTooth_update, actor_update_func_80326224, actor_draw,
+    maClankerTooth_update, actor_update_func_80326224, actor_draw,
     0, 0, 0.0f, 0
 };
 
 extern ActorInfo D_80389B24 = {
     MARKER_4D_CLANKER_JIGGY_TOOTH_EXT, ACTOR_45_CLANKER_JIGGY_TOOTH_EXTERIOR, ASSET_30A_MODEL_CLANKER_JIGGY_TOOTH_EXTERIOR, 
     0, NULL,
-    chClankerTooth_update, actor_update_func_80326224, actor_draw,
+    maClankerTooth_update, actor_update_func_80326224, actor_draw,
     0, 0, 0.0f, 0
 };
 
@@ -34,7 +34,7 @@ extern ActorInfo D_80389B24 = {
 u8 D_80389F80;
 
 /* .code */
-void chClankerTooth_setNextState(Actor *this, s32 next_state){
+void maClankerTooth_setNextState(Actor *this, s32 next_state){
     ActorLocal_CC_BF0 *local = (ActorLocal_CC_BF0 *)&this->local;
     s32 prev_state = this->state;
     this->state = next_state;
@@ -67,7 +67,7 @@ void func_803870EC(s32 arg0) {
     D_80389F80 = arg0;
 }
 
-void chClankerTooth_update(Actor *this){
+void maClankerTooth_update(Actor *this){
     ActorMarker *marker = this->marker;
     f32 sp70[3];
     ActorLocal_CC_BF0 *local = (ActorLocal_CC_BF0 *)&this->local;
@@ -87,9 +87,9 @@ void chClankerTooth_update(Actor *this){
         this->roll = 0.0f;
         local->unk0 = (marker->modelId == 0x309) ? 1 : 2;
         local->egg_count = 0;
-        chClankerTooth_setNextState(this, 1);
+        maClankerTooth_setNextState(this, 1);
         if(levelSpecificFlags_get((local->unk0 == 1)? LEVEL_FLAG_0_CC_TOKEN_TOOTH_OPEN: LEVEL_FLAG_1_CC_JIGGY_TOOTH_OPEN)){
-            chClankerTooth_setNextState(this, 3);
+            maClankerTooth_setNextState(this, 3);
         }
     }//L803871D8
     if(this->state == 1){
@@ -99,7 +99,7 @@ void chClankerTooth_update(Actor *this){
         while(this->state == 1 && local->egg_count < shared){
             local->egg_count++;
             if(local->egg_count == 3){
-                chClankerTooth_setNextState(this, 2);
+                maClankerTooth_setNextState(this, 2);
             }else{
                 coMusicPlayer_playMusic(COMUSIC_2B_DING_B, 28000);
             }
@@ -140,7 +140,7 @@ void chClankerTooth_update(Actor *this){
         port_puzzleStep_orBits(ANCHOR_PUZZLE_CC_CLANKER_TEETH,
                                ((1 << local->egg_count) - 1) << ((local->unk0 - 1) * 3));
         if(local->egg_count == 3){
-            chClankerTooth_setNextState(this, 2);
+            maClankerTooth_setNextState(this, 2);
         }else{
             coMusicPlayer_playMusic(COMUSIC_2B_DING_B, 28000);
         }
@@ -148,9 +148,19 @@ void chClankerTooth_update(Actor *this){
     else if(this->state == 2 && 1.0f <= local->unk8){
         flagCnt = levelSpecificFlags_get(LEVEL_FLAG_0_CC_TOKEN_TOOTH_OPEN) + levelSpecificFlags_get(LEVEL_FLAG_1_CC_JIGGY_TOOTH_OPEN);
         if(!jiggyscore_isCollected(JIGGY_1B_CC_TOOTH)){
-            gcdialog_showDialog((local->unk0 == 1)? ((flagCnt == 0)? 0xd30 : 0xd31) : ((flagCnt == 0)? 0xd2e : 0xd2f), 4, NULL, NULL, NULL, NULL);
+            gcdialog_showDialog(
+                (local->unk0 == 1)?
+                    ((flagCnt == 0)?
+                        VER_SELECT(ASSET_D30_DIALOG_CLANKER_RIGHT_TOOTH_FIRST, 0xA03, 0, 0) : VER_SELECT(ASSET_D31_DIALOG_CLANKER_RIGHT_TOOTH_SECOND, 0xA04, 0, 0)) :
+                    ((flagCnt == 0)?
+                        VER_SELECT(ASSET_D2E_DIALOG_CLANKER_LEFT_TOOTH_FIRST, 0xA01, 0, 0) : VER_SELECT(ASSET_D2F_DIALOG_CLANKER_LEFT_TOOTH_SECOND, 0xA02, 0, 0)),
+                4,
+                NULL,
+                NULL,
+                NULL,
+                NULL);
         }
-        chClankerTooth_setNextState(this, 3);
+        maClankerTooth_setNextState(this, 3);
     }//L80387474
 
     if(this->state == 3){

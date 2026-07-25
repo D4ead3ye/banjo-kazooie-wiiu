@@ -1,3 +1,4 @@
+// BanjoDecomp: core2/code_5C240.c
 #include <ultra64.h>
 #include "core1/core1.h"
 #include "functions.h"
@@ -6,7 +7,7 @@
 #include "bk_time.h"
 
 extern void func_8023DFF0(s32);
-extern void comusicPlayer_update(void);
+extern void coMusicPlayer_update(void);
 extern void func_802F1A10(void *, f32);
 extern void func_8033DC10(void);
 extern void func_8033DC18(void);
@@ -44,11 +45,11 @@ void func_802E329C(s32 arg0, Gfx **gfx_begin, Gfx **gfx_end) {
     Vtx *vtx;
     Vtx *vtx_start;
 
-    getGraphicsStacks(&gfx, &mtx, &vtx);
+    graphicscache_swapAndGetStacks(&gfx, &mtx, &vtx);
     gfx_start = gfx;
     mtx_start = mtx;
     vtx_start = vtx;
-    scissorBox_SetForGameMode(&gfx, arg0);
+    setupFramebufferForGamemode(&gfx, arg0);
     if (D_8037E8C0.unk14 == 2) {
         drawRectangle2D(&gfx, 0, 0, (s32) (f32) gFramebufferWidth, (s32) (f32) gFramebufferHeight, 0, 0, 0);
     }
@@ -112,8 +113,8 @@ void func_802E3580(void) {
     assetcache_release((void *)(intptr_t)D_8037E8C0.unkC);
     func_802F1884(D_8037E8C0.unk10);
     func_802E5F68();
-    comusicPlayer_free();
-    depthBuffer_stub();
+    coMusicPlayer_free();
+    depthbuffer_stub();
     viMgr_func_8024BF94(2);
 }
 
@@ -167,7 +168,7 @@ void func_802E35D8(void ) {
             return;
         }
     }
-    comusicPlayer_update();
+    coMusicPlayer_update();
     if (D_8037E8C0.unk14 == 0) {
         gcbound_alpha(D_8037E8C0.unk8);
     }

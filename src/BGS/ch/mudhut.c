@@ -65,7 +65,7 @@ Actor *chMudHut_draw(ActorMarker *this, Gfx** gdl, Mtx** mtx, Vtx **vtx){
     Actor *thisActor;
 
     thisActor = marker_getActor(this);
-    func_8033A45C(1, thisActor->state == 1);
+    modelRender_setAppendageVisibility(1, thisActor->state == 1);
     if(thisActor->state == 3)
         return thisActor;
     
@@ -136,7 +136,7 @@ void chMudHut_update(Actor *this){
                 diffPos[2] = plyrPos[2] - this->position_z;
                 if( (150.0f < diffPos[1])
                     && (player_getActiveHitbox(this->marker) == HITBOX_1_BEAK_BUSTER)
-                    && (func_8028F20C())
+                    && (player_isStableWithExtraSteps())
                     && (LENGTH_VEC3F(diffPos) < 350.f)
                 ){
                     tmp = (s32)( (this->position_y - 600.f)/430.0f);

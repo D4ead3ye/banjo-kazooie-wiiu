@@ -1,3 +1,4 @@
+// BanjoDecomp: core2/code_A5BC0.c
 #include <ultra64.h>
 #include "core1/core1.h"
 #include "functions.h"
@@ -28,7 +29,7 @@ extern BKCollisionTriangle *collisionList_func_802E805C(BKCollisionList *, BKVer
 extern NodeProp *func_803080C8(s32 arg0);
 extern Cube *func_80308224(void);
 extern Cube *func_8030364C(void);
-extern Cube *cube_atPosition_s32(s32 position[3]);
+extern Cube *cubeList_GetCubeAtPosition_s32(s32 position[3]);
 
 extern f32 propModelList_getScale(Prop *);
 extern void propModelList_setScale(Prop *, f32);
@@ -275,8 +276,7 @@ void func_8032CD60(Prop *prop) {
                         } else {
                             sp3C = prop->spriteProp.isMirrored;
                         }
-                      if (1);
-                        break;
+                      if (1) break;
                 }
                 break;
 
@@ -364,17 +364,19 @@ void func_8032D3A8(void){
     bk_vector_clear(D_80383554);
 }
 
-void func_8032D3D8(Gfx **gdl, Mtx **mptr, Vtx **vptr){
+void core2_A5BC0_drawUnknownMarkers(Gfx **gfx, Mtx **mtx, Vtx **vtx) { // further investigation needed what's drawn here
     int i;
-    for(i = 0; i < bk_vector_size(D_80383550); i++){
-       __marker_draw(*(ActorMarker **) bk_vector_at(D_80383550, i), gdl, mptr, vptr);
+
+    for (i = 0; i < bk_vector_size(D_80383550); i++) {
+       __marker_draw(*(ActorMarker **) bk_vector_at(D_80383550, i), gfx, mtx, vtx);
     }
 }
 
-void func_8032D474(Gfx **gdl, Mtx **mptr, Vtx **vptr){
+void core2_A5BC0_drawScreenOverlayMarkers(Gfx **gfx, Mtx **mtx, Vtx **vtx) {
     int i;
-    for(i = 0; i < bk_vector_size(D_80383554); i++){
-       __marker_draw(*(ActorMarker **) bk_vector_at(D_80383554, i), gdl, mptr, vptr);
+
+    for (i = 0; i < bk_vector_size(D_80383554); i++) {
+       __marker_draw(*(ActorMarker **) bk_vector_at(D_80383554, i), gfx, mtx, vtx);
     }
 }
 
@@ -1220,7 +1222,7 @@ void func_8032F21C(Cube *cube, s32 position[3], ActorMarker *marker, bool arg3) 
 }
 
 void func_8032F3D4(s32 arg0[3], ActorMarker *marker, s32 arg2){
-    func_8032F21C((marker->unk40_23)? func_8030364C() : cube_atPosition_s32(arg0), arg0, marker, arg2);
+    func_8032F21C((marker->unk40_23)? func_8030364C() : cubeList_GetCubeAtPosition_s32(arg0), arg0, marker, arg2);
 }
 
 void marker_free(ActorMarker *this){
@@ -1235,7 +1237,7 @@ void func_8032F464(bool arg0){
 void func_8032F470(s32 *pos, ActorMarker *arg1){
     Cube *cubePtr;
 
-    cubePtr = (arg1->unk40_23)? func_8030364C(): cube_atPosition_s32(pos);
+    cubePtr = (arg1->unk40_23)? func_8030364C(): cubeList_GetCubeAtPosition_s32(pos);
 
     if(cubePtr == arg1->cubePtr){
         arg1->propPtr->x = pos[0];
@@ -1805,19 +1807,19 @@ BKSprite *func_80330F50(ActorMarker * marker){
     return sp1C;
 }
 
-s32 codeA5BC0_getNodePropUnkA(NodeProp *arg0){
+s32 codeA5BC0_getNodePropMarkerId(NodeProp *arg0){
     return arg0->unkA; //marker_id
 }
 
-s32 codeA5BC0_getNodePropBit6(NodeProp *arg0){
+s32 codeA5BC0_getNodePropCategory(NodeProp *arg0){
     return arg0->bit6;
 }
 
-s32 codeA5BC0_getNodePropUnk8(NodeProp *arg0){
+s32 codeA5BC0_getNodePropActorId(NodeProp *arg0){
     return arg0->unk8;
 }
 
-s32 codeA5BC0_getPositionAndReturnRadius(void *arg0_, s32 arg1[3]){
+s32 codeA5BC0_getPositionAndSelectorOrRadius(void *arg0_, s32 arg1[3]){
     NodeProp *arg0 = (NodeProp *)arg0_;
     arg1[0] = arg0->x;
     arg1[1] = arg0->y;
@@ -2426,8 +2428,8 @@ void func_80332894(void) {
     s32 size;
     s32 i;
 
-    size = 0x579;
-    D_8036E7C4 = bk_malloc(size);
+    size = VER_SELECT(0x579, 0x391, 0, 0);
+    D_8036E7C4 = malloc(size);
     i = 0;
     do{
         D_8036E7C4[i] = 0;

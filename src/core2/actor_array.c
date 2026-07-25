@@ -1,3 +1,4 @@
+// BanjoDecomp: core2/code_9E370.c
 #include <ultra64.h>
 #include "core1/core1.h"
 #include "functions.h"
@@ -192,13 +193,13 @@ void func_803255FC(Actor *this) {
         }
         break;
     }
-    func_8033A45C(1, this->unk124_3 + 1);
-    func_8033A45C(2, this->unk124_3 + 1);
+    modelRender_setAppendageVisibility(1, this->unk124_3 + 1);
+    modelRender_setAppendageVisibility(2, this->unk124_3 + 1);
 }
 
 void func_80325760(Actor *this) {
-    func_8033A45C(1, 4);
-    func_8033A45C(2, 4);
+    modelRender_setAppendageVisibility(1, 4);
+    modelRender_setAppendageVisibility(2, 4);
 }
 
 // [port] In widescreen, actors outside the 4:3 frustum are still drawn but
@@ -376,6 +377,7 @@ Actor *func_80325F2C(ActorMarker *marker, Gfx **gfx, Mtx **mtx, Vtx **vtx) {
     return actor_drawFullDepth(marker, gfx, mtx, vtx);
 }
 
+// CCW Unknown Update Function
 void func_80325F84(Actor *this){}
 
 void func_80325F8C(void) {
@@ -1540,14 +1542,14 @@ bool func_803292E0(Actor *this){
         return 1;
     }
 
-    _player_getPosition(player_position);
+    playerPosition_get(player_position);
     return func_80307258(player_position, this->unk10_25 - 1, this->unk10_18 - 1) != -1;
 }
 
 bool func_80329354(Actor *this){
     f32 sp1C[3];
 
-    _player_getPosition(sp1C);
+    playerPosition_get(sp1C);
     return func_80329260(this, sp1C);
 }
 
@@ -1557,7 +1559,7 @@ bool func_80329384(Actor *this, f32 arg1){
     if(this->unk10_25 == 0)
         return true;
 
-    _player_getPosition(sp1C);
+    playerPosition_get(sp1C);
 
     return func_80307258(sp1C, this->unk10_25 - 1, this->unk10_18 - 1) != -1
         && (sp1C[1] < (this->position[1] + arg1))
@@ -1604,14 +1606,14 @@ bool subaddie_playerIsWithinSphereAndActive(Actor *this, s32 dist){
 
 bool subaddie_playerIsWithinSphere(Actor *this, s32 dist){
     f32 sp24[3];
-    f32 sp18[3];
+    f32 player_position[3];
 
     func_8028E964(sp24);
-    _player_getPosition(sp18);
-    sp24[1] = sp18[1];
-    if( ( (this->position_x - sp24[0])*(this->position_x - sp24[0]) 
-          + (this->position_y - sp24[1])*(this->position_y - sp24[1])
-          + (this->position_z - sp24[2])*(this->position_z - sp24[2]) 
+    playerPosition_get(player_position);
+    sp24[1] = player_position[1];
+    if( ( (this->position_x - sp24[0]) * (this->position_x - sp24[0])
+          + (this->position_y - sp24[1]) * (this->position_y - sp24[1])
+          + (this->position_z - sp24[2]) * (this->position_z - sp24[2]) 
         ) < dist*dist
     ){
         return true;
@@ -1650,7 +1652,7 @@ s32 func_8032970C(Actor *this){
     f32 plyr_pos[3];
 
     func_8028E964(sp24);
-    _player_getPosition(plyr_pos);
+    playerPosition_get(plyr_pos);
     sp24[1] = plyr_pos[1];
     return (s32) DIST_SQ_VEC3F(this->position, sp24);
 }
@@ -1667,12 +1669,12 @@ s32 subaddie_getYawToPosition(Actor *arg0, f32 arg1[3]){
 }
 
 void func_803297FC(Actor *arg0, f32 *o1, f32 *o2){
-    f32 sp2C[3];
+    f32 player_pos[3];
 
-    _player_getPosition(sp2C);
-    func_8025727C(
+    playerPosition_get(player_pos);
+    ml_horizontal_and_vertical_angles(
         arg0->position[0], arg0->position[1], arg0->position[2],
-        sp2C[0], sp2C[1], sp2C[2],
+        player_pos[0], player_pos[1], player_pos[2],
         o1, o2
     );
     *o1 = 360.0f - *o1;
@@ -2008,7 +2010,7 @@ void func_8032A82C(Actor *arg0, s32 arg1) {
     sp1C = (Actorlocal_Core2_9E370 *)arg0->local;
     sp24 = nodeprop_findByActorIdAndActorPosition(arg1, arg0);
     if (sp24 != NULL) {
-        sp1C->unkC = nodeprop_getYaw(sp24);
+        sp1C->unkC = nodeProp_getYaw(sp24);
         nodeprop_getPosition(sp24, sp1C->unk0);
         sp1C->unkE = func_80341EC4(sp1C->unk0);
     }
