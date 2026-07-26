@@ -2427,7 +2427,7 @@ typedef enum actor_e
     ACTOR_3CA_ROCK_TRAPPING_GRUNTY,
     ACTOR_3CB_UNKNOWN,
     ACTOR_3CC_DUMMY_PLAYER_ANCHOR = 0x3CC // Lighthouse [port] network anchor dummy player
-};
+} ActorID;
 
 enum bundle_e {
     BUNDLE_0_MM_HUT_MUSIC_NOTE,

@@ -188,6 +188,8 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                     case BUNDLE_7__JIGGY:
                         randoCheckId = RC_FP_JIGGY_BOGGY_RACE_2;
                         break;
+                    default:
+                        break;
                 }
                 break;
             case LEVEL_6_LAIR:
@@ -240,6 +242,7 @@ void Rando::ObjectBehavior::InitBundleBehavior() {
                         break;
                     case BUNDLE_D__EMPTY_HONEYCOMB:
                         randoCheckId = RC_GV_EMPTY_HONEYCOMB_GOBI;
+                        break;
                     default:
                         break;
                 }

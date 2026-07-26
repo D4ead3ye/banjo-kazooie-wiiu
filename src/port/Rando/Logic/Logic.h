@@ -347,6 +347,8 @@ inline bool CanKillEnemy(actor_e enemyType) {
                 canKillEnemy = true;
             }
             break;
+        default:
+            break;
     }
 
     return canKillEnemy;

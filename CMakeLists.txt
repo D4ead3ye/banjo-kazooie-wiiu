@@ -218,8 +218,6 @@ file(GLOB_RECURSE ALL_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     "${CMAKE_CURRENT_SOURCE_DIR}/include/*"
 )
 
-list(FILTER ALL_FILES EXCLUDE REGEX "src/unused/")
-
 list(APPEND ALL_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Resource.rc)
 
 
@@ -543,6 +541,7 @@ if(MSVC)
           /we4311;  # pointer truncation (e.g. void* to int)
           /we4312;  # conversion to pointer of greater size (e.g. int to void*)
           /we4133;  # incompatible pointer types
+          /wd4200;  # we don't care about zero-sized flexible arrays
           ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
           ${DEFAULT_CXX_EXCEPTION_HANDLING}
       )
