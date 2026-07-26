@@ -103,7 +103,7 @@ const std::unordered_map<uint32_t, std::string>& GetAssetSymbolMap() {
         switch (Lighthouse::GetBaseVersion()) {
             case BK_VER_US_11:
                 remapTable = &sV10toV11Remap;
-                SPDLOG_INFO("Loaded v1.1 o2r with {} entries", symbolMap.size());
+                SPDLOG_INFO("Loaded US v1.1 o2r with {} entries", symbolMap.size());
                 break;
             case BK_VER_PAL:
                 remapTable = &sV10toPALRemap;
@@ -115,6 +115,7 @@ const std::unordered_map<uint32_t, std::string>& GetAssetSymbolMap() {
                 break;
             case BK_VER_US_10:
             default:
+                SPDLOG_INFO("Loaded US v1.0 o2r");
                 // v1.0 or a v1.0-based romhack: decomp IDs are already correct.
                 break;
         }
