@@ -41,6 +41,7 @@ jobs:
       run: |
         export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
         make -C Torch type=release -j3
+        cp -r ./libultraship/src/fast/shaders ./port
         Torch/cmake-build-release/torch pack port lighthouse.o2r o2r -u ${{ steps.extract_version.outputs.version }}
     - uses: actions/upload-artifact@v4
       with:
