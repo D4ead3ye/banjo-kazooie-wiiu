@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <fstream>
 #include <chrono>
+#include <future>
 #if defined(__linux__) || defined(__APPLE__)
 #include <unistd.h>
 #include <cerrno>
@@ -31,6 +32,7 @@
 #include "Audio/GameAudio.h"
 #include "build.h"
 #include "Extractor/GameExtractor.h"
+#include "ship/window/gui/FileBrowserWindow.h"
 #include "Interpolation/AdaptiveFps.h"
 #include "Interpolation/FrameInterpolation.h"
 #include "Network/Anchor/Anchor.h"
@@ -211,6 +213,7 @@ typedef enum PromptSteps {
     PS_FILE_CHECK,
     PS_LOCAL,
     PS_FIRST,
+    PS_FIRST_WAIT, // waiting for the async file-pick result (resolves immediately on the native path)
     PS_WAIT,
     PS_NONE,
 } PromptSteps;
@@ -453,6 +456,11 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
     bool extractStarted = false;
     std::atomic<size_t> extractCount{ 0 }, totalExtract{ 0 };
 
+    // Async ROM selection: the result callback fires on this thread during the render step below, so
+    // these plain locals are safe to capture by reference.
+    bool romLoaded = false;
+    bool romResultReady = false;
+
     std::string installPath = Ship::Context::GetAppBundlePath();
     std::string file;
 
@@ -511,7 +519,7 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                     GameExtractor::sCustomCodePromptActive = false;
                 });
         }
-        if (LighthouseGui::PopupsQueued() > 0 || extracting) {
+        if (LighthouseGui::PopupsQueued() > 0 || extracting || Ship::FileBrowserWindow::IsOpen()) {
             goto render;
         }
 
@@ -746,13 +754,54 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                         continue;
                     }
                     case PS_FIRST: {
-                        if (args.empty() && !extract.SelectGameFromUI()) {
-                            promptStep = PS_FILE_CHECK;
+                        if (args.empty()) {
+                            // Skip the picker entirely if a baserom.us.z64 is sitting in the app
+                            // directory: load it and go straight to extraction.
+                            std::string baserom = Ship::Context::GetPathRelativeToAppDirectory("baserom.us.z64");
+                            if (std::filesystem::exists(baserom) && extract.LoadRomFromPath(baserom)) {
+                                extracting = true;
+                                extractStarted = true;
+                                file = extract.GetRomPath();
+                                (void)threadPool->submit_task([&]() -> void {
+                                    extract.GenerateOTR(extractCount, totalExtract, "bk");
+                                    extracting = false;
+                                });
+                                continue; // stay in PS_FIRST; the completion check fires when done
+                            }
+                            // Otherwise open the picker (native dialog on desktop, ImGui browser on
+                            // consoles/arm). For the browser, the IsOpen() gate above keeps the loop
+                            // rendering until the user picks or cancels; the ROM loads before the callback.
+                            romResultReady = false;
+                            romLoaded = false;
+                            extract.SelectGameFromUI([&](bool ok) {
+                                romLoaded = ok;
+                                romResultReady = true;
+                            });
+                            promptStep = PS_FIRST_WAIT;
                             continue;
                         }
                         extracting = true;
                         extractStarted = true;
                         file = extract.GetRomPath();
+                        (void)threadPool->submit_task([&]() -> void {
+                            extract.GenerateOTR(extractCount, totalExtract, "bk");
+                            extracting = false;
+                        });
+                        continue;
+                    }
+                    case PS_FIRST_WAIT: {
+                        if (!romResultReady) {
+                            goto render; // browser still open; keep drawing it
+                        }
+                        romResultReady = false;
+                        if (!romLoaded) {
+                            promptStep = PS_FILE_CHECK; // cancelled or failed to load
+                            continue;
+                        }
+                        extracting = true;
+                        extractStarted = true;
+                        file = extract.GetRomPath();
+                        promptStep = PS_FIRST; // so the ES_EXTRACT/PS_FIRST completion check fires
                         (void)threadPool->submit_task([&]() -> void {
                             extract.GenerateOTR(extractCount, totalExtract, "bk");
                             extracting = false;
@@ -1243,6 +1292,9 @@ using Clock = std::chrono::steady_clock;
 inline long long NsSince(Clock::time_point t0) {
     return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - t0).count();
 }
+
+// In-flight async builds of interpolated sub-frame replacement maps
+std::vector<std::future<void>> sMapBuildFutures;
 } // namespace
 
 void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map<Mtx*, MtxF>>& mtx_replacements,
@@ -1265,18 +1317,21 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
     // physical memory so gFramebuffers always had valid pixel data after rendering.
     auto wndBase = Ship::Context::GetRawInstance()->GetWindow();
     for (size_t frameIdx = 0; frameIdx < frameCount; frameIdx++) {
+        if (frameIdx >= 1 && frameIdx - 1 < sMapBuildFutures.size()) {
+            sMapBuildFutures[frameIdx - 1].wait();
+        }
         const auto& m = mtx_replacements[frameIdx];
         bool isFinalFrame = (frameIdx == frameCount - 1);
         // Bypass IsFrameReady() when interpolation is active — render all
         // frames per tick and let vsync pace them.
         if (frameCount > 1 || wndBase->IsFrameReady()) {
+            // Sample the full CPU cost of producing this sub-frame.
+            auto runT0 = Clock::now();
             auto gui = wndBase->GetGui();
             wndBase->GetMouseStateManager()->StartFrame();
             gui->StartDraw();
             interpreter->StartFrame();
-            auto runT0 = Clock::now();
             interpreter->Run(Commands, m);
-            AdaptiveFps_Sample(NsSince(runT0));
             // Emulate N64 osViBlack to prevent a flicker when the scene is drawn
             // for the falling jiggy transition framebuffer capture.
             if (port_isViBlack()) {
@@ -1286,6 +1341,7 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
                 rapi->ClearFramebuffer(true, false);
             }
             gui->EndDraw();
+            AdaptiveFps_Sample(NsSince(runT0));
             interpreter->EndFrame();
             CALL_EVENT(FrameDrawEnd);
         }
@@ -1396,10 +1452,17 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
         mtx_replacements.resize(subframesPerTick);
     }
     size_t activeFrames = 0;
+    sMapBuildFutures.clear();
     for (int i = 1; i <= subframesPerTick; i++) {
         if (i < subframesPerTick) {
             float t = (float)i / (float)subframesPerTick;
-            FrameInterpolation_Interpolate(t, mtx_replacements[activeFrames]);
+            if (i == 1) {
+                FrameInterpolation_Interpolate(t, mtx_replacements[activeFrames]);
+            } else {
+                auto* map = &mtx_replacements[activeFrames];
+                sMapBuildFutures.push_back(
+                    std::async(std::launch::async, [t, map] { FrameInterpolation_Interpolate(t, *map); }));
+            }
         } else {
             mtx_replacements[activeFrames].clear();
         }
@@ -1421,6 +1484,15 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
     }
 
     RunCommands(commands, mtx_replacements, activeFrames);
+
+    // Drain any builds the render loop didn't consume (debugger path, early
+    // return) before the next tick's StartRecord resets the trees they read.
+    for (auto& f : sMapBuildFutures) {
+        if (f.valid()) {
+            f.wait();
+        }
+    }
+    sMapBuildFutures.clear();
 
     // [port] Release the demo audio hold after kDemoAudioHoldFrames rendered frames.
     if (sHoldAudio.load() && --sHoldFramesRemaining <= 0) {
