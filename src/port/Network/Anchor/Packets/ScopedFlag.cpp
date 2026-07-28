@@ -30,6 +30,7 @@ void Anchor::SendPacket_ScopedFlag(u8 space, s16 index, u8 value) {
 
     nlohmann::json payload;
     payload["type"] = SCOPED_FLAG;
+    payload["targetTeamId"] = CVarGetString(CVAR_REMOTE_ANCHOR("TeamId"), "default");
     payload["space"] = space;
     payload["index"] = index;
     payload["value"] = value;

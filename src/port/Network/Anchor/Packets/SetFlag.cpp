@@ -64,8 +64,6 @@ void Anchor::HandlePacket_SetFlag(nlohmann::json& payload) {
     u8 flagSpace = payload.at("flagSpace").get<u8>();
     s16 flag = payload.at("flag").get<s16>();
 
-    SPDLOG_INFO("[Anchor][flagdiag] received SetFlag space={} flag={:#x}", flagSpace, flag);
-
     if (flagSpace == ANCHOR_FLAGSPACE_RANDO_INF) {
         // Non-derived rando flag; set directly.
         if (IS_RANDO && flag > RANDO_INF_UNKNOWN && flag < RANDO_INF_MAX) {

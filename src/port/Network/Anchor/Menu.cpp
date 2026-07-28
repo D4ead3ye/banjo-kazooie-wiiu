@@ -193,13 +193,13 @@ void AnchorAdminMenu(WidgetInfo& info) {
     }
     UIWidgets::PopStyleButton();
 
-    if (UIWidgets::CVarCombobox("PvP Mode:", CVAR_REMOTE_ANCHOR("RoomSettings.PvpMode"), pvpModes,
-                                UIWidgets::ComboboxOptions()
-                                    .DefaultIndex(1)
-                                    .LabelPosition(UIWidgets::LabelPositions::Above)
-                                    .Color(THEME_COLOR))) {
-        anchor->SendPacket_UpdateRoomState();
-    }
+    //if (UIWidgets::CVarCombobox("PvP Mode:", CVAR_REMOTE_ANCHOR("RoomSettings.PvpMode"), pvpModes,
+    //                            UIWidgets::ComboboxOptions()
+    //                                .DefaultIndex(1)
+    //                                .LabelPosition(UIWidgets::LabelPositions::Above)
+    //                                .Color(THEME_COLOR))) {
+    //    anchor->SendPacket_UpdateRoomState();
+    //}
     if (UIWidgets::CVarCombobox("Show Locations For:", CVAR_REMOTE_ANCHOR("RoomSettings.ShowLocationsMode"),
                                 showLocationsModes,
                                 UIWidgets::ComboboxOptions()
@@ -236,16 +236,13 @@ void AnchorInstructionsMenu(WidgetInfo& info) {
     ImGui::TextWrapped("2. Come up with a unique Room ID (this is basically your password) and enter it, along with "
                        "your desired player name and team ID and click Enable");
 
-    ImGui::TextWrapped("3. The host should configure the randomizer settings and generate a seed, then share the newly "
-                       "generated JSON spoiler file with other players.");
+    ImGui::TextWrapped("3. For Rando: The host should configure the randomizer settings and generate a seed, then get "
+                       "in game to create a save file to share.");
 
-    ImGui::TextWrapped("4. All players should load the same JSON spoiler file (drag it into SoH window), make sure "
-                       "seed icons match, then create a new file.");
-
-    ImGui::TextWrapped("5. All players should now load into their game. IMPORTANT! If using an existing save/seed "
+    ImGui::TextWrapped("4. All players should now load into their game. IMPORTANT! If using an existing save/seed "
                        "ensure the player with the most progress loads the file first.");
 
-    ImGui::TextWrapped("6. After everyone has loaded in, verify on the network tab that it doesn't warn about anyone "
+    ImGui::TextWrapped("5. After everyone has loaded in, verify on the network tab that it doesn't warn about anyone "
                        "being on a wrong version or seed.");
 
     ImGui::Spacing();

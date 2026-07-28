@@ -75,7 +75,6 @@ void NetAuthority_Claim(NetworkActivityId activity) {
     }
     ActivityState& state = sActivities[activity];
     if (state.claimed && state.owner != anchor->ownClientId) {
-        SPDLOG_WARN("[Authority] Tried to claim activity {} already owned by client {}", (int)activity, state.owner);
         return;
     }
     if (!state.claimed || state.owner != anchor->ownClientId) {
