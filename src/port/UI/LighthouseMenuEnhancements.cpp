@@ -354,11 +354,11 @@ void LighthouseMenu::AddMenuEnhancements() {
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip("Stops the Jinjo charge-up sound the instant it hits Grunty."));
 
-    AddWidget(path, "Mute Chimpy Stump Replay", WIDGET_CVAR_CHECKBOX)
+    AddWidget(path, "Mute Chimpy Replay", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Fixes.ChimpyStumpRumble"))
         .RaceDisable(false)
         .Options(CheckboxOptions().DefaultValue(true).Tooltip(
-            "Mutes the rumbling sound when Chimpy's stump rises again on every return trip to "
+            "Mutes Chimpy and the rumbling sound his stump makes on every return trip to "
             "Mumbo's Mountain. The first rise keeps its sound."));
 
     AddWidget(path, "Fix Cutscene Audio Sync", WIDGET_CVAR_CHECKBOX)
@@ -385,6 +385,17 @@ void LighthouseMenu::AddMenuEnhancements() {
             }
         })
         .Options(CheckboxOptions().Tooltip("Corrects a spelling error when meeting Conga as a termite."));
+
+    AddWidget(path, "Fix Freezeezy Peak Lobby", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Fixes.FPLobbyDoorTile"))
+        .RaceDisable(false)
+        .PreFunc([](WidgetInfo& info) {
+            if (mLighthouseMenu->disabledMap.at(DISABLE_FOR_ROMHACK).active) {
+                info.activeDisables.push_back(DISABLE_FOR_ROMHACK);
+            }
+        })
+        .Options(CheckboxOptions().Tooltip("Fixes the smeared snow trim around the Freezeezy Peak entrance in "
+                                           "Gruntilda's Lair. Requires a map reload to take effect."));
 
     // Enhancements -> Restorations
     path = { "Enhancements", "Restorations", SECTION_COLUMN_1 };
