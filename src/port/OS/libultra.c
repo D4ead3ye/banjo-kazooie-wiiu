@@ -1,7 +1,14 @@
+// BanjoDecomp: This file no longer exists upstream,
+// but we do wrap its functions with our own.
+
+// Include the headers that declare what this file defines, so the compiler
+// checks the definitions against them.
 #include "libultraship/libultra/types.h"
 #include "libultraship/libultra/interrupt.h"
 #include "libultraship/libultra/sptask.h"
 #include "libultraship/libultra/thread.h"
+#include "libultraship/libultra/os.h"
+#include "functions.h"
 #include "bk_string.h"
 
 #include <libultra/convert.h>
@@ -16,29 +23,35 @@ s32 osViClock = VI_NTSC_CLOCK;
 u32 __osShutdown = 0;
 u32 __OSGlobalIntMask = OS_IM_ALL;
 s32 osCicId = 6103;
-// [port] On N64 this was a fixed-address depth buffer at 0x8000E800 (naturally 0x40-aligned).
+// On N64 this was a fixed-address depth buffer at 0x8000E800 (naturally 0x40-aligned).
 // On PC we need a properly sized and aligned buffer to avoid the alignment loop in func_80253428.
 _Alignas(0x40) u8 D_8000E800[DEFAULT_FRAMEBUFFER_WIDTH * DEFAULT_FRAMEBUFFER_HEIGHT * sizeof(u16)];
 
 u16 gFramebuffers[2][DEFAULT_FRAMEBUFFER_WIDTH * DEFAULT_FRAMEBUFFER_HEIGHT];
 
+// Threads are in src/port/OS/OS.cpp.
+void OS_CreateThread(OSThread* thread, OSId id, void* entry, void* arg, void* sp, OSPri p);
+void OS_StartThread(OSThread* thread);
+void OS_StopThread(OSThread* thread);
+void OS_DestroyThread(OSThread* thread);
+void OS_SetThreadPri(OSThread* thread, OSPri p);
+
 void osCreateThread(OSThread* thread, OSId id, void* entry, void* arg, void* sp, OSPri p) {
+    OS_CreateThread(thread, id, entry, arg, sp, p);
 }
 void osStartThread(OSThread* thread) {
+    OS_StartThread(thread);
 }
 void osStopThread(OSThread* t) {
+    OS_StopThread(t);
 }
 void osDestroyThread(OSThread* thread) {
-}
-void osSpTaskYield(void) {
-}
-void osSpTaskLoad(OSTask* task) {
-}
-void osSpTaskStartGo(OSTask* task) {
+    OS_DestroyThread(thread);
 }
 void osViExtendVStart(u32 arg0) {
 }
 void osSetThreadPri(OSThread* thread, OSPri p) {
+    OS_SetThreadPri(thread, p);
 }
 s32 osContSetCh(u8 ch) {
     return 0;
@@ -48,23 +61,12 @@ u32 __osGetSR(void) {
 }
 void __osSetSR(u32 value) {
 }
+// All interrupt-enable bits set. thread5_checkAndExecutePreNMI reads SR_IBIT5
+// and treats a clear bit as "reset pressed"; with retraces running, returning
+// 0 fires the PreNMI handler 60 times a second.
 u32 bkGetSR(void) {
-    return 0;
+    return 0xFFFFFFFFu;
 }
-OSYieldResult osSpTaskYielded(OSTask* task) {
-    return 0;
-}
-// Lighthouse TODO these need to be implemented in LUS
-int osStartTimer(void* t) {
-    return 0;
-}
-int osStopTimer(void* t) {
-    return 0;
-}
-
-void osDpSetStatus(u32 data) {
-}
-
 void __osError(s16 error_code, s16 num_args, ...) {
 }
 

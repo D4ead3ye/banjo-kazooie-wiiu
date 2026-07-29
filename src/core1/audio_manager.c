@@ -7,6 +7,7 @@
 //#include "PR/sched.h"
 #include "n_audio/PR/n_libaudio.h"
 //#include "PR/os_system.h"
+#include "port/DevTools/ThreadWatchdog.h"
 #include "port/ShipUtils.h"
 
 #define DMA_BLOCK_SIZE VER_SELECT(0x200, 0x270, 0x200, 0x200)
@@ -355,6 +356,7 @@ void audioManagerThread_entry(void *arg) {
 
     while (true) {
         osRecvMesg(&audioManager.audioFrameMsgQ, NULL, OS_MESG_BLOCK);
+        ThreadWatchdog_Beat(WATCHDOG_AUDIO_MANAGER); // [port] one beat per audio frame
         if (audioManager_handleFrameMsg(audioManager.audio_info[sAudioInfoID % 3], sPrevFinishedAudioInfo)) {
             if (skip_handle_done_mesg == 0) {
                 osRecvMesg(&audioManager.audioReplyMsgQ, (OSMesg *) &D_80275844, OS_MESG_BLOCK);
@@ -383,6 +385,12 @@ bool audioManager_handleFrameMsg(AudioInfo *info, AudioInfo *prev_info){
 #if VERSION == VERSION_USA_1_0
     ret = 0;
 #endif
+
+    // [port] On N64 nothing could run concurrently with this thread: one core,
+    // and the game brackets its audio writes with osSetIntMask, which blocks
+    // preemption. On PC those brackets map to a lock, and the engine advance
+    // here has to take the same one.
+    port_lockAudio();
 
     outbuffer = (s16 *) osVirtualToPhysical(info->data);
     audioManager_func_802403F0();
@@ -425,10 +433,12 @@ bool audioManager_handleFrameMsg(AudioInfo *info, AudioInfo *prev_info){
 #endif
 
     if (command_list_len == 0) {
+        port_unlockAudio(); // [port]
         return false;
     } else {
         core1_15B30_addAudioTaskData(audioManager.ACMDList[sCmdBufferIndex], command_list_end, &audioManager.audioReplyMsgQ, OS_MESG_PTR(&info->reply_mesg_data)); // [port] OSMesg is a union on PC
         func_80250650();
+        port_unlockAudio(); // [port]
         sCmdBufferIndex ^= 1;
         return true;
     }
@@ -590,8 +600,12 @@ void audioManager_stopThread(void) {
 void audioManager_startThread(void) {
     if (!sAudioManagerThreadStarted) {
         sAudioManagerThreadStarted = true;
-        port_audioStartThread();
+        osStartThread(&audioManager.thread);
     }
+}
+
+OSMesgQueue *audioManager_getReplyMesgQueue(void) {
+    return &audioManager.audioReplyMsgQ;
 }
 
 OSThread *audioManager_getThread(void) {

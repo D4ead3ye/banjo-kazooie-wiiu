@@ -1,0 +1,73 @@
+#ifndef PORT_OS_H
+#define PORT_OS_H
+
+// N64 OS SDK
+//
+// libultraship already implements most of the libultra surface, and where its
+// version is correct for a PC port we use it as-is. This layer exists only for
+// the calls libultraship cannot serve, so that the decomp's own threading code
+// can run instead of being replaced by port stand-ins.
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "libultraship/libultra/thread.h"
+
+void OS_CreateThread(OSThread* thread, OSId id, void* entry, void* arg, void* sp, OSPri p);
+void OS_StartThread(OSThread* thread);
+void OS_StopThread(OSThread* thread);
+void OS_DestroyThread(OSThread* thread);
+void OS_SetThreadPri(OSThread* thread, OSPri p);
+
+// Allowlist one decomp thread entry point. Until its entry is passed here, an
+// osCreateThread/osStartThread pair is recorded but never launched, so threads
+// are revived deliberately, one consumer at a time.
+void OS_EnableThreadEntry(void* entry);
+
+#include "libultraship/libultra/message.h"
+
+// OS_MESG_BLOCK only blocks on queues opted in here.
+void OS_SetQueueBlocking(OSMesgQueue* mq, int enabled);
+
+// Watchdog diagnostics: threads currently parked inside a blocking
+// osSendMesg/osRecvMesg, so a stall dump can say where each one waits.
+typedef struct OS_BlockedWait {
+    unsigned long tid; // SDL thread id
+    OSMesgQueue* mq;
+    int isSend; // 0 = recv, 1 = send/jam
+} OS_BlockedWait;
+int OS_MesgSnapshotBlockedWaits(OS_BlockedWait* out, int max);
+
+// Raise a registered hardware event (VI retrace, SI done, RDP done).
+void OS_SendEventMesg(OSEvent event);
+
+// Raise an event ahead of whatever the recipient already has queued, the way
+// an interrupt preempts. Used for completions that must not be reordered
+// behind pending messages.
+void OS_JamEventMesg(OSEvent event);
+
+// The VI ticker starts with osCreateViManager; this stops it at shutdown.
+void OS_StopViTicker(void);
+
+// Complete one pending controller read: poll the pads and raise OS_EVENT_SI.
+// Called by the thread that owns SDL input.
+int OS_SiService(void);
+
+// Whether osViBlack has the display blanked. The renderer blacks the presented
+// frame while the world keeps rendering underneath.
+int OS_ViBlackActive(void);
+
+#include "libultraship/libultra/sptask.h"
+
+// Take the task osSpTaskStartGo handed over, or NULL if none is pending.
+OSTask* OS_SpTakePendingTask(void);
+
+// Same, but without consuming it; the watchdog reports what is in flight.
+OSTask* OS_SpPeekPendingTask(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // PORT_OS_H

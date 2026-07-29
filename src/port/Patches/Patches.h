@@ -7,6 +7,15 @@
 extern "C" {
 #endif
 
+// Threaded rendering (Game.cpp)
+
+// Carries the interpolation pair with a submitted display list.
+void port_thread5_onSubmit(void* taskData);
+// Runs fn on the window thread when the tick is on its own thread.
+void port_runOnRenderThread(void (*fn)(void*), void* arg);
+// Waits for in-flight display lists before freeing or reading what they use.
+void port_pipelineSyncPoint(void);
+
 // Frame Pacing (FramePacingPatches.cpp)
 
 int port_getDemoViCount(void);
@@ -28,8 +37,6 @@ void port_refreshDialogFontGlyphCount(void); // re-read the reachable glyph coun
 
 // Framebuffer (FramebufferPatches.cpp)
 
-void port_setViBlack(int active);
-int port_isViBlack(void);
 void port_freezeReadback(int freeze);
 void port_requestReadback(void);
 int port_consumeReadbackRequest(void);
@@ -113,6 +120,8 @@ void romhack_RewriteActorSpawn(void* actorInfo, u32* flags);
 // Attract-demo audio hold
 
 void port_beginDemoAudioHold(void);
+void port_tickDemoAudioHold(void);
+int port_audioHeld(void);
 
 void port_notedoor_remoteOpen(int32_t progressFlag);
 

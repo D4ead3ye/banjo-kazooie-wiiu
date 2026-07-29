@@ -33,8 +33,8 @@
 #include "build.h"
 #include "Extractor/GameExtractor.h"
 #include "ship/window/gui/FileBrowserWindow.h"
-#include "Interpolation/AdaptiveFps.h"
 #include "Interpolation/FrameInterpolation.h"
+#include "OS/OS.h"
 #include "Network/Anchor/Anchor.h"
 #include "port/Enhancements/Events/PortEnhancements.h"
 #include "port/Patches/Patches.h"
@@ -74,11 +74,6 @@ extern s32 D_80275610;
 bool prevAltAssets = false;
 // bool gEnableGammaBoost = true;
 
-// Audio synthesis entry point (decomp n_synthesizer.c)
-Acmd* n_alAudioFrame(Acmd* cmdList, s32* cmdLen, s16* outBuf, s32 outLen);
-// DMA cache cleanup (decomp audio_manager.c)
-void audioManager_func_802403F0(void);
-void func_80250650(void);
 // Game mode helper
 bool func_802E4A08(void);
 
@@ -394,6 +389,11 @@ void GameEngine::FinishInit() {
     lhFast3dWindow->SetMaximumFrameLatency(1);
     lhFast3dWindow->SetRendererUCode(ucode_f3d);
 
+    // Opt-in to memoization
+    if (auto interpreter = lhFast3dWindow->GetInterpreterWeak().lock()) {
+        interpreter->SetResolvedResourceCacheEnabled(true);
+    }
+
 #ifdef USE_NETWORKING
     SDLNet_Init();
 #endif
@@ -412,7 +412,6 @@ void GameEngine::FinishInit() {
     // Likewise if it refused romhack overlays due to a non-v1.0 base.
     MaybeShowRomhackBaseMismatchPopup();
     Instance->AudioInit();
-    AdaptiveFps_Configure(30); // BK ticks at 30 Hz
     // Instance->LoadDictionary();
     // Instance->LoadPlayerAnims();
 #if defined(__SWITCH__) || defined(__WIIU__)
@@ -1057,7 +1056,6 @@ void GameEngine::Destroy() {
 
     // Flush all resource refs so destructors run while spdlog is still active.
     // sResourceRefCache holds shared_ptrs that outlive the LUS cache otherwise.
-    AudioExit();
     ResourceHelpers_ClearRefCache();
     AudioDma_Clear();
     ReleaseSoundfonts();
@@ -1139,33 +1137,19 @@ void GameEngine::RelaunchIfRequested(int argc, char* argv[]) {
 #endif
 }
 
-#if 0
-// Values for 44100 hz
-#define SAMPLES_HIGH 752
-#define SAMPLES_LOW 720
-#else
-// Values for 32000 hz
-#define SAMPLES_HIGH 560
-#define SAMPLES_LOW 528
+#define SAMPLES_PER_FRAME (560 * 2 * 2)
 
-#endif
-#define NUM_AUDIO_CHANNELS 2
-#define SAMPLES_PER_FRAME (SAMPLES_HIGH * NUM_AUDIO_CHANNELS * 2)
+// 2 VIs per game frame (30fps)
+#define gVIsPerFrame 2
 
 extern "C" uint32_t GameEngine_GetSamplesPerFrame() {
     return SAMPLES_PER_FRAME;
 }
 
-// 2 VIs per game frame (30fps)
-#define gVIsPerFrame 2
-
-// 736 samples per audio update (44000/60, aligned to 184-sample boundary)
-#define AlFrameSize 736
-
 // Attract-demo audio hold
 static std::atomic<bool> sHoldAudio{ false };
-static constexpr int kDemoAudioHoldFrames = 2; // frames to stay held after the load
-static int sHoldFramesRemaining = 0;           // game-thread countdown
+static constexpr int kDemoAudioHoldFrames = 2; // drawn ticks to stay held after the load
+static int sHoldFramesRemaining = 0;           // game thread only
 
 extern "C" void port_beginDemoAudioHold(void) {
     if (kDemoAudioHoldFrames <= 0) {
@@ -1175,50 +1159,14 @@ extern "C" void port_beginDemoAudioHold(void) {
     sHoldAudio.store(true);
 }
 
-void GameEngine::HandleAudioThread() {
-    int16_t audioBuffer[AlFrameSize * 2];
-    Acmd cmdList[0x800];
-
-    // Free-run: continuously keep the backend queue topped up, real-time paced and
-    // decoupled from the game frame, so a long game frame can't starve the device.
-    while (audio.running) {
-        if (audio.ready) {
-            while (audio.running && AudioPlayerBuffered() < AudioPlayerGetDesiredBuffered()) {
-                int samplesToGen = AlFrameSize * 2 * sizeof(int16_t);
-
-                memset(audioBuffer, 0, samplesToGen);
-
-                // While held, leave the buffer as silence and do NOT advance the engine.
-                if (!sHoldAudio) {
-                    int32_t cmdLen = 0;
-                    // Lock only the engine work; the volume scale and backend submit touch
-                    // worker-local / backend state, not the synth.
-                    port_lockAudio();
-                    audioManager_func_802403F0();
-                    n_alAudioFrame(cmdList, &cmdLen, audioBuffer, AlFrameSize);
-                    func_80250650();
-                    port_unlockAudio();
-
-                    float master_vol = CVarGetInteger(CVAR_SETTING("Volume.Master"), 100) / 100.0f;
-                    for (u32 i = 0; i < AlFrameSize * 2; i++) {
-                        audioBuffer[i] = static_cast<s16>(audioBuffer[i] * master_vol);
-                    }
-                }
-                AudioPlayerPlayFrame((uint8_t*)audioBuffer, samplesToGen);
-            }
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(2));
+extern "C" void port_tickDemoAudioHold(void) {
+    if (sHoldAudio.load() && --sHoldFramesRemaining <= 0) {
+        sHoldAudio.store(false);
     }
 }
 
-void GameEngine::StartAudioFrame() {
-    // Worker free-runs now; this only marks the engine initialized (first call is after
-    // audio init, once the game loop is running).
-    audio.ready = true;
-}
-
-void GameEngine::EndAudioFrame() {
-    // No-op: audio generation is decoupled from the game frame.
+extern "C" int port_audioHeld(void) {
+    return sHoldAudio.load() ? 1 : 0;
 }
 
 static std::vector<std::shared_ptr<Ship::IResource>> sSoundfontResources;
@@ -1267,26 +1215,8 @@ void GameEngine::AudioInit() {
     LoadSoundfonts();
 }
 
-void GameEngine::AudioStartThread() {
-    if (!audio.running) {
-        audio.running = true;
-        audio.thread = std::thread(HandleAudioThread);
-#ifdef _WIN32
-        SetThreadPriority(audio.thread.native_handle(), THREAD_PRIORITY_TIME_CRITICAL);
-#endif
-    }
-}
 
-void GameEngine::AudioExit() {
-    // Free-run worker checks `running` each loop (~every 2 ms), so just clear it and join.
-    audio.running = false;
-    if (audio.thread.joinable()) {
-        audio.thread.join();
-    }
-}
-
-// Local timer helper for the per-sub-frame measurement we feed into
-// AdaptiveFps_Sample.
+// Local timer helper for the per-sub-frame cost measurement.
 namespace {
 using Clock = std::chrono::steady_clock;
 inline long long NsSince(Clock::time_point t0) {
@@ -1295,6 +1225,11 @@ inline long long NsSince(Clock::time_point t0) {
 
 // In-flight async builds of interpolated sub-frame replacement maps
 std::vector<std::future<void>> sMapBuildFutures;
+
+// Cost of the most recent sub-frame, and the wall time this pass may spend:
+// subframes/paceFps is exactly the game time one task represents.
+long long sLastSubFrameNs = 0;
+long long sPassBudgetNs = 0;
 } // namespace
 
 void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map<Mtx*, MtxF>>& mtx_replacements,
@@ -1316,14 +1251,18 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
     // Run() (frame rendered) and EndFrame() (buffer swap). On N64, CPU/RDP shared
     // physical memory so gFramebuffers always had valid pixel data after rendering.
     auto wndBase = Ship::Context::GetRawInstance()->GetWindow();
+    const auto passT0 = Clock::now();
     for (size_t frameIdx = 0; frameIdx < frameCount; frameIdx++) {
         if (frameIdx >= 1 && frameIdx - 1 < sMapBuildFutures.size()) {
             sMapBuildFutures[frameIdx - 1].wait();
         }
+        // Stop once another sub-frame no longer fits in what the tick's worth
+        // of wall time has left.
+        if (frameIdx > 0 && sLastSubFrameNs > 0 && (sPassBudgetNs - NsSince(passT0)) < sLastSubFrameNs) {
+            break;
+        }
         const auto& m = mtx_replacements[frameIdx];
         bool isFinalFrame = (frameIdx == frameCount - 1);
-        // Bypass IsFrameReady() when interpolation is active — render all
-        // frames per tick and let vsync pace them.
         if (frameCount > 1 || wndBase->IsFrameReady()) {
             // Sample the full CPU cost of producing this sub-frame.
             auto runT0 = Clock::now();
@@ -1332,16 +1271,14 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
             gui->StartDraw();
             interpreter->StartFrame();
             interpreter->Run(Commands, m);
-            // Emulate N64 osViBlack to prevent a flicker when the scene is drawn
-            // for the falling jiggy transition framebuffer capture.
-            if (port_isViBlack()) {
+            if (OS_ViBlackActive()) {
                 interpreter->mGfxFrameBuffer = 0;
                 auto rapi = interpreter->GetCurrentRenderingAPI();
                 rapi->StartDrawToFramebuffer(0, 1.0f);
                 rapi->ClearFramebuffer(true, false);
             }
             gui->EndDraw();
-            AdaptiveFps_Sample(NsSince(runT0));
+            sLastSubFrameNs = NsSince(runT0);
             interpreter->EndFrame();
             CALL_EVENT(FrameDrawEnd);
         }
@@ -1375,10 +1312,6 @@ SubframePacing ComputeSubframePacing() {
     // Demo/replay modes render at the native rate
     const bool replayMode = func_802E4A08();
     if (!replayMode) {
-        if (CVarGetInteger(CVAR_SETTING("AdaptiveFPS"), 1)) {
-            target_fps = (int)AdaptiveFps_Cap((uint32_t)target_fps);
-        }
-
         // Some music-synced cutscenes cap interpolation at native 30
         int fpsCap = port_getInterpolationFpsCap();
         if (fpsCap > 0 && target_fps > fpsCap) {
@@ -1469,6 +1402,8 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
         activeFrames++;
     }
 
+    sPassBudgetNs = 1000000000LL * subframesPerTick / fps;
+
     if (wnd != nullptr) {
         wnd->SetTargetFps(fps);
         // Hardcoded: CVarGetInteger crashes due to heap corruption in debug builds.
@@ -1493,11 +1428,6 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
         }
     }
     sMapBuildFutures.clear();
-
-    // [port] Release the demo audio hold after kDemoAudioHoldFrames rendered frames.
-    if (sHoldAudio.load() && --sHoldFramesRemaining <= 0) {
-        sHoldAudio.store(false);
-    }
 }
 
 uint32_t GameEngine::GetInterpolationFPS() {

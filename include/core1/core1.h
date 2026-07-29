@@ -54,6 +54,7 @@ ALHeap *audioManager_getALHeapInfo(void);
 OSMesgQueue *audioManager_getDMANotifyMesgQueue(void);
 OSIoMesg *audioManager_getExtraDMAMesg(void);
 OSMesgQueue *audioManager_getFrameMesgQueue(void);
+OSMesgQueue *audioManager_getReplyMesgQueue(void);
 
 
 /* src/core1/overlay.c */
@@ -214,6 +215,8 @@ void dummy_func_80254464(void);
 void defragManager_init(void);
 void defragManager_free(void);
 void defragManager_setPriority(OSPri pri);
+void defragManager_resume(void);
+void defragManager_pause(void);
 
 #ifdef __cplusplus
 }

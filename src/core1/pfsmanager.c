@@ -9,6 +9,7 @@
 #include "version.h"
 #include "checksums.h"
 
+#include "port/DevTools/ThreadWatchdog.h"
 #include "port/Patches/Patches.h"
 
 #define PFSMANAGER_THREAD_STACK_SIZE 0x200
@@ -165,10 +166,9 @@ void pfsManager_update(void) {
 
     osSetThreadPri(0, 0x29);
 
-    // [port] On N64, pfsManager_getStartReadData() is called from the RSP/GFX thread
-    // (code_8C50.c:490) which is #if 0'd on PC. Without it, pfsManagerBusy is never set,
-    // pfsManager_readData() never fires, and osContGetReadData() never fills the pad data.
-    // Poll LUS input directly here each frame instead.
+    // [port] Re-read the latched transaction so the pad data is stable for the
+    // whole tick; the SI completes reads at its own cadence, and the shaping
+    // below rewrites this buffer in place.
     osContGetReadData(pfsManagerContPadData);
 
     // [port] Control-scheme input shaping: right stick -> C-button conversion,
@@ -301,14 +301,13 @@ void pfsManager_update(void) {
 
 void pfsManager_readData(){
     func_8024F35C(0);
-    if(!pfsManagerContStatus.err_no)
-        osContGetReadData(pfsManagerContPadData);
 }
 
 
 void pfsManager_entry(void *arg) {
     do {
         osRecvMesg(&pfsManagerContPollingMsqQ, 0, 1);
+        ThreadWatchdog_Beat(WATCHDOG_PFSMANAGER); // [port] one beat per SI completion
         if(pfsManagerBusy == true){
             pfsManager_readData();
         }
@@ -398,15 +397,24 @@ OSMesgQueue *pfsManager_getFrameMesgQ(void){
     return &pfsManagerContPollingMsqQ;
 }
 
+// [port] Watchdog diagnostics: the SI event-registration lock queue
+// (func_8024F450 parks here), so blocked waits get a name.
+OSMesgQueue *pfsManager_getSiLockQueue(void){
+    return &D_802816E8;
+}
+
 void func_8024F35C(s32 arg0) {
     if(!arg0)
         func_8024F4AC();
     else
         func_8024F450();
-
+#if 0
     if(arg0 || D_802816E8.validCount == 1){
         pfsManagerBusy = arg0; 
     }
+#endif
+    // [port] Rumble safety, don't rely on the OSMesgQueue
+    pfsManagerBusy = arg0; 
 }
 
 bool pfsManager_isBusy(void){

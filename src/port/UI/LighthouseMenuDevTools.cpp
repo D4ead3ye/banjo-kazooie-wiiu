@@ -6,6 +6,7 @@
 //#include <soh/GameVersions.h>
 #include "port/ResourceHelpers.h"
 #include "port/DevTools/DevSequences.h"
+#include "port/DevTools/ThreadWatchdog.h"
 #include "UIWidgets.hpp"
 #include <spdlog/fmt/fmt.h>
 
@@ -74,6 +75,11 @@ void LighthouseMenu::AddMenuDevTools() {
     AddWidget(path, "Nametag Distance", WIDGET_CVAR_SLIDER_FLOAT)
         .CVar(CVAR_DEVELOPER_TOOLS("NametagDist"))
         .Options(FloatSliderOptions().DefaultValue(3000.0f).Min(1000.0f).Max(10000.0f).Step(10.0f));
+    AddWidget(path, "Dump Thread State", WIDGET_BUTTON)
+        .Callback([](WidgetInfo&) { ThreadWatchdog_DumpNow(); })
+        .Options(ButtonOptions().Size(Sizes::Inline).Tooltip(
+            "Log a snapshot of the decomp thread heartbeats and pipeline queue state. The watchdog also logs "
+            "this automatically when a thread stops beating."));
     /*AddWidget(path, "Debug Mode", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_DEVELOPER_TOOLS("DebugMode"))
         .Options(CheckboxOptions().Tooltip("Various debug features, including a level selector from the main menu."));*/
@@ -139,14 +145,6 @@ void LighthouseMenu::AddMenuDevTools() {
         .HideInSearch(true)
         .Options(WindowButtonOptions().Tooltip(
             "Shows the stats window, with your FPS and frametimes, and the OS you're playing on."));
-    AddWidget(path, "Adaptive FPS", WIDGET_CVAR_CHECKBOX)
-        .CVar(CVAR_SETTING("AdaptiveFPS"))
-        .RaceDisable(false)
-        .Options(CheckboxOptions()
-                     .Tooltip("Automatically lowers interpolation FPS in demanding scenes so the game logic never "
-                              "stalls, then restores it when the scene clears. Disable to always target your "
-                              "requested FPS, which may stutter on heavy scenes or weaker hardware.")
-                     .DefaultValue(true));
 
     // Console
     // path.sidebarName = "Console";
