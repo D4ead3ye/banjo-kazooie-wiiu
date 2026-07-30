@@ -239,27 +239,30 @@ void chmole_additionalAbilityLearnActions(ActorMarker *marker, enum asset_e arg1
 int chmole_learnAbility(Actor *this){
     s32 teach_text_id;
     s32 sp28 = 0xe;
-    // Known Ability: Refresher Dialog
-    if(ability_isUnlocked(moleTable[this->actorTypeSpecificField - MOLE_ID_TO_TABLE_SHIFT].ability)){
-        sp28 = 0xf;
-        teach_text_id = moleTable[this->actorTypeSpecificField - MOLE_ID_TO_TABLE_SHIFT].refresher_text_id;
-    }//L802D99EC
-    // New Ability: Learn Dialog & Misc Actions
-    else{
-        func_80347A14(0);
-        this->has_met_before = TRUE;
-        teach_text_id = moleTable[this->actorTypeSpecificField - MOLE_ID_TO_TABLE_SHIFT].teach_text_id;
-        ability_unlock(moleTable[this->actorTypeSpecificField - MOLE_ID_TO_TABLE_SHIFT].ability);
-        switch(moleTable[this->actorTypeSpecificField - MOLE_ID_TO_TABLE_SHIFT].ability){
-            case ABILITY_9_FLIGHT:
-            case ABILITY_D_SHOCK_JUMP:
-                gcsfx_playWithPitch(SFX_113_PAD_APPEARS, 0.9f, 32000);
-                break;
-            case ABILITY_13_1ST_NOTEDOOR:
-                func_802FAD64(ITEM_C_NOTE);
-                break;
-        }
-    }//L802D9A9C
+    // [port] Rando hands out its own item here, whether or not the vanilla move is known.
+    if (!EventSystem_Should(VB_OVERRIDE_MOLEHILL_ABILITY, false, this, &teach_text_id, &sp28)) {
+        // Known Ability: Refresher Dialog
+        if(ability_isUnlocked(moleTable[this->actorTypeSpecificField - MOLE_ID_TO_TABLE_SHIFT].ability)){
+            sp28 = 0xf;
+            teach_text_id = moleTable[this->actorTypeSpecificField - MOLE_ID_TO_TABLE_SHIFT].refresher_text_id;
+        }//L802D99EC
+        // New Ability: Learn Dialog & Misc Actions
+        else{
+            func_80347A14(0);
+            this->has_met_before = TRUE;
+            teach_text_id = moleTable[this->actorTypeSpecificField - MOLE_ID_TO_TABLE_SHIFT].teach_text_id;
+            ability_unlock(moleTable[this->actorTypeSpecificField - MOLE_ID_TO_TABLE_SHIFT].ability);
+            switch(moleTable[this->actorTypeSpecificField - MOLE_ID_TO_TABLE_SHIFT].ability){
+                case ABILITY_9_FLIGHT:
+                case ABILITY_D_SHOCK_JUMP:
+                    gcsfx_playWithPitch(SFX_113_PAD_APPEARS, 0.9f, 32000);
+                    break;
+                case ABILITY_13_1ST_NOTEDOOR:
+                    func_802FAD64(ITEM_C_NOTE);
+                    break;
+            }
+        }//L802D9A9C
+    }
     gcdialog_showDialog(teach_text_id, sp28, this->position, this->marker, chmole_healthRefill, chmole_additionalAbilityLearnActions);
     return TRUE;
 }
