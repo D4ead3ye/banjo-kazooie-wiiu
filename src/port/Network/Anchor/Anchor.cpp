@@ -92,8 +92,19 @@ void Anchor::ProcessOutgoingPackets() {
     }
 }
 
+bool Anchor::AllowedWithoutGameSync(const std::string& packetType) {
+    return packetType == HANDSHAKE || packetType == ALL_CLIENT_STATE || packetType == UPDATE_CLIENT_STATE ||
+           packetType == UPDATE_ROOM_STATE || packetType == MAP_LOAD || packetType == PLAYER_UPDATE ||
+           packetType == PLAYER_UPDATE_FULL || packetType == PLAYER_ANIM || packetType == PLAYER_SUBRANGE ||
+           packetType == PLAYER_TRANSFORM || packetType == PLAYER_SFX || packetType == SERVER_MESSAGE;
+}
+
 void Anchor::SendJsonToRemote(nlohmann::json payload) {
     if (!isConnected) {
+        return;
+    }
+
+    if (!roomState.syncItemsAndFlags && !AllowedWithoutGameSync(payload.value("type", std::string()))) {
         return;
     }
 
@@ -124,6 +135,12 @@ void Anchor::OnIncomingJson(nlohmann::json payload) {
     }
 
     std::string packetType = payload["type"].get<std::string>();
+
+    // Same rule inbound: a peer on an older build must not push world state into a room
+    // that isn't syncing it.
+    if (!roomState.syncItemsAndFlags && !AllowedWithoutGameSync(packetType)) {
+        return;
+    }
 
     // Ignore packets from mismatched clients, except for ALL_CLIENT_STATE, UPDATE_CLIENT_STATE, and
     // PLAYER_UPDATE(_FULL)
