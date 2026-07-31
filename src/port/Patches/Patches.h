@@ -194,6 +194,12 @@ int32_t port_hutSmash_countForCurrentLevel(void);
 void port_jiggyCrane_broadcast(int32_t stage);
 void port_jiggyCrane_remoteApply(int32_t stage);
 
+// Rate-limited: a marker reached cube_removeProp with a propPtr outside its cube.
+void port_warnPropNotInCube(int32_t index, int32_t propCnt);
+
+// Rate-limited: a cube's node-prop split index passed 31, where the old :5 field wrapped.
+void port_warnNodePropSplit(int32_t splitIndex, int32_t nodeCnt);
+
 #ifdef __cplusplus
 }
 #endif
