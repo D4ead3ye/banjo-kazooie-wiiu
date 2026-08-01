@@ -66,6 +66,10 @@ void FrameInterpolation_RecordCameraPosition(const float pos[3]);
 void FrameInterpolation_NoInterpolatePush(void);
 void FrameInterpolation_NoInterpolatePop(void);
 
+// Like NoInterpolatePush, but keeps the camera half of the transform live.
+void FrameInterpolation_CameraRelativePush(void);
+void FrameInterpolation_CameraRelativePop(void);
+
 // kind matches the three sprite paths in sprite/render.c:
 //   BILLBOARD       — func_80344138. camYaw/camPitch, no spriteRoll.
 //   BILLBOARD_ROLL  — func_80344424. camYaw/camPitch + spriteRoll forward.
@@ -78,6 +82,9 @@ void FrameInterpolation_NoInterpolatePop(void);
 void FrameInterpolation_RecordSpriteDraw(int kind, void* dst, const float camRelPos[3], const float scale[3],
                                          float camYaw, float camPitch, float spriteRoll, const float rotation[3],
                                          int mirrored);
+
+void FrameInterpolation_RecordAnimVertices(void* dst, const void* vertices, int32_t count);
+void FrameInterpolation_ApplyAnimVertices(float t);
 
 // Drop the prev tree at known camera cuts (map load, camera type change).
 void FrameInterpolation_DontInterpolateCamera(void);
