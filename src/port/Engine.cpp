@@ -1090,7 +1090,7 @@ void GameEngine::StartFrame() const {
         case KbScancode::LUS_KB_TAB: {
             // Toggle HD Assets
             CVarSetInteger(CVAR_SETTING("Mods.AlternateAssets"),
-                           !CVarGetInteger(CVAR_SETTING("Mods.AlternateAssets"), 0));
+                           !CVarGetInteger(CVAR_SETTING("Mods.AlternateAssets"), 1));
             break;
         }
         case KbScancode::LUS_KB_F4: {
@@ -1298,7 +1298,7 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
         interpreter->mInterpolationIndex++;
     }
 
-    bool curAltAssets = CVarGetInteger(CVAR_SETTING("Mods.AlternateAssets"), 0);
+    bool curAltAssets = CVarGetInteger(CVAR_SETTING("Mods.AlternateAssets"), 1);
     if (prevAltAssets != curAltAssets) {
         prevAltAssets = curAltAssets;
         Ship::Context::GetRawInstance()->GetResourceManager()->SetAltAssetsEnabled(curAltAssets);
