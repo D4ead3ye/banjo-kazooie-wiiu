@@ -33,7 +33,7 @@ extern "C" s32 osAiSetNextBuffer(void* buff, size_t len) {
         AudioPlayerPlayFrame(silence.data(), silence.size());
     }
 
-    float masterVol = CVarGetInteger(CVAR_SETTING("Volume.Master"), 100) / 100.0f;
+    float masterVol = CVarGetInteger(CVAR_SETTING("Volume.Master"), 40) / 100.0f;
     if (masterVol >= 1.0f) {
         AudioPlayerPlayFrame((const uint8_t*)buff, len);
         return 0;
