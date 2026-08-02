@@ -108,5 +108,4 @@ If you want to playtest a continuous integration build, you can find them at the
 
 # Special Thanks:
 
-* GiantJigglypuff3 for their extensive and continued Banjo Decomp documentation  
 * Fredomato, scorched11 for work on rando
