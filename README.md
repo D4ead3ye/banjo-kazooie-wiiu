@@ -108,4 +108,5 @@ If you want to playtest a continuous integration build, you can find them at the
 
 # Special Thanks:
 
+* The Banjo decomp team
 * Fredomato, scorched11 for work on rando
