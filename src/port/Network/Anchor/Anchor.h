@@ -31,6 +31,7 @@ typedef struct {
     bool isGameComplete;
     GameMap map, prevMap;
     s32 exit, prevExit;
+    s32 cutsceneReturnMap;
 
     DummyPlayer* dummy;
 } AnchorClient;
@@ -209,6 +210,11 @@ public:
     bool GetCurrentMapPlayers();
 
     bool IsGlobalRoom();
+
+    // The single gate for every Anchor behaviour that touches the world. A presence-only
+    // room (the global room, or a private room with "Sync Items & Flags" off) has to play
+    // exactly like single player, so only dummy players are allowed past this.
+    bool IsWorldSyncActive();
 
     // Presence/position/plumbing packets, the only ones allowed through when the room
     // is not syncing game state. Anything absent is treated as world state and dropped
