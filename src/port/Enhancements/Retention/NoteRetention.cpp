@@ -139,6 +139,11 @@ int32_t countCollectedForLevel(int32_t levelId) {
     return total;
 }
 
+bool isInParade() {
+    return volatileFlag_get(VOLATILE_FLAG_1F_IN_CHARACTER_PARADE) ||
+           volatileFlag_get(VOLATILE_FLAG_C1_IN_FINAL_CHARACTER_PARADE);
+}
+
 } // namespace
 
 extern "C" void port_noteRetention_getSizeAndPtr(int32_t* size, uint8_t** addr) {
@@ -386,7 +391,7 @@ void RegisterNoteRetention_Init() {
         }
         const int32_t level = sPendingSeedLevel;
         sPendingSeedLevel = -1;
-        if (!systemActive() || !applyEnabled()) {
+        if (!systemActive() || !applyEnabled() || isInParade()) {
             return;
         }
         item_adjustByDiffWithoutHud(ITEM_C_NOTE, countCollectedForLevel(level) - item_getCount(ITEM_C_NOTE));
