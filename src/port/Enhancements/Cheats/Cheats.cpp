@@ -331,12 +331,8 @@ void RegisterFastTransform_Init() {
 
 // Disable Mumbo untransform when going too far
 void RegisterNoMumboUntransform_Init() {
-    COND_HOOK(GameFrameUpdate, EVENT_PRIORITY_NORMAL, CVarGetInteger(CVAR_NO_MUMBO_UNTRANSFORM, 0), [](IEvent* event) {
-        // Prevent Mumbo from triggering untransform dialog/warn
-        // These functions check game state and show dialog
-        // We disable them by setting a flag they check
-        volatileFlag_set((enum volatile_flags_e)207, 1); // Prevents detransform warning
-    });
+    COND_VB_SHOULD(VB_MUMBO_DETRANSFORM, EVENT_PRIORITY_NORMAL, CVarGetInteger(CVAR_NO_MUMBO_UNTRANSFORM, 0),
+                   { *should = false; });
 }
 
 // ============================================================================

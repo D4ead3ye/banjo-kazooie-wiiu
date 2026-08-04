@@ -48,6 +48,7 @@ typedef enum VBehaviorID {
     VB_DISABLE_SNACKER,
     VB_SAVE_AND_EXIT,
     VB_MUMBO_HUT_TRANSFORM_CUTSCENE,
+    VB_MUMBO_DETRANSFORM,
 
     // Rando object behavior
     VB_OVERRIDE_BOTTLES_TEXT_CALLBACK,
