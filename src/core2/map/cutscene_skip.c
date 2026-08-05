@@ -135,6 +135,9 @@ void func_8031CB50(enum map_e map_id, s32 exit_id, s32 arg2) {
     s32 sp1C;
 
     if ((D_80383190 == 0) && (getGameMode() != GAME_MODE_8_BOTTLES_BONUS) && (getGameMode() != GAME_MODE_7_ATTRACT_DEMO)) {
+        // [port] Romhack gate: a listener may call musicKeepsPlaying() here to
+        // carry a special-music state across this warp.
+        EventSystem_Should(VB_WARP_KEEPS_MUSIC, true, map_id);
         sp1C = func_803226E8(gsworld_getMap());
         if ((func_803226E8(map_id) != sp1C) && (func_80322914() == 0)) {
             func_8025A388(0, 0x4E2);
@@ -1374,18 +1377,8 @@ void warp_smExitBanjosHouse(NodeProp *arg0, ActorMarker *arg1) {
 }
 
 void warp_lairEnterMMLobbyFromSMLevel(NodeProp *arg0, ActorMarker *arg1) {
-    // [port] BB romhacks can override this warp destination via BKCF; port
-    // listeners can refine further by responding to OnWarpResolveDest.
     s32 dest = 0x6912;
-    s32 bkcf = port_getRomhackWarpEnterLair();
-    if (bkcf >= 0) {
-        dest = bkcf;
-    }
-    s32 mapOverride = port_getRomhackStartLevel2();
-    if (mapOverride >= 0) {
-        dest = (mapOverride << 8) | (dest & 0xFF);
-    }
-    CALL_EVENT(OnWarpResolveDest, WARP_ID_LAIR_ENTER_MM_LOBBY_FROM_SM_LEVEL, 0x6912, bkcf, &dest);
+    CALL_EVENT(OnWarpResolveDest, WARP_ID_LAIR_ENTER_MM_LOBBY_FROM_SM_LEVEL, 0x6912, -1, &dest);
     func_8031CC8C(arg0, dest);
 }
 
@@ -1522,9 +1515,15 @@ void func_8031FAB4(NodeProp *arg0, ActorMarker *arg1) {
 void warp_lairEnterLairFromSMLevel(NodeProp *arg0, ActorMarker *arg1) {
     if (fileProgressFlag_get(FILEPROG_BD_ENTER_LAIR_CUTSCENE) != 0) {
         // MM Lobby
-        // [port] BB romhacks can override this warp destination
-        s32 override = port_getRomhackWarpEnterLair();
-        func_8031CC8C(arg0, override >= 0 ? override : 0x6912);
+        // [port] BB romhacks can override this warp destination via BKCF; port
+        // listeners can refine further by responding to OnWarpResolveDest.
+        s32 dest = 0x6912;
+        s32 bkcf = port_getRomhackWarpEnterLair();
+        if (bkcf >= 0) {
+            dest = bkcf;
+        }
+        CALL_EVENT(OnWarpResolveDest, WARP_ID_LAIR_ENTER_LAIR_FROM_SM_LEVEL, 0x6912, bkcf, &dest);
+        func_8031CC8C(arg0, dest);
     } else {
         fileProgressFlag_set(FILEPROG_BD_ENTER_LAIR_CUTSCENE, 1);
         // Enter Lair Cutscene

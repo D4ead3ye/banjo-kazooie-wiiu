@@ -1,5 +1,6 @@
 #include "Anchor.h"
 #include "Authority.h"
+#include <cstring>
 #include <nlohmann/json.hpp>
 #include <libultraship/libultraship.h>
 #include "port/Engine.h"
@@ -32,7 +33,11 @@ void Anchor::Enable() {
 }
 
 bool Anchor::IsGlobalRoom() {
-    return std::string("lh-global") == CVarGetString(CVAR_REMOTE_ANCHOR("RoomId"), "");
+    return strcmp(CVarGetString(CVAR_REMOTE_ANCHOR("RoomId"), ""), "lh-global") == 0;
+}
+
+bool Anchor::IsWorldSyncActive() {
+    return isConnected && !IsGlobalRoom() && roomState.syncItemsAndFlags != 0;
 }
 
 void Anchor::Disable() {
@@ -47,6 +52,7 @@ void Anchor::Disable() {
         }
     }
     clients.clear();
+    PlayerColors_reset();
     RefreshClientActors();
 }
 
@@ -54,8 +60,8 @@ void Anchor::OnConnected() {
     SendPacket_Handshake();
     RegisterHooks();
 
-    port_noteRetention_setForced(1);
-    port_jinjoRetention_setForced(1);
+    port_noteRetention_setForced(IsGlobalRoom() ? 0 : 1);
+    port_jinjoRetention_setForced(IsGlobalRoom() ? 0 : 1);
 
     if (IsSaveLoaded()) {
         SendPacket_RequestTeamState();
@@ -92,8 +98,19 @@ void Anchor::ProcessOutgoingPackets() {
     }
 }
 
+bool Anchor::AllowedWithoutGameSync(const std::string& packetType) {
+    return packetType == HANDSHAKE || packetType == ALL_CLIENT_STATE || packetType == UPDATE_CLIENT_STATE ||
+           packetType == UPDATE_ROOM_STATE || packetType == MAP_LOAD || packetType == PLAYER_UPDATE ||
+           packetType == PLAYER_UPDATE_FULL || packetType == PLAYER_ANIM || packetType == PLAYER_SUBRANGE ||
+           packetType == PLAYER_TRANSFORM || packetType == PLAYER_SFX || packetType == SERVER_MESSAGE;
+}
+
 void Anchor::SendJsonToRemote(nlohmann::json payload) {
     if (!isConnected) {
+        return;
+    }
+
+    if (!roomState.syncItemsAndFlags && !AllowedWithoutGameSync(payload.value("type", std::string()))) {
         return;
     }
 
@@ -124,6 +141,12 @@ void Anchor::OnIncomingJson(nlohmann::json payload) {
     }
 
     std::string packetType = payload["type"].get<std::string>();
+
+    // Same rule inbound: a peer on an older build must not push world state into a room
+    // that isn't syncing it.
+    if (!roomState.syncItemsAndFlags && !AllowedWithoutGameSync(packetType)) {
+        return;
+    }
 
     // Ignore packets from mismatched clients, except for ALL_CLIENT_STATE, UPDATE_CLIENT_STATE, and
     // PLAYER_UPDATE(_FULL)
@@ -284,13 +307,32 @@ void Anchor::SetDummyPlayerClientId(const Actor* actor, uint32_t clientId) {
     ObjectExtension::GetInstance().Set<DummyPlayerClientId>(actor, DummyPlayerClientId{ clientId });
 }
 
+// Roughly the top of Banjo's head.
+static constexpr f32 kNametagHeight = 155.0f;
+
+// The menu exposes the nametag range as a multiplier of this, the same way Extended Draw
+// Distance scales off its own base.
+static constexpr f32 kNametagRangeUnit = 3000.0f;
+
 void Anchor::DrawDummies(OnPlayerDraw* event) {
     if (!isConnected)
         return;
+    const bool showNametags = CVarGetInteger(CVAR_REMOTE_ANCHOR("Nametags"), 1) != 0;
+    const f32 nametagRange = kNametagRangeUnit * CVarGetFloat(CVAR_REMOTE_ANCHOR("NametagScale"), 1.0f);
     for (const auto& [id, dummy] : dummies) {
         FrameInterpolation_RecordOpenChild(clients[id].name.c_str(), 0);
         dummy->Draw(event->gfx, event->mtx, event->vtx);
         FrameInterpolation_RecordCloseChild();
+
+        // A nameless client would otherwise get an empty tag box floating over them.
+        const std::string label = showNametags ? GetNametagLabel(id) : std::string();
+        if (dummy->dummy_isVisible() && !label.empty()) {
+            f32 position[3];
+            dummy->dummy_getPosition(position);
+            position[1] += kNametagHeight;
+            const f32 fade = Nametag::FadeForDistance(position[0], position[1], position[2], nametagRange);
+            Nametag::Push(id, position[0], position[1], position[2], label.c_str(), fade);
+        }
     }
 }
 
@@ -301,10 +343,16 @@ void Anchor::ClearDummies() {
     dummies.clear();
 }
 
-// Lets decomp gate Anchor-only catch-up paths so single player keeps vanilla behaviour.
+// Presence only: true in any room, including the global one. For dummy-player visuals.
 extern "C" s32 port_anchor_isConnected(void) {
     Anchor* anchor = Anchor::GetInstance();
     return (anchor != nullptr && anchor->isConnected) ? 1 : 0;
+}
+
+// Lets decomp gate Anchor-only catch-up paths so single player keeps vanilla behaviour.
+extern "C" s32 port_anchor_isWorldSyncActive(void) {
+    Anchor* anchor = Anchor::GetInstance();
+    return (anchor != nullptr && anchor->IsWorldSyncActive()) ? 1 : 0;
 }
 
 // actorArray_free tears down actors/markers without firing OnActorDestroy; forget them all.
@@ -354,6 +402,35 @@ void Anchor::OnActorDestroyed(Actor* actor) {
     }
 }
 
+// Queues the honeycomb spawn the switch press performs.
+extern "C" void __baMarker_8028BA00(s32 honeycombId);
+
+// The GV cactus and RBB boathouse honeycombs only exist once their switch is
+// beak-busted: marker.c sets a map flag and spawns the actor. A teammate's press
+// reaches us as flag state, so spawn the same actor the local press would have.
+void Anchor::RevealSwitchHoneycomb() {
+    s32 uid;
+    s32 flag;
+
+    switch (gsworld_getMap()) {
+        case MAP_12_GV_GOBIS_VALLEY:
+            uid = HONEYCOMB_B_GV_CACTUS;
+            flag = 0xD;
+            break;
+        case MAP_36_RBB_BOATHOUSE:
+            uid = HONEYCOMB_F_RBB_BOAT_HOUSE;
+            flag = 0;
+            break;
+        default:
+            return;
+    }
+
+    if (!mapSpecificFlags_get(flag) || honeycombscore_get((enum honeycomb_e)uid)) {
+        return;
+    }
+    __baMarker_8028BA00(uid);
+}
+
 void Anchor::RemoveDummy(uint32_t clientId) {
     if (dummies.contains(clientId)) {
         dummies[clientId]->dummy_despawnActor();
@@ -361,27 +438,46 @@ void Anchor::RemoveDummy(uint32_t clientId) {
     }
 }
 
+extern "C" s32 port_cutsceneWarp_getReturnMap(void);
 extern void port_breakable_clearForLevel(int32_t levelId);
 extern void port_hutSmash_clearForLevel(int32_t levelId);
 extern void port_eggToll_clearForLevel(int32_t levelId);
 extern void port_puzzleStep_clearForLevel(int32_t levelId);
 extern void port_carriedSync_clearForLevel(int32_t levelId);
 
+s32 Anchor_LevelOfMap(s32 map) {
+    if (map <= 0 || map >= MAP_NUM_MAPS) {
+        return 0;
+    }
+    s32 level = (s32)map_getLevel((enum map_e)map);
+    return (level > 0 && level < 0x20) ? level : 0;
+}
+
 void Anchor::SweepUnoccupiedLevelState(GameMap selfMap) {
+    // Nothing is shared without world sync, so these stores hold only our own progress —
+    // dropping them on a level change would undo single-player state.
+    if (!IsWorldSyncActive()) {
+        return;
+    }
+
+    s32 selfLevel = Anchor_LevelOfMap((s32)selfMap);
+    if (selfLevel == 0 || selfLevel == (s32)LEVEL_D_CUTSCENE || selfMap == MAP_91_FILE_SELECT) {
+        return;
+    }
+
     bool occupied[0x20] = { false }; // level_e ids are small; matches jinjo retention slot count
     auto markOccupied = [&occupied](s32 map) {
-        if (map <= 0 || map >= MAP_NUM_MAPS) {
-            return;
-        }
-        s32 level = (s32)map_getLevel((enum map_e)map);
-        if (level > 0 && level < 0x20) {
+        s32 level = Anchor_LevelOfMap(map);
+        if (level != 0) {
             occupied[level] = true;
         }
     };
     markOccupied((s32)selfMap);
+    markOccupied(port_cutsceneWarp_getReturnMap());
     for (auto& [clientId, client] : clients) {
         if (!client.self && client.online && client.isSaveLoaded) {
             markOccupied((s32)client.map);
+            markOccupied(client.cutsceneReturnMap);
         }
     }
     for (s32 level = 1; level < 0x20; level++) {
@@ -397,6 +493,19 @@ void Anchor::SweepUnoccupiedLevelState(GameMap selfMap) {
 
 void Anchor::RegisterDummy(DummyPlayer* dummy, uint32_t clientID) {
     dummies.emplace(clientID, dummy);
+}
+
+// Pushes a client's chosen model colours onto their stand-in so the next draw picks them up.
+void Anchor::ApplyClientCosmetics(uint32_t clientId) {
+    if (!clients.contains(clientId)) {
+        return;
+    }
+    AnchorClient& client = clients[clientId];
+    if (client.dummy == nullptr) {
+        return;
+    }
+    client.dummy->dummy_setOwner(clientId);
+    client.dummy->dummy_setColors(client.colors);
 }
 
 void Anchor::EvaluateDummyForClient(uint32_t clientId) {
@@ -437,6 +546,21 @@ bool Anchor::IsSaveLoaded() {
 
 bool Anchor::ShouldShowNotifications() {
     return CVarGetInteger(CVAR_REMOTE_ANCHOR("Notifications"), 1) != 0;
+}
+
+// Public global room shows player number instead of custom name
+std::string Anchor::GetNametagLabel(uint32_t clientId) {
+    auto it = clients.find(clientId);
+    if (it == clients.end()) {
+        return "";
+    }
+    if (!IsGlobalRoom()) {
+        return it->second.name;
+    }
+    if (it->second.joinOrder == 0) {
+        return "Player";
+    }
+    return "Player " + std::to_string(it->second.joinOrder);
 }
 
 std::string Anchor::GetClientName(uint32_t clientId) {

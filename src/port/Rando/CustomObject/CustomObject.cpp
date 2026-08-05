@@ -168,6 +168,10 @@ Actor* CustomObject::SpawnCustomActorEX(RandoCheckId randoCheckId, int32_t posit
     Actor* customActor = actor_new(position, 0, actorInfo, flags);
 
     if (customActor != NULL) {
+        // Music notes don't cast shadows, custom or otherwise.
+        if (actorInfo->actorId == ACTOR_51_MUSIC_NOTE) {
+            customActor->unk124_6 = 0;
+        }
         customActor = SetCustomActorParametersEX(randoCheckId, customActor);
         randoSpawnedCheckIds.push_back(randoCheckId);
     }
@@ -213,7 +217,8 @@ void CustomObject::FlushRandoSpawnQueue() {
                                                               &actorInfoMap.at(randoActorId).first,
                                                               actorInfoMap.at(randoActorId).second);
 
-        if (randoSaveCheck.obtained && RANDO_SAVE_OPTIONS[RO_SPAWN_JUNK].optionValue == RO_GENERIC_ON) {
+        if (customActor != NULL && randoSaveCheck.obtained &&
+            RANDO_SAVE_OPTIONS[RO_SPAWN_JUNK].optionValue == RO_GENERIC_ON) {
             customActor->marker->unk14_21 = true;
             customActor->scale = 1.0f;
         }

@@ -21,8 +21,8 @@ void port_pipelineSyncPoint(void);
 int port_getDemoViCount(void);
 void port_setDemoViCount(int viCount);
 int port_getDemoDisplayViCount(int rawViCount);
+void port_tickCutsceneStutter(void);
 int port_getCutsceneExtraVis(void);
-int port_getInterpolationFpsCap(void);
 
 // Localization (Localization.cpp)
 
@@ -83,6 +83,14 @@ int port_spriteSizeCulled(float depth, float size, float baseThreshold, int disa
 float port_hudOrthoShift(float refX);
 void port_modelRenderResetTLUT(Gfx** gfx);
 
+// Vertex-animated models (AnimVertexPatches.cpp)
+
+// Recycles the per-draw vertex arena; once per tick, before the display list is built.
+void port_animVtx_beginTick(void);
+// Copies the just-posed vertices somewhere only this draw points at, and repoints
+// segment 0x01 at the copy.
+void port_modelRender_snapshotAnimVertices(Gfx** gfx, void* vertices, int32_t count);
+
 // Mirror (MirrorPatches.cpp)
 
 int port_mirror_active(void);
@@ -120,9 +128,13 @@ void romhack_RewriteActorSpawn(void* actorInfo, u32* flags);
 void port_beginDemoAudioHold(void);
 void port_tickDemoAudioHold(void);
 int port_audioHeld(void);
+void port_noteMainLoopAlive(void);
+int port_audioStallHold(void);
+int32_t port_audioCatchupFrames(void);
 
+// One-shot cues when a teammate's file-progress flag arrives
+void port_progressFlag_remoteCue(int32_t progressFlag);
 void port_notedoor_remoteOpen(int32_t progressFlag);
-
 void port_leveldoor_remoteOpen(int32_t progressFlag);
 
 void port_breakable_remoteBreak(int32_t progressFlag);
@@ -133,6 +145,8 @@ void port_breakable_remoteBreakAt(int32_t markerId, int32_t x, int32_t y, int32_
 void port_breakable_recordBreak(int32_t markerId, int32_t x, int32_t y, int32_t z);
 
 int32_t port_breakable_isBroken(int32_t map, int32_t markerId, int32_t x, int32_t y, int32_t z);
+
+int32_t port_cutsceneWarp_getReturnMap(void);
 
 void port_eggToll_onAdvance(int32_t map, int32_t secondaryId, int32_t stage);
 int32_t port_eggToll_getStage(int32_t map, int32_t secondaryId);
@@ -169,9 +183,15 @@ void port_remoteCarry_setCarried(uint32_t clientId, int32_t markerId, float offs
 void port_remoteCarry_throw(uint32_t clientId, int32_t markerId, float start[3], float target[3]);
 void port_remoteCarry_reset(void);
 void port_anchorDummies_onActorsFreed(void);
+
+// Connected, in a real room, syncing world state.
+int32_t port_anchor_isWorldSyncActive(void);
+
+// The puzzle mirrors below are home-scoped.
 void port_puzzleStep_orBits(int32_t puzzleId, int32_t bits);
 int32_t port_puzzleStep_get(int32_t puzzleId);
 int32_t port_puzzleStep_getForMap(int32_t map, int32_t puzzleId);
+int32_t port_puzzleStep_getForLevel(int32_t levelId, int32_t puzzleId);
 
 void port_puzzlePos_mark(int32_t puzzleId, int32_t x, int32_t y, int32_t z);
 int32_t port_puzzlePos_isMarked(int32_t puzzleId, int32_t x, int32_t y, int32_t z);

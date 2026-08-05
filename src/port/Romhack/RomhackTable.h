@@ -29,7 +29,7 @@ static constexpr RomhackTableEntry kRomhackTable[] = {
     { "13f4fa8a180fe5775a606486effbafeb58862d26", "CutThroatCoast", true },
 
     // The Gruntch, Santa's Village
-    { "bed22dd8ef931228fbc94f006dfc718a4d4f6f8c", "Gruntch", false },
+    { "bed22dd8ef931228fbc94f006dfc718a4d4f6f8c", "Gruntch", true },
 
     // Snow Glow Village
     { "23596c2858283b847e9e0ff44785e35110002fc7", "SnowGlowVillage", false },
@@ -47,6 +47,9 @@ static constexpr RomhackTableEntry kRomhackTable[] = {
     // in place, which aGameConfig has no schema for. Mostly actor table
     // rebinds, though Nostalgia 64 also fills spare overlay space with its own
     // functions and repoints update funcs at them.
+
+    // Banjo-Dreamie
+    { "3972b2a3aca230dde1cbf66ffa6f052327b7d3fa", "Dreamie", true },
 
     // Jiggies of Time
     { "ad7ef5ba9051c6a360c1d60546d5ca8cf61f0d92", "JiggiesOfTime", true },

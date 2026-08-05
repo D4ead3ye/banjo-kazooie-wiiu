@@ -9,12 +9,16 @@
 #include <unordered_map>
 
 #include <libultraship/libultra/gu.h>
+#include <libultraship/libultra/gbi.h>
 
 namespace {
 
 constexpr uint64_t kFnvSeed = 0xcbf29ce484222325ULL;
 constexpr uint64_t kSigKindToMtx = 0x1ULL;
 constexpr uint64_t kSigKindSprite = 0x2ULL;
+constexpr uint64_t kSigKindAnimVtx = 0x3ULL;
+constexpr uint64_t kSigKindProjRot = 0x4ULL;
+constexpr float kAnimVtxSnapRatio = 0.5f;
 constexpr float kSpriteSnapDistSq = 300.0f * 300.0f;
 constexpr int kRingSlots = 4;
 constexpr uint32_t kAmbiguousSig = UINT32_MAX;
@@ -24,7 +28,16 @@ struct ToMtxData {
     float src[4][4];
     uint64_t pathSig;
     bool noInterpolate;
+    bool camRelFixup;
     bool ambiguousSig;
+};
+
+struct AnimVtxData {
+    void* dst;
+    uint32_t count;
+    uint64_t pathSig;
+    bool ambiguousSig;
+    std::vector<int16_t> pos;
 };
 
 struct SpriteDrawData {
@@ -48,12 +61,16 @@ struct CameraProjRotData {
     float rollDeg;
     float pitchDeg;
     float yawDeg;
+    uint64_t pathSig;
+    bool ambiguousSig;
 };
 
 struct ScopeFrame {
     uint64_t pathHash;
     uint32_t toMtxIdx;
     uint32_t spriteIdx;
+    uint32_t animVtxIdx;
+    uint32_t projRotIdx;
     const char* key;
     uintptr_t id;
 };
@@ -62,8 +79,11 @@ struct FrameTree {
     std::vector<ToMtxData> toMtxs;
     std::vector<CameraProjRotData> projRots;
     std::vector<SpriteDrawData> sprites;
+    std::vector<AnimVtxData> animVtxs;
     std::unordered_map<uint64_t, uint32_t> sigToToMtx;
     std::unordered_map<uint64_t, uint32_t> sigToSprite;
+    std::unordered_map<uint64_t, uint32_t> sigToAnimVtx;
+    std::unordered_map<uint64_t, uint32_t> sigToProjRot;
     std::vector<ScopeFrame> scopeStack;
     float cameraPos[3] = { 0.0f, 0.0f, 0.0f };
     bool hasCameraPos = false;
@@ -76,8 +96,11 @@ struct FrameTree {
         toMtxs.clear();
         projRots.clear();
         sprites.clear();
+        animVtxs.clear();
         sigToToMtx.clear();
         sigToSprite.clear();
+        sigToAnimVtx.clear();
+        sigToProjRot.clear();
         scopeStack.clear();
         cameraPos[0] = cameraPos[1] = cameraPos[2] = 0.0f;
         hasCameraPos = false;
@@ -98,11 +121,27 @@ struct PairedSprite {
     bool snap;
 };
 
+struct PairedAnimVtx {
+    uint32_t currIdx;
+    uint32_t prevIdx;
+    bool snap;
+};
+
+struct PairedProjRot {
+    uint32_t currIdx;
+    uint32_t prevIdx;
+};
+
 struct InterpolationCache {
     bool built = false;
     bool valid = false;
     std::vector<PairedToMtx> pairedToMtxs;
     std::vector<PairedSprite> pairedSprites;
+    std::vector<PairedAnimVtx> pairedAnimVtxs;
+    std::vector<PairedProjRot> pairedProjRots;
+    std::vector<uint32_t> camRelFixups;
+    float cameraDelta[3] = { 0.0f, 0.0f, 0.0f };
+    bool hasCameraDelta = false;
     bool prevHasCameraPos = false;
     float prevCameraPos[3] = { 0.0f, 0.0f, 0.0f };
 
@@ -111,6 +150,10 @@ struct InterpolationCache {
         valid = false;
         pairedToMtxs.clear();
         pairedSprites.clear();
+        pairedAnimVtxs.clear();
+        pairedProjRots.clear();
+        camRelFixups.clear();
+        hasCameraDelta = false;
         prevHasCameraPos = false;
     }
 };
@@ -128,6 +171,7 @@ bool gRenderShould = false;
 bool gRecording = false;
 bool gShouldInterpolate = true;
 int gNoInterpolateDepth = 0;
+int gCameraRelativeDepth = 0;
 
 std::unordered_map<const void*, uint64_t> gIdMap;
 uint64_t gNextId = 1;
@@ -196,13 +240,15 @@ void FrameInterpolation_StartRecord(void) {
     gCollidedParentId = 0;
     gRecord->reset();
     gRecord->toMtxs.reserve(512);
-    gRecord->projRots.reserve(4);
+    gRecord->projRots.reserve(16);
     gRecord->sprites.reserve(256);
     gRecord->sigToToMtx.reserve(512);
     gRecord->sigToSprite.reserve(64);
-    gRecord->scopeStack.push_back({ kFnvSeed, 0, 0, "root", 0 });
+    gRecord->sigToProjRot.reserve(16);
+    gRecord->scopeStack.push_back({ kFnvSeed, 0, 0, 0, 0, "root", 0 });
     gShouldInterpolate = true;
     gNoInterpolateDepth = 0;
+    gCameraRelativeDepth = 0;
     gRecording = true;
 }
 
@@ -285,7 +331,7 @@ void FrameInterpolation_RecordOpenChild(const void* key, uintptr_t id) {
     uint64_t h = gRecord->scopeStack.back().pathHash;
     h = fnvMix(h, reinterpret_cast<uintptr_t>(key));
     h = fnvMix(h, static_cast<uint64_t>(id));
-    gRecord->scopeStack.push_back({ h, 0, 0, static_cast<const char*>(key), id });
+    gRecord->scopeStack.push_back({ h, 0, 0, 0, 0, static_cast<const char*>(key), id });
 }
 
 void FrameInterpolation_RecordCloseChild(void) {
@@ -322,7 +368,8 @@ void FrameInterpolation_RecordMatrixToMtx(void* dst, const float src[4][4]) {
     d.dst = dst;
     std::memcpy(d.src, src, sizeof(float) * 16);
     d.pathSig = sig;
-    d.noInterpolate = (gNoInterpolateDepth > 0);
+    d.noInterpolate = (gNoInterpolateDepth > 0 || gCameraRelativeDepth > 0);
+    d.camRelFixup = (gCameraRelativeDepth > 0);
     d.ambiguousSig = false;
     recordSigCollision(gRecord->sigToToMtx, gRecord->toMtxs, sig, idx, gRecord->sigCollisions, gRecord->scopeStack);
 }
@@ -332,6 +379,12 @@ void FrameInterpolation_RecordCameraProjectionRotation(void* rollMtx, float roll
     if (!gRecording) {
         return;
     }
+
+    ScopeFrame& scope = gRecord->scopeStack.back();
+    uint64_t sig = fnvMix(fnvMix(scope.pathHash, kSigKindProjRot), scope.projRotIdx);
+    scope.projRotIdx++;
+
+    uint32_t idx = static_cast<uint32_t>(gRecord->projRots.size());
     gRecord->projRots.emplace_back();
     CameraProjRotData& d = gRecord->projRots.back();
     d.rollMtx = rollMtx;
@@ -340,6 +393,9 @@ void FrameInterpolation_RecordCameraProjectionRotation(void* rollMtx, float roll
     d.rollDeg = rollDeg;
     d.pitchDeg = pitchDeg;
     d.yawDeg = yawDeg;
+    d.pathSig = sig;
+    d.ambiguousSig = false;
+    recordSigCollision(gRecord->sigToProjRot, gRecord->projRots, sig, idx, gRecord->sigCollisions, gRecord->scopeStack);
 }
 
 void FrameInterpolation_RecordCameraPosition(const float pos[3]) {
@@ -359,6 +415,16 @@ void FrameInterpolation_NoInterpolatePush(void) {
 void FrameInterpolation_NoInterpolatePop(void) {
     if (gNoInterpolateDepth > 0) {
         gNoInterpolateDepth--;
+    }
+}
+
+void FrameInterpolation_CameraRelativePush(void) {
+    gCameraRelativeDepth++;
+}
+
+void FrameInterpolation_CameraRelativePop(void) {
+    if (gCameraRelativeDepth > 0) {
+        gCameraRelativeDepth--;
     }
 }
 
@@ -391,6 +457,34 @@ void FrameInterpolation_RecordSpriteDraw(int kind, void* dst, const float camRel
     d.mirrored = (mirrored != 0);
     d.ambiguousSig = false;
     recordSigCollision(gRecord->sigToSprite, gRecord->sprites, sig, idx, gRecord->sigCollisions, gRecord->scopeStack);
+}
+
+void FrameInterpolation_RecordAnimVertices(void* dst, const void* vertices, int32_t count) {
+    if (!gRecording || dst == nullptr || vertices == nullptr || count <= 0) {
+        return;
+    }
+    ScopeFrame& scope = gRecord->scopeStack.back();
+    uint64_t sig = fnvMix(fnvMix(scope.pathHash, kSigKindAnimVtx), scope.animVtxIdx);
+    scope.animVtxIdx++;
+
+    uint32_t idx = static_cast<uint32_t>(gRecord->animVtxs.size());
+    gRecord->animVtxs.emplace_back();
+    AnimVtxData& d = gRecord->animVtxs.back();
+    d.dst = dst;
+    d.count = static_cast<uint32_t>(count);
+    d.pathSig = sig;
+    d.ambiguousSig = false;
+    d.pos.resize(static_cast<size_t>(count) * 3);
+
+    // Only ob[] moves; everything else in the Vtx (uv, colour/normal) is what
+    // the tick's own copy already put in dst.
+    const Vtx* src = static_cast<const Vtx*>(vertices);
+    for (int32_t i = 0; i < count; i++) {
+        d.pos[i * 3 + 0] = src[i].v.ob[0];
+        d.pos[i * 3 + 1] = src[i].v.ob[1];
+        d.pos[i * 3 + 2] = src[i].v.ob[2];
+    }
+    recordSigCollision(gRecord->sigToAnimVtx, gRecord->animVtxs, sig, idx, gRecord->sigCollisions, gRecord->scopeStack);
 }
 
 void FrameInterpolation_DontInterpolateCamera(void) {
@@ -460,6 +554,16 @@ void BuildInterpolationCache() {
         gCache.prevCameraPos[2] = gRenderPrev->cameraPos[2];
     }
 
+    // Same two positions the cut heuristic below compares, so a fixup can never
+    // shift further than the cut threshold before Interpolate() bails outright.
+    gCache.hasCameraDelta = false;
+    if (gRenderPrev->hasCameraPos && gRenderCurr->hasCameraPos) {
+        for (int k = 0; k < 3; k++) {
+            gCache.cameraDelta[k] = gRenderCurr->cameraPos[k] - gRenderPrev->cameraPos[k];
+            gCache.hasCameraDelta |= (gCache.cameraDelta[k] != 0.0f);
+        }
+    }
+
     const std::vector<ToMtxData>& currToMtxs = gRenderCurr->toMtxs;
     const std::vector<ToMtxData>& prevToMtxs = gRenderPrev->toMtxs;
     const std::vector<SpriteDrawData>& currSprites = gRenderCurr->sprites;
@@ -470,13 +574,44 @@ void BuildInterpolationCache() {
     gCache.pairedToMtxs.reserve(currToMtxs.size());
     gCache.pairedSprites.reserve(currSprites.size());
 
+    // Camera/viewport projection rotations, matched by path signature. Anything
+    // without a partner this tick keeps the matrix the game already wrote, which
+    // is this tick's own end state.
+    const std::vector<CameraProjRotData>& currProjRots = gRenderCurr->projRots;
+    const std::vector<CameraProjRotData>& prevProjRots = gRenderPrev->projRots;
+    gCache.pairedProjRots.reserve(currProjRots.size());
+    for (uint32_t i = 0; i < currProjRots.size(); i++) {
+        const CameraProjRotData& c = currProjRots[i];
+        if (c.ambiguousSig) {
+            continue;
+        }
+        auto it = gRenderPrev->sigToProjRot.find(c.pathSig);
+        if (it == gRenderPrev->sigToProjRot.end() || it->second >= prevProjRots.size()) {
+            continue;
+        }
+        if (prevProjRots[it->second].ambiguousSig) {
+            continue;
+        }
+        gCache.pairedProjRots.push_back({ i, it->second });
+    }
+
     // Whatever stays out of the cache falls back to the interpreter decoding
     // the Mtx bytes the game itself wrote, which already hold the correct
     // end-of-tick matrix. Entries with no previous partner, or whose
     // matrix didn't change, can simply be dropped here.
     for (uint32_t i = 0; i < currToMtxs.size(); i++) {
         const ToMtxData& c = currToMtxs[i];
-        if (c.dst == nullptr || c.noInterpolate || c.ambiguousSig) {
+        if (c.dst == nullptr) {
+            continue;
+        }
+        // Camera-relative fixups skip pairing entirely.
+        if (c.camRelFixup) {
+            if (gCache.hasCameraDelta) {
+                gCache.camRelFixups.push_back(i);
+            }
+            continue;
+        }
+        if (c.noInterpolate || c.ambiguousSig) {
             continue;
         }
         auto it = prevSigMap.find(c.pathSig);
@@ -519,6 +654,46 @@ void BuildInterpolationCache() {
             snap = (d[0] * d[0] + d[1] * d[1] + d[2] * d[2]) > kSpriteSnapDistSq;
         }
         gCache.pairedSprites.push_back({ i, it->second, snap });
+    }
+
+    // Same pairing as the sprite path. A vertex blend can't go degenerate the way
+    // a matrix lerp does, but blending across an animation cut still drags the
+    // model through itself, so measure the jump against the model's own size.
+    const std::vector<AnimVtxData>& currAnimVtxs = gRenderCurr->animVtxs;
+    const std::vector<AnimVtxData>& prevAnimVtxs = gRenderPrev->animVtxs;
+    const std::unordered_map<uint64_t, uint32_t>& prevAnimVtxMap = gRenderPrev->sigToAnimVtx;
+    gCache.pairedAnimVtxs.reserve(currAnimVtxs.size());
+    for (uint32_t i = 0; i < currAnimVtxs.size(); i++) {
+        const AnimVtxData& c = currAnimVtxs[i];
+        if (c.dst == nullptr || c.ambiguousSig) {
+            continue;
+        }
+        auto it = prevAnimVtxMap.find(c.pathSig);
+        if (it == prevAnimVtxMap.end() || it->second >= prevAnimVtxs.size()) {
+            continue;
+        }
+        const AnimVtxData& p = prevAnimVtxs[it->second];
+        // A different vertex count means the sig landed on a different model.
+        if (p.count != c.count || p.pos.size() != c.pos.size()) {
+            continue;
+        }
+        if (p.pos == c.pos) {
+            continue; // pose held still; dst already has it
+        }
+        int32_t maxExtent = 0;
+        int32_t maxDelta = 0;
+        for (size_t k = 0; k < c.pos.size(); k++) {
+            int32_t a = std::abs(static_cast<int32_t>(c.pos[k]));
+            int32_t d = std::abs(static_cast<int32_t>(c.pos[k]) - static_cast<int32_t>(p.pos[k]));
+            if (a > maxExtent) {
+                maxExtent = a;
+            }
+            if (d > maxDelta) {
+                maxDelta = d;
+            }
+        }
+        bool snap = maxExtent > 0 && static_cast<float>(maxDelta) > kAnimVtxSnapRatio * static_cast<float>(maxExtent);
+        gCache.pairedAnimVtxs.push_back({ i, it->second, snap });
     }
 
     // A tree recycled while we walked it means every index above is suspect.
@@ -610,6 +785,46 @@ void emitSprite(const SpriteDrawData& L, std::unordered_map<Mtx*, MtxF>& replace
 
 } // namespace
 
+void FrameInterpolation_ApplyAnimVertices(float t) {
+    if (!gRenderShould) {
+        return;
+    }
+    if (!gCache.built) {
+        BuildInterpolationCache();
+    }
+    if (!gCache.valid) {
+        return;
+    }
+    if (gCache.prevHasCameraPos && gRenderCurr->hasCameraPos) {
+        float dx = gRenderCurr->cameraPos[0] - gCache.prevCameraPos[0];
+        float dy = gRenderCurr->cameraPos[1] - gCache.prevCameraPos[1];
+        float dz = gRenderCurr->cameraPos[2] - gCache.prevCameraPos[2];
+        constexpr float kCutDistSq = 1000.0f * 1000.0f;
+        if (dx * dx + dy * dy + dz * dz > kCutDistSq) {
+            return;
+        }
+    }
+
+    const std::vector<AnimVtxData>& currAnimVtxs = gRenderCurr->animVtxs;
+    const std::vector<AnimVtxData>& prevAnimVtxs = gRenderPrev->animVtxs;
+    const float w = 1.0f - t;
+
+    for (const PairedAnimVtx& pair : gCache.pairedAnimVtxs) {
+        const AnimVtxData& c = currAnimVtxs[pair.currIdx];
+        if (pair.snap) {
+            continue; // never written, so dst still holds this tick's pose
+        }
+        const AnimVtxData& p = prevAnimVtxs[pair.prevIdx];
+        Vtx* dst = reinterpret_cast<Vtx*>(c.dst);
+        for (uint32_t i = 0; i < c.count; i++) {
+            for (int k = 0; k < 3; k++) {
+                float blended = w * static_cast<float>(p.pos[i * 3 + k]) + t * static_cast<float>(c.pos[i * 3 + k]);
+                dst[i].v.ob[k] = static_cast<int16_t>(std::lrintf(blended));
+            }
+        }
+    }
+}
+
 void FrameInterpolation_Interpolate(float t, std::unordered_map<Mtx*, MtxF>& replacements) {
     replacements.clear();
 
@@ -639,8 +854,19 @@ void FrameInterpolation_Interpolate(float t, std::unordered_map<Mtx*, MtxF>& rep
     const std::vector<SpriteDrawData>& prevSpritesData = gRenderPrev->sprites;
     const std::vector<SpriteDrawData>& currSpritesData = gRenderCurr->sprites;
 
-    replacements.reserve(gCache.pairedToMtxs.size() + gCache.pairedSprites.size() + gRenderCurr->projRots.size() * 3);
+    replacements.reserve(gCache.pairedToMtxs.size() + gCache.pairedSprites.size() + gCache.camRelFixups.size() +
+                         gRenderCurr->projRots.size() * 3);
     const float w = 1.0f - t;
+
+    // Re-aim the frozen matrix at the sub-frame's camera.
+    for (uint32_t idx : gCache.camRelFixups) {
+        const ToMtxData& c = currToMtxs[idx];
+        MtxF& out = replacements[reinterpret_cast<Mtx*>(c.dst)];
+        std::memcpy(out.mf, c.src, sizeof(out.mf));
+        for (int k = 0; k < 3; k++) {
+            out.mf[3][k] += w * gCache.cameraDelta[k];
+        }
+    }
 
     for (const PairedToMtx& pair : gCache.pairedToMtxs) {
         const ToMtxData& c = currToMtxs[pair.currIdx];
@@ -678,21 +904,19 @@ void FrameInterpolation_Interpolate(float t, std::unordered_map<Mtx*, MtxF>& rep
 
     const std::vector<CameraProjRotData>& prevProj = gRenderPrev->projRots;
     const std::vector<CameraProjRotData>& currProj = gRenderCurr->projRots;
-    if (prevProj.size() == currProj.size()) {
-        for (size_t i = 0; i < currProj.size(); i++) {
-            const CameraProjRotData& p = prevProj[i];
-            const CameraProjRotData& c = currProj[i];
-            auto emitProj = [&](void* dst, float deg, float ax, float ay, float az) {
-                if (dst == nullptr) {
-                    return;
-                }
-                MtxF& out = replacements[reinterpret_cast<Mtx*>(dst)];
-                guRotateF(out.mf, deg, ax, ay, az);
-            };
-            // Axis conventions per viewport.c: roll about -Z, pitch +X, yaw +Y.
-            emitProj(c.rollMtx, lerpAngleDegSP(p.rollDeg, c.rollDeg, t), 0.0f, 0.0f, -1.0f);
-            emitProj(c.pitchMtx, lerpAngleDegSP(p.pitchDeg, c.pitchDeg, t), 1.0f, 0.0f, 0.0f);
-            emitProj(c.yawMtx, lerpAngleDegSP(p.yawDeg, c.yawDeg, t), 0.0f, 1.0f, 0.0f);
-        }
+    for (const PairedProjRot& pair : gCache.pairedProjRots) {
+        const CameraProjRotData& c = currProj[pair.currIdx];
+        const CameraProjRotData& p = prevProj[pair.prevIdx];
+        auto emitProj = [&](void* dst, float deg, float ax, float ay, float az) {
+            if (dst == nullptr) {
+                return;
+            }
+            MtxF& out = replacements[reinterpret_cast<Mtx*>(dst)];
+            guRotateF(out.mf, deg, ax, ay, az);
+        };
+        // Axis conventions per viewport.c: roll about -Z, pitch +X, yaw +Y.
+        emitProj(c.rollMtx, lerpAngleDegSP(p.rollDeg, c.rollDeg, t), 0.0f, 0.0f, -1.0f);
+        emitProj(c.pitchMtx, lerpAngleDegSP(p.pitchDeg, c.pitchDeg, t), 1.0f, 0.0f, 0.0f);
+        emitProj(c.yawMtx, lerpAngleDegSP(p.yawDeg, c.yawDeg, t), 0.0f, 1.0f, 0.0f);
     }
 }

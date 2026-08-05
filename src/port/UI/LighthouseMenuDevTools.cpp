@@ -72,9 +72,6 @@ void LighthouseMenu::AddMenuDevTools() {
         .Options(CheckboxOptions().Tooltip(
             "Enables the Gfx trace mode, which will output information about the Gfx commands being run."));
 #endif
-    AddWidget(path, "Nametag Distance", WIDGET_CVAR_SLIDER_FLOAT)
-        .CVar(CVAR_DEVELOPER_TOOLS("NametagDist"))
-        .Options(FloatSliderOptions().DefaultValue(3000.0f).Min(1000.0f).Max(10000.0f).Step(10.0f));
     AddWidget(path, "Dump Thread State", WIDGET_BUTTON)
         .Callback([](WidgetInfo&) { ThreadWatchdog_DumpNow(); })
         .Options(
@@ -104,6 +101,11 @@ void LighthouseMenu::AddMenuDevTools() {
     AddWidget(path, "Spiral Mountain Ending Sequence", WIDGET_BUTTON)
         .Callback([](WidgetInfo&) { RequestSequence(SEQ_MODE9_BK); })
         .Options(ButtonOptions().Size(Sizes::Inline).Tooltip("Jump to the post-parade demo."));
+    AddWidget(path, "All 100 Ending Scene", WIDGET_BUTTON)
+        .Callback([](WidgetInfo&) { RequestSequence(SEQ_ENDING_ALL_100); })
+        .Options(ButtonOptions()
+                     .Size(Sizes::Inline)
+                     .Tooltip("Jump to the 100-jiggy ending cutscene (normally shown after the final parade)."));
 
     AddWidget(path, "Attract Demos", WIDGET_SEPARATOR_TEXT);
     // Demo index = slot in the decomp attract table (D_80371F00); 4 and 9 are the

@@ -35,6 +35,7 @@
 #include "Extractor/GameExtractor.h"
 #include "ship/window/gui/FileBrowserWindow.h"
 #include "Interpolation/FrameInterpolation.h"
+#include "Nametag/Nametag.h"
 #include "OS/OS.h"
 #include "Network/Anchor/Anchor.h"
 #include "port/Enhancements/Events/PortEnhancements.h"
@@ -52,6 +53,7 @@
 #include "src/port/Enhancements/Events/Hooks/Events.h"
 #include "UI/LighthouseGui.hpp"
 #include "UI/LighthouseModMenuWindow.h"
+#include "LaunchArgs.h"
 
 #ifdef __SWITCH__
 #include <port/switch/SwitchImpl.h>
@@ -74,9 +76,6 @@ extern s32 D_80275610;
 
 bool prevAltAssets = false;
 // bool gEnableGammaBoost = true;
-
-// Game mode helper
-bool func_802E4A08(void);
 
 // Soundfont ROM symbols — loaded from OTR in LoadSoundfonts()
 u8* soundfont1ctl_ROM_START = NULL;
@@ -179,6 +178,7 @@ GameEngine::GameEngine() {
 
     lhFast3dWindow = std::make_shared<Fast::Fast3dWindow>(std::vector<std::shared_ptr<Ship::GuiWindow>>({}));
     this->context->InitWindow(lhFast3dWindow);
+    this->context->InitAudio({ .SampleRate = 22000, .SampleLength = 736, .DesiredBuffered = 2208 });
 
     LighthouseGui::SetupMenu();
 
@@ -363,6 +363,9 @@ void GameEngine::FinishInit() {
         std::filesystem::create_directories(patches_path);
     }
 
+    // Apply `-hack <name>` before the scan.
+    Lighthouse::ApplyLaunchHack();
+
     // Load enabled mod o2rs into the ArchiveManager.
     UpdateModFiles(true);
     LoadLooseModDirectories(patches_path);
@@ -379,12 +382,11 @@ void GameEngine::FinishInit() {
     Ship::Context::GetRawInstance()->GetLogger()->set_pattern("[%H:%M:%S.%e] [%s:%#] [%l] %v");
     SPDLOG_INFO("Starting Lighthouse version {} (Branch: {} | Commit: {})", (char*)gBuildVersion, (char*)gGitBranch,
                 (char*)gGitCommitHash);
+    Lighthouse::FlushLaunchHackLog();
 
     context->InitFileDropMgr();
     context->InitCrashHandler();
     context->InitEventSystem();
-
-    this->context->InitAudio({ .SampleRate = 22000, .SampleLength = 736, .DesiredBuffered = 2208 });
 
     lhFast3dWindow->SetTargetFps(60);
     lhFast3dWindow->SetMaximumFrameLatency(1);
@@ -407,6 +409,10 @@ void GameEngine::FinishInit() {
     Lighthouse::RescanLanguages();
 
     LighthouseGui::SetupGuiElements();
+    // Undo the -hack override only now: LighthouseModMenuWindow::InitElement()
+    // re-runs UpdateModFiles(true) during SetupGuiElements and would otherwise
+    // re-read the restored CVars and reload the persisted hack over the override.
+    Lighthouse::RestoreModSelectionAfterLaunchHack();
     // If UpdateModFiles(true) above quarantined conflicting romhack overlays,
     // surface that to the user now that the modal window is alive.
     MaybeShowModConflictPopup();
@@ -445,10 +451,17 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
 
     std::filesystem::path ownPath;
     std::vector<std::string> args;
-    if (argc > 1) {
-        for (int i = 1; i < argc; i++) {
-            args.push_back(argv[argc]);
+    for (int i = 1; i < argc; i++) {
+        std::string arg = argv[i];
+        std::string inlineValue;
+        bool takesValue = false;
+        if (Lighthouse::IsLaunchHackFlag(arg, inlineValue, takesValue)) {
+            if (takesValue) {
+                i++;
+            }
+            continue;
         }
+        args.push_back(arg);
     }
     GameExtractor extract;
     PromptSteps promptStep = PS_FILE_CHECK;
@@ -1019,6 +1032,7 @@ void GameEngine::ScaleImGui() {
 }
 
 void GameEngine::Create(int argc, char* argv[]) {
+    Lighthouse::ParseLaunchArgs(argc, argv);
     const auto instance = Instance = new GameEngine();
     // instance->AudioInit();
     // DisplayListPatch::Run();
@@ -1090,7 +1104,7 @@ void GameEngine::StartFrame() const {
         case KbScancode::LUS_KB_TAB: {
             // Toggle HD Assets
             CVarSetInteger(CVAR_SETTING("Mods.AlternateAssets"),
-                           !CVarGetInteger(CVAR_SETTING("Mods.AlternateAssets"), 0));
+                           !CVarGetInteger(CVAR_SETTING("Mods.AlternateAssets"), 1));
             break;
         }
         case KbScancode::LUS_KB_F4: {
@@ -1269,6 +1283,16 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
             break;
         }
         const auto& m = mtx_replacements[frameIdx];
+        // Vertex-animated models blend into one buffer per draw, so unlike the
+        // matrix maps this can't be precomputed per sub-frame. It has to land
+        // right before the pass that reads it.
+        const float subframeBlend = (frameCount > 1) ? (float)(frameIdx + 1) / (float)frameCount : 1.0f;
+        if (frameCount > 1) {
+            FrameInterpolation_ApplyAnimVertices(subframeBlend);
+        }
+        // Overlays drawn by the Gui pass below place themselves per tick, so they need the
+        // same blend the geometry is being posed with or they step while the world glides.
+        Nametag::SetSubframeBlend(subframeBlend);
         bool isFinalFrame = (frameIdx == frameCount - 1);
         if (frameCount > 1 || wndBase->IsFrameReady()) {
             // Sample the full CPU cost of producing this sub-frame.
@@ -1292,7 +1316,7 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
         interpreter->mInterpolationIndex++;
     }
 
-    bool curAltAssets = CVarGetInteger(CVAR_SETTING("Mods.AlternateAssets"), 0);
+    bool curAltAssets = CVarGetInteger(CVAR_SETTING("Mods.AlternateAssets"), 1);
     if (prevAltAssets != curAltAssets) {
         prevAltAssets = curAltAssets;
         Ship::Context::GetRawInstance()->GetResourceManager()->SetAltAssetsEnabled(curAltAssets);
@@ -1311,20 +1335,11 @@ namespace {
 struct SubframePacing {
     int subframes; // renders to emit this tick (>= 1)
     int fps;       // target present fps for this tick
+    int viPerTick; // VIs of game time this tick covers
 };
 
 SubframePacing ComputeSubframePacing() {
     int target_fps = (int)GameEngine::Instance->GetInterpolationFPS();
-
-    // Demo/replay modes render at the native rate
-    const bool replayMode = func_802E4A08();
-    if (!replayMode) {
-        // Some music-synced cutscenes cap interpolation at native 30
-        int fpsCap = port_getInterpolationFpsCap();
-        if (fpsCap > 0 && target_fps > fpsCap) {
-            target_fps = fpsCap;
-        }
-    }
 
     // Game-logic VI per tick: gVIsPerFrame (=2 -> 30 Hz) normally; demo
     // replay and cutscene stutter raise it for slow N64 frames.
@@ -1334,6 +1349,12 @@ SubframePacing ComputeSubframePacing() {
     }
     if (viPerTick < gVIsPerFrame) {
         viPerTick = gVIsPerFrame;
+    }
+    // time_setDeltaReal_frames() clamps the demo's recorded VI count to 15, so the
+    // tick never advances more than that no matter what the demo asks for. Match it
+    // here or a bogus recorded value would scale the sub-frame count with it.
+    if (viPerTick > 15) {
+        viPerTick = 15;
     }
 
     int effective_logic_fps = 60 / viPerTick;
@@ -1349,18 +1370,16 @@ SubframePacing ComputeSubframePacing() {
         subframesPerTick = 1;
     }
 
-    // Replay modes never interpolate: one render per tick, held to viPerTick/60 by the floor.
-    if (replayMode) {
-        subframesPerTick = 1;
+    // paceFps drives DXGI's per-present wait so that subframes * 1/paceFps =
+    // viPerTick/60 wall (= game time per tick). Derived from viPerTick rather than
+    // effective_logic_fps: the latter is truncated (VI=7 -> 8, not 8.57), which would
+    // stretch wall time on the odd VI counts demo playback hands us every tick.
+    int fps = subframesPerTick * 60 / viPerTick;
+    if (fps < 1) {
+        fps = 1;
     }
 
-    // paceFps drives DXGI's per-present wait so that subframes * 1/paceFps =
-    // viPerTick/60 wall (= game time per tick). When viPerTick == gVIsPerFrame
-    // and target_fps is a multiple of eff, paceFps == target_fps and stays
-    // constant. Otherwise it varies per tick to keep wall == game.
-    int fps = subframesPerTick * effective_logic_fps;
-
-    return { subframesPerTick, fps };
+    return { subframesPerTick, fps, viPerTick };
 }
 } // namespace
 
@@ -1409,7 +1428,8 @@ void GameEngine::ProcessGfxCommands(Gfx* commands) {
         activeFrames++;
     }
 
-    sPassBudgetNs = 1000000000LL * subframesPerTick / fps;
+    // Wall time this tick is worth, straight from its VI count.
+    sPassBudgetNs = 1000000000LL * pacing.viPerTick / 60;
 
     if (wnd != nullptr) {
         wnd->SetTargetFps(fps);

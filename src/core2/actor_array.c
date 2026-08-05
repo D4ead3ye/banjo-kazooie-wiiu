@@ -56,7 +56,9 @@ typedef struct {
 }Actorlocal_Core2_9E370;
 
 // [port] Sized ahead of demand so actor_new never bk_reallocs (relocates) the array mid-map.
-#define ACTOR_ARRAY_INITIAL_CAP 512
+// The marker pool is the binding limit (see ACTOR_POOL_SIZE); the grow chunk only exists so
+// the array stays large enough to hold whatever the pool handed out, never the other way round.
+#define ACTOR_ARRAY_INITIAL_CAP ACTOR_POOL_SIZE
 #define ACTOR_ARRAY_GROW_CHUNK  128
 
 /* .data */
@@ -1936,9 +1938,13 @@ void actors_applyFromSavestate(void *savestate_ptr, ActorListSaveState *savestat
                 pad = savestate_actor->yaw;
                 CALL_CANCELLABLE_EVENT(OnLoadActorSaveState, savestate_actor, sp50[0], sp50[1], sp50[2]) {
                     temp_v0_6 = actor_spawnWithYaw_s32(savestate_actor->modelCacheIndex, &sp50, pad);
-                    actor_copy(savestate_actor, temp_v0_6);
-                    func_80329B68(temp_v0_6);
-                    func_803299B4(temp_v0_6);
+                    // [port] The spawn is nullable: the id may not be spawnable here, and a
+                    // cancelled OnActorSpawn returns whatever the listener supplied, including NULL.
+                    if (temp_v0_6 != NULL) {
+                        actor_copy(savestate_actor, temp_v0_6);
+                        func_80329B68(temp_v0_6);
+                        func_803299B4(temp_v0_6);
+                    }
                 }
             }
             savestate_actor++;

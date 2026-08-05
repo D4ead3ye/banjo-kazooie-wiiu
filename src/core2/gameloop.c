@@ -122,7 +122,7 @@ void func_802E398C(s32 arg0) {
 }
 
 void func_802E39D0(Gfx **gfx, Mtx **mtx, Vtx **vtx, s32 framebuffer_idx, bool arg4) {
-    Mtx* mtx_start = *mtx; 
+    Mtx* mtx_start = *mtx;
     Vtx* vtx_start = *vtx;
 
     setupFramebufferForGamemode(gfx, framebuffer_idx);
@@ -132,9 +132,6 @@ void func_802E39D0(Gfx **gfx, Mtx **mtx, Vtx **vtx, s32 framebuffer_idx, bool ar
     CALL_EVENT(OnWorldDraw, gfx, mtx, vtx);
     port_mirror_endScene();
     port_mirror_undoProjection(gfx, mtx);
-    if (port_shouldCaptureTransition()) {
-        port_captureTransitionFb(gfx);
-    }
     if(!arg4){
         func_802E67AC();
         func_802E3BD0(getActiveFramebuffer());
@@ -143,6 +140,9 @@ void func_802E39D0(Gfx **gfx, Mtx **mtx, Vtx **vtx, s32 framebuffer_idx, bool ar
     }
 
     if ((D_8037E8E0.game_mode == GAME_MODE_A_SNS_PICTURE) && (D_8037E8E0.unk19 != 6) && (D_8037E8E0.unk19 != 5)) {
+        if (port_shouldCaptureTransition()) {
+            port_captureTransitionFb(gfx);
+        }
         gctransition_draw(gfx, mtx, vtx);
     }
 
@@ -179,10 +179,15 @@ void func_802E39D0(Gfx **gfx, Mtx **mtx, Vtx **vtx, s32 framebuffer_idx, bool ar
     }
 
     if (!capturing) {
+        CALL_EVENT(OnHudDraw, gfx, mtx, vtx);
         printbuffer_draw(gfx, mtx, vtx);
     }
 
     if ((D_8037E8E0.game_mode != GAME_MODE_A_SNS_PICTURE) || (D_8037E8E0.unk19 == 6) || (D_8037E8E0.unk19 == 5)) {
+        // [port] Snapshot the composed frame for the falling-jiggy piece textures.
+        if (port_shouldCaptureTransition()) {
+            port_captureTransitionFb(gfx);
+        }
         gctransition_draw(gfx, mtx, vtx);
     }
     // [port] Populate gFramebuffers from the GPU via gDPReadFB at native resolution.
@@ -342,6 +347,11 @@ void game_draw(bool arg0) {
 
     func_802E39D0(&gfx, &mtx, &vtx, getActiveFramebuffer(), arg0);
 
+    // [port] Frame submission gate
+    if (!EventSystem_Should(VB_PICTUREBOX_SUBMIT_FRAME, true, (s32)(gfx - gfx_start))) {
+        return;
+    }
+
     graphicsCache_checkFrame(gfx_start, gfx, mtx_start, mtx, vtx_start, vtx);
 
     // Lighthouse [Port] not sure if this should be here or after the following block
@@ -480,6 +490,9 @@ void func_802E4384(void){
     }
     else{
         func_8033DC18();
+        // [port] Latch this cutscene frame's stutter before anything reads it, so the
+        // time delta below and the renderer's frame budget agree for the whole tick.
+        port_tickCutsceneStutter();
         // [port] Use a fixed 2-VI timestep for normal gameplay.
         s32 viDivisor = viMgr_func_8024BFA0();
         func_8033DC20(); // always consume wall-clock to keep last_ticks fresh

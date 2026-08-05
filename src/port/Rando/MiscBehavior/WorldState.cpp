@@ -173,6 +173,13 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                         break;
                     }
                 }
+                if (ev->jiggyId == JIGGY_37_LAIR_BGS_WITCH_SWITCH) {
+                    if (currenLevel == LEVEL_6_LAIR) {
+                        event->Cancelled = true;
+                        ev->result = RANDO_SAVE_CHECKS[RC_GL_JIGGY_WITCH_SWITCH_BUBBLEGLOOP_SWAMP].obtained;
+                        break;
+                    }
+                }
 
                 event->Cancelled = true;
                 ev->result = randoSaveCheck.obtained;
@@ -204,7 +211,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                 ev->result = RANDO_SAVE_FLAGS[RANDO_INF_MINIGAME_RINGS_COMPLETED].flagState ||
                              CustomObject::CheckSpawnedIdList(randoCheckId);
             } else {
-                ev->result = CustomObject::CheckSpawnedIdList(randoCheckId);
+                ev->result = CustomObject::CheckSpawnedIdList(randoCheckId) || RANDO_SAVE_CHECKS[randoCheckId].obtained;
             }
         }
     })

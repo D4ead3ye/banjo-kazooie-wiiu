@@ -20,16 +20,18 @@ extern "C" {
 typedef struct {
     uint32_t clientId;
     std::string name;
-    // Color_RGB8 color;
+    BKPlayerColorSet colors;
     std::string clientVersion;
     std::string teamId;
     bool online;
     bool self;
+    uint32_t joinOrder;
     uint32_t seed;
     bool isSaveLoaded;
     bool isGameComplete;
     GameMap map, prevMap;
     s32 exit, prevExit;
+    s32 cutsceneReturnMap;
 
     DummyPlayer* dummy;
 } AnchorClient;
@@ -79,6 +81,7 @@ private:
     void RemoveDummy(uint32_t clientId);
 
     void EvaluateDummyForClient(uint32_t clientId);
+    void ApplyClientCosmetics(uint32_t clientId);
 
     void HandlePacket_AllClientState(nlohmann::json& payload);
     void HandlePacket_AuthorityState(nlohmann::json& payload);
@@ -208,11 +211,22 @@ public:
 
     bool IsGlobalRoom();
 
+    // The single gate for every Anchor behaviour that touches the world. A presence-only
+    // room (the global room, or a private room with "Sync Items & Flags" off) has to play
+    // exactly like single player, so only dummy players are allowed past this.
+    bool IsWorldSyncActive();
+
+    // Presence/position/plumbing packets, the only ones allowed through when the room
+    // is not syncing game state. Anything absent is treated as world state and dropped
+    // at the send and receive choke points, so a new packet type is unsynced by default.
+    static bool AllowedWithoutGameSync(const std::string& packetType);
+
     void AdoptRemoteCheck(s32 rc);
     void CheckRandoRoomCompatibility();
 
     bool ShouldShowNotifications();
     std::string GetClientName(uint32_t clientId);
+    std::string GetNametagLabel(uint32_t clientId);
 
     void SendPacket_AuthorityState(u8 activity, bool claimed);
     void SendPacket_ClearTeamState(std::string teamId);
@@ -265,6 +279,7 @@ public:
     void SendPacket_VileHoleState(u8 holeId, u8 holeState, u8 pieceType, u32 eaterClientId);
     void SendPacket_VileUpdate(const f32 position[3], f32 pitch, f32 yaw, f32 roll, u8 animMode);
     void OnActorDestroyed(Actor* actor);
+    void RevealSwitchHoneycomb();
     void SendToCurrentMapPlayers(nlohmann::json& payload);
     void SendToCurrentLevelPlayers(nlohmann::json& payload);
     void SweepUnoccupiedLevelState(GameMap selfMap);
