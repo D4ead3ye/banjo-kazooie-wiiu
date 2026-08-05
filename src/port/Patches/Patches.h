@@ -128,6 +128,9 @@ void romhack_RewriteActorSpawn(void* actorInfo, u32* flags);
 void port_beginDemoAudioHold(void);
 void port_tickDemoAudioHold(void);
 int port_audioHeld(void);
+void port_noteMainLoopAlive(void);
+int port_audioStallHold(void);
+int32_t port_audioCatchupFrames(void);
 
 // One-shot cues when a teammate's file-progress flag arrives
 void port_progressFlag_remoteCue(int32_t progressFlag);
