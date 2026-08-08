@@ -126,7 +126,7 @@ void Rando::Logic::InitializeSaveData(SaveData* saveData) {
             // .randoItemId = Rando::StaticData::GetRandoItemByActorId((actor_e)randoStaticCheck.actorId),
             .randoCollectionId = randoStaticCheck.collectionId,
             .isShuffled = false,
-            .obtained = false,
+            .eligible = false,
             .skipped = false,
         };
 
@@ -148,7 +148,7 @@ void Rando::Logic::InitializeSaveData(SaveData* saveData) {
 }
 
 void Rando::Logic::GenerateSaveData(SaveData* saveData) {
-    for (auto& object : Rando::Logic::shuffledPool) {
+    for (auto& object : RANDO_SAVE_CHECKS) {
         saveData->shipSaveData.randoSaveData.randoSaveCheck[object.randoCheckId] = object;
     }
 
@@ -191,7 +191,7 @@ void Rando::Logic::GrantSpiralMountainChecks() {
         }
 
         CustomObject::CheckObtainedEX(smCheckId, true);
-        if (randoSaveCheck.randoItemId == RI_MOLEHILL) {
+        if (Rando::StaticData::Items[randoSaveCheck.randoItemId].randoItemType == RITYPE_MOLEHILL) {
             ability_setLearned((ability_e)randoSaveCheck.randoCollectionId, true);
             ability_setHasUsed((ability_e)randoSaveCheck.randoCollectionId);
         }
