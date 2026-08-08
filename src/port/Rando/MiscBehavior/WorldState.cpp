@@ -6,6 +6,7 @@
 #include "enums.h"
 
 #include "functions.h"
+#include "port/ShipUtils.h"
 
 // These read per-file save data, so they must not be evaluated before a file is selected.
 #define EMPTY_HONEYCOMB_OPTION_ENABLED \
@@ -55,33 +56,87 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
 
         RandoInf flagId = (RandoInf)ev->flagId;
 
-        if (flagId < RANDO_INF_UNKNOWN && flagId > RANDO_INF_MAX) {
+        if (flagId < RANDO_INF_UNKNOWN || flagId >= RANDO_INF_MAX) {
             return;
         }
 
         RANDO_SAVE_FLAGS[(RandoInf)flagId].flagState = ev->flagState;
     })
 
-    REGISTER_LISTENER(OnGetLevelSpecificFlag, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        OnGetLevelSpecificFlag* ev = (OnGetLevelSpecificFlag*)event;
+    COND_VB_SHOULD(VB_XMAS_TREE_JIGGY_COLLIDABLE, EVENT_PRIORITY_NORMAL, true, {
+        Actor* jiggyActor = va_arg(args, Actor*);
 
-        if (!IS_RANDO) {
+        if (!IS_RANDO || !JIGGY_OPTION_ENABLED) {
             return;
         }
 
-        map_e currentMap = gsworld_getMap();
-
-        switch (ev->flagId) {
-            case LEVEL_FLAG_29_FP_XMAS_TREE_COMPLETE:
-                if (currentMap == MAP_53_FP_CHRISTMAS_TREE) {
-                    return;
-                }
-                event->Cancelled = true;
-                ev->result = 1;
-                break;
-            default:
-                break;
+        if (jiggyActor != NULL && jiggyActor->marker != NULL && jiggyActor->marker->randoCheckId != RC_UNKNOWN) {
+            *should = true;
         }
+    })
+
+    COND_VB_SHOULD(VB_COLLECTABLE_ALREADY_HELD, EVENT_PRIORITY_NORMAL, true, {
+        Actor* collectable = va_arg(args, Actor*);
+
+        if (!IS_RANDO || collectable == NULL || collectable->marker == NULL) {
+            return;
+        }
+
+        RandoCheckId randoCheckId = (RandoCheckId)collectable->marker->randoCheckId;
+
+        if (randoCheckId == RC_UNKNOWN || randoCheckId >= RC_MAX) {
+            return;
+        }
+
+        *should = RANDO_SAVE_CHECKS[randoCheckId].obtained;
+    })
+
+    COND_VB_SHOULD(VB_JIGGYSCORE_LEVEL_TOTAL, EVENT_PRIORITY_NORMAL, true, {
+        s32 level = va_arg(args, s32);
+        s32* result = va_arg(args, s32*);
+
+        if (!IS_RANDO || !JIGGY_OPTION_ENABLED) {
+            return;
+        }
+
+        s32 total = 0;
+
+        if (level > 0 && level < 0xB) {
+            for (s32 jiggyId = (level - 1) * 10 + 1; jiggyId < level * 10 + 1; jiggyId++) {
+                if (port_jiggyscore_isCollectedRaw((jiggy_e)jiggyId)) {
+                    total++;
+                }
+            }
+        }
+
+        *result = total;
+        *should = false;
+    })
+
+    COND_VB_SHOULD(VB_HONEYCOMBSCORE_LEVEL_TOTAL, EVENT_PRIORITY_NORMAL, true, {
+        s32 level = va_arg(args, s32);
+        s32* result = va_arg(args, s32*);
+
+        if (!IS_RANDO || !EMPTY_HONEYCOMB_OPTION_ENABLED) {
+            return;
+        }
+
+        s32 total = 0;
+
+        if (level > 0 && level != LEVEL_6_LAIR && level < 0xC) {
+            s32 first = level * 2 - 1;
+            first = (level < 7) ? first : first - 2;
+            s32 end = (level * 2 - 1 == 0x15) ? first + 6 : first + 2;
+
+            for (s32 honeycombId = first; honeycombId < end; honeycombId++) {
+                if (port_honeycombscore_getRaw((honeycomb_e)honeycombId)) {
+                    total++;
+                }
+            }
+        }
+
+        *result = total;
+        *should = false;
     })
 
     REGISTER_LISTENER(OnActorSpawn, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -134,64 +189,38 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
     REGISTER_LISTENER(OnIsJiggyScoreCollected, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnIsJiggyScoreCollected* ev = (OnIsJiggyScoreCollected*)event;
 
-        if (!IS_RANDO && !JIGGY_OPTION_ENABLED) {
+        if (!IS_RANDO || !JIGGY_OPTION_ENABLED) {
             return;
         }
 
-        if (getGameMode() == GAME_MODE_4_PAUSED) {
+        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByJiggyId(ev->jiggyId);
+
+        if (randoCheckId == RC_UNKNOWN || !RANDO_SAVE_CHECKS[randoCheckId].isShuffled) {
             return;
         }
 
-        map_e currentMap = gsworld_getMap();
-        level_e currenLevel = map_getLevel(currentMap);
+        level_e currentLevel = map_getLevel(gsworld_getMap());
 
-        for (auto& randoSaveCheck : RANDO_SAVE_CHECKS) {
-            if (randoSaveCheck.randoItemId != RITYPE_JIGGY) {
-                continue;
-            }
-
-            if (randoSaveCheck.randoCollectionId == ev->jiggyId) {
-                if (ev->jiggyId == JIGGY_5D_MMM_NAPPER) {
-                    if (currentMap == MAP_26_MMM_NAPPERS_ROOM &&
-                        randoSaveCheck.randoCheckId != RC_MMM_JIGGY_MANSION_TABLE) {
-                        event->Cancelled = true;
-                        ev->result = RANDO_SAVE_CHECKS[RC_MMM_JIGGY_MANSION_TABLE].obtained;
-                        break;
-                    }
+        switch (ev->jiggyId) {
+            case JIGGY_42_GV_WATER_PYRAMID:
+                if (currentLevel == LEVEL_7_GOBIS_VALLEY) {
+                    event->Cancelled = true;
+                    ev->result = RANDO_SAVE_FLAGS[RANDO_INF_WATER_PYRAMID_DRAINED].flagState;
+                    return;
                 }
-                if (ev->jiggyId == JIGGY_42_GV_WATER_PYRAMID) {
-                    if (currenLevel == LEVEL_7_GOBIS_VALLEY) {
-                        event->Cancelled = true;
-                        ev->result = RANDO_SAVE_FLAGS[RANDO_INF_WATER_PYRAMID_DRAINED].flagState;
-                        break;
-                    }
-                }
-                if (ev->jiggyId == JIGGY_2E_FP_PRESENTS) {
-                    if (currenLevel == LEVEL_5_FREEZEEZY_PEAK) {
-                        event->Cancelled = true;
-                        ev->result = RANDO_SAVE_CHECKS[RC_FP_JIGGY_IGLOO].obtained;
-                        break;
-                    }
-                }
-                if (ev->jiggyId == JIGGY_37_LAIR_BGS_WITCH_SWITCH) {
-                    if (currenLevel == LEVEL_6_LAIR) {
-                        event->Cancelled = true;
-                        ev->result = RANDO_SAVE_CHECKS[RC_GL_JIGGY_WITCH_SWITCH_BUBBLEGLOOP_SWAMP].obtained;
-                        break;
-                    }
-                }
-
-                event->Cancelled = true;
-                ev->result = randoSaveCheck.obtained;
                 break;
-            }
+            default:
+                break;
         }
+
+        event->Cancelled = true;
+        ev->result = RANDO_SAVE_CHECKS[randoCheckId].obtained;
     })
 
     REGISTER_LISTENER(OnIsJiggyScoreSpawned, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnIsJiggyScoreSpawned* ev = (OnIsJiggyScoreSpawned*)event;
 
-        if (!IS_RANDO && !JIGGY_OPTION_ENABLED) {
+        if (!IS_RANDO || !JIGGY_OPTION_ENABLED) {
             return;
         }
 
@@ -228,37 +257,30 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
     REGISTER_LISTENER(OnIsHoneycombScoreCollected, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnIsHoneycombScoreCollected* ev = (OnIsHoneycombScoreCollected*)event;
 
-        if (!IS_RANDO && !EMPTY_HONEYCOMB_OPTION_ENABLED) {
+        if (!IS_RANDO || !EMPTY_HONEYCOMB_OPTION_ENABLED) {
             return;
         }
 
-        if (getGameMode() == GAME_MODE_4_PAUSED) {
+        RandoCheckId randoCheckId = Rando::StaticData::GetCheckByHoneycombId((honeycomb_e)ev->honeycombId);
+
+        if (randoCheckId == RC_UNKNOWN || !RANDO_SAVE_CHECKS[randoCheckId].isShuffled) {
             return;
         }
 
-        for (auto& saveCheck : RANDO_SAVE_CHECKS) {
-            if (Rando::StaticData::Checks[saveCheck.shuffledCheckId].randoCheckType != RCTYPE_EMPTY_HONEYCOMB) {
-                continue;
-            }
+        event->Cancelled = true;
 
-            if (saveCheck.randoCollectionId == ev->honeycombId) {
-                event->Cancelled = true;
-
-                if (ev->honeycombId == HONEYCOMB_17_SM_COLLIWOBBLE) {
-                    ev->result = false;
-                } else {
-                    ev->result = saveCheck.obtained;
-                }
-
-                break;
-            }
+        if (ev->honeycombId == HONEYCOMB_17_SM_COLLIWOBBLE) {
+            ev->result = false;
+            return;
         }
+
+        ev->result = RANDO_SAVE_CHECKS[randoCheckId].obtained;
     })
 
     REGISTER_LISTENER(OnIsMumboTokenScoreCollected, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
         OnIsMumboTokenScoreCollected* ev = (OnIsMumboTokenScoreCollected*)event;
 
-        if (!IS_RANDO && !MUMBO_TOKENS_OPTION_ENABLED) {
+        if (!IS_RANDO || !MUMBO_TOKENS_OPTION_ENABLED) {
             return;
         }
 
@@ -267,7 +289,9 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
         }
 
         for (auto& saveCheck : RANDO_SAVE_CHECKS) {
-            if (Rando::StaticData::Checks[saveCheck.shuffledCheckId].randoCheckType != RCTYPE_MUMBO_TOKEN) {
+            Rando::StaticData::RandoStaticItem randoItem = Rando::StaticData::Items[saveCheck.randoItemId];
+
+            if (randoItem.randoItemType != RITYPE_MUMBO_TOKEN) {
                 continue;
             }
 
