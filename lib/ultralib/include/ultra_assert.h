@@ -41,7 +41,9 @@ extern "C" {
 
 #else
 
+#ifndef __assert
 extern void __assert(const char *, const char *, int);
+#endif
 #ifdef __ANSI_CPP__
 #define assert(EX)  ((EX)?((void)0):__assert( # EX , __FILE__, __LINE__))
 #else

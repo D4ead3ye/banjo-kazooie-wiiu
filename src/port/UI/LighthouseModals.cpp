@@ -74,8 +74,8 @@ void LighthouseModalWindow::DrawElement() {
                 }
                 UIWidgets::PopStyleButton();
             }
+            ImGui::EndPopup();
         }
-        ImGui::EndPopup();
     }
 }
 

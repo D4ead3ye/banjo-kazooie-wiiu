@@ -38,6 +38,7 @@ void PortEnhancements_Register() {
     // Register localization events
     REGISTER_EVENT(LocalizeFileSelectPrompt);
     REGISTER_EVENT(OnFileSelectLanguageRefresh);
+    REGISTER_EVENT(OnFileSelectPortrait);
     REGISTER_EVENT(LocalizeParade);
     REGISTER_EVENT(ParadeCreditDialogId);
     REGISTER_EVENT(ResolveBoldFontSlot);
@@ -98,9 +99,11 @@ void PortEnhancements_Register() {
     REGISTER_EVENT(OnGameStart);
     REGISTER_EVENT(EggHeadSpawn);
     REGISTER_EVENT(OnActorDestroy);
+    REGISTER_EVENT(OnLevelReset);
     REGISTER_EVENT(OnCheckSpiralMountainAbilities);
-
     REGISTER_EVENT(OnReset);
+    REGISTER_EVENT(SetAnimSpeedMult);
+    REGISTER_EVENT(OnActorUpdate);
 
     // Register rando events
     REGISTER_EVENT(InitRandoEvents);
