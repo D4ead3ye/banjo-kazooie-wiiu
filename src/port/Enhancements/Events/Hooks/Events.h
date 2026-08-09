@@ -47,7 +47,6 @@ typedef enum VBehaviorID {
     // Gameplay options and cheats
     VB_DISABLE_SNACKER,
     VB_SAVE_AND_EXIT,
-    VB_MUMBO_HUT_TRANSFORM_CUTSCENE,
     VB_MUMBO_DETRANSFORM,
 
     // Rando object behavior
@@ -62,6 +61,8 @@ typedef enum VBehaviorID {
     VB_OVERRIDE_TIMED_DIALOGUE,
     VB_UPDATE_JINJO_HUD,
     VB_SET_JINJO_COUNT,
+    VB_COLLECTABLE_ALREADY_HELD,
+    VB_XMAS_TREE_JIGGY_COLLIDABLE,
 
     // Dialog and localization
     VB_RESET_DIALOG_LANGUAGE,
@@ -97,6 +98,7 @@ typedef enum VBehaviorID {
 
     // Romhack port gates
     VB_JIGGYSCORE_LEVEL_TOTAL,
+    VB_HONEYCOMBSCORE_LEVEL_TOTAL,
     VB_PAUSEMENU_LEVEL_TO_PAGE,
     VB_PAUSEMENU_SET_NEXT_PAGE,
     VB_PAUSEMENU_DRAW_JOYSTICKS,

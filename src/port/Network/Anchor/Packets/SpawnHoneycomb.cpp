@@ -3,6 +3,8 @@
 #include <libultraship/libultraship.h>
 
 #include "functions.h"
+#include "port/ShipUtils.h"
+
 extern "C" {
 void chHoneycomb_netSpawnDropAt(s32 uid, s32 bundleId, f32 x, f32 y, f32 z);
 }
@@ -34,7 +36,7 @@ void Anchor::HandlePacket_SpawnHoneycomb(nlohmann::json& payload) {
     if ((s32)gsworld_getMap() != payload.at("ctx").get<s32>()) {
         return;
     }
-    if (honeycombscore_get((enum honeycomb_e)honeycombId)) {
+    if (port_honeycombscore_getRaw((enum honeycomb_e)honeycombId)) {
         return;
     }
     // Already present locally, nothing to add.
