@@ -32,8 +32,8 @@ void Rando::StaticData::ModifyRandoInfFlagState(RandoCheckId randoCheckId) {
             break;
         case RC_GV_JIGGY_WATER_PYRAMID:
         case RC_GV_MUMBO_TOKEN_INSIDE_WATER_PYRAMID:
-            if (RANDO_SAVE_CHECKS[RC_GV_JIGGY_WATER_PYRAMID].obtained &&
-                RANDO_SAVE_CHECKS[RC_GV_MUMBO_TOKEN_INSIDE_WATER_PYRAMID].obtained) {
+            if (RANDO_SAVE_CHECKS[RC_GV_JIGGY_WATER_PYRAMID].eligible &&
+                RANDO_SAVE_CHECKS[RC_GV_MUMBO_TOKEN_INSIDE_WATER_PYRAMID].eligible) {
                 randoInfFlag = RANDO_INF_WATER_PYRAMID_DRAINED;
             }
             break;
@@ -88,7 +88,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             return;
         }
 
-        *should = RANDO_SAVE_CHECKS[randoCheckId].obtained;
+        *should = RANDO_SAVE_CHECKS[randoCheckId].eligible;
     })
 
     COND_VB_SHOULD(VB_JIGGYSCORE_LEVEL_TOTAL, EVENT_PRIORITY_NORMAL, true, {
@@ -151,18 +151,18 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
 
         switch (currentLevel) {
             case LEVEL_1_MUMBOS_MOUNTAIN:
-                if (RANDO_SAVE_CHECKS[RC_MM_JIGGY_CHIMPY].obtained) {
+                if (RANDO_SAVE_CHECKS[RC_MM_JIGGY_CHIMPY].eligible) {
                     if (ev->actorId == ACTOR_F_CHIMPY) {
                         event->Cancelled = true;
                         ev->result = NULL;
                     }
                 }
                 mapSpecificFlags_set(MM_SPECIFIC_FLAG_0_CHIMPY_STUMP_RAISED,
-                                     RANDO_SAVE_CHECKS[RC_MM_JIGGY_CHIMPY].obtained);
+                                     RANDO_SAVE_CHECKS[RC_MM_JIGGY_CHIMPY].eligible);
                 mapSpecificFlags_set(MM_SPECIFIC_FLAG_2_ORANGE_HAS_BEEN_RETURNED,
-                                     RANDO_SAVE_CHECKS[RC_MM_JIGGY_CHIMPY].obtained);
+                                     RANDO_SAVE_CHECKS[RC_MM_JIGGY_CHIMPY].eligible);
                 mapSpecificFlags_set(MM_SPECIFIC_FLAG_3_CHIMPY_HAS_LEFT,
-                                     RANDO_SAVE_CHECKS[RC_MM_JIGGY_CHIMPY].obtained);
+                                     RANDO_SAVE_CHECKS[RC_MM_JIGGY_CHIMPY].eligible);
                 break;
             case LEVEL_3_CLANKERS_CAVERN:
                 if (currentMap == MAP_22_CC_INSIDE_CLANKER &&
@@ -172,11 +172,11 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                 break;
             case LEVEL_9_RUSTY_BUCKET_BAY:
                 if (ev->actorId == 0x18F) {
-                    mapSpecificFlags_set(0, RANDO_SAVE_CHECKS[RC_RBB_EMPTY_HONEYCOMB_BOAT_HOUSE].obtained);
+                    mapSpecificFlags_set(0, RANDO_SAVE_CHECKS[RC_RBB_EMPTY_HONEYCOMB_BOAT_HOUSE].eligible);
                 }
                 break;
             case LEVEL_A_MAD_MONSTER_MANSION:
-                if (ev->actorId == ACTOR_39_NAPPER && RANDO_SAVE_CHECKS[RC_MMM_JIGGY_MANSION_TABLE].obtained) {
+                if (ev->actorId == ACTOR_39_NAPPER && RANDO_SAVE_CHECKS[RC_MMM_JIGGY_MANSION_TABLE].eligible) {
                     event->Cancelled = true;
                     ev->result = NULL;
                 }
@@ -214,7 +214,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
         }
 
         event->Cancelled = true;
-        ev->result = RANDO_SAVE_CHECKS[randoCheckId].obtained;
+        ev->result = RANDO_SAVE_CHECKS[randoCheckId].eligible;
     })
 
     REGISTER_LISTENER(OnIsJiggyScoreSpawned, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -240,7 +240,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
                 ev->result = RANDO_SAVE_FLAGS[RANDO_INF_MINIGAME_RINGS_COMPLETED].flagState ||
                              CustomObject::CheckSpawnedIdList(randoCheckId);
             } else {
-                ev->result = CustomObject::CheckSpawnedIdList(randoCheckId) || RANDO_SAVE_CHECKS[randoCheckId].obtained;
+                ev->result = CustomObject::CheckSpawnedIdList(randoCheckId) || RANDO_SAVE_CHECKS[randoCheckId].eligible;
             }
         }
     })
@@ -274,7 +274,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             return;
         }
 
-        ev->result = RANDO_SAVE_CHECKS[randoCheckId].obtained;
+        ev->result = RANDO_SAVE_CHECKS[randoCheckId].eligible;
     })
 
     REGISTER_LISTENER(OnIsMumboTokenScoreCollected, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -297,7 +297,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
 
             if (saveCheck.randoCollectionId == ev->tokenId) {
                 event->Cancelled = true;
-                ev->result = saveCheck.obtained;
+                ev->result = saveCheck.eligible;
                 break;
             }
         }
