@@ -88,7 +88,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             return;
         }
 
-        *should = RANDO_SAVE_CHECKS[randoCheckId].obtained;
+        *should = RANDO_SAVE_CHECKS[randoCheckId].eligible;
     })
 
     COND_VB_SHOULD(VB_JIGGYSCORE_LEVEL_TOTAL, EVENT_PRIORITY_NORMAL, true, {
@@ -214,7 +214,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
         }
 
         event->Cancelled = true;
-        ev->result = RANDO_SAVE_CHECKS[randoCheckId].obtained;
+        ev->result = RANDO_SAVE_CHECKS[randoCheckId].eligible;
     })
 
     REGISTER_LISTENER(OnIsJiggyScoreSpawned, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
@@ -274,7 +274,7 @@ void Rando::MiscBehavior::InitWorldStateBehavior() {
             return;
         }
 
-        ev->result = RANDO_SAVE_CHECKS[randoCheckId].obtained;
+        ev->result = RANDO_SAVE_CHECKS[randoCheckId].eligible;
     })
 
     REGISTER_LISTENER(OnIsMumboTokenScoreCollected, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
