@@ -370,7 +370,7 @@ if (CMAKE_GENERATOR MATCHES "Visual Studio")
     )
 endif()
 
-add_subdirectory(libultraship ${CMAKE_CURRENT_SOURCE_DIR}/libultraship)
+add_subdirectory(libultraship ${CMAKE_CURRENT_BINARY_DIR}/libultraship)
 add_dependencies(${PROJECT_NAME} libultraship)
 target_link_libraries(${PROJECT_NAME} PRIVATE libultraship)
 
@@ -743,7 +743,7 @@ include(ExternalProject)
 ExternalProject_Add(TorchExternal
 	PREFIX TorchExternal
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/Torch
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/Torch -DENABLE_ASAN=${ENABLE_ASAN}
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/Torch -DENABLE_ASAN=${ENABLE_ASAN} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
 )
 #set_target_properties(TorchExternal PROPERTIES EXCLUDE_FROM_DEFAULT_BUILD TRUE)
 ExternalProject_Get_Property(TorchExternal install_dir)
