@@ -3,6 +3,7 @@
 #include "functions.h"
 #include "variables.h"
 #include "gc/gcbound.h"
+#include "port/Engine.h"
 
 /* .data */
 extern s32 D_803688E0 = 0; //_gcBoundAlpha
@@ -27,8 +28,9 @@ u8 _gcbound_blue; //D_80380902
 void  _gcbound_draw(Gfx** dl, s32 a, s32 r, s32 g, s32 b){
     gSPDisplayList((*dl)++, D_803688E8);
     gDPSetPrimColor((*dl)++, 0, 0, r, g, b, a);
-    // [port] Overscan past the 4:3 native bounds so the fade still fills the screen
-    gSPWideTextureRectangle((*dl)++, -1024, -1024, 2048, 2048, 0, 0, 0, 0x100, 0x100);
+    gSPWideTextureRectangle((*dl)++, OTRGetRectDimensionFromLeftEdge(0) << 2, -1024,
+                            OTRGetRectDimensionFromRightEdge((f32)gFramebufferWidth) << 2, 2048, 0, 0, 0, 0x100,
+                            0x100);
 }
 
 void gcbound_draw(Gfx** dl){

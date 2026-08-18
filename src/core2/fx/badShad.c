@@ -73,6 +73,7 @@ f32 func_802D7038(Actor *this) {
         D_8037DE10[0] = this->spawn_position[0];
         D_8037DE10[1] = this->spawn_position[1];
         D_8037DE10[2] = this->spawn_position[2];
+        ml_vec3f_clear(D_8037DE20); // [port] Clear any previous math from leaked actors
     } else {
         this->spawn_position[0] = this->position[0];
         this->spawn_position[2] = this->position[2];
@@ -96,7 +97,8 @@ void func_802D7124(Actor *actor, f32 arg1) {
     f32 mul = port_drawDistanceMul();
 
     viewport_getPosition_vec3f(vp);
-    if ((actor->position[0] - vp[0]) * (actor->position[0] - vp[0]) + (actor->position[2] - vp[2]) * (actor->position[2] - vp[2]) < 12250000.0f * mul * mul) {
+    if (port_shouldDisableLOD()
+        || (actor->position[0] - vp[0]) * (actor->position[0] - vp[0]) + (actor->position[2] - vp[2]) * (actor->position[2] - vp[2]) < 12250000.0f * mul * mul) {
         func_802D729C(actor, arg1);
     }
 }

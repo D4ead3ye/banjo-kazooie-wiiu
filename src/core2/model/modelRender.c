@@ -1127,7 +1127,8 @@ BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation
         spD4 = sSecondaryModelData.unk4;
     }
     camera_focus_distance = gu_sqrtf(camera_focus[0]*camera_focus[0] + camera_focus[1]*camera_focus[1] + camera_focus[2]*camera_focus[2]);
-    if( 4000.0f <= camera_focus_distance && spD4*scale*D_8038370C*50.0f < D_80383708){
+//  if( 4000.0f <= camera_focus_distance && spD4*scale*D_8038370C*50.0f < D_80383708){
+    if( !port_shouldDisableLOD() && 4000.0f <= camera_focus_distance && spD4*scale*D_8038370C*50.0f < D_80383708){
         D_80383708 = spD4*scale*D_8038370C*50.0f;
     }
 

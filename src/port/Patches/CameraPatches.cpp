@@ -11,6 +11,7 @@
 #include "functions.h"
 #include "variables.h"
 
+#include <algorithm>
 #include <cmath>
 
 #ifndef M_PI
@@ -260,16 +261,25 @@ void RegisterCameraPatches_Init() {
             return;
         }
         auto* ev = (ViewportFrustumUpdate*)event;
-        const float kFrustumZ = 45.168514251708984f;
-        const float kMargin = 1.10f;
+        const float kDegToRad = (float)(M_PI / 180.0);
+        const float kFrustumZX = 45.168514251708984f; // must match viewport.c
+        const float kFrustumZY = 34.20201110839844f;  // must match viewport.c
+        const float kVanillaFrustumX = 89.21774f;     // must match viewport_update()
+        const float kVanillaFrustumY = 93.9692611694336f;
+        const float kPad = 3.0f * kDegToRad; // slack that keeps actors from popping in at the edge
+        const float kMaxHalfAngle = 88.0f * kDegToRad;
+
+        float halfFovY = (sViewportFOVy * 0.5f) * kDegToRad;
         float aspect = GameEngine_GetAspectRatio();
-        if (aspect < sViewportAspect) {
-            aspect = sViewportAspect;
-        }
-        float halfFovYRad = (sViewportFOVy * 0.5f) * (float)(M_PI / 180.0);
-        float halfFovXRad = std::atan(std::tan(halfFovYRad) * aspect * kMargin);
-        *ev->frustumX = kFrustumZ / std::tan(halfFovXRad);
-        *ev->frustumY = 93.9692611694336f * 1.15f;
+        float visibleTanX = std::tan(halfFovY) * (sViewportAspect / (4.0f / 3.0f)) * aspect;
+
+        float halfX = std::max(std::atan(visibleTanX) + kPad, std::atan(kFrustumZX / kVanillaFrustumX));
+        float halfY = std::max(halfFovY + kPad, std::atan(kFrustumZY / kVanillaFrustumY));
+        halfX = std::min(halfX, kMaxHalfAngle);
+        halfY = std::min(halfY, kMaxHalfAngle);
+
+        *ev->frustumX = kFrustumZX / std::tan(halfX);
+        *ev->frustumY = kFrustumZY / std::tan(halfY);
     });
 }
 

@@ -95,6 +95,9 @@ int port_spriteSizeCulled(float depth, float size, float baseThreshold, int disa
 }
 
 int port_shouldDisableLOD(void) {
+    if (IsDemoMode() && getGameMode() != GAME_MODE_4_PAUSED) {
+        return 0;
+    }
     return sDisableLOD;
 }
 }
