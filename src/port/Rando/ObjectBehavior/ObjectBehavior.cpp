@@ -305,9 +305,9 @@ void Rando::ObjectBehavior::Init() {
             return;
         }
 
-        randoSaveState.insert(
-            { (RandoCheckId)ev->actor->marker->randoCheckId,
-              { ev->actor->marker->propPtr->x, ev->actor->marker->propPtr->y, ev->actor->marker->propPtr->z } });
+        randoSaveState[(RandoCheckId)ev->actor->marker->randoCheckId] =
+            std::make_tuple((int32_t)ev->actor->marker->propPtr->x, (int32_t)ev->actor->marker->propPtr->y,
+                            (int32_t)ev->actor->marker->propPtr->z);
     })
 
     COND_HOOK(OnLoadActorSaveState, EVENT_PRIORITY_NORMAL, IS_RANDO, [](IEvent* event) {
@@ -345,6 +345,7 @@ void Rando::ObjectBehavior::Init() {
         // The check already has a live actor. Restoring would stack a second one on
         // top of it, so drop the restore entirely.
         if (CustomObject::CheckSpawnedIdList(randoCheckId)) {
+            randoSaveState.erase(randoCheckId);
             event->Cancelled = true;
             return;
         }
