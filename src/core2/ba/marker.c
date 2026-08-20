@@ -909,6 +909,7 @@ void __baMarker_resolveCollision(Prop *other_prop){
             }
         }
     }
+    CALL_EVENT(OnActorCollisionEnd);
 }
 
 void baMarker_init(void){
