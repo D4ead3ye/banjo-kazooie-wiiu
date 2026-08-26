@@ -26272,3 +26272,819 @@ events:
         - "C:/claude/bk-wiiu/Lighthouse/cmake/modules/"
         - "C:/devkitPro/portlibs/ppc/lib/cmake/libzip/modules"
 ...
+
+---
+events:
+  -
+    kind: "find_package-v1"
+    backtrace:
+      - "libultraship/cmake/dependencies/wiiu.cmake:8 (find_package)"
+      - "libultraship/CMakeLists.txt:53 (include)"
+    name: "nlohmann_json"
+    configs:
+      -
+        filename: "nlohmann_json.cps"
+        kind: "cps"
+      -
+        filename: "nlohmann_jsonConfig.cmake"
+        kind: "cmake"
+      -
+        filename: "nlohmann_json-config.cmake"
+        kind: "cmake"
+    version_request:
+      exact: false
+    settings:
+      required: "optional"
+      quiet: true
+      global: false
+      policy_scope: true
+      bypass_provider: false
+      names:
+        - "nlohmann_json"
+      path_suffixes:
+        - ""
+      paths:
+        CMAKE_FIND_USE_CMAKE_PATH: true
+        CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: false
+        CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+        CMAKE_FIND_USE_INSTALL_PREFIX: true
+        CMAKE_FIND_USE_PACKAGE_ROOT_PATH: true
+        CMAKE_FIND_USE_CMAKE_PACKAGE_REGISTRY: true
+        CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY: true
+        CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
+    candidates:
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/nlohmann_json.cps"
+        mode: "none?"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/nlohmann_jsonConfig.cmake"
+        mode: "none?"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/nlohmann_json-config.cmake"
+        mode: "none?"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/nlohmann_jsonConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/nlohmann_json-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/lib/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/share/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/nlohmann_jsonConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/nlohmann_json-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/lib/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/share/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/nlohmann_jsonConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/nlohmann_json-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/lib/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/share/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/wut/nlohmann_jsonConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/wut/nlohmann_json-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/wut/lib/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/wut/share/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/nlohmann_jsonConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/nlohmann_json-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/lib/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/share/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/powerpc-eabi/nlohmann_jsonConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/powerpc-eabi/nlohmann_json-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/powerpc-eabi/lib/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/powerpc-eabi/share/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/tools/nlohmann_jsonConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/tools/nlohmann_json-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/tools/lib/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/tools/share/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/nlohmann_jsonConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/nlohmann_json-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/lib/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/share/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/nlohmann_jsonConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/nlohmann_json-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/lib/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/share/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/nlohmann_jsonConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/nlohmann_json-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/lib/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/share/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/wut/nlohmann_jsonConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/wut/nlohmann_json-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/wut/lib/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/wut/share/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/nlohmann_jsonConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/nlohmann_json-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/lib/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/share/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/powerpc-eabi/nlohmann_jsonConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/powerpc-eabi/nlohmann_json-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/powerpc-eabi/lib/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/powerpc-eabi/share/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/tools/nlohmann_jsonConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/tools/nlohmann_json-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/tools/lib/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/tools/share/cps/nlohmann_json.cps"
+        mode: "cps"
+        reason: "no_exist"
+    found: null
+    search_context:
+      ENV{PATH}:
+        - "C:\\Users\\eduar\\AppData\\Local\\Microsoft\\WinGet\\Packages\\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\\mingw64\\bin"
+        - "C:\\devkitPro\\devkitPPC\\bin"
+        - "C:\\devkitPro\\tools\\bin"
+        - "C:\\Users\\eduar\\bin"
+        - "C:\\Program Files\\Git\\mingw64\\bin"
+        - "C:\\Program Files\\Git\\usr\\local\\bin"
+        - "C:\\Program Files\\Git\\usr\\bin"
+        - "C:\\Program Files\\Git\\usr\\bin"
+        - "C:\\Program Files\\Git\\mingw64\\bin"
+        - "C:\\Program Files\\Git\\usr\\bin"
+        - "C:\\Users\\eduar\\bin"
+        - "C:\\devkitPro\\msys2\\usr\\bin"
+        - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
+        - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath"
+        - "C:\\Program Files\\Meta Horizon\\Support\\oculus-runtime"
+        - "C:\\WINDOWS\\system32"
+        - "C:\\WINDOWS"
+        - "C:\\WINDOWS\\System32\\Wbem"
+        - "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0"
+        - "C:\\WINDOWS\\System32\\OpenSSH"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
+        - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
+        - "C:\\Program Files\\dotnet"
+        - "C:\\Program Files\\nodejs"
+        - "C:\\Program Files\\Git\\cmd"
+        - "C:\\Program Files\\Sunshine"
+        - "C:\\Program Files\\Sunshine\\tools"
+        - "C:\\Users\\eduar\\.cargo\\bin"
+        - "C:\\Users\\eduar\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\eduar\\AppData\\Roaming\\npm"
+        - "C:\\Users\\eduar\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\eduar\\AppData\\Local\\Microsoft\\WinGet\\Packages\\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\\mingw64\\bin"
+        - "C:\\Users\\eduar\\.dotnet\\tools"
+        - "C:\\Program Files\\nodejs"
+        - "C:\\Program Files\\Git\\mingw64\\bin"
+        - "C:\\Program Files\\Git\\usr\\bin\\vendor_perl"
+        - "C:\\Program Files\\Git\\usr\\bin\\core_perl"
+        - "C:\\Users\\eduar\\AppData\\Roaming\\Claude\\local-agent-mode-sessions\\skills-plugin\\403bddc8-4fd1-4261-a862-49ef29dec055\\4c129d08-35fb-465a-80a4-a041a8aa5282\\bin"
+      CMAKE_INSTALL_PREFIX: "C:/devkitPro/portlibs/wiiu"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "C:/devkitPro/portlibs/wiiu"
+        - "C:/devkitPro/portlibs/ppc"
+        - "C:/devkitPro/wut"
+        - "C:/devkitPro/devkitPPC"
+        - "C:/devkitPro/devkitPPC/powerpc-eabi"
+        - "C:/devkitPro/tools"
+      CMAKE_MODULE_PATH:
+        - "C:/devkitPro/cmake"
+        - "C:/claude/bk-wiiu/Lighthouse/cmake/modules/"
+  -
+    kind: "find_package-v1"
+    backtrace:
+      - "libultraship/cmake/dependencies/wiiu.cmake:24 (find_package)"
+      - "libultraship/CMakeLists.txt:53 (include)"
+    name: "spdlog"
+    configs:
+      -
+        filename: "spdlog.cps"
+        kind: "cps"
+      -
+        filename: "spdlogConfig.cmake"
+        kind: "cmake"
+      -
+        filename: "spdlog-config.cmake"
+        kind: "cmake"
+    version_request:
+      exact: false
+    settings:
+      required: "optional"
+      quiet: true
+      global: false
+      policy_scope: true
+      bypass_provider: false
+      names:
+        - "spdlog"
+      path_suffixes:
+        - ""
+      paths:
+        CMAKE_FIND_USE_CMAKE_PATH: true
+        CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: false
+        CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+        CMAKE_FIND_USE_INSTALL_PREFIX: true
+        CMAKE_FIND_USE_PACKAGE_ROOT_PATH: true
+        CMAKE_FIND_USE_CMAKE_PACKAGE_REGISTRY: true
+        CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY: true
+        CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
+    candidates:
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/spdlog.cps"
+        mode: "none?"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/spdlogConfig.cmake"
+        mode: "none?"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/spdlog-config.cmake"
+        mode: "none?"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/spdlogConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/spdlog-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/lib/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/share/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/spdlogConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/spdlog-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/lib/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/share/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/spdlogConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/spdlog-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/lib/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/share/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/wut/spdlogConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/wut/spdlog-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/wut/lib/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/wut/share/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/spdlogConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/spdlog-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/lib/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/share/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/powerpc-eabi/spdlogConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/powerpc-eabi/spdlog-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/powerpc-eabi/lib/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/powerpc-eabi/share/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/tools/spdlogConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/tools/spdlog-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/tools/lib/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/tools/share/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/spdlogConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/spdlog-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/lib/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/share/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/spdlogConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/spdlog-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/lib/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/share/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/spdlogConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/spdlog-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/lib/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/share/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/wut/spdlogConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/wut/spdlog-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/wut/lib/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/wut/share/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/spdlogConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/spdlog-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/lib/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/share/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/powerpc-eabi/spdlogConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/powerpc-eabi/spdlog-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/powerpc-eabi/lib/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/devkitPPC/powerpc-eabi/share/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/tools/spdlogConfig.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/tools/spdlog-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/tools/lib/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/tools/share/cps/spdlog.cps"
+        mode: "cps"
+        reason: "no_exist"
+    found: null
+    search_context:
+      ENV{PATH}:
+        - "C:\\Users\\eduar\\AppData\\Local\\Microsoft\\WinGet\\Packages\\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\\mingw64\\bin"
+        - "C:\\devkitPro\\devkitPPC\\bin"
+        - "C:\\devkitPro\\tools\\bin"
+        - "C:\\Users\\eduar\\bin"
+        - "C:\\Program Files\\Git\\mingw64\\bin"
+        - "C:\\Program Files\\Git\\usr\\local\\bin"
+        - "C:\\Program Files\\Git\\usr\\bin"
+        - "C:\\Program Files\\Git\\usr\\bin"
+        - "C:\\Program Files\\Git\\mingw64\\bin"
+        - "C:\\Program Files\\Git\\usr\\bin"
+        - "C:\\Users\\eduar\\bin"
+        - "C:\\devkitPro\\msys2\\usr\\bin"
+        - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
+        - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath"
+        - "C:\\Program Files\\Meta Horizon\\Support\\oculus-runtime"
+        - "C:\\WINDOWS\\system32"
+        - "C:\\WINDOWS"
+        - "C:\\WINDOWS\\System32\\Wbem"
+        - "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0"
+        - "C:\\WINDOWS\\System32\\OpenSSH"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
+        - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
+        - "C:\\Program Files\\dotnet"
+        - "C:\\Program Files\\nodejs"
+        - "C:\\Program Files\\Git\\cmd"
+        - "C:\\Program Files\\Sunshine"
+        - "C:\\Program Files\\Sunshine\\tools"
+        - "C:\\Users\\eduar\\.cargo\\bin"
+        - "C:\\Users\\eduar\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\eduar\\AppData\\Roaming\\npm"
+        - "C:\\Users\\eduar\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\eduar\\AppData\\Local\\Microsoft\\WinGet\\Packages\\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\\mingw64\\bin"
+        - "C:\\Users\\eduar\\.dotnet\\tools"
+        - "C:\\Program Files\\nodejs"
+        - "C:\\Program Files\\Git\\mingw64\\bin"
+        - "C:\\Program Files\\Git\\usr\\bin\\vendor_perl"
+        - "C:\\Program Files\\Git\\usr\\bin\\core_perl"
+        - "C:\\Users\\eduar\\AppData\\Roaming\\Claude\\local-agent-mode-sessions\\skills-plugin\\403bddc8-4fd1-4261-a862-49ef29dec055\\4c129d08-35fb-465a-80a4-a041a8aa5282\\bin"
+      CMAKE_INSTALL_PREFIX: "C:/devkitPro/portlibs/wiiu"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "C:/devkitPro/portlibs/wiiu"
+        - "C:/devkitPro/portlibs/ppc"
+        - "C:/devkitPro/wut"
+        - "C:/devkitPro/devkitPPC"
+        - "C:/devkitPro/devkitPPC/powerpc-eabi"
+        - "C:/devkitPro/tools"
+      CMAKE_MODULE_PATH:
+        - "C:/devkitPro/cmake"
+        - "C:/claude/bk-wiiu/Lighthouse/cmake/modules/"
+  -
+    kind: "find_package-v1"
+    backtrace:
+      - "libultraship/src/CMakeLists.txt:98 (find_package)"
+    name: "tinyxml2"
+    configs:
+      -
+        filename: "tinyxml2.cps"
+        kind: "cps"
+      -
+        filename: "tinyxml2Config.cmake"
+        kind: "cmake"
+      -
+        filename: "tinyxml2-config.cmake"
+        kind: "cmake"
+    version_request:
+      exact: false
+    settings:
+      required: "required_explicit"
+      quiet: false
+      global: false
+      policy_scope: true
+      bypass_provider: false
+      names:
+        - "tinyxml2"
+      path_suffixes:
+        - ""
+      paths:
+        CMAKE_FIND_USE_CMAKE_PATH: true
+        CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: false
+        CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+        CMAKE_FIND_USE_INSTALL_PREFIX: true
+        CMAKE_FIND_USE_PACKAGE_ROOT_PATH: true
+        CMAKE_FIND_USE_CMAKE_PACKAGE_REGISTRY: true
+        CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY: true
+        CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
+    candidates:
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/tinyxml2.cps"
+        mode: "none?"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/tinyxml2Config.cmake"
+        mode: "none?"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/tinyxml2-config.cmake"
+        mode: "none?"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/tinyxml2Config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/tinyxml2-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/lib/cps/tinyxml2.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/pkgRedirects/share/cps/tinyxml2.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/tinyxml2Config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/tinyxml2-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/lib/cps/tinyxml2.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/wiiu/share/cps/tinyxml2.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/tinyxml2Config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/tinyxml2-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/lib/cps/tinyxml2.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/share/cps/tinyxml2.cps"
+        mode: "cps"
+        reason: "no_exist"
+      -
+        path: "C:/devkitPro/portlibs/ppc/lib/cmake/tinyxml2/tinyxml2Config.cmake"
+        mode: "config"
+        reason: "no_exist"
+    found:
+      path: "C:/devkitPro/portlibs/ppc/lib/cmake/tinyxml2/tinyxml2-config.cmake"
+      mode: "config"
+      version: "10.0.0"
+    search_context:
+      ENV{PATH}:
+        - "C:\\Users\\eduar\\AppData\\Local\\Microsoft\\WinGet\\Packages\\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\\mingw64\\bin"
+        - "C:\\devkitPro\\devkitPPC\\bin"
+        - "C:\\devkitPro\\tools\\bin"
+        - "C:\\Users\\eduar\\bin"
+        - "C:\\Program Files\\Git\\mingw64\\bin"
+        - "C:\\Program Files\\Git\\usr\\local\\bin"
+        - "C:\\Program Files\\Git\\usr\\bin"
+        - "C:\\Program Files\\Git\\usr\\bin"
+        - "C:\\Program Files\\Git\\mingw64\\bin"
+        - "C:\\Program Files\\Git\\usr\\bin"
+        - "C:\\Users\\eduar\\bin"
+        - "C:\\devkitPro\\msys2\\usr\\bin"
+        - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
+        - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath"
+        - "C:\\Program Files\\Meta Horizon\\Support\\oculus-runtime"
+        - "C:\\WINDOWS\\system32"
+        - "C:\\WINDOWS"
+        - "C:\\WINDOWS\\System32\\Wbem"
+        - "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0"
+        - "C:\\WINDOWS\\System32\\OpenSSH"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
+        - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
+        - "C:\\Program Files\\dotnet"
+        - "C:\\Program Files\\nodejs"
+        - "C:\\Program Files\\Git\\cmd"
+        - "C:\\Program Files\\Sunshine"
+        - "C:\\Program Files\\Sunshine\\tools"
+        - "C:\\Users\\eduar\\.cargo\\bin"
+        - "C:\\Users\\eduar\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\eduar\\AppData\\Roaming\\npm"
+        - "C:\\Users\\eduar\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\eduar\\AppData\\Local\\Microsoft\\WinGet\\Packages\\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\\mingw64\\bin"
+        - "C:\\Users\\eduar\\.dotnet\\tools"
+        - "C:\\Program Files\\nodejs"
+        - "C:\\Program Files\\Git\\mingw64\\bin"
+        - "C:\\Program Files\\Git\\usr\\bin\\vendor_perl"
+        - "C:\\Program Files\\Git\\usr\\bin\\core_perl"
+        - "C:\\Users\\eduar\\AppData\\Roaming\\Claude\\local-agent-mode-sessions\\skills-plugin\\403bddc8-4fd1-4261-a862-49ef29dec055\\4c129d08-35fb-465a-80a4-a041a8aa5282\\bin"
+      CMAKE_INSTALL_PREFIX: "C:/devkitPro/portlibs/wiiu"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "C:/devkitPro/portlibs/wiiu"
+        - "C:/devkitPro/portlibs/ppc"
+        - "C:/devkitPro/wut"
+        - "C:/devkitPro/devkitPPC"
+        - "C:/devkitPro/devkitPPC/powerpc-eabi"
+        - "C:/devkitPro/tools"
+      CMAKE_MODULE_PATH:
+        - "C:/devkitPro/cmake"
+        - "C:/claude/bk-wiiu/Lighthouse/cmake/modules/"
+        - "C:/devkitPro/portlibs/ppc/lib/cmake/libzip/modules"
+...

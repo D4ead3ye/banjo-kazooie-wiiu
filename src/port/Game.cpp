@@ -39,6 +39,11 @@
 
 extern "C" {
 #include "enums.h"
+
+#ifdef __WIIU__
+extern "C" enum map_e gsworld_getMap(void);
+extern "C" enum level_e level_get(void);
+#endif
 #include "core1/core1.h"
 #include "core1/main.h"
 #include "core1/thread5.h"
@@ -363,6 +368,17 @@ int SDL_main(int argc, char* argv[]) {
     while (WindowIsRunning() || !sGameThreadDone.load()) {
         ThreadWatchdog_Beat(WATCHDOG_MAIN_LOOP);
         port_noteMainLoopAlive();
+#ifdef __WIIU__
+        {
+            // What does the game think it is doing? Everything else about the
+            // scene has checked out, so the remaining question is whether a
+            // level is ever entered at all.
+            static int tick = 0;
+            if ((tick++ % 60) == 0) {
+                WIIU_TRACE("[game] map=%d level=%d", (int)gsworld_getMap(), (int)level_get());
+            }
+        }
+#endif
         // Pump events every iteration: a task-starved pass must not starve
         // input and window messages.
         Ship::Context::GetRawInstance()->GetWindow()->HandleEvents();
