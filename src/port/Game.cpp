@@ -46,6 +46,7 @@ extern "C" enum level_e level_get(void);
 extern "C" unsigned int gWiiuModelCalls, gWiiuModelNoBin, gWiiuModelFarCull, gWiiuModelDrawn;
 extern "C" unsigned int gWiiuModelLodCull, gWiiuModelFrustum, gWiiuModelEmitted;
 extern "C" float gWiiuLastLocalNorm, gWiiuLastDrawDist, gWiiuLastCamDist;
+extern "C" unsigned int gWiiuSegTotal, gWiiuSegMarked, gWiiuSegResolved, gWiiuSegUnresolved, gWiiuSegLooksSeg;
 #endif
 #include "core1/core1.h"
 #include "core1/main.h"
@@ -393,7 +394,12 @@ int SDL_main(int argc, char* argv[]) {
                            gWiiuModelEmitted, (int)gWiiuLastLocalNorm, (int)gWiiuLastDrawDist,
                            (int)gWiiuLastCamDist);
                 gWiiuModelCalls = gWiiuModelNoBin = gWiiuModelFarCull = gWiiuModelDrawn = 0;
+                WIIU_TRACE("[seg] total=%u marked=%u resolved=%u unresolved=%u lostmarker=%u",
+                           gWiiuSegTotal, gWiiuSegMarked, gWiiuSegResolved, gWiiuSegUnresolved,
+                           gWiiuSegLooksSeg);
                 gWiiuModelLodCull = gWiiuModelFrustum = gWiiuModelEmitted = 0;
+                gWiiuSegTotal = gWiiuSegMarked = gWiiuSegResolved = 0;
+                gWiiuSegUnresolved = gWiiuSegLooksSeg = 0;
             }
         }
 #endif
