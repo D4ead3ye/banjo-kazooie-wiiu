@@ -1,3 +1,4 @@
+#include "port/WiiUDebug.h"
 #include "Engine.h"
 #include <algorithm>
 #include <filesystem>
@@ -125,7 +126,9 @@ GameEngine::GameEngine() {
     Ship::Switch::Init(Ship::PostInitPhase);
 #endif
 
+    WIIU_TRACE("[engine] -> InitConfiguration");
     this->context->InitConfiguration();
+    WIIU_TRACE("[engine] <- InitConfiguration");
     this->context->InitConsoleVariables();
     assets_path = Ship::Context::LocateFileAcrossAppDirs("lighthouse.o2r");
     portArchiveVersionMatch = std::filesystem::exists(assets_path); // TODO: port archive versioning
@@ -133,7 +136,9 @@ GameEngine::GameEngine() {
     auto controlDeck = std::make_shared<LUS::ControlDeck>();
 
     this->context->InitControlDeck(controlDeck);
+    WIIU_TRACE("[engine] -> InitResourceManager");
     this->context->InitResourceManager({ assets_path }, {}, 3, true);
+    WIIU_TRACE("[engine] <- InitResourceManager");
     this->context->InitConsole();
 
     // Register console commands for menu buttons
@@ -154,8 +159,12 @@ GameEngine::GameEngine() {
                   "Quit the game." });
 
     lhFast3dWindow = std::make_shared<Fast::Fast3dWindow>(std::vector<std::shared_ptr<Ship::GuiWindow>>({}));
+    WIIU_TRACE("[engine] -> InitWindow");
     this->context->InitWindow(lhFast3dWindow);
+    WIIU_TRACE("[engine] <- InitWindow");
+    WIIU_TRACE("[engine] -> InitAudio");
     this->context->InitAudio({ .SampleRate = 22000, .SampleLength = 736, .DesiredBuffered = 2208 });
+    WIIU_TRACE("[engine] <- InitAudio");
 
     LighthouseGui::SetupMenu();
 

@@ -2,12 +2,12 @@
 
 /*  Startup tracing for the Wii U build.
 
-    Two sinks, because either can fail on its own:
-      - UDP (port 4405), read on a PC, which needs the network to cooperate
-      - the console's own screen via OSScreen, which needs nothing
+    Logs over UDP (port 4405), read on a PC. An OSScreen sink was used while
+    UDP was still unproven; it is gone because its buffers have to be released
+    before GX2Init and drawing to it afterwards is a crash waiting to happen.
 
-    The on-screen sink has to be torn down before GX2 initialises, since both
-    want the scan buffers. gfx_wiiu.cpp calls WIIU_TRACE_SCREEN_OFF() for that.
+    Also installs a terminate handler: "Abort called" on the console is
+    usually std::terminate, and the exception message is the useful part.
 
     Enabled unconditionally while the port is being brought up.
 */
@@ -15,12 +15,35 @@
 
 #include <whb/log.h>
 #include <whb/log_udp.h>
-#include <whb/log_console.h>
 #include <whb/crash.h>
 
-#define WIIU_TRACE_INIT()                   do {                                        WHBLogUdpInit();                        WHBLogConsoleInit();                    WHBLogConsoleSetColor(0x0A3D1400);         WHBInitCrashHandler();              } while (0)
+#include <cstdlib>
+#include <exception>
 
-#define WIIU_TRACE(...)          do {                             WHBLogPrintf(__VA_ARGS__);         WHBLogConsoleDraw();     } while (0)
+inline void WiiUTerminateHandler() {
+    WHBLogPrintf("[lh] !!! std::terminate");
+    if (std::exception_ptr active = std::current_exception()) {
+        try {
+            std::rethrow_exception(active);
+        } catch (const std::exception& e) {
+            WHBLogPrintf("[lh] uncaught exception: %s", e.what());
+        } catch (...) {
+            WHBLogPrintf("[lh] uncaught exception of non-standard type");
+        }
+    } else {
+        WHBLogPrintf("[lh] terminate with no active exception");
+    }
+    std::abort();
+}
+
+#define WIIU_TRACE_INIT()                        \
+    do {                                         \
+        WHBLogUdpInit();                         \
+        WHBInitCrashHandler();                   \
+        std::set_terminate(WiiUTerminateHandler); \
+    } while (0)
+
+#define WIIU_TRACE(...) WHBLogPrintf(__VA_ARGS__)
 
 #else
 
