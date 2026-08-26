@@ -14,20 +14,27 @@
 #include <atomic>
 #include <chrono>
 #include <cstdint>
+#include <condition_variable>
 #include <mutex>
+#include <thread>
 
 extern "C" {
 #include <libultra/exception.h> // OSIntMask, OS_IM_NONE
 }
 
 namespace {
-std::recursive_mutex gAudioLock;
-#ifdef __WIIU__
-// no TLS in RPX; see port/WiiUThreadLocal.h
-#define gAudioMaskDepth (LighthouseWiiU::Locals().audioMaskDepth)
-#else
-thread_local int gAudioMaskDepth = 0;
-#endif
+// osSetIntMask is a *global* interrupt mask on the N64, so the depth that
+// mirrors it has to be global too. Keeping it per-thread meant that a section
+// opened on one thread and restored on another - which loading a level's sound
+// banks does - left the lock held forever and hung every thread that touched
+// audio afterwards. A recursive_mutex cannot express that either, since only
+// the owning thread may unlock one, so this is a hand-rolled recursive lock
+// whose depth any thread can release.
+std::mutex gAudioMutex;
+std::condition_variable gAudioCv;
+int gAudioMaskDepth = 0;
+bool gAudioMaskHeld = false;
+std::thread::id gAudioMaskOwner;
 } // namespace
 
 // Window-freeze audio hold
@@ -50,41 +57,48 @@ extern "C" int port_audioStallHold(void) {
     return allowedUntil != 0 && NowMs() > allowedUntil;
 }
 
+extern "C" void port_audioIntMaskEnter(void);
+extern "C" void port_audioIntMaskExit(void);
+
 extern "C" void port_lockAudio(void) {
-    gAudioLock.lock();
+    port_audioIntMaskEnter();
 }
 
 extern "C" void port_unlockAudio(void) {
-    gAudioLock.unlock();
+    port_audioIntMaskExit();
 }
 
 extern "C" void port_audioIntMaskEnter(void) {
+    const auto self = std::this_thread::get_id();
+    std::unique_lock<std::mutex> lk(gAudioMutex);
+    while (gAudioMaskHeld && gAudioMaskOwner != self) {
+        if (gAudioCv.wait_for(lk, std::chrono::seconds(2)) == std::cv_status::timeout) {
 #ifdef __WIIU__
-    static int traced = 0;
-    const bool trace = traced < 4;
-    if (trace) {
-        WHBLogPrintf("[audio] mask enter %d: locking", traced);
-    }
+            // Never hang silently again: say so and keep waiting.
+            WHBLogPrintf("[audio] STUCK waiting on the interrupt mask, depth %d", gAudioMaskDepth);
 #endif
-    gAudioLock.lock();
-#ifdef __WIIU__
-    if (trace) {
-        WHBLogPrintf("[audio] mask enter %d: locked, bumping depth", traced);
+        }
     }
-#endif
+    gAudioMaskHeld = true;
+    gAudioMaskOwner = self;
     gAudioMaskDepth++;
-#ifdef __WIIU__
-    if (trace) {
-        WHBLogPrintf("[audio] mask enter %d: depth now %d", traced, gAudioMaskDepth);
-        traced++;
-    }
-#endif
 }
 
 extern "C" void port_audioIntMaskExit(void) {
-    if (gAudioMaskDepth > 0) {
-        gAudioMaskDepth--;
-        gAudioLock.unlock();
+    const auto self = std::this_thread::get_id();
+    std::unique_lock<std::mutex> lk(gAudioMutex);
+    if (gAudioMaskDepth == 0) {
+        return; // restore without a matching mask - nothing to give back
+    }
+#ifdef __WIIU__
+    if (gAudioMaskOwner != self) {
+        WHBLogPrintf("[audio] cross-thread restore of the interrupt mask (depth %d)", gAudioMaskDepth);
+    }
+#endif
+    if (--gAudioMaskDepth == 0) {
+        gAudioMaskHeld = false;
+        gAudioMaskOwner = std::thread::id();
+        gAudioCv.notify_all();
     }
 }
 
