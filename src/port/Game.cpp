@@ -336,11 +336,17 @@ int SDL_main(int argc, char* argv[]) {
     WIIU_TRACE("[lh] before: GameEngine::Create returning");
     GameEngine::Create(argc, argv);
     WIIU_TRACE("[lh] after: GameEngine::Create returning");
+#ifdef __WIIU__
+    WIIU_TRACE("[lh] mem2 free=%u", (unsigned)LighthouseWiiU::FreeMem2());
+#endif
     // Both threads are created during core1_init, so allowlist them first.
     OS_EnableThreadEntry((void*)viMgr_entry);
     EnableThread5();
     WIIU_TRACE("[lh] before: core1_init returning");
     core1_init();
+#ifdef __WIIU__
+    WIIU_TRACE("[lh] mem2 free=%u", (unsigned)LighthouseWiiU::FreeMem2());
+#endif
     WIIU_TRACE("[lh] after: core1_init returning");
     WIIU_TRACE("[lh] before: watchdog started");
     ThreadWatchdog_Start();

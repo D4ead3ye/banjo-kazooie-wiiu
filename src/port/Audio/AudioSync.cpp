@@ -9,6 +9,7 @@
 
 #ifdef __WIIU__
 #include "port/WiiUThreadLocal.h"
+#include <whb/log.h>
 #endif
 #include <atomic>
 #include <chrono>
@@ -58,8 +59,26 @@ extern "C" void port_unlockAudio(void) {
 }
 
 extern "C" void port_audioIntMaskEnter(void) {
+#ifdef __WIIU__
+    static int traced = 0;
+    const bool trace = traced < 4;
+    if (trace) {
+        WHBLogPrintf("[audio] mask enter %d: locking", traced);
+    }
+#endif
     gAudioLock.lock();
+#ifdef __WIIU__
+    if (trace) {
+        WHBLogPrintf("[audio] mask enter %d: locked, bumping depth", traced);
+    }
+#endif
     gAudioMaskDepth++;
+#ifdef __WIIU__
+    if (trace) {
+        WHBLogPrintf("[audio] mask enter %d: depth now %d", traced, gAudioMaskDepth);
+        traced++;
+    }
+#endif
 }
 
 extern "C" void port_audioIntMaskExit(void) {

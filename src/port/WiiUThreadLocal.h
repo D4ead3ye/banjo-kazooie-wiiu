@@ -23,6 +23,9 @@ struct ThreadLocals {
 
 ThreadLocals& Locals();
 
+// Free space in the default (MEM2) heap, for spotting exhaustion.
+uint32_t FreeMem2();
+
 } // namespace LighthouseWiiU
 
 #endif
