@@ -1041,6 +1041,15 @@ void modelRender_executeGeoCmds(Gfx ** gfx, Mtx ** mtx, BKGeoCmd *geo_list){
     }while(1);
 }
 
+#ifdef __WIIU__
+// Bring-up: no 3D model has ever appeared on this target, so count how far
+// each draw gets. These are read by the port layer once a second.
+unsigned int gWiiuModelCalls = 0;      // entered at all
+unsigned int gWiiuModelNoBin = 0;      // rejected by the model_bin/secondary guard
+unsigned int gWiiuModelFarCull = 0;    // beyond the 17000-unit camera cull
+unsigned int gWiiuModelDrawn = 0;      // reached the geometry walk
+#endif
+
 BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation[3], f32 scale, f32*arg5, BKModelBin* model_bin){
 
     f32 camera_focus[3];
@@ -1056,10 +1065,15 @@ BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation
     f32 tmp_f0;
     f32 padB8;
     
+#ifdef __WIIU__
+    gWiiuModelCalls++;
+#endif
     if( (!model_bin && !sSecondaryModelData.model_id)
         || (model_bin && sSecondaryModelData.model_id)
     ){
-
+#ifdef __WIIU__
+        gWiiuModelNoBin++;
+#endif
         modelRender_reset();
         return 0;
     }
@@ -1097,9 +1111,16 @@ BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation
         || ((camera_focus[1] < -17000.0f) || (17000.0f < camera_focus[1]))
         || ((camera_focus[2] < -17000.0f) || (17000.0f < camera_focus[2]))
     ){
+#ifdef __WIIU__
+        gWiiuModelFarCull++;
+#endif
         modelRender_reset();
         return 0;
     }
+
+#ifdef __WIIU__
+    gWiiuModelDrawn++;
+#endif
 
     if(D_80383758.unk18){
         modelRenderCameraPosition[0] = D_80383758.unk0[0];

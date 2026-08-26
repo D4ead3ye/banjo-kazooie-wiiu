@@ -1421,3 +1421,8 @@
 39	80	8094374608333954	C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/cmake.verify_globs	117edc86797feed7
 125	1121	8094374609200200	CMakeFiles/Lighthouse.dir/src/port/Audio/AudioSync.o	944291ae15ae7650
 1121	2685	8094374619157912	Lighthouse.elf	59956e07d0175375
+46	81	8094375317303752	C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/cmake.verify_globs	117edc86797feed7
+41	82	8094379872457209	C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/cmake.verify_globs	117edc86797feed7
+131	508	8094379873358710	CMakeFiles/Lighthouse.dir/src/core2/model/modelRender.o	7259555e3a165400
+143	3551	8094379873478860	CMakeFiles/Lighthouse.dir/src/port/Game.o	233dd1560dcfcf2c
+3552	5128	8094379907564747	Lighthouse.elf	59956e07d0175375

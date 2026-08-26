@@ -43,6 +43,7 @@ extern "C" {
 #ifdef __WIIU__
 extern "C" enum map_e gsworld_getMap(void);
 extern "C" enum level_e level_get(void);
+extern "C" unsigned int gWiiuModelCalls, gWiiuModelNoBin, gWiiuModelFarCull, gWiiuModelDrawn;
 #endif
 #include "core1/core1.h"
 #include "core1/main.h"
@@ -383,8 +384,10 @@ int SDL_main(int argc, char* argv[]) {
                 WIIU_TRACE("[game] >>> map %d -> %d, level %d -> %d", lastMap, map, lastLevel, level);
                 lastMap = map;
                 lastLevel = level;
-            } else if ((tick++ % 600) == 0) {
-                WIIU_TRACE("[game] map=%d level=%d", map, level);
+            } else if ((tick++ % 60) == 0) {
+                WIIU_TRACE("[game] map=%d level=%d | model calls=%u nobin=%u farcull=%u drawn=%u", map, level,
+                           gWiiuModelCalls, gWiiuModelNoBin, gWiiuModelFarCull, gWiiuModelDrawn);
+                gWiiuModelCalls = gWiiuModelNoBin = gWiiuModelFarCull = gWiiuModelDrawn = 0;
             }
         }
 #endif
