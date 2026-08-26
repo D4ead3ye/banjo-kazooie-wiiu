@@ -9,6 +9,8 @@
 #include "port/Enhancements/Events/Hooks/Events.h"
 
 #include <string>
+#include <cstring>
+#include <algorithm>
 #include <vector>
 
 #include "model.h"
@@ -41,6 +43,132 @@ std::shared_ptr<Ship::Blob> MakeBlob(const std::shared_ptr<Ship::ResourceInitDat
 }
 
 } // anonymous namespace
+
+
+// ── Geo layout byte order ───────────────────────────────────────────────────
+// Torch writes the geo command tree with plain memcpy, so it lands in the byte
+// order of the machine that ran the extraction - little-endian on every
+// platform this port has shipped from. The game reads the fields natively, so
+// on a big-endian target every command's opcode comes out shifted (0x03000000
+// instead of 3), fails modelRender_executeGeoCmds' bounds check, and is
+// silently skipped. No mesh is ever emitted and nothing is logged.
+//
+// Swap each command in place, per field, matching BK64::GeoLayoutBinaryExporter.
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#define BK_GEO_NEEDS_SWAP 1
+#else
+#define BK_GEO_NEEDS_SWAP 0
+#endif
+
+#if BK_GEO_NEEDS_SWAP
+namespace {
+
+void Swap16At(uint8_t* p, size_t off) {
+    std::swap(p[off], p[off + 1]);
+}
+
+void Swap32At(uint8_t* p, size_t off) {
+    std::swap(p[off], p[off + 3]);
+    std::swap(p[off + 1], p[off + 2]);
+}
+
+uint32_t ReadU32Native(const uint8_t* p) {
+    uint32_t v;
+    std::memcpy(&v, p, 4);
+    return v;
+}
+
+// Field widths after the 8-byte {opCode, cmdLength} header, indexed by opcode.
+// 4 = one 32-bit field, 2 = one 16-bit field, 1 = a byte (never swapped).
+// A trailing -4 or -2 means "repeat that width until the command ends".
+const std::vector<int>* GeoCmdFieldWidths(uint32_t opCode) {
+    static const std::vector<int> k0 = { 2, 2, 4, 4, 4 };
+    static const std::vector<int> k1 = { 4, 4, 4, 4, 4, 4, 2, 2, 4 };
+    static const std::vector<int> k2 = { 1, 1, 2 };
+    static const std::vector<int> k3 = { 2, 2 };
+    static const std::vector<int> k5 = { -2 };
+    static const std::vector<int> k6 = { 4 };
+    static const std::vector<int> k7 = { 2, 2 };
+    static const std::vector<int> k8 = { 4, 4, 4, 4, 4, 4 };
+    static const std::vector<int> kA = { 2, 2, 4, 4, 4 };
+    static const std::vector<int> kC = { 2, 2, -4 };
+    static const std::vector<int> kD = { 2, 2, 2, 2, 2, 2, 2, 2 };
+    static const std::vector<int> kE = { 2, 2, 2, 2, 2, 2 };
+    static const std::vector<int> kF = { 2, 1, 1 };
+    static const std::vector<int> k10 = { 4 };
+    static const std::vector<int> kNone = {};
+    switch (opCode) {
+        case 0x0: return &k0;
+        case 0x1: return &k1;
+        case 0x2: return &k2;
+        case 0x3: return &k3;
+        case 0x5: return &k5;
+        case 0x6: return &k6;
+        case 0x7: return &k7;
+        case 0x8: return &k8;
+        case 0xA: return &kA;
+        case 0xC: return &kC;
+        case 0xD: return &kD;
+        case 0xE: return &kE;
+        case 0xF: return &kF;
+        case 0x10: return &k10;
+        case 0x4:
+        case 0x9:
+        case 0xB: return &kNone; // no-ops carry no arguments
+        default: return nullptr;
+    }
+}
+
+void SwapGeoLayout(std::vector<uint8_t>& data) {
+    size_t pos = 0;
+    while (pos + 8 <= data.size()) {
+        uint8_t* cmd = data.data() + pos;
+
+        // The header is stored in the extraction host's order, so read it
+        // before swapping, then swap both words in place.
+        const uint32_t opCode = __builtin_bswap32(ReadU32Native(cmd));
+        const uint32_t length = __builtin_bswap32(ReadU32Native(cmd + 4));
+        Swap32At(cmd, 0);
+        Swap32At(cmd, 4);
+
+        const auto* widths = GeoCmdFieldWidths(opCode);
+        if (widths == nullptr) {
+            break; // unknown opcode: stop rather than corrupt what follows
+        }
+
+        const size_t end = (length >= 8 && pos + length <= data.size()) ? pos + length : data.size();
+        size_t off = pos + 8;
+        for (int w : *widths) {
+            if (w == 4 && off + 4 <= end) {
+                Swap32At(data.data(), off);
+                off += 4;
+            } else if (w == 2 && off + 2 <= end) {
+                Swap16At(data.data(), off);
+                off += 2;
+            } else if (w == 1 && off + 1 <= end) {
+                off += 1;
+            } else if (w == -4) {
+                while (off + 4 <= end) {
+                    Swap32At(data.data(), off);
+                    off += 4;
+                }
+            } else if (w == -2) {
+                while (off + 2 <= end) {
+                    Swap16At(data.data(), off);
+                    off += 2;
+                }
+            }
+        }
+
+        if (length < 8) {
+            break; // malformed: a command must at least cover its header
+        }
+        pos += length;
+    }
+}
+
+} // namespace
+#endif
 
 std::shared_ptr<Ship::IResource>
 ResourceFactoryBinaryModelV0::ReadResource(std::shared_ptr<Ship::File> file,
@@ -453,7 +581,15 @@ ResourceFactoryBinaryModelV0::ReadResource(std::shared_ptr<Ship::File> file,
     if (geoBlob && !geoBlob->Data.empty()) {
         PadTo8(out);
         hdr()->geo_list_offset = static_cast<int32_t>(out.size());
+#if BK_GEO_NEEDS_SWAP
+        {
+            std::vector<uint8_t> geo = geoBlob->Data;
+            SwapGeoLayout(geo);
+            AppendBytes(out, geo.data(), geo.size());
+        }
+#else
         AppendBytes(out, geoBlob->Data.data(), geoBlob->Data.size());
+#endif
     }
 
     // Animation section

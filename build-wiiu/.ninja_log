@@ -1424,3 +1424,6 @@
 148	7195	8094780047982337	libultraship/src/CMakeFiles/libultraship.dir/fast/interpreter.o	f263cceeaea367f5
 7196	7514	8094780118456834	libultraship/src/libultraship.a	432a27479c7c41d0
 7514	9154	8094780121640776	Lighthouse.elf	59956e07d0175375
+45	80	8094785121458914	C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/cmake.verify_globs	117edc86797feed7
+129	4403	8094785122295822	CMakeFiles/Lighthouse.dir/src/port/Resource/Importers/ModelFactory.o	40f6a17958ad9365
+4404	5972	8094785165041141	Lighthouse.elf	59956e07d0175375
