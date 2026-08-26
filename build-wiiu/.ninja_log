@@ -1432,3 +1432,8 @@
 124	4754	8094788990615869	Torch/CMakeFiles/torch.dir/src/factories/bk64/GeoLayoutFactory.o	b5416f65d2d0827c
 4755	5314	8094789036922944	Torch/libtorch.a	4da6db344d38529b
 5314	6931	8094789042520403	Lighthouse.elf	59956e07d0175375
+45	75	8094789762085328	C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/cmake.verify_globs	117edc86797feed7
+40	73	8094791860189760	C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/cmake.verify_globs	117edc86797feed7
+121	4028	8094791860996804	CMakeFiles/Lighthouse.dir/src/port/Game.o	233dd1560dcfcf2c
+130	4603	8094791861096980	CMakeFiles/Lighthouse.dir/src/port/Resource/Importers/ModelFactory.o	40f6a17958ad9365
+4604	6200	8094791905824203	Lighthouse.elf	59956e07d0175375

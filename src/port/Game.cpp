@@ -300,7 +300,7 @@ void push_frame() {
 
 int SDL_main(int argc, char* argv[]) {
     WIIU_TRACE_INIT();
-    WIIU_TRACE("[lh] SDL_main entered");
+    WIIU_TRACE("[lh] SDL_main entered - build " __DATE__ " " __TIME__);
 #ifdef _WIN32
     timeBeginPeriod(1);
 #endif
