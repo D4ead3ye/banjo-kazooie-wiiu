@@ -1,3 +1,4 @@
+#include "port/WiiUDebug.h"
 #include "LighthouseMenu.h"
 #include "port/build.h"
 #include "port/Engine.h"
@@ -115,6 +116,7 @@ static void DrawResetAll(WidgetInfo& info) {
 }
 
 void LighthouseMenu::AddMenuSettings() {
+    WIIU_TRACE("[menu] AddMenuSettings begin");
     // Add Settings Menu
     AddMenuEntry("Settings", CVAR_SETTING("Menu.SettingsSidebarSection"));
     AddSidebarEntry("Settings", "General", 2);

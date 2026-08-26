@@ -1,3 +1,4 @@
+#include "port/WiiUDebug.h"
 #include "LighthouseMenu.h"
 #include "port/Engine.h"
 #include "Notification.h"
@@ -43,6 +44,7 @@ DebugLogOption defaultLogLevel = DEBUG_LOG_INFO;
 #endif
 
 void LighthouseMenu::AddMenuDevTools() {
+    WIIU_TRACE("[menu] AddMenuDevTools begin");
     // Add Dev Tools Menu
     AddMenuEntry("Dev Tools", CVAR_SETTING("Menu.DevToolsSidebarSection"));
 

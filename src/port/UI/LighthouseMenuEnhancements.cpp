@@ -1,3 +1,4 @@
+#include "port/WiiUDebug.h"
 #include "LighthouseMenu.h"
 #include "port/Enhancements/Trackers/DisplayOverlay.h"
 #include "port/Network/Anchor/Anchor.h"
@@ -66,6 +67,7 @@ extern std::shared_ptr<LighthouseMenu> mLighthouseMenu;
 using namespace UIWidgets;
 
 void LighthouseMenu::AddMenuEnhancements() {
+    WIIU_TRACE("[menu] AddMenuEnhancements begin");
     // Add Enhancements Menu
     AddMenuEntry("Enhancements", CVAR_SETTING("Menu.EnhancementsSidebarSection"));
 

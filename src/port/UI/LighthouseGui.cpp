@@ -1,3 +1,4 @@
+#include "port/WiiUDebug.h"
 #include "LighthouseGui.hpp"
 
 #include <spdlog/spdlog.h>
@@ -85,13 +86,20 @@ UIWidgets::Colors GetMenuThemeColor() {
 }
 
 void SetupMenu() {
+    WIIU_TRACE("[menu] SetupMenu: GetGui");
     auto gui = Ship::Context::GetRawInstance()->GetWindow()->GetGui();
+    WIIU_TRACE("[menu] SetupMenu: construct LighthouseMenu");
     mLighthouseMenu = std::make_shared<LighthouseGui::LighthouseMenu>(CVAR_WINDOW("Menu"), "Port Menu");
+    WIIU_TRACE("[menu] SetupMenu: SetMenu");
     gui->SetMenu(mLighthouseMenu);
 
+    WIIU_TRACE("[menu] SetupMenu: construct ModalWindow");
     mModalWindow = std::make_shared<LighthouseModalWindow>(CVAR_WINDOW("ModalWindow"), "Modal Window");
+    WIIU_TRACE("[menu] SetupMenu: AddGuiWindow");
     gui->AddGuiWindow(mModalWindow);
+    WIIU_TRACE("[menu] SetupMenu: Show");
     mModalWindow->Show();
+    WIIU_TRACE("[menu] SetupMenu: done");
 }
 
 void SetupGuiElements() {

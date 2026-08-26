@@ -1,4 +1,5 @@
 #ifdef __WIIU__
+#include "port/WiiUDebug.h"
 #include <whb/log.h>
 #endif
 #include "LighthouseMenu.h"
@@ -144,6 +145,7 @@ LighthouseMenu::LighthouseMenu(const std::string& consoleVariable, const std::st
 }
 
 void LighthouseMenu::InitElement() {
+    WIIU_TRACE("[menu] InitElement begin");
     Ship::Menu::InitElement();
     AddMenuSettings();
     AddMenuEnhancements();

@@ -1,3 +1,4 @@
+#include "port/WiiUDebug.h"
 #include "LighthouseMenu.h"
 #include "port/Engine.h"
 #include "Notification.h"
@@ -12,6 +13,7 @@
 namespace LighthouseGui {
 
 void LighthouseMenu::AddMenuNetwork() {
+    WIIU_TRACE("[menu] AddMenuNetwork begin");
     // Add Network Menu
     AddMenuEntry("Network", CVAR_SETTING("Menu.NetworkSidebarSection"));
     WidgetPath path;

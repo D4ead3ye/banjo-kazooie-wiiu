@@ -1503,3 +1503,11 @@
 185	5610	8094185900190224	CMakeFiles/Lighthouse.dir/src/port/UI/LighthouseMenu.o	870ec7f337abfae
 173	7358	8094185900069778	CMakeFiles/Lighthouse.dir/src/port/Engine.o	5542f7a369db7f54
 7358	9186	8094185971916558	Lighthouse.elf	59956e07d0175375
+53	111	8094191110228166	C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/cmake.verify_globs	117edc86797feed7
+230	5951	8094191111998387	CMakeFiles/Lighthouse.dir/src/port/UI/LighthouseMenuNetwork.o	5b340d81df490f
+199	6783	8094191111692446	CMakeFiles/Lighthouse.dir/src/port/UI/LighthouseMenuDevTools.o	3eb861d72cfeccbb
+186	7233	8094191111567070	CMakeFiles/Lighthouse.dir/src/port/UI/LighthouseMenu.o	870ec7f337abfae
+174	7248	8094191111441809	CMakeFiles/Lighthouse.dir/src/port/UI/LighthouseGui.o	32bf9a05984d4308
+246	7752	8094191112159044	CMakeFiles/Lighthouse.dir/src/port/UI/LighthouseMenuSettings.o	dec541844d33ed6
+213	7985	8094191111837942	CMakeFiles/Lighthouse.dir/src/port/UI/LighthouseMenuEnhancements.o	13db8de0326eb18
+7985	9759	8094191189552807	Lighthouse.elf	59956e07d0175375
