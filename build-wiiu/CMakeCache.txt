@@ -258,8 +258,11 @@ CMAKE_INSTALL_SYSCONFDIR:PATH=etc
 //Path to a program.
 CMAKE_LINKER:FILEPATH=C:/devkitPro/devkitPPC/bin/powerpc-eabi-ld.exe
 
-//Program used to build from build.ninja files.
-CMAKE_MAKE_PROGRAM:FILEPATH=/Users/eduar/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/ninja.exe
+//Tool that can launch the native build system. The value may be
+// the full path to an executable or just the tool name if it is
+// expected to be in the PATH. The tool selected depends on the
+// CMAKE_GENERATOR used to configure the project:
+CMAKE_MAKE_PROGRAM:UNINITIALIZED=C:/Users/eduar/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/ninja.exe
 
 //Flags used by the linker during the creation of modules during
 // all build types.
@@ -303,7 +306,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_GIT_BRANCH:STRING=develop
 
 //Git commit hash
-CMAKE_PROJECT_GIT_COMMIT_HASH:STRING=6a4044c
+CMAKE_PROJECT_GIT_COMMIT_HASH:STRING=d552d8c
 
 //Git commit tag
 CMAKE_PROJECT_GIT_COMMIT_TAG:STRING=
@@ -1214,6 +1217,8 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 CMAKE_STRIP-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_TAPI
 CMAKE_TAPI-ADVANCED:INTERNAL=1
+//uname command
+CMAKE_UNAME:INTERNAL=/c/Program Files/Git/usr/bin/uname.exe
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Deprecated.  Use -W[no-]deprecated instead.

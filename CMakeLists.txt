@@ -416,7 +416,9 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "CafeOS")
 		"$<$<CONFIG:Release>:"
 			"NDEBUG"
 		">"
-        "SPDLOG_ACTIVE_LEVEL=3;"
+        # Bring-up: 3 (warn) compiles out every SPDLOG_INFO in the port
+        # layer, including the asset-manifest and resource diagnostics.
+        "SPDLOG_ACTIVE_LEVEL=2;"
 		"SPDLOG_NO_THREAD_ID;"
         "SPDLOG_NO_TLS;"
 		"STBI_NO_THREAD_LOCALS;"

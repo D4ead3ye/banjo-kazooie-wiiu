@@ -30,7 +30,7 @@ CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/spdlog-populate
 // the full path to an executable or just the tool name if it is
 // expected to be in the PATH. The tool selected depends on the
 // CMAKE_GENERATOR used to configure the project:
-CMAKE_MAKE_PROGRAM:FILEPATH=/Users/eduar/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/ninja.exe
+CMAKE_MAKE_PROGRAM:FILEPATH=C:/Users/eduar/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/ninja.exe
 
 //Value Computed by CMake
 CMAKE_PROJECT_COMPAT_VERSION:STATIC=
