@@ -1,6 +1,9 @@
 #include <PR/ultraerror.h>
 #include "synthInternals.h"
 #include <ultra64.h>
+#ifdef __WIIU__
+#include <whb/log.h>
+#endif
 
 void *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size)
 {
@@ -8,6 +11,13 @@ void *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size)
     u8 *ptr = 0;
 
     bytes = (num*size + AL_CACHE_ALIGN) & ~AL_CACHE_ALIGN;
+
+#ifdef __WIIU__
+    if ((hp->cur + bytes) > (hp->base + hp->len)) {
+        WHBLogPrintf("[alheap] EXHAUSTED: want %d (%dx%d), used %d of %d", (int)bytes, (int)num, (int)size,
+                     (int)(hp->cur - hp->base), (int)hp->len);
+    }
+#endif
     
 #ifdef _DEBUG
     hp->count++;    

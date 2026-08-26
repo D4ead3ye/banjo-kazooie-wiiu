@@ -16,12 +16,13 @@
 
 // [port] BK audio - SDK calls stubbed, functions preserved for game code
 
-// [port] 64-bit structs with pointers are larger — double the heap
-#if UINTPTR_MAX > 0xFFFFFFFF
+// [port] The native structs are larger than the N64 originals on every target,
+// not just 64-bit ones: pointers are wider on 64-bit, and field widths and
+// alignment grew even where they are not. ALVoiceState alone is 0x38 bytes.
+// The original N64 size leaves alHeapAlloc returning NULL partway through
+// musicInstruments_init, and alHeapDBAlloc reports exhaustion by returning
+// NULL with no warning, so the caller writes its voice list to address 0.
 #define AUDIO_HEAP_SIZE VER_SELECT(0x42000, 0x47400, 0x42000, 0x42000)
-#else
-#define AUDIO_HEAP_SIZE VER_SELECT(0x21000, 0x23A00, 0x21000, 0x21000)
-#endif
 #define AUDIOMANAGER_THREAD_STACK_SIZE 3704
 #define NUM_SAMPLES 184 // n_audio has fixed sample count of 184
 #define NUM_OSC_STATES 48

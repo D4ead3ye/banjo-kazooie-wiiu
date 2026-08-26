@@ -1457,3 +1457,7 @@
 203	4803	8094222490517604	CMakeFiles/Lighthouse.dir/src/port/Resource/Alt/AltSprites.o	b58908853c1d3e7c
 180	4953	8094222490286924	CMakeFiles/Lighthouse.dir/src/port/Game.o	76bfb13283aa4b56
 4953	6691	8094222538022086	Lighthouse.elf	59956e07d0175375
+59	117	8094226711960783	C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/cmake.verify_globs	117edc86797feed7
+171	321	8094226713078808	CMakeFiles/Lighthouse.dir/lib/ultralib/audio/heapalloc.o	518de50d4494c6a9
+182	469	8094226713194014	CMakeFiles/Lighthouse.dir/src/core1/audio_manager.o	a11d289a0da5df9b
+469	2189	8094226716062489	Lighthouse.elf	59956e07d0175375
