@@ -1,4 +1,5 @@
 #ifdef __WIIU__
+#include "port/WiiUDebug.h"
 #include "port/WiiUThreadLocal.h"
 #endif
 #include "Engine.h"
@@ -286,6 +287,8 @@ void push_frame() {
 #endif
 
 int SDL_main(int argc, char* argv[]) {
+    WIIU_TRACE_INIT();
+    WIIU_TRACE("[lh] SDL_main entered");
 #ifdef _WIN32
     timeBeginPeriod(1);
 #endif
@@ -308,12 +311,30 @@ int SDL_main(int argc, char* argv[]) {
         }
     }
 
+#ifdef __WIIU__
+    {
+        std::error_code cwdEc;
+        auto cwd = std::filesystem::current_path(cwdEc);
+        WIIU_TRACE("[lh] cwd=%s", cwdEc ? "<error>" : cwd.string().c_str());
+        for (const char* name : { "bk.o2r", "lighthouse.o2r", "assets", "config.yml" }) {
+            std::error_code existsEc;
+            WIIU_TRACE("[lh]   %s: %s", name,
+                       std::filesystem::exists(name, existsEc) ? "found" : "MISSING");
+        }
+    }
+#endif
+    WIIU_TRACE("[lh] before: GameEngine::Create returning");
     GameEngine::Create(argc, argv);
+    WIIU_TRACE("[lh] after: GameEngine::Create returning");
     // Both threads are created during core1_init, so allowlist them first.
     OS_EnableThreadEntry((void*)viMgr_entry);
     EnableThread5();
+    WIIU_TRACE("[lh] before: core1_init returning");
     core1_init();
+    WIIU_TRACE("[lh] after: core1_init returning");
+    WIIU_TRACE("[lh] before: watchdog started");
     ThreadWatchdog_Start();
+    WIIU_TRACE("[lh] after: watchdog started");
 
     sGameThread = std::thread([] {
         tIsGameThread = true;
