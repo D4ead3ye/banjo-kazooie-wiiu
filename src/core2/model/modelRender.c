@@ -1047,7 +1047,13 @@ void modelRender_executeGeoCmds(Gfx ** gfx, Mtx ** mtx, BKGeoCmd *geo_list){
 unsigned int gWiiuModelCalls = 0;      // entered at all
 unsigned int gWiiuModelNoBin = 0;      // rejected by the model_bin/secondary guard
 unsigned int gWiiuModelFarCull = 0;    // beyond the 17000-unit camera cull
-unsigned int gWiiuModelDrawn = 0;      // reached the geometry walk
+unsigned int gWiiuModelDrawn = 0;      // past the first two guards
+unsigned int gWiiuModelLodCull = 0;    // rejected by the LOD/draw-distance test
+unsigned int gWiiuModelFrustum = 0;    // rejected by the viewport frustum test
+unsigned int gWiiuModelEmitted = 0;    // actually emitted geometry
+float gWiiuLastLocalNorm = 0.0f;       // the values that decide the LOD cull
+float gWiiuLastDrawDist = 0.0f;
+float gWiiuLastCamDist = 0.0f;
 #endif
 
 BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation[3], f32 scale, f32*arg5, BKModelBin* model_bin){
@@ -1152,16 +1158,30 @@ BKModelBin *modelRender_draw(Gfx **gfx, Mtx **mtx, f32 position[3], f32 rotation
         D_80383708 = spD4*scale*D_8038370C*50.0f;
     }
 
+#ifdef __WIIU__
+    gWiiuLastLocalNorm = spD4;
+    gWiiuLastDrawDist = D_80383708;
+    gWiiuLastCamDist = camera_focus_distance;
+#endif
     if(D_80383708 <= camera_focus_distance){
+#ifdef __WIIU__
+        gWiiuModelLodCull++;
+#endif
         modelRender_reset();
         return 0;
     }
 
     D_80370990 = (D_80383704) ? viewport_func_8024DB50(object_position, spD0*scale) : 1;
     if(D_80370990 == 0){
+#ifdef __WIIU__
+        gWiiuModelFrustum++;
+#endif
         modelRender_reset();
         return 0;
     }
+#ifdef __WIIU__
+    gWiiuModelEmitted++;
+#endif
 
     if(modelRenderCallback.pre_draw != NULL){
         modelRenderCallback.pre_draw(modelRenderCallback.pre_draw_arg);

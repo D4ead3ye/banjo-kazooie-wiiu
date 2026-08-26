@@ -44,6 +44,8 @@ extern "C" {
 extern "C" enum map_e gsworld_getMap(void);
 extern "C" enum level_e level_get(void);
 extern "C" unsigned int gWiiuModelCalls, gWiiuModelNoBin, gWiiuModelFarCull, gWiiuModelDrawn;
+extern "C" unsigned int gWiiuModelLodCull, gWiiuModelFrustum, gWiiuModelEmitted;
+extern "C" float gWiiuLastLocalNorm, gWiiuLastDrawDist, gWiiuLastCamDist;
 #endif
 #include "core1/core1.h"
 #include "core1/main.h"
@@ -385,9 +387,13 @@ int SDL_main(int argc, char* argv[]) {
                 lastMap = map;
                 lastLevel = level;
             } else if ((tick++ % 60) == 0) {
-                WIIU_TRACE("[game] map=%d level=%d | model calls=%u nobin=%u farcull=%u drawn=%u", map, level,
-                           gWiiuModelCalls, gWiiuModelNoBin, gWiiuModelFarCull, gWiiuModelDrawn);
+                WIIU_TRACE("[game] map=%d lvl=%d | calls=%u lod=%u frustum=%u emitted=%u"
+                           " | localnorm=%d drawdist=%d camdist=%d",
+                           map, level, gWiiuModelCalls, gWiiuModelLodCull, gWiiuModelFrustum,
+                           gWiiuModelEmitted, (int)gWiiuLastLocalNorm, (int)gWiiuLastDrawDist,
+                           (int)gWiiuLastCamDist);
                 gWiiuModelCalls = gWiiuModelNoBin = gWiiuModelFarCull = gWiiuModelDrawn = 0;
+                gWiiuModelLodCull = gWiiuModelFrustum = gWiiuModelEmitted = 0;
             }
         }
 #endif

@@ -1426,3 +1426,7 @@
 131	508	8094379873358710	CMakeFiles/Lighthouse.dir/src/core2/model/modelRender.o	7259555e3a165400
 143	3551	8094379873478860	CMakeFiles/Lighthouse.dir/src/port/Game.o	233dd1560dcfcf2c
 3552	5128	8094379907564747	Lighthouse.elf	59956e07d0175375
+75	1048	8094774705144418	C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/cmake.verify_globs	117edc86797feed7
+1317	3538	8094774717574083	CMakeFiles/Lighthouse.dir/src/core2/model/modelRender.o	7259555e3a165400
+1452	9763	8094774718918513	CMakeFiles/Lighthouse.dir/src/port/Game.o	233dd1560dcfcf2c
+9763	17832	8094774802023853	Lighthouse.elf	59956e07d0175375
