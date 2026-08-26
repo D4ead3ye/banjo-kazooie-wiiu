@@ -109,14 +109,18 @@ void Menu::UpdateWindowBackendObjects() {
     availableWindowBackends = Ship::Context::GetRawInstance()->GetWindow()->GetAvailableWindowBackends();
     for (auto& backendId : *availableWindowBackends) {
         auto backend = static_cast<Fast::WindowBackend>(backendId);
-        availableWindowBackendsMap[backend] = windowBackendsMap.at(backend);
+        // A backend with no display name is a menu problem, not a reason to
+        // take the whole app down on startup.
+        auto name = windowBackendsMap.find(backend);
+        availableWindowBackendsMap[backend] = name != windowBackendsMap.end() ? name->second : "Unknown";
     }
 }
 
 void Menu::UpdateAudioBackendObjects() {
     availableAudioBackends = Ship::Context::GetRawInstance()->GetAudio()->GetAvailableAudioBackends();
     for (auto& backend : *availableAudioBackends) {
-        availableAudioBackendsMap[backend] = audioBackendsMap.at(backend);
+        auto name = audioBackendsMap.find(backend);
+        availableAudioBackendsMap[backend] = name != audioBackendsMap.end() ? name->second : "Unknown";
     }
 }
 
