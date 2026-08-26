@@ -63,7 +63,11 @@ std::vector<LangInfoEntry> ParseLangInfo(const char* data, size_t size,
         if (pos + 4 > size) {
             return false;
         }
-        std::memcpy(&v, data + pos, 4);
+        // Written little-endian by Torch on the build machine; read the bytes
+        // explicitly so a big-endian target reads the same value.
+        const auto* p = reinterpret_cast<const uint8_t*>(data + pos);
+        v = static_cast<uint32_t>(p[0]) | (static_cast<uint32_t>(p[1]) << 8) |
+            (static_cast<uint32_t>(p[2]) << 16) | (static_cast<uint32_t>(p[3]) << 24);
         pos += 4;
         return true;
     };

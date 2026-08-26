@@ -1461,3 +1461,9 @@
 171	321	8094226713078808	CMakeFiles/Lighthouse.dir/lib/ultralib/audio/heapalloc.o	518de50d4494c6a9
 182	469	8094226713194014	CMakeFiles/Lighthouse.dir/src/core1/audio_manager.o	a11d289a0da5df9b
 469	2189	8094226716062489	Lighthouse.elf	59956e07d0175375
+53	109	8094229206937950	C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/cmake.verify_globs	117edc86797feed7
+165	4439	8094229208056132	CMakeFiles/Lighthouse.dir/src/port/ResourceHelpers.o	cc006b854f290b9b
+4440	6160	8094229250813029	Lighthouse.elf	59956e07d0175375
+51	105	8094229688880499	C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/cmake.verify_globs	117edc86797feed7
+158	4737	8094229689947712	CMakeFiles/Lighthouse.dir/src/port/Localization/Language.o	7cd5f359fdf979ff
+4738	6444	8094229735748071	Lighthouse.elf	59956e07d0175375

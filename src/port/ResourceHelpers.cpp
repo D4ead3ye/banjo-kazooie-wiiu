@@ -43,6 +43,15 @@ extern BKSnsDemoEntry D_80371F78[3];
 // Dialog language state — detected at boot from o2r version
 static int sDialogLanguageCount = 1; // 1 for US/JP, 3 for PAL (EN/FR/DE)
 static int sDialogLanguage = 0;      // 0=English, 1=French, 2=German
+// The asset manifest is written by Torch on the build machine, which is
+// little-endian on every platform this port has shipped on. Read the fields
+// explicitly rather than memcpy'ing host-order integers, so a big-endian
+// target (Wii U) sees the same values.
+static uint32_t ReadManifestU32(const uint8_t* p) {
+    return static_cast<uint32_t>(p[0]) | (static_cast<uint32_t>(p[1]) << 8) |
+           (static_cast<uint32_t>(p[2]) << 16) | (static_cast<uint32_t>(p[3]) << 24);
+}
+
 static bool sIsJapanese = false;     // true when a JP o2r is loaded
 
 namespace {
@@ -76,17 +85,14 @@ const std::unordered_map<uint32_t, std::string>& GetAssetSymbolMap() {
             return;
         }
 
-        uint32_t count;
-        std::memcpy(&count, data + pos, 4);
+        const uint32_t count = ReadManifestU32(data + pos);
         pos += 4;
 
         for (uint32_t i = 0; i < count && pos + 8 <= dataSize; i++) {
-            uint32_t assetId;
-            std::memcpy(&assetId, data + pos, 4);
+            const uint32_t assetId = ReadManifestU32(data + pos);
             pos += 4;
 
-            int32_t pathLen;
-            std::memcpy(&pathLen, data + pos, 4);
+            const int32_t pathLen = static_cast<int32_t>(ReadManifestU32(data + pos));
             pos += 4;
 
             if (pathLen < 0 || pos + static_cast<size_t>(pathLen) > dataSize) {
