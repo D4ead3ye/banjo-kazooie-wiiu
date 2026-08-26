@@ -1,6 +1,4 @@
-#ifdef __WIIU__
-#include <coreinit/debug.h> // OSFatal
-#endif
+#include "port/WiiUDebug.h"
 #include "port/Engine.h"
 
 #include <filesystem>
@@ -170,6 +168,9 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
     }
 
     bool shouldRegen = !VerifyArchiveVersion(romArchiveVersion) && romArchiveVersion.major != INT16_MAX;
+    WIIU_TRACE("[extract] rom archive %d.%d.%d, build expects %d.%d, shouldRegen=%d", romArchiveVersion.major,
+               romArchiveVersion.minor, romArchiveVersion.patch, gBuildVersionMajor, gBuildVersionMinor,
+               (int)shouldRegen);
 
     std::filesystem::path ownPath;
     std::vector<std::string> args;
@@ -208,7 +209,6 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                                  "Please generate a ROM O2R and relaunch.\n\n"
                                  "Press and hold the Power button to shutdown...",
                                  "OK", "", [&]() { exit(1); });
-    OSFatal("Lighthouse: outdated ROM archive. Regenerate bk.o2r and relaunch.");
 #endif
 
     if (!std::filesystem::exists(Ship::Context::LocateFileAcrossAppDirs("/assets"))) {

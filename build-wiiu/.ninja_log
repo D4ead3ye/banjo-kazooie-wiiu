@@ -1526,3 +1526,6 @@
 193	15576	8094194366659746	CMakeFiles/Lighthouse.dir/src/port/Presets/Presets.o	dd4100dc8c3fcb1e
 319	17491	8094194367924643	CMakeFiles/Lighthouse.dir/src/port/UI/LighthouseModMenuWindow.o	c3f0d8f4c3272816
 17492	19285	8094194539647240	Lighthouse.elf	59956e07d0175375
+53	120	8094197277266553	C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/cmake.verify_globs	117edc86797feed7
+185	6566	8094197278585206	CMakeFiles/Lighthouse.dir/src/port/Extractor/ExtractFlow.o	63257d74d93504f9
+6567	8349	8094197342395150	Lighthouse.elf	59956e07d0175375
