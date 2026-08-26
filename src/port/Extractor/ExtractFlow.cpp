@@ -197,19 +197,25 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
     std::string installPath = Ship::Context::GetAppBundlePath();
     std::string file;
 
+    // Only when the archive really is stale. RegisterPopup queues the popup
+    // immediately, and the extract loop treats a queued popup as a reason to
+    // keep rendering rather than advance - registering it every launch hangs
+    // startup waiting for an OK that nothing asked for.
+    if (shouldRegen) {
 #if defined(__SWITCH__)
-    LighthouseGui::RegisterPopup("Outdated ROM Archives",
-                                 "\x1b[2;2HYou've launched Lighthouse with an old ROM O2R file."
-                                 "\x1b[4;2HPlease regenerate a new ROM O2R and relaunch."
-                                 "\x1b[6;2HPress the Home button to exit...",
-                                 "OK", "", [&]() { exit(1); });
+        LighthouseGui::RegisterPopup("Outdated ROM Archives",
+                                     "\x1b[2;2HYou've launched Lighthouse with an old ROM O2R file."
+                                     "\x1b[4;2HPlease regenerate a new ROM O2R and relaunch."
+                                     "\x1b[6;2HPress the Home button to exit...",
+                                     "OK", "", [&]() { exit(1); });
 #elif defined(__WIIU__)
-    LighthouseGui::RegisterPopup("Outdated ROM Archives",
-                                 "You've launched Lighthouse with an old a ROM O2R file.\n\n"
-                                 "Please generate a ROM O2R and relaunch.\n\n"
-                                 "Press and hold the Power button to shutdown...",
-                                 "OK", "", [&]() { exit(1); });
+        LighthouseGui::RegisterPopup("Outdated ROM Archives",
+                                     "You've launched Lighthouse with an old a ROM O2R file.\n\n"
+                                     "Please generate a ROM O2R and relaunch.\n\n"
+                                     "Press and hold the Power button to shutdown...",
+                                     "OK", "", [&]() { exit(1); });
 #endif
+    }
 
     if (!std::filesystem::exists(Ship::Context::LocateFileAcrossAppDirs("/assets"))) {
         LighthouseGui::RegisterPopup(
@@ -579,6 +585,7 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                     }
                     continue;
                 }
+                WIIU_TRACE("[extract] verify ok, leaving extract loop");
                 extractDone = true;
                 continue;
             }
