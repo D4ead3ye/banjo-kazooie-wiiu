@@ -1,3 +1,6 @@
+#ifdef __WIIU__
+#include <whb/log.h>
+#endif
 #include "LighthouseMenu.h"
 #include "LighthouseInputEditorWindow.h"
 #include <fast/Fast3dWindow.h>
@@ -63,6 +66,12 @@ using namespace UIWidgets;
 void LighthouseMenu::AddSidebarEntry(std::string sectionName, std::string sidebarName, uint32_t columnCount) {
     assert(!sectionName.empty());
     assert(!sidebarName.empty());
+#ifdef __WIIU__
+    if (!menuEntries.contains(sectionName)) {
+        WHBLogPrintf("[menu] AddSidebarEntry: no section '%s' for sidebar '%s'", sectionName.c_str(),
+                     sidebarName.c_str());
+    }
+#endif
     menuEntries.at(sectionName).sidebars.emplace(sidebarName, SidebarEntry{ .columnCount = columnCount });
     menuEntries.at(sectionName).sidebarOrder.push_back(sidebarName);
 }
@@ -70,6 +79,14 @@ void LighthouseMenu::AddSidebarEntry(std::string sectionName, std::string sideba
 WidgetInfo& LighthouseMenu::AddWidget(WidgetPath& pathInfo, std::string widgetName, WidgetType widgetType) {
     assert(!widgetName.empty());                        // Must be unique
     assert(menuEntries.contains(pathInfo.sectionName)); // Section/header must already exist
+#ifdef __WIIU__
+    if (!menuEntries.contains(pathInfo.sectionName)) {
+        WHBLogPrintf("[menu] AddWidget '%s': no section '%s'", widgetName.c_str(), pathInfo.sectionName.c_str());
+    } else if (!menuEntries.at(pathInfo.sectionName).sidebars.contains(pathInfo.sidebarName)) {
+        WHBLogPrintf("[menu] AddWidget '%s': section '%s' has no sidebar '%s'", widgetName.c_str(),
+                     pathInfo.sectionName.c_str(), pathInfo.sidebarName.c_str());
+    }
+#endif
     assert(menuEntries.at(pathInfo.sectionName).sidebars.contains(pathInfo.sidebarName)); // Sidebar must already exist
     std::unordered_map<std::string, SidebarEntry>& sidebar = menuEntries.at(pathInfo.sectionName).sidebars;
     uint8_t column = pathInfo.column;

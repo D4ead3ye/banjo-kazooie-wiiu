@@ -166,10 +166,14 @@ GameEngine::GameEngine() {
     this->context->InitAudio({ .SampleRate = 22000, .SampleLength = 736, .DesiredBuffered = 2208 });
     WIIU_TRACE("[engine] <- InitAudio");
 
+    WIIU_TRACE("[engine] -> SetupMenu");
     LighthouseGui::SetupMenu();
+    WIIU_TRACE("[engine] <- SetupMenu");
 
     if (portArchiveVersionMatch) {
+    WIIU_TRACE("[engine] -> fonts");
         fontMono = CreateFontWithSize(16.0f, "fonts/Inconsolata-Regular.ttf");
+    WIIU_TRACE("[engine] <- fonts");
         fontMonoLarger = CreateFontWithSize(20.0f, "fonts/Inconsolata-Regular.ttf");
         fontMonoLargest = CreateFontWithSize(24.0f, "fonts/Inconsolata-Regular.ttf");
         fontStandard = CreateFontWithSize(16.0f, "fonts/Montserrat-Regular.ttf");
@@ -180,7 +184,9 @@ GameEngine::GameEngine() {
 
     previousImGuiScaleIndex = -1;
     previousImGuiScale = defaultImGuiScale;
+    WIIU_TRACE("[engine] -> ScaleImGui");
     ScaleImGui();
+    WIIU_TRACE("[engine] <- ScaleImGui");
 }
 
 // Startup

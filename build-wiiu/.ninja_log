@@ -1499,3 +1499,7 @@
 238	6517	8094181308942754	CMakeFiles/Lighthouse.dir/src/port/Game.o	76bfb13283aa4b56
 221	10237	8094181308772001	CMakeFiles/Lighthouse.dir/src/port/Engine.o	5542f7a369db7f54
 10237	12498	8094181408930167	Lighthouse.elf	59956e07d0175375
+52	109	8094185898860099	C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/cmake.verify_globs	117edc86797feed7
+185	5610	8094185900190224	CMakeFiles/Lighthouse.dir/src/port/UI/LighthouseMenu.o	870ec7f337abfae
+173	7358	8094185900069778	CMakeFiles/Lighthouse.dir/src/port/Engine.o	5542f7a369db7f54
+7358	9186	8094185971916558	Lighthouse.elf	59956e07d0175375
