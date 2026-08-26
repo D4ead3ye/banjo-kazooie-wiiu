@@ -373,9 +373,18 @@ int SDL_main(int argc, char* argv[]) {
             // What does the game think it is doing? Everything else about the
             // scene has checked out, so the remaining question is whether a
             // level is ever entered at all.
-            static int tick = 0;
-            if ((tick++ % 60) == 0) {
-                WIIU_TRACE("[game] map=%d level=%d", (int)gsworld_getMap(), (int)level_get());
+            // Log on change, plus a slow heartbeat. Once a second buried the
+            // transitions in 1300 identical lines and still nearly missed the
+            // one that mattered.
+            static int lastMap = -1, lastLevel = -1, tick = 0;
+            const int map = (int)gsworld_getMap();
+            const int level = (int)level_get();
+            if (map != lastMap || level != lastLevel) {
+                WIIU_TRACE("[game] >>> map %d -> %d, level %d -> %d", lastMap, map, lastLevel, level);
+                lastMap = map;
+                lastLevel = level;
+            } else if ((tick++ % 600) == 0) {
+                WIIU_TRACE("[game] map=%d level=%d", map, level);
             }
         }
 #endif
