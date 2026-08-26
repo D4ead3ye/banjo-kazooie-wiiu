@@ -1,4 +1,7 @@
 #ifdef __WIIU__
+#ifdef __WIIU__
+#include "ship/port/wiiu/WiiUImpl.h"
+#endif
 #include "port/WiiUDebug.h"
 #include "port/WiiUThreadLocal.h"
 #endif
@@ -312,6 +315,13 @@ int SDL_main(int argc, char* argv[]) {
     }
 
 #ifdef __WIIU__
+    // Must run before GameEngine::Create: this is what chdir's into
+    // sd:/wiiu/apps/bk, and the engine opens its archives relative to the
+    // working directory. It normally runs from inside the extract flow, which
+    // is far too late - the app otherwise starts at the SD root and finds
+    // nothing. Short name matches the one Context is created with.
+    Ship::WiiU::Init("bk");
+
     {
         std::error_code cwdEc;
         auto cwd = std::filesystem::current_path(cwdEc);
