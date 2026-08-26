@@ -1,0 +1,14 @@
+# Target labels
+ imgui-populate
+# Source files and their labels
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/imgui-subbuild/CMakeFiles/imgui-populate
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/imgui-subbuild/CMakeFiles/imgui-populate.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/imgui-subbuild/CMakeFiles/imgui-populate-complete.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/imgui-subbuild/imgui-populate-prefix/src/imgui-populate-stamp/imgui-populate-build.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/imgui-subbuild/imgui-populate-prefix/src/imgui-populate-stamp/imgui-populate-configure.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/imgui-subbuild/imgui-populate-prefix/src/imgui-populate-stamp/imgui-populate-download.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/imgui-subbuild/imgui-populate-prefix/src/imgui-populate-stamp/imgui-populate-install.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/imgui-subbuild/imgui-populate-prefix/src/imgui-populate-stamp/imgui-populate-mkdir.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/imgui-subbuild/imgui-populate-prefix/src/imgui-populate-stamp/imgui-populate-patch.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/imgui-subbuild/imgui-populate-prefix/src/imgui-populate-stamp/imgui-populate-test.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/imgui-subbuild/imgui-populate-prefix/src/imgui-populate-stamp/imgui-populate-update.rule

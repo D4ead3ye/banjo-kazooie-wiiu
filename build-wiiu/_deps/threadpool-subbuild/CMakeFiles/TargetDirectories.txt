@@ -1,0 +1,3 @@
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/threadpool-subbuild/CMakeFiles/threadpool-populate.dir
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/threadpool-subbuild/CMakeFiles/edit_cache.dir
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/threadpool-subbuild/CMakeFiles/rebuild_cache.dir

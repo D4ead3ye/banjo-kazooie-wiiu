@@ -7,6 +7,9 @@
 // thread-shared section with osSetIntMask(OS_IM_NONE)/restore. Routing those brackets to this
 // lock protects all of them with no edits to the audio code.
 
+#ifdef __WIIU__
+#include "port/WiiUThreadLocal.h"
+#endif
 #include <atomic>
 #include <chrono>
 #include <cstdint>
@@ -18,7 +21,12 @@ extern "C" {
 
 namespace {
 std::recursive_mutex gAudioLock;
+#ifdef __WIIU__
+// no TLS in RPX; see port/WiiUThreadLocal.h
+#define gAudioMaskDepth (LighthouseWiiU::Locals().audioMaskDepth)
+#else
 thread_local int gAudioMaskDepth = 0;
+#endif
 } // namespace
 
 // Window-freeze audio hold

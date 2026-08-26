@@ -1,0 +1,21 @@
+# ninja log v7
+6	1100	8094040827507064	spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-mkdir	e464f294ec96cbdc
+6	1100	8094040827507064	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-mkdir	e464f294ec96cbdc
+1100	12096	8094040937687256	spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-download	4a1a8bda8a3bb297
+1100	12096	8094040937687256	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-download	4a1a8bda8a3bb297
+12097	12925	8094040938770203	spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-update	92f96957795f85e6
+12097	12925	8094040938770203	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-update	92f96957795f85e6
+12925	13702	8094040953497201	spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-patch	aa1e9d3debe1638f
+12925	13702	8094040953497201	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-patch	aa1e9d3debe1638f
+13702	14678	8094040964091610	spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-configure	3abff0631ea3c23a
+13702	14678	8094040964091610	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-configure	3abff0631ea3c23a
+14678	15484	8094040972046382	spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-build	6399ffa76aac927
+14678	15484	8094040972046382	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-build	6399ffa76aac927
+15484	16082	8094040977795250	spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-install	8d5c0289026e41ab
+15484	16082	8094040977795250	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-install	8d5c0289026e41ab
+16082	17008	8094040987145551	spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-test	644f104bc5569769
+16082	17008	8094040987145551	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-test	644f104bc5569769
+17008	18266	8094040999121074	CMakeFiles/spdlog-populate-complete	56e67438f3b2e6b1
+17008	18266	8094040999121074	spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-done	56e67438f3b2e6b1
+17008	18266	8094040999121074	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/spdlog-subbuild/CMakeFiles/spdlog-populate-complete	56e67438f3b2e6b1
+17008	18266	8094040999121074	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-done	56e67438f3b2e6b1

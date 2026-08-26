@@ -3,6 +3,9 @@
 // The audio interface, backed by the libultraship audio player. The decomp's
 // audio manager runs its original path and this is the DAC at the end of it.
 
+#ifdef __WIIU__
+#include "port/WiiUThreadLocal.h"
+#endif
 #include "OS.h"
 
 #include <libultraship/libultraship.h>
@@ -70,7 +73,11 @@ extern "C" s32 osAiSetNextBuffer(void* buff, size_t len) {
         sCatchupOwed = AudioCatchupFrames();
         return 0;
     }
+#ifdef __WIIU__
+    std::vector<int16_t>& scaled = LighthouseWiiU::Locals().scaledAudio;
+#else
     static thread_local std::vector<int16_t> scaled;
+#endif
     scaled.resize(len / 2);
     const int16_t* src = (const int16_t*)buff;
     for (size_t i = 0; i < scaled.size(); i++) {

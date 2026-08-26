@@ -1,0 +1,33 @@
+_deps\yaml-cpp-build\CMakeFiles\yaml-cpp.dir\src\null.o.ddi: \
+ C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/null.cpp \
+ C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/include/yaml-cpp/null.h \
+ C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/include/yaml-cpp/dll.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/c++/16.1.0/cstddef \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/c++/16.1.0/powerpc-eabi/bits/c++config.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/c++/16.1.0/powerpc-eabi/bits/os_defines.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/c++/16.1.0/powerpc-eabi/bits/cpu_defines.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/c++/16.1.0/pstl/pstl_config.h \
+ C:/devkitPro/devkitPPC/lib/gcc/powerpc-eabi/16.1.0/include/stddef.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/c++/16.1.0/bits/version.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/c++/16.1.0/cstring \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/string.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/_ansi.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/newlib.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/_newlib_version.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/sys/config.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/machine/ieeefp.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/sys/features.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/sys/reent.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/_ansi.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/sys/cdefs.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/machine/_default_types.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/sys/_types.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/machine/_types.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/sys/lock.h \
+ C:/devkitPro/devkitPPC/lib/gcc/powerpc-eabi/16.1.0/include/stdint.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/stdint.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/sys/_intsup.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/sys/_stdint.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/sys/_locale.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/strings.h \
+ C:/devkitPro/devkitPPC/powerpc-eabi/include/sys/string.h

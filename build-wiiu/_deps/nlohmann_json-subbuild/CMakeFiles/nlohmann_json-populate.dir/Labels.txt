@@ -1,0 +1,14 @@
+# Target labels
+ nlohmann_json-populate
+# Source files and their labels
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/nlohmann_json-subbuild/CMakeFiles/nlohmann_json-populate
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/nlohmann_json-subbuild/CMakeFiles/nlohmann_json-populate.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/nlohmann_json-subbuild/CMakeFiles/nlohmann_json-populate-complete.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/nlohmann_json-subbuild/nlohmann_json-populate-prefix/src/nlohmann_json-populate-stamp/nlohmann_json-populate-build.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/nlohmann_json-subbuild/nlohmann_json-populate-prefix/src/nlohmann_json-populate-stamp/nlohmann_json-populate-configure.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/nlohmann_json-subbuild/nlohmann_json-populate-prefix/src/nlohmann_json-populate-stamp/nlohmann_json-populate-download.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/nlohmann_json-subbuild/nlohmann_json-populate-prefix/src/nlohmann_json-populate-stamp/nlohmann_json-populate-install.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/nlohmann_json-subbuild/nlohmann_json-populate-prefix/src/nlohmann_json-populate-stamp/nlohmann_json-populate-mkdir.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/nlohmann_json-subbuild/nlohmann_json-populate-prefix/src/nlohmann_json-populate-stamp/nlohmann_json-populate-patch.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/nlohmann_json-subbuild/nlohmann_json-populate-prefix/src/nlohmann_json-populate-stamp/nlohmann_json-populate-test.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/nlohmann_json-subbuild/nlohmann_json-populate-prefix/src/nlohmann_json-populate-stamp/nlohmann_json-populate-update.rule

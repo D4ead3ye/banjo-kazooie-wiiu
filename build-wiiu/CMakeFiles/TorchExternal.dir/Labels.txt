@@ -1,0 +1,13 @@
+# Target labels
+ TorchExternal
+# Source files and their labels
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/TorchExternal
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/TorchExternal.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/TorchExternal-complete.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-stamp/TorchExternal-build.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-stamp/TorchExternal-configure.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-stamp/TorchExternal-download.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-stamp/TorchExternal-install.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-stamp/TorchExternal-mkdir.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-stamp/TorchExternal-patch.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-stamp/TorchExternal-update.rule

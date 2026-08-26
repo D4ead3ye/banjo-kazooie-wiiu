@@ -1,0 +1,21 @@
+# ninja log v7
+4	958	8094040614230268	yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-mkdir	a50b2bc83f046ff9
+4	958	8094040614230268	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-mkdir	a50b2bc83f046ff9
+959	11153	8094040716238694	yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-download	e8b628657eb6215e
+959	11153	8094040716238694	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-download	e8b628657eb6215e
+11154	12156	8094040717313547	yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-update	57330cba6d5a2465
+11154	12156	8094040717313547	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-update	57330cba6d5a2465
+12156	12701	8094040732115998	yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-patch	8e71f787ed98012c
+12156	12701	8094040732115998	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-patch	8e71f787ed98012c
+12701	13414	8094040739181669	yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-configure	ca5123b091acbcab
+12701	13414	8094040739181669	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-configure	ca5123b091acbcab
+13414	14083	8094040746020736	yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-build	9ca0a7e658adc107
+13414	14083	8094040746020736	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-build	9ca0a7e658adc107
+14084	14732	8094040752298480	yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-install	cff366aa0ae70be9
+14084	14732	8094040752298480	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-install	cff366aa0ae70be9
+14733	16064	8094040765561461	yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-test	744e0fbbc6deaaa7
+14733	16064	8094040765561461	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-test	744e0fbbc6deaaa7
+16064	17008	8094040775051458	CMakeFiles/yaml-cpp-populate-complete	162078d324b6c97f
+16064	17008	8094040775051458	yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-done	162078d324b6c97f
+16064	17008	8094040775051458	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/yaml-cpp-subbuild/CMakeFiles/yaml-cpp-populate-complete	162078d324b6c97f
+16064	17008	8094040775051458	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-done	162078d324b6c97f

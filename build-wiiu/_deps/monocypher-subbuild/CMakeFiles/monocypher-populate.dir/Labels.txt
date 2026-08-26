@@ -1,0 +1,14 @@
+# Target labels
+ monocypher-populate
+# Source files and their labels
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/monocypher-subbuild/CMakeFiles/monocypher-populate
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/monocypher-subbuild/CMakeFiles/monocypher-populate.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/monocypher-subbuild/CMakeFiles/monocypher-populate-complete.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/monocypher-subbuild/monocypher-populate-prefix/src/monocypher-populate-stamp/monocypher-populate-build.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/monocypher-subbuild/monocypher-populate-prefix/src/monocypher-populate-stamp/monocypher-populate-configure.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/monocypher-subbuild/monocypher-populate-prefix/src/monocypher-populate-stamp/monocypher-populate-download.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/monocypher-subbuild/monocypher-populate-prefix/src/monocypher-populate-stamp/monocypher-populate-install.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/monocypher-subbuild/monocypher-populate-prefix/src/monocypher-populate-stamp/monocypher-populate-mkdir.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/monocypher-subbuild/monocypher-populate-prefix/src/monocypher-populate-stamp/monocypher-populate-patch.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/monocypher-subbuild/monocypher-populate-prefix/src/monocypher-populate-stamp/monocypher-populate-test.rule
+C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/monocypher-subbuild/monocypher-populate-prefix/src/monocypher-populate-stamp/monocypher-populate-update.rule

@@ -1,0 +1,223 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "GNU",
+	"compiler-id" : "GNU",
+	"compiler-simulate-id" : "",
+	"config" : "Release",
+	"cxx-modules" : {},
+	"database-info" : null,
+	"dir-cur-bld" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-build",
+	"dir-cur-src" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src",
+	"dir-top-bld" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu",
+	"dir-top-src" : "C:/claude/bk-wiiu/Lighthouse",
+	"exports" : [],
+	"forward-modules-from-target-dirs" : [],
+	"include-dirs" : 
+	[
+		"C:\\claude\\bk-wiiu\\Lighthouse",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\include",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\lib\\ultralib\\include",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\src",
+		"generated",
+		"_deps\\sse2neon",
+		".",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\include",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\include\\libultraship",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\src",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\src\\log",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\src\\debug",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\src\\menu",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\src\\utils",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\src\\utils\\binarytools",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\src\\config",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\src\\resource",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\src\\resource\\type",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\src\\resource\\factory",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\src\\audio",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\src\\window",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\src\\window\\gui",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\src\\public",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\src\\public\\libultra",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\src\\public\\bridge",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\extern",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\extern\\tinyxml2",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\libultraship\\Lib",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\libultraship\\Lib\\libjpeg\\include",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\libultraship\\Lib\\spdlog\\include",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\src\\graphic\\Fast3D\\U64\\PR",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\libultraship\\src\\graphic",
+		"_deps\\dr_libs-src",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\Torch",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\Torch\\lib",
+		"C:\\claude\\bk-wiiu\\Lighthouse\\Torch\\src",
+		"_deps\\yaml-cpp-src\\include",
+		"_deps\\yaml-cpp-src\\src",
+		"C:\\devkitPro\\wut\\include"
+	],
+	"language" : "CXX",
+	"linked-target-dirs" : [],
+	"module-dir" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir",
+	"sources" : 
+	{
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/binary.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/binary.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/contrib/graphbuilder.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/contrib/graphbuilder.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/contrib/graphbuilderadapter.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/contrib/graphbuilderadapter.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/convert.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/convert.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/depthguard.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/depthguard.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/directives.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/directives.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/emit.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/emit.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/emitfromevents.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/emitfromevents.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/emitter.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/emitter.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/emitterstate.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/emitterstate.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/emitterutils.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/emitterutils.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/exceptions.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/exceptions.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/exp.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/exp.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/fptostring.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/fptostring.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/memory.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/memory.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/node.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/node.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/node_data.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/node_data.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/nodebuilder.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/nodebuilder.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/nodeevents.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/nodeevents.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/null.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/null.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/ostream_wrapper.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/ostream_wrapper.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/parse.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/parse.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/parser.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/parser.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/regex_yaml.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/regex_yaml.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/scanner.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/scanner.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/scanscalar.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/scanscalar.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/scantag.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/scantag.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/scantoken.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/scantoken.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/simplekey.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/simplekey.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/singledocparser.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/singledocparser.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/stream.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/stream.cpp"
+		},
+		"_deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/tag.o" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src/src/tag.cpp"
+		}
+	}
+}

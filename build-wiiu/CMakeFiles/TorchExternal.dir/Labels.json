@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/TorchExternal"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/TorchExternal.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/CMakeFiles/TorchExternal-complete.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-stamp/TorchExternal-build.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-stamp/TorchExternal-configure.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-stamp/TorchExternal-download.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-stamp/TorchExternal-install.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-stamp/TorchExternal-mkdir.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-stamp/TorchExternal-patch.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-stamp/TorchExternal-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"TorchExternal"
+		],
+		"name" : "TorchExternal"
+	}
+}

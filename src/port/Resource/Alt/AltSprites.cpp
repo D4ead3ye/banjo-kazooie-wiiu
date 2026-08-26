@@ -16,6 +16,9 @@
 // interpreter alt-redirects to alt/<path> and applies HD dims/scale exactly like a
 // model texture. With alt assets off, the path stays null.
 
+#ifdef __WIIU__
+#include "port/WiiUThreadLocal.h"
+#endif
 #include <libultraship.h>
 #include <ship/Context.h>
 #include <ship/resource/ResourceManager.h>
@@ -34,7 +37,12 @@ namespace {
 std::unordered_map<const void*, const char*> sChunkPaths;
 std::mutex sMutex;
 
+#ifdef __WIIU__
+// no TLS in RPX; see port/WiiUThreadLocal.h
+#define sColorVariant (LighthouseWiiU::Locals().colorVariant)
+#else
 thread_local int sColorVariant = -1;
+#endif
 const char* const kJinjoColors[] = { "BLUE", "GREEN", "ORANGE", "PURPLE", "YELLOW" };
 std::unordered_map<std::string, const char*> sVariantCache;
 

@@ -1,0 +1,11 @@
+prefix=C:/claude/bk-wiiu/Lighthouse/build-wiiu/Torch
+exec_prefix=${prefix}
+includedir=C:/claude/bk-wiiu/Lighthouse/build-wiiu/Torch/include
+libdir=C:/claude/bk-wiiu/Lighthouse/build-wiiu/Torch/lib
+
+Name: Yaml-cpp
+Description: A YAML parser and emitter for C++
+Version: 0.9.0
+Requires:
+Libs: -L${libdir} -lyaml-cpp
+Cflags: -I${includedir}

@@ -1,0 +1,13 @@
+prefix=C:/claude/bk-wiiu/Lighthouse/build-wiiu/Torch
+exec_prefix=C:/claude/bk-wiiu/Lighthouse/build-wiiu/Torch
+libdir=C:/claude/bk-wiiu/Lighthouse/build-wiiu/Torch/lib
+sharedlibdir=C:/claude/bk-wiiu/Lighthouse/build-wiiu/Torch/lib
+includedir=C:/claude/bk-wiiu/Lighthouse/build-wiiu/Torch/include
+
+Name: zlib
+Description: zlib compression library
+Version: 1.3.1
+
+Requires:
+Libs: -L${libdir} -L${sharedlibdir} -lz
+Cflags: -I${includedir}

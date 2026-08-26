@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/zlib-subbuild/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

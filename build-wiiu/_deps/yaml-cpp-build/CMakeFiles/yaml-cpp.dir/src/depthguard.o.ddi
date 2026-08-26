@@ -1,0 +1,11 @@
+{
+"rules": [
+{
+"primary-output": "_deps\\yaml-cpp-build\\CMakeFiles\\yaml-cpp.dir\\src\\depthguard.o",
+"requires": [
+]
+}
+],
+"version": 0,
+"revision": 0
+}

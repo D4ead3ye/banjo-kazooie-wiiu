@@ -1,0 +1,21 @@
+# ninja log v7
+4	738	8094040414438055	libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-mkdir	71434158a56a1577
+4	738	8094040414438055	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-mkdir	71434158a56a1577
+739	11109	8094040516820676	libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-download	23d7d0340146440f
+739	11109	8094040516820676	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-download	23d7d0340146440f
+11115	11869	8094040518784058	libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-update	2e6134a7f3e28ae3
+11115	11869	8094040518784058	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-update	2e6134a7f3e28ae3
+11869	12592	8094040532700005	libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-patch	35c5252c1038c70
+11869	12592	8094040532700005	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-patch	35c5252c1038c70
+12593	13421	8094040540173681	libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-configure	db3f7faf7f5802ff
+12593	13421	8094040540173681	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-configure	db3f7faf7f5802ff
+13421	14498	8094040551561632	libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-build	c3a24a10c53546a8
+13421	14498	8094040551561632	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-build	c3a24a10c53546a8
+14499	15518	8094040561569484	libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-install	6e9194f455d14eac
+14499	15518	8094040561569484	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-install	6e9194f455d14eac
+15519	16416	8094040570831512	libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-test	c0482fe1ed737819
+15519	16416	8094040570831512	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-test	c0482fe1ed737819
+16416	18004	8094040586799092	CMakeFiles/libgfxd-populate-complete	27103190b047f9c
+16416	18004	8094040586799092	libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-done	27103190b047f9c
+16416	18004	8094040586799092	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/CMakeFiles/libgfxd-populate-complete	27103190b047f9c
+16416	18004	8094040586799092	C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-done	27103190b047f9c

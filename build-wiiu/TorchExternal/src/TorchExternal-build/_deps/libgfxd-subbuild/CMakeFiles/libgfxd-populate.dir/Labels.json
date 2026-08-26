@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/CMakeFiles/libgfxd-populate"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/CMakeFiles/libgfxd-populate.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/CMakeFiles/libgfxd-populate-complete.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-build.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-configure.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-download.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-install.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-mkdir.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-patch.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-test.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/libgfxd-subbuild/libgfxd-populate-prefix/src/libgfxd-populate-stamp/libgfxd-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"libgfxd-populate"
+		],
+		"name" : "libgfxd-populate"
+	}
+}

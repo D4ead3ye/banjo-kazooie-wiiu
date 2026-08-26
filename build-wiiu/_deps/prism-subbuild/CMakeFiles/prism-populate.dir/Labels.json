@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/prism-subbuild/CMakeFiles/prism-populate"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/prism-subbuild/CMakeFiles/prism-populate.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/prism-subbuild/CMakeFiles/prism-populate-complete.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/prism-subbuild/prism-populate-prefix/src/prism-populate-stamp/prism-populate-build.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/prism-subbuild/prism-populate-prefix/src/prism-populate-stamp/prism-populate-configure.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/prism-subbuild/prism-populate-prefix/src/prism-populate-stamp/prism-populate-download.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/prism-subbuild/prism-populate-prefix/src/prism-populate-stamp/prism-populate-install.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/prism-subbuild/prism-populate-prefix/src/prism-populate-stamp/prism-populate-mkdir.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/prism-subbuild/prism-populate-prefix/src/prism-populate-stamp/prism-populate-patch.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/prism-subbuild/prism-populate-prefix/src/prism-populate-stamp/prism-populate-test.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/prism-subbuild/prism-populate-prefix/src/prism-populate-stamp/prism-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"prism-populate"
+		],
+		"name" : "prism-populate"
+	}
+}

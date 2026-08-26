@@ -1,3 +1,4 @@
+#include "ship/controller/controldevice/controller/mapping/sdl/SDLAxisDirectionToButtonMapping.h"
 #include "LighthouseInputEditorWindow.h"
 #include <ship/Context.h>
 #include <libultraship/bridge/consolevariablebridge.h>

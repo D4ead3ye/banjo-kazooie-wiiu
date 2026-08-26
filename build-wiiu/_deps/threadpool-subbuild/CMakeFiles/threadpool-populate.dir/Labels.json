@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/threadpool-subbuild/CMakeFiles/threadpool-populate"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/threadpool-subbuild/CMakeFiles/threadpool-populate.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/threadpool-subbuild/CMakeFiles/threadpool-populate-complete.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/threadpool-subbuild/threadpool-populate-prefix/src/threadpool-populate-stamp/threadpool-populate-build.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/threadpool-subbuild/threadpool-populate-prefix/src/threadpool-populate-stamp/threadpool-populate-configure.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/threadpool-subbuild/threadpool-populate-prefix/src/threadpool-populate-stamp/threadpool-populate-download.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/threadpool-subbuild/threadpool-populate-prefix/src/threadpool-populate-stamp/threadpool-populate-install.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/threadpool-subbuild/threadpool-populate-prefix/src/threadpool-populate-stamp/threadpool-populate-mkdir.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/threadpool-subbuild/threadpool-populate-prefix/src/threadpool-populate-stamp/threadpool-populate-patch.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/threadpool-subbuild/threadpool-populate-prefix/src/threadpool-populate-stamp/threadpool-populate-test.rule"
+		},
+		{
+			"file" : "C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/threadpool-subbuild/threadpool-populate-prefix/src/threadpool-populate-stamp/threadpool-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"threadpool-populate"
+		],
+		"name" : "threadpool-populate"
+	}
+}

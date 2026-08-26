@@ -1,3 +1,6 @@
+#ifdef __WIIU__
+#include <coreinit/debug.h> // OSFatal
+#endif
 #include "port/Engine.h"
 
 #include <filesystem>
@@ -205,7 +208,7 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                                  "Please generate a ROM O2R and relaunch.\n\n"
                                  "Press and hold the Power button to shutdown...",
                                  "OK", "", [&]() { exit(1); });
-    OSFatal();
+    OSFatal("Lighthouse: outdated ROM archive. Regenerate bk.o2r and relaunch.");
 #endif
 
     if (!std::filesystem::exists(Ship::Context::LocateFileAcrossAppDirs("/assets"))) {
@@ -676,7 +679,7 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
 #ifdef __SWITCH__
     Ship::Switch::Init(Ship::PreInitPhase);
 #elif defined(__WIIU__)
-    Ship::WiiU::Init(appShortName);
+    Ship::WiiU::Init("bk");
 #endif
 
 #if not defined(__SWITCH__) && not defined(__WIIU__)

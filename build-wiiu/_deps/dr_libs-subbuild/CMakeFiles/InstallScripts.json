@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/dr_libs-subbuild/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

@@ -1,3 +1,6 @@
+#ifdef __WIIU__
+#include "port/WiiUThreadLocal.h"
+#endif
 #include "Engine.h"
 #include <atomic>
 #include <condition_variable>
@@ -48,7 +51,12 @@ OSMesgQueue* thread5_getSyncQueue(void);
 namespace {
 std::atomic<bool> sGameThreadDone{ false };
 std::thread sGameThread;
+#ifdef __WIIU__
+// no TLS in RPX; see port/WiiUThreadLocal.h
+#define tIsGameThread (LighthouseWiiU::Locals().isGameThread)
+#else
 thread_local bool tIsGameThread = false;
+#endif
 
 // The interpolation pair a submitted list was built from, carried to whoever
 // renders it. At most a couple are live at once.
