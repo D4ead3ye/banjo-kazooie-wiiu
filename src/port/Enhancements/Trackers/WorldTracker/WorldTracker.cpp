@@ -1,6 +1,5 @@
 #include "WorldTracker.h"
 #include "port/Enhancements/Retention/Retention.h"
-#include "port/Rando/ShuffleBehavior/ObjectBehavior.h"
 #include "port/Save/Types.h"
 #include "port/ShipUtils.h"
 #include "port/UI/UIWidgets.hpp"
@@ -33,6 +32,12 @@ std::vector<const char*> jinjoTextureNameList = { "Blue Jinjo", "Green Jinjo", "
 
 std::vector<actor_e> orderedJinjoActorList = { ACTOR_60_JINJO_BLUE, ACTOR_62_JINJO_GREEN, ACTOR_5F_JINJO_ORANGE,
                                                ACTOR_61_JINJO_PINK, ACTOR_5E_JINJO_YELLOW };
+
+std::map<actor_e, int32_t> jinjoMarkerMap = { { ACTOR_60_JINJO_BLUE, MARKER_5A_JINJO_BLUE },
+                                              { ACTOR_5E_JINJO_YELLOW, MARKER_5E_JINJO_YELLOW },
+                                              { ACTOR_62_JINJO_GREEN, MARKER_5B_JINJO_GREEN },
+                                              { ACTOR_61_JINJO_PINK, MARKER_5D_JINJO_PINK },
+                                              { ACTOR_5F_JINJO_ORANGE, MARKER_5C_JINJO_ORANGE } };
 
 namespace LighthouseGui {
 extern std::shared_ptr<WorldTracker::WorldTrackerWindow> mWorldTrackerWindow;
@@ -255,8 +260,7 @@ void UpdateWorldTracker() {
         worldTrackerObject[i].tokenLevelTotal = collectedTokens;
 
         for (int j = 0; j < 5; j++) {
-            int32_t jinjoIndex =
-                (GetJinjoActorMarkerId((actor_e)(int32_t)(ACTOR_5E_JINJO_YELLOW + j)) - MARKER_5A_JINJO_BLUE);
+            int32_t jinjoIndex = jinjoMarkerMap[(actor_e)(ACTOR_5E_JINJO_YELLOW + j - MARKER_5A_JINJO_BLUE)];
             u8 jinjoBit = jinjoBitFromActor(ACTOR_5E_JINJO_YELLOW + j);
             worldTrackerObject[i].hasJinjo[jinjoIndex] = (collectedJinjos & jinjoBit) != 0 ? 1 : 0;
         }
