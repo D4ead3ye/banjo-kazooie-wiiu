@@ -35,15 +35,25 @@ void AppendBytes(std::vector<uint8_t>& dst, const char* data, size_t size) {
 // C-right no longer exist as buttons at all - they rotated the camera, which is
 // now the stick itself.
 //
-//   N64 A -> A      N64 B -> B      Z -> LT      C-up -> Y      C-down -> X
-//   C-left -> RT (Talon Trot)   C-right -> the right stick while crouched
-//   (Wonderwing)                R -> RB   Start -> MENU
+//   N64 A -> A      N64 B -> B      Z -> ZL/LT   C-up -> Y      C-down -> X
+//   C-left -> ZR/RT (Talon Trot)  C-right -> the right stick while crouched
+//   (Wonderwing)                  R -> R    Start -> +/MENU
 //
-// Named for a standard Xbox-layout pad rather than a Nintendo one: LT/RT read as
-// triggers to most players, where ZL/ZR only mean something if you own the pad
-// that prints them. The face-button names need no translation - SDL reports A/B/
-// X/Y by the label printed on whichever pad is attached, so "Y" is the button
-// marked Y on both an Xbox pad and a Wii U Pro Controller.
+// The trigger and Start names follow the pad the build targets, because those
+// are the ones whose labels differ: a Wii U pad prints ZL/ZR and +, an Xbox-
+// layout pad prints LT/RT and Menu, and naming a button the player cannot find
+// is worse than not rewriting at all. The face buttons need no such split - SDL
+// reports A/B/X/Y by the label printed on whichever pad is attached, so "Y" is
+// the button marked Y on an Xbox pad and on a Wii U Pro Controller alike.
+#ifdef __WIIU__
+#define PROMPT_ZTRIGGER "ZL"
+#define PROMPT_RTRIGGER "ZR"
+#define PROMPT_START "+"
+#else
+#define PROMPT_ZTRIGGER "LT"
+#define PROMPT_RTRIGGER "RT"
+#define PROMPT_START "MENU"
+#endif
 //
 // Of these rules only HOLD Z, the four directional C BUTTON forms, bare C BUTTON
 // and CONTROL STICK ever match the shipped text; the rest are kept so a text
@@ -51,28 +61,28 @@ void AppendBytes(std::vector<uint8_t>& dst, const char* data, size_t size) {
 static const std::pair<const char*, const char*> kButtonPrompts[] = {
     // Order matters. The Z rules run first: rewriting C-left to "RT" before
     // them would let a bare "Z" rule match inside an already-rewritten string.
-    { "HOLD Z", "HOLD LT" },
-    { "PRESS Z", "PRESS LT" },
-    { "THE Z BUTTON", "LT" },
-    { "Z BUTTON", "LT" },
+    { "HOLD Z", "HOLD " PROMPT_ZTRIGGER },
+    { "PRESS Z", "PRESS " PROMPT_ZTRIGGER },
+    { "THE Z BUTTON", PROMPT_ZTRIGGER },
+    { "Z BUTTON", PROMPT_ZTRIGGER },
 
     { "THE TOP C BUTTON", "Y" },
     { "THE BOTTOM C BUTTON", "X" },
-    { "THE LEFT C BUTTON", "RT" },
+    { "THE LEFT C BUTTON", PROMPT_RTRIGGER },
     { "THE RIGHT C BUTTON", "THE RIGHT STICK" },
     { "TOP C BUTTON", "Y" },
     { "BOTTOM C BUTTON", "X" },
-    { "LEFT C BUTTON", "RT" },
+    { "LEFT C BUTTON", PROMPT_RTRIGGER },
     { "RIGHT C BUTTON", "R STICK RIGHT" },
     { "C BUTTONS", "R STICK" },
     { "C BUTTON", "R STICK" },
     { "C-UP", "Y" },
     { "C-DOWN", "X" },
-    { "C-LEFT", "RT" },
+    { "C-LEFT", PROMPT_RTRIGGER },
     { "C-RIGHT", "R STICK" },
 
-    { "THE START BUTTON", "MENU" },
-    { "START BUTTON", "MENU" },
+    { "THE START BUTTON", PROMPT_START },
+    { "START BUTTON", PROMPT_START },
     // No leading article: the source usually reads "THE CONTROL STICK".
     { "CONTROL STICK", "LEFT STICK" },
 };
