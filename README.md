@@ -1,4 +1,5 @@
 # Banjo-Kazooie — Wii U port, with PC cross-play
+<img width="1024" height="576" alt="da0e5f3a-683a-4b9e-80a4-2c2be79a3d06" src="https://github.com/user-attachments/assets/d8d2aca5-a76f-4372-957b-a7c2dce4e7b3" />
 
 A fork of [HarbourMasters/Lighthouse](https://github.com/HarbourMasters/Lighthouse)
 that adds a working **Wii U** target, a set of quality-of-life changes, and keeps
