@@ -8,6 +8,17 @@
 
 void func_80291488(s32 arg0);
 extern int port_freeLook_ownsCamera(void); // [port] free look is driving the camera
+
+// [port] The last camera node that was allowed to place the camera. Standing down
+// for a node the moment free look owns the camera suppressed every node from then
+// on - a scripted camera beat played once per boot and never again, because the
+// flag that made the first one yield was still set when the next was reached.
+// Keyed on the node so each one still gets its turn on entry; only the node that
+// has already had it stops re-asserting while the player steers.
+static s32 sLastFixedNode = -1;
+// Node indices are per-map, so the map is part of the key: the same index in a
+// different map is a different node and must get its own turn.
+static s32 sLastFixedMap = -1;
 void func_802914CC(s32 arg0);
 
 /* .bss */
@@ -74,6 +85,9 @@ int func_80290D48(void){
     camera_node_index = func_802903CC();
     if(camera_node_index == -1 || !ncCameraNodeList_nodeIsValid(camera_node_index)){
         func_80290BC0(0);
+        // Out of every node's reach: the next one entered is a fresh beat.
+        sLastFixedNode = -1;
+        sLastFixedMap = -1;
         return false;
     }
 
@@ -88,9 +102,12 @@ int func_80290D48(void){
             if(bsBeeFly_inSet(sp1C) && !code33310_func_802BA4D0(ncCameraNodeList_getZoomCameraNode(camera_node_index))){
                 return false;
             }
-            // [port] A zoom node pins the view to a fixed angle; yield to free look.
-            if(port_freeLook_ownsCamera())
+            // [port] Yield only for a node that has already placed the camera once.
+            if(port_freeLook_ownsCamera() && camera_node_index == sLastFixedNode &&
+               (s32)gsworld_getMap() == sLastFixedMap)
                 return true;
+            sLastFixedNode = camera_node_index;
+            sLastFixedMap = (s32)gsworld_getMap();
             ncDynamicCamera_setState(0x11);
             func_802BF798(camera_node_index);
             func_80291488(0x9);
@@ -100,8 +117,11 @@ int func_80290D48(void){
                 return false;
             }
             // [port] Likewise for a pivot node.
-            if(port_freeLook_ownsCamera())
+            if(port_freeLook_ownsCamera() && camera_node_index == sLastFixedNode &&
+               (s32)gsworld_getMap() == sLastFixedMap)
                 return true;
+            sLastFixedNode = camera_node_index;
+            sLastFixedMap = (s32)gsworld_getMap();
             ncDynamicCamera_setState(0x8);
             ncDynamicCam8_func_802BF9B8(camera_node_index);
             func_80291488(0x9);
