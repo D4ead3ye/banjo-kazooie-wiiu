@@ -6,6 +6,10 @@
 
 #include "port/UI/cvar_prefixes.h"
 #include "port/Enhancements/Camera/FreeLookCamera.h"
+#ifdef __WIIU__
+#include <coreinit/time.h>
+#include "port/WiiUDebug.h"
+#endif
 
 extern "C" {
 // Math helpers
@@ -227,8 +231,27 @@ extern "C" int port_freeLook_overridesFixed(void) {
 // out of bounds; in the picture modes that ends up in the bonus picture. Require
 // that free look really is the live camera, in a mode where it is allowed.
 extern "C" int port_freeLook_ownsCamera(void) {
-    return sActive && ncDynamicCamera_getState() == FREELOOK_CAM_STATE && getGameMode() == kGameModeNormal &&
-           port_freeLook_overridesFixed();
+    const int state = ncDynamicCamera_getState();
+    const int mode = getGameMode();
+    const bool owns = sActive && state == FREELOOK_CAM_STATE && mode == kGameModeNormal &&
+                      port_freeLook_overridesFixed();
+#ifdef __WIIU__
+    // [port] A report of the camera locking in one spot underwater, with no way
+    // to steer until surfacing, could not be reproduced. The entry path does
+    // cover state 3, so whatever declined it is one of the other terms. Say
+    // which, once a second and only while a fixed state is actually being held,
+    // so a recurrence names its own cause instead of needing a repro.
+    if (!owns && port_freeLook_isEnabled() && (state == 0x3 || state == 0x8 || state == 0x11)) {
+        static uint32_t sLastReport = 0;
+        const uint32_t now = (uint32_t)(OSTicksToMilliseconds(OSGetSystemTime()));
+        if (now - sLastReport > 1000) {
+            sLastReport = now;
+            WIIU_TRACE("[cam] declined fixed state=%d mode=%d active=%d overrides=%d", state, mode,
+                       (int)sActive, port_freeLook_overridesFixed());
+        }
+    }
+#endif
+    return owns;
 }
 
 extern "C" int port_freeLook_handle(void) {

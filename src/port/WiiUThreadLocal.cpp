@@ -6,6 +6,8 @@
 #include <whb/log.h>
 #include <coreinit/memheap.h>
 #include <coreinit/memexpheap.h>
+#include <coreinit/memfrmheap.h>
+#include <coreinit/memblockheap.h>
 #include <coreinit/memory.h>
 
 namespace LighthouseWiiU {
@@ -18,7 +20,21 @@ uint32_t FreeMem2() {
     if (heap == nullptr) {
         return 0;
     }
-    return MEMGetAllocatableSizeForExpHeapEx(heap, 4);
+    // [port] The accessors are per heap kind and the wrong one just returns 0 -
+    // which reads as "out of memory" and is worse than printing nothing, because
+    // it sends you looking for an exhaustion that is not happening. This was
+    // reporting free=0 on every boot while allocations right after it succeeded.
+    // Dispatch on the heap's own tag.
+    switch (heap->tag) {
+        case MEM_EXPANDED_HEAP_TAG:
+            return MEMGetTotalFreeSizeForExpHeap(heap);
+        case MEM_FRAME_HEAP_TAG:
+            return MEMGetAllocatableSizeForFrmHeapEx(heap, 4);
+        case MEM_BLOCK_HEAP_TAG:
+            return MEMGetTotalFreeSizeForBlockHeap(heap);
+        default:
+            return 0;
+    }
 }
 
 ThreadLocals& Locals() {
