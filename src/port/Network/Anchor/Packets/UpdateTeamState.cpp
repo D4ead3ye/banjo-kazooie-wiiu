@@ -38,11 +38,35 @@ extern void port_hutSmash_restore(const std::vector<int32_t>& flat);
  */
 
 // Snapshot a decomp byte-array score/flag section into a JSON byte array.
-static std::vector<u8> ScoreBytes(void (*getSizeAndPtr)(s32*, u8**)) {
+// [port] These blobs are raw memory, so anything wider than a byte travels in
+// the sender's byte order. Between a big-endian console and a little-endian PC
+// that scrambles the field: the ability bitfield's bit 0 sits in byte 3 on one
+// and byte 0 on the other, so a verbatim copy lands moves on the wrong slots -
+// a few survive by coincidence and the rest do not. Little-endian is the wire
+// order; on a little-endian host both of these are a no-op.
+static bool HostIsBigEndian() {
+    const uint32_t probe = 1;
+    return *reinterpret_cast<const uint8_t*>(&probe) == 0;
+}
+
+static void SwapElements(std::vector<u8>& bytes, int elemSize) {
+    if (elemSize < 2 || !HostIsBigEndian()) {
+        return;
+    }
+    for (size_t i = 0; i + elemSize <= bytes.size(); i += elemSize) {
+        std::reverse(bytes.begin() + i, bytes.begin() + i + elemSize);
+    }
+}
+
+// elemSize is the width of one element in the blob: 1 for the flag and score
+// byte arrays, 4 for the ability words, 2 for the time scores.
+static std::vector<u8> ScoreBytes(void (*getSizeAndPtr)(s32*, u8**), int elemSize = 1) {
     s32 size;
     u8* addr;
     getSizeAndPtr(&size, &addr);
-    return std::vector<u8>(addr, addr + size);
+    std::vector<u8> out(addr, addr + size);
+    SwapElements(out, elemSize);
+    return out;
 }
 
 void Anchor::SendPacket_UpdateTeamState() {
@@ -60,12 +84,14 @@ void Anchor::SendPacket_UpdateTeamState() {
     payload["state"]["mumboTokens"] = ScoreBytes(mumboscore_getSizeAndPtr);
     payload["state"]["noteScores"] = ScoreBytes(itemscore_noteScores_getSizeAndPtr);
     payload["state"]["savedItems"] = ScoreBytes(saveditem_getSizeAndPtr);
-    payload["state"]["abilities"] = ScoreBytes(ability_getSizeAndPtr);
+    payload["state"]["abilities"] = ScoreBytes(ability_getSizeAndPtr, 4);
     // Time scores use a (s32*, void**) accessor, so packed inline.
     s32 tsSize;
     void* tsAddr;
     timeScores_getSizeAndPtr(&tsSize, &tsAddr);
-    payload["state"]["timeScores"] = std::vector<u8>((u8*)tsAddr, (u8*)tsAddr + tsSize);
+    std::vector<u8> tsBytes((u8*)tsAddr, (u8*)tsAddr + tsSize);
+    SwapElements(tsBytes, 2);
+    payload["state"]["timeScores"] = tsBytes;
     payload["state"]["volatileFlags"] = ScoreBytes(volatileFlag_getSizeAndPtr);
     // In-memory session sets (never saved).
     payload["state"]["brokenObjects"] = port_breakable_snapshotBroken();
@@ -105,13 +131,15 @@ void Anchor::SendPacket_ClearTeamState(std::string teamId) {
 }
 
 // Overwrites a local byte section with the authoritative team-state array (no additive merge).
-static void ApplyTeamBytes(nlohmann::json& bytes, void (*getSizeAndPtr)(s32*, u8**)) {
+static void ApplyTeamBytes(nlohmann::json& bytes, void (*getSizeAndPtr)(s32*, u8**), int elemSize = 1) {
     s32 size;
     u8* addr;
     getSizeAndPtr(&size, &addr);
-    s32 count = std::min(size, (s32)bytes.size());
+    std::vector<u8> in = bytes.get<std::vector<u8>>();
+    SwapElements(in, elemSize);
+    s32 count = std::min(size, (s32)in.size());
     for (s32 i = 0; i < count; i++) {
-        addr[i] = bytes[i].get<u8>();
+        addr[i] = in[i];
     }
 }
 
@@ -151,7 +179,7 @@ void Anchor::HandlePacket_UpdateTeamState(nlohmann::json& payload) {
             ApplyTeamBytes(state["jinjoRetention"], port_jinjoRetention_getSizeAndPtr);
         }
         if (state.contains("abilities")) {
-            ApplyTeamBytes(state["abilities"], ability_getSizeAndPtr);
+            ApplyTeamBytes(state["abilities"], ability_getSizeAndPtr, 4);
         }
         // In-memory session sets; takes effect on next map load.
         if (state.contains("brokenObjects")) {
@@ -217,6 +245,7 @@ void Anchor::HandlePacket_UpdateTeamState(nlohmann::json& payload) {
             // Per-level best times (truncated u16 each).
             if (state.contains("timeScores")) {
                 auto incoming = state["timeScores"].get<std::vector<u8>>();
+                SwapElements(incoming, 2);
                 u16 ts[0xB] = { 0 };
                 size_t n = std::min(incoming.size(), sizeof(ts));
                 for (size_t i = 0; i < n; i++) {
