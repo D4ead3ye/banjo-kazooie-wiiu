@@ -174,6 +174,11 @@ void Anchor::HandlePacket_UpdateTeamState(nlohmann::json& payload) {
         // Per-level retention sets; takes effect on next map load.
         if (state.contains("noteRetention")) {
             ApplyTeamBytes(state["noteRetention"], port_noteRetention_getSizeAndPtr);
+            // The live note counter is derived from this bitfield and the byte copy
+            // above bypasses whatever normally maintains it - the same reason jiggies
+            // need func_8034798C below. Without it a reconnecting client sat at 0
+            // notes until it happened to reload a map.
+            port_noteRetention_requestReseed();
         }
         if (state.contains("jinjoRetention")) {
             ApplyTeamBytes(state["jinjoRetention"], port_jinjoRetention_getSizeAndPtr);

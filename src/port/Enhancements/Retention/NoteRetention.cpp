@@ -241,6 +241,19 @@ extern "C" void port_noteRetention_onActorsFreed(void) {
     noteActorQueue.clear();
 }
 
+// [port] A team-state sync overwrites the retention bitfield wholesale, but the
+// live ITEM_C_NOTE counter is derived from it and is not recomputed - so a client
+// that reconnected mid-session showed 0 notes while the bitfield underneath held
+// the team's real total, and "Request Team State" looked like it did nothing.
+// Queue the same deferred reseed a map load uses: it waits for normal play, so it
+// cannot fire during a transition or the pause menu.
+extern "C" void port_noteRetention_requestReseed(void) {
+    if (!systemActive() || !applyEnabled()) {
+        return;
+    }
+    sPendingSeedLevel = (int32_t)level_get();
+}
+
 extern "C" void port_noteRetention_setForced(int32_t forced) {
     sForcedByAnchor = forced != 0;
     ShipInit::Init(CVAR_NOTE_RETENTION);

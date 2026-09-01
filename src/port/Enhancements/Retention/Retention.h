@@ -16,6 +16,9 @@ void port_noteRetention_onActorsFreed(void);
 
 // Live slot's note-retention bytes for Anchor team-state sync (size 0 / null if no slot).
 void port_noteRetention_getSizeAndPtr(int32_t* size, uint8_t** addr);
+// Recompute the live note counter from the retention bitfield, deferred to normal
+// play. Call after anything overwrites that bitfield wholesale, such as a team sync.
+void port_noteRetention_requestReseed(void);
 
 void port_noteRetention_applyRemoteCollect(int32_t mapId, int32_t noteIndex, int32_t sameMap);
 
