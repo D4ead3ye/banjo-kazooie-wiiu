@@ -187,6 +187,24 @@ static bool retentionActiveForLevel(int32_t level) {
     return true;
 }
 
+// [port] Same gap notes had: a team-state sync overwrites the jinjo bitfield
+// wholesale, but ITEM_12_JINJOS is derived from it and is only ever seeded on
+// level entry (OnSetJiggyList), so a client that synced mid-level kept its old
+// count until it re-entered the level. Unlike the entry seed this also corrects
+// downward - after a sync the bitfield is the team's truth, not a floor.
+extern "C" void port_jinjoRetention_requestReseed(void) {
+    if (!systemActive() || !applyEnabled()) {
+        return;
+    }
+    const int32_t level = (int32_t)level_get();
+    if (!levelInRange(level) || !retentionActiveForLevel(level)) {
+        return;
+    }
+    const u8 bits = collectedBits(level);
+    item_adjustByDiffWithoutHud(ITEM_12_JINJOS, bits - item_getCount(ITEM_12_JINJOS));
+}
+
+
 void RegisterJinjoRetention_Init() {
     // Seed ITEM_12_JINJOS from saved bits on entry.
     COND_HOOK(OnSetJiggyList, EVENT_PRIORITY_NORMAL, CVAR_VALUE, [](IEvent* event) {

@@ -64,6 +64,9 @@ static std::vector<u8> ScoreBytes(void (*getSizeAndPtr)(s32*, u8**), int elemSiz
     s32 size;
     u8* addr;
     getSizeAndPtr(&size, &addr);
+    if (addr == nullptr || size <= 0) {
+        return {};
+    }
     std::vector<u8> out(addr, addr + size);
     SwapElements(out, elemSize);
     return out;
@@ -93,6 +96,13 @@ void Anchor::SendPacket_UpdateTeamState() {
     SwapElements(tsBytes, 2);
     payload["state"]["timeScores"] = tsBytes;
     payload["state"]["volatileFlags"] = ScoreBytes(volatileFlag_getSizeAndPtr);
+    // [port] These two were applied on receipt but never sent, so the bitfields
+    // recording *which* notes and jinjos the team has collected never crossed the
+    // wire at all. A client that joined or reconnected got the per-level high
+    // scores and nothing to reconstruct its own counters from, which is why notes
+    // came up empty and stayed empty however often the team state was requested.
+    payload["state"]["noteRetention"] = ScoreBytes(port_noteRetention_getSizeAndPtr);
+    payload["state"]["jinjoRetention"] = ScoreBytes(port_jinjoRetention_getSizeAndPtr);
     // In-memory session sets (never saved).
     payload["state"]["brokenObjects"] = port_breakable_snapshotBroken();
     payload["state"]["carriedCollected"] = port_carriedSync_snapshotCollected();
@@ -182,6 +192,8 @@ void Anchor::HandlePacket_UpdateTeamState(nlohmann::json& payload) {
         }
         if (state.contains("jinjoRetention")) {
             ApplyTeamBytes(state["jinjoRetention"], port_jinjoRetention_getSizeAndPtr);
+            // Derived counter, same as noteRetention above.
+            port_jinjoRetention_requestReseed();
         }
         if (state.contains("abilities")) {
             ApplyTeamBytes(state["abilities"], ability_getSizeAndPtr, 4);

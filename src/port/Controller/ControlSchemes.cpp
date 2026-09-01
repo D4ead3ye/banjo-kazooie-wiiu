@@ -317,6 +317,21 @@ extern "C" void port_shapeControllerInput(void* contPad) {
         }
     }
 
+    // [port] Flying steers like a flight sim for the same reason swimming does:
+    // pushing up on the stick pitches the nose down. Invert it so up climbs.
+    //
+    // Scoped to BS_24_FLY, not the whole bsbfly_inSet: only bsbfly_update reads
+    // the stick for pitch (via func_802A3648). The Beak Bomb and the knockback
+    // states are in that set too and do not use this axis, so inverting across
+    // the set would change controls that were never inverted.
+    {
+        const int st = bs_getState();
+        if (st == BS_24_FLY && CVarGetInteger(CVAR_ENHANCEMENT("Controls.UninvertFlight"), 1) != 0) {
+            const int32_t sy = -(int32_t)pad->stick_y;
+            pad->stick_y = static_cast<int8_t>(sy < -128 ? -128 : (sy > 127 ? 127 : sy));
+        }
+    }
+
     const bool crouched = (bs_getState() == BS_7_CROUCH);
     const bool eggPooping = (bs_getState() == BS_A_EGG_ASS);
 
