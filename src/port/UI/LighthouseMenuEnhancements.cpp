@@ -381,6 +381,14 @@ void LighthouseMenu::AddMenuEnhancements() {
        aspect ratios."));
     */
 
+    AddWidget(path, "Pillarbox cutscenes to 4:3", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Graphics.CutsceneAspect"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().DefaultValue(false).Tooltip(
+            "Cutscenes were staged for a 4:3 frame, so a wider one can show scenery and props "
+            "that were never meant to be on screen. This clamps cutscenes back to 4:3 and "
+            "restores your aspect ratio afterwards."));
+
     AddWidget(path, "Fix Conga's Name", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Fixes.CongaText"))
         .RaceDisable(false)

@@ -312,6 +312,54 @@ void port_captureTransitionFb(Gfx** gfx) {
     }
 }
 
+// Lifescale effect FB (intro circle, game-over shrink)
+
+// The effect freezes a screenshot and shatters it into 54 tiles of 33x33. Taking
+// that image from gFramebuffers means it is limited to the game's native 320x240,
+// which is what made the intro circle look pixelated. Capturing into a GPU FB
+// instead lets the tiles sample the full render resolution.
+static u16 sLifescaleFbDummy[1];
+static s32 sLifescaleGpuFbId = -1;
+static int sLifescaleCapturePending = 0;
+
+static void createLifescaleFb(void* arg) {
+    (void)arg;
+    sLifescaleGpuFbId = gfx_create_framebuffer(DEFAULT_FRAMEBUFFER_WIDTH, DEFAULT_FRAMEBUFFER_HEIGHT,
+                                               DEFAULT_FRAMEBUFFER_WIDTH, DEFAULT_FRAMEBUFFER_HEIGHT, 1, 0);
+    if (sLifescaleGpuFbId >= 0) {
+        gfx_register_fb_texture(sLifescaleFbDummy, sLifescaleGpuFbId);
+    }
+}
+
+int32_t port_getLifescaleGpuFbId(void) {
+    if (sLifescaleGpuFbId < 0) {
+        port_runOnRenderThread(createLifescaleFb, NULL);
+    }
+    return sLifescaleGpuFbId;
+}
+
+const void* port_lifescaleFbTexAddr(void) {
+    return sLifescaleFbDummy;
+}
+
+void port_requestLifescaleCapture(void) {
+    sLifescaleCapturePending = 1;
+}
+
+// Emitted from the game loop alongside gDPReadFB, so the GPU snapshot freezes the
+// same frame the CPU readback does.
+void port_captureLifescaleFb(void* gfx_ptr) {
+    Gfx** gfx = (Gfx**)gfx_ptr;
+    if (!sLifescaleCapturePending) {
+        return;
+    }
+    sLifescaleCapturePending = 0;
+    s32 fb = port_getLifescaleGpuFbId();
+    if (fb >= 0) {
+        gDPCopyFB((*gfx)++, fb, 0, 0, NULL);
+    }
+}
+
 static void setTransitionVertexTexcoord(Vtx* v) {
     // The transition FB captures the scene with AdjXForAspectRatio applied
     // (widescreen content in the FB). The projection X-scale and AdjX cancel

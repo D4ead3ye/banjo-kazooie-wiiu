@@ -766,10 +766,42 @@ static bool WriteFileAtomically(const std::filesystem::path& path, const std::st
     }
     std::filesystem::rename(tempPath, path, ec);
     if (ec) {
-        SPDLOG_ERROR("SaveManager: failed to replace \"{}\": {}", path.string(), ec.message());
-        std::error_code removeEc;
-        std::filesystem::remove(tempPath, removeEc);
-        return false;
+        // [port] POSIX rename replaces the destination atomically, but the Wii U
+        // filesystem refuses when it already exists ("File exists"), so every
+        // save after the first silently failed. Move the old file aside, put the
+        // new one in place, then drop the backup - so a failure at any point
+        // still leaves one complete file on the card.
+        const std::filesystem::path backupPath = path.parent_path() / (path.filename().string() + ".bak");
+        std::error_code backupEc;
+        std::filesystem::remove(backupPath, backupEc);
+
+        bool hadExisting = std::filesystem::exists(path, backupEc);
+        if (hadExisting) {
+            std::filesystem::rename(path, backupPath, backupEc);
+            if (backupEc) {
+                SPDLOG_ERROR("SaveManager: could not move \"{}\" aside: {}", path.string(), backupEc.message());
+                std::error_code removeEc;
+                std::filesystem::remove(tempPath, removeEc);
+                return false;
+            }
+        }
+
+        std::error_code retryEc;
+        std::filesystem::rename(tempPath, path, retryEc);
+        if (retryEc) {
+            SPDLOG_ERROR("SaveManager: failed to replace \"{}\": {}", path.string(), retryEc.message());
+            // Put the original back rather than leaving nothing there.
+            if (hadExisting) {
+                std::error_code restoreEc;
+                std::filesystem::rename(backupPath, path, restoreEc);
+            }
+            std::error_code removeEc;
+            std::filesystem::remove(tempPath, removeEc);
+            return false;
+        }
+
+        std::error_code cleanupEc;
+        std::filesystem::remove(backupPath, cleanupEc);
     }
     return true;
 }

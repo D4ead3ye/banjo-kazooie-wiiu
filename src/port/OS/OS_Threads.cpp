@@ -43,6 +43,9 @@ int sLiveThreads = 0;
 
 extern "C" void OS_RequestThreadExit(void) {
     sExitRequested.store(true, std::memory_order_release);
+    // Setting the flag alone is not enough: a thread already parked on a message
+    // queue will never look at it. Wake them so they can unwind.
+    OS_WakeAllQueues();
 }
 
 extern "C" int OS_ThreadShouldExit(void) {

@@ -1,7 +1,11 @@
 #include "DialogFactory.h"
+#include <cstring>
 
 #include <libultraship/libultraship.h>
+#include <libultraship/bridge/consolevariablebridge.h>
 #include <ship/resource/type/Blob.h>
+
+#include "port/UI/cvar_prefixes.h"
 
 namespace Factories {
 namespace {
@@ -11,12 +15,102 @@ void AppendBytes(std::vector<uint8_t>& dst, const char* data, size_t size) {
     std::memcpy(dst.data() + base, data, size);
 }
 
+// [port] The game's text names N64 buttons literally ("HOLD Z", "THE TOP C
+// BUTTON"), which means nothing on a GamePad. Rewrite them to the pad this build
+// actually maps to, under the stock Retro scheme:
+//   N64 A/B  -> A/B      (SDL follows Nintendo's printed layout here)
+//   N64 Z    -> ZL
+//   C buttons-> right stick directions
+// Longest-first, so "THE TOP C BUTTON" is matched before a bare "C BUTTON".
+//
+// Every replacement must be no longer than what it replaces. The game wraps text
+// on a fixed width, so a longer string pushes the last words outside the box -
+// "C BUTTON" -> "THE RIGHT STICK" nearly doubled it and did exactly that. The
+// only exception is Z, which grows by one character; there is no shorter way to
+// say ZL, and a single character stays inside the box.
+// Kept in step with ControlSchemes: under the Modern layout with free look, the
+// right stick is the camera and the C buttons moved onto face buttons, so the
+// old "RIGHT STICK UP/DOWN" wording is wrong for C-up and C-down. C-left and
+// C-right no longer exist as buttons at all - they rotated the camera, which is
+// now the stick itself.
+//
+//   N64 A -> A      N64 B -> B      Z -> ZL      C-up -> Y      C-down -> X
+//   C-left -> ZR (Talon Trot)   C-right -> the right stick while crouched
+//   (Wonderwing)                R -> R    Start -> +
+static const std::pair<const char*, const char*> kButtonPrompts[] = {
+    // Order matters. The Z rules run first: rewriting C-left to "ZR" before
+    // them would let "PRESS Z" match inside "PRESS ZR" and produce "PRESS ZLR".
+    { "HOLD Z", "HOLD ZL" },
+    { "PRESS Z", "PRESS ZL" },
+    { "THE Z BUTTON", "ZL" },
+    { "Z BUTTON", "ZL" },
+
+    { "THE TOP C BUTTON", "Y" },
+    { "THE BOTTOM C BUTTON", "X" },
+    { "THE LEFT C BUTTON", "ZR" },
+    { "THE RIGHT C BUTTON", "THE RIGHT STICK" },
+    { "TOP C BUTTON", "Y" },
+    { "BOTTOM C BUTTON", "X" },
+    { "LEFT C BUTTON", "ZR" },
+    { "RIGHT C BUTTON", "R STICK RIGHT" },
+    { "C BUTTONS", "R STICK" },
+    { "C BUTTON", "R STICK" },
+    { "C-UP", "Y" },
+    { "C-DOWN", "X" },
+    { "C-LEFT", "ZR" },
+    { "C-RIGHT", "R STICK" },
+
+    { "THE START BUTTON", "+" },
+    { "START BUTTON", "+" },
+    // No leading article: the source usually reads "THE CONTROL STICK".
+    { "CONTROL STICK", "LEFT STICK" },
+};
+
+// [port] Toggle, so the rewriting can be ruled in or out without a rebuild:
+// dialogue is rewritten at load, so change it and restart. Off gives the vanilla
+// N64 prompts.
+#define CVAR_REWRITE_PROMPTS CVAR_ENHANCEMENT("Controls.RewritePrompts")
+
+static void RewriteButtonPrompts(std::string& text) {
+    if (CVarGetInteger(CVAR_REWRITE_PROMPTS, 1) == 0) {
+        return;
+    }
+    const size_t before = text.size();
+    for (const auto& [from, to] : kButtonPrompts) {
+        const size_t fromLen = std::strlen(from);
+        size_t pos = 0;
+        while ((pos = text.find(from, pos)) != std::string::npos) {
+            const size_t grown = text.size() - fromLen + std::strlen(to);
+            if (grown > 255) {
+                // The length is written as a single byte; leave it alone rather
+                // than truncate a line of dialogue.
+                break;
+            }
+            text.replace(pos, fromLen, to);
+            pos += std::strlen(to);
+        }
+    }
+
+    // The length is stored in one byte downstream. Anything at or over the limit
+    // would be truncated into a corrupt entry, so report it rather than ship it.
+    if (text.size() > 255) {
+        SPDLOG_ERROR("[dialog] rewrite overflowed: {} -> {} bytes, truncating", before, text.size());
+        text.resize(255);
+    }
+    // Growth past a character or two means a replacement is wider than the text
+    // it replaced, which the fixed-width box cannot absorb.
+    if (text.size() > before + 1) {
+        SPDLOG_WARN("[dialog] rewrite grew {} -> {} bytes, may overflow the box", before, text.size());
+    }
+}
+
 std::string ReadSizedString(const std::shared_ptr<Ship::BinaryReader>& reader, uint32_t len) {
     std::string out;
     out.resize(len);
     if (len > 0) {
         reader->Read(out.data(), static_cast<int32_t>(len));
     }
+    RewriteButtonPrompts(out);
     return out;
 }
 
@@ -40,7 +134,7 @@ std::vector<uint8_t> ReadLangBlock(const std::shared_ptr<Ship::BinaryReader>& re
         const uint32_t len = reader->ReadUInt32();
         const auto str = ReadSizedString(reader, len);
         block.push_back(cmd);
-        block.push_back(static_cast<uint8_t>(len));
+        block.push_back(static_cast<uint8_t>(str.size()));
         AppendBytes(block, str.data(), str.size());
     }
 
@@ -52,7 +146,7 @@ std::vector<uint8_t> ReadLangBlock(const std::shared_ptr<Ship::BinaryReader>& re
         const uint32_t len = reader->ReadUInt32();
         const auto str = ReadSizedString(reader, len);
         block.push_back(cmd);
-        block.push_back(static_cast<uint8_t>(len));
+        block.push_back(static_cast<uint8_t>(str.size()));
         AppendBytes(block, str.data(), str.size());
     }
 
@@ -66,7 +160,7 @@ uint32_t ReadEntryRun(const std::shared_ptr<Ship::BinaryReader>& reader, std::ve
         const uint32_t len = reader->ReadUInt32();
         const auto str = ReadSizedString(reader, len);
         block.push_back(cmd);
-        block.push_back(static_cast<uint8_t>(len));
+        block.push_back(static_cast<uint8_t>(str.size()));
         AppendBytes(block, str.data(), str.size());
     }
     return count;
@@ -96,7 +190,7 @@ std::vector<uint8_t> ReadGruntyLangBlock(const std::shared_ptr<Ship::BinaryReade
         const auto str = ReadSizedString(reader, len);
 
         entries.push_back(cmd);
-        entries.push_back(static_cast<uint8_t>(len + 2));
+        entries.push_back(static_cast<uint8_t>(str.size() + 2));
         entries.push_back(unk0);
         entries.push_back(unk1);
         AppendBytes(entries, str.data(), str.size());

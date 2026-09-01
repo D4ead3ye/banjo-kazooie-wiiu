@@ -1,3 +1,0 @@
-C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/zlib-subbuild/CMakeFiles/zlib-populate.dir
-C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/zlib-subbuild/CMakeFiles/edit_cache.dir
-C:/claude/bk-wiiu/Lighthouse/build-wiiu/TorchExternal/src/TorchExternal-build/_deps/zlib-subbuild/CMakeFiles/rebuild_cache.dir

@@ -33,6 +33,12 @@ inline void WiiUTerminateHandler() {
     } else {
         WHBLogPrintf("[lh] terminate with no active exception");
     }
+    // [port] abort() unwinds without going through the crash handler, so we got
+    // the exception text and no call stack. Fault deliberately instead: that
+    // hands control to WHBInitCrashHandler, which dumps registers and the back
+    // chain - which is what actually locates the throw site.
+    WHBLogPrintf("[lh] faulting deliberately to capture a backtrace");
+    *(volatile uint32_t*)0 = 0;
     std::abort();
 }
 
@@ -49,5 +55,11 @@ inline void WiiUTerminateHandler() {
 
 #define WIIU_TRACE_INIT() ((void)0)
 #define WIIU_TRACE(...) ((void)0)
+
+// Bring-up logging in the port layer calls WHBLogPrintf directly in a number of
+// places. Those lines are Wii U diagnostics, not behaviour, so give the name a
+// no-op off-console instead of wrapping every call site in a guard - which is
+// what kept the tree from compiling for any other target.
+#define WHBLogPrintf(...) ((void)0)
 
 #endif

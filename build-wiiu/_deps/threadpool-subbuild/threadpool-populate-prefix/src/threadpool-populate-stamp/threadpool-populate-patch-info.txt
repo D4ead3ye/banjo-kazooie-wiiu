@@ -1,6 +1,0 @@
-# This is a generated file and its contents are an internal implementation detail.
-# The update step will be re-executed if anything in this file changes.
-# No other meaning or use of this file is supported.
-
-command=C:/Users/eduar/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/cmake.exe;-Dpatch_file=C:/claude/bk-wiiu/Lighthouse/libultraship/cmake/dependencies/patches/threadpool-wiiu.patch;-Dwith_reset=TRUE;-P;C:/claude/bk-wiiu/Lighthouse/libultraship/cmake/dependencies/git-patch.cmake
-work_dir=C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/threadpool-src

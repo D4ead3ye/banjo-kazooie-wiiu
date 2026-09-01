@@ -37,6 +37,14 @@
 #include "Extractor/GameExtractor.h"
 #include "ship/window/gui/FileBrowserWindow.h"
 #include "Interpolation/FrameInterpolation.h"
+#ifdef __WIIU__
+// coreinit/time.h clashes with the decomp's own OS types, so declare this one.
+extern "C" long long OSGetSystemTime(void);
+extern "C" int gfx_wiiu_has_foreground(void);
+#endif
+#ifdef __WIIU__
+#include <whb/log.h>
+#endif
 #include "Nametag/Nametag.h"
 #include "OS/OS.h"
 #include "Network/Anchor/Anchor.h"
@@ -590,6 +598,17 @@ void GameEngine::RunCommands(Gfx* Commands, const std::vector<std::unordered_map
     if (wnd == nullptr) {
         return;
     }
+#ifdef __WIIU__
+    // [port] The subframe loop below draws whenever frameCount > 1, which
+    // short-circuits the IsFrameReady() check - and that check is what refuses to
+    // draw once the foreground, and with it the MEM1 colour and depth surfaces,
+    // has been handed back. With 60fps interpolation frameCount is always 2, so
+    // shutdown kept rendering into freed MEM1 and faulted the GPU, taking the
+    // console down. Nothing may draw without the foreground.
+    if (!gfx_wiiu_has_foreground()) {
+        return;
+    }
+#endif
     auto interpreter = wnd->GetInterpreterWeak().lock().get();
     wnd->HandleEvents();
     interpreter->mInterpolationIndex = 0;
@@ -681,6 +700,7 @@ SubframePacing ComputeSubframePacing() {
     if (!sInterpolationRecorded) {
         subframesPerTick = 1;
     }
+
 
     int fps = subframesPerTick * 60 / viPerTick;
     if (fps < 1) {

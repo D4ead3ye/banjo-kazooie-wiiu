@@ -32,6 +32,8 @@ extern "C" {
 #include "enums.h"
 int bs_getState(void);
 int bsbtrot_inSet(int state); // nonzero if `state` is one of the Talon Trot states
+bool bsswim_inset(int state);  // nonzero while swimming at the surface
+bool bsbswim_inSet(int state); // ... and while submerged
 s32 getGameMode(void);
 }
 
@@ -164,7 +166,11 @@ void ControlSchemes_Apply(int scheme) {
             ClearButtonSDL(controller, BTN_CDOWN);
             ClearButtonSDL(controller, BTN_CUP);
             BindButton(controller, BTN_CUP, SDL_CONTROLLER_BUTTON_Y);
-            BindButton(controller, BTN_CDOWN, SDL_CONTROLLER_BUTTON_B);
+            BindButton(controller, BTN_CDOWN, SDL_CONTROLLER_BUTTON_X);
+            // C-left/C-right stay on the right stick: port_shapeControllerInput
+            // already suppresses them while the stick is being used as a camera,
+            // and re-enables them when crouched, which is how Talon Trot and
+            // Wonderwing are reached. Removing them made those moves impossible.
             BindAxisToButton(controller, BTN_CLEFT, SDL_CONTROLLER_AXIS_RIGHTX, -1);
             BindAxisToButton(controller, BTN_CRIGHT, SDL_CONTROLLER_AXIS_RIGHTX, 1);
 
@@ -177,9 +183,9 @@ void ControlSchemes_Apply(int scheme) {
             BindAxisToButton(controller, BTN_Z, SDL_CONTROLLER_AXIS_TRIGGERLEFT, 1);
             BindAxisToButton(controller, BTN_Z, SDL_CONTROLLER_AXIS_TRIGGERRIGHT, 1);
 
-            // Attacks
+            // Attacks. N64 B sits on the physical B button; C-down takes X.
             ClearButtonSDL(controller, BTN_B);
-            BindButton(controller, BTN_B, SDL_CONTROLLER_BUTTON_X);
+            BindButton(controller, BTN_B, SDL_CONTROLLER_BUTTON_B);
 
             // L remains L to preserve skip dialog combo
             ClearButtonSDL(controller, BTN_L);
@@ -212,7 +218,7 @@ void ControlSchemes_Apply(int scheme) {
             // Context-aware, imgui menu takes up BACK/SEL
             // so we can't be faithful to Pocket here
             ClearButtonSDL(controller, BTN_CDOWN);
-            BindButton(controller, BTN_CDOWN, SDL_CONTROLLER_BUTTON_B);
+            BindButton(controller, BTN_CDOWN, SDL_CONTROLLER_BUTTON_X);
 
             // Tip-toe / Talon Trot trigger. Recentering moves to a B hold, which
             // frees R to carry Pocket's extra gesture as a real, rebindable
@@ -224,14 +230,29 @@ void ControlSchemes_Apply(int scheme) {
             ClearButtonSDL(controller, BTN_Z);
             BindAxisToButton(controller, BTN_Z, SDL_CONTROLLER_AXIS_TRIGGERLEFT, 1);
 
-            // Attacks
+            // Attacks. N64 B sits on the physical B button; C-down takes X.
             ClearButtonSDL(controller, BTN_B);
-            BindButton(controller, BTN_B, SDL_CONTROLLER_BUTTON_X);
+            BindButton(controller, BTN_B, SDL_CONTROLLER_BUTTON_B);
             break;
         }
         case CONTROL_SCHEME_RETRO:
         default:
             break;
+    }
+
+    // [port] With free look driving the camera from the right stick, that stick
+    // must not also be wired to the C buttons - pushing it up was entering first
+    // person while trying to look up. Applies to every scheme, because the stock
+    // Retro layout puts all four C buttons on the right stick and a saved
+    // Controls.Scheme in config.yml keeps it selected.
+    if (port_freeLook_isEnabled()) {
+        // Only the vertical C buttons move off the stick: pushing up was entering
+        // first person while trying to look up. C-left/C-right stay put - the
+        // input reshaping gates them by player state, and Talon Trot needs them.
+        ClearButtonSDL(controller, BTN_CUP);
+        ClearButtonSDL(controller, BTN_CDOWN);
+        BindButton(controller, BTN_CUP, SDL_CONTROLLER_BUTTON_Y);
+        BindButton(controller, BTN_CDOWN, SDL_CONTROLLER_BUTTON_X);
     }
 
     auto ctx = Ship::Context::GetRawInstance();
@@ -263,9 +284,40 @@ extern "C" void port_shapeControllerInput(void* contPad) {
         return;
     }
 
-    const int scheme = CVarGetInteger(CVAR_SETTING("Controls.Scheme"), CONTROL_SCHEME_RETRO);
+#ifdef __WIIU__
+    // [port] The GamePad has two sticks and shoulder triggers, so Modern is the
+    // layout that fits it: right stick camera, Z on the triggers, R to recenter.
+    const int schemeDefault = CONTROL_SCHEME_MODERN;
+#else
+    const int schemeDefault = CONTROL_SCHEME_RETRO;
+#endif
+    const int scheme = CVarGetInteger(CVAR_SETTING("Controls.Scheme"), schemeDefault);
+
+    // [port] ControlSchemes_Apply is only called from the settings menu, which is
+    // not reachable on console - so the scheme and the free-look de-conflict were
+    // never applied at all there. Apply once, here, as soon as a controller
+    // exists (there is none at init time).
+    static bool sSchemeApplied = false;
+    if (!sSchemeApplied) {
+        sSchemeApplied = true;
+        ControlSchemes_Apply(scheme);
+    }
     const bool modern = (scheme == CONTROL_SCHEME_MODERN);
     const bool pocket = (scheme == CONTROL_SCHEME_POCKET);
+    // [port] Submerged, vanilla steers like a flight sim: pushing up on the
+    // stick dives. Invert the vertical axis down there so up means up. The CVar
+    // leaves the original behaviour available.
+    //
+    // Only while submerged: at the surface the same axis is ordinary forward and
+    // back movement, so inverting it there made back swim forward.
+    {
+        const int st = bs_getState();
+        if (bsbswim_inSet(st) && CVarGetInteger(CVAR_ENHANCEMENT("Controls.UninvertSwim"), 1) != 0) {
+            const int32_t sy = -(int32_t)pad->stick_y;
+            pad->stick_y = static_cast<int8_t>(sy < -128 ? -128 : (sy > 127 ? 127 : sy));
+        }
+    }
+
     const bool crouched = (bs_getState() == BS_7_CROUCH);
     const bool eggPooping = (bs_getState() == BS_A_EGG_ASS);
 

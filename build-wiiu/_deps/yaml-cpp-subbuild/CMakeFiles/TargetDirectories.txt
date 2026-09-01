@@ -1,3 +1,0 @@
-C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-subbuild/CMakeFiles/yaml-cpp-populate.dir
-C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-subbuild/CMakeFiles/edit_cache.dir
-C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-subbuild/CMakeFiles/rebuild_cache.dir

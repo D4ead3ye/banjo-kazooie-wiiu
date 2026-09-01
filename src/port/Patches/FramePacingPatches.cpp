@@ -3,6 +3,7 @@
 // Cutscene stutter tables are sourced from BanjoRecomp's analysis:
 // github.com/BanjoRecomp/BanjoRecomp/blob/main/patches/timing_patches.c
 
+#include <libultraship.h>
 #include <libultraship/bridge/consolevariablebridge.h>
 #include "port/UI/cvar_prefixes.h"
 #include "port/Enhancements/Events/Hooks/Events.h"
@@ -33,6 +34,17 @@ int port_getDemoViCount(void) {
 
 void port_setDemoViCount(int viCount) {
     sDemoViCount = (viCount > kMaxDemoViCount) ? kMaxDemoViCount : viCount;
+
+    { // [lagdiag] the picture modes pace the logic from the demo recording;
+      // 1 VI is 60fps logic, 2 is 30fps, 3 is 20fps. Reported on change only.
+        static int last = -1;
+        const int mode = getGameMode();
+        if ((mode == GAME_MODE_8_BOTTLES_BONUS || mode == GAME_MODE_A_SNS_PICTURE) && sDemoViCount != last) {
+            last = sDemoViCount;
+            SPDLOG_INFO("[lagdiag] mode={} demoViCount={} -> logic {}fps", mode, sDemoViCount,
+                        sDemoViCount > 0 ? 60 / sDemoViCount : 60);
+        }
+    }
 }
 
 int port_getDemoDisplayViCount(int rawViCount) {

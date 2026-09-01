@@ -90,3 +90,9 @@ CLAUDE.md
 /build-arm64
 x64
 /x64/Debug
+
+# Build output - was tracked by mistake; machine-specific and regenerable
+build-wiiu/
+build-pc/
+Torch/build-host/
+*.o2r

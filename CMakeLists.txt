@@ -475,8 +475,14 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "NintendoSwitch")
         "Vorbis::vorbisfile"
     )
 elseif(CMAKE_SYSTEM_NAME STREQUAL "CafeOS")
+    # [port] SDL2_net was linked for Windows and for the generic Unix branch but
+    # not here, so enabling USE_NETWORKING compiled the Anchor transport and then
+    # failed to link it. devkitPro ships libSDL2_net.a in portlibs/wiiu; name it
+    # directly rather than via an exported target, which the package does not
+    # provide for this toolchain. It must precede SDL2 for static resolution.
     set(ADDITIONAL_LIBRARY_DEPENDENCIES
         "$<$<CONFIG:Debug>:-Wl,--wrap=abort>"
+        "$<$<BOOL:${USE_NETWORKING}>:${DEVKITPRO}/portlibs/wiiu/lib/libSDL2_net.a>"
     )
     target_include_directories(${PROJECT_NAME} PRIVATE
         ${DEVKITPRO}/portlibs/wiiu/include/

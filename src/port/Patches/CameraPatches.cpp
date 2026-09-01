@@ -27,6 +27,20 @@ extern float sViewportAspect;
 #define CVAR_AR_X CVAR_PREFIX_ADVANCED_RESOLUTION ".AspectRatioX"
 #define CVAR_AR_Y CVAR_PREFIX_ADVANCED_RESOLUTION ".AspectRatioY"
 #define CVAR_CUTSCENE_ASPECT CVAR_ENHANCEMENT("Graphics.CutsceneAspect")
+// Keeps vanilla 4:3 actor culling during cutscenes so off-camera actors stay
+// hidden at widescreen. Only affects the culling frustum, not the projection.
+#define CVAR_CUTSCENE_CULL CVAR_ENHANCEMENT("Graphics.CutsceneActorCull")
+#ifdef __WIIU__
+static constexpr int kCutsceneCullDefault = 1;
+#else
+static constexpr int kCutsceneCullDefault = 0;
+#endif
+
+// [port] Off on console. This does not clamp the projection - it forces
+// libultraship's advanced-resolution override to 4:3, which the GX2 backend does
+// not render: turning it on gave a black screen from the first cutscene onward.
+// Fixing the intro's widescreen framing needs a projection-side change instead.
+static constexpr int kCutsceneAspectDefault = 0;
 #define CVAR_CSA_BAK_ACTIVE CVAR_ENHANCEMENT("Graphics.CutsceneAspectBackup.Active")
 #define CVAR_CSA_BAK_ENABLED CVAR_ENHANCEMENT("Graphics.CutsceneAspectBackup.Enabled")
 #define CVAR_CSA_BAK_COMBO CVAR_ENHANCEMENT("Graphics.CutsceneAspectBackup.Combo")
@@ -47,6 +61,17 @@ static void restoreCutsceneAspectBackup() {
     CVarSetFloat(CVAR_AR_Y, CVarGetFloat(CVAR_CSA_BAK_Y, 9.0f));
     CVarClear(CVAR_CSA_BAK_ACTIVE);
     sCutsceneAspectActive = 0;
+}
+
+// [port] True while the loaded map is a cutscene. Range-checked because
+// gsworld_getMap() is not meaningful before the first map load and map_getLevel
+// indexes a table with it.
+static bool currentMapIsCutscene() {
+    int32_t m = (int32_t)gsworld_getMap();
+    if (m < 0 || m >= MAP_NUM_MAPS) {
+        return false;
+    }
+    return map_getLevel((enum map_e)m) == LEVEL_D_CUTSCENE;
 }
 
 static void updateCutsceneAspect(int32_t mapId) {
@@ -196,10 +221,36 @@ void RegisterCutsceneAspect() {
     if (CVarGetInteger(CVAR_CSA_BAK_ACTIVE, 0)) {
         restoreCutsceneAspectBackup();
     }
-    COND_HOOK(OnMapLoad, EVENT_PRIORITY_NORMAL, CVarGetInteger(CVAR_CUTSCENE_ASPECT, 0), [](IEvent* event) {
+    COND_HOOK(OnMapLoad, EVENT_PRIORITY_NORMAL, CVarGetInteger(CVAR_CUTSCENE_ASPECT, kCutsceneAspectDefault), [](IEvent* event) {
         OnMapLoad* ev = (OnMapLoad*)event;
         updateCutsceneAspect(ev->nextMap);
     });
+
+    // The hook above only ever sees the *next* map, so a cutscene that is
+    // already on screen when this runs never gets the 4:3 clamp - and this
+    // runs both at boot and every time the CVar changes. That left the
+    // setting doing nothing until the following map load: turn it on during
+    // the intro and the out-of-frame scenery stays visible for the rest of
+    // it, then behaves correctly the next time round. Apply it to the map
+    // that is already loaded.
+    // [port] Skip this on the very first call. It runs from GameEngine::Create,
+    // before any map exists: gsworld_getMap() returns an uninitialised value that
+    // can pass a range check and still fault inside map_getLevel(), whose table is
+    // not built yet. Every later call comes from the CVar changing at runtime,
+    // when a map really is loaded - which is the case this block is for. At boot
+    // the OnMapLoad hook above covers the first map anyway.
+    static bool sPastBootCall = false;
+    if (!sPastBootCall) {
+        sPastBootCall = true;
+        return;
+    }
+
+    if (CVarGetInteger(CVAR_CUTSCENE_ASPECT, kCutsceneAspectDefault)) {
+        int32_t curMap = (int32_t)gsworld_getMap();
+        if (curMap >= 0 && curMap < MAP_NUM_MAPS) {
+            updateCutsceneAspect(curMap);
+        }
+    }
 }
 
 void RegisterWidescreenCamera() {
@@ -256,7 +307,14 @@ void RegisterCameraPatches_Init() {
 
     // Bigger frustum for wider aspect ratios, no-op for deterministic scenes
     REGISTER_LISTENER(ViewportFrustumUpdate, EVENT_PRIORITY_NORMAL, [](IEvent* event) {
-        if (IsDemoMode()) {
+        // [port] Cutscenes are framed for 4:3, and actors wait off to the sides
+        // until their cue. Widening the frustum for 16:9 stops culling them, so
+        // they can be seen loitering - the insect at the start of the intro is
+        // the clearest case. IsDemoMode() alone did not cover this: the intro
+        // runs as a scripted cutscene in GAME_MODE_3_NORMAL on a cold boot, and
+        // only takes the attract-demo path afterwards, which is exactly why it
+        // was visible once per launch and never again.
+        if (IsDemoMode() || (CVarGetInteger(CVAR_CUTSCENE_CULL, kCutsceneCullDefault) && currentMapIsCutscene())) {
             return;
         }
         auto* ev = (ViewportFrustumUpdate*)event;

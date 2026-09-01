@@ -230,3 +230,18 @@ static void RegisterSpriteRestoreAlphaCompare_Init() {
 }
 
 static RegisterShipInitFunc sSpriteRestoreAlphaCompareInit(RegisterSpriteRestoreAlphaCompare_Init);
+
+#ifdef __WIIU__
+#include <whb/log.h>
+extern "C" void port_wiiu_trace_chunk(int idx, int count, int x, int y, int w, int h) {
+    WHBLogPrintf("[glyph] chunk %d/%d x=%d y=%d w=%d h=%d", idx, count, x, y, w, h);
+}
+#endif
+
+#ifdef __WIIU__
+#include <whb/log.h>
+extern "C" void port_wiiu_trace_spritescale(int dw, int dh, int fw, int fh, int sx100, int sy100, int chunks) {
+    WHBLogPrintf("[sprscale] draw=%dx%d frame=%dx%d scale=%d.%02d/%d.%02d chunks=%d", dw, dh, fw, fh, sx100 / 100,
+                 sx100 % 100, sy100 / 100, sy100 % 100, chunks);
+}
+#endif

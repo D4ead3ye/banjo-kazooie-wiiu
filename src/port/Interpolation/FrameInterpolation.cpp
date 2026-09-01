@@ -331,6 +331,7 @@ void FrameInterpolation_RecordOpenChild(const void* key, uintptr_t id) {
     uint64_t h = gRecord->scopeStack.back().pathHash;
     h = fnvMix(h, reinterpret_cast<uintptr_t>(key));
     h = fnvMix(h, static_cast<uint64_t>(id));
+
     gRecord->scopeStack.push_back({ h, 0, 0, 0, 0, static_cast<const char*>(key), id });
 }
 

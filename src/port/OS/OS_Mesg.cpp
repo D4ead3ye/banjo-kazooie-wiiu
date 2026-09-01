@@ -35,6 +35,11 @@ struct QueueSync {
     std::condition_variable notEmpty;
     std::condition_variable notFull;
     bool blockingEnabled = false;
+    // [port] Kept only so OS_WakeAllQueues has something to set; the waits below
+    // test the queue itself plus OS_ThreadShouldExit(), which is what the wake is
+    // signalling. It deliberately does not appear in any predicate: nothing
+    // clears it, so a waiter that trusted it would spin forever once set.
+    bool wake = false;
 };
 
 std::mutex sMesgMutex;
@@ -102,7 +107,16 @@ int32_t osSendMesg(OSMesgQueue* mq, OSMesg msg, int32_t flag) {
         if (waitSlot < 0) {
             waitSlot = MarkBlockedWait(mq, 1);
         }
-        sync.notFull.wait(lock);
+        // [port] Nothing used to break this wait, so a thread parked on a queue
+        // at shutdown slept forever and the process could never finish. Leave the
+        // wait when an exit has been requested; the caller sees the same -1 it
+        // gets from a non-blocking queue and unwinds normally.
+        sync.notFull.wait(lock,
+                          [&] { return mq->validCount < mq->msgCount || OS_ThreadShouldExit(); });
+        if (OS_ThreadShouldExit()) {
+            ClearBlockedWait(waitSlot);
+            return -1;
+        }
     }
     ClearBlockedWait(waitSlot);
     s32 last = (mq->first + mq->validCount) % mq->msgCount;
@@ -126,7 +140,16 @@ int32_t osJamMesg(OSMesgQueue* mq, OSMesg msg, int32_t flag) {
         if (waitSlot < 0) {
             waitSlot = MarkBlockedWait(mq, 1);
         }
-        sync.notFull.wait(lock);
+        // [port] Nothing used to break this wait, so a thread parked on a queue
+        // at shutdown slept forever and the process could never finish. Leave the
+        // wait when an exit has been requested; the caller sees the same -1 it
+        // gets from a non-blocking queue and unwinds normally.
+        sync.notFull.wait(lock,
+                          [&] { return mq->validCount < mq->msgCount || OS_ThreadShouldExit(); });
+        if (OS_ThreadShouldExit()) {
+            ClearBlockedWait(waitSlot);
+            return -1;
+        }
     }
     ClearBlockedWait(waitSlot);
     mq->first = (mq->first + mq->msgCount - 1) % mq->msgCount;
@@ -148,7 +171,11 @@ int32_t osRecvMesg(OSMesgQueue* mq, OSMesg* msg, int32_t flag) {
         if (waitSlot < 0) {
             waitSlot = MarkBlockedWait(mq, 0);
         }
-        sync.notEmpty.wait(lock);
+        sync.notEmpty.wait(lock, [&] { return mq->validCount != 0 || OS_ThreadShouldExit(); });
+        if (OS_ThreadShouldExit()) {
+            ClearBlockedWait(waitSlot);
+            return -1;
+        }
     }
     ClearBlockedWait(waitSlot);
     if (msg != nullptr) {
@@ -165,6 +192,18 @@ void osSetEventMesg(OSEvent event, OSMesgQueue* mq, OSMesg msg) {
     if (event < OS_NUM_EVENTS) {
         __osEventStateTab[event].queue = mq;
         __osEventStateTab[event].msg = msg;
+    }
+}
+
+// Wake everything parked on a queue. Called when a thread exit is requested, so
+// the waiters can observe the flag and unwind instead of sleeping forever.
+void OS_WakeAllQueues(void) {
+    std::lock_guard<std::mutex> lock(sMesgMutex);
+    for (auto& [mq, sync] : sQueueSync) {
+        (void)mq;
+        sync.wake = true;
+        sync.notEmpty.notify_all();
+        sync.notFull.notify_all();
     }
 }
 

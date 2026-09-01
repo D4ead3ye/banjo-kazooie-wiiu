@@ -198,6 +198,9 @@ void func_802E39D0(Gfx **gfx, Mtx **mtx, Vtx **vtx, s32 framebuffer_idx, bool ar
         gDPReadFB((*gfx)++, 0, (u16 *)gFramebuffers[getActiveFramebuffer()],
                   0, 0, gFramebufferWidth, gFramebufferHeight, 1);
     }
+    // [port] Freeze the same frame on the GPU for the lifescale effect, so it can
+    // sample at render resolution rather than the native-res readback above.
+    port_captureLifescaleFb(gfx);
     core1_15B30_finishDList(gfx);
     osWritebackDCache(mtx_start, sizeof(Mtx)*( *mtx - mtx_start));
     osWritebackDCache(vtx_start, sizeof(Vtx)*( *vtx - vtx_start));

@@ -1,5 +1,9 @@
-#ifdef __WIIU__
+// WiiUDebug.h is safe on every target: off Wii U it defines WIIU_TRACE as a
+// no-op. Including it only under the guard left the macro undefined on other
+// platforms while the calls below stayed unguarded, which no one noticed while
+// Wii U was the only target being built.
 #include "port/WiiUDebug.h"
+#ifdef __WIIU__
 #include <whb/log.h>
 #endif
 #include "LighthouseMenu.h"

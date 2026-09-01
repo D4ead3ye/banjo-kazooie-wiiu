@@ -10,9 +10,25 @@ void Network::Enable(const char* host, uint16_t port) {
         return;
     }
 
-    if (SDLNet_ResolveHost(&networkAddress, host, port) == -1) {
-        SPDLOG_ERROR("[Network] SDLNet_ResolveHost: {}", SDLNet_GetError());
+    // [port] SDL_net requires an explicit init before any other call. Nothing did
+    // it, which desktop SDL_net tolerates but the Wii U build does not - its
+    // socket library has to be brought up first.
+    static bool sNetInit = false;
+    if (!sNetInit) {
+        if (SDLNet_Init() == -1) {
+            SPDLOG_ERROR("[Network] SDLNet_Init failed: {}", SDLNet_GetError());
+            return;
+        }
+        sNetInit = true;
+        SPDLOG_INFO("[Network] SDL_net ready");
     }
+
+    if (SDLNet_ResolveHost(&networkAddress, host, port) == -1) {
+        SPDLOG_ERROR("[Network] SDLNet_ResolveHost('{}', {}): {}", host, port, SDLNet_GetError());
+        isEnabled = false;
+        return;
+    }
+    SPDLOG_INFO("[Network] resolved {}:{}", host, port);
 
     isEnabled = true;
 
@@ -87,7 +103,15 @@ void Network::ReceiveFromServer() {
         // Listen to socket messages
         while (isConnected && networkSocket && isEnabled) {
             // we check first if socket has data, to not block in the TCP_Recv
-            int socketsReady = SDLNet_CheckSockets(socketSet, 0);
+            //
+            // [port] This timeout used to be 0, which returns immediately: with no
+            // data the loop hit `continue` and came straight back, spinning a core
+            // flat out. A desktop absorbs that; the Wii U has three cores and the
+            // spin starved the main loop, so pressing HOME - which needs that loop
+            // to pump ProcUI messages - hung the console. Block here instead. It
+            // costs at most one frame of outgoing latency.
+            static constexpr int kPollTimeoutMs = 16;
+            int socketsReady = SDLNet_CheckSockets(socketSet, kPollTimeoutMs);
 
             if (socketsReady == -1) {
                 SPDLOG_ERROR("[Network] SDLNet_CheckSockets: {}", SDLNet_GetError());

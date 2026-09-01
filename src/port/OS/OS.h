@@ -34,6 +34,8 @@ void OS_SetQueueBlocking(OSMesgQueue* mq, int enabled);
 
 // Cooperative exit for threads.
 void OS_RequestThreadExit(void);
+void OS_WakeAllQueues(void);
+int OS_ThreadShouldExit(void);
 int OS_ThreadShouldExit(void);
 void OS_JoinDecompThreads(void);
 

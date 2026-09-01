@@ -32,6 +32,8 @@ std::atomic<bool> sTickerRun{ false };
 std::atomic<void*> sNextFramebuffer{ nullptr };
 std::atomic<void*> sCurrentFramebuffer{ nullptr };
 std::atomic<bool> sBlack{ false };
+std::atomic<uint64_t> sRetraceCount{ 0 };
+std::atomic<bool> sPaused{ false };
 
 } // namespace
 
@@ -54,10 +56,30 @@ extern "C" void osCreateViManager(OSPri pri) {
             }
             // A retrace latches whatever swap armed, then raises VI.
             sCurrentFramebuffer.store(sNextFramebuffer.load(std::memory_order_acquire), std::memory_order_release);
+            // While the system holds the foreground the game cannot advance, and
+            // firing retraces at a thread that is not consuming them fills its
+            // queue and deadlocks the pipeline. Keep the cadence, drop the beat.
+            if (sPaused.load(std::memory_order_acquire)) {
+                continue;
+            }
+            sRetraceCount.fetch_add(1, std::memory_order_relaxed);
             ThreadWatchdog_Beat(WATCHDOG_VI_TICKER);
             OS_SendEventMesg(OS_EVENT_VI);
         }
     });
+}
+
+// How many retraces the 60Hz ticker has issued. Game speed is meant to come off
+// this cadence, so comparing it against the game tick rate says whether the
+// logic is running at its intended 30Hz or at the full 60.
+// Suspend the retrace cadence across a foreground handover. The ticker thread
+// keeps running so it can resume on an absolute schedule rather than drifting.
+extern "C" void OS_SetViPaused(int paused) {
+    sPaused.store(paused != 0, std::memory_order_release);
+}
+
+extern "C" unsigned long long OS_ViRetraceCount(void) {
+    return sRetraceCount.load(std::memory_order_relaxed);
 }
 
 extern "C" void OS_StopViTicker(void) {

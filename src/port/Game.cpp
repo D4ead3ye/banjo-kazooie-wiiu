@@ -1,8 +1,7 @@
-#ifdef __WIIU__
+// Safe on every target: off Wii U this defines WIIU_TRACE as a no-op.
+#include "port/WiiUDebug.h"
 #ifdef __WIIU__
 #include "ship/port/wiiu/WiiUImpl.h"
-#endif
-#include "port/WiiUDebug.h"
 #include "port/WiiUThreadLocal.h"
 #endif
 #include "Engine.h"
@@ -28,6 +27,7 @@
 #include "DevTools/ThreadWatchdog.h"
 #include "GameStatus.h"
 #include "Interpolation/FrameInterpolation.h"
+#include <malloc.h>
 #include "Nametag/Nametag.h"
 #include "Network/Anchor/Anchor.h"
 #include "OS/OS.h"
@@ -171,6 +171,27 @@ void RenderTask(void* dlStart) {
 
 // This thread plays the RCP: thread5 hands over a task,
 // we run it and raise SP then DP.
+extern "C" unsigned long long OS_ViRetraceCount(void);
+
+#ifdef __WIIU__
+extern "C" int gfx_wiiu_has_foreground(void);
+extern "C" int64_t OSGetSystemTime(void);
+extern "C" void OSSleepTicks(int64_t ticks);
+// The Wii U timer runs at 62.156250 MHz.
+static constexpr int64_t kLoopTicksPerMs = 62156;
+#else
+// [port] Off Wii U there is no foreground handover and no console tick clock.
+// Supplying equivalents keeps the loop below identical on both targets instead
+// of threading #ifdefs through it - the loop is subtle enough already.
+static inline int gfx_wiiu_has_foreground() {
+    return 1;  // a desktop window never loses its surfaces to the system
+}
+static constexpr int64_t kLoopTicksPerMs = 1000;  // a "tick" is a microsecond here
+static inline void OSSleepTicks(int64_t ticks) {
+    std::this_thread::sleep_for(std::chrono::microseconds(ticks));
+}
+#endif
+
 int ServiceRcp() {
     OSTask* task = OS_SpTakePendingTask();
     if (task == nullptr) {
@@ -179,6 +200,7 @@ int ServiceRcp() {
     RenderTask(task->t.data_ptr);
     OS_SendEventMesg(OS_EVENT_SP);
     OS_SendEventMesg(OS_EVENT_DP);
+
     return 1;
 }
 
@@ -369,7 +391,34 @@ int SDL_main(int argc, char* argv[]) {
         }
         sGameThreadDone.store(true);
     });
+    // [port] This waits for the game thread even after the window is gone. If
+    // that thread is parked somewhere the shutdown request cannot reach, the loop
+    // spins forever and the console never gets its menu back - which is the HOME
+    // close hang. Give it a bounded grace period, then stop waiting.
+    int64_t closingSince = 0;
     while (WindowIsRunning() || !sGameThreadDone.load()) {
+        if (!WindowIsRunning()) {
+            // [port] Do not attempt a graceful teardown here. Every version of it
+            // froze the console: the shutdown path touches GX2 and MEM1 after the
+            // system has reclaimed them, and the game thread cannot be joined
+            // when it is parked inside game code. The OS reclaims everything on
+            // process exit, so unwinding buys nothing.
+            //
+            // Saves are written at save points rather than on exit, so nothing
+            // game-critical is in flight. Flush settings, give any in-progress
+            // file write a moment to land, and terminate.
+            (void)closingSince;
+            WHBLogPrintf("[exit] window closed, flushing settings and terminating");
+            OS_RequestThreadExit();
+
+            auto ctx = Ship::Context::GetRawInstance();
+            if (ctx != nullptr && ctx->GetConsoleVariables() != nullptr) {
+                ctx->GetConsoleVariables()->Save();
+            }
+            OSSleepTicks(kLoopTicksPerMs * 300);
+            WHBLogPrintf("[exit] terminating now");
+            _Exit(0);
+        }
         ThreadWatchdog_Beat(WATCHDOG_MAIN_LOOP);
         port_noteMainLoopAlive();
 #ifdef __WIIU__
@@ -387,7 +436,10 @@ int SDL_main(int argc, char* argv[]) {
                 WIIU_TRACE("[game] >>> map %d -> %d, level %d -> %d", lastMap, map, lastLevel, level);
                 lastMap = map;
                 lastLevel = level;
-            } else if ((tick++ % 60) == 0) {
+            } else if ((tick++ % 1800) == 0) {
+                // Slowed from every 60 ticks: at one a second these two lines
+                // were ~2000 of the log's 4000 line budget and evicted
+                // everything worth reading. Map/level changes still log above.
                 WIIU_TRACE("[game] map=%d lvl=%d | calls=%u lod=%u frustum=%u emitted=%u"
                            " | localnorm=%d drawdist=%d camdist=%d",
                            map, level, gWiiuModelCalls, gWiiuModelLodCull, gWiiuModelFrustum,
@@ -408,25 +460,69 @@ int SDL_main(int argc, char* argv[]) {
         Ship::Context::GetRawInstance()->GetWindow()->HandleEvents();
         OS_SiService();
         if (IsInlineModExtractionBusy()) {
-            GameEngine::Instance->RenderGuiFrame();
+            if (gfx_wiiu_has_foreground()) {
+                GameEngine::Instance->RenderGuiFrame();
+            }
             SDL_Delay(16);
             continue;
         }
         DrainRenderService();
-        if (!ServiceRcp()) {
+        const int rcpDid = ServiceRcp();
+        if (!rcpDid) {
             // The gui only draws inside serviced frames, so a stalled game
             // thread would freeze ImGui with it. Render gui-only frames during
             // a stall so the menu (and the watchdog dump) stays reachable.
-            if (ThreadWatchdog_IsStalled(WATCHDOG_GAME_TICK)) {
+            // [port] The game thread stops ticking during shutdown, so the
+            // watchdog reports a stall and this rendered a GUI frame - after the
+            // release callback had already freed the MEM1 colour and depth
+            // surfaces. Drawing against freed MEM1 faults the GPU and takes the
+            // whole console down, which is the HOME close freeze. Never render
+            // without the foreground.
+            if (ThreadWatchdog_IsStalled(WATCHDOG_GAME_TICK) && gfx_wiiu_has_foreground()) {
                 GameEngine::Instance->RenderGuiFrame();
                 SDL_Delay(16);
                 continue;
             }
+#ifdef __WIIU__
+            // coreinit/thread.h cannot be included here: it redefines OSThread,
+            // which the decomp already provides. Declare just what is needed.
+            // The Wii U timer runs at 62.156250 MHz.
+            static constexpr int64_t kTicksPerMs = 62156;
+            // 250us in whatever unit OSSleepTicks takes on this target.
+            static constexpr int64_t kTicksPer250us = kLoopTicksPerMs / 4;
+            // [port] SDL_Delay(1) sleeps for a whole scheduler tick here, far
+            // longer than the millisecond asked for, and this path runs every
+            // iteration the game thread has not produced a frame yet. As the game
+            // thread slows, more iterations land here, each costing a full tick,
+            // which starves it further - frame time climbs and never recovers
+            // even though the renderer is doing less work. Sleep a real 250us
+            // instead, and report what this path actually costs.
+            {
+                static uint32_t idleCount = 0;
+                static int64_t idleTicks = 0;
+                static int64_t lastReport = 0;
+                const int64_t t0 = OSGetSystemTime();
+                OSSleepTicks(kTicksPer250us);
+                idleTicks += OSGetSystemTime() - t0;
+                idleCount++;
+                if (lastReport == 0) {
+                    lastReport = t0;
+                } else if ((t0 - lastReport) / kTicksPerMs >= 1000) {
+                    WHBLogPrintf("[idle] %u waits costing %ums of the last second", idleCount,
+                                 (unsigned)(idleTicks / kTicksPerMs));
+                    idleCount = 0;
+                    idleTicks = 0;
+                    lastReport = t0;
+                }
+            }
+#else
             SDL_Delay(1);
+#endif
         }
     }
     // Ask first, then release: a thread woken before the request is set would just
     // park again.
+    WHBLogPrintf("[exit] loop done, requesting thread exit");
     OS_RequestThreadExit();
     {
         std::lock_guard<std::mutex> lock(sSvcMutex);
@@ -436,14 +532,28 @@ int SDL_main(int argc, char* argv[]) {
     sSvcCv.notify_all();
     OS_BeginShutdown();
 
+    WHBLogPrintf("[exit] begin shutdown done");
     if (sGameThread.joinable()) {
-        sGameThread.join();
+        // join() cannot time out, so only join a thread that has actually
+        // returned. One still inside game code is detached instead - the same
+        // choice OS_JoinDecompThreads already makes for a straggler.
+        if (sGameThreadDone.load()) {
+            sGameThread.join();
+            WHBLogPrintf("[exit] game thread joined");
+        } else {
+            sGameThread.detach();
+            WHBLogPrintf("[exit] game thread still running, detached");
+        }
     }
     // Before Destroy: these threads draw and play audio through the engine.
     OS_JoinDecompThreads();
+    WHBLogPrintf("[exit] decomp threads joined");
     ThreadWatchdog_Stop();
+    WHBLogPrintf("[exit] watchdog stopped");
     OS_StopViTicker();
+    WHBLogPrintf("[exit] vi ticker stopped");
     OS_StopTimerWorker();
+    WHBLogPrintf("[exit] timer worker stopped");
 #ifdef USE_NETWORKING
     Anchor::GetInstance()->Disable();
     SDLNet_Quit();
@@ -451,7 +561,9 @@ int SDL_main(int argc, char* argv[]) {
 #ifdef _WIN32
     timeEndPeriod(1);
 #endif
+    WHBLogPrintf("[exit] destroying engine");
     GameEngine::Instance->Destroy();
+    WHBLogPrintf("[exit] engine destroyed, returning from main");
     GameEngine::RelaunchIfRequested(argc, argv);
     return 0;
 }

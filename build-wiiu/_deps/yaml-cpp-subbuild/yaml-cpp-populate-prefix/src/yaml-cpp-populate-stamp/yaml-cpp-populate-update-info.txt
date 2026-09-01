@@ -1,7 +1,0 @@
-# This is a generated file and its contents are an internal implementation detail.
-# The patch step will be re-executed if anything in this file changes.
-# No other meaning or use of this file is supported.
-
-command (connected)=C:/Users/eduar/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/cmake.exe;-Dcan_fetch=YES;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/tmp/yaml-cpp-populate-gitupdate.cmake
-command (disconnected)=C:/Users/eduar/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/cmake.exe;-Dcan_fetch=NO;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/tmp/yaml-cpp-populate-gitupdate.cmake
-work_dir=C:/claude/bk-wiiu/Lighthouse/build-wiiu/_deps/yaml-cpp-src

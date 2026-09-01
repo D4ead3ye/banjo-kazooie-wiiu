@@ -5,6 +5,8 @@
 #include <libultraship/bridge/consolevariablebridge.h>
 #include <sstream>
 #include <random>
+#include <chrono>
+#include <cstdint>
 
 #include "enums.h"
 
@@ -21,12 +23,45 @@ std::vector<std::tuple<actor_e, int32_t, RandoCheckId>> abilityItemPool;
 
 std::vector<RandoSaveCheck> shuffledPool;
 
+#ifdef __WIIU__
+// coreinit/time.h drags in headers the decomp already defines; declare just this.
+extern "C" int64_t OSGetSystemTime(void);
+#endif
+
 uint32_t GetRandoSeed(const std::string& input) {
     if (CVarGetInteger(CVAR_RANDOMIZER_SETTING("ManualInput"), 0) && !input.empty()) {
         return Ship_Hash(input);
     }
-    std::string randoHash = std::to_string(GetUnixTimestamp());
-    return Ship_Hash(randoHash);
+
+    // [port] Gather entropy from several independent sources and mix it properly.
+    //
+    // The wall clock alone was not enough. On Wii U it comes from
+    // std::chrono::system_clock, which needs an RTC the console does not
+    // reliably expose to the C library, so it could return the same value every
+    // boot - the same seed, and the same shuffle, every run. Worse, this is
+    // called once per pool: two calls landing in the same clock tick handed both
+    // pools an identical seed, correlating their layouts even when the seed did
+    // change between runs. The counter makes every call distinct regardless.
+    uint64_t x = 0x9E3779B97F4A7C15ULL;
+    x ^= static_cast<uint64_t>(GetUnixTimestamp());
+    x ^= static_cast<uint64_t>(
+             std::chrono::steady_clock::now().time_since_epoch().count()) * 0xD1B54A32D192ED03ULL;
+    static uint32_t sCallCounter = 0;
+    x ^= static_cast<uint64_t>(++sCallCounter) * 0xBF58476D1CE4E5B9ULL;
+#ifdef __WIIU__
+    x ^= static_cast<uint64_t>(OSGetSystemTime()) * 2654435761ULL;
+#endif
+
+    // splitmix64 finalizer: spreads a small change in any input across all bits,
+    // so seeds from adjacent ticks are unrelated rather than adjacent.
+    x += 0x9E3779B97F4A7C15ULL;
+    x = (x ^ (x >> 30)) * 0xBF58476D1CE4E5B9ULL;
+    x = (x ^ (x >> 27)) * 0x94D049BB133111EBULL;
+    x = x ^ (x >> 31);
+
+    const uint32_t seed = static_cast<uint32_t>(x ^ (x >> 32));
+    BK_LOG_INFO("[rando] seed %u (call %u)", (unsigned)seed, (unsigned)sCallCounter);
+    return seed;
 }
 
 void ShuffleRandoItems(const std::string& input, std::vector<std::tuple<actor_e, int32_t, RandoCheckId>>& pool) {

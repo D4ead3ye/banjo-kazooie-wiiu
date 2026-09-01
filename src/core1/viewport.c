@@ -18,6 +18,22 @@ extern void guPerspective(Mtx *, u16*, f32, f32, f32, f32, f32);
 
 f32 sViewportFOVy = VIEWPORT_FOVY_DEFAULT;
 f32 sViewportAspect = 1.35185182f;
+
+// [port] Vanilla builds a fixed 4:3 projection. Rendering that into a 16:9
+// target stretches the image horizontally instead of showing more of the world.
+// Follow the real render aspect so the extra width becomes extra view (Hor+),
+// which is what the rest of the port already assumes - actor_array and
+// modelRender both branch on GameEngine_GetAspectRatio() for widescreen.
+// Never narrower than vanilla, so a 4:3 display is untouched.
+extern f32 GameEngine_GetAspectRatio(void);
+
+static f32 port_viewport_aspect(void) {
+    f32 rendered = GameEngine_GetAspectRatio();
+    if (!(rendered > 0.0f)) {
+        return sViewportAspect;
+    }
+    return (rendered > sViewportAspect) ? rendered : sViewportAspect;
+}
 f32 sViewportNear = 30.0f;
 f32 sViewportFar = 4000.0f;
 f32 sViewportLookbk_vector[3];
@@ -107,7 +123,7 @@ void viewport_setRenderPerspectiveMatrix(Gfx **gfx, Mtx **mtx, f32 near, f32 far
     }
 #endif
     
-    guPerspective(*mtx, &perspNorm, sViewportFOVy, sViewportAspect, near, far, 0.5f);
+    guPerspective(*mtx, &perspNorm, sViewportFOVy, port_viewport_aspect(), near, far, 0.5f);
     gSPPerspNormalize((*gfx)++, perspNorm);
     gSPMatrix((*gfx)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
 
@@ -440,7 +456,9 @@ void viewport_setFOVy(f32 fovy) {
 }
 
 f32 viewport_getAspectRatio(void) {
-    return sViewportAspect;
+    // Report what is actually projected, so anything reasoning about the frustum
+    // (culling, on-screen tests) agrees with what is drawn.
+    return port_viewport_aspect();
 }
 
 f32 viewport_getNear(void) {

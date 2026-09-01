@@ -209,6 +209,31 @@ ResourceFactoryBinarySpriteV0::ReadResource(std::shared_ptr<Ship::File> file,
         // value declared in the manifest; make the frame header reflect what was actually built.
         frameData.frameHeader.chunkCnt = static_cast<uint16_t>(frameData.chunks.size());
 
+        // [port] A frame with no exported header was left at 0x0 - including every
+        // synthesised "special sprite" frame below. Drawing code divides by these
+        // to work out its scale (pauseMenu's mlMtxScale_xyz does
+        // (scale * w) / frame->w), so a zero produced an infinite scale and threw
+        // a 32x32 glyph across the whole screen. Derive the extent from the chunks
+        // that were actually built.
+        if (frameData.frameHeader.w <= 0 || frameData.frameHeader.h <= 0) {
+            int32_t maxX = 0;
+            int32_t maxY = 0;
+            for (const auto& c : frameData.chunks) {
+                const int32_t right = static_cast<int32_t>(c.header.x) + static_cast<int32_t>(c.header.w);
+                const int32_t bottom = static_cast<int32_t>(c.header.y) + static_cast<int32_t>(c.header.h);
+                maxX = right > maxX ? right : maxX;
+                maxY = bottom > maxY ? bottom : maxY;
+            }
+            if (frameData.frameHeader.w <= 0) {
+                frameData.frameHeader.w = static_cast<int16_t>(maxX > 0 ? maxX : 1);
+            }
+            if (frameData.frameHeader.h <= 0) {
+                frameData.frameHeader.h = static_cast<int16_t>(maxY > 0 ? maxY : 1);
+            }
+            SPDLOG_INFO("[port] sprite '{}' frame {} had no size; derived {}x{} from {} chunks", initData->Path,
+                        frameIdx, frameData.frameHeader.w, frameData.frameHeader.h, frameData.chunks.size());
+        }
+
         // SPDLOG_INFO("  Frame {} final size: {}x{} with {} chunks loaded",
         //            frameIdx, frameData.frameHeader.w, frameData.frameHeader.h, frameData.chunks.size());
         sprite->frames.push_back(std::move(frameData));

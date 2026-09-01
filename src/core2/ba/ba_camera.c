@@ -7,6 +7,7 @@
 #include "port/Controller/ModernCamera.h"
 
 void func_80291488(s32 arg0);
+extern int port_freeLook_ownsCamera(void); // [port] free look is driving the camera
 void func_802914CC(s32 arg0);
 
 /* .bss */
@@ -87,6 +88,9 @@ int func_80290D48(void){
             if(bsBeeFly_inSet(sp1C) && !code33310_func_802BA4D0(ncCameraNodeList_getZoomCameraNode(camera_node_index))){
                 return false;
             }
+            // [port] A zoom node pins the view to a fixed angle; yield to free look.
+            if(port_freeLook_ownsCamera())
+                return true;
             ncDynamicCamera_setState(0x11);
             func_802BF798(camera_node_index);
             func_80291488(0x9);
@@ -95,6 +99,9 @@ int func_80290D48(void){
             if(bsBeeFly_inSet(sp1C) && !code336F0_func_802BA89C(ncCameraNodeList_getPivotCameraNode(camera_node_index))){
                 return false;
             }
+            // [port] Likewise for a pivot node.
+            if(port_freeLook_ownsCamera())
+                return true;
             ncDynamicCamera_setState(0x8);
             ncDynamicCam8_func_802BF9B8(camera_node_index);
             func_80291488(0x9);
@@ -109,6 +116,11 @@ int func_80290D48(void){
 int func_80290E8C(void){
     if(player_getWaterState() != BSWATERGROUP_2_UNDERWATER)
         return false;
+
+    // [port] Underwater the game pins the camera to state 3 every frame. Claim
+    // the frame as handled but leave the state alone so free look keeps it.
+    if(port_freeLook_ownsCamera())
+        return true;
 
     ncDynamicCamera_setState(3);
     func_80291488(0xB);

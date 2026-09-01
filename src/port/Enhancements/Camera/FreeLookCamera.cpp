@@ -10,6 +10,7 @@
 extern "C" {
 // Math helpers
 void func_80256E24(float dst[3], float pitch, float yaw, float x, float y, float z);
+int getGameMode(void);
 void ml_vec3f_add(float dst[3], float a[3], float b[3]);
 void ml_vec3f_clear(float dst[3]);
 float mlNormalizeAngle(float deg);
@@ -48,6 +49,11 @@ void func_802BE6FC(float rotOut[3], float focus[3]); // look-at from the live po
 
 namespace {
 #define CVAR_FREELOOK_ENABLED CVAR_ENHANCEMENT("Camera.FreeLook.Enabled")
+// Lets free look take over the fixed camera-node angles and the underwater camera.
+#define CVAR_FREELOOK_MODERN CVAR_ENHANCEMENT("Camera.FreeLook.OverrideFixed")
+// Spring-arm behaviour near walls: keep the player's steering through a
+// collision, and pull the camera in rather than letting it jam.
+#define CVAR_FREELOOK_WALLS CVAR_ENHANCEMENT("Camera.FreeLook.WallSmoothing")
 #define CVAR_FREELOOK_YAW_SENS CVAR_ENHANCEMENT("Camera.FreeLook.YawSensitivity")
 #define CVAR_FREELOOK_PITCH_SENS CVAR_ENHANCEMENT("Camera.FreeLook.PitchSensitivity")
 #define CVAR_FREELOOK_INVERT_X CVAR_ENHANCEMENT("Camera.FreeLook.InvertX")
@@ -55,12 +61,60 @@ namespace {
 #define CVAR_FREELOOK_SMOOTH_RATE CVAR_ENHANCEMENT("Camera.FreeLook.SmoothRate")
 
 constexpr float kDeadzone = 0.15f;
+// GAME_MODE_3_NORMAL; enums.h is not reachable from this translation unit.
+constexpr int kGameModeNormal = 3;
+// Spring-arm limits. Give ground quickly so the camera never clips into
+// geometry, but recover slowly and only after the way has been clear for a
+// moment.
+//
+// The blocked/clear signal is binary, so feeding it straight back into the
+// distance oscillates: pulling in clears the obstruction, which lets the arm
+// extend, which blocks it again. Asymmetric rates alone only change how fast it
+// pumps. The dwell breaks the loop - the arm cannot start extending until it has
+// been unobstructed for kClearDwell, so one wall contact settles at a short
+// length instead of buzzing against it.
+constexpr float kMinDistScale = 0.45f;
+constexpr float kDistPullInRate = 3.0f;
+constexpr float kDistPushOutRate = 0.5f;
+constexpr float kClearDwell = 0.4f;
+
+// The collision state drives a *target* length; what the camera actually uses
+// eases towards it. Applying the target directly meant every change of state
+// showed up on screen the instant it happened, which is what made rotating along
+// a wall feel like the camera was snapping at you. Shrinking eases faster than
+// growing so the arm still gets out of geometry promptly.
+constexpr float kDistShrinkSmooth = 12.0f;
+constexpr float kDistGrowSmooth = 3.5f;
+float sDistTarget = 1.0f;
+float sDistScale = 1.0f;
+float sClearTime = 0.0f;
+
+// Stick response. A curve gives fine control near centre while keeping the full
+// rate at the edge, and easing the angular velocity stops the camera starting
+// and stopping dead with the stick.
+constexpr float kStickCurve = 1.7f;
+constexpr float kTurnSmooth = 14.0f;
+float sYawVel = 0.0f;
+float sPitchVel = 0.0f;
+
+// Frame-rate independent exponential smoothing.
+float ExpSmooth(float current, float target, float rate, float dt) {
+    if (rate <= 0.0f || dt <= 0.0f) {
+        return target;
+    }
+    return current + (target - current) * (1.0f - std::exp(-rate * dt));
+}
+
 constexpr float kEnterThreshold = 0.30f;
 constexpr float kYawSpeed = 160.0f;
 constexpr float kPitchSpeed = 100.0f;
 
 constexpr float kMinPitch = -85.0f;
-constexpr float kMaxPitch = 40.0f;
+// [port] Free look places the camera analytically and so does not get the
+// collision push-out the stock camera relies on. Positive pitch swings it below
+// the player, where it used to sink through the floor; keep it shallow enough
+// that it stays in the room.
+constexpr float kMaxPitch = 22.0f;
 
 constexpr float kAimHeightRate = 8.0f;
 constexpr float kDefaultSmooth = 40.0f;
@@ -93,6 +147,9 @@ float ReadStick(float out[2]) {
         mag = 1.0f;
     }
     float scaled = (mag - kDeadzone) / (1.0f - kDeadzone);
+    // Curve the magnitude: small deflections turn slowly for aiming, full
+    // deflection still reaches the full rate.
+    scaled = std::pow(scaled, kStickCurve);
     float k = scaled / mag;
     out[0] *= k;
     out[1] *= k;
@@ -126,6 +183,14 @@ void EnterOrbit() {
 
     ml_vec3f_clear(D_8037D9C8);
 
+    // Start each orbit at full length; a value left over from the last wall
+    // would otherwise open the camera up close for half a second.
+    sDistScale = 1.0f;
+    sDistTarget = 1.0f;
+    sClearTime = 0.0f;
+    sYawVel = 0.0f;
+    sPitchVel = 0.0f;
+
     sAimValid = false;
     sActive = true;
     ncDynamicCamera_setState(FREELOOK_CAM_STATE);
@@ -141,10 +206,50 @@ void ExitOrbit() {
 } // namespace
 
 extern "C" int port_freeLook_isEnabled(void) {
+#ifdef __WIIU__
+    // [port] Dual analog is the point of the GamePad's second stick, so it is on
+    // by default here. The in-game menu is the normal way to change this; on
+    // console it can also be set in config.yml next to the .wuhb.
+    return CVarGetInteger(CVAR_FREELOOK_ENABLED, 1) != 0;
+#else
     return CVarGetInteger(CVAR_FREELOOK_ENABLED, 0) != 0;
+#endif
+}
+
+extern "C" int port_freeLook_overridesFixed(void) {
+#ifdef __WIIU__
+    return port_freeLook_isEnabled() && CVarGetInteger(CVAR_FREELOOK_MODERN, 1) != 0;
+#else
+    return port_freeLook_isEnabled() && CVarGetInteger(CVAR_FREELOOK_MODERN, 0) != 0;
+#endif
+}
+
+// True while free look is actually driving the camera. The game re-forces its
+// fixed camera states every frame, so those sites have to leave the state alone
+// while this holds or they would yank the camera back a frame after every nudge.
+//
+// sActive on its own is not enough to claim that. The fixed-camera sites are
+// evaluated before the handler that clears sActive - they short-circuit it - so a
+// flag left over from ordinary gameplay made them stand down in places where free
+// look was not running at all. Nothing owned the camera then, and it drifted
+// out of bounds; in the picture modes that ends up in the bonus picture. Require
+// that free look really is the live camera, in a mode where it is allowed.
+extern "C" int port_freeLook_ownsCamera(void) {
+    return sActive && ncDynamicCamera_getState() == FREELOOK_CAM_STATE && getGameMode() == kGameModeNormal &&
+           port_freeLook_overridesFixed();
 }
 
 extern "C" int port_freeLook_handle(void) {
+    // [port] The camera states free look hooks are also used by the attract demo
+    // and the intro, so gating on state alone let the right stick drive the
+    // camera on the title screen. Only take over during actual gameplay.
+    if (getGameMode() != kGameModeNormal) {
+        if (sActive) {
+            ExitOrbit();
+        }
+        return 0;
+    }
+
     if (!port_freeLook_isEnabled()) {
         if (sActive) {
             ExitOrbit();
@@ -170,7 +275,14 @@ extern "C" int port_freeLook_handle(void) {
         return 0;
     }
 
-    if (state != 0xB && state != 0x1 && state != 0xA) {
+    // 0xB/0x1/0xA are the ordinary follow states. With the modern option on we
+    // also take over the states the level forces on the player: 0x3 underwater,
+    // 0x8 from a pivot camera node and 0x11 from a zoom node - the ones that
+    // otherwise lock the view to a fixed angle.
+    const bool modernCam = port_freeLook_overridesFixed();
+    const bool ordinary = (state == 0xB || state == 0x1 || state == 0xA);
+    const bool fixed = (state == 0x3 || state == 0x8 || state == 0x11);
+    if (!ordinary && !(modernCam && fixed)) {
         return 0;
     }
 
@@ -189,31 +301,92 @@ extern "C" void port_freeLookCamera_update(void) {
     float stick[2];
     ReadStick(stick);
 
+#ifdef __WIIU__
+    // Both axes came out reversed on the GamePad: stick left panned right, and
+    // stick up looked down. Flip X, and put Y back to its unflipped sense.
+    const int kInvertXDefault = 1;
+    const int kInvertYDefault = 0;
+#else
+    const int kInvertXDefault = 0;
+    const int kInvertYDefault = 0;
+#endif
     float yawSens = CVarGetFloat(CVAR_FREELOOK_YAW_SENS, 1.0f);
     float pitchSens = CVarGetFloat(CVAR_FREELOOK_PITCH_SENS, 1.0f);
-    bool invertX = CVarGetInteger(CVAR_FREELOOK_INVERT_X, 0) != 0;
-    bool invertY = CVarGetInteger(CVAR_FREELOOK_INVERT_Y, 0) != 0;
+    bool invertX = CVarGetInteger(CVAR_FREELOOK_INVERT_X, kInvertXDefault) != 0;
+    bool invertY = CVarGetInteger(CVAR_FREELOOK_INVERT_Y, kInvertYDefault) != 0;
 
-    D_8037DB70 = mlNormalizeAngle(D_8037DB70 + (invertX ? -stick[0] : stick[0]) * kYawSpeed * yawSens * dt);
-    sPitch = clampf(sPitch + (invertY ? stick[1] : -stick[1]) * kPitchSpeed * pitchSens * dt, kMinPitch, kMaxPitch);
+    // [port] Ease the turn rate rather than driving the angle straight from the
+    // stick. Modern third-person cameras ramp in and out over a few frames; the
+    // raw stick made every flick start and stop dead.
+    const float yawWanted = (invertX ? -stick[0] : stick[0]) * kYawSpeed * yawSens;
+    const float pitchWanted = (invertY ? -stick[1] : stick[1]) * kPitchSpeed * pitchSens;
+    sYawVel = ExpSmooth(sYawVel, yawWanted, kTurnSmooth, dt);
+    sPitchVel = ExpSmooth(sPitchVel, pitchWanted, kTurnSmooth, dt);
+
+    D_8037DB70 = mlNormalizeAngle(D_8037DB70 + sYawVel * dt);
+    // [port] Default is now stick-up looks up. InvertY still flips it for anyone
+    // who wants the other convention.
+    sPitch = clampf(sPitch + sPitchVel * dt, kMinPitch, kMaxPitch);
 
     float focus[3];
     float offset[3];
     float target[3];
 
+#ifdef __WIIU__
+    const bool smoothWalls = CVarGetInteger(CVAR_FREELOOK_WALLS, 1) != 0;
+#else
+    const bool smoothWalls = CVarGetInteger(CVAR_FREELOOK_WALLS, 0) != 0;
+#endif
+
     func_802C0370();
     func_802C0490(focus);
-    func_80256E24(offset, sPitch, D_8037DB70, 0.0f, 0.0f, func_802BD8D4());
+    // [port] Spring arm: shorten the orbit while something is in the way so the
+    // camera slides in close instead of grinding along the wall at full length.
+    const float dist = func_802BD8D4() * (smoothWalls ? sDistScale : 1.0f);
+    func_80256E24(offset, sPitch, D_8037DB70, 0.0f, 0.0f, dist);
     ml_vec3f_add(target, focus, offset);
+
+    // What the player asked for this frame. A collision resolve rewrites this,
+    // which is what made the camera fight the stick near walls.
+    const float desiredYaw = D_8037DB70;
 
     func_802C0394(target);
     func_802BE190(target);
 
-    if (func_802BE60C()) {
+    const bool blocked = func_802BE60C() != 0;
+    if (blocked) {
         if (!func_802BC84C(1)) {
             func_802C03BC();
         }
         func_802C04B0();
+        // [port] func_802C04B0 re-derives the orbit yaw from where the collision
+        // left the camera, discarding the angle the player was steering towards -
+        // so a wall would capture the camera and only enough extra rotation could
+        // pull it free. Put the intended yaw back and let the spring keep working
+        // towards it; collision still owns the position, just not the aim.
+        if (smoothWalls) {
+            D_8037DB70 = desiredYaw;
+        }
+    }
+
+    if (smoothWalls) {
+        if (blocked) {
+            sClearTime = 0.0f;
+            sDistTarget -= kDistPullInRate * dt;
+        } else {
+            sClearTime += dt;
+            if (sClearTime >= kClearDwell) {
+                sDistTarget += kDistPushOutRate * dt;
+            }
+        }
+        sDistTarget = clampf(sDistTarget, kMinDistScale, 1.0f);
+        // Ease towards the target instead of using it directly.
+        sDistScale = ExpSmooth(sDistScale, sDistTarget,
+                               (sDistTarget < sDistScale) ? kDistShrinkSmooth : kDistGrowSmooth, dt);
+    } else {
+        sDistTarget = 1.0f;
+        sDistScale = 1.0f;
+        sClearTime = 0.0f;
     }
 
     func_802C0490(focus);

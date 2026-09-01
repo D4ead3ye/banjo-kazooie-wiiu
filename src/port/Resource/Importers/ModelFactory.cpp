@@ -51,6 +51,7 @@ std::shared_ptr<Ship::Blob> MakeBlob(const std::shared_ptr<Ship::ResourceInitDat
 
 
 
+
 std::shared_ptr<Ship::IResource>
 ResourceFactoryBinaryModelV0::ReadResource(std::shared_ptr<Ship::File> file,
                                            std::shared_ptr<Ship::ResourceInitData> initData) {
@@ -462,25 +463,10 @@ ResourceFactoryBinaryModelV0::ReadResource(std::shared_ptr<Ship::File> file,
     if (geoBlob && !geoBlob->Data.empty()) {
         PadTo8(out);
         hdr()->geo_list_offset = static_cast<int32_t>(out.size());
-        // Byte order note: Torch writes this tree with explicit big-endian
-        // fields (see BK64::GeoLayoutBinaryExporter), matching the N64 original
-        // and this target, so it is copied verbatim.
-#ifdef __WIIU__
-        {
-            // Say once, out loud, whether this archive's geo tree is readable
-            // on this target. A stale archive is indistinguishable from a code
-            // bug in the counters, and cost a full test cycle to tell apart.
-            static bool reported = false;
-            if (!reported && geoBlob->Data.size() >= 8) {
-                reported = true;
-                uint32_t op;
-                std::memcpy(&op, geoBlob->Data.data(), 4);
-                WHBLogPrintf("[geo] first opcode reads %u (%s) - archive is %s", (unsigned)op,
-                             op < 17 ? "in range" : "OUT OF RANGE",
-                             op < 17 ? "correct for this target" : "STALE, regenerate and redeploy");
-            }
-        }
-#endif
+// Torch writes this tree in the byte order the target reads natively - big
+        // by default, little when extracted with TORCH_GEO_LITTLE_ENDIAN=1 - so it
+        // is copied verbatim. Swapping it here was tried twice and cannot be done
+        // reliably: the commands are neither contiguous nor all fixed-length.
         AppendBytes(out, geoBlob->Data.data(), geoBlob->Data.size());
     }
 

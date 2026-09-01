@@ -50,6 +50,14 @@ void port_patchPictureModel(void* model_bin, int32_t min_xy, int32_t max_xy, int
                             uint32_t from);
 int32_t port_getTransitionGpuFbId(void);
 void port_captureTransitionFb(void* gfx_ptr);
+
+// Lifescale ("shatter the screen into a circle") effect. Same idea as the
+// transition FB: capture the frozen frame on the GPU so the tiles can sample it
+// at render resolution instead of the native-res CPU readback.
+int32_t port_getLifescaleGpuFbId(void);
+const void* port_lifescaleFbTexAddr(void);
+void port_requestLifescaleCapture(void);
+void port_captureLifescaleFb(void* gfx_ptr);
 void port_patchTransitionModel(void* model_bin);
 
 // Sprite Display Cache (SpritePatches.cpp)

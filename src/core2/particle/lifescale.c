@@ -43,6 +43,11 @@ void func_802F1440(Struct_Core2_6A4B0_2 *arg0, Gfx **gfx, Mtx **mtx, Vtx **vtx) 
     static s32 s_values[6] = {0x60, 0x840,  0x60, 0x840, 0x840,  0x60};
     static s32 t_values[6] = {0x60,  0x60, 0x860,  0x60, 0x860, 0x860};
     
+    // [port] Prefer the GPU snapshot; fall back to the native-res CPU copy if the
+    // framebuffer is not ready yet (it is created on the render thread).
+    const s32 fb_id = port_getLifescaleGpuFbId();
+    const s32 use_gpu_fb = (fb_id >= 0);
+
     if (!arg0->unk10) {
         viewport_setRenderViewportAndOrthoMatrix(gfx, mtx);
     }
@@ -60,8 +65,12 @@ void func_802F1440(Struct_Core2_6A4B0_2 *arg0, Gfx **gfx, Mtx **mtx, Vtx **vtx) 
 
                     i_vtx->n.flag = 0;
 
-                    i_vtx->n.tc[0] = s_values[sp54 * 3 + var_s3];
-                    i_vtx->n.tc[1] = t_values[sp54 * 3 + var_s3];
+                    // [port] Against the GPU framebuffer every tile shares one
+                    // full-screen texture, so the per-tile origin that used to come
+                    // from the tmem pointer has to move into the texture coords.
+                    // tc is S10.5 and gsSPTexture halves it, so a texel is 64 units.
+                    i_vtx->n.tc[0] = s_values[sp54 * 3 + var_s3] + (use_gpu_fb ? (0x20 * sp50 + 1) * 64 : 0);
+                    i_vtx->n.tc[1] = t_values[sp54 * 3 + var_s3] + (use_gpu_fb ? (0x20 * sp4C + 0xC) * 64 : 0);
                     i_vtx->n.n[0] = -1;
                     i_vtx->n.n[1] = -1;
                     i_vtx->n.n[2] = -1;
@@ -75,10 +84,19 @@ void func_802F1440(Struct_Core2_6A4B0_2 *arg0, Gfx **gfx, Mtx **mtx, Vtx **vtx) 
     i_vtx = vtx_start;
     var_s3 = 0;
     gSPVertex((*gfx)++, osVirtualToPhysical(i_vtx), 16, 0);
+    if (use_gpu_fb) {
+        // One bind for the whole screen; the vertices carry per-tile offsets.
+        gDPLoadTextureTile((*gfx)++, port_lifescaleFbTexAddr(), G_IM_FMT_RGBA, G_IM_SIZ_16b, gFramebufferWidth,
+                           gFramebufferHeight, 0, 0, gFramebufferWidth - 1, gFramebufferHeight - 1, 0,
+                           G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
+                           G_TX_NOLOD, G_TX_NOLOD);
+    }
     for(sp4C = 0; sp4C < 6; sp4C++){
         for(sp50 = 0; sp50 < 9; sp50++){
+            if (!use_gpu_fb) {
             s16 *tmem = arg0->tmem_ptr + (0x20*sp50 + 1) + (0x20*sp4C + 0xC)*gFramebufferWidth;
             gDPLoadTextureTile((*gfx)++, osVirtualToPhysical(tmem), G_IM_FMT_RGBA, G_IM_SIZ_16b, gFramebufferWidth, 0, 0, 0, 33, 33, 0, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+            }
             for(sp54 = 0; sp54 < 2; sp54++){
                 gSP1Triangle((*gfx)++, var_s3, var_s3 + 1, var_s3 + 2, 0);
                 var_s3 += 3;
@@ -140,6 +158,7 @@ void func_802F1934(void *arg0_, s32 arg1){
         arg0->tmem_ptr = (u16*)((uintptr_t)arg0->tmem_ptr + 1);
     }
     port_requestReadback(); // [port] particle copies framebuffer pixels
+    port_requestLifescaleCapture(); // [port] and the GPU-resolution copy it draws from
     bkmemcpy64(arg0->tmem_ptr, gFramebuffers[arg1], gFramebufferWidth*gFramebufferHeight*sizeof(u16));
     osWritebackDCacheAll();
 }
