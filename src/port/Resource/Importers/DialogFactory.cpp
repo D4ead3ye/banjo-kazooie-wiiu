@@ -6,6 +6,7 @@
 #include <ship/resource/type/Blob.h>
 
 #include "port/UI/cvar_prefixes.h"
+#include "port/Controller/ControlSchemes.h"
 
 namespace Factories {
 namespace {
@@ -73,6 +74,14 @@ static const std::pair<const char*, const char*> kButtonPrompts[] = {
 
 static void RewriteButtonPrompts(std::string& text) {
     if (CVarGetInteger(CVAR_REWRITE_PROMPTS, 1) == 0) {
+        return;
+    }
+    // [port] The replacements below name Modern's buttons (Y, X, ZL, ZR, the
+    // right stick). Under Retro those names are simply wrong - C-up is not Y
+    // there - so leave the vanilla N64 text alone and let it describe the
+    // bindings the player actually has. Keep this default in step with
+    // ControlSchemes.cpp.
+    if (CVarGetInteger(CVAR_SETTING("Controls.Scheme"), CONTROL_SCHEME_MODERN) != CONTROL_SCHEME_MODERN) {
         return;
     }
     const size_t before = text.size();

@@ -284,13 +284,12 @@ extern "C" void port_shapeControllerInput(void* contPad) {
         return;
     }
 
-#ifdef __WIIU__
-    // [port] The GamePad has two sticks and shoulder triggers, so Modern is the
-    // layout that fits it: right stick camera, Z on the triggers, R to recenter.
+    // [port] Modern is the layout that fits any two-stick pad: right stick
+    // camera, Z on the triggers, R to recenter. That is every target this port
+    // builds for, so the default is the same everywhere - a Wii U and a PC
+    // playing together should not disagree about what the buttons do. Retro
+    // remains selectable in the settings menu.
     const int schemeDefault = CONTROL_SCHEME_MODERN;
-#else
-    const int schemeDefault = CONTROL_SCHEME_RETRO;
-#endif
     const int scheme = CVarGetInteger(CVAR_SETTING("Controls.Scheme"), schemeDefault);
 
     // [port] ControlSchemes_Apply is only called from the settings menu, which is

@@ -206,22 +206,14 @@ void ExitOrbit() {
 } // namespace
 
 extern "C" int port_freeLook_isEnabled(void) {
-#ifdef __WIIU__
-    // [port] Dual analog is the point of the GamePad's second stick, so it is on
-    // by default here. The in-game menu is the normal way to change this; on
+    // [port] Dual analog is what a second stick is for, so it is on by default
+    // on every target. The in-game menu is the normal way to change this; on
     // console it can also be set in config.yml next to the .wuhb.
     return CVarGetInteger(CVAR_FREELOOK_ENABLED, 1) != 0;
-#else
-    return CVarGetInteger(CVAR_FREELOOK_ENABLED, 0) != 0;
-#endif
 }
 
 extern "C" int port_freeLook_overridesFixed(void) {
-#ifdef __WIIU__
     return port_freeLook_isEnabled() && CVarGetInteger(CVAR_FREELOOK_MODERN, 1) != 0;
-#else
-    return port_freeLook_isEnabled() && CVarGetInteger(CVAR_FREELOOK_MODERN, 0) != 0;
-#endif
 }
 
 // True while free look is actually driving the camera. The game re-forces its
@@ -302,8 +294,10 @@ extern "C" void port_freeLookCamera_update(void) {
     ReadStick(stick);
 
 #ifdef __WIIU__
-    // Both axes came out reversed on the GamePad: stick left panned right, and
-    // stick up looked down. Flip X, and put Y back to its unflipped sense.
+    // Deliberately NOT mirrored to other targets. Both axes came out reversed on
+    // the GamePad specifically - stick left panned right, stick up looked down -
+    // so this corrects that pad, not a convention the game shares. An SDL pad on
+    // desktop already reports the standard sense.
     const int kInvertXDefault = 1;
     const int kInvertYDefault = 0;
 #else
@@ -332,11 +326,7 @@ extern "C" void port_freeLookCamera_update(void) {
     float offset[3];
     float target[3];
 
-#ifdef __WIIU__
     const bool smoothWalls = CVarGetInteger(CVAR_FREELOOK_WALLS, 1) != 0;
-#else
-    const bool smoothWalls = CVarGetInteger(CVAR_FREELOOK_WALLS, 0) != 0;
-#endif
 
     func_802C0370();
     func_802C0490(focus);
