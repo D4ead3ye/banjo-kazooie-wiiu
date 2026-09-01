@@ -35,34 +35,44 @@ void AppendBytes(std::vector<uint8_t>& dst, const char* data, size_t size) {
 // C-right no longer exist as buttons at all - they rotated the camera, which is
 // now the stick itself.
 //
-//   N64 A -> A      N64 B -> B      Z -> ZL      C-up -> Y      C-down -> X
-//   C-left -> ZR (Talon Trot)   C-right -> the right stick while crouched
-//   (Wonderwing)                R -> R    Start -> +
+//   N64 A -> A      N64 B -> B      Z -> LT      C-up -> Y      C-down -> X
+//   C-left -> RT (Talon Trot)   C-right -> the right stick while crouched
+//   (Wonderwing)                R -> RB   Start -> MENU
+//
+// Named for a standard Xbox-layout pad rather than a Nintendo one: LT/RT read as
+// triggers to most players, where ZL/ZR only mean something if you own the pad
+// that prints them. The face-button names need no translation - SDL reports A/B/
+// X/Y by the label printed on whichever pad is attached, so "Y" is the button
+// marked Y on both an Xbox pad and a Wii U Pro Controller.
+//
+// Of these rules only HOLD Z, the four directional C BUTTON forms, bare C BUTTON
+// and CONTROL STICK ever match the shipped text; the rest are kept so a text
+// revision or another region does not silently go unrewritten.
 static const std::pair<const char*, const char*> kButtonPrompts[] = {
-    // Order matters. The Z rules run first: rewriting C-left to "ZR" before
-    // them would let "PRESS Z" match inside "PRESS ZR" and produce "PRESS ZLR".
-    { "HOLD Z", "HOLD ZL" },
-    { "PRESS Z", "PRESS ZL" },
-    { "THE Z BUTTON", "ZL" },
-    { "Z BUTTON", "ZL" },
+    // Order matters. The Z rules run first: rewriting C-left to "RT" before
+    // them would let a bare "Z" rule match inside an already-rewritten string.
+    { "HOLD Z", "HOLD LT" },
+    { "PRESS Z", "PRESS LT" },
+    { "THE Z BUTTON", "LT" },
+    { "Z BUTTON", "LT" },
 
     { "THE TOP C BUTTON", "Y" },
     { "THE BOTTOM C BUTTON", "X" },
-    { "THE LEFT C BUTTON", "ZR" },
+    { "THE LEFT C BUTTON", "RT" },
     { "THE RIGHT C BUTTON", "THE RIGHT STICK" },
     { "TOP C BUTTON", "Y" },
     { "BOTTOM C BUTTON", "X" },
-    { "LEFT C BUTTON", "ZR" },
+    { "LEFT C BUTTON", "RT" },
     { "RIGHT C BUTTON", "R STICK RIGHT" },
     { "C BUTTONS", "R STICK" },
     { "C BUTTON", "R STICK" },
     { "C-UP", "Y" },
     { "C-DOWN", "X" },
-    { "C-LEFT", "ZR" },
+    { "C-LEFT", "RT" },
     { "C-RIGHT", "R STICK" },
 
-    { "THE START BUTTON", "+" },
-    { "START BUTTON", "+" },
+    { "THE START BUTTON", "MENU" },
+    { "START BUTTON", "MENU" },
     // No leading article: the source usually reads "THE CONTROL STICK".
     { "CONTROL STICK", "LEFT STICK" },
 };
