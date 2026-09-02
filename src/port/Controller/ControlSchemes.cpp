@@ -167,12 +167,18 @@ void ControlSchemes_Apply(int scheme) {
             ClearButtonSDL(controller, BTN_CUP);
             BindButton(controller, BTN_CUP, SDL_CONTROLLER_BUTTON_Y);
             BindButton(controller, BTN_CDOWN, SDL_CONTROLLER_BUTTON_X);
-            // C-left/C-right stay on the right stick: port_shapeControllerInput
-            // already suppresses them while the stick is being used as a camera,
-            // and re-enables them when crouched, which is how Talon Trot and
-            // Wonderwing are reached. Removing them made those moves impossible.
+            // C-left stays on the right stick: port_shapeControllerInput suppresses
+            // it while the stick is a camera and re-enables it crouched, which is
+            // how Talon Trot is reached.
             BindAxisToButton(controller, BTN_CLEFT, SDL_CONTROLLER_AXIS_RIGHTX, -1);
-            BindAxisToButton(controller, BTN_CRIGHT, SDL_CONTROLLER_AXIS_RIGHTX, 1);
+            // C-right is Wonderwing while crouched, and on the right stick that is
+            // the camera axis - so crouching and looking around fired the gold
+            // feather. It moves to the d-pad, which nothing else in play uses.
+            // A button source lands in CollectCButtonSources' otherHeld and is
+            // passed through unconditionally, so the crouch gate and the one-shot
+            // arming below only ever applied to the stick and are not needed here;
+            // the game still requires the crouch itself.
+            BindButton(controller, BTN_CRIGHT, SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
 
             // Recenter camera
             ClearButtonSDL(controller, BTN_R);
