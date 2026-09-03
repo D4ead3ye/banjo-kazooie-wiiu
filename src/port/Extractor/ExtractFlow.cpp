@@ -600,8 +600,27 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                     }
                     case PS_FIRST: {
                         if (args.empty()) {
-                            std::string baserom = Ship::Context::GetPathRelativeToAppDirectory("baserom.us.z64");
-                            if (std::filesystem::exists(baserom) && extract.LoadRomFromPath(baserom)) {
+                            // [port] Accept the names people actually use. Only
+                            // baserom.us.z64 was checked, while the Wii U's own
+                            // READ ME tells them to use baserom.z64 - so anyone
+                            // following the instructions got "No ROM O2R file
+                            // detected" with their ROM sitting right there. On
+                            // console there is no practical file picker to fall
+                            // back to, which made it a dead end.
+                            static const char* kRomNames[] = {
+                                "baserom.us.z64", "baserom.z64", "baserom.n64", "baserom.v64",
+                                "baserom.us.v64", "baserom.us.n64",
+                            };
+                            std::string baserom;
+                            for (const char* name : kRomNames) {
+                                std::string candidate = Ship::Context::GetPathRelativeToAppDirectory(name);
+                                if (std::filesystem::exists(candidate)) {
+                                    baserom = candidate;
+                                    WIIU_TRACE("[extract] found ROM: %s", name);
+                                    break;
+                                }
+                            }
+                            if (!baserom.empty() && extract.LoadRomFromPath(baserom)) {
                                 extracting = true;
                                 extractStarted = true;
                                 file = extract.GetRomPath();
