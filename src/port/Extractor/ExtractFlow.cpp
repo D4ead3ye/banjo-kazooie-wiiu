@@ -1,6 +1,13 @@
 #include "port/WiiUDebug.h"
 #include "port/Engine.h"
 
+#include <cstdlib>
+#include <chrono>
+#include <thread>
+#include "port/OS/OS.h"
+#ifdef __WIIU__
+#include <sysapp/launch.h>
+#endif
 #include <filesystem>
 #include <fstream>
 #include <string>
@@ -89,6 +96,38 @@ OTRVersion DetectOTRVersion(std::string fileName) {
 // of a geo payload is a small count; byte-swapped it is enormous. Sampling a few
 // assets is unambiguous - measured 400/400 against 3/400 on known-good and
 // known-bad archives.
+// [port] Leave without running static destructors.
+//
+// exit() runs them, and Ship::Context is held in a static shared_ptr whose
+// destructor faults on the Wii U once the graphics and thread teardown has
+// already happened - the console crashed here on a fresh install with no ROM,
+// after the message telling the user to supply one. Dropping the local
+// shared_ptr is not enough; the static one is the problem.
+//
+// The main loop already reached this conclusion (see Game.cpp): at process exit
+// unwinding buys nothing, so flush what matters and stop. Settings are the only
+// state in flight - saves are written at save points, not on exit.
+[[noreturn]] static void LeaveWithoutUnwinding() {
+    // Ask the game threads to unwind before terminating, and give them a moment.
+    // Without this the console froze on the message it had just been asked to
+    // dismiss: _Exit ran while the render and ProcUI threads were still live, so
+    // the exit callback stopped the VI cadence with nobody left to drain it and
+    // the last frame stayed on screen. This mirrors the main loop's shutdown in
+    // Game.cpp, which is the sequence known to close cleanly.
+    OS_RequestThreadExit();
+
+    auto ctx = Ship::Context::GetRawInstance();
+    if (ctx != nullptr && ctx->GetConsoleVariables() != nullptr) {
+        ctx->GetConsoleVariables()->Save();
+    }
+    // Give the threads that were just asked to unwind a moment to land.
+    // std::this_thread rather than OSSleepTicks: coreinit's thread.h clashes
+    // with the port's own OSThread definition if included here.
+    std::this_thread::sleep_for(std::chrono::milliseconds(300));
+    WIIU_TRACE("[extract] terminating without static destruction");
+    _Exit(0);
+}
+
 bool ArchiveGeoByteOrderIsWrong(const std::string& fileName) {
     const std::string otrPath = Ship::Context::LocateFileAcrossAppDirs(fileName);
     if (!std::filesystem::exists(otrPath)) {
@@ -211,6 +250,14 @@ bool AnyRomArchiveExists() {
 
 void GameEngine::RunExtract(int argc, char* argv[]) {
     bool extractDone = false;
+    // [port] Set by the error popup instead of tearing down inside it. Its OK
+    // handler runs from LighthouseModalWindow::DrawElement - part way through a
+    // frame the context owns - so releasing the context and calling exit() there
+    // destroyed the GUI that was still drawing, and the Wii U crashed in
+    // Ship::Context::~Context during static destruction. A fresh install with no
+    // ROM hits this on the very first launch.
+    bool exitAfterFrame = false;
+    bool menuLaunchRequested = false;
     ExtractSteps extractStep = ES_PORT_ARCHIVE;
     WindowsSteps windowsStep = WS_TEMP;
     auto wnd = std::dynamic_pointer_cast<Fast::Fast3dWindow>(context->GetWindow());
@@ -390,10 +437,7 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                                 "Lighthouse Path Error",
                                 "Lighthouse is running in a temp folder.\nExtract the .zip and run again.", "OK", "",
                                 [&]() {
-                                    threadPool = nullptr;
-                                    lhFast3dWindow = nullptr;
-                                    context = nullptr;
-                                    exit(0);
+                                    exitAfterFrame = true;
                                 });
                         } else {
                             windowsStep = WS_PERMS;
@@ -418,10 +462,7 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                                         fclose(tfile);
                                     }
                                     PathTestCleanup();
-                                    threadPool = nullptr;
-                                    lhFast3dWindow = nullptr;
-                                    context = nullptr;
-                                    exit(0);
+                                    exitAfterFrame = true;
                                 });
                         } else {
                             fclose(tfile);
@@ -431,10 +472,7 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                                     "Lighthouse does not have proper file permissions.\nPlease move it to a "
                                     "folder that does and run again.",
                                     "OK", "", [&]() {
-                                        threadPool = nullptr;
-                                        lhFast3dWindow = nullptr;
-                                        context = nullptr;
-                                        exit(0);
+                                        exitAfterFrame = true;
                                     });
                             }
                             windowsStep = WS_ONEDRIVE;
@@ -449,10 +487,7 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                                 "Please move it to a folder outside of OneDrive, like the root of a\n"
                                 "drive (e.g. \"C:\\Games\\Lighthouse\").",
                                 "OK", "", [&]() {
-                                    threadPool = nullptr;
-                                    lhFast3dWindow = nullptr;
-                                    context = nullptr;
-                                    exit(0);
+                                    exitAfterFrame = true;
                                 });
                         } else {
                             windowsStep = WS_DONE;
@@ -483,10 +518,7 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                             }
                         },
                         [&]() {
-                            threadPool = nullptr;
-                            lhFast3dWindow = nullptr;
-                            context = nullptr;
-                            exit(0);
+                            exitAfterFrame = true;
                         });
                     break;
                 }
@@ -532,10 +564,7 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                                 "No O2R Files", "No O2R files found. Generate one now?", "Yes", "No",
                                 [&]() { promptStep = PS_LOCAL; },
                                 [&]() {
-                                    threadPool = nullptr;
-                                    lhFast3dWindow = nullptr;
-                                    context = nullptr;
-                                    exit(0);
+                                    exitAfterFrame = true;
                                 });
                         } else {
                             extractStep = ES_VERIFY;
@@ -647,12 +676,8 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
                         } else {
                             errorMsg = "No ROM O2R file detected.\nPlease generate a ROM O2R and relaunch.";
                         }
-                        LighthouseGui::RegisterPopup("Extraction Error", errorMsg.c_str(), "OK", "", [&]() {
-                            threadPool = nullptr;
-                            lhFast3dWindow = nullptr;
-                            context = nullptr;
-                            exit(0);
-                        });
+                        LighthouseGui::RegisterPopup("Extraction Error", errorMsg.c_str(), "OK", "",
+                                                     [&]() { exitAfterFrame = true; });
                     }
                     continue;
                 }
@@ -667,9 +692,7 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
     render:
         if (!WindowIsRunning()) {
             threadPool = nullptr;
-            lhFast3dWindow = nullptr;
-            context = nullptr;
-            exit(0);
+            LeaveWithoutUnwinding();
         }
         wnd->HandleEvents();
         UIWidgets::Colors themeColor =
@@ -751,6 +774,31 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
         gui->EndDraw();
         lhFast3dWindow->EndFrame();
         ImGui::PopStyleColor(2);
+
+        // Outside the frame, with nothing left mid-draw to pull out from under.
+        if (exitAfterFrame) {
+#ifdef __WIIU__
+            // [port] Do not terminate from here. _Exit() runs the ProcUI exit
+            // callback on this thread while ProcUI is still running normally,
+            // and the console hung there with the dismissed message still on
+            // screen - not even the callback's own six-second backstop fired.
+            //
+            // The main loop's _Exit works because by then ProcUI has already
+            // begun shutting down. So ask the system to take the app back, the
+            // way pressing HOME does, and keep drawing until it does. The loop's
+            // existing !WindowIsRunning() branch then unwinds through the path
+            // that is known to close cleanly.
+            if (!menuLaunchRequested) {
+                menuLaunchRequested = true;
+                WIIU_TRACE("[extract] returning to the Wii U menu");
+                SYSLaunchMenu();
+            }
+#else
+            WIIU_TRACE("[extract] user dismissed the error - exiting cleanly");
+            threadPool = nullptr;
+            LeaveWithoutUnwinding();
+#endif
+        }
     }
     threadPool = nullptr;
 
