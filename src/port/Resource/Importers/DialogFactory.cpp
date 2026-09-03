@@ -24,11 +24,11 @@ void AppendBytes(std::vector<uint8_t>& dst, const char* data, size_t size) {
 //   C buttons-> right stick directions
 // Longest-first, so "THE TOP C BUTTON" is matched before a bare "C BUTTON".
 //
-// Every replacement must be no longer than what it replaces. The game wraps text
-// on a fixed width, so a longer string pushes the last words outside the box -
-// "C BUTTON" -> "THE RIGHT STICK" nearly doubled it and did exactly that. The
-// only exception is Z, which grows by one character; there is no shorter way to
-// say ZL, and a single character stays inside the box.
+// Replacements used to be held to "no longer than what it replaces", because the
+// box wrapped on a character count and a longer string pushed the last words out
+// of it. The wrap now measures real glyph widths and breaks lines accordingly, so
+// that constraint is gone and these can say what they mean. A longer name costs a
+// line break, not a line falling off the edge.
 // Kept in step with ControlSchemes: under the Modern layout with free look, the
 // right stick is the camera and the C buttons moved onto face buttons, so the
 // old "RIGHT STICK UP/DOWN" wording is wrong for C-up and C-down. C-left and
@@ -69,17 +69,17 @@ static const std::pair<const char*, const char*> kButtonPrompts[] = {
     { "THE TOP C BUTTON", "Y" },
     { "THE BOTTOM C BUTTON", "X" },
     { "THE LEFT C BUTTON", PROMPT_RTRIGGER },
-    { "THE RIGHT C BUTTON", "THE D-PAD RIGHT" },
+    { "THE RIGHT C BUTTON", "RIGHT ON THE D-PAD" },
     { "TOP C BUTTON", "Y" },
     { "BOTTOM C BUTTON", "X" },
     { "LEFT C BUTTON", PROMPT_RTRIGGER },
     { "RIGHT C BUTTON", "D-PAD RIGHT" },
-    { "C BUTTONS", "R STICK" },
-    { "C BUTTON", "R STICK" },
+    { "C BUTTONS", "RIGHT STICK" },
+    { "C BUTTON", "RIGHT STICK" },
     { "C-UP", "Y" },
     { "C-DOWN", "X" },
     { "C-LEFT", PROMPT_RTRIGGER },
-    { "C-RIGHT", "D-PAD" },
+    { "C-RIGHT", "D-PAD RIGHT" },
 
     { "THE START BUTTON", PROMPT_START },
     { "START BUTTON", PROMPT_START },

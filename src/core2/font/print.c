@@ -1018,7 +1018,7 @@ f32 print_measureDialogWidth(u8* string, s32 count) {
     if (string == NULL || print_sFonts[0] == NULL) {
         return 0.0f;
     }
-    for (i = 0; i < count && string[i] != ' '; i++) {
+    for (i = 0; i < count && string[i] != 0; i++) {
         u8 c = (u8) string[i];
         if (c == 0xFD) {          // escape: the next byte is a control code
             skip_next = TRUE;
