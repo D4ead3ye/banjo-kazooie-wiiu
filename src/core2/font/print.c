@@ -1000,6 +1000,52 @@ void print_bold_spaced(s32 x, s32 y, u8* string){
     }
 }
 
+// [port] Measure a dialogue line the way it will actually be drawn.
+//
+// The box wraps on a character count (24), but the dialogue font is
+// proportional - the draw advances by each glyph's own width. Twenty-four narrow
+// letters fit the box and twenty-four wide ones do not, which is why overflow
+// looked intermittent: it tracks which letters a line happens to contain, and
+// all-caps lines full of W and M are the worst case.
+//
+// Font 0 is named explicitly rather than read from print_sCurrentFont, which is
+// only set while a string is being drawn - measuring happens before that.
+f32 print_measureDialogWidth(u8* string, s32 count) {
+    f32 width = 0.0f;
+    s32 i;
+    s32 skip_next = FALSE;
+
+    if (string == NULL || print_sFonts[0] == NULL) {
+        return 0.0f;
+    }
+    for (i = 0; i < count && string[i] != ' '; i++) {
+        u8 c = (u8) string[i];
+        if (c == 0xFD) {          // escape: the next byte is a control code
+            skip_next = TRUE;
+            continue;
+        }
+        if (skip_next) {
+            skip_next = FALSE;
+            continue;
+        }
+        if (c == ' ') {
+            width += maxFontLetterWidths[0] * 0.8f;
+        } else if (c >= 0x21 && c < 0x21 + print_sDialogFontGlyphCount) {
+            BKSpriteTextureBlock* sp = print_sFonts[0][c - 0x21].sprite;
+            if (sp != NULL) {
+                width += sp->x;
+            }
+        }
+    }
+    return width;
+}
+
+// What twenty-four average-width characters come to - the width the original
+// count was standing in for, and so the budget a line has to stay inside.
+f32 print_dialogLineWidthBudget(void) {
+    return 24.0f * maxFontLetterWidths[0] * 0.8f;
+}
+
 void print_dialog(s32 x, s32 y, u8* string){
     _printbuffer_push_new(x, y, string);
     if(print_sCurrentPtr){

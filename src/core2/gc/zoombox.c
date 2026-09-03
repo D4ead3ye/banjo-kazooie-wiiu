@@ -596,8 +596,26 @@ static s32 _gczoombox_findLineBreak(char *string, s32 line_length){
      if((u8)string[0] == 0xFD && (u8)string[1] == 0x6A){
           return gczoombox_strlen(string);
      }
-     for(i = gczoombox_strlen(string); (line_length < (__get_str_print_len(string, i)) || (' ' != string[i] )); i--);
-     return i;
+     // [port] The count alone is not enough: the dialogue font is proportional, so
+     // twenty-four narrow letters fit the box and twenty-four wide ones overflow
+     // it. Require the measured width to fit as well.
+     //
+     // Deliberately conservative - a line can only break earlier than it does
+     // today, never later. If no break satisfies both, fall back to the
+     // count-only one, which is exactly the old behaviour.
+     {
+          const f32 budget = print_dialogLineWidthBudget();
+          s32 countOnly = -1;
+
+          for(i = gczoombox_strlen(string); i > 0; i--){
+               if(' ' != string[i]) continue;
+               if(line_length < __get_str_print_len(string, i)) continue;
+               if(countOnly < 0) countOnly = i;
+               if(budget < print_measureDialogWidth((u8 *)string, i)) continue;
+               return i;
+          }
+          return (countOnly >= 0) ? countOnly : gczoombox_strlen(string);
+     }
 }
 
 void func_8031594C(GcZoombox * this, u8 *str, s32 arg2, s32 arg3){
@@ -842,6 +860,7 @@ void func_803163A8(GcZoombox *this, Gfx **gfx, Mtx **mtx) {
     f32 sp34;
 
     sp34 = viewport_transformCoordinate((f32)this->unk170, this->unk172, sp50, sp5C);
+
     if (this->unk1A4_24) {
         sp5C[1] += 180.0f;
         sp5C[0] -= 2*sp5C[0];
@@ -1442,7 +1461,11 @@ GcZoombox *gczoombox_new(s32 y, GcZoomboxSprite portrait_id, s32 arg2, s32 arg3,
     this->unk168 = 0xFF;
     this->unk1A4_24 = arg3;
     if(this->unk1A4_24){
-        this->unk16A = 45;
+        // [port] Was 45, giving 8 units of left padding where the unmirrored box
+        // uses 34 - the text sat against the border. Both boxes rest on the same
+        // span (the mirrored one is drawn flipped, so it extends left from its
+        // anchor to the same left edge at 37), so the inset should match.
+        this->unk16A = 71;
         this->unk174 = gFramebufferWidth - 0x25;
         this->unk170 = gFramebufferWidth + 0x66;
     }else{

@@ -214,6 +214,8 @@ BKSpriteTextureBlock *func_802E4D5C(s32 arg0, char arg1);
 
 // --- core2/font/print.c ---
 BKSpriteTextureBlock *print_getBoldFontLetterSprite(s32 letterId, s32 *fontType);
+f32 print_measureDialogWidth(u8* string, s32 count);
+f32 print_dialogLineWidthBudget(void);
 
 // --- core2/anim/anim_spriteframe.c / particle/typeindex.c etc. ---
 ParticleEmitter *func_802EDD8C(f32 pos[3], f32 xz_range, f32 arg2);
