@@ -75,6 +75,69 @@ OTRVersion DetectOTRVersion(std::string fileName) {
     return ReadPortVersionFromOTR(otrPath);
 }
 
+// [port] An archive can carry the right version and still be unusable.
+//
+// Torch writes the geo command tree in the byte order of the machine that will
+// read it. An early build defaulted that to big-endian for every target, so a PC
+// extracted an archive it could not read: models never built, some textures still
+// drew, and it crashed in modelRender_executeGeoCmds. The extraction default was
+// fixed, but a bk.o2r already on disk is not regenerated - updating the binary
+// leaves the bad archive in place, and the version check cannot see the problem
+// because the version is genuinely correct.
+//
+// So read the geo tree and ask whether it is the right way round. The first u32
+// of a geo payload is a small count; byte-swapped it is enormous. Sampling a few
+// assets is unambiguous - measured 400/400 against 3/400 on known-good and
+// known-bad archives.
+bool ArchiveGeoByteOrderIsWrong(const std::string& fileName) {
+    const std::string otrPath = Ship::Context::LocateFileAcrossAppDirs(fileName);
+    if (!std::filesystem::exists(otrPath)) {
+        return false;
+    }
+    auto archive = std::make_shared<Ship::O2rArchive>(otrPath);
+    if (!archive->Open()) {
+        return false;
+    }
+    auto files = archive->ListFiles("*_GEO");
+    if (files == nullptr || files->empty()) {
+        return false;   // nothing to judge by; leave the archive alone
+    }
+
+    constexpr size_t kGeoPayloadOffset = 0x44;  // past the 0x40 resource header and its length word
+    constexpr uint32_t kPlausible = 0x1000;     // the count is small; swapped it is not
+    int native = 0, swapped = 0, sampled = 0;
+
+    for (const auto& [hash, name] : *files) {
+        if (sampled >= 16) {
+            break;
+        }
+        auto f = archive->LoadFile(name);
+        if (f == nullptr || !f->IsLoaded || f->Buffer == nullptr ||
+            f->Buffer->size() < kGeoPayloadOffset + sizeof(uint32_t)) {
+            continue;
+        }
+        uint32_t v;
+        memcpy(&v, f->Buffer->data() + kGeoPayloadOffset, sizeof(v));
+        const uint32_t other = ((v >> 24) & 0xFF) | ((v >> 8) & 0xFF00) |
+                               ((v << 8) & 0xFF0000) | ((v << 24) & 0xFF000000);
+        if (v < kPlausible) {
+            native++;
+        }
+        if (other < kPlausible) {
+            swapped++;
+        }
+        sampled++;
+    }
+
+    const bool wrong = (sampled > 0) && (swapped > native);
+    WIIU_TRACE("[extract] geo byte order: sampled %d, native-plausible %d, swapped-plausible %d -> %s", sampled,
+               native, swapped, wrong ? "WRONG, regenerating" : "ok");
+    if (wrong) {
+        SPDLOG_WARN("bk.o2r geo data is byte-swapped for this machine - regenerating it from the ROM");
+    }
+    return wrong;
+}
+
 bool VerifyArchiveVersion(OTRVersion version) {
     return version.major == gBuildVersionMajor && version.minor == gBuildVersionMinor;
 }
@@ -168,6 +231,14 @@ void GameEngine::RunExtract(int argc, char* argv[]) {
     }
 
     bool shouldRegen = !VerifyArchiveVersion(romArchiveVersion) && romArchiveVersion.major != INT16_MAX;
+    if (!shouldRegen && romArchiveVersion.major != INT16_MAX) {
+        for (const auto& archive : kRomArchives) {
+            if (ArchiveGeoByteOrderIsWrong(archive)) {
+                shouldRegen = true;
+                break;
+            }
+        }
+    }
     WIIU_TRACE("[extract] rom archive %d.%d.%d, build expects %d.%d, shouldRegen=%d", romArchiveVersion.major,
                romArchiveVersion.minor, romArchiveVersion.patch, gBuildVersionMajor, gBuildVersionMinor,
                (int)shouldRegen);
