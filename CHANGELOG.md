@@ -80,6 +80,13 @@ surfaced problems no other platform had hit.
   spreading position and press across frames landed clicks at a stale cursor.
 - SDL event-queue drain (the leak behind a progressive frame-rate collapse),
   controller re-enumeration fixes, and Pro Controller support.
+- **A Pro Controller on its own could not open the menu.** `GetVPADStatus`
+  handed ImGui nothing unless `hasVpad` was set, and that flag means "a GamePad
+  holds player index 0" — SDL gives a lone Pro Controller index 1. The
+  backend does have Wiimote, Classic and Pro button paths, but they read KPAD
+  and nothing fills it, so on a console with no GamePad every button source was
+  zero and no button on any pad could open the overlay. The synthesised state is
+  now built from every connected pad, and handed over whenever it holds input.
 
 ### Assets and audio
 
@@ -131,8 +138,21 @@ Everything here is a CVar and can be toggled in-game.
   C-button wording remapped. Every replacement is no longer than what it
   replaces, because the text box wraps on a fixed width.
   `Controls.RewritePrompts`
-- Underwater dive controls un-inverted, correctly scoped to submerged movement
-  only — surface swimming uses the same axis for forward and back.
+- **Underwater and flight controls un-inverted**, each with its own toggle so
+  the original N64 handling can be restored independently — *Enhancements
+  — Gameplay — Controls*, "Uninvert Swimming" and "Uninvert Flight". Both
+  ship on the modern sense. Swimming is scoped to submerged movement only,
+  because surface swimming uses the same axis for forward and back; flight is
+  scoped to `BS_24_FLY`, so the Beak Bomb keeps its original aiming either way.
+  `Controls.UninvertSwim`, `Controls.UninvertFlight`
+- **Dialogue no longer overflows the text box, and can no longer overrun the
+  line buffer.** Lines break on measured width rather than a character count,
+  because the font is proportional and twenty-four wide letters do not fit where
+  twenty-four narrow ones do. The break point is now also clamped to the 48-byte
+  line buffer: the search had no lower bound, and a line with no usable break
+  returned an index past the end, writing over the text box's own model, sprite
+  and callback pointers. That corruption surfaced later as a crash somewhere
+  unrelated.
 
 ### Randomizer
 
@@ -185,10 +205,6 @@ tree, and a mismatch desyncs items and map transitions.
 
 ## Known issues
 
-- **Dialogue text can overflow the text box.** The frame's geometry comes from
-  `gFramebufferWidth` with hardcoded offsets while the text is laid out by a
-  separate path, and neither consults the aspect ratio. Present in upstream and
-  in the official 1.1.0 build; not introduced here.
 - **The intro logo model does not appear.** Unresolved.
 - **Bottles' Bonus is harder than intended.** The picture is a live render of the
   world, and at 720p with upscaled textures the moving character is legible in a
