@@ -311,6 +311,25 @@ void LighthouseMenu::AddMenuEnhancements() {
     // Gameplay Behavior Section
     AddWidget(path, "Gameplay Behavior", WIDGET_SEPARATOR_TEXT);
 
+    // [port] Both default to the modern sense. Unchecking either restores the
+    // N64 behaviour exactly - the CVars already existed and were only reachable
+    // by editing the config by hand.
+    AddWidget(path, "Uninvert Swimming", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Controls.UninvertSwim"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip(
+            "Underwater, pushing up on the stick swims up. Turn this off for the original "
+            "controls, where pushing up dives. Only applies while submerged - at the surface "
+            "the same axis is ordinary forward and back either way."));
+
+    AddWidget(path, "Uninvert Flight", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("Controls.UninvertFlight"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip(
+            "While flying, pushing up on the stick climbs. Turn this off for the original "
+            "controls, where pushing up descends. Does not affect the Beak Bomb, which keeps "
+            "its original aiming either way."));
+
     AddWidget(path, "Fix CCW Gnawty Rock (Spring)", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("Fixes.GnawtySpringRock"))
         .RaceDisable(false)

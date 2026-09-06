@@ -605,16 +605,31 @@ static s32 _gczoombox_findLineBreak(char *string, s32 line_length){
      // count-only one, which is exactly the old behaviour.
      {
           const f32 budget = print_dialogLineWidthBudget();
+          const s32 len = gczoombox_strlen(string);
+          // The caller copies this many bytes into a 48-byte line buffer and
+          // writes a terminator at the end of them, so the result must stay
+          // inside it whatever happens. Returning the whole string when no break
+          // fits - which an unbroken run longer than the line can do - overran
+          // that buffer and corrupted the box, crashing later somewhere
+          // unrelated.
+          const s32 maxIndex = (s32)(sizeof(((GcZoombox *)0)->unk60) - 1);
           s32 countOnly = -1;
 
-          for(i = gczoombox_strlen(string); i > 0; i--){
+          for(i = len; i > 0; i--){
                if(' ' != string[i]) continue;
                if(line_length < __get_str_print_len(string, i)) continue;
+               if(i > maxIndex) continue;
                if(countOnly < 0) countOnly = i;
                if(budget < print_measureDialogWidth((u8 *)string, i)) continue;
                return i;
           }
-          return (countOnly >= 0) ? countOnly : gczoombox_strlen(string);
+          if(countOnly >= 0){
+               return countOnly;
+          }
+          // No usable space: cut mid-word rather than overrun. Prefer the
+          // requested line length, and never exceed the buffer.
+          i = (len < line_length) ? len : line_length;
+          return (i > maxIndex) ? maxIndex : i;
      }
 }
 
@@ -1143,6 +1158,14 @@ void gczoombox_update(GcZoombox *this){
                }
                else{
                     this->unk15D = 0;
+               }
+               // [port] unk60 is a fixed 48-byte line buffer and the terminator is
+               // written at unk15C, so anything longer corrupts the rest of the box
+               // and crashes somewhere unrelated later. Clamp here so every wrap
+               // path is covered, including the pre-split font-2 strings that skip
+               // the search entirely.
+               if(this->unk15C > sizeof(this->unk60) - 1){
+                    this->unk15C = sizeof(this->unk60) - 1;
                }
                func_803153A8(this->unk160, this->unk60, 0, this->unk15C);
                this->unk60[this->unk15C] = 0;
