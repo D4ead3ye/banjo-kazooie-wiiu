@@ -37,6 +37,13 @@ void ThreadWatchdog_Stop(void);
 // Log the pipeline state immediately, stalled or not.
 void ThreadWatchdog_DumpNow(void);
 
+// Where a serviced loop currently is. A stall that is not a queue wait only
+// names candidates, which is not enough when the loop has several blocking
+// steps; this records which one it actually reached. Only the pointer is
+// stored, so the string must have static lifetime, and setting it is one
+// relaxed store.
+void ThreadWatchdog_SetPhase(WatchdogThread id, const char* phase);
+
 // Bracket a section that blocks a serviced thread on purpose.
 void ThreadWatchdog_BeginExpectedStall(const char* reason);
 void ThreadWatchdog_EndExpectedStall(void);

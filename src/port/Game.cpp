@@ -421,6 +421,7 @@ int SDL_main(int argc, char* argv[]) {
         }
         ThreadWatchdog_Beat(WATCHDOG_MAIN_LOOP);
         port_noteMainLoopAlive();
+        ThreadWatchdog_SetPhase(WATCHDOG_MAIN_LOOP, "top of loop");
 #ifdef __WIIU__
         {
             // What does the game think it is doing? Everything else about the
@@ -457,7 +458,9 @@ int SDL_main(int argc, char* argv[]) {
 #endif
         // Pump events every iteration: a task-starved pass must not starve
         // input and window messages.
+        ThreadWatchdog_SetPhase(WATCHDOG_MAIN_LOOP, "HandleEvents (ProcUI callbacks run here)");
         Ship::Context::GetRawInstance()->GetWindow()->HandleEvents();
+        ThreadWatchdog_SetPhase(WATCHDOG_MAIN_LOOP, "OS_SiService -> ControlDeck");
         OS_SiService();
         if (IsInlineModExtractionBusy()) {
             if (gfx_wiiu_has_foreground()) {
@@ -466,8 +469,11 @@ int SDL_main(int argc, char* argv[]) {
             SDL_Delay(16);
             continue;
         }
+        ThreadWatchdog_SetPhase(WATCHDOG_MAIN_LOOP, "DrainRenderService");
         DrainRenderService();
+        ThreadWatchdog_SetPhase(WATCHDOG_MAIN_LOOP, "ServiceRcp");
         const int rcpDid = ServiceRcp();
+        ThreadWatchdog_SetPhase(WATCHDOG_MAIN_LOOP, "after ServiceRcp");
         if (!rcpDid) {
             // The gui only draws inside serviced frames, so a stalled game
             // thread would freeze ImGui with it. Render gui-only frames during

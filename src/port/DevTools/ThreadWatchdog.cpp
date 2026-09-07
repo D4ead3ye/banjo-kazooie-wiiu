@@ -79,6 +79,9 @@ constexpr const char* kThreadNonQueueWaits[WATCHDOG_NUM_THREADS] = {
     "ControlDeck rumble",
 };
 
+// Set by the loops themselves as they move through their blocking steps.
+std::atomic<const char*> sPhase[WATCHDOG_NUM_THREADS] = {};
+
 // Entry point each heartbeat belongs to.
 constexpr const char* kThreadLoops[WATCHDOG_NUM_THREADS] = {
     "osCreateViManager ticker (OS_VI.cpp)",
@@ -377,6 +380,9 @@ std::string BuildDump(const bool* stalled, Clock::time_point now, const std::str
         } else {
             out += fmt::format("Parked at: no queue wait, so loop/mutex/condvar. Candidates: {}\n",
                                kThreadNonQueueWaits[firstStalled]);
+            if (const char* phase = sPhase[firstStalled].load(std::memory_order_relaxed)) {
+                out += fmt::format("Last phase reached: {}\n", phase);
+            }
             if (firstStalled == WATCHDOG_GAME_TICK && port_renderServicePending()) {
                 out += "Note: port_runOnRenderThread call is pending, so sSvcCv is the prime suspect\n";
             }
@@ -514,6 +520,12 @@ void Watcher() {
 }
 
 } // namespace
+
+extern "C" void ThreadWatchdog_SetPhase(WatchdogThread id, const char* phase) {
+    if (id < WATCHDOG_NUM_THREADS) {
+        sPhase[id].store(phase, std::memory_order_relaxed);
+    }
+}
 
 extern "C" void ThreadWatchdog_Beat(WatchdogThread id) {
     Heartbeat& hb = sBeats[id];
