@@ -10,6 +10,12 @@
 
 #include <SDL2/SDL_thread.h>
 
+#ifdef __WIIU__
+#include <cstdio>
+#include <unistd.h>
+#include <whb/log.h>
+#endif
+
 #include "port/OS/OS.h"
 
 #if defined(_WIN32)
@@ -82,6 +88,7 @@ constexpr const char* kThreadNonQueueWaits[WATCHDOG_NUM_THREADS] = {
 // Set by the loops themselves as they move through their blocking steps.
 std::atomic<const char*> sPhase[WATCHDOG_NUM_THREADS] = {};
 
+
 // Entry point each heartbeat belongs to.
 constexpr const char* kThreadLoops[WATCHDOG_NUM_THREADS] = {
     "osCreateViManager ticker (OS_VI.cpp)",
@@ -115,6 +122,92 @@ struct Heartbeat {
 };
 
 Heartbeat sBeats[WATCHDOG_NUM_THREADS];
+
+#ifdef __WIIU__
+// [port] Black-box recorder, for lockups this watcher cannot report.
+//
+// A hard lock takes the whole console with it: the game, this thread and UDP
+// logging all stop in the same instant. That is exactly what the 8 Sep crash
+// looked like - the log ends mid-second with no stall dump at all - and it is
+// why nothing that reports over the network can ever explain one. This writes
+// the same state to the SD card instead, where it is still there after the
+// power cycle.
+//
+// The file is created once at its final size and every write is a seek plus
+// one fixed-width record, so no directory entry is ever updated again and a
+// lock mid-write can corrupt at most the slot being written. It is plain text:
+// read it back and take the line with the highest seq=.
+//
+// What it answers: whether the CPU outlived the last UDP line. If seq keeps
+// climbing past it, the console was still running and only the GPU or the
+// network died. If it stops at the same moment, the lock is global.
+constexpr int kCrumbSlots = 256; // at one per sample, just over two minutes
+constexpr int kCrumbBytes = 160; // the longest phase string needs 144
+const char* const kCrumbPath = "crash-breadcrumb.txt";
+
+uint32_t sCrumbSeq = 0;
+int sCrumbState = 0; // 0 unopened, 1 ready, -1 unusable
+
+void CrumbPrepare() {
+    if (sCrumbState != 0) {
+        return;
+    }
+    FILE* f = fopen(kCrumbPath, "wb");
+    if (f == nullptr) {
+        sCrumbState = -1;
+        WHBLogPrintf("[crumb] cannot create %s - breadcrumbs disabled", kCrumbPath);
+        return;
+    }
+    char blank[kCrumbBytes];
+    memset(blank, ' ', sizeof(blank));
+    blank[kCrumbBytes - 1] = '\n';
+    for (int i = 0; i < kCrumbSlots; i++) {
+        fwrite(blank, 1, sizeof(blank), f);
+    }
+    fclose(f);
+    sCrumbState = 1;
+    WHBLogPrintf("[crumb] recording to %s (%d slots)", kCrumbPath, kCrumbSlots);
+}
+
+void CrumbWrite(const char* note) {
+    if (sCrumbState == 0) {
+        CrumbPrepare();
+    }
+    if (sCrumbState != 1) {
+        return;
+    }
+
+    const char* phase = sPhase[WATCHDOG_MAIN_LOOP].load(std::memory_order_relaxed);
+    static const auto start = Clock::now();
+    const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - start).count();
+
+    char rec[kCrumbBytes];
+    const int n = snprintf(rec, sizeof(rec),
+                           "seq=%06u t=%08lldms main=%09llu tick=%09llu vi=%09llu map=%#06x exit=%#05x %s phase=%s",
+                           sCrumbSeq, (long long)ms,
+                           (unsigned long long)sBeats[WATCHDOG_MAIN_LOOP].count.load(std::memory_order_relaxed),
+                           (unsigned long long)sBeats[WATCHDOG_GAME_TICK].count.load(std::memory_order_relaxed),
+                           (unsigned long long)sBeats[WATCHDOG_VI_TICKER].count.load(std::memory_order_relaxed),
+                           (unsigned)gsworld_getMap(), (unsigned)gsworld_getExit(), note != nullptr ? note : "-",
+                           phase != nullptr ? phase : "-");
+    for (int i = (n < 0 ? 0 : (n < kCrumbBytes ? n : kCrumbBytes)); i < kCrumbBytes; i++) {
+        rec[i] = ' ';
+    }
+    rec[kCrumbBytes - 1] = '\n';
+
+    FILE* f = fopen(kCrumbPath, "r+b");
+    if (f == nullptr) {
+        return;
+    }
+    fseek(f, (long)((sCrumbSeq % kCrumbSlots) * kCrumbBytes), SEEK_SET);
+    fwrite(rec, 1, kCrumbBytes, f);
+    fflush(f);
+    // Best effort: the devoptab may not implement it, and fclose flushes anyway.
+    (void)fsync(fileno(f));
+    fclose(f);
+    sCrumbSeq++;
+}
+#endif // __WIIU__
 std::atomic<bool> sStalledFlags[WATCHDOG_NUM_THREADS] = {};
 std::thread sWatcher;
 std::atomic<bool> sWatcherRun{ false };
@@ -487,6 +580,11 @@ void Watcher() {
             sStalledFlags[i].store(stalled[i], std::memory_order_relaxed);
         }
 
+#ifdef __WIIU__
+        // Last thing each sample, so the record reflects the state just judged.
+        CrumbWrite(anyStalled ? "STALLED" : "ok");
+#endif
+
         if (!anyStalled) {
             wasStalled = false;
             continue;
@@ -558,6 +656,12 @@ extern "C" void ThreadWatchdog_Stop(void) {
     if (sWatcher.joinable()) {
         sWatcher.join();
     }
+#ifdef __WIIU__
+    // Marks the difference between "the session ended" and "the console
+    // stopped". Without it, a clean exit and a lockup leave the same trailing
+    // record and the file cannot tell them apart.
+    CrumbWrite("CLEAN-SHUTDOWN");
+#endif
 }
 
 extern "C" void ThreadWatchdog_DumpNow(void) {
