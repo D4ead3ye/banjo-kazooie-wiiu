@@ -416,6 +416,10 @@ int SDL_main(int argc, char* argv[]) {
                 ctx->GetConsoleVariables()->Save();
             }
             OSSleepTicks(kLoopTicksPerMs * 300);
+            // This path never reaches ThreadWatchdog_Stop, so the breadcrumb
+            // marker has to be written here or a normal quit is indistinguishable
+            // from a lockup in the ring.
+            ThreadWatchdog_Breadcrumb("CLEAN-SHUTDOWN");
             WHBLogPrintf("[exit] terminating now");
             _Exit(0);
         }

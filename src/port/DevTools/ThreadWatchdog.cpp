@@ -691,6 +691,14 @@ void Watcher() {
 
 } // namespace
 
+extern "C" void ThreadWatchdog_Breadcrumb(const char* note) {
+#ifdef __WIIU__
+    CrumbWrite(note);
+#else
+    (void)note;
+#endif
+}
+
 extern "C" void ThreadWatchdog_SetPhase(WatchdogThread id, const char* phase) {
     if (id < WATCHDOG_NUM_THREADS) {
         sPhase[id].store(phase, std::memory_order_relaxed);

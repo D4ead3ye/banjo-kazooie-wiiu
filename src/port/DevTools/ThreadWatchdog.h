@@ -44,6 +44,14 @@ void ThreadWatchdog_DumpNow(void);
 // relaxed store.
 void ThreadWatchdog_SetPhase(WatchdogThread id, const char* phase);
 
+// Force a breadcrumb out to the SD card now, tagged with `note`.
+//
+// The watcher writes one per sample on its own; this is for moments worth
+// marking exactly, and for the ones it would otherwise miss - the Wii U quit
+// path calls _Exit and never unwinds, so without a call here a normal exit and
+// a lockup leave the same trailing record. No-op off Wii U.
+void ThreadWatchdog_Breadcrumb(const char* note);
+
 // Bracket a section that blocks a serviced thread on purpose.
 void ThreadWatchdog_BeginExpectedStall(const char* reason);
 void ThreadWatchdog_EndExpectedStall(void);
