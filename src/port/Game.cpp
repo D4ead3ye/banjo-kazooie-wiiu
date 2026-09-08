@@ -328,6 +328,30 @@ void push_frame() {
 // never reached that path, and the six-second backstop killed the process with
 // the settings unflushed and no marker in the breadcrumb ring. The exit
 // callback now calls this as well, and whichever reaches it first wins.
+// [port] Terminate, once, from whichever thread gets here first.
+//
+// _Exit is not reentrant on this console. It takes about three seconds to
+// complete, and the exit thread's two-second timer fired in the middle of one -
+// the log shows "terminating now" from the main loop, then "pump did not
+// return" from the thread 1.4s later, then the console gone. Both paths had
+// succeeded; calling _Exit twice is what froze it.
+//
+// Whoever loses the race returns and lets the winner finish.
+extern "C" void port_terminateOnce(void) {
+    static std::atomic<bool> sTerminating{ false };
+    if (!sTerminating.exchange(true)) {
+        _Exit(0);
+    }
+    // Lost the race. Park rather than return: the caller's next move would be
+    // another loop iteration, rendering a frame while the winner is tearing the
+    // process down. There is nothing left worth doing, and the winner does not
+    // need this thread - a shutdown from the exit thread has always completed
+    // with the main loop parked exactly like this.
+    for (;;) {
+        SDL_Delay(100);
+    }
+}
+
 // Bounded, and safe to call from inside a ProcUI callback: the breadcrumb write
 // gives up rather than wait. Nothing else here touches the filesystem.
 extern "C" void port_markCleanExit(void) {
@@ -465,7 +489,7 @@ int SDL_main(int argc, char* argv[]) {
             // from a lockup in the ring.
             ThreadWatchdog_Breadcrumb("CLEAN-SHUTDOWN");
             WHBLogPrintf("[exit] terminating now");
-            _Exit(0);
+            port_terminateOnce();
         }
         ThreadWatchdog_Beat(WATCHDOG_MAIN_LOOP);
         port_noteMainLoopAlive();
