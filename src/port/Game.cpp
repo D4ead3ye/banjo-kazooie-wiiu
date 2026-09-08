@@ -396,8 +396,24 @@ int SDL_main(int argc, char* argv[]) {
     // spins forever and the console never gets its menu back - which is the HOME
     // close hang. Give it a bounded grace period, then stop waiting.
     int64_t closingSince = 0;
-    while (WindowIsRunning() || !sGameThreadDone.load()) {
-        if (!WindowIsRunning()) {
+    for (;;) {
+        // [port] Pump ProcUI exactly once per iteration.
+        //
+        // This was `while (WindowIsRunning() || ...)` with `if (!WindowIsRunning())`
+        // inside it, so the pump ran twice per pass. It is not a predicate: it
+        // dispatches the foreground callbacks and advances the shutdown state
+        // machine, and on the exit message it tears ProcUI down and answers
+        // false. The second call then re-entered a pump that had just been shut
+        // down and never came back - the main loop stopped beating, the clean
+        // exit below never ran, and the six-second backstop had to kill the
+        // process. That is the HOME-close hang, and the logs show it every time:
+        // "cadence stopped, threads asked to unwind" from the first call, no
+        // [exit] line at all, then "STILL RUNNING after 6s".
+        const bool windowRunning = WindowIsRunning();
+        if (!windowRunning && sGameThreadDone.load()) {
+            break;
+        }
+        if (!windowRunning) {
             // [port] Do not attempt a graceful teardown here. Every version of it
             // froze the console: the shutdown path touches GX2 and MEM1 after the
             // system has reclaimed them, and the game thread cannot be joined
