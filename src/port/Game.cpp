@@ -320,6 +320,27 @@ void push_frame() {
 #define SDL_main main
 #endif
 
+// [port] Everything that must survive a close, in one idempotent call.
+//
+// This used to live only in the main loop's exit path, which depends on
+// WindowIsRunning() returning after ProcUI dispatches the exit message. It does
+// not always: on roughly one close in five the pump never came back, the loop
+// never reached that path, and the six-second backstop killed the process with
+// the settings unflushed and no marker in the breadcrumb ring. The exit
+// callback now calls this as well, and whichever reaches it first wins.
+extern "C" void port_flushSettingsForExit(void) {
+    static std::atomic<bool> sDone{ false };
+    if (sDone.exchange(true)) {
+        return;
+    }
+    auto ctx = Ship::Context::GetRawInstance();
+    if (ctx != nullptr && ctx->GetConsoleVariables() != nullptr) {
+        ctx->GetConsoleVariables()->Save();
+    }
+    ThreadWatchdog_Breadcrumb("CLEAN-SHUTDOWN");
+    WHBLogPrintf("[exit] settings flushed");
+}
+
 int SDL_main(int argc, char* argv[]) {
     WIIU_TRACE_INIT();
     WIIU_TRACE("[lh] SDL_main entered - build " __DATE__ " " __TIME__);
@@ -427,10 +448,7 @@ int SDL_main(int argc, char* argv[]) {
             WHBLogPrintf("[exit] window closed, flushing settings and terminating");
             OS_RequestThreadExit();
 
-            auto ctx = Ship::Context::GetRawInstance();
-            if (ctx != nullptr && ctx->GetConsoleVariables() != nullptr) {
-                ctx->GetConsoleVariables()->Save();
-            }
+            port_flushSettingsForExit();
             OSSleepTicks(kLoopTicksPerMs * 300);
             // This path never reaches ThreadWatchdog_Stop, so the breadcrumb
             // marker has to be written here or a normal quit is indistinguishable
