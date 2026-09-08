@@ -60,6 +60,30 @@ surfaced problems no other platform had hit.
   configured one, putting the image in a corner after the 720p change.
 - Internal resolution set to 1280×720.
 
+- **Closing from the HOME menu could freeze the console.** Five separate faults
+  behind one button, each of which had to be fixed before the next was visible:
+
+  - `WindowIsRunning()` was read twice per loop iteration. It is not a
+    predicate — it dispatches the foreground callbacks and advances ProcUI's
+    shutdown state machine, and on the exit message it tears ProcUI down before
+    answering false. The second read then re-entered a pump that no longer
+    existed and never returned.
+  - The settings save ran inside the ProcUI exit callback, where any write to
+    the SD card can stall while the foreground is being handed over.
+  - The breadcrumb recorder took a plain lock that the exit path then waited on,
+    turning a stalled card write into a sixty-second lockup. It now gives up
+    after 250ms; a lost diagnostic record costs nothing.
+  - `_Exit` was called from inside the exit callback. It is not reentrant here:
+    ProcUI is still dispatching and holding its own locks, and the process stayed
+    alive for over a minute. It runs from a separate thread instead.
+  - `_Exit` could then be called twice — once by the main loop and once by that
+    thread — because it takes about three seconds to complete and the thread's
+    timer fired inside one already running. Termination now happens once,
+    whichever path reaches it first.
+
+  Settings are also saved when the menu closes rather than only on the way out,
+  since the shutdown path is no longer a place to do filesystem work.
+
 ### Input
 
 - **The enhancements menu was unreachable on console.** Three separate defects,
@@ -138,6 +162,13 @@ Everything here is a CVar and can be toggled in-game.
   C-button wording remapped. Every replacement is no longer than what it
   replaces, because the text box wraps on a fixed width.
   `Controls.RewritePrompts`
+- **Output resolution presets.** Fast3dGui implemented four of these all along
+  and nothing exposed them, so a console-era output was reachable only by editing
+  the config by hand. *Settings — Graphics — Output Resolution*: the window's own
+  resolution, 240p in 4:3, or 240p and 480p widescreen. The 4:3 mode is the one
+  worth having — pillarboxed rather than stretched, which is what an N64 actually
+  put on a screen. Pairs with *Texture Filter — None* for the authentic look.
+  `Settings.LowResMode`
 - **Underwater and flight controls un-inverted**, each with its own toggle so
   the original N64 handling can be restored independently — *Enhancements
   — Gameplay — Controls*, "Uninvert Swimming" and "Uninvert Flight". Both
@@ -205,6 +236,12 @@ tree, and a mismatch desyncs items and map transitions.
 
 ## Known issues
 
+- **Returning from the HOME menu can leave the game stopped.** Backgrounding the
+  app — opening the Download Manager, say — and coming back runs the whole
+  reacquire successfully and then never hands the main loop back: the watchdog
+  reports it parked in ProcUI's message pump with the game tick waiting on a
+  frame token that cannot arrive. Distinct from the close freeze above, and
+  present in earlier releases too. Rare, and the console itself stays alive.
 - **The intro logo model does not appear.** Unresolved.
 - **Bottles' Bonus is harder than intended.** The picture is a live render of the
   world, and at 720p with upscaled textures the moving character is legible in a
