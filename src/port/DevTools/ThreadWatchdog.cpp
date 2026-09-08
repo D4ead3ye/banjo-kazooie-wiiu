@@ -6,6 +6,7 @@
 #include <spdlog/spdlog.h>
 #include <cstring>
 #include <string>
+#include <mutex>
 #include <thread>
 
 #include <SDL2/SDL_thread.h>
@@ -146,8 +147,17 @@ constexpr int kCrumbBytes = 160; // the longest phase string needs 144
 const char* const kCrumbPath = "crash-breadcrumb.txt";
 const char* const kCrumbPrevPath = "crash-breadcrumb-prev.txt";
 
+// The watcher samples on its own thread while the loops post markers from
+// theirs, so this is written from more than one at once. Without the lock the
+// two interleave inside one record and the sequence numbers race, which is how
+// a CLEAN-SHUTDOWN marker ended up with a lower seq than records written after
+// it - the file contradicted the log it was supposed to corroborate.
+std::mutex sCrumbMutex;
 uint32_t sCrumbSeq = 0;
 int sCrumbState = 0; // 0 unopened, 1 ready, -1 unusable
+// Set once the final marker is down. Nothing may write after it, or it stops
+// being the last record and the verdict is wrong again.
+bool sCrumbSealed = false;
 
 // [port] Replay the previous session into the log before starting a new ring.
 //
@@ -242,11 +252,18 @@ void CrumbPrepare() {
 }
 
 void CrumbWrite(const char* note) {
+    std::lock_guard<std::mutex> lock(sCrumbMutex);
+    if (sCrumbSealed) {
+        return;
+    }
     if (sCrumbState == 0) {
         CrumbPrepare();
     }
     if (sCrumbState != 1) {
         return;
+    }
+    if (note != nullptr && strcmp(note, "CLEAN-SHUTDOWN") == 0) {
+        sCrumbSealed = true;
     }
 
     const char* phase = sPhase[WATCHDOG_MAIN_LOOP].load(std::memory_order_relaxed);
