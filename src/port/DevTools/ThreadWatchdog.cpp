@@ -152,12 +152,19 @@ const char* const kCrumbPrevPath = "crash-breadcrumb-prev.txt";
 // two interleave inside one record and the sequence numbers race, which is how
 // a CLEAN-SHUTDOWN marker ended up with a lower seq than records written after
 // it - the file contradicted the log it was supposed to corroborate.
-std::mutex sCrumbMutex;
+// Timed, and the seal is atomic and checked before it is taken.
+//
+// A plain lock here cost a sixty-second lockup on close. An SD write can stall
+// while the foreground is being handed over, and the exit path's very first act
+// is to write the final marker - so it parked on a mutex the watcher was
+// holding across a stalled write, and neither the marker nor the settings save
+// ever happened. No breadcrumb is worth blocking a shutdown for.
+std::timed_mutex sCrumbMutex;
 uint32_t sCrumbSeq = 0;
 int sCrumbState = 0; // 0 unopened, 1 ready, -1 unusable
 // Set once the final marker is down. Nothing may write after it, or it stops
 // being the last record and the verdict is wrong again.
-bool sCrumbSealed = false;
+std::atomic<bool> sCrumbSealed{ false };
 
 // [port] Replay the previous session into the log before starting a new ring.
 //
@@ -252,8 +259,20 @@ void CrumbPrepare() {
 }
 
 void CrumbWrite(const char* note) {
-    std::lock_guard<std::mutex> lock(sCrumbMutex);
-    if (sCrumbSealed) {
+    const bool isFinal = (note != nullptr && strcmp(note, "CLEAN-SHUTDOWN") == 0);
+    // Checked before the lock, and set before it too, so the watcher stops
+    // trying the moment a shutdown starts rather than queueing behind it.
+    if (sCrumbSealed.load(std::memory_order_acquire)) {
+        return;
+    }
+    if (isFinal) {
+        sCrumbSealed.store(true, std::memory_order_release);
+    }
+
+    std::unique_lock<std::timed_mutex> lock(sCrumbMutex, std::chrono::milliseconds(250));
+    if (!lock.owns_lock()) {
+        // Another thread is inside a write that is not coming back. Losing this
+        // record is nothing; waiting for it froze the console.
         return;
     }
     if (sCrumbState == 0) {
@@ -261,9 +280,6 @@ void CrumbWrite(const char* note) {
     }
     if (sCrumbState != 1) {
         return;
-    }
-    if (note != nullptr && strcmp(note, "CLEAN-SHUTDOWN") == 0) {
-        sCrumbSealed = true;
     }
 
     const char* phase = sPhase[WATCHDOG_MAIN_LOOP].load(std::memory_order_relaxed);
