@@ -52,6 +52,16 @@ static const std::unordered_map<int32_t, const char*> textureFilteringMap = {
     { Fast::FILTER_NONE, "None" },
 };
 
+// [port] The four modes Fast3dGui already implements for CVAR_LOW_RES_MODE.
+// Nothing exposed them, so a fixed low output resolution was reachable only by
+// editing the config by hand.
+static const std::unordered_map<int32_t, const char*> outputResolutionMap = {
+    { 0, "Auto (window)" },
+    { 1, "Original (240p, 4:3)" },
+    { 2, "Original widescreen (240p)" },
+    { 3, "Original 2x widescreen (480p)" },
+};
+
 static const std::unordered_map<int32_t, const char*> notificationPosition = {
     { 0, "Top Left" }, { 1, "Top Right" }, { 2, "Bottom Left" }, { 3, "Bottom Right" }, { 4, "Hidden" },
 };
@@ -379,6 +389,17 @@ void LighthouseMenu::AddMenuSettings() {
         .RaceDisable(false)
         .Callback([](WidgetInfo& info) { Ship::Context::GetRawInstance()->GetWindow()->ToggleFullscreen(); })
         .Options(ButtonOptions().Tooltip("Toggles Fullscreen On/Off."));
+    AddWidget(path, "Output Resolution", WIDGET_CVAR_COMBOBOX)
+        .CVar(CVAR_LOW_RES_MODE)
+        .RaceDisable(false)
+        .Options(ComboboxOptions()
+                     .Tooltip("Sets the resolution the game renders at.\n\n"
+                              "Auto follows the window and is the sharpest. The Original modes render at the "
+                              "console's own vertical resolution and scale up, which is how the game looked on "
+                              "hardware - 240p in 4:3 is what an N64 actually output, pillarboxed here rather "
+                              "than stretched.\n\n"
+                              "Anything other than Auto overrides Internal Resolution below.")
+                     .ComboMap(outputResolutionMap));
     AddWidget(path, "Internal Resolution", WIDGET_CVAR_SLIDER_FLOAT)
         .CVar(CVAR_INTERNAL_RESOLUTION)
         .RaceDisable(false)
