@@ -328,6 +328,12 @@ void push_frame() {
 // never reached that path, and the six-second backstop killed the process with
 // the settings unflushed and no marker in the breadcrumb ring. The exit
 // callback now calls this as well, and whichever reaches it first wins.
+// Bounded, and safe to call from inside a ProcUI callback: the breadcrumb write
+// gives up rather than wait. Nothing else here touches the filesystem.
+extern "C" void port_markCleanExit(void) {
+    ThreadWatchdog_Breadcrumb("CLEAN-SHUTDOWN");
+}
+
 extern "C" void port_flushSettingsForExit(void) {
     static std::atomic<bool> sDone{ false };
     if (sDone.exchange(true)) {
@@ -502,6 +508,26 @@ int SDL_main(int argc, char* argv[]) {
         // input and window messages.
         ThreadWatchdog_SetPhase(WATCHDOG_MAIN_LOOP, "HandleEvents (SDL/window events)");
         Ship::Context::GetRawInstance()->GetWindow()->HandleEvents();
+        // [port] Save settings when the menu closes, not only on the way out.
+        //
+        // The exit path can no longer write the config - doing that inside the
+        // ProcUI callback stalled the console - and when the pump does not
+        // return, the main loop's own save never runs either. Closing the menu
+        // is the natural moment: the player has just finished changing things,
+        // the game is running normally, and nothing is being handed over.
+        {
+            auto gui = Ship::Context::GetRawInstance()->GetWindow()->GetGui();
+            static bool sMenuWasOpen = false;
+            const bool menuOpen = gui != nullptr && gui->GetMenu() != nullptr && gui->GetMenu()->IsVisible();
+            if (sMenuWasOpen && !menuOpen) {
+                auto ctx = Ship::Context::GetRawInstance();
+                if (ctx != nullptr && ctx->GetConsoleVariables() != nullptr) {
+                    ctx->GetConsoleVariables()->Save();
+                }
+            }
+            sMenuWasOpen = menuOpen;
+        }
+
         ThreadWatchdog_SetPhase(WATCHDOG_MAIN_LOOP, "OS_SiService -> ControlDeck");
         OS_SiService();
         if (IsInlineModExtractionBusy()) {
