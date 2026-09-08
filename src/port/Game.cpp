@@ -333,11 +333,15 @@ extern "C" void port_flushSettingsForExit(void) {
     if (sDone.exchange(true)) {
         return;
     }
+    // Marker first. It is one small fixed-size write and it has never failed,
+    // whereas the settings save below has hung inside the exit callback. Doing
+    // the cheap, proven thing first means a hang there still leaves the ring
+    // saying how the session ended.
+    ThreadWatchdog_Breadcrumb("CLEAN-SHUTDOWN");
     auto ctx = Ship::Context::GetRawInstance();
     if (ctx != nullptr && ctx->GetConsoleVariables() != nullptr) {
         ctx->GetConsoleVariables()->Save();
     }
-    ThreadWatchdog_Breadcrumb("CLEAN-SHUTDOWN");
     WHBLogPrintf("[exit] settings flushed");
 }
 
