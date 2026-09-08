@@ -144,14 +144,86 @@ Heartbeat sBeats[WATCHDOG_NUM_THREADS];
 constexpr int kCrumbSlots = 256; // at one per sample, just over two minutes
 constexpr int kCrumbBytes = 160; // the longest phase string needs 144
 const char* const kCrumbPath = "crash-breadcrumb.txt";
+const char* const kCrumbPrevPath = "crash-breadcrumb-prev.txt";
 
 uint32_t sCrumbSeq = 0;
 int sCrumbState = 0; // 0 unopened, 1 ready, -1 unusable
+
+// [port] Replay the previous session into the log before starting a new ring.
+//
+// The breadcrumbs only help if they reach us, and after a lockup the console
+// has been power-cycled - whoever hit it is not going to pull a file off the SD
+// card by hand. Emitting them over UDP on the next launch means the existing
+// workflow carries them: start the logger, launch the game, send the log.
+//
+// The old ring is kept as -prev in case the raw file is wanted later.
+void CrumbReplayPrevious() {
+    FILE* f = fopen(kCrumbPath, "rb");
+    if (f == nullptr) {
+        return; // first run on this card
+    }
+
+    char rec[kCrumbBytes + 1];
+    unsigned bestSeq = 0;
+    int bestSlot = -1;
+    int found = 0;
+    for (int slot = 0; slot < kCrumbSlots; slot++) {
+        if (fseek(f, (long)slot * kCrumbBytes, SEEK_SET) != 0 ||
+            fread(rec, 1, kCrumbBytes, f) != (size_t)kCrumbBytes) {
+            break;
+        }
+        rec[kCrumbBytes] = '\0';
+        unsigned seq = 0;
+        if (sscanf(rec, "seq=%u", &seq) == 1) {
+            found++;
+            if (bestSlot < 0 || seq >= bestSeq) {
+                bestSeq = seq;
+                bestSlot = slot;
+            }
+        }
+    }
+    if (bestSlot < 0) {
+        fclose(f);
+        return; // created but never written
+    }
+
+    constexpr int kReplay = 40;
+    WHBLogPrintf("[crumb] ==== previous session: %d records, replaying last %d ====", found,
+                 found < kReplay ? found : kReplay);
+    bool clean = false;
+    for (int i = kReplay - 1; i >= 0; i--) {
+        const int slot = ((bestSlot - i) % kCrumbSlots + kCrumbSlots) % kCrumbSlots;
+        if (fseek(f, (long)slot * kCrumbBytes, SEEK_SET) != 0 ||
+            fread(rec, 1, kCrumbBytes, f) != (size_t)kCrumbBytes) {
+            break;
+        }
+        rec[kCrumbBytes] = '\0';
+        unsigned seq = 0;
+        if (sscanf(rec, "seq=%u", &seq) != 1) {
+            continue; // slot never filled
+        }
+        int end = kCrumbBytes - 1;
+        while (end > 0 && (rec[end] == ' ' || rec[end] == '\n')) {
+            rec[end--] = '\0';
+        }
+        if (strstr(rec, "CLEAN-SHUTDOWN") != nullptr) {
+            clean = true;
+        }
+        WHBLogPrintf("[crumb] %s", rec);
+    }
+    WHBLogPrintf("[crumb] ==== end of previous session: %s ====",
+                 clean ? "ended cleanly" : "NO SHUTDOWN MARKER - it stopped without unwinding");
+    fclose(f);
+
+    remove(kCrumbPrevPath);
+    rename(kCrumbPath, kCrumbPrevPath);
+}
 
 void CrumbPrepare() {
     if (sCrumbState != 0) {
         return;
     }
+    CrumbReplayPrevious();
     FILE* f = fopen(kCrumbPath, "wb");
     if (f == nullptr) {
         sCrumbState = -1;
