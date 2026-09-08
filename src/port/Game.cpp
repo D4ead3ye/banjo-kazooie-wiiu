@@ -462,7 +462,7 @@ int SDL_main(int argc, char* argv[]) {
 #endif
         // Pump events every iteration: a task-starved pass must not starve
         // input and window messages.
-        ThreadWatchdog_SetPhase(WATCHDOG_MAIN_LOOP, "HandleEvents (ProcUI callbacks run here)");
+        ThreadWatchdog_SetPhase(WATCHDOG_MAIN_LOOP, "HandleEvents (SDL/window events)");
         Ship::Context::GetRawInstance()->GetWindow()->HandleEvents();
         ThreadWatchdog_SetPhase(WATCHDOG_MAIN_LOOP, "OS_SiService -> ControlDeck");
         OS_SiService();
@@ -529,6 +529,11 @@ int SDL_main(int argc, char* argv[]) {
             SDL_Delay(1);
 #endif
         }
+        // Last thing in the body, so it is the phase in force while the loop
+        // condition runs. WindowIsRunning() pumps ProcUI, which is where the
+        // foreground callbacks actually fire - a lock there was showing up
+        // under whatever phase the previous iteration happened to leave set.
+        ThreadWatchdog_SetPhase(WATCHDOG_MAIN_LOOP, "WindowIsRunning -> ProcUI pump (handover callbacks)");
     }
     // Ask first, then release: a thread woken before the request is set would just
     // park again.
