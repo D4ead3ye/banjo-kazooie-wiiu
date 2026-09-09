@@ -248,12 +248,7 @@ void thread5_handleSyncEvent(void) {
 extern u64 osClockRate;
 
 void thread5_handleDPEvent(void) {
-    // [port] Test the saved copy, not the live one: starting the next task
-    // overwrites the flags this frame's swap token gates on, so the live word
-    // can already have moved on by the time the DP event is handled. When it
-    // has, the token is never posted and the game tick waits on it forever.
-    // Adopted from upstream HarbourMasters/Lighthouse#575.
-    if (sUnkFlag2_Saved & 0x40000000) {
+    if ((sUnkFlag2 << 1) < 0) {
         osDpSetStatus(DPC_SET_FREEZE);
         sCurrentFramebuffer = osViGetCurrentFramebuffer();
         viMgr_func_8024BFAC();

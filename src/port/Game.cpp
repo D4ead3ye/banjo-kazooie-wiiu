@@ -198,12 +198,8 @@ int ServiceRcp() {
         return 0;
     }
     RenderTask(task->t.data_ptr);
-    // [port] DP before SP. Hardware raises SP first, but the list is fully drawn
-    // before either goes out, and SP frees thread5 to start the next task -
-    // which overwrites the flags this frame's swap token gates on. Adopted from
-    // upstream HarbourMasters/Lighthouse#575.
-    OS_SendEventMesg(OS_EVENT_DP);
     OS_SendEventMesg(OS_EVENT_SP);
+    OS_SendEventMesg(OS_EVENT_DP);
 
     return 1;
 }
