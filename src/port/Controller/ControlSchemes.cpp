@@ -19,6 +19,9 @@
 #include <ship/controller/controldevice/controller/mapping/sdl/SDLButtonToAxisDirectionMapping.h>
 #include <ship/controller/physicaldevice/PhysicalDeviceType.h>
 #include <ship/controller/physicaldevice/ConnectedPhysicalDeviceManager.h>
+#ifdef __WIIU__
+#include <whb/log.h>
+#endif
 #include <libultraship/libultra/controller.h>
 #include <libultraship/bridge.h>
 
@@ -415,6 +418,44 @@ extern "C" void port_shapeControllerInput(void* contPad) {
                 sStickArmed = false;
             }
             pad->button = (pad->button & ~(BTN_CLEFT | BTN_CRIGHT)) | allow;
+
+#ifdef __WIIU__
+            // [port] Temporary. The Wonderwing bind does not fire on a Pro
+            // Controller and three explanations have already been wrong, so
+            // measure instead: whether SDL reports the d-pad at all, whether the
+            // bind survives into otherHeld, and what the game is finally handed.
+            // Logs only when something changes, so it cannot flood.
+            {
+                int rawDpad = 0;
+                int mappings = 0;
+                auto deck = Ship::Context::GetRawInstance()->GetControlDeck();
+                auto devices = deck != nullptr ? deck->GetConnectedPhysicalDeviceManager() : nullptr;
+                if (devices != nullptr) {
+                    for (const auto& [instanceId, gamepad] : devices->GetConnectedSDLGamepadsForPort(0)) {
+                        if (gamepad != nullptr &&
+                            SDL_GameControllerGetButton(gamepad, SDL_CONTROLLER_BUTTON_DPAD_RIGHT) != 0) {
+                            rawDpad = 1;
+                        }
+                    }
+                }
+                if (auto cright = controller->GetButton(BTN_CRIGHT)) {
+                    mappings = (int)cright->GetAllButtonMappings().size();
+                }
+                const int outC = (pad->button & BTN_CRIGHT) ? 1 : 0;
+                static int sLastRaw = -1, sLastOut = -1, sLastOther = -1, sLastMaps = -1;
+                if (rawDpad != sLastRaw || outC != sLastOut || (int)(otherHeld & BTN_CRIGHT) != sLastOther ||
+                    mappings != sLastMaps) {
+                    sLastRaw = rawDpad;
+                    sLastOut = outC;
+                    sLastOther = (int)(otherHeld & BTN_CRIGHT);
+                    sLastMaps = mappings;
+                    WHBLogPrintf("[featherdiag] sdl_dpad_right=%d cright_mappings=%d otherHeld_cright=%d "
+                                 "-> game_cright=%d (stickCamera=%d crouched=%d)",
+                                 rawDpad, mappings, sLastOther ? 1 : 0, outC, stickCamera ? 1 : 0,
+                                 crouched ? 1 : 0);
+                }
+            }
+#endif
         }
     } else {
         uint16_t axisMask = 0;
