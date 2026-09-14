@@ -314,7 +314,17 @@ extern "C" void port_shapeControllerInput(void* contPad) {
     //
     // The fingerprint is order-independent because the device map is unordered,
     // and includes the scheme so switching it in the menu also takes effect.
+    //
+    // Checked periodically rather than every tick: GetConnectedSDLGamepadsForPort
+    // builds and returns a map by value, so asking every frame is a heap
+    // allocation per frame for something that changes when someone picks up a
+    // controller. Half a second late is imperceptible.
     static uint64_t sAppliedFingerprint = 0;
+    static int sDeviceCheckCountdown = 0;
+    if (sDeviceCheckCountdown > 0) {
+        sDeviceCheckCountdown--;
+    } else {
+        sDeviceCheckCountdown = 30;
     uint64_t fingerprint = 1469598103934665603ull ^ (uint64_t)(uint32_t)scheme;
     {
         auto deck = Ship::Context::GetRawInstance()->GetControlDeck();
@@ -333,6 +343,7 @@ extern "C" void port_shapeControllerInput(void* contPad) {
     if (fingerprint != sAppliedFingerprint) {
         sAppliedFingerprint = fingerprint;
         ControlSchemes_Apply(scheme);
+    }
     }
     const bool modern = (scheme == CONTROL_SCHEME_MODERN);
     const bool pocket = (scheme == CONTROL_SCHEME_POCKET);
