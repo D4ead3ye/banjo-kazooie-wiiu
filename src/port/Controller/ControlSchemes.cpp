@@ -18,6 +18,7 @@
 #include <ship/controller/controldevice/controller/mapping/sdl/SDLAxisDirectionToButtonMapping.h>
 #include <ship/controller/controldevice/controller/mapping/sdl/SDLButtonToAxisDirectionMapping.h>
 #include <ship/controller/physicaldevice/PhysicalDeviceType.h>
+#include <ship/controller/physicaldevice/ConnectedPhysicalDeviceManager.h>
 #include <libultraship/libultra/controller.h>
 #include <libultraship/bridge.h>
 
@@ -300,11 +301,37 @@ extern "C" void port_shapeControllerInput(void* contPad) {
 
     // [port] ControlSchemes_Apply is only called from the settings menu, which is
     // not reachable on console - so the scheme and the free-look de-conflict were
-    // never applied at all there. Apply once, here, as soon as a controller
+    // never applied at all there. Apply here instead, as soon as a controller
     // exists (there is none at init time).
-    static bool sSchemeApplied = false;
-    if (!sSchemeApplied) {
-        sSchemeApplied = true;
+    //
+    // Re-apply whenever the connected pads change, not just once. Apply rebuilds
+    // the mappings from the stock defaults for whatever is attached at the time,
+    // so a pad re-enumerating throws the rebinds away - and a once-only flag
+    // meant they never came back. Everything else in Modern happens to sit near
+    // its stock position, so the only bind that visibly died was the Wonderwing
+    // on the d-pad, and only on a Pro Controller, which re-enumerates far more
+    // often than the GamePad does.
+    //
+    // The fingerprint is order-independent because the device map is unordered,
+    // and includes the scheme so switching it in the menu also takes effect.
+    static uint64_t sAppliedFingerprint = 0;
+    uint64_t fingerprint = 1469598103934665603ull ^ (uint64_t)(uint32_t)scheme;
+    {
+        auto deck = Ship::Context::GetRawInstance()->GetControlDeck();
+        auto devices = deck != nullptr ? deck->GetConnectedPhysicalDeviceManager() : nullptr;
+        if (devices != nullptr) {
+            uint64_t ids = 0;
+            uint64_t count = 0;
+            for (const auto& [instanceId, gamepad] : devices->GetConnectedSDLGamepadsForPort(0)) {
+                uint64_t h = (uint64_t)(uint32_t)instanceId * 11400714819323198485ull;
+                ids ^= (h ^ (h >> 29));
+                count++;
+            }
+            fingerprint = fingerprint * 1099511628211ull + ids + count;
+        }
+    }
+    if (fingerprint != sAppliedFingerprint) {
+        sAppliedFingerprint = fingerprint;
         ControlSchemes_Apply(scheme);
     }
     const bool modern = (scheme == CONTROL_SCHEME_MODERN);
