@@ -513,13 +513,13 @@ int SDL_main(int argc, char* argv[]) {
                 // Slowed from every 60 ticks: at one a second these two lines
                 // were ~2000 of the log's 4000 line budget and evicted
                 // everything worth reading. Map/level changes still log above.
-                WIIU_TRACE("[game] map=%d lvl=%d | calls=%u lod=%u frustum=%u emitted=%u"
+                WIIU_TRACE_HOT("[game] map=%d lvl=%d | calls=%u lod=%u frustum=%u emitted=%u"
                            " | localnorm=%d drawdist=%d camdist=%d",
                            map, level, gWiiuModelCalls, gWiiuModelLodCull, gWiiuModelFrustum,
                            gWiiuModelEmitted, (int)gWiiuLastLocalNorm, (int)gWiiuLastDrawDist,
                            (int)gWiiuLastCamDist);
                 gWiiuModelCalls = gWiiuModelNoBin = gWiiuModelFarCull = gWiiuModelDrawn = 0;
-                WIIU_TRACE("[seg] total=%u marked=%u resolved=%u unresolved=%u lostmarker=%u",
+                WIIU_TRACE_HOT("[seg] total=%u marked=%u resolved=%u unresolved=%u lostmarker=%u",
                            gWiiuSegTotal, gWiiuSegMarked, gWiiuSegResolved, gWiiuSegUnresolved,
                            gWiiuSegLooksSeg);
                 gWiiuModelLodCull = gWiiuModelFrustum = gWiiuModelEmitted = 0;
@@ -606,7 +606,7 @@ int SDL_main(int argc, char* argv[]) {
                 if (lastReport == 0) {
                     lastReport = t0;
                 } else if ((t0 - lastReport) / kTicksPerMs >= 1000) {
-                    WHBLogPrintf("[idle] %u waits costing %ums of the last second", idleCount,
+                    WIIU_TRACE_HOT("[idle] %u waits costing %ums of the last second", idleCount,
                                  (unsigned)(idleTicks / kTicksPerMs));
                     idleCount = 0;
                     idleTicks = 0;

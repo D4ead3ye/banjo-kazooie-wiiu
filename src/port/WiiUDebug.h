@@ -51,10 +51,31 @@ inline void WiiUTerminateHandler() {
 
 #define WIIU_TRACE(...) WHBLogPrintf(__VA_ARGS__)
 
+// [port] The high-frequency tier, compiled out unless asked for.
+//
+// A crash report from a ninety-minute session faulted inside newlib's locale
+// lookup, reached from _svfprintf_r - which is where snprintf and friends end
+// up. Whatever the root cause turns out to be, a release build has no business
+// running printf every second forever: the once-a-second idle counter, the
+// periodic scene stats, and the controller enumeration (which has been seen
+// firing eight hundred times in three seconds) between them keep that path
+// permanently busy.
+//
+// Build with -DLH_WIIU_HOT_TRACE=1 to get them back when actually chasing
+// something. Everything that happens once a session - startup, foreground
+// handovers, exit, the breadcrumb replay - stays on WIIU_TRACE and is
+// unaffected.
+#ifdef LH_WIIU_HOT_TRACE
+#define WIIU_TRACE_HOT(...) WHBLogPrintf(__VA_ARGS__)
+#else
+#define WIIU_TRACE_HOT(...) ((void)0)
+#endif
+
 #else
 
 #define WIIU_TRACE_INIT() ((void)0)
 #define WIIU_TRACE(...) ((void)0)
+#define WIIU_TRACE_HOT(...) ((void)0)
 
 // Bring-up logging in the port layer calls WHBLogPrintf directly in a number of
 // places. Those lines are Wii U diagnostics, not behaviour, so give the name a
