@@ -84,6 +84,21 @@ surfaced problems no other platform had hit.
   Settings are also saved when the menu closes rather than only on the way out,
   since the shutdown path is no longer a place to do filesystem work.
 
+- **The control scheme is re-applied when the connected pads change.** It was
+  applied once, behind a static flag, the first time a controller existed.
+  Applying it rebuilds the mappings from the stock defaults for whatever is
+  attached at that moment, so a pad re-enumerating discarded the rebinds and the
+  flag meant they never came back. Everything else in Modern sits near its stock
+  position, so the only bind that visibly died was the Wonderwing on the d-pad,
+  and only on a Pro Controller — wireless, and re-enumerating far more often
+  than the GamePad.
+- **A mapping for the Wii Classic Controller.** SDL's Wii U driver enumerates one
+  and maps its buttons, but SDL ships built-in mappings for only the GamePad and
+  the Pro Controller, so `SDL_IsGameController` was false for it and the control
+  deck never opened it. Layout is the Pro Controller's without the stick clicks,
+  which the Classic does not have. Untested — no Classic Controller was
+  available.
+
 ### Input
 
 - **The enhancements menu was unreachable on console.** Three separate defects,
@@ -242,6 +257,15 @@ tree, and a mismatch desyncs items and map transitions.
   reports it parked in ProcUI's message pump with the game tick waiting on a
   frame token that cannot arrive. Distinct from the close freeze above, and
   present in earlier releases too. Rare, and the console itself stays alive.
+- **The game can crash after a long session, and the mechanism is understood.**
+  A thread's first `printf` asks wut for its reentrancy struct; wut allocates 520
+  bytes for it, and the failure path caches NULL in the thread-specific slot and
+  returns NULL. The next `printf` reads through that and faults in
+  `_localeconv_r` at offset 0x30 - which is the reported crash, register for
+  register. So `printf` is the victim: the real fault is the heap running out,
+  and a 520-byte allocation is simply the first thing brittle enough to kill the
+  process. What is not known is why the heap drains. This release logs the heap
+  once a minute so the shape of it is visible in any long session.
 - **The intro logo model does not appear.** Unresolved.
 - **Bottles' Bonus is harder than intended.** The picture is a live render of the
   world, and at 720p with upscaled textures the moving character is legible in a
