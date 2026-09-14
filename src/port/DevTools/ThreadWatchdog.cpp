@@ -13,6 +13,7 @@
 
 #ifdef __WIIU__
 #include <cstdio>
+#include <malloc.h>
 #include <unistd.h>
 #include <whb/log.h>
 #endif
@@ -688,6 +689,29 @@ void Watcher() {
 #ifdef __WIIU__
         // Last thing each sample, so the record reflects the state just judged.
         CrumbWrite(anyStalled ? "STALLED" : "ok");
+
+        // [port] Heap heartbeat, once a minute.
+        //
+        // The crash after an hour and a half is heap exhaustion, not a logging
+        // bug: a thread's first printf asks wut for its reentrancy struct, wut
+        // mallocs 520 bytes for it, and when that fails it caches NULL in the
+        // thread-specific slot and hands NULL back. The next printf then reads
+        // through it and faults in _localeconv_r, which is the crash that was
+        // reported - printf is the victim, not the cause.
+        //
+        // So watch the number that actually matters. mallinfo reports the heap
+        // malloc really uses, unlike the MEM2 base heap, which reads zero on
+        // every boot because the C heap has already taken it. Once a minute is
+        // enough to see a drain across a long session and costs nothing.
+        {
+            static int sHeapCountdown = 0;
+            if (sHeapCountdown-- <= 0) {
+                sHeapCountdown = 120; // 120 samples at 500ms
+                struct mallinfo mi = mallinfo();
+                WHBLogPrintf("[heap] free=%u used=%u arena=%u largest-free=%u", (unsigned)mi.fordblks,
+                             (unsigned)mi.uordblks, (unsigned)mi.arena, (unsigned)mi.keepcost);
+            }
+        }
 #endif
 
         if (!anyStalled) {
